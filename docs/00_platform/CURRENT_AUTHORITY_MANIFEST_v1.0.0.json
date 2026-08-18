@@ -1,0 +1,108 @@
+{
+  "manifest_id": "CURRENT_AUTHORITY_MANIFEST",
+  "manifest_version": "1.0.0",
+  "scope": "Current platform authority and current deep-reference evidence",
+  "governing_documents": [
+    {
+      "document_id": "PROJECT_NORTH_STAR_AND_MVP",
+      "canonical_filename": "PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
+      "semver": "1.2.1",
+      "repository_path": "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
+      "authority_class": "PRODUCT_NORTH_STAR",
+      "sha256": "03fd7566fee79269df1ddd14efe097ef2952e6837500e917c78388e79e326ef1",
+      "superseded_version": null
+    },
+    {
+      "document_id": "PLATFORM_BASELINE",
+      "canonical_filename": "00_PLATFORM_v1.2.1.md",
+      "semver": "1.2.1",
+      "repository_path": "docs/00_platform/00_PLATFORM_v1.2.1.md",
+      "authority_class": "PLATFORM_PRODUCT_LAW",
+      "sha256": "29d9d9abc16bf0b93cdd257cf677f3f0e8d5e5c746450f338ac8875b9404385e",
+      "superseded_version": null
+    },
+    {
+      "document_id": "DECISION_REGISTER",
+      "canonical_filename": "01_DECISIONS_v1.2.1.md",
+      "semver": "1.2.1",
+      "repository_path": "docs/00_platform/01_DECISIONS_v1.2.1.md",
+      "authority_class": "DECISION_REGISTER",
+      "sha256": "62ab34518c6c33220d1f4ec26f5c65a85c216277fe86ffbfa30b9eb7143988b8",
+      "superseded_version": null
+    },
+    {
+      "document_id": "OPEN_WORK",
+      "canonical_filename": "02_OPEN_WORK_v1.2.27.md",
+      "semver": "1.2.27",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.27.md",
+      "authority_class": "PLANNING_TRACKER",
+      "sha256": "9867e5a1fdf1b92a2bc757458167e6cf0566b1858bb5e5d5f0badef1ecb5ad75",
+      "superseded_version": "1.2.26"
+    },
+    {
+      "document_id": "ARCHITECTURE_SYNTHESIS",
+      "canonical_filename": "03_ARCHITECTURE_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/03_ARCHITECTURE_v1.0.0.md",
+      "authority_class": "ARCHITECTURE_SYNTHESIS",
+      "sha256": "2ed701bb8a14263046ec72d32d6a7119fbdacfc2e615df18bed9ba5547c35410",
+      "superseded_version": "0.1.0"
+    },
+    {
+      "document_id": "DOMAIN_MAP",
+      "canonical_filename": "04_DOMAIN_MAP_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.0.0.md",
+      "authority_class": "DOMAIN_LAW",
+      "sha256": "991e29f2fd07742805c5083429bfb59687a1106fae5afd34a40ecaa48636767c",
+      "superseded_version": "0.2.0"
+    },
+    {
+      "document_id": "ROADMAP",
+      "canonical_filename": "05_ROADMAP_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/05_ROADMAP_v1.0.0.md",
+      "authority_class": "ROADMAP",
+      "sha256": "3699845b4bac30935da6e5189bee7c4b00063b4ed718cc0aaa52270ab522433a",
+      "superseded_version": "0.1.0"
+    }
+  ],
+  "reference_documents": [
+    {
+      "document_id": "ARCHITECTURE_REQUIREMENTS",
+      "canonical_filename": "ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md",
+      "authority_class": "ARCHITECTURE_REQUIREMENTS_EVIDENCE",
+      "sha256": "182095db7197def3631cd30b18bb7fc81cc50c497c2d88799e524545fd3c6b1a",
+      "superseded_version": "0.22.0"
+    },
+    {
+      "document_id": "ARCHITECTURE_LAW",
+      "canonical_filename": "ARCHITECTURE_LAW_WORKING_v0.35.0.md",
+      "semver": "0.35.0",
+      "repository_path": "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md",
+      "authority_class": "ARCHITECTURE_LAW_EVIDENCE",
+      "sha256": "cf04a7940c243f644f816305c7dba0470ea29552b5d7ed146bc811d1554cb92b",
+      "superseded_version": "0.34.0"
+    },
+    {
+      "document_id": "REFERENCE_FLOW_PRESSURE_TESTS",
+      "canonical_filename": "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
+      "semver": "0.2.0",
+      "repository_path": "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
+      "authority_class": "REFERENCE_FLOW_EVIDENCE",
+      "sha256": "1ed2df604d6eebbfd0e409cf5ede4b75213e80dcea37659e270fc25ae8fdc396",
+      "superseded_version": "0.1.0"
+    },
+    {
+      "document_id": "FOUNDATION_READINESS_AUDIT",
+      "canonical_filename": "FOUNDATION_READINESS_AUDIT_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/reference/FOUNDATION_READINESS_AUDIT_v1.0.0.md",
+      "authority_class": "FOUNDATION_AUDIT_EVIDENCE",
+      "sha256": "e8c12b23e69f1fa7403e43997fc29ce67fb888989d4d643d2cfc39f6f78df45e",
+      "superseded_version": null
+    }
+  ]
+}
