@@ -1,6 +1,6 @@
-# 02_OPEN_WORK_v1.2.24.md
+# 02_OPEN_WORK_v1.2.25.md
 
-- **Document status:** POST-GRILL OPEN-WORK BASELINE v1.2.24
+- **Document status:** POST-GRILL OPEN-WORK BASELINE v1.2.25
 - **Authoritative for:** Remaining unresolved planning questions, expert/vendor/architecture/operations gates, post-grilling deliverables, planning and delivery sequencing, and planning/development stop conditions
 - **Not authoritative for:** Locked product decisions, platform truth, implementation details, Ash Resources, schemas, or legal and clinical conclusions
 - **Related documents:**
@@ -141,7 +141,7 @@
 
 ## v1.2.14 — 2026-08-17 — AR-007 P2 + final closure / AR-008 advancement
 
-- Planning-state-only SemVer transition: `v1.2.13 → v1.2.14`.
+- Planning-state SemVer transition: `v1.2.13 → v1.2.14`.
 - Recorded accepted AR-007 P2 Architecture Law `ARC-243...ARC-254` in `ARCHITECTURE_LAW_WORKING_v0.28.0.md`.
 - Locked complete recovery-authority scope, HA-versus-backup separation, encrypted-backup ageing with deletion-safe restore, independently recoverable deletion/withdrawal suppression, recovery-gated service promotion, semantic restore verification, deletion-safe derived-model rebuild, class-specific RPO/RTO, governed participant export composition/reauthorisation, temporary protected export artifacts and sensitive-export assurance/audit/output safety.
 - Re-ran the complete AR-007 closure audit against **51 frozen ARQs routed through AR-007**: Performance 12; Analytics 28; System 1; IAM 2; State 6; Content 1; Operations 1. Result: **PASS**.
@@ -160,7 +160,7 @@
 
 ## v1.2.12 — 2026-08-17 — AR-006 C4 closure / AR-007 advancement
 
-- Planning-state-only SemVer transition: `v1.2.11 → v1.2.12`.
+- Planning-state SemVer transition: `v1.2.11 → v1.2.12`.
 - Recorded accepted AR-006 C4 Architecture Law `ARC-223...ARC-232` in `ARCHITECTURE_LAW_WORKING_v0.26.0.md`.
 - Re-ran the full AR-006 closure audit across **66 routed frozen ARQs**: Performance 16; Analytics 33; Payments 1; System 5; State 1; Async 3; Content 6; Security 1. Result: **PASS**.
 - Marked `AR-006 — Content, Translation, Media & External Integrations` COMPLETE through `ARC-232`.
@@ -170,7 +170,7 @@
 
 ## v1.2.11 — 2026-08-17 — AR-006 C1–C3 progress / preliminary closure audit
 
-- Planning-state-only SemVer transition: `v1.2.10 → v1.2.11`.
+- Planning-state SemVer transition: `v1.2.10 → v1.2.11`.
 - Recorded accepted AR-006 C1–C3 Architecture Law through `ARC-222` in `ARCHITECTURE_LAW_WORKING_v0.25.0.md`.
 - Mechanically audited all **66 frozen ARQs routed through AR-006**: Performance 16; Analytics 33; Payments 1; System 5; State 1; Async 3; Content 6; Security 1.
 - Preliminary audit result: **AR-006 is not yet complete**. C1–C3 close content/translation/publication, search/personalisation/SEO/experiment-safe public delivery, and media/live/replay/provider boundaries, but one surgical residual cluster remains for governed notification/message-template delivery, email/message A/B/n treatment semantics, sensitive scheduled/alert delivery, acquisition/marketing measurement boundaries and outbound vendor-integration privacy/deduplication/reconciliation.
@@ -179,7 +179,7 @@
 
 ## v1.2.10 — 2026-08-17 — AR-005 TC4 closure / AR-006 advancement
 
-- Planning-state-only SemVer transition: `v1.2.9 → v1.2.10`.
+- Planning-state SemVer transition: `v1.2.9 → v1.2.10`.
 - Recorded accepted AR-005 TC4 Architecture Law `ARC-179...ARC-188` in `ARCHITECTURE_LAW_WORKING_v0.22.0.md`.
 - Re-ran the full AR-005 closure audit across **234** routed frozen ARQs (Performance 106; Analytics 118; Payments 1; IAM 2; State 3; Async 3; Content 1). Result: **PASS**.
 - Marked `AR-005 — Transactions, Consistency, Async & Realtime` COMPLETE through `ARC-188`.
