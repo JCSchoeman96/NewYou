@@ -5,7 +5,7 @@
 - **Authoritative for:** Locked, provisional and externally gated platform decisions
 - **Decision coverage:** GQ-001 through GQ-012 plus GQ-NY-001 + approved post-freeze DEC-292–DEC-293 amendments
 - **Last updated:** 2026-08-18
-- **Related documents:** `00_PLATFORM_v1.2.1.md`, `02_OPEN_WORK_v1.2.27.md`, `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
+- **Related documents:** `00_PLATFORM_v1.2.1.md`, `02_OPEN_WORK_v1.2.28.md`, `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 - **v1.2 amendment scope:** Preserve DEC-001 through DEC-291 history; append DEC-292 and DEC-293 for the approved Paystack launch-gateway promotion and first-party experimentation capability. DEC-047's historical provisional wording is superseded by DEC-292. Existing expert/vendor validation gates remain in force.
 
 ## v1.2.2 Patch Scope

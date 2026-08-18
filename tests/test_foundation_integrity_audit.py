@@ -20,6 +20,17 @@ SMALL_COUNTS = {
     "feature_packs": 0,
 }
 
+FAD72C1_FROZEN_HASHES = {
+    "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
+    "docs/00_platform/00_PLATFORM_v1.2.1.md": "56a2b9a5db42a81e287f0c61deae37d6bbce5b19f48f67732584160b455f935a",
+    "docs/00_platform/03_ARCHITECTURE_v1.0.0.md": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b",
+    "docs/00_platform/04_DOMAIN_MAP_v1.0.0.md": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
+    "docs/00_platform/05_ROADMAP_v1.0.0.md": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
+    "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md": "cdf09ecced658635572a20e4f2feb04120b4f856e81762ef5af9ba179a11c40e",
+    "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md": "a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639",
+    "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20",
+}
+
 
 class FoundationIntegrityAuditTests(unittest.TestCase):
     def test_clean_fixture_returns_pass_report(self):
@@ -45,6 +56,95 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 check for check in report["checks"] if check["name"] == "definition_count_dec"
             )
             self.assertEqual("DEC definition count is 1, expected 2", decision_count_check["message"])
+
+    def test_source_at_freeze_references_are_not_stale(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_clean_fixture(root)
+            source_at_freeze = root / "docs" / "00_platform" / "reference" / "ARCHITECTURE_LAW_WORKING_v0.35.0.md"
+            source_at_freeze.write_text(
+                source_at_freeze.read_text(encoding="utf-8")
+                + "\nSource tracker at freeze: 02_OPEN_WORK_v1.2.23.md\n",
+                encoding="utf-8",
+            )
+            manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"] = [
+                r"(?<!archive/)02_OPEN_WORK_v1\.2\.(?:[0-9]|1[0-9]|2[0-6])\.md"
+            ]
+            manifest["integrity_rules"]["graph_rules"]["navigation_document_ids"] = ["ROADMAP"]
+            (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = run_audit(root, root / "manifest.json")
+
+            self.assertFalse(
+                any(finding["check"] == "active_document_graph" for finding in report["findings"])
+            )
+
+    def test_non_navigation_document_is_not_scanned_for_stale_references(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_clean_fixture(root)
+            current_navigation = root / "docs" / "00_platform" / "05_ROADMAP_v1.0.0.md"
+            current_navigation.write_text(
+                current_navigation.read_text(encoding="utf-8") + "\nOLD_TRACKER_MARKER\n",
+                encoding="utf-8",
+            )
+            manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"] = [
+                r"OLD_TRACKER_MARKER"
+            ]
+            manifest["integrity_rules"]["graph_rules"]["navigation_document_ids"] = []
+            (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = run_audit(root, root / "manifest.json")
+
+            self.assertFalse(
+                any(finding["check"] == "active_document_graph" for finding in report["findings"])
+            )
+
+    def test_declared_current_navigation_reference_is_reported(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_clean_fixture(root)
+            current_navigation = root / "docs" / "00_platform" / "05_ROADMAP_v1.0.0.md"
+            current_navigation.write_text(
+                current_navigation.read_text(encoding="utf-8") + "\nOLD_TRACKER_MARKER\n",
+                encoding="utf-8",
+            )
+            manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"] = [
+                r"OLD_TRACKER_MARKER"
+            ]
+            manifest["integrity_rules"]["graph_rules"]["navigation_document_ids"] = ["ROADMAP"]
+            (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = run_audit(root, root / "manifest.json")
+
+            self.assertTrue(
+                any(finding["check"] == "active_document_graph" for finding in report["findings"])
+            )
+
+    def test_frozen_provenance_hash_mismatch_is_reported(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_clean_fixture(root)
+            path = root / "docs" / "00_platform" / "01_DECISIONS_v1.2.1.md"
+            manifest["governing_documents"][0]["provenance_sha256"] = hashlib.sha256(
+                path.read_bytes()
+            ).hexdigest()
+            path.write_text(path.read_text(encoding="utf-8") + "\nChanged after freeze.\n", encoding="utf-8")
+            (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertTrue(
+                any(finding["check"] == "frozen_provenance_hash" for finding in report["findings"])
+            )
+
+    def test_fad72c1_frozen_artifacts_match_accepted_hashes(self):
+        root = Path(__file__).resolve().parents[1]
+
+        for relative, expected_hash in FAD72C1_FROZEN_HASHES.items():
+            with self.subTest(path=relative):
+                actual_hash = hashlib.sha256((root / relative).read_bytes()).hexdigest()
+                self.assertEqual(expected_hash, actual_hash)
 
     def test_hash_mismatch_is_reported(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -280,6 +380,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                     "stale_reference_patterns": [],
                     "reference_header_lines": 35,
                     "frozen_provenance_policy": "frozen_provenance",
+                    "navigation_document_ids": ["ROADMAP"],
                 },
             },
         }
@@ -291,11 +392,19 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md": "REFERENCE_FLOW_EVIDENCE",
             "04_DOMAIN_MAP_v1.0.0.md": "DOMAIN_LAW",
         }
+        document_ids = {
+            "01_DECISIONS_v1.2.1.md": "DECISION_REGISTER",
+            "05_ROADMAP_v1.0.0.md": "ROADMAP",
+            "ARCHITECTURE_LAW_WORKING_v0.35.0.md": "ARCHITECTURE_LAW_EVIDENCE",
+            "ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md": "ARCHITECTURE_REQUIREMENTS_EVIDENCE",
+            "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md": "REFERENCE_FLOW_EVIDENCE",
+            "04_DOMAIN_MAP_v1.0.0.md": "DOMAIN_LAW",
+        }
         for relative in files:
             path = root / relative
             manifest["governing_documents"].append(
                 {
-                    "document_id": path.stem,
+                    "document_id": document_ids[path.name],
                     "canonical_filename": path.name,
                     "semver": path.name.split("_v", 1)[1][:-3],
                     "repository_path": relative,

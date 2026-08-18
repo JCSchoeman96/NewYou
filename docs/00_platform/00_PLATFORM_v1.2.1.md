@@ -8,7 +8,7 @@
 - **Initial market:** Adult women, 18+
 - **Last updated:** 2026-08-16
 - **Decision coverage:** GQ-001 through GQ-012 plus GQ-NY-001 + approved post-freeze DEC-292–DEC-293 amendments
-- **Related documents:** `01_DECISIONS_v1.2.1.md`, `02_OPEN_WORK_v1.2.27.md`, `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
+- **Related documents:** `01_DECISIONS_v1.2.1.md`, `02_OPEN_WORK_v1.2.1.md`, `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 
 ---
 

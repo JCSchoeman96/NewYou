@@ -1,6 +1,6 @@
-# 02_OPEN_WORK_v1.2.27.md
+# 02_OPEN_WORK_v1.2.28.md
 
-- **Document status:** POST-FOUNDATION-READINESS-AUDIT OPEN-WORK BASELINE v1.2.27
+- **Document status:** POST-FOUNDATION-READINESS-AUDIT OPEN-WORK BASELINE v1.2.28
 - **Authoritative for:** Remaining unresolved planning questions, expert/vendor/architecture/operations gates, post-grilling deliverables, planning and delivery sequencing, and planning/development stop conditions
 - **Not authoritative for:** Locked product decisions, platform truth, implementation details, Ash Resources, schemas, or legal and clinical conclusions
 - **Related documents:**
