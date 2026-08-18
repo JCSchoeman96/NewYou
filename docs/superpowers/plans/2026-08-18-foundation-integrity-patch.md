@@ -66,7 +66,16 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             self._write_clean_fixture(root)
-            report = run_audit(root, root / "manifest.json")
+            report = run_audit(root, root / "manifest.json", expected_counts={
+                "decisions": 1,
+                "open_questions": 1,
+                "architecture_law": 1,
+                "architecture_requirements": 1,
+                "reference_flows": 1,
+                "domains": 1,
+                "ownership_rows": 1,
+                "feature_packs": 0,
+            })
             self.assertEqual("PASS", report["status"])
             self.assertEqual([], report["findings"])
 
@@ -76,7 +85,16 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             manifest = self._write_clean_fixture(root)
             manifest["governing_documents"][0]["sha256"] = "0" * 64
             (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
-            report = run_audit(root, root / "manifest.json")
+            report = run_audit(root, root / "manifest.json", expected_counts={
+                "decisions": 1,
+                "open_questions": 1,
+                "architecture_law": 1,
+                "architecture_requirements": 1,
+                "reference_flows": 1,
+                "domains": 1,
+                "ownership_rows": 1,
+                "feature_packs": 0,
+            })
             self.assertEqual("FAIL", report["status"])
             self.assertTrue(any(f["check"] == "manifest_hash_parity" for f in report["findings"]))
 
@@ -86,7 +104,16 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             self._write_clean_fixture(root)
             path = root / "docs" / "00_platform" / "01_DECISIONS_v1.2.1.md"
             path.write_text(path.read_text(encoding="utf-8") + "\nSee OQ-999.\n", encoding="utf-8")
-            report = run_audit(root, root / "manifest.json")
+            report = run_audit(root, root / "manifest.json", expected_counts={
+                "decisions": 1,
+                "open_questions": 1,
+                "architecture_law": 1,
+                "architecture_requirements": 1,
+                "reference_flows": 1,
+                "domains": 1,
+                "ownership_rows": 1,
+                "feature_packs": 0,
+            })
             self.assertEqual("FAIL", report["status"])
             self.assertTrue(any(f["check"] == "identifier_resolution" for f in report["findings"]))
 
@@ -168,7 +195,7 @@ Use `Path` throughout. Compute hashes by streaming bytes with `hashlib.sha256`; 
 
 - [ ] **Step 2: Implement pure parsing and reporting helpers.**
 
-Implement `load_manifest`, `sha256_file`, `extract_identifier_tokens`, `collect_definitions`, `add_finding`, and `parse_semver`. Every finding must be a JSON-serializable dictionary with at least `check`, `path`, and `message`; the report must contain `status`, `assertion_count`, `counts`, `checks`, and `findings`.
+Implement `load_manifest`, `sha256_file`, `extract_identifier_tokens`, `collect_definitions`, `add_finding`, and `parse_semver`. `run_audit(root, manifest_path, expected_counts=None)` must use the production `EXPECTED_COUNTS` when `expected_counts` is omitted and accept reduced counts only for self-contained tests. Every finding must be a JSON-serializable dictionary with at least `check`, `path`, and `message`; the report must contain `status`, `assertion_count`, `counts`, `checks`, and `findings`.
 
 - [ ] **Step 3: Implement manifest/path/hash/version checks.**
 
