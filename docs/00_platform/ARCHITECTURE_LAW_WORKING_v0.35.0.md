@@ -1,14 +1,14 @@
-# ARCHITECTURE_LAW_WORKING_v0.29.0.md
+# ARCHITECTURE_LAW_WORKING_v0.35.0.md
 
 - **Document status:** ACTIVE WORKING ARCHITECTURE LAW REGISTER
-- **Document version:** v0.29.0
+- **Document version:** v0.35.0
 - **Started:** 2026-08-16
 - **Last updated:** 2026-08-17
-- **Current workstream:** AR-008 — Reliability, Deployment, Operations & Observability
-- **Current scope:** AR-001 COMPLETE; AR-002 COMPLETE; AR-003 COMPLETE; AR-004 COMPLETE; AR-005 COMPLETE; AR-006 COMPLETE; AR-007 COMPLETE after final 51-ARQ closure audit PASS; accepted Architecture Law is ARC-001 through ARC-266; AR-008 IN PROGRESS after accepted O1 runtime/reliability/deployment law
-- **Next planned scope:** AR-008 O2 — Observability, SLO/error-budget evidence, logs/metrics/traces, incident correlation, alert ownership and telemetry privacy
+- **Current workstream:** Phase 3 Reference Flow Pressure Tests COMPLETE; AR-009 remains COMPLETE
+- **Current scope:** AR-001 through AR-009 COMPLETE; cumulative accepted Architecture Law is ARC-001 through ARC-327; ARC-327 amends ARC-326 proof timing only
+- **Next planned scope:** Phase 4 — synthesize/review/freeze `03_ARCHITECTURE.md`; lightweight traceability-check the already-passed FLOW-01...FLOW-12 and rerun only materially affected flows
 - **Governance mode:** CUMULATIVE / APPEND-ONLY ARCHITECTURE DECISIONS
-- **Filename governance:** Every emitted version of this cumulative artifact includes its SemVer in the filename (for example `ARCHITECTURE_LAW_WORKING_v0.29.0.md`); later versions are emitted as new versioned files rather than relying on an unversioned filename.
+- **Filename governance:** Every emitted version of this cumulative artifact includes its SemVer in the filename (for example `ARCHITECTURE_LAW_WORKING_v0.34.0.md`); later versions are emitted as new versioned files rather than relying on an unversioned filename.
 - **Authority boundary:** This document records `ARC-nnn` decisions — HOW the platform will satisfy frozen `ARQ-*` requirements. It does not modify Product Law and does not assign final concrete business-domain ownership reserved for `04_DOMAIN_MAP.md`.
 
 ## Governing source set
@@ -16,7 +16,7 @@
 - `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 - `00_PLATFORM_v1.2.1.md`
 - `01_DECISIONS_v1.2.1.md`
-- `02_OPEN_WORK_v1.2.14.md`
+- `02_OPEN_WORK_v1.2.22.md`
 - `ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md` — frozen AR-000 handoff
 
 Architecture decisions must remain traceable to the frozen requirement set. A later change to an accepted ARC must preserve history through explicit amendment/supersession rather than silent rewriting.
@@ -5257,7 +5257,1194 @@ Coverage findings:
 
 **O1 deferrals:** exact availability/SLO percentages and error budgets; health endpoint paths/payloads; concrete supervisor-tree/restart-intensity values; dependency timeout/retry-budget constants; circuit/bulkhead implementation; PostgreSQL HA/failover/fencing product; drain/grace durations; deployment/canary tooling; rollback automation; emergency-control UI/API and exact operator roles remain assigned to O2/AR-009, Operations/JIT configuration, Domain Dossiers where business-specific, and Architectural Proof/release gates.
 
+## 4L.2 Round O2 — Observability, SLO Evidence, Telemetry, Alerting & Incident Correlation
+
+**Accepted answer set:** `O2.1 B, O2.2 B, O2.3 B, O2.4 B, O2.5 B, O2.6 B, O2.7 B, O2.8 B, O2.9 B, O2.10 B, O2.11 B, O2.12 B`
+
+## ARC-267 — Observability is a coherent metrics, traces, structured-logs and domain-signal system; audit/security evidence remains a separate governed class
+
+- **Decision source:** AR-008 O2.1
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-013`, `ARQ-PERF-023`, `ARQ-OPS-001`, `ARQ-IAM-007`
+- **Decision:** Operate one coherent observability model composed of metrics, distributed/causal traces, structured diagnostic logs and governed domain/business outcome signals. Audit/security evidence remains a separate immutable/minimised evidence path and is not collapsed into generic observability logs.
+- **Rationale:** Infrastructure-only monitoring cannot show whether business outcomes remain correct, while logs alone cannot efficiently represent health, saturation, latency distributions or cross-boundary causality.
+- **Rules:**
+  1. Metrics answer health/rate/latency/saturation/freshness questions.
+  2. Traces diagnose causal path and time distribution across important boundaries.
+  3. Structured logs provide bounded contextual diagnostic evidence.
+  4. Domain outcome signals expose governed operational state without becoming business authority.
+  5. Audit/security evidence follows ARC-131 and its own retention/access rules.
+- **Failure behaviour:** Loss of one observability signal class degrades diagnosis/visibility but does not silently redefine business success or audit evidence.
+- **Security/privacy:** All observability classes are minimised and access-controlled according to sensitivity; generic telemetry does not duplicate protected payloads.
+- **Performance/scaling:** Instrumentation volume and backend cost are bounded through signal design, aggregation and sampling rather than uncontrolled event dumping.
+- **Enforcement/downstream:** O3 governs ownership/retention/access; AR-009 defines numerical SLI/SLO and proof thresholds; JIT implementation chooses compatible backends.
+
+## ARC-268 — Platform correlation context propagates across synchronous, durable-async and provider boundaries without using sensitive identity as the tracing key
+
+- **Decision source:** AR-008 O2.2
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-013`, `ARQ-IAM-007`, `ARQ-ASYNC-001`, `ARQ-ASYNC-003`; cross-reference `ARC-149`, `ARC-153`, `ARC-167`
+- **Decision:** Propagate a safe platform correlation/causation context across important HTTP/LiveView interactions, Ash actions, database operations, durable jobs, provider calls and callbacks where practical. Correlation identity is distinct from participant identity, business-resource identity and causal actor provenance.
+- **Rationale:** Incidents spanning request, job and provider boundaries are otherwise difficult to reconstruct, but using email/user IDs or complete payloads as tracing context leaks sensitive data and couples diagnostics to business identity.
+- **Rules:**
+  1. Correlation/trace IDs are opaque operational identifiers, not authorization credentials.
+  2. Causal initiator and execution actor remain separately represented where material.
+  3. Release/environment/node/runtime-role and safe operation/job/provider identities may accompany correlation where useful.
+  4. Trace baggage/context excludes secrets, cookies, tokens and unnecessary protected data.
+- **Failure behaviour:** Missing correlation weakens diagnostics but cannot block an otherwise valid business action unless the correlation itself is part of separately governed audit evidence.
+- **Security/privacy:** Correlation metadata is intentionally non-secret and minimised; protected identity is accessed through governed drill-down rather than embedded broadly in telemetry.
+- **Performance/scaling:** Context propagation is bounded and compact.
+- **Enforcement/downstream:** Shared observability helpers/adapters implement propagation; O3 defines access/retention; Domain Dossiers may add safe domain operation IDs.
+
+## ARC-269 — Metrics use controlled low-cardinality dimensions; high-cardinality entity identity stays out of metric labels
+
+- **Decision source:** AR-008 O2.3
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-023`, `ARQ-PERF-083`, `ARQ-PERF-107`, `ARQ-IAM-007`
+- **Decision:** Metric dimensions/labels are governed for bounded cardinality and privacy. Suitable dimensions include controlled operation class, queue, provider, outcome/error class, runtime role and release/environment; participant IDs, emails, order/payment identifiers, arbitrary URLs and other unbounded identities are not ordinary metric labels.
+- **Rationale:** Unbounded cardinality creates telemetry cost/memory/index pressure and leaks sensitive/business identifiers into systems designed for aggregation.
+- **Rules:**
+  1. Every metric dimension must have a bounded/understood cardinality envelope.
+  2. High-cardinality drill-down identity belongs in appropriate trace/log/audit evidence with access controls.
+  3. Error labels use governed categories rather than raw exception strings when aggregating.
+  4. New labels are reviewed for both scale and privacy.
+- **Failure behaviour:** When a useful dimension cannot be represented safely as a metric label, retain aggregate metrics and rely on sampled/contextual trace/log evidence for drill-down.
+- **Security/privacy:** Direct identifiers and secrets are prohibited from general metric labels.
+- **Performance/scaling:** Cardinality budgets protect telemetry pipelines and queryability at scale.
+- **Enforcement/downstream:** Metric-schema conventions and lint/review checks are JIT/AR-009 work.
+
+## ARC-270 — Structured operational logs are diagnostic evidence, not the audit ledger; sensitive payloads are redacted/minimised by design
+
+- **Decision source:** AR-008 O2.4
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-IAM-007`, `ARQ-PERF-023`; cross-reference `ARC-131`
+- **Decision:** Use structured operational logs for diagnostics and correlation, while material audit/security evidence remains the separate immutable/minimised path defined by AR-004. Generic logs do not serve as authoritative audit history.
+- **Rationale:** Operational logs need flexibility and lifecycle controls that differ from governed evidence; mixing them encourages sensitive payload dumping and weakens audit tamper/retention semantics.
+- **Rules:**
+  1. Logs prefer structured safe fields over interpolated dumps.
+  2. Passwords, session/bearer tokens, secrets, payment credentials, cookies and full protected records are never general log content.
+  3. Exceptions are normalised/redacted before exporting where necessary.
+  4. Audit events are emitted through the dedicated governed evidence path even if a diagnostic log also exists.
+- **Failure behaviour:** Logging backend/export failure degrades diagnostics; required audit evidence must still follow its durable policy.
+- **Security/privacy:** Log access and retention are sensitivity-aware; logs are not a shadow participant database.
+- **Performance/scaling:** Log volume is bounded with levels/sampling/aggregation rather than disabling diagnostic value globally.
+- **Enforcement/downstream:** O3 sets retention/access/incident handling; implementation establishes redaction helpers and safe logger metadata.
+
+## ARC-271 — Important boundaries support vendor-neutral distributed tracing with controlled sampling; traces never substitute for zero-tolerance evidence
+
+- **Decision source:** AR-008 O2.5
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-013`, `ARQ-PERF-023`, `ARQ-PERF-024`
+- **Decision:** Instrument important application, database, queue and provider boundaries consistently for distributed tracing and use controlled sampling according to traffic, criticality and diagnostic need. OpenTelemetry-compatible propagation/export is the preferred proof direction, while no proprietary APM backend is architecture authority.
+- **Rationale:** Cross-boundary traces materially improve latency/failure diagnosis, but retaining every trace indefinitely is costly and traces are observational rather than canonical business evidence.
+- **Rules:**
+  1. Sampling policy may vary by environment, traffic class, error/anomaly state and diagnostic campaign.
+  2. Important low-volume/error traces may be sampled more strongly than routine high-volume success traffic.
+  3. Trace absence may not erase a required audit/business invariant.
+  4. Instrumentation APIs remain backend-neutral where practical.
+- **Failure behaviour:** Tracing/exporter failure degrades diagnosis only and remains isolated under ARC-278.
+- **Security/privacy:** Span attributes/baggage follow minimisation/cardinality rules and exclude protected payloads.
+- **Performance/scaling:** Sampling and span design bound telemetry overhead.
+- **Enforcement/downstream:** JIT selects exporter/collector/backend; AR-009 measures instrumentation overhead and trace completeness on key paths.
+
+## ARC-272 — SLOs use user/business-facing SLIs by capability class while hard correctness invariants remain outside consumable error budgets
+
+- **Decision source:** AR-008 O2.6
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-012`, `ARQ-PERF-013`, `ARQ-PERF-024`, `ARQ-PERF-139`, `ARQ-PERF-140`; cross-reference `ARC-255`
+- **Decision:** Each availability/performance class has explicit user/business-facing SLIs and supporting component metrics. Percentiles/distributions are used where appropriate instead of relying on averages alone. Error budgets apply only to approved availability, latency or freshness objectives; zero-tolerance business/security/privacy invariants are separate incident gates.
+- **Rationale:** Component uptime can be green while users cannot complete the intended business operation, and average latency hides tail failure.
+- **Rules:**
+  1. SLI definitions describe the successful user/business outcome and observation window.
+  2. Diagnostic metrics explain SLI degradation but do not replace the SLI.
+  3. Exact targets/error-budget policies are evidence-gated AR-009 decisions.
+  4. Hard invariant breach is not reclassified as acceptable because an SLO remains within budget.
+- **Failure behaviour:** SLO breach drives operational/release response according to severity; invariant breach invokes correctness incident/STOP semantics.
+- **Security/privacy:** SLI calculation uses minimised aggregated data.
+- **Performance/scaling:** SLI computation is efficient and does not create per-user high-cardinality monitoring state by default.
+- **Enforcement/downstream:** AR-009 locks numerical targets, tests and release thresholds; O3 governs alert/error-budget ownership.
+
+## ARC-273 — PostgreSQL observability must distinguish query, pool, lock, planner/index, maintenance, replication and resource bottlenecks
+
+- **Decision source:** AR-008 O2.7
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-083`, `ARQ-PERF-073`, `ARQ-PERF-081`, `ARQ-PERF-082`
+- **Decision:** PostgreSQL and application DB telemetry must expose enough evidence to distinguish query execution latency from connection/pool queueing, locks/contention, index/planner issues, replication lag where applicable, vacuum/analyze/statistics health, storage/resource pressure and migration impact.
+- **Rationale:** A generic “database slow” signal cannot identify whether to fix query shape, indexing, pool economics, lock scope, maintenance or infrastructure.
+- **Rules:**
+  1. Pool wait/checkout time is observable separately from SQL execution time.
+  2. Slow/top query evidence is available without indiscriminately logging sensitive bind values.
+  3. Lock/transaction contention and long-running transactions are diagnosable.
+  4. Maintenance/replica/storage indicators are captured where the topology uses them.
+- **Failure behaviour:** DB telemetry gaps trigger monitoring degradation; they do not alter database authority.
+- **Security/privacy:** SQL telemetry avoids exposing sensitive parameters/query payloads unnecessarily.
+- **Performance/scaling:** Database observability itself is sampled/aggregated to avoid materially worsening DB load.
+- **Enforcement/downstream:** AR-009 defines thresholds/load evidence; operations choose PostgreSQL/hosting telemetry integrations.
+
+## ARC-274 — Material queues and realtime surfaces expose freshness, saturation, retry and amplification evidence sufficient for diagnosis
+
+- **Decision source:** AR-008 O2.8
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-107`, `ARQ-PERF-135`; cross-reference `ARC-160`, `ARC-161`, `ARC-166`
+- **Decision:** Material queue observability includes depth, oldest wait age, execution duration, throughput, retries/failures/discards/cancels and downstream resource/dependency saturation. Realtime/LiveView observability includes connection/churn/reconnect behaviour, relevant mount/event/render timing, process/mailbox pressure, subscription/fan-out, broadcast rates/payload sizes and errors.
+- **Rationale:** Job counts or websocket connection totals alone do not expose freshness collapse, retry storms, slow clients or fan-out amplification.
+- **Rules:**
+  1. Freshness/wait age is first-class for time-sensitive queues.
+  2. Queue state is correlated with dependency/DB/resource pressure where possible.
+  3. Realtime metrics remain bounded and avoid per-connection cardinality explosion.
+  4. High-fan-out changes expose enough evidence to identify amplification.
+- **Failure behaviour:** Queue/realtime monitoring loss degrades diagnosis while durable queue/business/realtime semantics remain unchanged.
+- **Security/privacy:** Payload-size and routing metrics avoid exposing message contents/topic secrets.
+- **Performance/scaling:** Collection is aggregation-oriented and compatible with worker-node separation/multi-node LiveView.
+- **Enforcement/downstream:** AR-009 load/failure tests validate thresholds; O3 alert/runbook ownership.
+
+## ARC-275 — Important business capabilities expose operational domain outcome signals without moving domain authority into observability queries
+
+- **Decision source:** AR-008 O2.9
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-OPS-001`, `ARQ-PERF-024`; cross-reference `ARC-154`, `ARC-168`, `ARC-221`, `ARC-240`
+- **Decision:** Important domains/capabilities expose bounded operational signals representing material unresolved/failing business outcomes (for example reconciliation backlog, unresolved required consequence, deletion workflow backlog, scheduled transition failure or critical provider reconciliation failure). Monitoring reads these governed states; dashboards/alerts do not become authority or encode hidden business law.
+- **Rationale:** Green infrastructure can coexist with failed business obligations, while implementing business semantics only in monitoring queries creates unreviewed shadow law.
+- **Rules:**
+  1. Domain signal semantics originate from owning application/domain contracts.
+  2. Signals are aggregated/minimised enough for operations.
+  3. Monitoring may drill into governed records through authorised workflows rather than copy protected payloads.
+  4. Domain signal absence/failure is itself observable where material.
+- **Failure behaviour:** Monitoring failure does not resolve or mutate the underlying domain obligation.
+- **Security/privacy:** Domain metrics avoid protected detail; authorised diagnostic drill-down is separate.
+- **Performance/scaling:** Prefer derived counts/age/state-class signals over expensive ad-hoc full-domain scans.
+- **Enforcement/downstream:** Domain Map/Dossiers define concrete signals; O3 owns response; AR-009 defines thresholds/proof.
+
+## ARC-276 — Material alerts are actionable, severity-governed and explicitly owned; noisy correlated symptoms are grouped instead of paging everyone
+
+- **Decision source:** AR-008 O2.10
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-OPS-001`, `ARQ-PERF-163`, `ARQ-PERF-165`
+- **Decision:** Material alerts/pages have an explicit severity, owning role/team, affected capability/SLO/invariant, useful evidence/context and response/runbook/escalation path. Prefer alerts tied to user/business impact, saturation or invariant threat over indiscriminate low-level exceptions, and group/deduplicate correlated failures where possible.
+- **Rationale:** Alert volume without ownership/actionability produces fatigue and slows incident response; one provider outage should not become hundreds of independent pages.
+- **Rules:**
+  1. Paging alerts require a defined human action or escalation.
+  2. Informational diagnostics may remain dashboards/logs instead of paging.
+  3. Alert thresholds and severity map are reviewed with SLO/error-budget/invariant semantics.
+  4. Correlation/suppression never hides a distinct critical invariant breach.
+- **Failure behaviour:** Alert-delivery failure is itself operationally visible through an independent path appropriate to risk.
+- **Security/privacy:** Alert payloads are minimised; sensitive diagnostics require authorised drill-down rather than broad message disclosure.
+- **Performance/scaling:** Alert aggregation/dedup protects operators and downstream notification systems during storms.
+- **Enforcement/downstream:** O3 defines incident ownership/severity/runbooks and alert-channel resilience; AR-009 locks numerical criteria.
+
+## ARC-277 — Release, configuration and incident timelines are correlated with runtime evidence, and significant incidents feed explicit amendment/re-proof
+
+- **Decision source:** AR-008 O2.11
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-159`, `ARQ-PERF-165`, `ARQ-OPS-001`; cross-reference `ARC-265`
+- **Decision:** Operational evidence includes safe release/deployment-stage, environment, node/runtime-role and relevant configuration-generation/experiment-feature version markers so behaviour changes can be correlated with rollout/configuration events. Material incidents retain an evidence-backed timeline and feed explicit Architecture/test/capacity/runbook amendment when evidence contradicts existing assumptions.
+- **Rationale:** Without change correlation, operators waste time discovering what changed, and incident lessons disappear into prose instead of correcting governing assumptions.
+- **Rules:**
+  1. Deployment/canary markers are queryable alongside relevant SLIs/diagnostics.
+  2. Secret values are never recorded as configuration correlation data.
+  3. Incident timelines distinguish observation, hypothesis, containment and confirmed cause.
+  4. Contradicted Product/ARQ/ARC/Domain/Feature-Pack assumptions trigger STOP and explicit upstream amendment/re-proof.
+- **Failure behaviour:** Missing rollout marker is an observability defect, not permission to continue an ambiguous high-risk rollout.
+- **Security/privacy:** Correlation metadata stores versions/generations/hashes where safe, never secret material.
+- **Performance/scaling:** Release markers are low-volume metadata correlated by backend, not per-request large payloads.
+- **Enforcement/downstream:** O3 establishes incident/release evidence workflow; governance-wide amendment discipline applies.
+
+## ARC-278 — Observability is failure-isolated from business authority; telemetry handlers/exporters remain lightweight, bounded and non-blocking
+
+- **Decision source:** AR-008 O2.12
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-145`, `ARQ-PERF-151`, `ARQ-PERF-166`, `ARQ-IAM-007`; cross-reference `ARC-267`
+- **Decision:** Ordinary metrics/log/trace exporter or observability-backend failure degrades visibility rather than blocking valid payment, entitlement, authentication, consent, safety or other authoritative operations. Local instrumentation/handlers are lightweight and bounded; expensive exporting/processing occurs off the emitting critical path. Durable audit/security/business-required evidence remains separately governed and cannot be silently downgraded to best-effort telemetry.
+- **Rationale:** Observability should help detect incidents, not become a new synchronous dependency capable of causing them.
+- **Rules:**
+  1. Telemetry handlers do no slow external I/O on emitting processes.
+  2. Export buffering is bounded and may drop ordinary telemetry according to policy under overload rather than exhausting business capacity.
+  3. Observability backend health is itself monitored where practical but not a universal readiness dependency.
+  4. Required audit/security evidence follows its own durable path.
+- **Failure behaviour:** Exporter/backend outage produces explicit monitoring degradation/backlog/drop evidence while business flows remain operational where otherwise safe.
+- **Security/privacy:** Local buffering/export honours retention/redaction/access controls.
+- **Performance/scaling:** Instrumentation overhead is measured and constrained; telemetry cannot consume unbounded memory/CPU/network.
+- **Enforcement/downstream:** O3 defines telemetry retention/access/degraded operations; AR-009 performance tests include instrumentation overhead/failure.
+
+**O2 deferrals:** exact observability backend/vendor, OpenTelemetry exporter/collector deployment, metric/tracing libraries beyond preferred proof direction, SLI/SLO numerical values, alert thresholds/channels/on-call schedule, telemetry sampling rates, metric-cardinality budgets, log/trace/metric retention, dashboard layout, incident-severity vocabulary and ownership roster remain assigned to O3/AR-009, Operations/JIT configuration and release evidence.
+
+
+## 4L.3 Round O3 — Incident Command, Operational Proof, Release Gates, Configuration & Telemetry Governance
+
+**Accepted answer set:** `O3.1 B, O3.2 B, O3.3 B, O3.4 B, O3.5 B, O3.6 B, O3.7 B, O3.8 B, O3.9 B, O3.10 B, O3.11 B, O3.12 B`
+
+## ARC-279 — Material incident severity is governed by impact and risk, not technical novelty or exception volume
+
+- **Decision source:** AR-008 O3.1
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-OPS-001`, `ARQ-PERF-165`, `ARQ-PERF-166`
+- **Decision:** Define a governed material-incident severity model whose primary inputs are user/business impact, affected criticality class, financial/entitlement impact, safety/privacy/security implications, data-integrity uncertainty, duration, scope/blast radius and recovery difficulty. Exact labels and thresholds remain Operations/AR-009 evidence inputs.
+- **Rationale:** A technically dramatic infrastructure event may be low business impact, while a subtle privacy, safety, entitlement or accounting correctness failure may require immediate high-severity response.
+- **Rules:**
+  1. Severity is based on impact/risk evidence rather than number of logs/exceptions alone.
+  2. Hard-invariant uncertainty may elevate severity even before final root cause is known.
+  3. Severity may change as evidence develops, with the change recorded in the incident timeline.
+  4. Exact `SEV-*` names and numerical thresholds are not frozen by this ARC.
+- **Failure behaviour:** When impact is uncertain on a hard-invariant path, response errs toward containment/escalation until evidence establishes a lower-risk state.
+- **Security/privacy:** Security/privacy incidents are classified on exposure/risk and integrity impact, not merely application availability.
+- **Performance/scaling:** Large traffic volume is relevant only insofar as it changes blast radius, saturation or user/business impact.
+- **Enforcement/downstream:** Operations/JIT defines the severity vocabulary and contact roster; AR-009 defines measurable thresholds where appropriate.
+
+## ARC-280 — Every material incident has one named coordination owner while specialist authorities retain their own non-waivable decision rights
+
+- **Decision source:** AR-008 O3.2
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-OPS-001`, `ARQ-IAM-004`, `ARQ-IAM-008`
+- **Decision:** Assign a single named incident commander/owner for coordination of each material incident. Specialist authorities such as security, privacy/legal, clinical/safety, finance/commerce or product retain their governed decision rights; incident command coordinates but does not manufacture authority or waive another authority's blocker.
+- **Rationale:** Collective ownership produces ambiguity during time pressure, while a technically senior responder should not become an unlimited cross-functional authority.
+- **Rules:**
+  1. Incident command owns coordination, priorities, timeline and communication cadence.
+  2. Technical lead, communications/scribe and specialist-authority roles may be distinct people.
+  3. Break-glass or privileged actions still follow ARC-130/AR-004 governance.
+  4. A required authority's no-go/containment requirement cannot be overruled by convenience.
+- **Failure behaviour:** If the incident owner becomes unavailable, ownership is explicitly transferred rather than silently becoming collective.
+- **Security/privacy:** Privileged incident actions remain named, scoped, auditable and least-privilege.
+- **Performance/scaling:** Clear command reduces duplicated or conflicting remediation during large incidents.
+- **Enforcement/downstream:** Operations runbooks define role assignment/transfer and contact paths; final organisational roster remains outside Architecture Law.
+
+## ARC-281 — Safe containment precedes perfect diagnosis when material impact is ongoing, using authorised controls that preserve evidence and authority
+
+- **Decision source:** AR-008 O3.3
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-164`, `ARQ-PERF-166`, `ARQ-OPS-001`, `ARQ-IAM-008`; cross-reference `ARC-266`
+- **Decision:** When material impact is active, prefer safe bounded containment before waiting for complete root-cause certainty. Approved containment may pause optional queues/integrations, stop a rollout, isolate a provider, disable an affected non-critical capability, revoke compromised authority or enter a governed degraded mode, while preserving evidence and authoritative state.
+- **Rationale:** Continuing damage while pursuing perfect diagnosis is unsafe, but arbitrary destructive intervention can worsen incidents or destroy evidence.
+- **Rules:**
+  1. Containment controls are named, authorised and auditable.
+  2. Containment never fabricates successful business outcomes.
+  3. Hard correctness/security/privacy policy remains enforced in degraded modes.
+  4. Destructive/manual data mutation requires separately governed authority and evidence.
+- **Failure behaviour:** If safe containment is unavailable, escalate severity/ownership and stop affected operations rather than improvise unbounded state changes.
+- **Security/privacy:** Compromise containment may revoke sessions/devices and freeze sensitive actions under ARC-139.
+- **Performance/scaling:** Containment may deliberately sacrifice optional freshness/throughput to protect critical capacity and truth.
+- **Enforcement/downstream:** Emergency-control inventory/runbooks are Operations/JIT artifacts and are exercised under ARC-285.
+
+## ARC-282 — Material runbooks are owned, versioned, evidence-bearing procedures with explicit entry, stop, success and escalation conditions
+
+- **Decision source:** AR-008 O3.4
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-163`, `ARQ-OPS-001`
+- **Decision:** Treat material runbooks as governed operational procedures, not passive documentation. Each runbook identifies ownership, applicability/entry conditions, authority prerequisites, steps, stop/escalation conditions, success verification and recovery/fallback. Confidence requires exercised or incident-derived evidence.
+- **Rationale:** A stale wiki page that has never been exercised is not reliable recovery capability.
+- **Rules:**
+  1. Runbooks are versioned and linked to the capability/failure they govern.
+  2. Material changes to architecture/provider/configuration trigger runbook review where applicable.
+  3. Exercises/incidents record runbook version and outcome.
+  4. A failed runbook exercise creates remediation work rather than being silently accepted.
+- **Failure behaviour:** If the documented path proves unsafe or invalid, stop, contain, escalate and amend before relying on it again.
+- **Security/privacy:** Runbooks do not embed secrets; privileged steps identify the authority required.
+- **Performance/scaling:** Procedures consider load, timeouts, concurrency and recovery pressure where material.
+- **Enforcement/downstream:** AR-009/release gates require exercised evidence for applicable critical paths.
+
+## ARC-283 — Material post-incident review is factual, evidence-based and feeds explicit upstream amendment/re-proof when governing assumptions fail
+
+- **Decision source:** AR-008 O3.5
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-165`, `ARQ-OPS-001`
+- **Decision:** Material incidents produce a post-incident record covering impact, timeline, detection, containment, contributing/root causes, recovery, what succeeded/failed and assigned follow-up actions. Where evidence contradicts Product Law, an ARQ/ARC, Domain Law, a Feature Pack premise, capacity assumption, test, alert or runbook, apply STOP → classify → explicitly amend the correct upstream layer → re-prove affected flows before normal execution resumes.
+- **Rationale:** Restoring service without correcting failed assumptions creates repeat incidents and silent architectural drift.
+- **Rules:**
+  1. Separate observed facts, hypotheses and confirmed causes.
+  2. Follow-ups have owners and completion criteria.
+  3. Human/process accountability may be addressed where relevant, but technical analysis focuses on system/process correction rather than blame.
+  4. Architecture amendments preserve prior history through explicit supersession/amendment.
+- **Failure behaviour:** Unresolved material correctness uncertainty remains an open incident/release blocker.
+- **Security/privacy:** Post-incident artifacts are access-controlled/minimised when they contain sensitive security/privacy detail.
+- **Performance/scaling:** Capacity and latency incidents update workload assumptions and AR-009 proof plans.
+- **Enforcement/downstream:** Governance-wide; closure evidence feeds Architecture Law, Domain/Dossier, test and release artifacts as appropriate.
+
+## ARC-284 — Release/pilot progression uses an evidence-bearing cross-functional gate manifest; any applicable unresolved mandatory gate is a no-go
+
+- **Decision source:** AR-008 O3.6
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-OPS-001`, `ARQ-PERF-153`, `ARQ-PERF-156`, `ARQ-PERF-158`, `ARQ-PERF-159`
+- **Decision:** Every material release/pilot stage has an explicit gate manifest identifying applicable authorities, required evidence and pass/no-go state. Depending on scope, gates may include engineering/operations, clinical/safety, content, commerce/finance, privacy/legal, security and product. A mandatory unresolved gate is a no-go for the affected stage and cannot be waived by success in another discipline.
+- **Rationale:** Production readiness is cross-functional; a technically green build is not releasable if a required privacy, safety or commercial control remains unproved.
+- **Rules:**
+  1. Gates are explicit and evidence-linked.
+  2. `Not applicable` requires justified classification rather than omission.
+  3. Gate ownership remains with the competent authority.
+  4. Progressive rollout/canary does not waive preconditions; it limits blast radius after prerequisites pass.
+- **Failure behaviour:** Missing/failed mandatory evidence stops progression until resolved or the governing requirement is explicitly amended by the proper authority.
+- **Security/privacy:** Security/privacy gates remain independent no-go authorities where applicable.
+- **Performance/scaling:** AR-009 supplies load/capacity/performance evidence into the manifest.
+- **Enforcement/downstream:** Feature Pack skeleton/gate manifest and release workflow consume this ARC.
+
+## ARC-285 — Failure injection follows a maturity ladder from deterministic tests to controlled production game days, with blast radius proportional to operational maturity
+
+- **Decision source:** AR-008 O3.7
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-162`, `ARQ-PERF-153`, `ARQ-PERF-163`
+- **Decision:** Exercise expected failure modes progressively: deterministic/local tests → representative integration/staging failures → Architectural Proof/pre-release scenarios → carefully controlled production game days only when maturity, containment and observability justify them.
+- **Rationale:** Untested failure paths are speculation, while premature production chaos testing can create avoidable harm.
+- **Rules:**
+  1. Test scenarios derive from actual architecture and risk, including node death, dependency loss/slowness, queue backlog, Redis loss where used, database failover, reconnect storms, object/provider loss and recovery.
+  2. Exercises define expected safe/degraded behaviour and pass/fail criteria in advance.
+  3. Production exercises require explicit authority, containment and rollback/recovery.
+  4. Exercise findings amend tests/runbooks/architecture where evidence demands.
+- **Failure behaviour:** An exercise that breaches a hard invariant fails regardless of availability metrics.
+- **Security/privacy:** Synthetic/test data is preferred; production exercises avoid unnecessary sensitive-data exposure.
+- **Performance/scaling:** AR-009 combines failure injection with load/stress scenarios where required.
+- **Enforcement/downstream:** Architectural Proof, hardening and release gates schedule/record applicable exercises.
+
+## ARC-286 — Recovery exercises must prove the complete recoverable service boundary and semantic promotion criteria, not merely database-byte restoration
+
+- **Decision source:** AR-008 O3.8
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-OPS-002`, `ARQ-PERF-147`, `ARQ-PERF-148`, `ARQ-PERF-163`, `ARQ-STATE-006`; cross-reference `ARC-243` through `ARC-250`
+- **Decision:** Recovery exercises prove restoration of the complete minimum service-authority set required by AR-007, including database/PITR, required object state, runtime configuration, recoverable secrets/key material, deletion/withdrawal suppression and other critical configuration/provider references, followed by replay/reconciliation and semantic verification before service promotion.
+- **Rationale:** A backup job or database restore is not disaster-recovery proof if the resulting platform cannot safely resume service.
+- **Rules:**
+  1. Recovery remains gated until semantic verification passes.
+  2. Restore evidence records source point, recovered classes, replay/reconciliation and verification outcome.
+  3. Deletion/withdrawal truth is replayed before normal service resumes.
+  4. Exact RPO/RTO values remain class-specific AR-009/operations evidence inputs.
+- **Failure behaviour:** Failed restore/reconciliation/verification leaves the environment non-ready and triggers remediation/escalation.
+- **Security/privacy:** Recovery secrets and restored sensitive state retain production-grade access controls; deleted identities may not reappear.
+- **Performance/scaling:** Exercises measure recovery duration/resource demands against approved objectives.
+- **Enforcement/downstream:** Release/DR gates require periodic exercised evidence appropriate to criticality.
+
+## ARC-287 — Runtime configuration is centralised, validated and readiness-gated rather than interpreted ad hoc throughout business code
+
+- **Decision source:** AR-008 O3.9
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-144`, `ARQ-PERF-154`, `ARQ-OPS-002`; cross-reference `ARC-017`
+- **Decision:** Environment-specific runtime values enter through a controlled application/configuration boundary, are parsed/validated into explicit configuration and are consumed by application/business code through that governed boundary. Missing/invalid mandatory configuration prevents safe readiness; immutable release artifacts remain environment-neutral.
+- **Rationale:** Scattered raw environment reads create inconsistent validation, hidden runtime dependencies and deployment drift.
+- **Rules:**
+  1. Mandatory configuration is validated before readiness.
+  2. Optional/capability configuration has explicit degraded/disabled semantics.
+  3. Release images do not bake environment-specific secrets/credentials.
+  4. Health/config diagnostics expose safe metadata only.
+- **Failure behaviour:** Invalid mandatory configuration fails startup/readiness clearly rather than causing delayed undefined behaviour.
+- **Security/privacy:** Sensitive values use the secret-class controls in ARC-288.
+- **Performance/scaling:** Configuration access is bounded/local after validation and not dependent on per-request remote lookups by default.
+- **Enforcement/downstream:** Exact ConfigProvider/secret-manager/hosting integration remains JIT/provider proof.
+
+## ARC-288 — Secrets are a distinct sensitive configuration class with least-privilege access, non-disclosure, rotation/revocation support and recoverability
+
+- **Decision source:** AR-008 O3.10
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-OPS-002`, `ARQ-IAM-004`, `ARQ-IAM-007`; cross-reference `ARC-017`, `ARC-137`
+- **Decision:** Treat secrets/credentials/key material separately from ordinary configuration. They are never committed to source, baked into OCI/release images, emitted in logs/traces/health endpoints or duplicated into general configuration evidence. Access is environment-specific and least-privilege; recovery, rotation and revocation are operationally supported. Architecture does not require a specific secret-manager vendor or universal live reload.
+- **Rationale:** Secret sprawl turns operational convenience into a security and disaster-recovery weakness.
+- **Rules:**
+  1. Secret references/versions may be observable where safe; secret values are not.
+  2. Controlled rolling restart/deployment is acceptable for rotation where service correctness/availability is preserved.
+  3. Higher-risk compromise may require accelerated rotation/revocation.
+  4. Recoverability is proved without storing secret plaintext in runbooks/backups outside the approved secret path.
+- **Failure behaviour:** Missing/revoked mandatory secrets prevent the affected capability/readiness rather than falling back to insecure defaults.
+- **Security/privacy:** Secret access/change is privileged and appropriately auditable without logging the value.
+- **Performance/scaling:** Secret resolution strategy avoids high-frequency remote secret-manager calls on hot paths unless specifically justified.
+- **Enforcement/downstream:** Secret manager/product, rotation cadence and access implementation remain Operations/JIT evidence decisions.
+
+## ARC-289 — Material configuration changes are code-adjacent governed releases with validation, provenance and rollback/forward-recovery semantics
+
+- **Decision source:** AR-008 O3.11
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-155`, `ARQ-PERF-158`, `ARQ-PERF-159`, `ARQ-OPS-001`; cross-reference `ARC-277`, `ARC-287`
+- **Decision:** Treat material configuration/provider/infrastructure policy changes as governed release events. Validate them before activation, restrict mutation authority, correlate a safe configuration generation/version with telemetry, retain appropriate change evidence and define rollback or forward recovery. Risk-appropriate progressive rollout may apply to high-risk configuration changes.
+- **Rationale:** “No code changed” is not a valid exemption from change control when configuration can alter security, routing, capacity or business availability.
+- **Rules:**
+  1. Material configuration has explicit ownership and review/activation path.
+  2. Configuration correlation records version/generation, not secret values.
+  3. Emergency controls are named mechanisms, not arbitrary undocumented config edits.
+  4. Irreversible changes require explicit forward recovery.
+- **Failure behaviour:** Invalid/regressive configuration is rolled back or forward-recovered according to the predeclared plan; ambiguous high-risk state stops progression.
+- **Security/privacy:** Mutation rights are least-privilege and auditable.
+- **Performance/scaling:** Capacity/routing/concurrency config changes are validated against AR-009 evidence where applicable.
+- **Enforcement/downstream:** Release gate manifest and observability timelines include material configuration changes.
+
+## ARC-290 — Observability classes have purpose/sensitivity-specific retention and access; minimise collection before relying on redaction
+
+- **Decision source:** AR-008 O3.12
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-IAM-007`, `ARQ-PERF-023`, `ARQ-OPS-001`; cross-reference `ARC-270`, `ARC-271`, `ARC-278`
+- **Decision:** Define separate retention/access policy classes for metrics, traces, diagnostic logs and audit/security evidence according to purpose, sensitivity and operational value. Prefer not collecting sensitive telemetry in the first place; redaction/filtering is defence in depth. Exact durations are privacy/security/operations inputs, not Architecture-invented constants.
+- **Rationale:** Keeping every diagnostic forever expands privacy/security exposure and cost, while deleting all operational evidence destroys incident/reliability learning.
+- **Rules:**
+  1. Aggregated metrics may have different retention from detailed trace/log data.
+  2. Potentially sensitive diagnostic telemetry receives stricter access and justified retention.
+  3. Audit/security evidence remains under its separate immutable/minimised retention law.
+  4. Telemetry access is least-privilege and appropriate access itself may be auditable.
+  5. Retention/deletion propagates to buffers/exporters/backends under the applicable policy where controllable.
+- **Failure behaviour:** Retention/export backend failure is visible and does not silently expand retention or block authoritative flows.
+- **Security/privacy:** Secrets, credentials and full sensitive payloads are prohibited from generic telemetry.
+- **Performance/scaling:** Sampling/aggregation/retention control telemetry volume without losing required SLI or incident evidence.
+- **Enforcement/downstream:** Operations/JIT assigns exact periods, roles and backend controls; AR-009 proves observability overhead/retention-scale assumptions.
+
+**O3 deferrals:** exact incident-severity labels/thresholds, on-call roster, alert channels, runbook inventory/tooling, release-gate workflow tool, secret manager/provider, rotation cadence, configuration-management implementation, backup product, recovery schedule, game-day schedule, telemetry backend/exporter/collector, telemetry access roles and retention durations remain Operations/JIT/AR-009 evidence decisions.
+
+## 4L.4 AR-008 Closure Audit — Reliability, Deployment, Operations & Observability
+
+**Audit status:** PASS — AR-008 COMPLETE.
+
+The final routing audit mechanically reproduced **321 frozen ARQs whose `Primary downstream workstreams` include AR-008**:
+
+- Performance: **115**
+- Analytics: **184**
+- Payments: **1**
+- IAM: **5**
+- State: **6**
+- Async: **3**
+- Content: **3**
+- Security: **2**
+- Operations: **2**
+- **TOTAL: 321**
+
+### Closure coverage findings
+
+1. **Failure containment, availability classes and overload:** AR-001/AR-003/AR-005 foundations plus `ARC-255`–`ARC-266` establish capability-specific availability, readiness/liveness, dependency isolation, bounded supervision, backpressure/load shedding, retry ownership, fenced write authority, mixed-version deployment, draining, rollback/forward recovery, progressive rollout and governed emergency controls.
+2. **Observability and operational diagnosis:** `ARC-267`–`ARC-278` establish metrics/traces/structured diagnostics/domain-outcome signals, safe correlation, telemetry privacy/cardinality, SLI/SLO evidence, PostgreSQL/queue/realtime observability, owned alerting, deployment correlation and failure-isolated telemetry.
+3. **Incident/release/recovery governance:** `ARC-279`–`ARC-290` establish impact-based severity, named incident command, containment, exercised runbooks, post-incident amendment/re-proof, cross-functional no-go gates, failure-injection maturity, full-service recovery proof, validated runtime configuration/secrets, governed configuration change and telemetry retention/access.
+4. **Analytics-heavy AR-008 routing:** The 184 Analytics ARQs do not require a second analytics architecture inside AR-008. Their authoritative event/replay/privacy/experiment semantics are already closed by AR-003/004/005/006/007; AR-008 supplies their operational observability, failure, recovery, release and incident mechanisms.
+5. **Security/abuse/upload operations:** `ARQ-SEC-001` is already semantically closed by AR-004 abuse/recovery law (`ARC-144`–`ARC-145`) plus AR-008 distributed readiness/bulkhead/emergency/incident controls; exact thresholds remain AR-009/JIT evidence. `ARQ-SEC-002` is already semantically closed by AR-003 quarantine/storage law and AR-006 governed media/provider law, with AR-008 supplying operational failure/recovery/release controls; scanner product and exact limits remain JIT/provider evidence, not an Architecture-law gap.
+6. **Deletion/backup/recovery:** AR-007 (`ARC-233`–`ARC-254`) owns privacy lifecycle and deletion-safe restore semantics; AR-008 adds exercised full-runtime recovery, incident ownership and release proof without duplicating that authority.
+7. **No new Product Law needed:** The audit found no contradiction requiring Product Law, DEC, OQ or ARQ amendment and no residual AR-008 mechanism requiring an O4 round.
+
+### AR-008 closure result
+
+- Product Law change: **NO**
+- ARQ amendment: **NO**
+- New O4 round: **NO**
+- Contradiction discovered: **NO**
+- AR-008 status: **COMPLETE**
+- Accepted AR-008 Architecture Law: `ARC-255` through `ARC-290`
+- Next Architecture Decision workstream: **AR-009 — Performance, Scaling & Multi-Node Behaviour**
+
+**AR-008 closure boundary:** Numerical SLOs/latency targets, concrete capacity limits, workload envelopes, performance/load/failure acceptance thresholds, exact distributed-rate limits, telemetry-overhead budgets and proof matrices remain AR-009/evidence work. Exact vendors/products/operational rosters/retention durations remain provider/JIT/Operations decisions unless later evidence requires an explicit Architecture amendment.
+
+
+
+# 4M. AR-009 — Performance, Scaling & Multi-Node Behaviour
+
+## 4M.1 Round V1 — Workload Model, Performance Budgets & Verification Regime
+
+**Accepted answer set:** `V1.1 B, V1.2 B, V1.3 B, V1.4 B, V1.5 B, V1.6 B, V1.7 B, V1.8 B, V1.9 B, V1.10 B, V1.11 B, V1.12 B`
+
+## ARC-291 — Scale verification is reference-flow and workload specific; the 100,000-user objective is not a fictional per-endpoint simultaneous-request requirement
+
+- **Decision source:** AR-009 V1.1
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-001`, `ARQ-PERF-003`, `ARQ-PERF-008`
+- **Decision:** Performance/capacity verification models concurrency per reference flow and workload class. The architecture must retain a credible path to approximately 100,000 simultaneously active/connected users where relevant, while each operation receives its own realistic arrival rate, concurrent-operation count, connection count and burst shape rather than inheriting a universal 100,000-simultaneous-request assumption.
+- **Rationale:** Active users, connected sessions and simultaneous authoritative mutations are different load dimensions. Collapsing them into one number creates meaningless tests and encourages the wrong scaling work.
+- **Rules:**
+  1. Every material reference flow declares the relevant concurrency dimensions before major proof.
+  2. Connected-user scale, request rate, authoritative-write rate, provider-bound concurrency and background work are modelled separately where material.
+  3. Multi-node correctness remains mandatory even when a particular load test runs on one application node.
+  4. Workload assumptions are versioned evidence and may be tightened when production evidence justifies it.
+- **Failure behaviour:** A test that cannot state what its virtual users/connections/arrival rate represent is not accepted as scale proof.
+- **Security/privacy:** Load generation uses synthetic/minimised data and may not weaken security or privacy invariants for throughput.
+- **Performance/scaling:** Capacity conclusions are attached to the tested reference flow and workload, not extrapolated blindly to the whole platform.
+- **Enforcement/downstream:** FLOW pressure tests, Feature Pack gate manifests and Architectural Proof consume this model.
+
+## ARC-292 — The platform maintains distinct governed workload profiles rather than one generic benchmark
+
+- **Decision source:** AR-009 V1.2
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-003`, `ARQ-PERF-004`, `ARQ-PERF-005`, `ARQ-PERF-010`
+- **Decision:** Performance validation maintains at least the frozen workload families where relevant: ordinary sustained authenticated use; campaign/login bursts; scheduled programme/content releases; scarce-inventory flash sales; and abusive/bot/accidental-retry pressure. Feature Packs may add specialised workload profiles but may not erase platform workload classes that materially affect them.
+- **Rationale:** Different traffic shapes stress different bottlenecks: connection lifetime, write contention, provider concurrency, queue fan-out, database pools, cache behaviour and admission controls.
+- **Rules:**
+  1. Each workload profile defines traffic shape, ramp/burst pattern, relevant read/write mix and expected degraded behaviour.
+  2. Flash-sale/scarce-inventory tests assert correctness under contention, not merely response time.
+  3. Abuse/retry profiles verify bounded admission and idempotency rather than benchmarking unsafe acceptance.
+  4. Scheduled-release profiles distinguish business-effective time from downstream fan-out completion.
+- **Failure behaviour:** Unsupported overload must fail safely through the governed throttling/degradation/refusal hierarchy.
+- **Security/privacy:** Abuse tests do not disable security controls merely to reach higher throughput.
+- **Performance/scaling:** Results are reported per workload profile with no claim that one scenario represents all platform traffic.
+- **Enforcement/downstream:** AR-009 V2/V3 and FLOW tests refine exact envelopes and thresholds.
+
+## ARC-293 — Important latency budgets are percentile-based; averages are diagnostic only
+
+- **Decision source:** AR-009 V1.3
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-011`, `ARQ-PERF-024`
+- **Decision:** Important/common latency SLIs and performance gates use percentile distributions such as p50 plus appropriate p90/p95/p99 tail measures. Mean/average latency may be retained for diagnostics but is never the sole acceptance measure.
+- **Rationale:** Tail latency is operationally and experientially significant and is hidden by averages.
+- **Rules:**
+  1. Percentile selection is appropriate to traffic volume and criticality.
+  2. Tail regressions can fail a gate even when the mean remains stable.
+  3. Percentiles are evaluated over representative windows/workloads rather than tiny samples.
+- **Failure behaviour:** Insufficient sample quality or invalid percentile computation invalidates the proof rather than yielding a pass.
+- **Security/privacy:** No sensitive participant identifiers are required as metric dimensions.
+- **Performance/scaling:** Percentile evidence is correlated with throughput/concurrency/saturation so latency cannot be interpreted in isolation.
+- **Enforcement/downstream:** Performance budgets and gate manifests identify the percentile thresholds they enforce.
+
+## ARC-294 — Initial server-side latency classes are semantic, explicit and tighten-with-evidence rather than universal sub-100ms promises
+
+- **Decision source:** AR-009 V1.4
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-012`, `ARQ-PERF-016`, `ARQ-PERF-017`, `ARQ-PERF-020`
+- **Decision:** Adopt the frozen provisional latency classes as initial Architecture budgets: suitable hot/common interactive actions aim for at least p90 <= 100 ms and p99 <= 400 ms server-side; normal durable interactions aim for p95 <= 500 ms and p99 <= 1 s; provider-bound checkout/payment retains end-to-end p99 <= 5 s where provider latency permits while internal platform contribution is measured separately. Async/fan-out work uses freshness/completion budgets rather than pretending to be synchronous HTTP latency.
+- **Rationale:** Action semantics and external dependencies determine meaningful latency budgets; a universal sub-100ms target would either be fictitious or distort architecture.
+- **Rules:**
+  1. These are initial governing ceilings/targets, not entitlements to consume the whole budget.
+  2. Faster proven baselines should not quietly regress merely because they remain under the ceiling.
+  3. Weakening a governing budget requires explicit evidence and Architecture amendment, not local threshold drift.
+  4. Domain/Feature Pack proof may define stricter path-specific budgets.
+- **Failure behaviour:** Material unexplained regression beyond an approved budget is a failed gate.
+- **Security/privacy:** Correctness/security/privacy work is not skipped to meet latency.
+- **Performance/scaling:** Internal platform and provider contributions are decomposed so capacity tuning targets the correct layer.
+- **Enforcement/downstream:** FLOW/Feature Pack proofs bind concrete actions to these or stricter classes.
+
+## ARC-295 — Current official “good” Core Web Vitals are the minimum frontend/user-experience floor where applicable, with an aim to outperform them
+
+- **Decision source:** AR-009 V1.5
+- **Status:** ACCEPTED_WITH_FUTURE-PROOFING
+- **Source ARQs:** `ARQ-PERF-014`, `ARQ-PERF-015`, `ARQ-PERF-020`
+- **Decision:** Applicable public/participant-facing web experiences must meet at least the then-current official “good” Core Web Vitals thresholds using the appropriate user-centric/field methodology, and the project aims to outperform that floor wherever reasonably achievable. The frozen baseline when this law was locked is LCP <= 2.5 s, INP <= 200 ms and CLS <= 0.1 at the 75th percentile, evaluated appropriately across mobile and desktop.
+- **Rationale:** Server latency alone does not capture user-perceived responsiveness/layout stability, especially for LiveView/browser/network paths.
+- **Rules:**
+  1. Current official definitions are revalidated when release gates are executed.
+  2. External definitions may only tighten or update the project floor; they do not justify silent weakening.
+  3. Lab/synthetic measurements help diagnose and gate regressions but do not substitute for appropriate field evidence once available.
+  4. LiveView interaction timing remains decomposed alongside browser UX metrics.
+- **Failure behaviour:** Sustained performance below the applicable “good” range is treated as a regression requiring remediation or explicit upstream exception, not accepted steady state.
+- **Security/privacy:** Field telemetry uses privacy-safe aggregation and collection rules.
+- **Performance/scaling:** Mobile/desktop/network/device distributions are considered where material.
+- **Enforcement/downstream:** AR-009 proof matrices and release gates incorporate the then-current official threshold evidence.
+
+## ARC-296 — Performance evidence separates user end-to-end latency from internal platform and external-provider contribution
+
+- **Decision source:** AR-009 V1.6
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-013`, `ARQ-PERF-016`, `ARQ-PERF-023`; cross-reference `ARC-268`, `ARC-273`
+- **Decision:** Measure both end-to-end/user-perceived latency and the internal-versus-external contribution for provider-bound or distributed flows. Provider delay remains part of the experience, while platform processing, database/pool time, queue time, network/client effects and external provider time remain separable for diagnosis and SLO interpretation.
+- **Rationale:** A single end-to-end number cannot identify which authority or dependency requires remediation.
+- **Rules:**
+  1. Correlation/tracing context is reused where practical.
+  2. Provider latency is never erased from product-quality reporting simply because it is external.
+  3. Internal budget compliance does not automatically imply acceptable end-to-end experience.
+- **Failure behaviour:** Missing decomposition on a material provider-bound proof yields incomplete diagnostic evidence rather than a false platform pass/fail conclusion.
+- **Security/privacy:** Correlation uses safe identifiers/metadata rather than raw sensitive payloads.
+- **Performance/scaling:** Provider saturation and platform saturation are measured independently where possible.
+- **Enforcement/downstream:** Provider-bound FLOW tests declare both internal and end-to-end budgets.
+
+## ARC-297 — Material unexplained performance regressions are failed acceptance criteria for affected slices and Feature Packs
+
+- **Decision source:** AR-009 V1.7
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-019`, `ARQ-PERF-020`, `ARQ-PERF-023`
+- **Decision:** Relevant slices and Feature Packs carry explicit performance budgets/baselines for paths they materially affect. A statistically/materially meaningful unexplained regression against the approved budget or representative baseline fails acceptance even when functional tests pass.
+- **Rationale:** Deferring known performance debt until the end contradicts the scale-ready/no-intentional-performance-debt doctrine.
+- **Rules:**
+  1. Deterministic structural checks catch known anti-patterns where practical.
+  2. Real latency/throughput claims require representative benchmark/load evidence.
+  3. A baseline may tighten after proven improvement; it may not quietly deteriorate.
+  4. Regression exceptions require explicit rationale/authority and must not weaken hard invariants.
+- **Failure behaviour:** Failed material budget halts the affected delivery gate until corrected or explicitly amended at the right authority layer.
+- **Security/privacy:** Performance fixes cannot bypass access/privacy controls.
+- **Performance/scaling:** Regression tests preserve future scaling headroom rather than validating only current tiny load.
+- **Enforcement/downstream:** Feature Pack/VS acceptance evidence references concrete performance checks.
+
+## ARC-298 — Performance-sensitive capabilities use a progressive proof ladder from smoke through failure/recovery pressure, with workload-based justified exclusions
+
+- **Decision source:** AR-009 V1.8
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-003`, `ARQ-PERF-021`, `ARQ-PERF-022`, `ARQ-PERF-162`
+- **Decision:** Applicable performance verification uses progressive classes: smoke, normal load, stress, spike, breakpoint/limit discovery, soak and relevant failure/recovery pressure. Not every capability must execute every class, but exclusions require explicit workload/risk rationale.
+- **Rationale:** Different tests reveal different failure modes; a single steady load test cannot prove burst tolerance, leak-free endurance, breakpoint behaviour or recovery safety.
+- **Rules:**
+  1. Test class selection derives from workload semantics and criticality.
+  2. Hard correctness assertions remain active during stress/spike/failure tests.
+  3. Breakpoint testing is controlled and need not endanger production.
+  4. Soak duration/scale is evidence-driven and proportionate.
+- **Failure behaviour:** Breach of a hard invariant fails the scenario regardless of throughput/latency success.
+- **Security/privacy:** Use safe synthetic identities/data and representative controls.
+- **Performance/scaling:** Major tests capture saturation/resource evidence to explain the limit, not merely the first observed failure count.
+- **Enforcement/downstream:** Architectural Proof/hardening/release stages choose and document applicable classes.
+
+## ARC-299 — Performance proof uses layered cadence across CI, Feature Packs, Architectural Proof, hardening and release gates
+
+- **Decision source:** AR-009 V1.9
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-020`, `ARQ-PERF-021`, `ARQ-PERF-022`
+- **Decision:** Distribute performance verification by cost and purpose: cheap deterministic checks in normal CI; smoke/small-load tests frequently; workload-specific load/stress tests during affected Feature Packs; and major spike/breakpoint/soak/failure-recovery tests during Architectural Proof, hardening or release gates where applicable.
+- **Rationale:** Running every expensive scenario on every commit is wasteful, while reserving all performance testing for release discovers structural problems too late.
+- **Rules:**
+  1. Fast regression evidence is available close to the change.
+  2. Expensive proofs run when the architecture/scope is stable enough to make them meaningful.
+  3. Critical-flow changes can trigger earlier/larger proof regardless of cadence.
+- **Failure behaviour:** Required proof omitted without justified classification is a release/gate failure.
+- **Security/privacy:** Test environments/data remain appropriately isolated and minimised.
+- **Performance/scaling:** Cadence preserves both fast feedback and credible large-scale evidence.
+- **Enforcement/downstream:** CI/gate manifests name the proof class and execution stage.
+
+## ARC-300 — Representative performance evidence includes cold-cache, restart, deployment-overlap and dependency-recovery states where applicable
+
+- **Decision source:** AR-009 V1.10
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-018`, `ARQ-PERF-154`, `ARQ-PERF-155`, `ARQ-PERF-162`
+- **Decision:** Important applicable paths are tested under warm state and relevant non-ideal states including cold cache, node restart, rolling-deployment overlap and dependency recovery. Warm-cache steady-state benchmarks alone are insufficient architecture/release proof.
+- **Rationale:** Real incidents/deployments occur outside ideal warmed steady state and can reveal stampedes, startup pressure, stale-version incompatibility and recovery thundering herds.
+- **Rules:**
+  1. Cold-state tests preserve empty-cache correctness.
+  2. Restart tests include readiness/startup semantics rather than merely process boot.
+  3. Rolling-overlap tests exercise adjacent-version shared contracts where used.
+  4. Dependency-recovery tests observe retry/backlog catch-up pressure.
+- **Failure behaviour:** Stampede or recovery overload that threatens correctness/availability is a failed proof.
+- **Security/privacy:** Recovery/deployment tests preserve normal security controls.
+- **Performance/scaling:** Resource spikes during warming/recovery count toward headroom/capacity planning.
+- **Enforcement/downstream:** V2 capacity/headroom decisions consume this evidence.
+
+## ARC-301 — Formal performance scenarios have versioned pass/fail thresholds plus independent hard-invariant assertions
+
+- **Decision source:** AR-009 V1.11
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-010`, `ARQ-PERF-020`, `ARQ-PERF-021`, `ARQ-PERF-024`, `ARQ-PERF-025`
+- **Decision:** Every formal verification scenario defines versioned pass/fail thresholds and invariant assertions before execution. Thresholds may cover latency percentiles, error/failure rate, throughput/freshness, backlog/wait age and saturation; zero-tolerance correctness/privacy/safety/payment/entitlement/capacity invariants are asserted independently and are never converted into consumable performance error budgets.
+- **Rationale:** Charts without acceptance criteria do not constitute evidence-bearing release gates.
+- **Rules:**
+  1. Threshold provenance identifies workload, environment, release and test version.
+  2. A scenario can fail for performance or invariant breach independently.
+  3. Threshold changes are reviewed/versioned and cannot silently redefine historical results.
+  4. False success under unsafe overload is prohibited.
+- **Failure behaviour:** Any hard-invariant violation is immediate failure regardless of achieved throughput.
+- **Security/privacy:** Performance assertions include relevant security/privacy invariants where the workload can threaten them.
+- **Performance/scaling:** Thresholds are linked to saturation evidence so passes remain interpretable.
+- **Enforcement/downstream:** Gate manifests reference the exact threshold/test artifact version.
+
+## ARC-302 — Major scale proofs validate load-generator capacity and distribute generation only when evidence requires it
+
+- **Decision source:** AR-009 V1.12
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-001`, `ARQ-PERF-003`, `ARQ-PERF-021`, `ARQ-PERF-160`
+- **Decision:** Major high-scale proofs verify that the load generator itself has sufficient CPU, memory, network and scheduling capacity to produce the declared traffic faithfully. Begin with the simplest generator topology that satisfies the proof; distribute load generation when one generator becomes a bottleneck, multiple network origins are genuinely required, or target scale cannot otherwise be generated reliably.
+- **Rationale:** A saturated test client can make an application appear slower, faster or lower-throughput than reality and invalidates capacity conclusions.
+- **Rules:**
+  1. Generator-side utilisation/limitations are captured for major proofs.
+  2. Generated arrival rate/concurrency is validated against the declared scenario.
+  3. Distributed generation is a proof mechanism, not mandatory infrastructure from day one.
+  4. Test-network/provider limits are separated from application bottlenecks where practical.
+- **Failure behaviour:** A generator-limited test is marked invalid/inconclusive rather than accepted as the platform breakpoint.
+- **Security/privacy:** Distributed generators use controlled credentials/data and approved source networks.
+- **Performance/scaling:** Generator topology scales only as required to produce trustworthy evidence.
+- **Enforcement/downstream:** Architectural Proof/release evidence records generator validity for major load tests.
+
+**V1 consolidated doctrine:** Performance proof is workload-specific, percentile-driven, user-and-system aware, progressively tested, gate-bearing and generator-valid. Hard correctness invariants remain outside consumable error budgets. Performance budgets are initial ceilings/floors that can tighten with evidence but may not silently weaken.
+
+**V1 deferrals:** Exact per-flow concurrency/arrival envelopes; exact RPO/RTO values; final CWV official thresholds at future gate time; concrete k6/test-runner topology; test data generators; CI provider; test-environment sizing; path-specific stricter latency budgets; workload-specific soak durations; exact error-rate/freshness thresholds; and final capacity triggers remain V2/V3/FLOW/Feature Pack/JIT evidence decisions.
+
+## 4M.2 Round V2 — Capacity Budgets, Multi-Node Multipliers & Scaling Triggers
+
+**Accepted answer set:** `V2.1 B, V2.2 B, V2.3 B, V2.4 B, V2.5 B, V2.6 B, V2.7 B, V2.8 B, V2.9 B, V2.10 B, V2.11 B, V2.12 B`
+
+## ARC-303 — PostgreSQL connections are one platform-wide finite capacity budget, not independent per-node entitlements
+
+- **Decision source:** AR-009 V2.1
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-073`, `ARQ-PERF-074`, `ARQ-PERF-008`; cross-reference `ARC-073`, `ARC-156`, `ARC-257`
+- **Decision:** PostgreSQL connection capacity is budgeted across the entire production topology, including interactive application pools, durable workers, migrations/maintenance, monitoring/operations and future nodes/pools. Per-node pool size is derived from the total safe PostgreSQL envelope and measured workload rather than chosen independently.
+- **Rationale:** Horizontal application scaling can otherwise multiply connection demand faster than database capacity and move the bottleneck into pool/database saturation.
+- **Rules:**
+  1. Capacity models state application-node count, pool count, worker count and reserved operational connection requirements.
+  2. Adding a node triggers recalculation of total possible PostgreSQL concurrency.
+  3. Pool saturation uses bounded queueing/timeouts/backpressure rather than emergency unbounded connection growth.
+  4. One connection per user is prohibited as a design assumption.
+- **Failure behaviour:** When the safe database envelope is reached, governed admission/backpressure/degradation applies before connection-capacity correctness is compromised.
+- **Security/privacy:** Operational reserve does not become a general privileged bypass to normal application authority.
+- **Performance/scaling:** Pool queue time and database saturation are first-class evidence for topology changes.
+- **Enforcement/downstream:** FLOW proofs and deployment sizing must show the whole-topology connection budget.
+
+## ARC-304 — Production database capacity retains an explicit operational/failure reserve rather than planning steady state at the hard ceiling
+
+- **Decision source:** AR-009 V2.2
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-073`, `ARQ-PERF-074`, `ARQ-PERF-146`, `ARQ-PERF-160`
+- **Decision:** The steady-state connection/load plan must preserve evidence-based reserve for operations, maintenance, failover/recovery and unexpected pressure. Exact counts/percentages are configuration/proof decisions and are not hard-coded in Architecture Law.
+- **Rationale:** A topology that consumes every available connection during ordinary load has no safe room for recovery, maintenance or incident response.
+- **Rules:**
+  1. Reserve is sized from PostgreSQL capability and expected failure topology.
+  2. Operational reserve is monitored and not silently consumed by ordinary pools.
+  3. Capacity alerts/scaling triggers fire before the hard ceiling becomes the operating target.
+- **Failure behaviour:** Exhaustion of planned reserve is a capacity-risk condition requiring admission/scaling/remediation, not a reason to loosen correctness controls.
+- **Security/privacy:** Reserved operational access remains least-privilege and auditable.
+- **Performance/scaling:** Headroom evidence includes connection capacity, not CPU/RAM alone.
+- **Enforcement/downstream:** Production sizing/runbooks and recovery exercises include reserve validation.
+
+## ARC-305 — Transaction-pooling compatibility is preserved now; PgBouncer-equivalent topology is introduced only on measured need
+
+- **Decision source:** AR-009 V2.3
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-075`, `ARQ-PERF-073`, `ARQ-PERF-160`
+- **Decision:** Application/database usage should avoid unnecessary session-local PostgreSQL assumptions that would force redesign for transaction pooling later. PgBouncer or equivalent external pooling remains evidence-gated and is introduced when multi-node connection pressure, connection churn or topology justifies its operational cost.
+- **Rationale:** Scale-readiness requires avoiding preventable incompatibility without installing infrastructure before it solves a measured problem.
+- **Rules:**
+  1. New database features that require sticky/session-local semantics identify the compatibility cost explicitly.
+  2. Pooling introduction requires representative proof of benefit and compatibility.
+  3. External pooling does not change business authority or transaction semantics.
+- **Failure behaviour:** Connection pressure is first diagnosed and pool budgets corrected; a proxy is not used to hide unsafe query/load behaviour.
+- **Security/privacy:** Pooling topology preserves authentication/networking/least-privilege controls.
+- **Performance/scaling:** Pooling is a capacity tool, not an authority layer.
+- **Enforcement/downstream:** JIT deployment/database proof records whether external pooling is required.
+
+## ARC-306 — Critical/common database paths use semantic query-shape and representative query-plan budgets, not universal query-count folklore
+
+- **Decision source:** AR-009 V2.4
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-067`, `ARQ-PERF-068`, `ARQ-PERF-071`, `ARQ-PERF-072`, `ARQ-PERF-083`
+- **Decision:** Important access paths receive bounded query/retrieval shapes, indexes derived from real constraints/filters/joins/orderings and representative PostgreSQL query-plan evidence. Universal rules such as “every action <= N queries” are not Architecture Law, although path-specific query counts may be regression signals.
+- **Rationale:** Query count alone does not capture cardinality, lock behaviour, planner choices, row width or I/O cost.
+- **Rules:**
+  1. Growing reads are bounded by pagination, streaming, aggregation or equivalent controlled traversal.
+  2. Deep/high-volume traversal prefers access patterns that avoid pathological offset cost where semantics allow.
+  3. Critical/slow/suspicious queries use representative data cardinality/distribution for plan evidence.
+  4. Specialised indexes are justified by actual paths/invariants and carry observable maintenance cost.
+- **Failure behaviour:** A path with unbounded materialisation or unstable/unsafe query-plan behaviour fails proof even if small fixtures are fast.
+- **Security/privacy:** Query optimisations may not bypass row/field/purpose authorization.
+- **Performance/scaling:** Query/index changes are assessed against latency, write amplification, storage and maintenance effects.
+- **Enforcement/downstream:** Domain Dossiers/Feature Packs define exact access-path budgets and indexes.
+
+## ARC-307 — Read scaling follows an evidence-driven ladder while correctness-sensitive reads remain on an authority-consistent path
+
+- **Decision source:** AR-009 V2.5
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-076`, `ARQ-PERF-077`, `ARQ-PERF-078`, `ARQ-PERF-079`, `ARQ-PERF-080`
+- **Decision:** Read scaling progresses from sound authoritative query/model design and indexes, to bounded derived/read models or caches where justified, then to stale-tolerant replicas/partitioning only when workload evidence warrants them. Correctness-sensitive read-after-write paths use an authority path that provides the required consistency.
+- **Rationale:** Premature replicas/partitioning/denormalisation add operational and consistency complexity while often failing to address the real bottleneck.
+- **Rules:**
+  1. Large peak-time analytics scans may not compete blindly with critical OLTP.
+  2. Read replicas are explicitly stale-tolerant and never assumed perfectly current.
+  3. Derived models declare freshness/rebuild semantics and never become transactional authority.
+  4. Partitioning is introduced only for demonstrated volume/retention/maintenance/query benefit.
+- **Failure behaviour:** Replica lag or derived-model staleness degrades only workloads that permit it and must not corrupt correctness-sensitive decisions.
+- **Security/privacy:** Derived/replica access retains the same privacy/deletion/authorization constraints applicable to the data class.
+- **Performance/scaling:** Each added read-acceleration layer must show measurable benefit and known freshness cost.
+- **Enforcement/downstream:** FLOW/Dossier proof chooses the lowest-complexity layer that meets the workload.
+
+## ARC-308 — LiveView scale is proven through bounded per-connection resource envelopes rather than assumed from lightweight BEAM processes
+
+- **Decision source:** AR-009 V2.6
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-123`, `ARQ-PERF-124`, `ARQ-PERF-125`, `ARQ-PERF-135`
+- **Decision:** Representative LiveView experiences are empirically budgeted for server-side connection/process cost including assigns/state, subscriptions, mailbox pressure, event/render work, query behaviour and fan-out. The process-per-connection model remains accepted; unbounded per-connection growth does not.
+- **Rationale:** BEAM process overhead is only one component of connection cost; retained state, subscriptions, renders and downstream amplification can dominate at scale.
+- **Rules:**
+  1. Large/growing collections use streams/pagination/keyed bounded representations rather than indefinite socket assigns.
+  2. Slow/stale clients may not accumulate unbounded mailboxes or server work.
+  3. Expendable intermediate UI observations may be coalesced/reconstructed from current authority.
+  4. Representative connection-cost evidence is captured at meaningful connection counts and workloads.
+- **Failure behaviour:** Mailbox/memory/render/query amplification beyond the approved envelope triggers coalescing, degradation, admission or redesign rather than unlimited accumulation.
+- **Security/privacy:** Connection-state minimisation also limits unnecessary sensitive-data residence.
+- **Performance/scaling:** Connection-count claims include per-connection resource evidence, not process counts alone.
+- **Enforcement/downstream:** V3/FLOW pressure tests include representative LiveView populations where applicable.
+
+## ARC-309 — Realtime capacity proof measures end-to-end amplification from one logical change through subscribers, refresh, render and network
+
+- **Decision source:** AR-009 V2.7
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-132`, `ARQ-PERF-133`, `ARQ-PERF-135`; cross-reference `ARC-175`, `ARC-176`
+- **Decision:** High-fan-out realtime proofs measure the full amplification chain rather than PubSub broadcast throughput alone: topic/broadcast, subscriber process work, authoritative refresh where required, render/diff, payload/network and cross-node effects.
+- **Rationale:** A fast broadcast primitive can still trigger catastrophic N×M database, render, memory or network work downstream.
+- **Rules:**
+  1. Topic scoping, coalescing, batching and derived projections are used where they materially reduce amplification.
+  2. Realtime refresh retrieves only the projection needed for the changed UI where practical.
+  3. Obsolete intermediate states need not be faithfully buffered.
+  4. Fan-out tests include representative subscriber distributions and multi-node topology where applicable.
+- **Failure behaviour:** Realtime may degrade in freshness before authoritative correctness; uncontrolled amplification is a failed proof.
+- **Security/privacy:** PubSub/topic knowledge never becomes authorization; refreshed data is re-read through proper authority.
+- **Performance/scaling:** CPU, DB, mailbox, render, network and payload dimensions are correlated in the proof.
+- **Enforcement/downstream:** FLOW tests define high-fan-out scenarios for affected features.
+
+## ARC-310 — Durable worker capacity shares database/CPU/RAM/I/O/provider budgets with interactive traffic and is constrained by the tightest bottleneck
+
+- **Decision source:** AR-009 V2.8
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-106`, `ARQ-PERF-108`, `ARQ-PERF-110`, `ARQ-PERF-111`, `ARQ-PERF-112`; cross-reference `ARC-157`, `ARC-158`
+- **Decision:** Oban/worker concurrency is sized against the same finite PostgreSQL, CPU, memory, I/O and provider budgets as interactive work, with critical interactive/authoritative headroom protected. Queue concurrency follows the tightest relevant bottleneck rather than available BEAM schedulers alone.
+- **Rationale:** Asynchronous execution moves work in time; it does not make the underlying resources unlimited.
+- **Rules:**
+  1. Low-value bulk/convenience work is throttleable/pausable/deferable before starving critical work.
+  2. Provider-limited or CPU/I/O-heavy workloads receive queue isolation and suitable lower concurrency where needed.
+  3. Queue wait/completion/freshness SLOs are workload-specific.
+  4. Worker topology may later separate onto worker-focused nodes without changing domain semantics.
+- **Failure behaviour:** Backlog growth triggers controlled throttling/admission/concurrency adjustment rather than blindly increasing workers.
+- **Security/privacy:** Worker separation does not create broader execution authority; handlers retain current-policy/revalidation rules.
+- **Performance/scaling:** Queue depth/oldest age/throughput/resource saturation and OLTP impact are evaluated together.
+- **Enforcement/downstream:** Composite pressure tests include worker traffic alongside interactive load.
+
+## ARC-311 — Horizontal node count is both a capacity multiplier and a shared-resource pressure multiplier that requires explicit recalculation
+
+- **Decision source:** AR-009 V2.9
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-008`, `ARQ-PERF-073`, `ARQ-PERF-106`, `ARQ-PERF-133`, `ARQ-PERF-160`; cross-reference `ARC-004`, `ARC-159`
+- **Decision:** Adding application/worker nodes requires recalculation of aggregate DB pools, local queue concurrency, provider/API concurrency, PubSub/fan-out, cache/rebuild pressure, scheduled work, socket distribution and telemetry volume. Node replication must not silently multiply a strict global constraint.
+- **Rationale:** Horizontal scale can increase pressure on shared state/services even while increasing application CPU/RAM capacity.
+- **Rules:**
+  1. Per-node concurrency values are not assumed to be global unless enforced/proven as such.
+  2. Periodic/scheduled work preserves one-logical-issuance semantics where required.
+  3. Provider limits and database capacity are modelled across all nodes.
+  4. Multi-node pressure proof precedes reliance on the scaled topology for production capacity.
+- **Failure behaviour:** If added nodes push a shared dependency beyond its safe envelope, scaling is rejected/reconfigured rather than treated as success.
+- **Security/privacy:** Node replication preserves the same authority/privacy semantics and secrets/config isolation.
+- **Performance/scaling:** Capacity gains are measured net of new shared-resource demand.
+- **Enforcement/downstream:** Deployment/topology changes include a multiplier impact review.
+
+## ARC-312 — Production headroom is resource/workload specific and maintained before measured saturation knees; autoscaling does not replace capacity planning
+
+- **Decision source:** AR-009 V2.10
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-005`, `ARQ-PERF-152`, `ARQ-PERF-160`, `ARQ-PERF-161`
+- **Decision:** Safe operating envelopes and headroom are defined per constrained resource/workload from measured saturation behaviour and expected failure topology. There is no universal Architecture percentage for CPU, memory, database connections, provider quota, network or queue backlog.
+- **Rationale:** Different resources fail non-linearly at different saturation points; universal utilisation percentages create false confidence.
+- **Rules:**
+  1. Scaling/shedding triggers occur before the demonstrated saturation knee.
+  2. Headroom accounts for expected burst, recovery catch-up and traffic redistribution after capacity loss.
+  3. Once production relies on multiple capacity units, expected loss of one relevant unit must not immediately cause cascading failure.
+  4. Autoscaling is a response mechanism, not permission to run permanently at unsafe saturation.
+- **Failure behaviour:** When headroom is exhausted, governed admission/degradation activates before correctness is compromised.
+- **Security/privacy:** Capacity shedding preserves security/privacy/safety/payment/entitlement invariants.
+- **Performance/scaling:** Headroom targets are evidence-bearing and revisited with workload/topology changes.
+- **Enforcement/downstream:** Release/readiness capacity evidence records the active safe operating envelope.
+
+## ARC-313 — Vertical versus horizontal scaling is triggered by the measured bottleneck and uses the simplest lawful mechanism that resolves it
+
+- **Decision source:** AR-009 V2.11
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-002`, `ARQ-PERF-073`, `ARQ-PERF-075`, `ARQ-PERF-076`, `ARQ-PERF-079`, `ARQ-PERF-106`, `ARQ-PERF-160`
+- **Decision:** Scaling decisions follow sustained SLI/resource/headroom evidence and forecasted workload rather than registered-user counts or a fixed vertical/horizontal ideology. Query/index correction precedes adding database complexity where it addresses the bottleneck; application/worker nodes, DB capacity, pooling, replicas/read models and partitioning are introduced only where each solves the demonstrated constraint.
+- **Rationale:** Scaling the wrong layer increases cost/complexity while preserving the actual bottleneck.
+- **Rules:**
+  1. Optimisation of known structural inefficiency precedes infrastructure multiplication where practical.
+  2. Vertical scaling remains valid when it is the simplest sufficient capacity step.
+  3. Horizontal scaling is used for availability/parallel capacity only when shared-resource envelopes remain safe.
+  4. Specialised infrastructure is evidence-gated and must preserve existing domain semantics.
+- **Failure behaviour:** A scaling change that fails to improve the constrained SLI/resource or creates a worse shared bottleneck is rolled back/revised.
+- **Security/privacy:** Scaling may not weaken isolation/authorization to obtain throughput.
+- **Performance/scaling:** Trigger evidence is versioned and tied to workload/topology.
+- **Enforcement/downstream:** Capacity plans state bottleneck, chosen intervention and proof outcome.
+
+## ARC-314 — Final topology capacity proof uses realistic composite competing workloads and expected failure/recovery conditions, not isolated component maxima
+
+- **Decision source:** AR-009 V2.12
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-003`, `ARQ-PERF-018`, `ARQ-PERF-112`, `ARQ-PERF-160`, `ARQ-PERF-162`
+- **Decision:** Major topology proofs combine the material competing workloads for the reference scenario—HTTP/Ash, connected LiveViews, PostgreSQL pool/query contention, durable worker backlog, provider delay/retries, realtime fan-out, cold/recovery activity and expected capacity loss where applicable. They do not simply add independent component maxima or require impossible simultaneous worst cases unrelated to the workload model.
+- **Rationale:** Shared-resource contention and recovery catch-up emerge only when subsystems operate together.
+- **Rules:**
+  1. Composite scenarios are derived from V1 workload profiles and expected failure topology.
+  2. Component tests remain useful diagnostics but do not replace end-to-end pressure proof.
+  3. Correctness/invariant assertions run under the same composite pressure.
+  4. Generator validity from ARC-302 remains required.
+- **Failure behaviour:** Saturation, false success, unbounded backlog/amplification or hard-invariant breach under the declared envelope fails the topology proof.
+- **Security/privacy:** Representative pressure tests preserve normal security/privacy controls and use synthetic/minimised data.
+- **Performance/scaling:** Results define the proven safe envelope for that topology/release/workload version.
+- **Enforcement/downstream:** V3 and FLOW proof matrices use composite topology scenarios as release evidence.
+
+**V2 consolidated doctrine:** Capacity is a set of shared finite resource envelopes. Horizontal scale can add application capacity while simultaneously multiplying database, worker, provider, fan-out and telemetry pressure. Scale the measured bottleneck using the simplest mechanism that preserves authority, maintain evidence-based headroom, and prove the whole topology under realistic competing load.
+
+**V2 deferrals:** Exact PostgreSQL `max_connections`/pool sizes; exact operational reserve; PgBouncer introduction point/configuration; exact indexes/query-count budgets; read-replica/partition thresholds; per-LiveView byte/process limits; queue concurrency values; node counts; provider quotas; headroom percentages; autoscaling rules; and exact composite workload numbers remain V3/FLOW/Feature Pack/JIT/performance evidence decisions.
+
+
+## 4M.3 Round V3 — Contention, Recovery & Final Performance-Proof Matrix
+
+**Accepted answer set:** `V3.1 B, V3.2 B, V3.3 B, V3.4 B, V3.5 B, V3.6 B, V3.7 B, V3.8 B, V3.9 B, V3.10 B, V3.11 B, V3.12 B`
+
+## ARC-315 — Contention and race proofs attack declared hard invariants and inspect authoritative post-state, not merely throughput
+
+- **Decision source:** AR-009 V3.1
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-025`, `ARQ-PERF-031`, `ARQ-PERF-041`; cross-reference `ARC-068`, `ARC-070`, `ARC-301`
+- **Decision:** Every material contention-sensitive reference flow declares the hard invariant being attacked and proves it under deliberately simultaneous, duplicate, reordered, retried and partially failed execution. Proof evaluates authoritative durable post-state and reconciliation evidence rather than inferring correctness from HTTP success/error counts or throughput alone.
+- **Rationale:** High throughput can coexist with duplicate grants, illegal transitions or oversell; performance evidence is invalid if correctness is not asserted under the same pressure.
+- **Rules:**
+  1. The invariant under test is named before execution.
+  2. Test concurrency is designed to maximise realistic collision/overlap for the governed operation.
+  3. Durable post-state and relevant operation/idempotency evidence are verified after the run.
+  4. Hard-invariant violations are zero-tolerance failures independent of latency/error-budget thresholds.
+- **Failure behaviour:** Any committed invariant breach fails the proof immediately; transient/refused work is evaluated according to the workload contract rather than counted as corruption.
+- **Security/privacy:** Pressure tests use synthetic/minimised identities and do not weaken normal authorisation/security controls.
+- **Performance/scaling:** Safe throughput is the highest envelope that preserves both performance budgets and hard invariants.
+- **Enforcement/downstream:** Reference Flow Pressure Tests and later Feature Pack proof matrices include explicit invariant assertions.
+
+## ARC-316 — Scarce-inventory and flash-sale proofs require zero confirmed oversell under adversarial concurrency
+
+- **Decision source:** AR-009 V3.2
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-003`, `ARQ-PERF-010`, `ARQ-PERF-031`, `ARQ-PERF-041`; cross-reference `ARC-069`, `ARC-301`, `ARC-315`
+- **Decision:** Scarce-inventory/capacity proofs drive competing reservations/confirmations against the same constrained authority under relevant burst, retry, duplicate and multi-node conditions and assert that confirmed allocations never exceed authoritative capacity. Latency may degrade and excess demand may be throttled, queued, deferred or rejected according to law; confirmed oversell is never an acceptable trade-off.
+- **Rationale:** Flash-sale scale is a correctness problem first and a throughput problem second.
+- **Rules:**
+  1. The test includes intentional contention on the same inventory/capacity keys rather than evenly distributed low-contention demand only.
+  2. Duplicate/retry cases are included where the real client/provider path can create them.
+  3. Final confirmed allocation count is reconciled to authoritative capacity.
+  4. Failed/refused demand must not fabricate success or hidden allocation.
+- **Failure behaviour:** One committed oversell is a hard failure regardless of achieved requests/second.
+- **Security/privacy:** Synthetic purchase/participant data is used for large-scale proof unless a separately approved environment requires otherwise.
+- **Performance/scaling:** Proof records the highest safe contention envelope, tail latency, refusal behaviour and saturation point.
+- **Enforcement/downstream:** Ticketing/inventory Feature Packs inherit this zero-oversell gate where scarcity applies.
+
+## ARC-317 — Retry and duplicate storms are explicit performance/correctness scenarios for idempotency and reconciliation
+
+- **Decision source:** AR-009 V3.3
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-026`, `ARQ-PERF-027`, `ARQ-PERF-041`, `ARQ-PERF-112`; cross-reference `ARC-071`, `ARC-146`, `ARC-170`
+- **Decision:** Applicable proofs deliberately inject duplicate submissions, client/connectivity retries, durable-job retries, duplicated/reordered provider callbacks and ambiguous timeout/recovery cases. The expected result is one valid durable effect per governed operation identity, or a deliberately unresolved/reconcilable state, never multiplied committed effects.
+- **Rationale:** Clean one-request-per-user load hides the failure modes most likely to create duplicate payments, entitlements or side effects in production.
+- **Rules:**
+  1. Duplicate/retry patterns are derived from realistic protocol/client/provider behaviour.
+  2. Business idempotency remains distinct from Oban uniqueness or transport duplicate suppression.
+  3. Ambiguous irreversible provider outcomes reconcile before unsafe repetition.
+  4. Test assertions inspect authoritative effects and reconciliation state.
+- **Failure behaviour:** Duplicate durable effects or unrecoverable ambiguous state fail the scenario.
+- **Security/privacy:** Retry simulations do not bypass authentication or disclose sensitive response differences.
+- **Performance/scaling:** Retry amplification and its effect on shared resources are captured explicitly.
+- **Enforcement/downstream:** Reference flows identify which duplicate/retry classes are mandatory for their proof matrix.
+
+## ARC-318 — Database contention proof measures lock, pool, transaction and query-plan behaviour alongside business outcomes
+
+- **Decision source:** AR-009 V3.4
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-073`, `ARQ-PERF-074`, `ARQ-PERF-083`, `ARQ-PERF-084`, `ARQ-PERF-085`; cross-reference `ARC-072`, `ARC-073`, `ARC-273`, `ARC-306`
+- **Decision:** Contention-sensitive performance proofs collect sufficient database evidence to distinguish pool queueing, lock waits/contention, transaction duration, deadlock/timeout behaviour, query-plan cost and database resource saturation while verifying the governed business result. Passing latency alone is insufficient if the workload creates unsafe lock amplification or starves unrelated OLTP work.
+- **Rationale:** Database saturation often presents as application latency while the real limiting mechanism is shared connection, lock or I/O contention.
+- **Rules:**
+  1. Relevant scenarios capture pool and database-side pressure dimensions.
+  2. Long/interactive queries remain bounded according to workload class.
+  3. Unrelated critical traffic is included where required to detect starvation/blast radius.
+  4. Representative cardinality/distribution is required for scale-sensitive query plans.
+- **Failure behaviour:** Dangerous lock amplification, unbounded waiting, starvation or hard-invariant breach fails the proof even when some latency percentiles remain within target.
+- **Security/privacy:** Query diagnostics are captured without exporting sensitive row payloads unnecessarily.
+- **Performance/scaling:** Evidence identifies whether the bottleneck is query, pool, lock, I/O, CPU, plan or other database resource.
+- **Enforcement/downstream:** Query/load evidence feeds index/query/topology decisions rather than generic database scaling assumptions.
+
+## ARC-319 — Cold-cache, expiry and recovery proofs must demonstrate bounded anti-stampede regeneration
+
+- **Decision source:** AR-009 V3.5
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-018`, `ARQ-PERF-057`, `ARQ-PERF-154`; cross-reference `ARC-081`, `ARC-086`, `ARC-300`, `ARC-314`
+- **Decision:** Material cached/high-fan-out paths are tested under cold cache, coordinated/near-coordinated expiry, node startup and dependency recovery so simultaneous misses cannot create uncontrolled regeneration/database/provider pressure. Proof validates the applicable coalescing, jitter, prewarming, stale-safe serving or other bounded anti-stampede mechanism while preserving empty-cache correctness.
+- **Rationale:** Warm-state benchmarks hide a common cascading-failure mechanism: many consumers regenerating the same derived value simultaneously.
+- **Rules:**
+  1. Cache absence may worsen latency but may not break authority/correctness.
+  2. Regeneration amplification is measured at database/provider/resource boundaries.
+  3. Stale-while-revalidate or stale serving is used only where the data class permits it.
+  4. Prewarming remains bounded and may not itself stampede dependencies.
+- **Failure behaviour:** Unbounded regeneration amplification or correctness dependence on cache presence fails the proof.
+- **Security/privacy:** Protected/sensitive cache paths preserve their access contract during recovery/stale handling.
+- **Performance/scaling:** The proof records cold/recovery cost and time to return to stable operating envelopes.
+- **Enforcement/downstream:** High-fan-out cache use requires an anti-stampede proof case in the relevant matrix.
+
+## ARC-320 — Backlog recovery is proven as controlled catch-up inside shared OLTP/provider budgets, not merely eventual queue drain
+
+- **Decision source:** AR-009 V3.6
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-108`, `ARQ-PERF-110`, `ARQ-PERF-111`, `ARQ-PERF-112`; cross-reference `ARC-156`, `ARC-157`, `ARC-164`, `ARC-309`, `ARC-314`
+- **Decision:** Queue/system proofs include burst creation, sustained backlog, dependency slowdown/outage, retry pressure, node restart, deployment interruption and recovery. Catch-up must remain within approved PostgreSQL, CPU/RAM/I/O and provider budgets, protect newly arriving higher-criticality work and meet workload-specific queue wait/completion/freshness objectives without weakening hard correctness obligations.
+- **Rationale:** Maximum worker concurrency after an outage can turn recovery into a second outage by crushing shared dependencies.
+- **Rules:**
+  1. Recovery scenarios include new foreground/critical arrivals while backlog drains where relevant.
+  2. Low-value work is throttleable/deferable before critical queues or OLTP are starved.
+  3. Queue freshness/completion SLOs are evaluated separately from must-happen correctness.
+  4. Provider-specific concurrency/rate constraints remain part of the recovery budget.
+- **Failure behaviour:** Catch-up that causes cascading saturation, starvation, false completion or missed hard obligation fails the proof.
+- **Security/privacy:** Backlog controls do not skip privacy/security/consent revalidation where current policy is required.
+- **Performance/scaling:** Proof captures drain rate, oldest-job age, resource use and stable-recovery envelope.
+- **Enforcement/downstream:** Worker/queue topology changes require representative backlog-recovery evidence.
+
+## ARC-321 — Realtime capacity proof includes connection/reconnect storms, fan-out bursts, slow clients, node loss and rolling recovery
+
+- **Decision source:** AR-009 V3.7
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-123`, `ARQ-PERF-124`, `ARQ-PERF-125`, `ARQ-PERF-132`, `ARQ-PERF-133`, `ARQ-PERF-136`; cross-reference `ARC-054`, `ARC-055`, `ARC-308`
+- **Decision:** Realtime performance validation includes large concurrent connection populations and the adverse behaviours that matter operationally: connection/reconnect storms, subscription fan-out, broadcast bursts, slow clients, rolling deployment, node loss and recovery. Proof verifies bounded process/mailbox/memory/database/render/network amplification while permitting governed freshness degradation instead of durable corruption.
+- **Rationale:** Idle WebSocket counts or ordinary HTTP load do not prove LiveView/PubSub behaviour under reconnect/fan-out pressure.
+- **Rules:**
+  1. Representative LiveView state and subscriptions are used rather than empty sockets only.
+  2. Slow/stale clients may not create unbounded mailbox or server work.
+  3. Broadcast refresh remains scoped/coalesced and avoids N×M database amplification.
+  4. Node loss may interrupt freshness but not durable truth.
+- **Failure behaviour:** Unbounded mailbox/memory/fan-out/database amplification or durable-effect duplication fails the proof.
+- **Security/privacy:** Reconnect/failover preserves current authorisation/revocation semantics.
+- **Performance/scaling:** The proof establishes connection/process/fan-out envelopes for the tested topology.
+- **Enforcement/downstream:** Realtime-heavy reference flows receive explicit realtime pressure scenarios.
+
+## ARC-322 — Abuse and velocity controls are pressure-tested with normal layered protections enabled and must work across nodes without enumeration leakage
+
+- **Decision source:** AR-009 V3.8
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-SEC-001`, `ARQ-PERF-003`, `ARQ-PERF-005`, `ARQ-PERF-010`; cross-reference `ARC-141`, `ARC-142`, `ARC-258`
+- **Decision:** Applicable authentication, recovery, redemption, checkout/payment, protected-download/search and similar sensitive entry points are pressure-tested with their normal layered edge/application/distributed abuse controls enabled. Proof verifies cross-node effectiveness, bounded legitimate recovery/challenge semantics, stricter privileged handling where required and non-enumerating external responses. Exact thresholds and concrete counter/backing technology remain evidence/JIT decisions.
+- **Rationale:** Disabling abuse controls during performance testing can produce an impressive benchmark for a topology that is not the topology actually exposed to hostile traffic.
+- **Rules:**
+  1. Test profiles distinguish ordinary users, bursts, accidental retry and malicious/automated pressure where relevant.
+  2. Distributed limits must remain effective when traffic is spread across application nodes.
+  3. Rate-control failure/degradation semantics are explicit and may not silently grant unlimited access to high-risk operations.
+  4. Thresholds are tuned from risk and measured legitimate traffic rather than one universal constant.
+- **Failure behaviour:** Cross-node bypass, enumeration leakage, runaway counter dependency pressure or unsafe fail-open behaviour fails the relevant security/performance gate.
+- **Security/privacy:** Rate-limit identifiers/payloads are minimised and may not become a tracking/marketing identity store.
+- **Performance/scaling:** Counter/backend latency and saturation are included in the safe operating envelope.
+- **Enforcement/downstream:** Exact library/backend/threshold selection is proof-gated before implementation of the affected Feature Pack.
+
+## ARC-323 — Large/hot-table migrations and database maintenance are pressure-tested as part of the production performance envelope
+
+- **Decision source:** AR-009 V3.9
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-081`, `ARQ-PERF-082`, `ARQ-PERF-083`, `ARQ-PERF-085`; cross-reference `ARC-076`, `ARC-262`, `ARC-318`
+- **Decision:** Production schema/index changes affecting large or hot tables are tested with representative cardinality and concurrent workload for lock duration, runtime, resource impact, failure/rollback or forward-recovery behaviour and adjacent-version compatibility. Routine PostgreSQL maintenance, planner statistics and vacuum/analyze health are included in the operating performance model rather than treated as unrelated DBA detail.
+- **Rationale:** A migration that succeeds on a small/idle database may create unacceptable lock or I/O pressure in a realistic production workload.
+- **Rules:**
+  1. Representative data volume/distribution is used for scale-sensitive migration proof.
+  2. Online/concurrent PostgreSQL techniques are preferred where supported and justified.
+  3. Deployment compatibility and rollback/forward-recovery evidence accompany risky changes.
+  4. Maintenance pressure is observed under representative load when it can materially affect critical paths.
+- **Failure behaviour:** Avoidable blocking downtime, unsafe lock duration, resource starvation or unrecoverable migration failure blocks release.
+- **Security/privacy:** Performance fixtures avoid copying sensitive production identities solely for migration realism.
+- **Performance/scaling:** Migration/maintenance evidence forms part of headroom and deployment-capacity planning.
+- **Enforcement/downstream:** High-risk migration gate manifests reference representative pressure evidence.
+
+## ARC-324 — Scale-sensitive proof data reproduces cardinality, skew, selectivity, relationship density and hot spots without requiring production identities
+
+- **Decision source:** AR-009 V3.10
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-003`, `ARQ-PERF-071`, `ARQ-PERF-085`, `ARQ-AN-160`; cross-reference `ARC-306`, `ARC-314`
+- **Decision:** Major query/load/performance proofs use synthetic, generated or otherwise safely prepared datasets that reproduce the material scale characteristics of the target workload, including cardinality, skew/distribution, selectivity, relationship density, historical depth and contention hot spots where relevant. Tiny fixtures alone are insufficient; sensitive production data is not copied merely for realism.
+- **Rationale:** PostgreSQL planner choices, memory/I/O behaviour and contention can change materially as data size and distribution evolve.
+- **Rules:**
+  1. Data-generation assumptions and seed/version are captured with proof evidence.
+  2. Referential/business-shape realism is preserved where it affects access patterns.
+  3. Hot-key/skew scenarios are included where uniform distributions would hide contention.
+  4. Production-derived data requires an independently approved privacy/security basis if ever used.
+- **Failure behaviour:** A proof using materially unrealistic cardinality/distribution is inconclusive rather than accepted as scale evidence.
+- **Security/privacy:** Synthetic/minimised datasets are the default for performance environments.
+- **Performance/scaling:** Dataset version is part of benchmark reproducibility.
+- **Enforcement/downstream:** Performance & Capacity Proof Matrix records dataset cardinality/distribution/version.
+
+## ARC-325 — Analytics and experimentation participate in composite pressure proof without competing blindly with OLTP or bypassing validity gates
+
+- **Decision source:** AR-009 V3.11
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-077`, `ARQ-AN-149`, `ARQ-AN-160`, `ARQ-AN-197`; cross-reference `ARC-179...ARC-188`, `ARC-277`, `ARC-307`, `ARC-314`
+- **Decision:** Where material to the workload, composite proof includes representative analytical refresh/rebuild work, concurrent dashboard usage, large ranges, exports, backfills, pipeline lag/recovery and experiment-measurement health while measuring impact on OLTP. Analytical freshness may degrade within its governed SLO before critical transactional capacity is threatened. Statistical/experiment-validity blockers such as material unexplained sample-ratio mismatch remain blockers regardless of pipeline speed.
+- **Rationale:** Analytics and experimentation are real production workloads, but they are downstream decision-support systems and may not steal capacity from authoritative critical work or manufacture valid conclusions from broken measurement.
+- **Rules:**
+  1. Analytical workloads use representative volume/cardinality and concurrency.
+  2. OLTP impact is measured explicitly for heavy refresh/export/backfill scenarios.
+  3. Freshness SLOs and hard integrity/statistical-validity gates remain distinct.
+  4. Warehouse/CDC introduction remains evidence-gated rather than assumed by the test model.
+- **Failure behaviour:** Unbounded analytical impact on critical OLTP, unreconciled pipeline corruption or invalid experiment-health state fails the relevant proof/gate.
+- **Security/privacy:** Performance proof preserves analytics deletion/privacy/minimisation constraints.
+- **Performance/scaling:** Results identify when PostgreSQL/read-model architecture remains sufficient versus when later isolation evidence is triggered.
+- **Enforcement/downstream:** Analytics/experiment-heavy Feature Packs instantiate these composite pressure cases where applicable.
+
+## ARC-326 — Architecture establishes a versioned Performance & Capacity Proof Matrix contract for all later reference-flow and Feature-Pack evidence
+
+- **Decision source:** AR-009 V3.12
+- **Status:** ACCEPTED
+- **Source ARQs:** `ARQ-PERF-003`, `ARQ-PERF-020`, `ARQ-PERF-021`, `ARQ-PERF-022`, `ARQ-PERF-041`, `ARQ-PERF-160`; cross-reference `ARC-291...ARC-325`
+- **Decision:** Every later governed Reference Flow Pressure Test, Architectural Proof and performance-sensitive Feature Pack instantiates a versioned Performance & Capacity Proof Matrix that records at least: reference flow/operation; workload profile/version; topology/node roles/counts; data cardinality/distribution; concurrency/arrival/connection envelope; latency/freshness/throughput budgets; hard invariants; resource budgets/headroom; dependency/failure conditions; required test classes; evidence/tool versions; pass/fail result; proven safe envelope/breakpoint; and known exclusions/unresolved gates.
+- **Rationale:** A repeatable proof contract prevents each team/Feature Pack from redefining what “performance tested” means and preserves comparability across architectural evolution.
+- **Rules:**
+  1. The matrix is evidence metadata plus results, not one universal benchmark number.
+  2. Scenario and dataset versions are immutable historical evidence once used for a decision; later changes create new versions.
+  3. Exclusions require explicit workload-based rationale.
+  4. Hard-invariant assertions and performance thresholds are reported separately.
+  5. The proven safe envelope/breakpoint is tied to the tested topology/release, not treated as timeless capacity.
+- **Failure behaviour:** Missing mandatory proof fields, invalid generator/data conditions or unresolved hard-invariant failures prevent a PASS conclusion.
+- **Security/privacy:** Proof artifacts minimise sensitive data and preserve access/retention controls appropriate to operational evidence.
+- **Performance/scaling:** This matrix is the canonical downstream vehicle for capacity/scaling evidence.
+- **Enforcement/downstream:** Reference Flow Pressure Tests consume this contract before `03_ARCHITECTURE.md` is frozen; later Feature Pack gate manifests reference the applicable matrix version.
+
+**V3 consolidated doctrine:** A topology is not proven because it is fast under clean load. It is proven only when it remains correct, bounded and recoverable under the adverse workload conditions the platform is designed to survive. Concurrency, duplicates, retries, scarcity, database contention, cache regeneration, backlog recovery, realtime storms, abuse controls, migration pressure and representative data are first-class proof dimensions.
+
+**V3 deferrals:** Exact per-flow concurrency/arrival envelopes; concrete rate-limit library/backend and thresholds; exact migration timing thresholds; dataset generators/seeds; k6/distributed-generator topology; environment sizing; final load durations; and Feature-Pack-specific hard-invariant/test matrices remain Reference Flow/Domain/JIT/Feature Pack proof decisions. Architecture requires the proof contract and semantics, not speculative universal constants.
+
+## ARC-327 — ARC-326 proof depth is staged: Phase 3 records proof obligations; executable stages record runtime evidence
+
+- **Decision source:** Phase 3 Reference Flow efficiency correction accepted 2026-08-17; explicit timing/depth amendment to `ARC-326`
+- **Status:** ACCEPTED_AMENDMENT
+- **Amends:** `ARC-326` timing/depth only; the full Performance & Capacity Proof Matrix contract remains in force
+- **Source ARQs:** `ARQ-PERF-003`, `ARQ-PERF-020`, `ARQ-PERF-021`, `ARQ-PERF-022`, `ARQ-PERF-041`, `ARQ-PERF-160`; cross-reference `ARC-291...ARC-326`
+- **Decision:** The canonical Performance & Capacity Proof Matrix remains the required contract for executable performance/capacity evidence. Pre-implementation Reference Flow Pressure Tests use a **proof-obligation projection** rather than fabricating runtime evidence. At Phase 3 each flow records, at minimum: whether the flow is performance-sensitive; its material scale/resource concern; the hard performance/correctness invariant that later proof must attack; whether executable proof is required; and the downstream proof stage(s) that must instantiate the full matrix. Runtime-only fields such as measured topology capacity, representative cardinality, concurrency envelope, latency/throughput result, tool version, safe envelope and breakpoint are deferred until executable evidence can actually exist.
+- **Rationale:** Phase 3 exists to prove architectural coherence across end-to-end flows, not to simulate Architectural Proof, Horizontal Hardening or Release testing before software exists. Requiring placeholder `NOT_YET_MEASURED` values creates ceremony without evidence while obscuring the genuinely useful question: whether the architecture can support the proof later.
+- **Rules:**
+  1. A Phase 3 flow does **not** need placeholder values for runtime-only matrix fields.
+  2. A Phase 3 PASS means the required future proof is identifiable, architecturally possible and not contradicted by accepted law; it is not a measured production-capacity claim.
+  3. The first applicable executable proof point — Architectural Proof, a performance-sensitive Feature Pack/slice, Horizontal Hardening or Release Gate — instantiates the full `ARC-326` matrix fields relevant to that path.
+  4. Hard correctness invariants remain explicit in Phase 3 even when their executable concurrency/failure proof is deferred.
+  5. If a pre-implementation architectural choice genuinely cannot be judged without targeted executable evidence, Phase 3 may mark that flow blocked for Architectural Proof rather than inventing a benchmark result.
+  6. Later executable evidence remains versioned, topology/release-specific and governed by `ARC-326`; this amendment does not weaken any V1–V3 performance, contention, recovery or validity requirement.
+- **Failure behaviour:** Phase 3 cannot PASS a flow if the required later proof cannot be identified, the architecture makes the required proof impossible, or a hard invariant lacks an architectural enforcement path. At executable proof stages, missing mandatory `ARC-326` evidence fields or failed hard invariants still prevent PASS.
+- **Security/privacy:** Deferred runtime evidence does not defer security/privacy invariants. Phase 3 must still identify security-sensitive pressure concerns and later proof obligations without copying production participant data merely for realism.
+- **Performance/scaling:** This amendment changes **when** evidence fields become mandatory, not **what** must eventually be proven. The full matrix remains the canonical downstream capacity/scaling evidence vehicle.
+- **Enforcement/downstream:** `REFERENCE_FLOW_PRESSURE_TESTS_WORKING` uses the lean proof-obligation projection. Architectural Proof, affected Feature Packs/slices, Horizontal Hardening and Release Gates instantiate the full executable matrix when software and representative environments exist.
+- **Amendment effect:** `ARC-326` remains preserved as accepted history. Where `ARC-326` can be read as requiring runtime-only evidence during pre-implementation Phase 3, `ARC-327` governs that timing interpretation. AR-009 remains COMPLETE through `ARC-326`; this is a post-closure proof-governance amendment, not an AR-009 reopening.
+
+---
+
 # 5. Change Log
+
+## v0.35.0 — 2026-08-17 — Phase 3 proof-depth correction / ARC-326 timing amendment
+
+- SemVer transition: `v0.34.0 → v0.35.0`.
+- Added `ARC-327` as one narrow post-closure amendment to `ARC-326`.
+- Preserved the full Performance & Capacity Proof Matrix as the canonical executable evidence contract while removing the requirement to populate runtime-only placeholder fields during pre-implementation Reference Flow Pressure Tests.
+- Phase 3 now records a lean proof-obligation projection: performance sensitivity, material scale concern, hard invariant, need for later executable proof and applicable proof stage.
+- Full workload/topology/cardinality/concurrency/latency/resource/tool/result/safe-envelope/breakpoint evidence remains mandatory when executable Architectural Proof, affected Feature Pack/slice, Horizontal Hardening or Release testing actually occurs.
+- AR-009 remains COMPLETE through `ARC-326`; it was not reopened and no V4 was created.
+- Phase 3 then completed in `REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md`: FLOW-01...FLOW-12 all passed architecture pressure testing with 0 architecture gaps and 0 contradictions; the next stage is `03_ARCHITECTURE.md` synthesis/review/freeze.
+- No Product Law, DEC, OQ, ARQ or prior ARC was changed.
+
+
+
+## v0.34.0 — 2026-08-17 — AR-009 V3 Adversarial Proof Hardening + Final Closure
+
+- SemVer transition: `v0.33.0 → v0.34.0`.
+- Accepted all AR-009 V3.1–V3.12 recommendations and added `ARC-315` through `ARC-326`.
+- Locked invariant-attacking contention proofs; zero-confirmed-oversell flash-sale proof; duplicate/retry storm testing; database lock/pool/query contention evidence; cold-cache anti-stampede proof; controlled backlog recovery; realtime reconnect/fan-out/node-loss pressure; distributed abuse-control pressure with non-enumeration; representative migration/maintenance pressure; synthetic representative scale data; analytics/experiment composite pressure without OLTP starvation; and the versioned Performance & Capacity Proof Matrix contract.
+- Re-ran the complete AR-009 closure audit against **155 frozen ARQs routed through AR-009**: Performance 105; Analytics 47; Payments 1; Security 1; Operations 1. Result: **PASS**.
+- Confirmed the remaining AR-009-routed requirements not newly named in V3 are already semantically closed by prior AR-001...AR-008 decisions plus V1/V2/V3, including realtime/degraded semantics, dashboard freshness/alerts, PostgreSQL/read-model-first analytics, warehouse/CDC evidence gates, experiment statistical governance/lifecycle and public experiment URL/cache rules. No V4 is required.
+- Marked `AR-009 — Performance, Scaling & Multi-Node Behaviour` COMPLETE through `ARC-326`.
+- **Architecture Decision workstreams AR-001 through AR-009 are now COMPLETE.** Advanced the governed next stage to **Reference Flow Pressure Tests**, which must instantiate the proof matrix against end-to-end flows before `03_ARCHITECTURE.md` is frozen.
+- Updated current document/tracker pointers to `ARCHITECTURE_LAW_WORKING_v0.34.0.md` and `02_OPEN_WORK_v1.2.20.md`.
+- No Product Law, DEC, OQ, ARQ or prior ARC changed.
+
+## v0.33.0 — 2026-08-17 — AR-009 V2 Capacity Budgets, Multi-Node Multipliers & Scaling Triggers
+
+- SemVer transition: `v0.32.0 → v0.33.0`.
+- Accepted all AR-009 V2.1–V2.12 recommendations and added `ARC-303` through `ARC-314`.
+- Locked platform-wide PostgreSQL connection budgeting with operational reserve; evidence-gated transaction pooling; semantic query/index/plan budgets; evidence-driven read-scaling progression; empirical bounded LiveView connection envelopes; end-to-end realtime amplification proof; worker capacity inside shared DB/CPU/RAM/I/O/provider budgets; explicit multi-node pressure multipliers; resource-specific headroom; bottleneck-driven vertical/horizontal scaling; and composite topology pressure proof.
+- Marked AR-009 IN PROGRESS through `ARC-314`; next round is `AR-009 V3 — contention/race proofs, flash-sale zero-oversell, backlog recovery, abuse pressure, migration/maintenance pressure, realistic test data and final proof matrix`.
+- Updated current document/tracker pointers to `ARCHITECTURE_LAW_WORKING_v0.33.0.md` and `02_OPEN_WORK_v1.2.19.md`.
+- No Product Law, DEC, OQ, ARQ or prior ARC changed.
+
+## v0.32.0 — 2026-08-17 — AR-009 V1 Workload Model, Performance Budgets & Verification Regime
+
+- SemVer transition: `v0.31.0 → v0.32.0`.
+- Accepted all AR-009 V1.1–V1.12 recommendations and added `ARC-291` through `ARC-302`.
+- Locked reference-flow/workload-specific interpretation of the 100,000-user scale objective; distinct sustained/burst/scheduled/flash/abusive workload profiles; percentile latency evidence; initial semantic latency classes; current-official Core Web Vitals as the minimum frontend floor; end-to-end versus internal/provider latency decomposition; regression-blocking performance budgets; progressive smoke/load/stress/spike/breakpoint/soak/failure proof; layered test cadence; cold/restart/deployment/recovery-state testing; versioned pass/fail thresholds plus hard-invariant assertions; and load-generator validity/distribution rules.
+- Marked AR-009 IN PROGRESS through `ARC-302`; next round is `AR-009 V2 — PostgreSQL/connection capacity, LiveView/process cost, worker/resource headroom, scaling triggers and multi-node pressure proof`.
+- Updated current document/tracker pointers to `ARCHITECTURE_LAW_WORKING_v0.32.0.md` and `02_OPEN_WORK_v1.2.18.md`.
+- No Product Law, DEC, OQ, ARQ or prior ARC changed.
+
+## v0.31.0 — 2026-08-17 — AR-008 O3 Operations Governance + Final Closure
+
+- SemVer transition: `v0.30.0 → v0.31.0`.
+- Accepted all AR-008 O3.1–O3.12 recommendations and added `ARC-279` through `ARC-290`.
+- Locked impact/risk-based incident severity; named incident command with preserved specialist authority; containment-before-perfect-diagnosis; owned/versioned/exercised runbooks; evidence-based post-incident amendment/re-proof; cross-functional release no-go manifests; failure-injection maturity; complete service-boundary recovery proof; validated central runtime configuration; separate least-privilege secret handling; governed material configuration releases; and purpose/sensitivity-specific telemetry retention/access.
+- Re-ran the complete AR-008 closure audit across **321 frozen ARQs routed through AR-008**: Performance 115; Analytics 184; Payments 1; IAM 5; State 6; Async 3; Content 3; Security 2; Operations 2. Result: **PASS**.
+- Confirmed the abuse/upload-security residuals are already semantically covered by prior AR-003/004/006 law plus AR-008 operational controls; no O4 is required.
+- Marked `AR-008 — Reliability, Deployment, Operations & Observability` COMPLETE through `ARC-290`.
+- Advanced immediate Architecture Decision work to `AR-009 — Performance, Scaling & Multi-Node Behaviour`.
+- Corrected current-document metadata pointers in this new version so the document version/filename and governing open-work source identify `v0.31.0` / `02_OPEN_WORK_v1.2.17.md`; no prior ARC semantics or historical changelog entries were modified.
+- No Product Law, DEC, OQ, ARQ or prior ARC changed.
+
+
+## v0.30.0 — 2026-08-17 — AR-008 O2 Observability, SLO Evidence, Telemetry, Alerting & Incident Correlation
+
+- SemVer transition: `v0.29.0 → v0.30.0`.
+- Accepted all AR-008 O2.1–O2.12 recommendations and added `ARC-267` through `ARC-278`.
+- Locked a coherent metrics/traces/structured-logs/domain-signal observability model; safe cross-boundary correlation context; bounded metric-cardinality governance; diagnostic logs separate from immutable audit evidence; vendor-neutral distributed tracing with controlled sampling; business-facing SLI/SLO evidence with non-budgetable correctness invariants; PostgreSQL/queue/realtime diagnostic coverage; domain outcome signals; actionable owned alerting; release/config/incident correlation; and failure-isolated lightweight telemetry/export.
+- Marked AR-008 IN PROGRESS through `ARC-278`; next round is O3 incident severity/command, runbooks, cross-functional release gates, recovery/failure exercises, secrets/config operations and observability retention/access.
+- No Product Law, DEC, OQ, ARQ or prior ARC changed.
+
 
 ## v0.29.0 — 2026-08-17 — AR-008 O1 Runtime Failure, Health, Dependency Isolation & Safe Deployment
 
