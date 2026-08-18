@@ -14,15 +14,14 @@
 
 ## Governing source pack
 
-This frozen requirement handoff derives from the current Product Law v1.2.1 source set plus the planning-state tracker v1.2.2:
+This frozen requirement handoff derives from the current Product Law v1.2.1 source set plus the current planning-state tracker v1.2.27:
 
 - `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 - `00_PLATFORM_v1.2.1.md`
 - `01_DECISIONS_v1.2.1.md`
-- `02_OPEN_WORK_v1.2.2.md`
-- `CORE_DOCS_AMENDMENT_AND_PRESERVATION_AUDIT_v1.2.1_2026-08-16.md`
+- `../02_OPEN_WORK_v1.2.27.md`
 
-Where this document appears to conflict with upstream Product Law or an approved later Architecture Law decision, work must STOP and the conflict must be routed to the correct authority rather than silently reconciled.
+The current Product Law files above are canonical; historical source-audit filenames are preserved only in archived evidence and are not active path requirements. Where this document appears to conflict with upstream Product Law or an approved later Architecture Law decision, work must STOP and the conflict must be routed to the correct authority rather than silently reconciled.
 
 ---
 

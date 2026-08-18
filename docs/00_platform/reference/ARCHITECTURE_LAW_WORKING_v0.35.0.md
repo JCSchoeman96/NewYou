@@ -16,7 +16,7 @@
 - `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 - `00_PLATFORM_v1.2.1.md`
 - `01_DECISIONS_v1.2.1.md`
-- `02_OPEN_WORK_v1.2.22.md`
+- `../02_OPEN_WORK_v1.2.27.md`
 - `ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md` — frozen AR-000 handoff
 
 Architecture decisions must remain traceable to the frozen requirement set. A later change to an accepted ARC must preserve history through explicit amendment/supersession rather than silent rewriting.
