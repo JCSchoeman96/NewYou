@@ -22,6 +22,10 @@ Routine Phase 7 work should use the README, current Roadmap, current Open Work, 
 
 The seven documents listed above describe the current platform state. Their explicit versioned filenames are intentional and should not be replaced with unversioned aliases without a separate governance decision.
 
+## Machine-readable inventory
+
+`CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` is the machine-readable inventory of current authority and deep-reference evidence. It records canonical paths, SemVer, authority class, SHA-256 and superseded-version metadata; it does not create a new authority layer.
+
 ## Reference Documents
 
 Use `reference/` only when the current authority requires exact evidence or identifier-level reasoning:
@@ -58,8 +62,8 @@ Product Law
 
 ## Current State
 
-- **Foundation:** READY
-- **Next:** Phase 7 / FP-001 preparation
-- **Executable development:** NOT YET AUTHORISED
+- PLANNING FOUNDATION: READY
+- NEXT: PHASE 7 / FP-001 PREPARATION
+- EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS
 
 Foundation readiness does not authorise implementation. Do not begin FP-001 execution, JIT Domain Dossiers, TOON generation, Architectural Proof, Vertical Slices or implementation unless a later approved task explicitly authorises the applicable preparation and execution gates.

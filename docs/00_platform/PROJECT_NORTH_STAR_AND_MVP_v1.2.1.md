@@ -6,7 +6,7 @@
 - **Related documents:**
   - `00_PLATFORM_v1.2.1.md`
   - `01_DECISIONS_v1.2.1.md`
-  - `02_OPEN_WORK_v1.2.1.md`
+  - `02_OPEN_WORK_v1.2.27.md`
 - **Source foundation:** The approved book source documents, including the temperament assessment, health, sleep, stress, trauma, self-talk, faith, four temperament chapters, and conclusion
 - **Last updated:** 2026-08-16
 - **Decision coverage:** GQ-001 through GQ-012 plus GQ-NY-001 + approved post-freeze DEC-292–DEC-293 amendments

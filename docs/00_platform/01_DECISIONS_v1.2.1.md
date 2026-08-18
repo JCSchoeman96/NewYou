@@ -4,7 +4,7 @@
 - **Authoritative for:** Locked, provisional and externally gated platform decisions
 - **Decision coverage:** GQ-001 through GQ-012 plus GQ-NY-001 + approved post-freeze DEC-292–DEC-293 amendments
 - **Last updated:** 2026-08-16
-- **Related documents:** `00_PLATFORM_v1.2.1.md`, `02_OPEN_WORK_v1.2.1.md`, `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
+- **Related documents:** `00_PLATFORM_v1.2.1.md`, `02_OPEN_WORK_v1.2.27.md`, `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 - **v1.2 amendment scope:** Preserve DEC-001 through DEC-291 history; append DEC-292 and DEC-293 for the approved Paystack launch-gateway promotion and first-party experimentation capability. DEC-047's historical provisional wording is superseded by DEC-292. Existing expert/vendor validation gates remain in force.
 
 ## v1.2.1 Patch Scope
@@ -1405,6 +1405,11 @@ Maintain two levels of performance/scaling definition:
 2. **Implementation-grade mapping before affected slices are issued:** for every domain/action touched by the Feature Pack or implementation slice, define the concrete indexes, Redis structures or `NONE`, TTL/invalidation or `NONE`, GenServer ownership or `NONE`, PubSub behaviour or `NONE`, Oban priority/behaviour or `NONE`, replica use, streaming/pagination, concurrency/idempotency behaviour and relevant 100k-concurrency characteristics before that slice may be implemented.
 
 Future domains or actions not touched by the current delivery scope do not require speculative implementation-grade mapping before development begins. This clarification changes planning timing and granularity only; it does not weaken the platform-wide performance, correctness, privacy, safety, financial-integrity or horizontal-scaling requirements.
+
+## OQ-040 — First-party experimentation proof
+**Status:** ARCHITECTURE / EXPERIMENTATION PROOF
+**Source decision:** DEC-293
+Prove the first-party governed A/B/n architecture before the first governed activation. The proof must cover deterministic/sticky assignment, anonymous-to-known continuity, concurrent-experiment isolation, exposure logging, authoritative conversion attribution, statistical validity, immutable aggregate learning evidence, privacy/deletion handling, variant-safe delivery/caching and failure/recovery. Exact assignment, cache and statistical mechanisms remain downstream Architecture and Feature Pack decisions.
 
 
 # Decision Interpretation Notes
