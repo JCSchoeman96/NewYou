@@ -347,4 +347,3 @@ The v1.1 correction:
 - keeps TOON as a just-in-time execution projection, never an authority.
 
 Implementation remains stopped until the Development Entry Hard Stop in this document is satisfied.
-
