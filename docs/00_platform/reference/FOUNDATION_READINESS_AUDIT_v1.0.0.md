@@ -1,6 +1,7 @@
 # FOUNDATION_READINESS_AUDIT_v1.0.0.md
 
 - **Status:** FROZEN / COMPLETE FOUNDATION INTEGRITY AUDIT
+- **Document version:** v1.0.0
 - **Audit date:** 2026-08-18
 - **Audit command:** `python3 tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json`
 - **Machine evidence:** `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` plus the deterministic runner at `tools/foundation_integrity_audit.py`
@@ -59,7 +60,7 @@ The audit checked cross-document integrity, ownership, delivery order, gate rout
 - **48** durable-truth ownership rows checked; each has one authoritative owner.
 - **17** contiguous Roadmap Feature Packs checked.
 - **40/40** Roadmap OQs (`OQ-001` through `OQ-040`) routed in the Gate Schedule.
-- **79** deterministic audit checks passed in the machine runner.
+- **91** deterministic audit checks passed in the machine runner.
 
 The machine runner supplies the deterministic integrity evidence above; the broader semantic PASS areas remain the consolidated human audit review and are not inferred solely from identifier, path or hash checks.
 

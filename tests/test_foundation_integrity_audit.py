@@ -132,6 +132,25 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 any(finding["check"] == "domain_ownership_uniqueness" for finding in report["findings"])
             )
 
+    def test_duplicate_domain_name_is_reported(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_clean_fixture(root)
+            path = root / "docs" / "00_platform" / "04_DOMAIN_MAP_v1.0.0.md"
+            path.write_text(
+                path.read_text(encoding="utf-8").replace(
+                    "## 4. Platform-wide",
+                    "| 2 | **Example Domain** | Duplicate |\n## 4. Platform-wide",
+                ),
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertTrue(
+                any(finding["check"] == "duplicate_domain_names" for finding in report["findings"])
+            )
+
     def test_missing_current_version_is_reported(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -143,6 +162,24 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
             self.assertTrue(
                 any(finding["check"] == "manifest_version_parity" for finding in report["findings"])
+            )
+
+    def test_document_version_metadata_mismatch_is_reported(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_clean_fixture(root)
+            path = root / "docs" / "00_platform" / "01_DECISIONS_v1.2.1.md"
+            path.write_text(
+                path.read_text(encoding="utf-8").replace(
+                    "**Document version:** v1.2.1", "**Document version:** v9.9.9"
+                ),
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertTrue(
+                any(finding["check"] == "document_version_parity" for finding in report["findings"])
             )
 
     def test_refresh_manifest_updates_hashes(self):
@@ -161,24 +198,30 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
     def _write_clean_fixture(self, root: Path) -> dict:
         files = {
             "docs/00_platform/01_DECISIONS_v1.2.1.md": (
+                "- **Document version:** v1.2.1\n"
                 "## DEC-001 — Example\n"
                 "## OQ-001 — Example\n"
             ),
             "docs/00_platform/05_ROADMAP_v1.0.0.md": (
+                "- **Document version:** v1.0.0\n"
                 "# 14. Gate schedule\n"
                 "| OQ-001 | Example |\n"
                 "## 14.1 Non-OQ expert/vendor gates\n"
             ),
             "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md": (
+                "- **Document version:** v0.35.0\n"
                 "## ARC-001 — Example\n"
             ),
             "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md": (
+                "- **Document version:** v1.0.0\n"
                 "### ARQ-TEST-001 — Example\n"
             ),
             "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md": (
+                "- **Document version:** v0.2.0\n"
                 "# 3. FLOW-01 — Example\n"
             ),
             "docs/00_platform/04_DOMAIN_MAP_v1.0.0.md": (
+                "- **Document version:** v1.0.0\n"
                 "## 3. Approved domain set\n"
                 "| 1 | **Example Domain** | Example |\n"
                 "## 4. Platform-wide business-truth ownership matrix\n"

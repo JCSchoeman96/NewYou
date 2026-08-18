@@ -54,6 +54,12 @@ SOURCE_NAME_PARTS = {
 }
 
 VERSION_PATTERN = re.compile(r"_v(\d+\.\d+\.\d+)\.md$")
+DOCUMENT_VERSION_PATTERN = re.compile(
+    r"^-\s+\*\*Document version:\*\*\s+v?(\d+\.\d+\.\d+)\s*$", re.MULTILINE
+)
+STATUS_VERSION_PATTERN = re.compile(
+    r"^-\s+\*\*Document status:\*\*.*?\bv(\d+\.\d+\.\d+)\b", re.MULTILINE
+)
 BOLD_PATTERN = re.compile(r"\*\*([^*]+)\*\*")
 
 REQUIRED_ENTRY_FIELDS = {
@@ -143,6 +149,15 @@ def _read_entry_text(root: Path, entry: dict[str, Any] | None) -> str:
     if not path.is_file():
         return ""
     return path.read_text(encoding="utf-8")
+
+
+def _declared_document_version(text: str) -> str | None:
+    metadata = "\n".join(text.splitlines()[:40])
+    explicit_versions = DOCUMENT_VERSION_PATTERN.findall(metadata)
+    if explicit_versions:
+        return explicit_versions[0] if len(explicit_versions) == 1 else None
+    status_versions = STATUS_VERSION_PATTERN.findall(metadata)
+    return status_versions[0] if len(status_versions) == 1 else None
 
 
 def _record_check(
@@ -314,6 +329,17 @@ def _check_manifest_entries(root: Path, entries: list[dict[str, Any]], report: d
             else f"SemVer {entry.get('semver')!r} does not match versioned filename {canonical_filename!r}",
             path=repository_path,
         )
+        declared_version = _declared_document_version(path.read_text(encoding="utf-8")) if exists else None
+        document_version_matches = exists and declared_version == str(entry.get("semver", ""))
+        _record_check(
+            report,
+            "document_version_parity",
+            document_version_matches,
+            f"document metadata version matches for {repository_path}"
+            if document_version_matches
+            else f"document metadata version {declared_version!r} does not match manifest SemVer {entry.get('semver')!r}",
+            path=repository_path,
+        )
 
 
 def _build_definitions(root: Path, entries: list[dict[str, Any]], report: dict[str, Any]) -> dict[str, dict[str, list[str]]]:
@@ -452,22 +478,39 @@ def _check_domain_ownership(root: Path, entries: list[dict[str, Any]], report: d
     entry = _find_entry(entries, SOURCE_NAME_PARTS["domain_map"])
     text = _read_entry_text(root, entry)
     domain_rows = _table_rows(text, "## 3. Approved domain set", "## 4.")
-    domains = {row[1].strip("*") for row in domain_rows if len(row) >= 2 and row[0].isdigit()}
+    domain_names = [
+        row[1].strip().strip("*").strip()
+        for row in domain_rows
+        if len(row) >= 2 and row[0].isdigit()
+    ]
+    domains = set(domain_names)
+    duplicate_domains = sorted(
+        name for name, count in Counter(domain_names).items() if count > 1
+    )
     ownership_rows = _table_rows(
         text,
         "## 4. Platform-wide business-truth ownership matrix",
         "### 4.1 Ownership interpretation",
     )
     ownership_rows = [row for row in ownership_rows if len(row) >= 2 and row[0] != "Business truth"]
-    report["counts"]["domains"] = len(domains)
+    report["counts"]["domains"] = len(domain_names)
     report["counts"]["ownership_rows"] = len(ownership_rows)
     _record_check(
         report,
         "domain_count",
-        len(domains) == expected_counts["domains"],
-        f"approved domain count is {expected_counts['domains']}"
-        if len(domains) == expected_counts["domains"]
-        else f"approved domain count is {len(domains)}, expected {expected_counts['domains']}",
+        len(domain_names) == expected_counts["domains"],
+        f"approved domain row count is {expected_counts['domains']}"
+        if len(domain_names) == expected_counts["domains"]
+        else f"approved domain row count is {len(domain_names)}, expected {expected_counts['domains']}",
+        path=_relative_path(entry) if entry else "",
+    )
+    _record_check(
+        report,
+        "duplicate_domain_names",
+        not duplicate_domains,
+        "approved domain names are unique"
+        if not duplicate_domains
+        else f"duplicate approved domain names: {duplicate_domains}",
         path=_relative_path(entry) if entry else "",
     )
     _record_check(
