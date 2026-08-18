@@ -8,7 +8,7 @@ For normal planning and delivery-preparation work, read **only** these current-a
 
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.2.1.md`
-3. `01_DECISIONS_v1.2.1.md`
+3. `01_DECISIONS_v1.2.2.md`
 4. `02_OPEN_WORK_v1.2.27.md`
 5. `03_ARCHITECTURE_v1.0.0.md`
 6. `04_DOMAIN_MAP_v1.0.0.md`
@@ -33,7 +33,7 @@ Use `reference/` only when the current authority requires exact evidence or iden
 - `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md` — exact ARQ source tracing.
 - `reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md` — exact ARC legislative reasoning.
 - `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md` — detailed FLOW evidence.
-- `reference/FOUNDATION_READINESS_AUDIT_v1.0.0.md` — final foundation verification evidence.
+- `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` — current machine-backed foundation integrity evidence.
 
 These documents are valuable evidence, but they are not default context for routine planning or delivery preparation.
 
@@ -47,6 +47,8 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/04_DOMAIN_MAP_WORKING_v0.1.0.md`
 - `archive/04_DOMAIN_MAP_WORKING_v0.2.0.md`
 - `archive/05_ROADMAP_WORKING_v0.1.0.md`
+- `archive/01_DECISIONS_v1.2.1.md` — preserved superseded Decision Register.
+- `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md` — preserved original foundation-readiness evidence.
 
 Archive files are historical evidence only and are never current authority. Never use an archived document to override a current authoritative document.
 

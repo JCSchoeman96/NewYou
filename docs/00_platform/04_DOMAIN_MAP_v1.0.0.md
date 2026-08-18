@@ -6,8 +6,8 @@
 - **Started:** 2026-08-17
 - **Last updated:** 2026-08-17
 - **Authority:** Derived from frozen Product Law v1.2.1 and `03_ARCHITECTURE_v1.0.0.md`
-- **Primary inputs:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `00_PLATFORM_v1.2.1.md`, `01_DECISIONS_v1.2.1.md`, `03_ARCHITECTURE_v1.0.0.md`, `02_OPEN_WORK_v1.2.27.md`
-- **Architecture deep reference:** `reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md` only where the frozen synthesis needs deeper legislative detail
+- **Primary inputs:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `00_PLATFORM_v1.2.1.md`, `01_DECISIONS_v1.2.1.md`, `03_ARCHITECTURE_v1.0.0.md`, `02_OPEN_WORK_v1.2.24.md`
+- **Architecture deep reference:** `ARCHITECTURE_LAW_WORKING_v0.35.0.md` only where the frozen synthesis needs deeper legislative detail
 - **Governance boundary:** This document decides **WHO owns durable business truth**. It does not invent new platform mechanisms, implementation schemas or source code.
 - **Current result:** PHASE 5 COMPLETE / PASS — 18 approved ownership domains, 48 major durable-truth ownership rows, 18/18 lightweight Domain Architecture Profiles, 0 shared-write ambiguities, 0 circular authoritative control dependencies.
 

@@ -32,6 +32,20 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             self.assertEqual("PASS", report["status"])
             self.assertEqual([], report["findings"])
 
+    def test_production_audit_uses_manifest_expectations(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_clean_fixture(root)
+            manifest["integrity_rules"]["expected_counts"]["decisions"] = 2
+            (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = run_audit(root, root / "manifest.json")
+
+            decision_count_check = next(
+                check for check in report["checks"] if check["name"] == "definition_count_dec"
+            )
+            self.assertEqual("DEC definition count is 1, expected 2", decision_count_check["message"])
+
     def test_hash_mismatch_is_reported(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -236,7 +250,47 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(content, encoding="utf-8")
 
-        manifest = {"governing_documents": [], "reference_documents": []}
+        manifest = {
+            "governing_documents": [],
+            "reference_documents": [],
+            "historical_documents": [],
+            "integrity_rules": {
+                "document_roots": {
+                    "governing": "docs/00_platform",
+                    "reference": "docs/00_platform/reference",
+                    "historical": "docs/00_platform/archive",
+                    "context_index": "docs/00_platform/README.md",
+                },
+                "expected_counts": SMALL_COUNTS,
+                "contiguous_ranges": {
+                    "DEC": {"prefix": "DEC", "start": 1, "end": 1, "width": 3},
+                    "OQ": {"prefix": "OQ", "start": 1, "end": 1, "width": 3},
+                    "ARC": {"prefix": "ARC", "start": 1, "end": 1, "width": 3},
+                    "FLOW": {"prefix": "FLOW", "start": 1, "end": 1, "width": 2},
+                },
+                "definition_sources": {
+                    "decisions": "DECISION_REGISTER",
+                    "architecture_law": "ARCHITECTURE_LAW_EVIDENCE",
+                    "architecture_requirements": "ARCHITECTURE_REQUIREMENTS_EVIDENCE",
+                    "reference_flows": "REFERENCE_FLOW_EVIDENCE",
+                    "roadmap": "ROADMAP",
+                    "domain_map": "DOMAIN_LAW",
+                },
+                "graph_rules": {
+                    "stale_reference_patterns": [],
+                    "reference_header_lines": 35,
+                    "frozen_provenance_policy": "frozen_provenance",
+                },
+            },
+        }
+        authority_classes = {
+            "01_DECISIONS_v1.2.1.md": "DECISION_REGISTER",
+            "05_ROADMAP_v1.0.0.md": "ROADMAP",
+            "ARCHITECTURE_LAW_WORKING_v0.35.0.md": "ARCHITECTURE_LAW_EVIDENCE",
+            "ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md": "ARCHITECTURE_REQUIREMENTS_EVIDENCE",
+            "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md": "REFERENCE_FLOW_EVIDENCE",
+            "04_DOMAIN_MAP_v1.0.0.md": "DOMAIN_LAW",
+        }
         for relative in files:
             path = root / relative
             manifest["governing_documents"].append(
@@ -245,7 +299,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                     "canonical_filename": path.name,
                     "semver": path.name.split("_v", 1)[1][:-3],
                     "repository_path": relative,
-                    "authority_class": "TEST",
+                    "authority_class": authority_classes[path.name],
                     "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                     "superseded_version": None,
                 }

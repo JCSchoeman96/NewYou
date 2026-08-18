@@ -2,10 +2,10 @@
 
 - **Document status:** FROZEN / COMPLETE ARCHITECTURE SYNTHESIS
 - **Document version:** v1.0.0
-- **Previous working version:** `archive/03_ARCHITECTURE_WORKING_v0.1.0.md`
+- **Previous working version:** `03_ARCHITECTURE_WORKING_v0.1.0.md`
 - **Last updated:** 2026-08-17
 - **Purpose:** Synthesize accepted Product/Requirement/Architecture Law into a concise engineering architecture that can govern Domain Map and later delivery planning.
-- **Derived from:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `00_PLATFORM_v1.2.1.md`, `01_DECISIONS_v1.2.1.md`, `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md`, `reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md`, `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md`, `02_OPEN_WORK_v1.2.27.md`
+- **Derived from:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `00_PLATFORM_v1.2.1.md`, `01_DECISIONS_v1.2.1.md`, `ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md`, `ARCHITECTURE_LAW_WORKING_v0.35.0.md`, `REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md`, `02_OPEN_WORK_v1.2.23.md`
 - **Architecture Law coverage:** `ARC-001...ARC-327` — 327/327 contiguous and represented
 - **Frozen ARQ coverage:** 417/417 requirements preserved through the accepted Architecture Law; all 10 requirement families represented in this synthesis
 - **Reference Flow coverage:** `FLOW-01...FLOW-12` — 12/12 traceability PASS; no flow rerun required
@@ -17,7 +17,7 @@
 
 # 1. Document Authority & Purpose
 
-`03_ARCHITECTURE` is the platform's operating architecture constitution. It turns the detailed legislative record in `reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md` into a usable set of doctrines and boundaries.
+`03_ARCHITECTURE` is the platform's operating architecture constitution. It turns the detailed legislative record in `ARCHITECTURE_LAW_WORKING_v0.35.0.md` into a usable set of doctrines and boundaries.
 
 The governing chain remains:
 
@@ -844,9 +844,9 @@ No flow was rerun because synthesis did not change Architecture Law or a materia
 
 The detailed supporting records remain preserved:
 
-- `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md`;
-- `reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md`;
-- `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md`.
+- `ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md`;
+- `ARCHITECTURE_LAW_WORKING_v0.35.0.md`;
+- `REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md`.
 
 Normal downstream work should consume this frozen synthesis first and consult exact `ARC-*` entries when deeper legislative rationale/evidence is required.
 

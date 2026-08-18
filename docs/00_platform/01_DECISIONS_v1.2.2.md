@@ -1,11 +1,16 @@
-# 01_DECISIONS.md
+# 01_DECISIONS_v1.2.2.md
 
-- **Document status:** FROZEN PRODUCT DECISION REGISTER v1.2.1
+- **Document status:** FROZEN PRODUCT DECISION REGISTER v1.2.2
+- **Document version:** v1.2.2
 - **Authoritative for:** Locked, provisional and externally gated platform decisions
 - **Decision coverage:** GQ-001 through GQ-012 plus GQ-NY-001 + approved post-freeze DEC-292–DEC-293 amendments
-- **Last updated:** 2026-08-16
+- **Last updated:** 2026-08-18
 - **Related documents:** `00_PLATFORM_v1.2.1.md`, `02_OPEN_WORK_v1.2.27.md`, `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 - **v1.2 amendment scope:** Preserve DEC-001 through DEC-291 history; append DEC-292 and DEC-293 for the approved Paystack launch-gateway promotion and first-party experimentation capability. DEC-047's historical provisional wording is superseded by DEC-292. Existing expert/vendor validation gates remain in force.
+
+## v1.2.2 Patch Scope
+
+This non-semantic governance correction formalises `OQ-040`, an already-consumed architecture/proof gate tied to `DEC-293`. It introduces no new Product Law semantics, changes no existing DEC status, meaning or numbering, and does not reopen Product Law.
 
 ## v1.2.1 Patch Scope
 
@@ -25,67 +30,67 @@ Statuses:
 # GQ-001 — Ultimate Goal and Commercial Foundation
 
 ## DEC-001 — Platform category
-**Status:** LOCKED  
+**Status:** LOCKED
 Build a Christian, temperament-guided holistic health, wellness, lifestyle and community ecosystem, initially for women.
 
 ## DEC-002 — Initial customer
-**Status:** LOCKED  
+**Status:** LOCKED
 The initial commercial customer is an individual adult woman reached through the book, events, existing media platforms and public educational content.
 
 ## DEC-003 — Primary outcome
-**Status:** LOCKED  
+**Status:** LOCKED
 Health, consistency and sustainable whole-person wellbeing take priority over weight loss.
 
 ## DEC-004 — Faith position
-**Status:** LOCKED  
+**Status:** LOCKED
 The platform is openly Christian and available to everyone. It will not provide a configurable faith-free variant.
 
 ## DEC-005 — Future men’s product
-**Status:** LOCKED  
+**Status:** LOCKED
 Men may later use the same technical platform through a separate product and content experience.
 
 ## DEC-006 — Public and paid access
-**Status:** LOCKED  
+**Status:** LOCKED
 Generic educational content is public. Assessments, plans, selected content and recurring personalised benefits may require payment or entitlement.
 
 ## DEC-007 — Assessment product
-**Status:** LOCKED  
+**Status:** LOCKED
 The digital assessment is paid, independently purchasable and includes a report plus introductory personalised guidance.
 
 ## DEC-008 — Book entitlements
-**Status:** LOCKED  
+**Status:** LOCKED
 The standard physical book grants no automatic digital access. Selected bundles may grant named entitlements.
 
 ## DEC-009 — Standard plan
-**Status:** LOCKED  
+**Status:** LOCKED
 The initial plan is a repeatable seven-day self-guided plan whose structure varies by temperament.
 
 ## DEC-010 — Programme expansion
-**Status:** LOCKED  
+**Status:** LOCKED
 A longer foundation programme will launch incrementally after the initial plan is validated.
 
 ## DEC-011 — Clinical service levels
-**Status:** LOCKED  
+**Status:** LOCKED
 Separate automated self-guided, premium automated and practitioner-reviewed pathways.
 
 ## DEC-012 — Clinical authority
-**Status:** LOCKED  
+**Status:** LOCKED
 Venessa is the primary dietetic and nutrition authority. Doctors may be involved when matters exceed the dietetic boundary.
 
 ## DEC-013 — Community launch
-**Status:** LOCKED  
+**Status:** LOCKED
 Validate community through Facebook first, then build a first-party community when product and moderation needs are proven.
 
 ## DEC-014 — Revenue milestones
-**Status:** LOCKED  
+**Status:** LOCKED
 Use 500 paying members at R200 as the initial R100,000 gross MRR milestone and 5,000 members at R200 as the five-year R1,000,000 gross MRR target.
 
 ## DEC-015 — Operating entity
-**Status:** PROVISIONAL / EXPERT REVIEW  
+**Status:** PROVISIONAL / EXPERT REVIEW
 Voelgoed Media is the provisional operating entity. A new dedicated company may be created.
 
 ## DEC-016 — Intellectual property
-**Status:** EXPERT REVIEW  
+**Status:** EXPERT REVIEW
 Lynette contributes the temperament model; Venessa contributes most health, nutrition and programme knowledge. Exact ownership and licences require formal agreement.
 
 ---
@@ -93,51 +98,51 @@ Lynette contributes the temperament model; Venessa contributes most health, nutr
 # GQ-002 — Users, Roles and Data Ownership
 
 ## DEC-017 — Public access and free accounts
-**Status:** LOCKED  
+**Status:** LOCKED
 Public content may be read without an account. A person may create a free account or join the mailing list without purchasing.
 
 ## DEC-018 — Minimum age
-**Status:** LOCKED  
+**Status:** LOCKED
 The initial platform is restricted to users aged 18 and older.
 
 ## DEC-019 — Account model
-**Status:** LOCKED  
+**Status:** LOCKED
 Support individual accounts only at launch.
 
 ## DEC-020 — Purchaser separation
-**Status:** LOCKED  
+**Status:** LOCKED
 Purchaser, recipient, participant and account holder are separate concepts.
 
 ## DEC-021 — Multiple roles
-**Status:** LOCKED  
+**Status:** LOCKED
 One identity may hold multiple explicit, assignable, removable and auditable roles.
 
 ## DEC-022 — Staff roles
-**Status:** LOCKED  
+**Status:** LOCKED
 Initial staff categories include Support, Finance, Super Admin, Content, Moderator, Data Analyst, Event Admin and Developer.
 
 ## DEC-023 — Founder access
-**Status:** LOCKED  
+**Status:** LOCKED
 Venessa may hold separately scoped clinical, content and administrative roles. Lynette initially has a verified community-facing account without routine backend or health-data access.
 
 ## DEC-024 — Practitioner types
-**Status:** LOCKED  
+**Status:** LOCKED
 Distinguish employed practitioners, contracted practitioners and external referral partners.
 
 ## DEC-025 — Practitioner data access
-**Status:** LOCKED  
+**Status:** LOCKED
 Practitioner access requires explicit participant consent, an active relationship, defined scope and expiry, complete auditing and revocable future access.
 
 ## DEC-026 — Participant data principle
-**Status:** LOCKED  
+**Status:** LOCKED
 The participant controls her personal health journey and may access, correct and export appropriate records.
 
 ## DEC-027 — Registration fields
-**Status:** LOCKED  
+**Status:** LOCKED
 Require first name, surname, email, authentication credential, preferred language, 18+ confirmation and terms/privacy acceptance. Phone and city are optional. Preferred name is not required.
 
 ## DEC-028 — Multilingual launch
-**Status:** LOCKED  
+**Status:** LOCKED
 Support Afrikaans and English from launch, ask for language on first entry, save it to the profile and allow switching from the header.
 
 ---
@@ -145,93 +150,93 @@ Support Afrikaans and English from launch, ask for language on first entry, save
 # GQ-003 — Products, Purchases, Memberships and Entitlements
 
 ## DEC-029 — Incremental delivery
-**Status:** LOCKED  
+**Status:** LOCKED
 Model the approved long-term catalogue but implement products incrementally.
 
 ## DEC-030 — Product lifecycle
-**Status:** LOCKED  
+**Status:** LOCKED
 Use `draft → internal → pilot → public → paused → retired`.
 
 ## DEC-031 — Existing temperament onboarding
-**Status:** LOCKED  
+**Status:** LOCKED
 A qualifying plan purchase may include an assessment credit. A user may onboard with a self-reported or book-derived result and complete the online assessment later.
 
 ## DEC-032 — Temperament provenance
-**Status:** LOCKED  
+**Status:** LOCKED
 Distinguish `self_reported`, `book_derived` and `digitally_assessed`.
 
 ## DEC-033 — Assessment history
-**Status:** LOCKED  
+**Status:** LOCKED
 One paid attempt includes permanent report access. Preserve historical results and explicitly select one current profile.
 
 ## DEC-034 — Retake interval
-**Status:** LOCKED  
+**Status:** LOCKED
 Permit no more than one assessment retake per year when a valid entitlement exists.
 
 ## DEC-035 — Premium reassessment
-**Status:** LOCKED  
+**Status:** LOCKED
 One annual entitlement becomes available after 12 continuous premium months or annual renewal, does not accumulate and expires unused when membership ends.
 
 ## DEC-036 — Plan regeneration
-**Status:** LOCKED  
+**Status:** LOCKED
 When the plan included the assessment credit, a materially different digital result permits one complimentary regeneration within 90 days.
 
 ## DEC-037 — Once-off plan access
-**Status:** LOCKED  
+**Status:** LOCKED
 A once-off purchaser retains permanent access to the delivered plan and receives corrections and safety replacements.
 
 ## DEC-038 — Ongoing re-personalisation
-**Status:** LOCKED  
+**Status:** LOCKED
 Preference- or progress-based re-personalisation, including macro and portion recalculation, requires a new purchase or active qualifying membership/add-on.
 
 ## DEC-039 — Membership billing
-**Status:** LOCKED  
+**Status:** LOCKED
 Support monthly and annual billing, no default free trial and cancellation at the end of the paid period.
 
 ## DEC-040 — Membership and add-ons
-**Status:** LOCKED  
+**Status:** LOCKED
 Basic membership is the base subscription. Add-ons grant recurring entitlements. Premium is a named bundle of basic membership plus add-ons.
 
 ## DEC-041 — Access after cancellation
-**Status:** LOCKED  
+**Status:** LOCKED
 Purchased assessments, once-off plans and historical check-ins remain. Membership content, community and new adjustments end.
 
 ## DEC-042 — Monthly premium review
-**Status:** LOCKED  
+**Status:** LOCKED
 A complete check-in is required. Reviews do not accumulate indefinitely. No-change counts as a review. Approved minor changes may be automated. Professional review remains separate.
 
 ## DEC-043 — Failed-payment lifecycle
-**Status:** LOCKED / IMPLEMENTATION PROVISIONAL  
+**Status:** LOCKED / IMPLEMENTATION PROVISIONAL
 Use a 72-hour grace period, clear communication, provider-safe retries and suspension after final failure. Final retry calls depend on Paystack testing.
 
 ## DEC-044 — Gifts and sponsored access
-**Status:** LOCKED  
+**Status:** LOCKED
 The purchaser sees redemption status only. Codes expire after 12 months by default. Redeemed access is non-transferable.
 
 ## DEC-045 — Refund boundaries
-**Status:** LOCKED  
+**Status:** LOCKED
 Assessment refunds end after the first answer except technical failure; plan refunds end after generation; membership has no ordinary partial-period refund; event rules are versioned per event.
 
 ## DEC-046 — Upgrades and downgrades
-**Status:** LOCKED  
+**Status:** LOCKED
 Upgrades are immediate with provider-supported proration. Downgrades take effect at renewal. Historical records remain accessible.
 
 ## DEC-047 — Payment provider and market
-**Status:** SUPERSEDED BY DEC-292  
+**Status:** SUPERSEDED BY DEC-292
 Use Paystack initially, launch in South Africa and bill in ZAR.
 
 **Historical note:** This provisional decision is retained verbatim as the pre-v1.2 position. DEC-292 promotes Paystack to the locked first/launch gateway while preserving provider-behaviour validation gates.
 
 ## DEC-048 — International cards and currencies
-**Status:** LOCKED  
+**Status:** LOCKED
 Accept international cards when enabled. Do not assume true multi-currency charging through the initial South African Paystack integration.
 
 ## DEC-049 — Manual payments
-**Status:** LOCKED  
+**Status:** LOCKED
 Manual EFT may be supported separately but does not create automatic renewal. Grant access only after payment verification.
 
 ## DEC-050 — Promotions and grants
-**Status:** LOCKED  
+**Status:** LOCKED
 Support fixed and percentage discounts, event-linked discounts, promotional pricing, book and gift codes, complimentary access, sponsored access and explicitly scoped lifetime access.
 
 ---
@@ -240,91 +245,91 @@ Support fixed and percentage discounts, event-linked discounts, promotional pric
 # GQ-004 — Temperament Assessment, Scoring and Reports
 
 ## DEC-051 — Methodology authority
-**Status:** LOCKED  
+**Status:** LOCKED
 Only Venessa and Super Admin, acting under the intellectual-property agreement, may approve or alter assessment methodology.
 
 ## DEC-052 — Initial assessment fidelity
-**Status:** LOCKED  
+**Status:** LOCKED
 Launch with a faithful, versioned digital representation of the approved book assessment.
 
 ## DEC-053 — Required answers and feedback
-**Status:** LOCKED  
+**Status:** LOCKED
 All scored questions are required. Optional feedback questions remain separate from scoring.
 
 ## DEC-054 — Save, resume and attempt limit
-**Status:** LOCKED  
+**Status:** LOCKED
 Support save and resume, one active attempt at a time and controlled recovery for genuine technical failure.
 
 ## DEC-055 — Entitlement consumption
-**Status:** LOCKED  
+**Status:** LOCKED
 Do not consume the entitlement until the first answer is saved. Mark it used once the attempt begins.
 
 ## DEC-056 — Attempt expiry
-**Status:** LOCKED  
+**Status:** LOCKED
 Unfinished attempts expire after 30 days with advance warning.
 
 ## DEC-057 — Launch scoring
-**Status:** LOCKED  
+**Status:** LOCKED
 Use equal weighting initially while permitting future versioned question and answer weights.
 
 ## DEC-058 — Primary and secondary results
-**Status:** LOCKED  
+**Status:** LOCKED
 Highest score is primary, second-highest is secondary and exact colour scores are shown.
 
 ## DEC-059 — Tie workflow
-**Status:** LOCKED  
+**Status:** LOCKED
 Use approved tie-break questions and rules first. Preserve an equal mixed result when unresolved. Record participant preference separately. Manual review is exceptional.
 
 ## DEC-060 — Score-distance labels
-**Status:** LOCKED / METHODOLOGY GATE  
+**Status:** LOCKED / METHODOLOGY GATE
 Do not enable dominance-strength, balanced, close-result or mixed-distance labels until exact thresholds are approved.
 
 ## DEC-061 — Immutable raw result
-**Status:** LOCKED  
+**Status:** LOCKED
 Submitted answers, calculated scores and assessment version are immutable.
 
 ## DEC-062 — Reviewed interpretation
-**Status:** LOCKED  
+**Status:** LOCKED
 An exceptional change creates a separate audited reviewed interpretation and never overwrites the raw result.
 
 ## DEC-063 — Current profile selection
-**Status:** LOCKED  
+**Status:** LOCKED
 The participant selects the current eligible profile. Staff may assist only with consent and audit. New digital results do not become current automatically.
 
 ## DEC-064 — Self-reported result use
-**Status:** LOCKED  
+**Status:** LOCKED
 Self-reported and book-derived results may drive presentation and low-risk temperament adjustments but must be clearly labelled.
 
 ## DEC-065 — Assessment report scope
-**Status:** LOCKED  
+**Status:** LOCKED
 The paid report covers scores, strengths, vulnerabilities, stress, health patterns, communication, practical strategies, faith reflection, next product and limitations.
 
 ## DEC-066 — Historical reports
-**Status:** LOCKED  
+**Status:** LOCKED
 Preserve the original delivered report and provide the latest approved interpretation where wording improves.
 
 ## DEC-067 — Version immutability
-**Status:** LOCKED  
+**Status:** LOCKED
 Completed results remain immutable. Active short-lived attempts may finish on the original version. Retired versions cannot start new attempts.
 
 ## DEC-068 — Language versions
-**Status:** LOCKED  
+**Status:** LOCKED
 Afrikaans and English are separately governed language variants of one methodological version.
 
 ## DEC-069 — Assessment publication workflow
-**Status:** LOCKED  
+**Status:** LOCKED
 Use draft, methodology approval, health review where affected, language review, admin publication, active and retired states.
 
 ## DEC-070 — Submitted-answer retention
-**Status:** LOCKED  
+**Status:** LOCKED
 Retain submitted answers immutably for reproducibility. Participants may view their answers. Staff access is restricted and audited.
 
 ## DEC-071 — Cross-product reuse
-**Status:** LOCKED  
+**Status:** LOCKED
 The underlying temperament result may be reused across approved product families, each with its own interpretations and recommendations.
 
 ## DEC-072 — Assessment analytics
-**Status:** LOCKED  
+**Status:** LOCKED
 Permit privacy-controlled aggregated assessment analytics without identifiable public disclosure.
 
 
@@ -332,95 +337,95 @@ Permit privacy-controlled aggregated assessment analytics without identifiable p
 # GQ-005 — Health Onboarding, Eligibility and Safety
 
 ## DEC-073 — Progressive health onboarding
-**Status:** LOCKED  
+**Status:** LOCKED
 Collect health information progressively by product purpose rather than during account registration.
 
 ## DEC-074 — Required plan intake
-**Status:** LOCKED  
+**Status:** LOCKED
 Require a safety-focused structured health and lifestyle intake before automated personalised-plan generation.
 
 ## DEC-075 — Full date of birth
-**Status:** LOCKED  
+**Status:** LOCKED
 Require full date of birth during plan onboarding, not ordinary registration.
 
 ## DEC-076 — Health-data provenance
-**Status:** LOCKED  
+**Status:** LOCKED
 Record member-reported, document-uploaded, practitioner-entered, practitioner-verified and laboratory-verified provenance.
 
 ## DEC-077 — Missing and withheld information
-**Status:** LOCKED  
+**Status:** LOCKED
 Support `unknown`, `not_tested` and `prefer_not_to_answer` where safe. Missing safety-critical information produces `insufficient_information`.
 
 ## DEC-078 — Eligibility outcomes
-**Status:** LOCKED  
+**Status:** LOCKED
 Use `eligible_automated`, `general_wellness_only`, `professional_review_required` and `insufficient_information`.
 
 ## DEC-079 — High-risk blockers
-**Status:** LOCKED / CLINICAL GATE  
+**Status:** LOCKED / CLINICAL GATE
 Approved high-risk rules block automated personalised plans. The final blocker matrix requires clinical approval before launch.
 
 ## DEC-080 — Moderate-risk routing
-**Status:** LOCKED / CLINICAL GATE  
+**Status:** LOCKED / CLINICAL GATE
 Use approved automated routing with General Wellness support, clarification and manual escalation.
 
 ## DEC-081 — Eating-disorder boundary
-**Status:** LOCKED  
+**Status:** LOCKED
 Active or recent cases block automated plans. Older stable history requires professional review.
 
 ## DEC-082 — Pregnancy and breastfeeding
-**Status:** LOCKED  
+**Status:** LOCKED
 Require professional review before personalised eating plans while permitting the General Wellness Starter Pathway.
 
 ## DEC-083 — Food-exclusion classification
-**Status:** LOCKED  
+**Status:** LOCKED
 Separate medical allergies, intolerances, religious exclusions, ethical exclusions, dislikes and preferences.
 
 ## DEC-084 — Medication boundary
-**Status:** LOCKED  
+**Status:** LOCKED
 Collect the structured minimum required for safety, automate only professionally approved rules and route unclear or complex cases to review.
 
 ## DEC-085 — Supplement boundary
-**Status:** LOCKED  
+**Status:** LOCKED
 Manage supplements separately. Dosage, deficiency, interaction, pregnancy and complex-use guidance require approved rules or professional review.
 
 ## DEC-086 — Laboratory-result validity
-**Status:** LOCKED / CLINICAL GATE  
+**Status:** LOCKED / CLINICAL GATE
 Keep results historically while applying clinically approved test-specific validity periods for current decisions.
 
 ## DEC-087 — Progress-entry frequency
-**Status:** LOCKED  
+**Status:** LOCKED
 Permit daily or weekly progress entries, but ordinary plan adjustments occur monthly using trends rather than fluctuations or isolated measurements.
 
 ## DEC-088 — Progress photographs
-**Status:** LOCKED  
+**Status:** LOCKED
 Progress photographs are optional and require separate privacy controls.
 
 ## DEC-089 — Automatic safety suspension
-**Status:** LOCKED  
+**Status:** LOCKED
 Approved new high-risk information places an active plan into `safety_paused`; history remains visible while new adjustments stop.
 
 ## DEC-090 — Safety-case lifecycle
-**Status:** LOCKED  
+**Status:** LOCKED
 Use `detected`, `awaiting_information`, `participant_action_required`, `professional_review_required`, `under_professional_review`, `cleared`, `restricted` and `resolved`.
 
 ## DEC-091 — Clinical override
-**Status:** LOCKED  
+**Status:** LOCKED
 Create a scoped, time-bound and audited override without replacing the original automated outcome.
 
 ## DEC-092 — High-risk downgrade approval
-**Status:** LOCKED  
+**Status:** LOCKED
 Lowering high-risk status to automated eligibility requires a second authorised clinical approval or an approved single-practitioner protocol.
 
 ## DEC-093 — Practitioner-review outcomes
-**Status:** LOCKED  
+**Status:** LOCKED
 Record structured outcomes for approval, modification, practitioner-authored plans, restrictions, follow-up, decline and external referral.
 
 ## DEC-094 — Purpose-specific permissions
-**Status:** LOCKED  
+**Status:** LOCKED
 Separate service delivery, health storage, personalisation, automated recommendations, uploads, practitioner sharing, analytics, marketing and community permissions.
 
 ## DEC-095 — Emergency boundary
-**Status:** LOCKED / EXPERT REVIEW  
+**Status:** LOCKED / EXPERT REVIEW
 Stop unsafe automation, display approved urgent-help instructions and never imply continuous clinical monitoring. Final wording and protocols require professional and legal review.
 
 
@@ -428,111 +433,111 @@ Stop unsafe automation, display approved urgent-help instructions and never impl
 # GQ-006 — Plan Generation, Lifecycle and Adjustments
 
 ## DEC-096 — Deterministic plan engine
-**Status:** LOCKED  
+**Status:** LOCKED
 Use a deterministic, versioned rule engine built from approved calculations, templates, substitutions and content.
 
 ## DEC-097 — Extensible goal catalogue
-**Status:** LOCKED  
+**Status:** LOCKED
 Launch with health foundation, weight reduction and weight maintenance while allowing future approved pathways without redesign.
 
 ## DEC-098 — Weight gain distinction
-**Status:** LOCKED  
+**Status:** LOCKED
 General weight gain may later be automated; clinical weight restoration remains separately governed.
 
 ## DEC-099 — Versioned calculation protocols
-**Status:** LOCKED / CLINICAL GATE  
+**Status:** LOCKED / CLINICAL GATE
 Use explicit approved formulas, limits, rounding, allocation, exclusions and escalation rules.
 
 ## DEC-100 — Energy units
-**Status:** LOCKED  
+**Status:** LOCKED
 Display kilojoules by default and support a saved Calories/kilocalories toggle from launch using one authoritative underlying value.
 
 ## DEC-101 — Numerical presentation
-**Status:** LOCKED  
+**Status:** LOCKED
 Vary participant-facing numerical detail according to product and safety rules while retaining exact internal targets.
 
 ## DEC-102 — Weight-reduction limits
-**Status:** LOCKED / CLINICAL GATE  
+**Status:** LOCKED / CLINICAL GATE
 Use approved bounded deficits, minimum energy limits, rate guardrails and trend-based adjustment.
 
 ## DEC-103 — Meal frequency
-**Status:** LOCKED  
+**Status:** LOCKED
 Support approved three- or four-meal structures and exclude fasting from ordinary automated plans.
 
 ## DEC-104 — Modular plan composition
-**Status:** LOCKED  
+**Status:** LOCKED
 Use approved modular meal slots, portions, recipes, alternatives, preparation and shopping support.
 
 ## DEC-105 — Substitution groups
-**Status:** LOCKED  
+**Status:** LOCKED
 Permit only approved, versioned equivalence substitutions that enforce exclusions.
 
 ## DEC-106 — Temperament boundary
-**Status:** LOCKED  
+**Status:** LOCKED
 Temperament affects behavioural delivery and presentation, not safety or nutritional truth.
 
 ## DEC-107 — Immutable plan snapshots
-**Status:** LOCKED  
+**Status:** LOCKED
 Every generation and adjustment creates an immutable, reproducible, linked plan version.
 
 ## DEC-108 — Layered explainability
-**Status:** LOCKED  
+**Status:** LOCKED
 Provide participant-facing reasons and retain exact internal rule and input traces.
 
 ## DEC-109 — Generation failure
-**Status:** LOCKED  
+**Status:** LOCKED
 Fail closed, preserve entitlements and prevent partial plans, duplicate generation and double charging.
 
 ## DEC-110 — Plan lifecycle
-**Status:** LOCKED  
+**Status:** LOCKED
 Use pending, generated, review, approval, scheduled, active, safety-paused, completed, superseded and withdrawn states.
 
 ## DEC-111 — Activation
-**Status:** LOCKED  
+**Status:** LOCKED
 Permit immediate or approved near-term start with revalidation when information or timing becomes stale.
 
 ## DEC-112 — Formal review entitlement
-**Status:** LOCKED  
+**Status:** LOCKED
 Allow one review per qualifying entitlement period after minimum plan exposure and a complete check-in.
 
 ## DEC-113 — Missed review
-**Status:** LOCKED  
+**Status:** LOCKED
 Do not adjust from incomplete data; continue the safe current plan and let the unused review expire after a defined grace period.
 
 ## DEC-114 — Structured review outcomes
-**Status:** LOCKED  
+**Status:** LOCKED
 Use explicit outcomes for unchanged, presentation, substitutions, portions, macros, meal frequency, simplification, variety, safety pause and professional review.
 
 ## DEC-115 — Trend-based recalculation
-**Status:** LOCKED / CLINICAL GATE  
+**Status:** LOCKED / CLINICAL GATE
 Adjust only from sufficient trends beyond approved fluctuation tolerance and within protocol limits.
 
 ## DEC-116 — Conflicting participant requests
-**Status:** LOCKED  
+**Status:** LOCKED
 Record and explain requests that conflict with safety, offer approved alternatives and escalate where needed.
 
 ## DEC-117 — Practitioner-derived plans
-**Status:** LOCKED  
+**Status:** LOCKED
 Professional changes create a new immutable practitioner-derived version rather than editing the automated source.
 
 ## DEC-118 — Shared bilingual plan logic
-**Status:** LOCKED  
+**Status:** LOCKED
 Share calculations and logic while using separately approved Afrikaans and English content variants.
 
 ## DEC-119 — Layered translation architecture
-**Status:** LOCKED / ARCHITECTURE DETAIL PENDING  
+**Status:** LOCKED / ARCHITECTURE DETAIL PENDING
 Use Gettext for fixed UI and system strings, Ash-backed resources for governed runtime content and immutable references to delivered translation versions.
 
 ## DEC-120 — Recipes and shopping lists
-**Status:** LOCKED  
+**Status:** LOCKED
 Use approved reusable recipes and generate shopping lists from the immutable plan snapshot.
 
 ## DEC-121 — Corrections and withdrawal
-**Status:** LOCKED  
+**Status:** LOCKED
 Preserve history while issuing governed corrections, replacements and safety withdrawals without consuming a new entitlement.
 
 ## DEC-122 — Plan analytics
-**Status:** LOCKED  
+**Status:** LOCKED
 Use governed events and precomputed aggregates, with Redis for suitable operational counters and PostgreSQL for durable truth.
 
 
@@ -540,99 +545,99 @@ Use governed events and precomputed aggregates, with Redis for suitable operatio
 # GQ-007 — Content, Translation and Personalised Feeds
 
 ## DEC-123 — Source-language strategy
-**Status:** LOCKED  
+**Status:** LOCKED
 Content may originate in Afrikaans or English while recording the source locale and version relationship.
 
 ## DEC-124 — Risk-based bilingual publication
-**Status:** LOCKED  
+**Status:** LOCKED
 Require both languages for paid, contractual, assessment, plan, clinical, safety and core-onboarding content; permit explicit single-language availability for optional low-risk editorial content.
 
 ## DEC-125 — Translation lifecycle
-**Status:** LOCKED  
+**Status:** LOCKED
 Use independently governed missing, draft, machine-draft, review, approval, publication, superseded and withdrawn states.
 
 ## DEC-126 — Machine translation
-**Status:** LOCKED  
+**Status:** LOCKED
 Machine translation may create drafts only and never publishes without required human and clinical review.
 
 ## DEC-127 — Multilingual content structure
-**Status:** LOCKED  
+**Status:** LOCKED
 Use shared conceptual content with immutable content and translation versions rather than unrelated records or one JSON translation blob.
 
 ## DEC-128 — Controlled content types
-**Status:** LOCKED  
+**Status:** LOCKED
 Use an approved extensible catalogue for articles, lessons, devotionals, recipes, instructions, interpretations, safety notices, FAQs, product pages, event pages, sessions and downloads.
 
 ## DEC-129 — Content risk classes
-**Status:** LOCKED  
+**Status:** LOCKED
 Use editorial, health-education, personalisation, clinical, safety-critical and legal-or-consent risk classes.
 
 ## DEC-130 — Scoped approval matrix
-**Status:** LOCKED  
+**Status:** LOCKED
 Approval authority follows content risk, language and professional scope, with each approval recorded separately.
 
 ## DEC-131 — Explainable feed ranking
-**Status:** LOCKED  
+**Status:** LOCKED
 Use deterministic ranking from approved signals while allowing broader browsing.
 
 ## DEC-132 — Derived relevance flags
-**Status:** LOCKED  
+**Status:** LOCKED
 Use minimum derived relevance flags rather than copying full diagnoses or clinical details into feed infrastructure.
 
 ## DEC-133 — Feed controls
-**Status:** LOCKED  
+**Status:** LOCKED
 Provide explanation, save, dismiss, topic controls, full browsing and reset while preventing permanent hiding of applicable safety content.
 
 ## DEC-134 — Translation fallback
-**Status:** LOCKED  
+**Status:** LOCKED
 Permit explicit fallback for optional low-risk content and block delivery of paid or safety-sensitive content without approved required translations.
 
 ## DEC-135 — Immutable content versions
-**Status:** LOCKED  
+**Status:** LOCKED
 Every material edit creates a new immutable and traceable content version.
 
 ## DEC-136 — Scheduled automatic publication
-**Status:** LOCKED  
+**Status:** LOCKED
 Permit reliable future auto-publication with pre-publication revalidation, idempotency, observability and failure alerts.
 
 ## DEC-137 — Correction classes
-**Status:** LOCKED  
+**Status:** LOCKED
 Use minor, material, safety, legal-or-consent and full-withdrawal correction classes with proportional handling.
 
 ## DEC-138 — Attribution
-**Status:** LOCKED  
+**Status:** LOCKED
 Separate internal authorship and approval responsibility from selected public attribution.
 
 ## DEC-139 — Governed taxonomy
-**Status:** LOCKED  
+**Status:** LOCKED
 Use controlled, versioned taxonomy groups with aliases and reviewed changes.
 
 ## DEC-140 — Search ranking
-**Status:** LOCKED  
+**Status:** LOCKED
 Use access-controlled layered deterministic search; semantic ranking may later act only as a governed secondary signal.
 
 ## DEC-141 — Bilingual SEO
-**Status:** LOCKED  
+**Status:** LOCKED
 Use explicit locale-specific public URLs, language alternates, per-language canonicals and permanent redirects for slug changes.
 
 ## DEC-142 — Reusable content blocks
-**Status:** LOCKED  
+**Status:** LOCKED
 Reuse approved versioned blocks while preserving exact immutable delivery snapshots.
 
 ## DEC-143 — Governed media
-**Status:** LOCKED  
+**Status:** LOCKED
 Store media metadata, rights, accessibility, versions, checksums and publication state separately from text content.
 
 ## DEC-144 — Protected asset delivery
-**Status:** LOCKED  
+**Status:** LOCKED
 Use entitlement checks and short-lived signed access for protected downloads, reports and recordings.
 
 ## DEC-145 — Minimum content analytics
-**Status:** LOCKED  
+**Status:** LOCKED
 Collect governed minimum events without creating a shadow health record or ingesting journals by default.
 
 ## DEC-146 — Cloudflare and layered caching
-**Status:** LOCKED / ARCHITECTURE DETAIL PENDING  
+**Status:** LOCKED / ARCHITECTURE DETAIL PENDING
 Use Cloudflare for suitable edge delivery together with ETS or Cachex, Redis and PostgreSQL; optimise Ash and PostgreSQL queries while prohibiting unsafe public caching of private or personalised content.
 
 
@@ -640,201 +645,201 @@ Use Cloudflare for suitable edge delivery together with ETS or Cachex, Redis and
 # GQ-008 — Programmes, Habits, Journals and Progress
 
 ## DEC-147 — Reusable programme structure
-**Status:** LOCKED  
+**Status:** LOCKED
 Use Programme, ProgrammeVersion, Module, Lesson and Activity as the reusable conceptual hierarchy.
 
 ## DEC-148 — Programme catalogue and lifecycle
-**Status:** LOCKED  
+**Status:** LOCKED
 Use an approved extensible programme catalogue with draft, internal, pilot, public, paused and retired states.
 
 ## DEC-149 — Delivery modes
-**Status:** LOCKED  
+**Status:** LOCKED
 Support evergreen self-paced, scheduled cohort and facilitated cohort delivery, launching primarily evergreen.
 
 ## DEC-150 — Programme entitlements
-**Status:** LOCKED  
+**Status:** LOCKED
 Access follows explicit public, free, membership, add-on, purchase, bundle, sponsored or practitioner-assigned entitlements.
 
 ## DEC-151 — Guided progression and pacing
-**Status:** LOCKED  
+**Status:** LOCKED
 Use explicit prerequisites and recommended pacing without punitive failure for ordinary delay.
 
 ## DEC-152 — Enrolment history
-**Status:** LOCKED  
+**Status:** LOCKED
 Preserve enrolment attempts, pauses, restarts and completions without deleting progress or silently consuming entitlements.
 
 ## DEC-153 — Activity requirement types
-**Status:** LOCKED  
+**Status:** LOCKED
 Use required-for-progression, required-for-completion, required-for-safety, recommended, optional and conditional activity types.
 
 ## DEC-154 — Recovery model
-**Status:** LOCKED  
+**Status:** LOCKED
 Preserve progress and provide catch-up, rescheduling, simplification and supportive recovery rather than resets.
 
 ## DEC-155 — Completion rules
-**Status:** LOCKED  
+**Status:** LOCKED
 Use versioned participation-based completion rules that do not require weight loss, perfect adherence or uninterrupted streaks.
 
 ## DEC-156 — Programme-version migration
-**Status:** LOCKED  
+**Status:** LOCKED
 Keep active enrolments on their version unless governed migration or safety correction applies.
 
 ## DEC-157 — Programme temperament boundary
-**Status:** LOCKED  
+**Status:** LOCKED
 Temperament changes behavioural delivery, not health facts, safety or professional restrictions.
 
 ## DEC-158 — Habit catalogue
-**Status:** LOCKED  
+**Status:** LOCKED
 Use approved habits plus participant-created low-risk habits and distinguish practitioner-assigned habits.
 
 ## DEC-159 — Habit schedules
-**Status:** LOCKED  
+**Status:** LOCKED
 Use controlled daily, weekday, weekly, times-per-week, date-specific and programme-relative schedules.
 
 ## DEC-160 — Habit occurrence states
-**Status:** LOCKED  
+**Status:** LOCKED
 Use pending, completed, partial, intentional skip, missed, not applicable and safety blocked.
 
 ## DEC-161 — Compassionate consistency
-**Status:** LOCKED  
+**Status:** LOCKED
 Use trend and recovery indicators rather than streaks that reset after one missed day.
 
 ## DEC-162 — Reminder controls
-**Status:** LOCKED  
+**Status:** LOCKED
 Use participant-controlled, timezone-aware reminders with quiet hours, caps, pause and supportive language.
 
 ## DEC-163 — Accountability sharing
-**Status:** LOCKED  
+**Status:** LOCKED
 Allow optional scoped, expiring and revocable sharing of selected progress without default journal or health access.
 
 ## DEC-164 — Journal entry types
-**Status:** LOCKED  
+**Status:** LOCKED
 Support free, guided, programme, gratitude, faith, hunger, setback and practitioner-shared entry types.
 
 ## DEC-165 — Journal privacy
-**Status:** LOCKED  
+**Status:** LOCKED
 Keep journals private by default and permit entry-specific practitioner sharing with consent, scope, expiry and audit.
 
 ## DEC-166 — Journal monitoring boundary
-**Status:** LOCKED  
+**Status:** LOCKED
 Do not promise continuous free-text monitoring; use explicit structured safety pathways.
 
 ## DEC-167 — AI journal assistance
-**Status:** LOCKED / DEFERRED  
+**Status:** LOCKED / DEFERRED
 Any future AI summary is participant-initiated, scoped, labelled, non-diagnostic and outside the MVP.
 
 ## DEC-168 — Progress recognition
-**Status:** LOCKED  
+**Status:** LOCKED
 Use private, health-aligned milestones, optional badges and completion certificates without weight rankings or shame.
 
 ## DEC-169 — Programme analytics
-**Status:** LOCKED  
+**Status:** LOCKED
 Collect governed behavioural events and aggregates while excluding journal text and unnecessary health detail.
 
 # GQ-009 — Community, Challenges, Live Sessions and Events
 
 ## DEC-170 — Community rollout
-**Status:** LOCKED  
+**Status:** LOCKED
 Launch through a governed Facebook group and migrate to first-party community only when explicit readiness criteria are met.
 
 ## DEC-171 — Community entitlement
-**Status:** LOCKED  
+**Status:** LOCKED
 Grant community access through an explicit qualifying membership, bundle, sponsored, pilot, staff or practitioner entitlement.
 
 ## DEC-172 — Community identity
-**Status:** LOCKED  
+**Status:** LOCKED
 Maintain private account identity while permitting a controlled public display name and verified staff/practitioner badges.
 
 ## DEC-173 — Profile privacy
-**Status:** LOCKED  
+**Status:** LOCKED
 Expose only participant-selected community fields and keep health, plan, journal, practitioner and purchase data private by default.
 
 ## DEC-174 — Participation policies
-**Status:** LOCKED  
+**Status:** LOCKED
 Use group-specific read-only, staff-post/member-comment, moderated member-post, immediate member-post and facilitated-discussion permissions.
 
 ## DEC-175 — Sensitive disclosures
-**Status:** LOCKED  
+**Status:** LOCKED
 Permit general wellbeing discussion while warning, redirecting or moderating highly sensitive health and personal disclosures.
 
 ## DEC-176 — Peer health-advice boundary
-**Status:** LOCKED  
+**Status:** LOCKED
 Allow personal experience but prohibit diagnosis, medication changes, dosing, dangerous restriction and presenting unverified claims as platform advice.
 
 ## DEC-177 — Moderation lifecycle
-**Status:** LOCKED  
+**Status:** LOCKED
 Use structured report, triage, review, action, appeal and closure states with secure evidence retention.
 
 ## DEC-178 — Member reporting
-**Status:** LOCKED  
+**Status:** LOCKED
 Use structured report categories, protect reporter identity and prioritise urgent safety/privacy categories.
 
 ## DEC-179 — Severity-based sanctions
-**Status:** LOCKED  
+**Status:** LOCKED
 Use education, warning, posting restriction, suspension and ban, with immediate severe-action capability.
 
 ## DEC-180 — Moderation appeals
-**Status:** LOCKED  
+**Status:** LOCKED
 Permit one governed appeal per eligible decision, independently reviewed where possible.
 
 ## DEC-181 — Direct messaging
-**Status:** LOCKED  
+**Status:** LOCKED
 Exclude unrestricted member messaging initially and require consent, safety, reporting and moderation controls before any future release.
 
 ## DEC-182 — Former-member content
-**Status:** LOCKED  
+**Status:** LOCKED
 End active participation when entitlement ends while preserving governed discussion/moderation history subject to deletion and anonymisation rules.
 
 ## DEC-183 — Challenge definitions
-**Status:** LOCKED  
+**Status:** LOCKED
 Use governed reusable challenge modes with explicit eligibility, privacy, safety, completion, facilitation and entitlement.
 
 ## DEC-184 — Challenge metrics
-**Status:** LOCKED  
+**Status:** LOCKED
 Use private progress and safe optional group recognition; prohibit public weight, calorie-restriction and body-measurement competition.
 
 ## DEC-185 — Challenge safety
-**Status:** LOCKED  
+**Status:** LOCKED
 Pause or restrict unsafe activities privately, offer safe alternatives and allow exit without penalty.
 
 ## DEC-186 — Live-session access
-**Status:** LOCKED  
+**Status:** LOCKED
 Use entitlement-aware registration, capacity, waitlists, protected joining instructions and privacy-preserving attendance.
 
 ## DEC-187 — Group Q&A
-**Status:** LOCKED  
+**Status:** LOCKED
 Use moderated educational Q&A and redirect private diagnosis, prescription and treatment requests to professional pathways.
 
 ## DEC-188 — Recording governance
-**Status:** LOCKED  
+**Status:** LOCKED
 Require explicit recording notice, participant controls, governed editing, replay entitlements, versioning, correction and clip approval.
 
 ## DEC-189 — Restream launch direction
-**Status:** PROVISIONAL / VALIDATION REQUIRED  
+**Status:** PROVISIONAL / VALIDATION REQUIRED
 Use Restream provisionally for production and multistream distribution, subject to plan, reliability and operational validation.
 
 ## DEC-190 — Platform live-video path
-**Status:** LOCKED / ARCHITECTURE DETAIL PENDING  
+**Status:** LOCKED / ARCHITECTURE DETAIL PENDING
 Prefer Restream → custom RTMPS → Cloudflare Stream → entitlement-controlled platform player with governed automatic replay records.
 
 ## DEC-191 — Event structure
-**Status:** LOCKED  
+**Status:** LOCKED
 Use Event → EventVersion → EventOccurrence → TicketType → TicketEntitlement as the reusable conceptual model.
 
 ## DEC-192 — Capacity reservations
-**Status:** LOCKED  
+**Status:** LOCKED
 Use short-lived idempotent transactional reservations, verified payment confirmation, expiry and waitlists to prevent confirmed overselling.
 
 ## DEC-193 — Ticket identity and states
-**Status:** LOCKED  
+**Status:** LOCKED
 Separate purchaser, ticket holder and attendee and use governed reservation, payment, issue, transfer, check-in, cancellation, refund, credit, expiry and void states.
 
 ## DEC-194 — Event policy
-**Status:** LOCKED  
+**Status:** LOCKED
 Use versioned event-specific cancellation, transfer, credit, postponement, format-change, force-majeure and bundled-entitlement rules accepted before checkout.
 
 ## DEC-195 — Community/event analytics
-**Status:** LOCKED  
+**Status:** LOCKED
 Collect minimum operational events and aggregates without duplicating sensitive post or health content; durable moderation, ticket and entitlement truth remains authoritative.
 
 
@@ -842,99 +847,99 @@ Collect minimum operational events and aggregates without duplicating sensitive 
 # GQ-NY-001 — Nuwe Jy Flagship Product
 
 ## DEC-196 — Nuwe Jy product definition
-**Status:** LOCKED  
+**Status:** LOCKED
 Nuwe Jy is a guided transformation programme delivered through a 60-day challenge experience, not a conventional LMS course.
 
 ## DEC-197 — Release priority
-**Status:** LOCKED  
+**Status:** LOCKED
 Build Nuwe Jy as the first flagship vertical expansion after the core account, assessment, safety, payment, entitlement and plan foundation.
 
 ## DEC-198 — Delivery mode
-**Status:** LOCKED  
+**Status:** LOCKED
 Use scheduled cohorts as the flagship mode and support a later evergreen edition.
 
 ## DEC-199 — Sixty-day meaning
-**Status:** LOCKED  
+**Status:** LOCKED
 Use a 60-calendar-day guided rhythm with catch-up and recovery rather than punitive reset or false automatic completion.
 
 ## DEC-200 — Today experience
-**Status:** LOCKED  
+**Status:** LOCKED
 Provide a dedicated Today view for focus, lesson, action, habit, reflection, live/community activity, progress and recovery.
 
 ## DEC-201 — Daily drip release
-**Status:** LOCKED  
+**Status:** LOCKED
 Prepare all 60 days in advance and release content automatically by edition schedule with timezone awareness, idempotency, observability and recovery.
 
 ## DEC-202 — Day composition
-**Status:** LOCKED  
+**Status:** LOCKED
 Use controlled composable day components rather than one generic lesson or an unrestricted page builder.
 
 ## DEC-203 — Temperament delivery
-**Status:** LOCKED  
+**Status:** LOCKED
 Use temperament to adapt behavioural delivery while preserving shared health, faith, safety and programme truth.
 
 ## DEC-204 — Nuwe Jy progress
-**Status:** LOCKED  
+**Status:** LOCKED
 Use private multi-dimensional progress and prohibit weight-led or fastest-completion competition.
 
 ## DEC-205 — Cohort community
-**Status:** LOCKED  
+**Status:** LOCKED
 Give each flagship edition a governed cohort community, initially through Facebook and later through the first-party platform.
 
 ## DEC-206 — Live sessions
-**Status:** LOCKED  
+**Status:** LOCKED
 Link sessions, registration, attendance and governed replays directly to the challenge edition and cohort.
 
 ## DEC-207 — Build-from-scratch boundary
-**Status:** LOCKED  
+**Status:** LOCKED
 Do not build a LearnDash importer, converter or compatibility layer and do not preserve LearnDash structures as domain truth.
 
 ## DEC-208 — Progressive challenge onboarding
-**Status:** LOCKED  
+**Status:** LOCKED
 Require account, age, consent, essential safety screening, language and temperament provenance before participation, with deeper plan intake separately.
 
 ## DEC-209 — Nuwe Jy safety routing
-**Status:** LOCKED  
+**Status:** LOCKED
 Use full-challenge, safe-modification, general-wellness-only, professional-review and insufficient-information outcomes.
 
 ## DEC-210 — Purchaser/participant separation
-**Status:** LOCKED  
+**Status:** LOCKED
 Keep purchaser, intended recipient, redeemed participant and enrolment separate, with no purchaser access to the participant’s private journey.
 
 ## DEC-211 — Edition creation
-**Status:** LOCKED  
+**Status:** LOCKED
 Create each edition from an approved programme version and validate content, translations, schedules, sessions, safety, facilitation, products, community and communications before activation.
 
 ## DEC-212 — Late enrolment
-**Status:** LOCKED  
+**Status:** LOCKED
 Use an edition-specific late-enrolment policy and guided catch-up while keeping participants on the shared cohort schedule.
 
 ## DEC-213 — Scoped Nuwe Jy roles
-**Status:** LOCKED  
+**Status:** LOCKED
 Separate challenge owner, programme admin, cohort manager, facilitator, moderator, host, support, clinical reviewer and analyst access.
 
 ## DEC-214 — Nuwe Jy check-ins
-**Status:** LOCKED  
+**Status:** LOCKED
 Use lightweight daily interactions with deeper versioned milestone check-ins and keep journals separate.
 
 ## DEC-215 — Support routing
-**Status:** LOCKED  
+**Status:** LOCKED
 Use deterministic self-service, recovery, support, professional-review and safety outcomes without implying unlimited coaching.
 
 ## DEC-216 — Central plan integration
-**Status:** LOCKED  
+**Status:** LOCKED
 Use the platform’s authoritative safety and plan system and never create a separate Nuwe Jy nutrition engine.
 
 ## DEC-217 — Completion and certification
-**Status:** LOCKED  
+**Status:** LOCKED
 Use versioned compassionate completion outcomes and certificates that state participation or completion only.
 
 ## DEC-218 — Edition communications/operations
-**Status:** LOCKED  
+**Status:** LOCKED
 Use preconfigured language- and timezone-aware deduplicated communications and role-scoped operational dashboards.
 
 ## DEC-219 — Analytics and clean cutover
-**Status:** LOCKED  
+**Status:** LOCKED
 Use health-aligned analytics, preserve repeat-enrolment history and move from LearnDash through a clean future-edition cutover rather than technical migration.
 
 
@@ -942,99 +947,99 @@ Use health-aligned analytics, preserve repeat-enrolment history and move from Le
 # GQ-010 — Privacy, Records and Data Lifecycle
 
 ## DEC-220 — Shared lifecycle vocabulary
-**Status:** LOCKED  
+**Status:** LOCKED
 Use shared active, archived, restricted, deletion, anonymisation, retained-obligation and legal-hold states with category-specific applicability.
 
 ## DEC-221 — Account closure versus deletion
-**Status:** LOCKED  
+**Status:** LOCKED
 Provide recoverable account closure separately from irreversible full deletion.
 
 ## DEC-222 — Destructive-action verification
-**Status:** LOCKED  
+**Status:** LOCKED
 Use risk-based step-up verification for closure, deletion and sensitive exports without collecting unnecessary health or identity-document data.
 
 ## DEC-223 — Recovery and cancellation windows
-**Status:** LOCKED  
+**Status:** LOCKED
 Use a 30-day recoverable account-closure window and a 14-day full-deletion cancellation window; completed deletion has no recovery or reconstruction path.
 
 ## DEC-224 — Assessment deletion
-**Status:** LOCKED  
+**Status:** LOCKED
 Preserve immutability while records exist, then delete or irreversibly anonymise eligible identifiable answers, scores and reports during full deletion.
 
 ## DEC-225 — Purchased-access consequence
-**Status:** LOCKED  
+**Status:** LOCKED
 Full deletion permanently ends participant access to reports, plans, programmes, progress and entitlements; retained financial records cannot restore them.
 
 ## DEC-226 — Health-record separation
-**Status:** LOCKED  
+**Status:** LOCKED
 Delete or anonymise self-guided health records while restricting formal professional records only for approved professional retention.
 
 ## DEC-227 — Journal deletion
-**Status:** LOCKED  
+**Status:** LOCKED
 Prioritise deletion of private journal content, attachments and derived artefacts while separately governing professional copies.
 
 ## DEC-228 — Complete asset deletion
-**Status:** LOCKED  
+**Status:** LOCKED
 Delete original files, derivatives, previews, extracted values, indexes, cached links and temporary processing artefacts.
 
 ## DEC-229 — Professional record governance
-**Status:** LOCKED  
+**Status:** LOCKED
 Make professional records participant-accessible but correction- and retention-controlled by authorised professional recordkeeping authority.
 
 ## DEC-230 — Community deletion/anonymisation
-**Status:** LOCKED  
+**Status:** LOCKED
 Use content-sensitive deletion or anonymisation while preserving restricted moderation evidence and independently authored context.
 
 ## DEC-231 — Restricted commercial retention
-**Status:** LOCKED  
+**Status:** LOCKED
 Retain only required financial and dispute evidence, isolated from product use and unusable for account reconstruction.
 
 ## DEC-232 — Consent withdrawal
-**Status:** LOCKED  
+**Status:** LOCKED
 Stop affected processing, recalculate dependent access and invalidate caches, permissions and derived signals.
 
 ## DEC-233 — Audit retention
-**Status:** LOCKED  
+**Status:** LOCKED
 Use immutable, minimised, restricted and category-specific audit retention without copying full sensitive payloads.
 
 ## DEC-234 — Security-event retention
-**Status:** LOCKED  
+**Status:** LOCKED
 Retain minimised security/fraud evidence under security-specific identifiers for an approved period.
 
 ## DEC-235 — Analytics deletion
-**Status:** LOCKED  
+**Status:** LOCKED
 Remove identifiable participant-level analytics and retain only irreversibly aggregated statistics with suppression controls.
 
 ## DEC-236 — Inactive-account lifecycle
-**Status:** LOCKED  
+**Status:** LOCKED
 Use warning, dormancy, restricted archive and eventual deletion/anonymisation stages with entitlement-aware notices.
 
 ## DEC-237 — Deceased-participant process
-**Status:** LOCKED  
+**Status:** LOCKED
 Require verified authority, freeze access and provide no automatic relative access to private records.
 
 ## DEC-238 — Scoped legal holds
-**Status:** LOCKED  
+**Status:** LOCKED
 Hold only necessary records, restrict ordinary use, review regularly and resume deletion when the hold ends.
 
 ## DEC-239 — Backup deletion boundary
-**Status:** LOCKED  
+**Status:** LOCKED
 Allow deleted data only until normal encrypted backup expiry and require replay of deletion events after restoration; backups cannot recover accounts.
 
 ## DEC-240 — Participant export
-**Status:** LOCKED  
+**Status:** LOCKED
 Provide secure, verified, asynchronous human-readable and structured exports with expiring delivery.
 
 ## DEC-241 — Record corrections
-**Status:** LOCKED  
+**Status:** LOCKED
 Use direct updates only where appropriate and additive or superseding corrections for immutable, professional and financial records.
 
 ## DEC-242 — Incident records
-**Status:** LOCKED  
+**Status:** LOCKED
 Maintain minimised, restricted incident records with linked evidence rather than duplicated sensitive datasets.
 
 ## DEC-243 — Retention governance/deletion completion
-**Status:** LOCKED  
+**Status:** LOCKED
 Use approved versioned per-category retention policies and consider deletion complete only after live, derived, cached, external and access paths are processed and no recovery remains.
 
 
@@ -1042,363 +1047,363 @@ Use approved versioned per-category retention policies and consider deletion com
 # GQ-011 — Identity, Security, Notifications and Operations
 
 ## DEC-244 — Participant authentication
-**Status:** LOCKED  
+**Status:** LOCKED
 Launch with email/password plus optional magic-link sign-in; defer social login and keep passkeys as a future extension.
 
 ## DEC-245 — Email verification gates
-**Status:** LOCKED  
+**Status:** LOCKED
 Permit limited onboarding before verification and require verified email before paid, assessment, health, plan, community, export and deletion capabilities.
 
 ## DEC-246 — Participant MFA
-**Status:** LOCKED  
+**Status:** LOCKED
 Make MFA optional for participants while requiring step-up authentication for high-risk actions.
 
 ## DEC-247 — Staff/practitioner MFA
-**Status:** LOCKED  
+**Status:** LOCKED
 Require MFA for every privileged user, prohibit shared accounts and govern resets.
 
 ## DEC-248 — Session policy
-**Status:** LOCKED  
+**Status:** LOCKED
 Use role- and risk-based inactivity and absolute expiry with user-visible session revocation.
 
 ## DEC-249 — Trusted devices
-**Status:** LOCKED  
+**Status:** LOCKED
 Use consented, expiring and revocable device trust that never bypasses high-risk step-up checks.
 
 ## DEC-250 — Account recovery
-**Status:** LOCKED  
+**Status:** LOCKED
 Use graduated automated and manual recovery with holds, notifications and stronger privileged-user review.
 
 ## DEC-251 — Primary-email change
-**Status:** LOCKED  
+**Status:** LOCKED
 Require reauthentication, new-address confirmation, old-address notice, audit and risk-based delay/session handling.
 
 ## DEC-252 — Duplicate-account merge
-**Status:** LOCKED  
+**Status:** LOCKED
 Use verified domain-aware merging that preserves immutable history and original commercial/professional provenance.
 
 ## DEC-253 — Compromise containment
-**Status:** LOCKED  
+**Status:** LOCKED
 Use active session/device revocation, sensitive-action freezing, verified recovery and minimised incident evidence.
 
 ## DEC-254 — Privileged grants
-**Status:** LOCKED  
+**Status:** LOCKED
 Use scoped, reasoned, approved, reviewable and revocable grants under least privilege.
 
 ## DEC-255 — Break-glass access
-**Status:** LOCKED  
+**Status:** LOCKED
 Use named, MFA-protected, time-limited, alerted and post-reviewed emergency access with no shared credentials.
 
 ## DEC-256 — Authentication abuse controls
-**Status:** LOCKED  
+**Status:** LOCKED
 Use Cloudflare, application limits, Redis velocity counters and risk signals across registration, login and recovery paths.
 
 ## DEC-257 — Redemption abuse
-**Status:** LOCKED  
+**Status:** LOCKED
 Use strong codes, distributed throttling, explicit usage limits, idempotent redemption and fraud escalation.
 
 ## DEC-258 — Payment abuse
-**Status:** LOCKED  
+**Status:** LOCKED
 Use verified idempotent provider webhooks, platform risk controls and one-time entitlement granting.
 
 ## DEC-259 — Upload security
-**Status:** LOCKED  
+**Status:** LOCKED
 Use restricted temporary upload, content validation, malware scanning, sanitisation and governed durable access.
 
 ## DEC-260 — Scraping controls
-**Status:** LOCKED  
+**Status:** LOCKED
 Protect authenticated and paid data while preserving intended public crawlability and SEO.
 
 ## DEC-261 — Notification channels
-**Status:** LOCKED  
+**Status:** LOCKED
 Use channel-capable architecture with email and in-app first; activate SMS/WhatsApp later and defer native push.
 
 ## DEC-262 — Notification preferences
-**Status:** LOCKED  
+**Status:** LOCKED
 Use category/channel preferences, quiet hours, frequency caps, marketing-consent separation and governed mandatory notices.
 
 ## DEC-263 — Notification delivery
-**Status:** LOCKED  
+**Status:** LOCKED
 Use durable Oban-backed idempotent, deduplicated, retryable and observable delivery.
 
 ## DEC-264 — Graceful degradation
-**Status:** LOCKED  
+**Status:** LOCKED
 Use read-only, limited-capability and full-maintenance modes while never guessing health, entitlement or payment truth.
 
 ## DEC-265 — Backup tiers
-**Status:** LOCKED  
+**Status:** LOCKED
 Use criticality-based backup/restore classes with later architecture-defined RPO/RTO and mandatory restore testing.
 
 ## DEC-266 — Incident severity
-**Status:** LOCKED  
+**Status:** LOCKED
 Use SEV-1 through SEV-4 with named ownership, containment, communication, remediation and review.
 
 ## DEC-267 — Operational observability
-**Status:** LOCKED  
+**Status:** LOCKED
 Monitor infrastructure, application and domain outcomes, use priority Oban queues, bounded retries and explicit provider-outage handling.
 
 # GQ-012 — Launch Scope, Product Spaces, Pilot, Pricing and Go/No-Go
 
 ## DEC-268 — Controlled product spaces
-**Status:** LOCKED  
+**Status:** LOCKED
 Use one operating platform with controlled product spaces rather than a permanent women-only codebase, unrestricted generic SaaS tenancy or fully separate applications.
 
 ## DEC-269 — Launch-facing product space
-**Status:** LOCKED  
+**Status:** LOCKED
 Expose only the women’s health and lifestyle product space at first launch; future men’s, specialist, professional or partner spaces remain invisible until deliberately activated.
 
 ## DEC-270 — South Africa first
-**Status:** LOCKED  
+**Status:** LOCKED
 Launch South Africa first with ZAR, Afrikaans/English and Africa/Johannesburg defaults while keeping reusable domain logic suitable for controlled future market activation.
 
 ## DEC-271 — Core MVP loop
-**Status:** LOCKED  
+**Status:** LOCKED
 The first commercially usable MVP proves public discovery → account → checkout → temperament → report → safety intake → eligibility → personalised seven-day plan or General Wellness → purchased library → lightweight progress/support.
 
 ## DEC-272 — MVP temperament provenance
-**Status:** LOCKED  
+**Status:** LOCKED
 Support self_reported, book_derived and digitally_assessed provenance in the MVP, clearly labelled, with the digital assessment remaining the authoritative platform assessment product.
 
 ## DEC-273 — Initial commercial catalogue
-**Status:** LOCKED  
+**Status:** LOCKED
 Launch with only Digital Temperament Assessment, 7-Day Personalised Plan and Assessment + Plan Bundle.
 
 ## DEC-274 — Nuwe Jy first flagship expansion
-**Status:** LOCKED  
+**Status:** LOCKED
 Launch the first native Nuwe Jy edition after the core paid MVP is proven and hardened while ensuring the core architecture already supports its reusable programme primitives.
 
 ## DEC-275 — Basic Membership readiness gate
-**Status:** LOCKED  
+**Status:** LOCKED
 Do not sell Basic Membership until moderated community, monthly approved content, monthly live value, group Q&A, entitlement and cancellation behaviour are reliably operational.
 
 ## DEC-276 — Adjustment capability before Premium
-**Status:** LOCKED  
+**Status:** LOCKED
 Prove stable plan delivery, useful check-ins and recurring adjustment capability before packaging the plan-adjustment add-on and then Premium.
 
 ## DEC-277 — Practitioner service pilot
-**Status:** LOCKED  
+**Status:** LOCKED
 Introduce practitioner-reviewed service through a limited explicitly priced, capacity-controlled pilot only after automated plan delivery is stable.
 
 ## DEC-278 — Community release sequence
-**Status:** LOCKED  
+**Status:** LOCKED
 Use governed Facebook communities for early Nuwe Jy/Membership validation, then pilot and migrate to first-party community when evidence justifies it.
 
 ## DEC-279 — Live first, full event commerce later
-**Status:** LOCKED  
+**Status:** LOCKED
 Integrate governed live-session registration, entitlements, Restream/Cloudflare playback and replay early; defer complete paid event commerce/ticketing until later.
 
 ## DEC-280 — Staged paid release
-**Status:** LOCKED  
+**Status:** LOCKED
 Use internal validation → controlled paid pilot → expanded paid pilot → limited public release → general public release, with explicit gates between stages.
 
 ## DEC-281 — First paid-pilot capacity
-**Status:** LOCKED  
+**Status:** LOCKED
 Limit the first paid pilot to 50 participants, expanding deliberately through approximately 10 → 25 → 50 only after safety, payment, entitlement, generation and support review.
 
 ## DEC-282 — MVP South African launch list prices
-**Status:** LOCKED / VERSIONED BUSINESS CONFIGURATION  
+**Status:** LOCKED / VERSIONED BUSINESS CONFIGURATION
 Set initial list prices to R249 Digital Temperament Assessment, R399 7-Day Personalised Plan and R549 Assessment + Plan Bundle. Store prices as versioned configuration, preserve accepted historical prices and keep promotions separate.
 
 ## DEC-283 — Basic Membership commercial anchor
-**Status:** PROVISIONAL / COMMERCIAL CONFIGURATION  
+**Status:** PROVISIONAL / COMMERCIAL CONFIGURATION
 Use R199/month and R1,990/year as the future Basic Membership planning anchor, approximately two months free annually, subject to evidence before the product publicly launches.
 
 ## DEC-284 — Small explicit bundle catalogue
-**Status:** LOCKED  
+**Status:** LOCKED
 Keep bundles intentionally small and grant explicit underlying component entitlements rather than creating a parallel bundle-entitlement system.
 
 ## DEC-285 — Governed complimentary and sponsored grants
-**Status:** LOCKED  
+**Status:** LOCKED
 Grant free/sponsored access only through explicit scoped, reasoned, auditable authority with elevated approval for high-value, long-duration or lifetime grants.
 
 ## DEC-286 — Nuwe Jy edition activation gate
-**Status:** LOCKED  
+**Status:** LOCKED
 Require core platform, programme, operations, safety, live/community and technical readiness before any native Nuwe Jy edition activates.
 
 ## DEC-287 — Practitioner saleable-capacity model
-**Status:** LOCKED  
+**Status:** LOCKED
 Model practitioner saleable capacity from authorised practitioners × safe cases per practitioner per period, track turnaround/workload and stop selling before capacity is exceeded.
 
 ## DEC-288 — Paid-pilot cross-functional readiness gate
-**Status:** LOCKED  
+**Status:** LOCKED
 The first paid pilot is a NO-GO until required Product, Clinical, Content, Commerce, Legal/Privacy, Security and Operations owners have signed off their mandatory launch conditions.
 
 ## DEC-289 — Progressive performance/load gates
-**Status:** LOCKED  
+**Status:** LOCKED
 Use progressive near-term load gates while preserving an architecture that can scale horizontally toward 100k-concurrent-user assumptions without rebuilding authoritative domain truth.
 
 ## DEC-290 — Paid-pilot success criteria
-**Status:** LOCKED  
+**Status:** LOCKED
 Require zero critical platform-caused safety failures, duplicate charges/entitlements, unreproducible plans and unauthorised sensitive-data exposures, plus defined operational/product/value targets to decide proceed, iterate, repeat or pause.
 
 ## DEC-291 — Release and rollback authority
-**Status:** LOCKED  
+**Status:** LOCKED
 Require separate product/commercial, clinical/safety and technical/operations authority for stage expansion; permit immediate scoped safety or technical stop actions and record every launch/rollback decision with evidence and re-entry criteria.
 
 
 ## DEC-292 — Paystack first / launch payment gateway
-**Status:** LOCKED  
+**Status:** LOCKED
 Paystack is the first and launch payment gateway for the initial South African/ZAR platform release. Durable platform payment truth remains provider-independent and authoritative in PostgreSQL. Exact Paystack retry, recurring billing, webhook, proration, refund, dispute/chargeback, settlement and related provider behaviour must still pass the existing validation gate before implementation details are fixed. Future additional gateways may be introduced behind a provider boundary without redefining core payment, entitlement, refund, reconciliation or analytics semantics.
 
 ## DEC-293 — First-party A/B/n experimentation capability
-**Status:** LOCKED  
+**Status:** LOCKED
 Build first-party governed A/B/n experimentation for approved web/page experiences and eligible email/message experiences. Experiments must support stable randomised/sticky allocation, clean/canonical public URLs, governed exposure and metric semantics, statistically valid decision rules, authoritative downstream conversion/income reconciliation, privacy/deletion constraints, protected-invariant exclusions, durable immutable/auditable aggregate results and searchable historical learning. Exact assignment, cache and statistical implementation mechanisms remain Architecture decisions.
 
 # Open Gates
 
 ## OQ-001 — Final operating entity
-**Status:** EXPERT REVIEW  
+**Status:** EXPERT REVIEW
 Resolve before production subscriptions, large-scale sensitive health-data processing or practitioner contracting.
 
 ## OQ-002 — Exact launch pricing
-**Status:** RESOLVED BY DEC-282 / DEC-283  
+**Status:** RESOLVED BY DEC-282 / DEC-283
 MVP list prices are locked as versioned business configuration. Basic Membership uses a provisional planning anchor until that product’s pre-launch commercial review.
 ## OQ-003 — Monthly review contract
-**Status:** PRODUCT REVIEW  
+**Status:** PRODUCT REVIEW
 Define exact check-in deadline, grace period and incomplete-check-in behaviour before recurring adjustment launches.
 
 ## OQ-004 — Paystack retry implementation
-**Status:** VALIDATION REQUIRED  
+**Status:** VALIDATION REQUIRED
 Test failed-payment, subscription, webhook, proration, refund and chargeback behaviour before implementation is locked.
 
 ## OQ-005 — Clinical eligibility matrix
-**Status:** CLINICAL REVIEW  
+**Status:** CLINICAL REVIEW
 Approve the exact low-, moderate- and high-risk routing matrix before automated plans launch.
 
 ## OQ-006 — Score-distance thresholds
-**Status:** METHODOLOGY REVIEW  
+**Status:** METHODOLOGY REVIEW
 Approve dominance, close-result, balanced and mixed-profile thresholds before those labels are enabled.
 
 ## OQ-007 — Laboratory validity matrix
-**Status:** CLINICAL REVIEW  
+**Status:** CLINICAL REVIEW
 Define test-specific current-validity and superseding rules.
 
 ## OQ-008 — Emergency and urgent-support wording
-**Status:** CLINICAL / LEGAL REVIEW  
+**Status:** CLINICAL / LEGAL REVIEW
 Approve country-specific urgent-help wording, acknowledgements and escalation boundaries.
 
 ## OQ-009 — Early retention categories
-**Status:** LEGAL / PROFESSIONAL REVIEW  
+**Status:** LEGAL / PROFESSIONAL REVIEW
 Ensure required health and professional record categories are included in the formal retention schedule.
 
 ## OQ-010 — Calculation values
-**Status:** CLINICAL REVIEW  
+**Status:** CLINICAL REVIEW
 Approve exact calculation formulas, minimums, ranges and bounded weight-reduction values.
 
 ## OQ-011 — Adjustment thresholds
-**Status:** CLINICAL / PRODUCT REVIEW  
+**Status:** CLINICAL / PRODUCT REVIEW
 Approve trend windows, tolerances, adherence requirements and recalculation thresholds.
 
 ## OQ-012 — Review timing
-**Status:** PRODUCT REVIEW  
+**Status:** PRODUCT REVIEW
 Approve minimum plan-use period, monthly review window and grace behaviour.
 
 ## OQ-013 — Translation resource design
-**Status:** ARCHITECTURE REVIEW  
+**Status:** ARCHITECTURE REVIEW
 Define exact Ash resource boundaries, approval relationships, locale/version indexes and immutable delivery references.
 
 ## OQ-014 — Cloudflare and edge-cache design
-**Status:** ARCHITECTURE REVIEW  
+**Status:** ARCHITECTURE REVIEW
 Define public-cache eligibility, cache rules, signed delivery, purge paths, security controls and immediate safety-withdrawal invalidation.
 
 ## OQ-015 — Search configuration
-**Status:** ARCHITECTURE REVIEW  
+**Status:** ARCHITECTURE REVIEW
 Define PostgreSQL full-text search, approved synonyms, ranking weights, indexes, pagination and any future semantic-search boundary.
 
 ## OQ-016 — Content publication operations
-**Status:** OPERATIONS / ARCHITECTURE REVIEW  
+**Status:** OPERATIONS / ARCHITECTURE REVIEW
 Define scheduler reliability, retry policy, alert ownership, stale-approval checks and recovery.
 
 ## OQ-017 — Reminder delivery design
-**Status:** ARCHITECTURE / OPERATIONS REVIEW  
+**Status:** ARCHITECTURE / OPERATIONS REVIEW
 Define channels, scheduling, retries, quiet-hour behaviour, observability and rate limits.
 
 ## OQ-018 — Journal encryption and retention
-**Status:** SECURITY / LEGAL REVIEW  
+**Status:** SECURITY / LEGAL REVIEW
 Define encryption, field-policy boundaries, retention, export, deletion and professional-record handling for journal data.
 
 ## OQ-019 — Programme completion metrics
-**Status:** PRODUCT REVIEW  
+**Status:** PRODUCT REVIEW
 Define programme-specific minimum participation, final check-ins and completion thresholds before each programme is published.
 
 ## OQ-020 — Restream and Cloudflare live-video validation
-**Status:** VENDOR / ARCHITECTURE REVIEW  
+**Status:** VENDOR / ARCHITECTURE REVIEW
 Validate Restream plan requirements, custom RTMPS output, recording limits, failure handling and Cloudflare Stream live-input integration.
 
 ## OQ-021 — Video consent and retention
-**Status:** LEGAL / OPERATIONS REVIEW  
+**Status:** LEGAL / OPERATIONS REVIEW
 Define speaker, attendee, recording, editing, replay, clip, retention and withdrawal rules.
 
 ## OQ-022 — Event reservation architecture
-**Status:** ARCHITECTURE / PERFORMANCE REVIEW  
+**Status:** ARCHITECTURE / PERFORMANCE REVIEW
 Define locking, reservation expiry, Redis acceleration, payment idempotency, waiting-list allocation and flash-sale protection.
 
 ## OQ-023 — Facebook community operating policy
-**Status:** OPERATIONS / PRIVACY REVIEW  
+**Status:** OPERATIONS / PRIVACY REVIEW
 Define moderator staffing, escalation, member notices, disclosure warnings, evidence handling and migration-readiness measures.
 
 ## OQ-024 — Nuwe Jy source-content inventory
-**Status:** CONTENT REVIEW  
+**Status:** CONTENT REVIEW
 Inventory current Nuwe Jy lessons, videos, downloads, live-session assets, rights, duplicated material, missing translations and outdated content.
 
 ## OQ-025 — Nuwe Jy safety and completion thresholds
-**Status:** CLINICAL / PRODUCT REVIEW  
+**Status:** CLINICAL / PRODUCT REVIEW
 Approve exact challenge safety routing, milestone check-ins, required activities and completion rules.
 
 ## OQ-026 — Nuwe Jy edition operations
-**Status:** OPERATIONS REVIEW  
+**Status:** OPERATIONS REVIEW
 Define cohort capacity, facilitator coverage, moderator coverage, support ownership, live-session ownership, escalation and archive responsibilities.
 
 ## OQ-027 — Nuwe Jy communication channels
-**Status:** OPERATIONS / ARCHITECTURE REVIEW  
+**Status:** OPERATIONS / ARCHITECTURE REVIEW
 Select launch channels and define delivery caps, templates, retries, quiet hours, deduplication and failure ownership.
 
 ## OQ-028 — LearnDash retirement obligations
-**Status:** COMMERCIAL / LEGAL REVIEW  
+**Status:** COMMERCIAL / LEGAL REVIEW
 Document current participant promises, access obligations, record retention and exact retirement conditions for the legacy system.
 
 ## OQ-029 — Retention schedule matrix
-**Status:** LEGAL / FINANCE / PROFESSIONAL REVIEW  
+**Status:** LEGAL / FINANCE / PROFESSIONAL REVIEW
 Define approved durations, owners, purposes, archive periods, deletion actions and exceptions for every record category.
 
 ## OQ-030 — External processor deletion inventory
-**Status:** PRIVACY / ARCHITECTURE REVIEW  
+**Status:** PRIVACY / ARCHITECTURE REVIEW
 Inventory payment, messaging, analytics, storage, video, support and future AI processors and define deletion/export/evidence behaviour.
 
 ## OQ-031 — Backup restore and deletion replay
-**Status:** ARCHITECTURE / OPERATIONS REVIEW  
+**Status:** ARCHITECTURE / OPERATIONS REVIEW
 Define backup expiry, restore isolation, deletion-ledger replay, verification and go-live gates so deleted participants never reappear.
 
 ## OQ-032 — Export and deletion operations
-**Status:** SECURITY / OPERATIONS REVIEW  
+**Status:** SECURITY / OPERATIONS REVIEW
 Define verification levels, job deadlines, processor retries, pending states, participant notices, failure alerts and completion evidence.
 
 ## OQ-033 — Professional record authority
-**Status:** CLINICAL / LEGAL REVIEW  
+**Status:** CLINICAL / LEGAL REVIEW
 Define responsible record authority, participant-access boundary, addendum process and final disposition for practitioner records.
 
 ## OQ-034 — Authentication implementation architecture
-**Status:** ARCHITECTURE / SECURITY REVIEW  
+**Status:** ARCHITECTURE / SECURITY REVIEW
 Select and validate authentication, MFA, recovery, trusted-device and step-up implementation details after domain modelling.
 
 ## OQ-035 — Abuse-control thresholds
-**Status:** SECURITY / OPERATIONS REVIEW  
+**Status:** SECURITY / OPERATIONS REVIEW
 Define Cloudflare, application and Redis rate-limit thresholds, escalation rules and false-positive recovery.
 
 ## OQ-036 — Notification providers and channel policy
-**Status:** VENDOR / OPERATIONS REVIEW  
+**Status:** VENDOR / OPERATIONS REVIEW
 Select launch email/in-app implementation and later SMS/WhatsApp providers, costs, consent rules, retries and delivery evidence.
 
 ## OQ-037 — RPO/RTO targets
-**Status:** ARCHITECTURE / BUSINESS CONTINUITY REVIEW  
+**Status:** ARCHITECTURE / BUSINESS CONTINUITY REVIEW
 Assign exact recovery-point and recovery-time targets by criticality tier and validate them through restore exercises.
 
 ## OQ-038 — Incident response ownership
-**Status:** OPERATIONS / SECURITY REVIEW  
+**Status:** OPERATIONS / SECURITY REVIEW
 Define named on-call ownership, escalation tree, after-hours handling, customer communication and post-incident cadence.
 
 ## OQ-039 — Performance and scaling domain mapping
-**Status:** ARCHITECTURE / PERFORMANCE REVIEW  
+**Status:** ARCHITECTURE / PERFORMANCE REVIEW
 Maintain two levels of performance/scaling definition:
 
 1. **Platform-wide domain architecture baseline before Roadmap:** for every approved domain, establish enough architecture-level information to identify authoritative state ownership, broad hot/warm/cold classification, concurrency sensitivity, major scaling risks, and whether Redis, ETS/Cachex, GenServer, PubSub, Oban, replicas and streaming/pagination are potentially applicable or explicitly `NONE`/not justified. This baseline exists to make domain ownership and delivery sequencing safe without forcing speculative implementation detail.

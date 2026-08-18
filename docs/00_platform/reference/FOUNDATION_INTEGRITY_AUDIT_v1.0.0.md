@@ -1,4 +1,4 @@
-# FOUNDATION_READINESS_AUDIT_v1.0.0.md
+# FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md
 
 - **Status:** FROZEN / COMPLETE FOUNDATION INTEGRITY AUDIT
 - **Document version:** v1.0.0
@@ -26,7 +26,7 @@ The audit checked cross-document integrity, ownership, delivery order, gate rout
 
 - `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 - `docs/00_platform/00_PLATFORM_v1.2.1.md`
-- `docs/00_platform/01_DECISIONS_v1.2.1.md`
+- `docs/00_platform/01_DECISIONS_v1.2.2.md`
 - `docs/00_platform/02_OPEN_WORK_v1.2.27.md`
 - `docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md`
 - `docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md`
@@ -60,7 +60,7 @@ The audit checked cross-document integrity, ownership, delivery order, gate rout
 - **48** durable-truth ownership rows checked; each has one authoritative owner.
 - **17** contiguous Roadmap Feature Packs checked.
 - **40/40** Roadmap OQs (`OQ-001` through `OQ-040`) routed in the Gate Schedule.
-- **91** deterministic audit checks passed in the machine runner.
+- **102** deterministic audit checks passed in the machine runner.
 
 The machine runner supplies the deterministic integrity evidence above; the broader semantic PASS areas remain the consolidated human audit review and are not inferred solely from identifier, path or hash checks.
 
@@ -76,7 +76,7 @@ The machine runner supplies the deterministic integrity evidence above; the broa
 | Bounded integrity corrections applied | 6 |
 | Product/Architecture/Domain/Roadmap semantic redesigns | 0 |
 
-The audit correction pass formalised `OQ-040`, repaired moved-document references, added the authority manifest and reproducible runner, compacted current Open Work context, and clarified readiness wording. No `UPSTREAM_CONTRADICTION`, `ROADMAP_GAP` or semantic foundation redesign remained.
+The original Foundation Readiness Audit remains preserved exactly as historical evidence at `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`. This integrity audit formalises the later `OQ-040` correction, repairs active moved-document references, adds the authority manifest and reproducible runner, compacts current Open Work context, versions the changed Decision Register and clarifies readiness wording. No `UPSTREAM_CONTRADICTION`, `ROADMAP_GAP` or semantic foundation redesign remained.
 
 ## 6. Foundation readiness decision
 

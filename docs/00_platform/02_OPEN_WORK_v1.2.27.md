@@ -5,7 +5,7 @@
 - **Not authoritative for:** Locked product decisions, platform truth, implementation details, Ash Resources, schemas, or legal and clinical conclusions
 - **Related documents:**
   - `00_PLATFORM_v1.2.1.md`
-  - `01_DECISIONS_v1.2.1.md`
+  - `01_DECISIONS_v1.2.2.md`
   - `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
   - `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md`
   - `reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md`
@@ -14,9 +14,10 @@
   - `04_DOMAIN_MAP_v1.0.0.md`
   - `05_ROADMAP_v1.0.0.md`
   - `archive/05_ROADMAP_WORKING_v0.1.0.md`
-  - `reference/FOUNDATION_READINESS_AUDIT_v1.0.0.md`
+  - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`
+  - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`
 - **Last updated:** 2026-08-18
-- **Current planning position:** PRODUCT GRILL COMPLETE; Product Law remains at v1.2.1; `AR-000` is COMPLETE/FROZEN at `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md`; **Phase 2 Architecture Decision Workstreams are COMPLETE** through AR-009 closure at `ARC-326`, with post-closure `ARC-327` preserving staged proof timing; **Phase 3 Reference Flow Pressure Tests are COMPLETE** in `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md`; **Phase 4 Architecture is FROZEN** at `03_ARCHITECTURE_v1.0.0.md`; **Phase 5 Domain Map + lightweight Domain Architecture Profile baseline is COMPLETE/FROZEN** at `04_DOMAIN_MAP_v1.0.0.md`; **Phase 6 Roadmap is COMPLETE/FROZEN** at `05_ROADMAP_v1.0.0.md`, with the working draft preserved as historical planning evidence; **Foundation Readiness Audit is COMPLETE / PASS** in `reference/FOUNDATION_READINESS_AUDIT_v1.0.0.md`; **PLANNING FOUNDATION: READY**. **NEXT: PHASE 7 / FP-001 PREPARATION.** **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** This is delivery preparation only and does not authorise implementation.
+- **Current planning position:** PRODUCT GRILL COMPLETE; Product Law remains at v1.2.1; `AR-000` is COMPLETE/FROZEN at `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md`; **Phase 2 Architecture Decision Workstreams are COMPLETE** through AR-009 closure at `ARC-326`, with post-closure `ARC-327` preserving staged proof timing; **Phase 3 Reference Flow Pressure Tests are COMPLETE** in `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md`; **Phase 4 Architecture is FROZEN** at `03_ARCHITECTURE_v1.0.0.md`; **Phase 5 Domain Map + lightweight Domain Architecture Profile baseline is COMPLETE/FROZEN** at `04_DOMAIN_MAP_v1.0.0.md`; **Phase 6 Roadmap is COMPLETE/FROZEN** at `05_ROADMAP_v1.0.0.md`, with the working draft preserved as historical planning evidence; **Foundation Integrity Audit is COMPLETE / PASS** in `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`, with the original Foundation Readiness Audit preserved as historical evidence in `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`; **PLANNING FOUNDATION: READY**. **NEXT: PHASE 7 / FP-001 PREPARATION.** **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** This is delivery preparation only and does not authorise implementation.
 
 ---
 
