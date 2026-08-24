@@ -4,7 +4,7 @@
 - **Version:** v0.2.0
 - **Date:** 2026-08-24
 - **Derived experience authority:** `EXPERIENCE_DECISIONS_WORKING_v0.7.0.md`
-- **Current repo authority basis:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `00_PLATFORM_v1.2.1.md`, `01_DECISIONS_v1.2.2.md`, `02_OPEN_WORK_v1.2.27.md`, `03_ARCHITECTURE_v1.0.0.md`, `04_DOMAIN_MAP_v1.0.0.md`, `05_ROADMAP_v1.0.0.md`
+- **Current repo authority basis:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `00_PLATFORM_v1.2.1.md`, `01_DECISIONS_v1.2.2.md`, `02_OPEN_WORK_v1.2.28.md`, `03_ARCHITECTURE_v1.0.0.md`, `04_DOMAIN_MAP_v1.0.0.md`, `05_ROADMAP_v1.0.0.md`
 - **Implementation status:** NOT AUTHORISED
 - **Authority boundary:** Product Law → Architecture Law → Domain Law → Roadmap remain upstream. This document governs human operating patterns only and must not invent business truth, implementation schemas or unresolved expert policy.
 - **JIT boundary:** This document intentionally stops before exact Resource/action/schema/queue/topic/threshold/provider configuration. Those details belong to the affected Feature Pack and JIT dossiers/contracts.
@@ -254,6 +254,8 @@ Exact routing rules belong to the affected JIT Content Domain/Resource dossier w
 # 12. Translation operating lifecycle
 
 Translation must preserve frozen Product Law.
+
+Current Product Law §21E.2 (`docs/00_platform/00_PLATFORM_v1.2.1.md`) explicitly defines the operational translation identifiers below. They refine, rather than replace, DEC-125 (`docs/00_platform/01_DECISIONS_v1.2.2.md`): DEC-125's `draft / machine-draft`, `review`, `approval`, `publication`, `superseded` and `withdrawn` semantics map to `draft → machine_draft`, `language_review` plus any required `clinical_review_required`, `approved`, `published`, `superseded` and `withdrawn`. Where clinical review is not required by risk, `language_review` proceeds to `approved`.
 
 ## States
 

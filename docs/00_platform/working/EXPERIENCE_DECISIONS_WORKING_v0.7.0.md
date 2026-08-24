@@ -729,7 +729,7 @@ Afrikaans and English are separately governed language variants of one conceptua
 
 They have independent translation/review states while preserving their relationship to the same conceptual item/version lineage.
 
-The Product-Law translation lifecycle remains exact and independently governed per locale:
+Current Product Law §21E.2 (`docs/00_platform/00_PLATFORM_v1.2.1.md`) explicitly defines the operational translation identifiers below. They refine, rather than replace, DEC-125 (`docs/00_platform/01_DECISIONS_v1.2.2.md`): DEC-125's `draft / machine-draft`, `review`, `approval`, `publication`, `superseded` and `withdrawn` semantics map to `draft → machine_draft`, `language_review` plus any required `clinical_review_required`, `approved`, `published`, `superseded` and `withdrawn`. Where clinical review is not required by risk, `language_review` proceeds to `approved`.
 
 `missing → draft → machine_draft → language_review → clinical_review_required (where risk requires it) → approved → published → superseded → withdrawn`
 
