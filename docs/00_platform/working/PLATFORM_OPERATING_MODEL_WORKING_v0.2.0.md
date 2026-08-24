@@ -221,7 +221,7 @@ A content item:
 3. has an explicit responsible editor/owner while active;
 4. uses approved reusable blocks, sections, components and patterns;
 5. receives risk classification early enough to derive the correct review path;
-6. passes required language/professional/administrative review;
+6. passes all applicable scoped Product-Law approvals;
 7. is previewed;
 8. is published now or scheduled;
 9. is monitored and later corrected, superseded or withdrawn as required.
