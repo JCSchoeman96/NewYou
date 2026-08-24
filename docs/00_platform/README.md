@@ -24,6 +24,13 @@ The seven documents listed above describe the current platform state. Their expl
 
 The README and manifest are the current routing pointers. Frozen artifacts may retain source-at-freeze filenames as historical provenance; those references do not override the current routing above.
 
+## Active Working Artifacts
+
+`working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Read them only when a task explicitly concerns experience or operating-model planning; they must not override the seven current-authority documents. They remain working until an explicit freeze review and governance decision.
+
+- `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register.
+- `working/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md` — derived human/operating workflow model.
+
 ## Machine-readable inventory
 
 `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` is the machine-readable inventory of current authority and deep-reference evidence. It records canonical paths, SemVer, authority class, SHA-256 and superseded-version metadata; it does not create a new authority layer.
