@@ -30,6 +30,7 @@ The README and manifest are the current routing pointers. Frozen artifacts may r
 `working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Read them only when a task explicitly concerns experience or operating-model planning; they must not override the eight current-authority documents. They remain working until an explicit freeze review and governance decision.
 
 - `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register.
+- `working/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md` — hardened frontend-experience contract candidate; load it for explicit frontend-experience planning after the current-authority set and the Experience Decision Register.
 
 ## Machine-readable inventory
 
@@ -59,6 +60,7 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/01_DECISIONS_v1.2.1.md` — preserved superseded Decision Register.
 - `archive/02_OPEN_WORK_v1.2.27.md` — preserved pre-compaction Open Work snapshot.
 - `archive/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md` — preserved pre-freeze Operating Model working provenance.
+- `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.1.0.md` — preserved pre-hardening Frontend Experience System source provenance.
 - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md` — preserved original foundation-readiness evidence.
 
 Archive files are historical evidence only and are never current authority. Never use an archived document to override a current authoritative document.
