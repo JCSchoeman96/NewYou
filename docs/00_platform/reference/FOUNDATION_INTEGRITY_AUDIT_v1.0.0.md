@@ -27,7 +27,7 @@ The audit checked cross-document integrity, ownership, delivery order, gate rout
 - `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 - `docs/00_platform/00_PLATFORM_v1.2.1.md`
 - `docs/00_platform/01_DECISIONS_v1.2.2.md`
-- `docs/00_platform/02_OPEN_WORK_v1.2.27.md`
+- `docs/00_platform/02_OPEN_WORK_v1.2.28.md`
 - `docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md`
 - `docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md`
 - `docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md`
@@ -48,6 +48,7 @@ The audit checked cross-document integrity, ownership, delivery order, gate rout
 | Roadmap / MVP coverage | PASS |
 | Safety, privacy/security, payment and recovery boundaries | PASS |
 | Active document graph and authority paths | PASS |
+| Frozen source-at-freeze provenance and accepted hashes | PASS |
 | Readiness-state clarity | PASS |
 | Anti-overengineering and development friction | PASS |
 
@@ -60,7 +61,8 @@ The audit checked cross-document integrity, ownership, delivery order, gate rout
 - **48** durable-truth ownership rows checked; each has one authoritative owner.
 - **17** contiguous Roadmap Feature Packs checked.
 - **40/40** Roadmap OQs (`OQ-001` through `OQ-040`) routed in the Gate Schedule.
-- **102** deterministic audit checks passed in the machine runner.
+- **8** frozen/source-at-freeze artifacts matched their accepted pre-PR3 SHA-256 hashes.
+- **116** deterministic audit checks passed in the machine runner.
 
 The machine runner supplies the deterministic integrity evidence above; the broader semantic PASS areas remain the consolidated human audit review and are not inferred solely from identifier, path or hash checks.
 
@@ -73,10 +75,10 @@ The machine runner supplies the deterministic integrity evidence above; the broa
 | Unowned durable truths | 0 |
 | Unrouted blocking gates | 0 |
 | Unresolved machine-audit findings | 0 |
-| Bounded integrity corrections applied | 6 |
+| Bounded integrity corrections applied | 7 |
 | Product/Architecture/Domain/Roadmap semantic redesigns | 0 |
 
-The original Foundation Readiness Audit remains preserved exactly as historical evidence at `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`. This integrity audit formalises the later `OQ-040` correction, repairs active moved-document references, adds the authority manifest and reproducible runner, compacts current Open Work context, versions the changed Decision Register and clarifies readiness wording. No `UPSTREAM_CONTRADICTION`, `ROADMAP_GAP` or semantic foundation redesign remained.
+The original Foundation Readiness Audit remains preserved exactly as historical evidence at `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`. This integrity audit formalises the later `OQ-040` correction, repairs current routing references, preserves source-at-freeze provenance, adds the authority manifest and reproducible runner, versions the compacted Open Work tracker, versions the changed Decision Register and clarifies readiness wording. No `UPSTREAM_CONTRADICTION`, `ROADMAP_GAP` or semantic foundation redesign remained.
 
 ## 6. Foundation readiness decision
 

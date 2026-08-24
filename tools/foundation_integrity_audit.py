@@ -157,6 +157,11 @@ def _load_integrity_rules(manifest: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("manifest graph reference_header_lines must be a positive integer")
     if not isinstance(graph_rules.get("frozen_provenance_policy"), str):
         raise ValueError("manifest graph frozen_provenance_policy must be a string")
+    navigation_document_ids = graph_rules.get("navigation_document_ids")
+    if not isinstance(navigation_document_ids, list) or any(
+        not isinstance(document_id, str) or not document_id for document_id in navigation_document_ids
+    ):
+        raise ValueError("manifest graph navigation_document_ids must be a string list")
 
     return rules
 
@@ -347,8 +352,8 @@ def _check_manifest_entries(root: Path, entries: list[dict[str, Any]], report: d
             else f"canonical filename {canonical_filename!r} does not match {repository_path!r}",
             path=repository_path,
         )
-        if exists:
-            actual_hash = sha256_file(path)
+        actual_hash = sha256_file(path) if exists else None
+        if actual_hash is not None:
             hash_matches = actual_hash == entry.get("sha256")
             _record_check(
                 report,
@@ -357,6 +362,18 @@ def _check_manifest_entries(root: Path, entries: list[dict[str, Any]], report: d
                 f"SHA-256 matches for {repository_path}"
                 if hash_matches
                 else f"SHA-256 mismatch for {repository_path}: expected {entry.get('sha256')}, actual {actual_hash}",
+                path=repository_path,
+            )
+        provenance_hash = entry.get("provenance_sha256")
+        if provenance_hash is not None:
+            provenance_matches = actual_hash is not None and actual_hash == provenance_hash
+            _record_check(
+                report,
+                "frozen_provenance_hash",
+                provenance_matches,
+                f"frozen provenance SHA-256 matches for {repository_path}"
+                if provenance_matches
+                else f"frozen provenance SHA-256 mismatch for {repository_path}: expected {provenance_hash}, actual {actual_hash}",
                 path=repository_path,
             )
         version_match = VERSION_PATTERN.search(canonical_filename)
@@ -665,21 +682,24 @@ def _check_production_graph(
 
     graph_rules = integrity_rules["graph_rules"]
     stale_patterns = tuple(re.compile(pattern) for pattern in graph_rules["stale_reference_patterns"])
-    frozen_policy = graph_rules["frozen_provenance_policy"]
-    active_entries = [
+    navigation_document_ids = set(graph_rules["navigation_document_ids"])
+    navigation_entries = [
         entry
         for entry in entries
         if entry.get("lifecycle", "current") != "historical"
-        and entry.get("graph_policy") != frozen_policy
+        and entry.get("document_id") in navigation_document_ids
     ]
     stale_hits: list[str] = []
-    for entry in active_entries:
-        relative = _relative_path(entry)
+    scan_targets = [(context_index, False)] + [
+        (_relative_path(entry), _path_is_under(_relative_path(entry), roots["reference"]))
+        for entry in navigation_entries
+    ]
+    for relative, is_reference in scan_targets:
         path = root / relative
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8")
-        if _path_is_under(relative, roots["reference"]):
+        if is_reference:
             text = "\n".join(text.splitlines()[: graph_rules["reference_header_lines"]])
             patterns = stale_patterns[:1] + stale_patterns[-1:]
         else:

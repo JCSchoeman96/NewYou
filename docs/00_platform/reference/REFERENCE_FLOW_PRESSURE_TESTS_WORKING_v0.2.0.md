@@ -11,7 +11,7 @@
 - **Architecture authority:** `ARCHITECTURE_LAW_WORKING_v0.35.0.md`, cumulative `ARC-001...ARC-327`
 - **Requirements authority:** `ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md`, 417 frozen ARQs
 - **Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `00_PLATFORM_v1.2.1.md`, `01_DECISIONS_v1.2.1.md`
-- **Planning tracker:** `../02_OPEN_WORK_v1.2.27.md`
+- **Planning tracker:** `02_OPEN_WORK_v1.2.22.md`
 - **Governance mode:** CUMULATIVE / APPEND-ONLY PRESSURE-TEST EVIDENCE
 - **Authority boundary:** This register pressure-tests accepted Architecture Law across representative end-to-end flows. It does not assign final Domain ownership, invent Resources/tables/modules/packages/thresholds, or authorise executable development.
 

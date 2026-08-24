@@ -7,8 +7,8 @@
 - **Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `00_PLATFORM_v1.2.1.md`, `01_DECISIONS_v1.2.1.md`
 - **Architecture authority:** `03_ARCHITECTURE_v1.0.0.md` and accepted Architecture Law
 - **Domain authority:** `04_DOMAIN_MAP_v1.0.0.md`
-- **Planning tracker:** `02_OPEN_WORK_v1.2.27.md`
-- **Historical working draft:** `archive/05_ROADMAP_WORKING_v0.1.0.md`
+- **Planning tracker:** `02_OPEN_WORK_v1.2.26.md`
+- **Historical working draft:** `05_ROADMAP_WORKING_v0.1.0.md`
 - **Implementation status:** STOPPED; this document does not authorise Feature Pack preparation, JIT Domain Dossiers, Architectural Proof, Vertical Slices, TOON generation or implementation
 
 ---
@@ -506,7 +506,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Affected Domains:** `Identity & Access`; `Privacy & Consent`; `Commerce`; `Entitlements`; `Temperament`; `Health Records`; `Safety & Eligibility`; `Plans & Nutrition`; `Content & Media`; `Communications`; `Analytics`; `Audit & Evidence`.
 
-**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md §§15–17A, 19A–24`; `00_PLATFORM_v1.2.1.md §§21L.13–21L.24`; `DEC-280...DEC-291`; `archive/02_OPEN_WORK_v1.2.25.md §§8, 11`.
+**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md §§15–17A, 19A–24`; `00_PLATFORM_v1.2.1.md §§21L.13–21L.24`; `DEC-280...DEC-291`; `02_OPEN_WORK_v1.2.25.md §§8, 11`.
 
 **Architecture Authority:** `03_ARCHITECTURE_v1.0.0.md §§7–15`; `FLOW-01...FLOW-06`, `FLOW-08`, `FLOW-11`; release/degradation, deletion/recovery, observability, audit and staged performance-proof themes.
 

@@ -9,9 +9,11 @@
       "semver": "1.2.1",
       "repository_path": "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
       "authority_class": "PRODUCT_NORTH_STAR",
-      "sha256": "03fd7566fee79269df1ddd14efe097ef2952e6837500e917c78388e79e326ef1",
+      "sha256": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
       "superseded_version": null,
-      "lifecycle": "current"
+      "lifecycle": "current",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20"
     },
     {
       "document_id": "PLATFORM_BASELINE",
@@ -19,9 +21,11 @@
       "semver": "1.2.1",
       "repository_path": "docs/00_platform/00_PLATFORM_v1.2.1.md",
       "authority_class": "PLATFORM_PRODUCT_LAW",
-      "sha256": "29d9d9abc16bf0b93cdd257cf677f3f0e8d5e5c746450f338ac8875b9404385e",
+      "sha256": "56a2b9a5db42a81e287f0c61deae37d6bbce5b19f48f67732584160b455f935a",
       "superseded_version": null,
-      "lifecycle": "current"
+      "lifecycle": "current",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "56a2b9a5db42a81e287f0c61deae37d6bbce5b19f48f67732584160b455f935a"
     },
     {
       "document_id": "DECISION_REGISTER",
@@ -29,18 +33,18 @@
       "semver": "1.2.2",
       "repository_path": "docs/00_platform/01_DECISIONS_v1.2.2.md",
       "authority_class": "DECISION_REGISTER",
-      "sha256": "ee11f9f2d8582f287ea1a90016bcf65a6d7fe80b9af3efd27e1216a562a30e2f",
+      "sha256": "198f0afa6e9ad07f20d67996b4ee3f585bcb2963a2f22afb28fe91d278641c31",
       "superseded_version": "1.2.1",
       "lifecycle": "current"
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.27.md",
-      "semver": "1.2.27",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.27.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.28.md",
+      "semver": "1.2.28",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.28.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "b7008c116d81c178236f2756e64bd46c1812c6665611605115325f94103a931f",
-      "superseded_version": "1.2.26",
+      "sha256": "1d0cb00f3365414d772a11de5cd74b8051bf3e1b71a912f13708e28d0544ce0f",
+      "superseded_version": "1.2.27",
       "lifecycle": "current"
     },
     {
@@ -52,7 +56,8 @@
       "sha256": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b",
       "superseded_version": "0.1.0",
       "lifecycle": "current",
-      "graph_policy": "frozen_provenance"
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b"
     },
     {
       "document_id": "DOMAIN_MAP",
@@ -63,7 +68,8 @@
       "sha256": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
       "superseded_version": "0.2.0",
       "lifecycle": "current",
-      "graph_policy": "frozen_provenance"
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a"
     },
     {
       "document_id": "ROADMAP",
@@ -71,9 +77,11 @@
       "semver": "1.0.0",
       "repository_path": "docs/00_platform/05_ROADMAP_v1.0.0.md",
       "authority_class": "ROADMAP",
-      "sha256": "3699845b4bac30935da6e5189bee7c4b00063b4ed718cc0aaa52270ab522433a",
+      "sha256": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
       "superseded_version": "0.1.0",
-      "lifecycle": "current"
+      "lifecycle": "current",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20"
     }
   ],
   "reference_documents": [
@@ -83,9 +91,11 @@
       "semver": "1.0.0",
       "repository_path": "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md",
       "authority_class": "ARCHITECTURE_REQUIREMENTS_EVIDENCE",
-      "sha256": "182095db7197def3631cd30b18bb7fc81cc50c497c2d88799e524545fd3c6b1a",
+      "sha256": "cdf09ecced658635572a20e4f2feb04120b4f856e81762ef5af9ba179a11c40e",
       "superseded_version": "0.22.0",
-      "lifecycle": "current"
+      "lifecycle": "current",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "cdf09ecced658635572a20e4f2feb04120b4f856e81762ef5af9ba179a11c40e"
     },
     {
       "document_id": "ARCHITECTURE_LAW",
@@ -93,9 +103,11 @@
       "semver": "0.35.0",
       "repository_path": "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md",
       "authority_class": "ARCHITECTURE_LAW_EVIDENCE",
-      "sha256": "cf04a7940c243f644f816305c7dba0470ea29552b5d7ed146bc811d1554cb92b",
+      "sha256": "a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639",
       "superseded_version": "0.34.0",
-      "lifecycle": "current"
+      "lifecycle": "current",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639"
     },
     {
       "document_id": "REFERENCE_FLOW_PRESSURE_TESTS",
@@ -103,9 +115,11 @@
       "semver": "0.2.0",
       "repository_path": "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
       "authority_class": "REFERENCE_FLOW_EVIDENCE",
-      "sha256": "1ed2df604d6eebbfd0e409cf5ede4b75213e80dcea37659e270fc25ae8fdc396",
+      "sha256": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20",
       "superseded_version": "0.1.0",
-      "lifecycle": "current"
+      "lifecycle": "current",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20"
     },
     {
       "document_id": "FOUNDATION_INTEGRITY_AUDIT",
@@ -113,7 +127,7 @@
       "semver": "1.0.0",
       "repository_path": "docs/00_platform/reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md",
       "authority_class": "FOUNDATION_INTEGRITY_EVIDENCE",
-      "sha256": "6ebc6e357af38cd290590fda412e6a5be49b412522c0eacb503f40c6433f33a3",
+      "sha256": "3f53066c22c1590b965cf4be71683987e6bc746478ec41084387255fff3c642d",
       "superseded_version": null,
       "lifecycle": "current"
     }
@@ -138,6 +152,17 @@
       "sha256": "d3047b377403e932f9f2442d741fa698e06008b70e5c726995f8720f7f6b12b1",
       "superseded_version": "1.2.2",
       "lifecycle": "historical"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_27",
+      "canonical_filename": "02_OPEN_WORK_v1.2.27.md",
+      "semver": "1.2.27",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.27.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "db50ff91eac66033c58824c6e139a74ddbce58ab2292a0655de68ef223bccc42",
+      "superseded_version": "1.2.28",
+      "lifecycle": "historical",
+      "provenance_sha256": "db50ff91eac66033c58824c6e139a74ddbce58ab2292a0655de68ef223bccc42"
     }
   ],
   "integrity_rules": {
@@ -208,7 +233,10 @@
         "CORE_DOCS_AMENDMENT_AND_PRESERVATION_AUDIT_v1\\.2\\.1_2026-08-16\\.md"
       ],
       "reference_header_lines": 35,
-      "frozen_provenance_policy": "frozen_provenance"
+      "frozen_provenance_policy": "frozen_provenance",
+      "navigation_document_ids": [
+        "OPEN_WORK"
+      ]
     }
   }
 }
