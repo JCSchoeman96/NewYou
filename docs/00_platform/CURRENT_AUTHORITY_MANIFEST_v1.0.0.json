@@ -82,6 +82,18 @@
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20"
+    },
+    {
+      "document_id": "PLATFORM_OPERATING_MODEL",
+      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md",
+      "authority_class": "PLATFORM_OPERATING_MODEL",
+      "sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
+      "superseded_version": null,
+      "lifecycle": "current",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811"
     }
   ],
   "reference_documents": [
@@ -163,6 +175,17 @@
       "superseded_version": "1.2.28",
       "lifecycle": "historical",
       "provenance_sha256": "db50ff91eac66033c58824c6e139a74ddbce58ab2292a0655de68ef223bccc42"
+    },
+    {
+      "document_id": "PLATFORM_OPERATING_MODEL_WORKING_V0_2_0",
+      "canonical_filename": "PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md",
+      "semver": "0.2.0",
+      "repository_path": "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md",
+      "authority_class": "PLATFORM_OPERATING_MODEL_HISTORICAL",
+      "sha256": "898ad8ac7aee55211a99446a3bd66c06d9422356edcfb7a6bad780e22072af4a",
+      "superseded_version": "1.0.0",
+      "lifecycle": "historical",
+      "provenance_sha256": "898ad8ac7aee55211a99446a3bd66c06d9422356edcfb7a6bad780e22072af4a"
     }
   ],
   "integrity_rules": {

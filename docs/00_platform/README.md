@@ -13,6 +13,7 @@ For normal planning and delivery-preparation work, read **only** these current-a
 5. `03_ARCHITECTURE_v1.0.0.md`
 6. `04_DOMAIN_MAP_v1.0.0.md`
 7. `05_ROADMAP_v1.0.0.md`
+8. `PLATFORM_OPERATING_MODEL_v1.0.0.md`
 
 Do not automatically read files under `reference/` or `archive/`.
 
@@ -20,16 +21,15 @@ Routine Phase 7 work should use the README, current Roadmap, current Open Work, 
 
 ## Current Authority
 
-The seven documents listed above describe the current platform state. Their explicit versioned filenames are intentional and should not be replaced with unversioned aliases without a separate governance decision.
+The eight documents listed above describe the current platform state. Their explicit versioned filenames are intentional and should not be replaced with unversioned aliases without a separate governance decision.
 
 The README and manifest are the current routing pointers. Frozen artifacts may retain source-at-freeze filenames as historical provenance; those references do not override the current routing above.
 
 ## Active Working Artifacts
 
-`working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Read them only when a task explicitly concerns experience or operating-model planning; they must not override the seven current-authority documents. They remain working until an explicit freeze review and governance decision.
+`working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Read them only when a task explicitly concerns experience or operating-model planning; they must not override the eight current-authority documents. They remain working until an explicit freeze review and governance decision.
 
 - `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register.
-- `working/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md` — derived human/operating workflow model.
 
 ## Machine-readable inventory
 
@@ -58,6 +58,7 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/05_ROADMAP_WORKING_v0.1.0.md`
 - `archive/01_DECISIONS_v1.2.1.md` — preserved superseded Decision Register.
 - `archive/02_OPEN_WORK_v1.2.27.md` — preserved pre-compaction Open Work snapshot.
+- `archive/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md` — preserved pre-freeze Operating Model working provenance.
 - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md` — preserved original foundation-readiness evidence.
 
 Archive files are historical evidence only and are never current authority. Never use an archived document to override a current authoritative document.
@@ -69,7 +70,8 @@ Product Law
 → Architecture Law / 03_ARCHITECTURE
 → Domain Law / 04_DOMAIN_MAP
 → 05_ROADMAP
-→ current 02_OPEN_WORK / selected Feature Pack planning
+→ PLATFORM_OPERATING_MODEL
+→ current 02_OPEN_WORK / selected Feature Pack / JIT planning
 ```
 
 ## Current State
