@@ -94,6 +94,18 @@
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811"
+    },
+    {
+      "document_id": "FRONTEND_EXPERIENCE_SYSTEM",
+      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
+      "authority_class": "FRONTEND_EXPERIENCE_SYSTEM",
+      "sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3",
+      "superseded_version": null,
+      "lifecycle": "current",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3"
     }
   ],
   "reference_documents": [
@@ -186,6 +198,28 @@
       "superseded_version": "1.0.0",
       "lifecycle": "historical",
       "provenance_sha256": "898ad8ac7aee55211a99446a3bd66c06d9422356edcfb7a6bad780e22072af4a"
+    },
+    {
+      "document_id": "FRONTEND_EXPERIENCE_SYSTEM_WORKING_V0_1_0",
+      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.1.0.md",
+      "semver": "0.1.0",
+      "repository_path": "docs/00_platform/archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.1.0.md",
+      "authority_class": "FRONTEND_EXPERIENCE_SYSTEM_HISTORICAL",
+      "sha256": "05ca75c89d12f9de1704f452be45edd07263a3c7fc9e6b4f176732e9cd91009a",
+      "superseded_version": "0.2.0",
+      "lifecycle": "historical",
+      "provenance_sha256": "05ca75c89d12f9de1704f452be45edd07263a3c7fc9e6b4f176732e9cd91009a"
+    },
+    {
+      "document_id": "FRONTEND_EXPERIENCE_SYSTEM_WORKING_V0_2_0",
+      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md",
+      "semver": "0.2.0",
+      "repository_path": "docs/00_platform/archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md",
+      "authority_class": "FRONTEND_EXPERIENCE_SYSTEM_HISTORICAL",
+      "sha256": "635cd997641409f876e9d6d5ff00b61aecffef8d75d310bec24f2e897f286aa4",
+      "superseded_version": "1.0.0",
+      "lifecycle": "historical",
+      "provenance_sha256": "635cd997641409f876e9d6d5ff00b61aecffef8d75d310bec24f2e897f286aa4"
     }
   ],
   "integrity_rules": {

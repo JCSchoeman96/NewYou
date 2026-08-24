@@ -4,7 +4,7 @@ This directory separates current platform authority from deep evidence and histo
 
 ## Default Agent Context
 
-For normal planning and delivery-preparation work, read **only** these current-authority documents first:
+For foundation/default planning and delivery-preparation work, read **only** these current-authority documents first:
 
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.2.1.md`
@@ -15,22 +15,27 @@ For normal planning and delivery-preparation work, read **only** these current-a
 7. `05_ROADMAP_v1.0.0.md`
 8. `PLATFORM_OPERATING_MODEL_v1.0.0.md`
 
+For frontend, UI, public-experience, design-system, accessibility, SEO, analytics-UI or Feature Pack planning, additionally load:
+
+9. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md`
+
 Do not automatically read files under `reference/` or `archive/`.
 
 Routine Phase 7 work should use the README, current Roadmap, current Open Work, the relevant Feature Pack section, frozen Architecture, relevant Domain Map sections and specific Product/Decision references. Consult deep evidence only when a real question requires exact source tracing.
 
 ## Current Authority
 
-The eight documents listed above describe the current platform state. Their explicit versioned filenames are intentional and should not be replaced with unversioned aliases without a separate governance decision.
+The nine documents listed above describe the current platform state. Their explicit versioned filenames are intentional and should not be replaced with unversioned aliases without a separate governance decision.
 
 The README and manifest are the current routing pointers. Frozen artifacts may retain source-at-freeze filenames as historical provenance; those references do not override the current routing above.
 
+The frozen Frontend Experience System is current authority for affected frontend-experience planning, but it is conditionally loaded rather than default context for unrelated routine work.
+
 ## Active Working Artifacts
 
-`working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Read them only when a task explicitly concerns experience or operating-model planning; they must not override the eight current-authority documents. They remain working until an explicit freeze review and governance decision.
+`working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Read them only when a task explicitly concerns experience or operating-model planning; they must not override the nine current-authority documents. They remain working until an explicit freeze review and governance decision.
 
-- `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register.
-- `working/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md` — hardened frontend-experience contract candidate; load it for explicit frontend-experience planning after the current-authority set and the Experience Decision Register.
+- `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register; remains working/non-authoritative provenance.
 
 ## Machine-readable inventory
 
@@ -61,6 +66,7 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/02_OPEN_WORK_v1.2.27.md` — preserved pre-compaction Open Work snapshot.
 - `archive/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md` — preserved pre-freeze Operating Model working provenance.
 - `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.1.0.md` — preserved pre-hardening Frontend Experience System source provenance.
+- `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md` — preserved final pre-freeze Frontend Experience System working provenance.
 - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md` — preserved original foundation-readiness evidence.
 
 Archive files are historical evidence only and are never current authority. Never use an archived document to override a current authoritative document.
@@ -73,6 +79,7 @@ Product Law
 → Domain Law / 04_DOMAIN_MAP
 → 05_ROADMAP
 → PLATFORM_OPERATING_MODEL
+→ FRONTEND_EXPERIENCE_SYSTEM when frontend/UI/public-experience planning is in scope
 → current 02_OPEN_WORK / selected Feature Pack / JIT planning
 ```
 

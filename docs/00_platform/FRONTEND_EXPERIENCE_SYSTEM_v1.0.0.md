@@ -1,16 +1,22 @@
-# FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md
+# FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md
 
-- **Status:** WORKING / DERIVED FRONTEND-EXPERIENCE CONTRACT CANDIDATE
-- **Version:** v0.2.0
-- **Previous working version:** `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.1.0.md`
+- **Status:** FROZEN / COMPLETE FRONTEND EXPERIENCE SYSTEM
+- **Document version:** v1.0.0
+- **Frozen working source:** `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md`
+- **Frozen working source SHA-256:** `635cd997641409f876e9d6d5ff00b61aecffef8d75d310bec24f2e897f286aa4`
+- **Previous source:** `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.1.0.md`
 - **Previous source SHA-256:** `05ca75c89d12f9de1704f452be45edd07263a3c7fc9e6b4f176732e9cd91009a`
 - **Derived from:** `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md`
 - **Current authority basis:** Product Law, Architecture, Domain Law, Roadmap and the frozen `PLATFORM_OPERATING_MODEL_v1.0.0.md`
+- **Authority boundary:** Subordinate to Product Law, Architecture, Domain Law, Roadmap and the frozen Platform Operating Model. The Experience Decision Register is cumulative working provenance and does not override upstream authority.
+- **Governs:** frontend-experience, design-system and interaction contracts for in-scope frontend, UI and public-experience planning.
+- **Authority status:** CURRENT / CONDITIONALLY LOADED FRONTEND AUTHORITY
 - **Date:** 2026-08-24
 - **Implementation:** NOT AUTHORISED BY THIS DOCUMENT
-- **Freeze status:** NOT FROZEN; suitable for later freeze review after any remaining owner/gate questions are resolved
+- **JIT boundary:** Exact implementation and design detail remains deferred to the affected Feature Pack and JIT contracts.
+- **Freeze status:** FROZEN / COMPLETE
 
-This version hardens the v0.1.0 synthesis for internal consistency and cumulative decision coverage. The preserved v0.1.0 artifact is the exact canonical source supplied before hardening; it is not silently overwritten.
+This frozen artifact preserves the final v0.2.0 working synthesis without semantic expansion. The v0.2.0 working artifact is archived byte-for-byte, and the v0.1.0 source remains preserved as historical provenance.
 
 ---
 
@@ -391,6 +397,8 @@ Avoid scattered magic numbers, duplicate variables, enormous unused token sets a
 
 Automatic.css is research/inspiration for variable-first and mathematical systems, not a WordPress dependency or runtime library. Only lawful public or user-provided licensed material may be studied or copied; proprietary source is not copied into NewYou. Do not add Sass/SCSS merely to imitate Automatic.css.
 
+Before a future token-engine implementation or major design-system expansion, review relevant current public Automatic.css documentation where available. This remains a study/reference step; it does not make Automatic.css a runtime dependency or permit copying proprietary source.
+
 Tailwind v4 is implementation/build syntax. It may map to and consume NewYou tokens, but class availability does not authorise arbitrary design values. The preferred composition is:
 
 ```text
@@ -486,6 +494,8 @@ The explicit state vocabulary is:
 
 States remain revisitable while the parent workflow is active. Validation errors preserve input where safe, associate errors with controls and do not rely on colour alone.
 
+Form presentation guards are limited to interaction conditions such as focus, value, autofill, validation progress and parent-workflow permission for disabled/read-only presentation. Side effects are limited to label, focus, error and feedback presentation plus safe input preservation; they do not mutate Domain truth. Form states remain revisitable while the parent workflow permits it, so correction and recovery remain possible.
+
 ## 10.2 Asynchronous interaction state machine
 
 For a meaningful frontend action, the presentation lifecycle may be:
@@ -499,6 +509,8 @@ IDLE → SUBMITTING → SUCCESS
 ```
 
 `PENDING_EXTERNAL` is used for authoritative provider/system ambiguity where reconciliation is safe. `REQUIRES_ATTENTION` is used when a safe automatic resolution is unavailable. The frontend never skips from click to critical success without authoritative confirmation.
+
+Async guards are scoped to actionable intent, current permission and authoritative confirmation where correctness requires it. Side effects are scoped pending feedback, duplicate-submit protection, recoverable-work preservation and re-reading the authoritative projection. `SUCCESS` terminates the current interaction only after confirmation; validation errors, conflicts and requires-attention outcomes remain recoverable through correction, retry or support where permitted.
 
 ## 10.3 Loading and error hierarchy
 
@@ -570,6 +582,8 @@ Do not silently fill missing authoritative values or render unknown data as zero
 Drill-down inherits or tightens row/field/purpose permissions; dashboard visibility never grants sensitive record access. Export is a separate permission enforcing the same controls. Large exports use bounded durable async generation, secure artifact lifecycle, expiry where appropriate, notification and audit; do not load large exports into LiveView or browser memory.
 
 Saved views may preserve filters, periods, sorting/grouping and permitted presentation preferences, but never create dashboard forks or redefine canonical metrics. Time-bound governed annotations may record launches, incidents, methodology changes, pricing/content releases or provider disruptions.
+
+If filter state is bookmarkable or shareable, it must not place sensitive participant identifiers or protected data in the URL.
 
 Start with deterministic thresholds and actionable work/notifications. Anomaly detection is evidence-gated; it is not an MVP requirement. General management dashboards use minimised aggregates; private journals and full clinical/professional records do not belong there.
 
@@ -670,13 +684,13 @@ The following remain deliberately deferred:
 - full offline/PWA requirement;
 - provider-specific payment, analytics, video, notification and embed semantics.
 
-No implementation, FP-001, JIT Domain/Resource dossier, TOON prompt, Phoenix/LiveView/Ash build, component-library build or frozen-authority change is authorised here.
+No implementation, FP-001, JIT Domain/Resource dossier, TOON prompt, Phoenix/LiveView/Ash build or component-library build is authorised by this document. Any future change to this authority requires a separate governance decision.
 
 ---
 
 # 16. Freeze-review checklist
 
-Before a later freeze review, compare this synthesis against the cumulative Experience Decision Register and confirm that no `LOCKED` decision was deleted, weakened, silently reinterpreted or replaced by implementation convenience. At minimum verify:
+This frozen synthesis was compared against the cumulative Experience Decision Register. Future amendments must confirm that no `LOCKED` decision is deleted, weakened, silently reinterpreted or replaced by implementation convenience. At minimum verify:
 
 - Command Centre, Library/Work Queue/Calendar, canonical dashboards/saved views and next-authorised-action Home;
 - workflow-first operator Work with assignment/history, changes-requested, safe bulk actions, scoped support and no universal Task authority;
@@ -704,4 +718,4 @@ STOP and report the smallest exact blocker if:
 - the work expands into FP-001, JIT dossiers, TOONs or implementation;
 - the only way to proceed is to invent implementation detail.
 
-This artifact remains working and non-authoritative until a separate freeze review and governance decision.
+This artifact is frozen current authority for frontend-experience, design-system and interaction planning when those concerns are in scope. It is not default context for unrelated routine tasks, and it does not authorise implementation.
