@@ -10,7 +10,7 @@
 - **Current content state:** Contract and empty population structure only. No Feature Pack, domain, lifecycle, journey or implementation analysis is populated by ATLAS-01.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
-This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels while leaving implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
+This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
 
 The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 does not change that manifest.
 
@@ -28,7 +28,8 @@ Product Law
     → Domain Law
     → Roadmap
     → Delivery Atlas
-    → Feature Pack preparation / JIT Domain Dossiers
+    → Feature Pack Contracts
+    → JIT Domain Dossiers
     → Architectural Proof
     → Vertical Slices
     → Horizontal Hardening
@@ -105,6 +106,310 @@ architectural / delivery seam != implementation design
 The Atlas may record the first. It must defer the second unless an upstream source has already frozen the exact detail.
 
 ---
+
+# Delivery Lifecycle Governance
+
+## Lifecycle purpose and operating flow
+
+The Delivery Atlas governs how an approved roadmap outcome moves from a delivery relationship into implementation and returns as verified evidence. It makes the required handoffs and review points visible without authorising implementation or creating lower-level contracts.
+
+The operating flow is:
+
+```text
+Roadmap
+    → Delivery Atlas
+    → Feature Pack preparation
+    → TB / VS / HH preparation
+    → Grill-Me review
+    → Implementation
+    → Evidence collection
+    → Implementation handoff
+    → Continuation review
+    → Next delivery decision
+```
+
+The Roadmap supplies the approved outcome, scope, sequencing, dependencies and gates. The Atlas derives the delivery relationships and identifies the next required planning boundary. Feature Pack preparation turns an approved outcome into a controlled implementation boundary. TB, VS and HH preparation defines the proof, behaviour or hardening objective at the correct level. Grill-Me confirms that the proposed boundary is understood before meaningful implementation planning. Implementation then produces evidence, a handoff and a continuation decision.
+
+This governance section is a working contract beneath the authority hierarchy in Section 1.1. It does not modify Product Law, Architecture Law, Domain Law or the Roadmap. It does not authorise implementation, freeze an implementation mechanism or replace a Feature Pack Contract, JIT Domain Dossier, Architectural Proof, Vertical Slice, Horizontal Hardening artifact, release decision or readiness decision.
+
+## Feature Pack lifecycle
+
+### Purpose
+
+The Feature Pack lifecycle moves an approved roadmap outcome into a controlled implementation boundary.
+
+### Stages
+
+Every Feature Pack follows these stages in order, with a gate or explicit decision recorded when a stage cannot proceed:
+
+1. **Selection.** Select an approved Roadmap outcome. Do not create a new outcome or expand the approved scope inside the Atlas.
+2. **Discovery.** Gather the relevant authority documents, existing evidence, affected domains, dependencies, assumptions, policies, lifecycle concerns and open questions.
+3. **Grill-Me.** Review the proposed outcome boundary and expose assumptions, dependencies, invalidation risks, future capability risks, affected domains and policy or lifecycle implications.
+4. **Domain/architecture preparation.** Prepare the domain and architecture material needed for implementation-grade planning. This work must preserve domain ownership, architectural constraints, policy gates and known failure behaviour.
+5. **Feature Pack contract approval.** Approve the Feature Pack Contract only after the outcome, boundary, dependencies, gates, acceptance criteria and required preparation are clear. ATLAS-01 defines this approval point but does not create the contract.
+6. **TB/VS/HH selection.** Select the smallest applicable proof, behaviour and hardening boundaries. Record why each selected artifact is needed and what evidence it must produce.
+7. **Implementation.** Execute only the approved Feature Pack Contract and lower-level contracts. Any material scope change returns to the relevant authority or review gate.
+8. **Evidence review.** Compare implementation evidence with the acceptance criteria, assumptions, architecture, domain rules, lifecycle expectations, policies and operational requirements.
+9. **Handoff.** Produce the Implementation Handoff with the final impact, evidence, limitations and operational requirements.
+10. **Closure.** Record whether the Feature Pack is complete, needs more implementation or hardening, is blocked, or is ready for a next delivery decision. Closure requires the evidence and handoff requirements in this section.
+
+The Feature Pack lifecycle may stop at any stage when authority, ownership, policy, evidence or scope is unresolved. A stopped stage is recorded and routed. It is not passed by filling the gap with an Atlas assumption.
+
+## Tracer Bullet lifecycle
+
+### Purpose
+
+The Tracer Bullet lifecycle proves an architectural assumption or unknown path with the smallest realistic proof. A TB is a proof boundary, not a partial feature and not evidence that the complete product behaviour is ready.
+
+### Required questions
+
+Before a TB is selected, its contract must answer:
+
+- What assumption is being proven?
+- Why does existing evidence not prove it?
+- What is the smallest realistic proof?
+- What architecture layers are involved?
+- What evidence determines success?
+- What happens if proof fails?
+
+The TB lifecycle frames the assumption, identifies the missing evidence, bounds the path, names the involved layers at the level required for the proof, runs the smallest realistic proof and records the result. A successful proof records what it proves and the boundary of that result. A failed proof records the failed assumption, the evidence, the affected authority or Feature Pack and the required rework, clarification or alternative. A failed TB never becomes an implicit approval to continue.
+
+ATLAS-01 defines the TB lifecycle and selection questions only. It does not create a TB contract, proof task, `TB-nnn` identifier or executable proof.
+
+## Vertical Slice lifecycle
+
+### Purpose
+
+The Vertical Slice lifecycle delivers one complete production-quality behaviour across every layer needed to make the stated user outcome true.
+
+### Required considerations
+
+Each VS contract must consider the following, marking an item as not applicable only with a reason:
+
+- user outcome;
+- domain ownership;
+- policies;
+- lifecycle changes;
+- durable state;
+- side effects;
+- async behaviour;
+- realtime behaviour;
+- audit;
+- tests; and
+- operational evidence.
+
+The VS lifecycle starts with a bounded behaviour and acceptance criteria, confirms its domain and policy boundaries, implements the complete path, exercises relevant failure and recovery behaviour, collects test and operational evidence, and ends with review against the stated outcome. A UI path, endpoint, projection or provider response alone is not a complete VS when the behaviour also requires authoritative state, side effects, audit, asynchronous work or operational controls.
+
+ATLAS-01 defines these VS boundaries only. It does not create a VS contract, implementation task or `VS-nnn` identifier.
+
+## Horizontal Hardening lifecycle
+
+### Purpose
+
+The Horizontal Hardening lifecycle strengthens already-correct functionality based on evidence. It does not replace missing implementation or hide an unproven behaviour behind a hardening label.
+
+### Required evidence
+
+Every HH contract must require:
+
+- a measured reason;
+- an identified failure mode;
+- an improvement objective;
+- before/after evidence; and
+- regression validation.
+
+The HH lifecycle identifies the measured pressure or failure, states the improvement objective, applies the smallest justified change, measures the before and after behaviour, validates regression risk and records the remaining safe boundary. If the underlying functionality is not correct or the failure is not understood, the work returns to implementation, proof or upstream clarification rather than being labelled hardening.
+
+ATLAS-01 defines these HH boundaries only. It does not create an HH contract, hardening task or `HH-nnn` identifier.
+
+## Grill-Me review gates
+
+Grill-Me reviews are required before meaningful implementation planning. The review is an evidence and boundary check. It does not grant permission to change upstream law, and a positive review does not replace a required authority or expert decision.
+
+### Feature Pack Grill-Me
+
+The Feature Pack review must ask:
+
+- What assumptions exist?
+- What dependencies exist?
+- What could invalidate the approach?
+- What future capability could be blocked?
+- What domains are affected?
+- What policies/lifecycles are involved?
+
+The review records the answers, missing evidence, required gates and the decision to proceed, revise, stop or seek upstream clarification.
+
+### TB/VS/HH Grill-Me
+
+The TB/VS/HH review must ask:
+
+- Is this the correct implementation boundary?
+- Are acceptance criteria clear?
+- Are failure modes understood?
+- Are security/privacy/performance requirements identified?
+- Is the task small enough?
+- Does it require upstream clarification?
+
+The review must identify the artifact type, its acceptance boundary, evidence required, dependencies and unresolved questions. If the boundary is wrong or the task is too large, the review returns it for re-scoping. If an upstream rule is unclear, the review routes the question rather than deciding it locally.
+
+## Implementation handoff
+
+Completed implementation work must produce an Implementation Handoff artifact. The handoff is the durable record that connects the approved implementation boundary to the repository state, collected evidence and the next review. It records facts and decisions; it does not become a new authority source.
+
+The handoff must capture:
+
+- what was implemented;
+- final architecture impact;
+- domain impact;
+- lifecycle changes;
+- state machine changes;
+- database changes;
+- performance characteristics;
+- security/privacy changes;
+- tests/evidence;
+- operational requirements;
+- known limitations; and
+- unlocked future work.
+
+Each item must be stated explicitly or marked not applicable with a reason. The handoff must distinguish measured results from assumptions, link evidence to the relevant acceptance criteria or invariant and identify any work that remains gated, deferred or unsafe to continue.
+
+## Continuation review
+
+Before continuing development after previous work, the current system state must be compared against:
+
+- previous handoff documentation;
+- current repository state;
+- current tests; and
+- current authority documents.
+
+The continuation review must verify:
+
+- implementation matches the intended outcome;
+- no undocumented scope expansion occurred;
+- assumptions remain valid;
+- no upstream authority was violated; and
+- next work remains correctly scoped.
+
+The review records the comparison, evidence, discrepancies and next delivery decision. A discrepancy stops continuation until it is corrected, accepted by the proper authority or explicitly routed. The review must not treat an unchanged plan or a passing narrow test as proof that the current repository still matches the previous handoff.
+
+## Evidence and closure requirements
+
+Evidence must be tied to the claim it supports. Depending on the lifecycle, it may include source references, approved decisions, domain and architecture checks, proof results, acceptance tests, failure and recovery tests, security or privacy checks, performance measurements, audit records and operational observations. Evidence must identify its scope, date or revision where relevant, and any limitation that prevents a broader claim.
+
+Closure requires all of the following:
+
+- the approved outcome and implementation boundary are identifiable;
+- required Grill-Me reviews and authority gates are recorded;
+- the selected TB, VS and HH objectives have a reviewed result, or an explicit reason they were not required;
+- acceptance, regression, security/privacy, performance and operational evidence is present for the claims being closed;
+- failed, pending or degraded behaviour is recorded with its owner, recovery path and next decision;
+- the Implementation Handoff is complete, including known limitations and unlocked future work;
+- the Continuation Review confirms the repository and authority state; and
+- the next delivery decision is recorded as continue, harden, revise, stop, or proceed to the next approved outcome.
+
+An artifact remains open, gated or stopped when any required evidence is missing or contradictory. Code completion alone is not lifecycle closure. Closure of a Feature Pack or lower-level artifact does not promote the Atlas or any handoff into Product Law, Architecture Law, Domain Law or Roadmap authority.
+
+## Decision Escalation Matrix
+
+Every planning or implementation discovery must be routed to the lowest correct authority that owns the decision. "Lowest correct" means the most specific authority that can decide the question without changing a higher-level rule. The Atlas may record the route and its downstream effect, but it must not decide for that authority.
+
+The detailed authority hierarchy remains the one in Section 1.1. For escalation and execution routing, the relevant path is:
+
+```text
+Product Law
+    → Architecture Law
+    → Domain Law
+    → Roadmap
+    → Delivery Atlas
+    → Feature Pack Contracts
+    → JIT Domain Dossiers
+    → TB / VS / HH
+    → Implementation
+```
+
+This abbreviated path does not remove the Architectural Proof, Release or Readiness boundaries defined in Section 1.1 and the later Atlas views. It shows where a discovery is routed before work continues.
+
+| Discovery Type | Example Question | Escalation Authority |
+|---|---|---|
+| Product truth | What should the platform/business do? | Product Law / Decision Register |
+| Commercial model | Pricing, packaging, business rules | Product Law / Commercial decisions |
+| Legal requirement | Compliance, contracts, obligations | Legal/Product authority |
+| Clinical/safety rule | Health, safety, professional judgement | Clinical/Safety authority |
+| Domain ownership | Who owns this durable truth? | Domain Map / Domain Law |
+| Lifecycle semantics | What states, transitions, guards exist? | Owning Domain |
+| Architecture mechanism | How should the platform support this? | Architecture Law |
+| Cross-domain interaction | How should domains communicate? | Architecture + affected Domains |
+| Delivery sequencing | What comes first? | Roadmap |
+| Feature Pack scope | Included/excluded work | Feature Pack Contract |
+| Implementation semantics | How exactly should code implement it? | JIT Domain Dossier / TB / VS / HH |
+| Execution ambiguity | Coding task unclear | TB / VS / HH contract |
+| Evidence problem | Cannot prove completion | Validation/evidence review |
+| Operational concern | Monitoring, support, ownership | Operating Model |
+
+### Lower-level artifacts do not resolve higher-level uncertainty
+
+Lower-level artifacts must not resolve higher-level uncertainty. In particular:
+
+- A TOON must not invent missing Product decisions.
+- A Vertical Slice must not redefine Domain ownership.
+- A JIT Dossier must not override Architecture Law.
+- Implementation code must not become the source of business truth.
+
+When a lower-level artifact discovers a question outside its authority, it records the question, the evidence, the affected work and the escalation route. It does not turn a plausible answer into a local rule.
+
+### Escalation response
+
+When uncertainty is discovered, the correct response is:
+
+```text
+identify owner
+    → escalate
+    → update correct authority artifact
+    → continue only after resolution
+```
+
+The receiving authority updates its own artifact. The Atlas then revalidates the affected relationship, gate or STOP condition before downstream work continues. If the authority declines to decide, the discovery remains open or stopped and the next delivery decision records that state.
+
+### Assumption prohibition
+
+Plausible assumptions are not acceptable when:
+
+- financial truth is affected;
+- health/safety truth is affected;
+- privacy/security boundaries are affected;
+- durable ownership is unclear;
+- lifecycle semantics are unclear; or
+- architecture constraints are violated.
+
+The absence of an immediate failure is not evidence that one of these assumptions is safe. Route the question to its owner and wait for the required resolution or authority decision.
+
+### Escalation STOP conditions
+
+A planner or coding agent must STOP when:
+
+- the required decision belongs to a higher authority layer;
+- two authority documents conflict;
+- ownership of durable truth is unclear;
+- a lifecycle cannot be correctly modelled;
+- implementation would require inventing business rules; or
+- acceptance criteria depend on unresolved policy.
+
+The STOP record must name the discovery, evidence, current authority boundary, escalation authority, affected work and the condition required before continuation. No lower-level artifact may silently absorb the unresolved decision.
+
+## Future template registry
+
+Future authorized work will provide templates in `docs/templates/`. The templates will standardize the contracts and records described by this governance model:
+
+| Future template | Purpose |
+|---|---|
+| `FEATURE_PACK_TEMPLATE.md` | Define the approved outcome, implementation boundary, dependencies, gates, acceptance criteria and required lower-level preparation for a Feature Pack. |
+| `TB_TEMPLATE.md` | Define an architectural assumption, the smallest proof, involved layers, success evidence and the failure route for a Tracer Bullet. |
+| `VS_TEMPLATE.md` | Define one complete production-quality behaviour, its domain and policy boundaries, acceptance criteria and implementation evidence for a Vertical Slice. |
+| `HH_TEMPLATE.md` | Define the measured failure or pressure, improvement objective, before/after evidence and regression validation for Horizontal Hardening. |
+| `IMPLEMENTATION_HANDOFF_TEMPLATE.md` | Capture final implementation impact, tests, evidence, operational requirements, limitations and unlocked future work. |
+| `CONTINUATION_REVIEW_TEMPLATE.md` | Compare prior handoff, repository, tests and authority documents, then record discrepancies and the next delivery decision. |
+
+This registry is conceptual. ATLAS-01 does not create these files, populate them or create any Feature Pack Contract, JIT Domain Dossier, TB, VS, HH or TOON prompt.
 
 # 2. Atlas terminology and classification system
 
@@ -655,7 +960,7 @@ The Atlas is used for navigation in this order:
 11. Recheck Atlas relationships after an approved upstream amendment. Do not patch around a changed authority inside the Atlas.
 12. Stop when a relationship cannot be proven without missing policy, ownership, mechanism or evidence.
 
-This task does not perform steps 6 through 10. ATLAS-01 ends after defining the navigation contract.
+This task does not perform steps 6 through 10. ATLAS-01 ends after defining the navigation and lifecycle governance contract.
 
 ---
 
@@ -746,6 +1051,9 @@ ATLAS-01 is ready for review only when the evidence shows all of the following:
 | Authority contract exists | This artifact names the upstream hierarchy, source set and subordinate role of the Atlas. |
 | Working status is explicit | The artifact is marked derived, working and non-authoritative, and says it does not authorise implementation. |
 | Scope is explicit | The artifact defines medium-resolution navigation across the complete approved roadmap. |
+| Delivery lifecycle governance is explicit | The Delivery Lifecycle Governance section defines the Roadmap-to-next-decision flow, Feature Pack, TB, VS and HH lifecycles, Grill-Me gates, handoff, continuation review and evidence/closure requirements. |
+| Decision escalation is explicit | The Decision Escalation Matrix routes discoveries to the lowest correct authority and defines lower-level boundaries, escalation response and STOP conditions. |
+| Future templates remain conceptual | The future template registry names the expected files and their purposes without creating any files under `docs/templates/`. |
 | Proposed views are defined | Sections 3 through 22 define the mature-platform view, portfolio map, registers, matrices, journeys, flows, proof, hardening, seams and risks without substantive pack analysis. |
 | Lifecycle boundary is explicit | Section 7 records the eventual state-machine requirements and limits Atlas lifecycle coverage to existence, ownership, known upstream semantics and the Feature Pack where full specification becomes mandatory. |
 | Performance boundary is explicit | Section 16 preserves PostgreSQL authority, evidence-led acceleration and simplest-correct-path-first sequencing. |
