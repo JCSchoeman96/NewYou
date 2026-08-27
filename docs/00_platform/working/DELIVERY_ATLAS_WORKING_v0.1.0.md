@@ -1254,7 +1254,7 @@ A participant can browse an approved paid event, obtain an expiring capacity hol
 - `OQ-004 — BLOCKS_THIS_FP`: event payment and ticket issuance must reconcile with the provider path.
 - `OQ-035 — BLOCKS_THIS_FP`: admission, rate and abuse behaviour is part of safe scarce-capacity operation.
 - `OQ-020` and `OQ-021 — BLOCKS_RELEASE_ONLY` for live or recorded event variants.
-- `OQ-036 — BLOCKS_RELEASE_ONLY` for event communications.
+- `OQ-036` is a conditional release gate for event communications: it applies before an event communication promise is released. Roadmap §14 schedules it at the affected notification boundary; ordinary ticket commerce does not add that dependency.
 - `OQ-014 — NON_BLOCKING_FOR_THIS_FP`: ordinary event information delivery is not the capacity authority.
 
 ### Release Significance
@@ -1901,6 +1901,8 @@ When STOP occurs, record:
 
 ## 26.1 ATLAS-01 completion standard
 
+This subsection records the completion standard for the ATLAS-01 contract layer. It remains the historical baseline for the ATLAS-02 update.
+
 ATLAS-01 is ready for review only when the evidence shows all of the following:
 
 | Requirement | Required evidence |
@@ -1921,9 +1923,9 @@ ATLAS-01 is ready for review only when the evidence shows all of the following:
 | No implementation or lower-level preparation was created | No product code, Feature Pack preparation, JIT Domain Dossier, TB, VS, HH or TOON exists as part of ATLAS-01. |
 | Atlas remains unfrozen | No freeze verdict or current-authority promotion is made by this artifact. |
 
-## 26.2 Review protocol
+## 26.2 ATLAS-01 review protocol
 
-The ATLAS-01 delivery report must:
+The ATLAS-01 delivery report used the following protocol:
 
 1. inspect the full diff;
 2. confirm the branch and changed-file set;
@@ -1935,3 +1937,16 @@ The ATLAS-01 delivery report must:
 8. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
 
 ATLAS-01 ended with the contract captured above. ATLAS-02 adds only the Feature Pack Portfolio Register under that same authority boundary. The next Atlas content layer must be separately named and authorised; this artifact does not begin ATLAS-03.
+
+## 26.3 ATLAS-02 completion standard
+
+ATLAS-02 is ready for review only when the evidence shows all of the following:
+
+| Requirement | Evidence in this artifact |
+|---|---|
+| Complete portfolio coverage | The summary and register contain all 17 approved Roadmap Feature Packs in Roadmap order. |
+| Required entry structure | Each pack has Purpose, Intended Outcome, Roadmap Position, Approved Dependencies, Known Unlocks, High-Level Domain Involvement, Known Gates, Release Significance and Authority Anchors. |
+| Authority fidelity | Purpose, outcomes, positions, dependencies, unlocks and release significance derive from the frozen Roadmap; domain names and ownership boundaries derive from the frozen Domain Map; gate references remain tied to current authority. |
+| Dependency and gate discipline | No dependency, unlock, gate or domain role is added by inference; conditional FP-017 remains explicitly unassigned until its required future direction exists. |
+| Navigation scope | The register remains outcome-level delivery navigation and does not become implementation planning or another Atlas view. |
+| Working boundary | The artifact remains derived, working, non-authoritative and unfrozen, and does not begin ATLAS-03. |
