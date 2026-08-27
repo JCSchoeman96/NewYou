@@ -1,18 +1,18 @@
 # Delivery Atlas working v0.1.0
 
-- **Artifact:** `ATLAS-01`
+- **Artifact:** `ATLAS-02`
 - **Document status:** **DERIVED DELIVERY PLANNING ARTIFACT**
 - **Working state:** **WORKING / NON-AUTHORITATIVE**
 - **Authority boundary:** **DOES NOT MODIFY PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW**
 - **Implementation boundary:** **DOES NOT AUTHORISE IMPLEMENTATION**
 - **Purpose:** Define the first medium-resolution delivery-navigation contract for the complete approved NewYou roadmap.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
-- **Current content state:** Contract and empty population structure only. No Feature Pack, domain, lifecycle, journey or implementation analysis is populated by ATLAS-01.
+- **Current content state:** ATLAS-01 contract plus the ATLAS-02 Feature Pack Portfolio Register. The other Atlas views remain unpopulated. No Feature Pack preparation, standalone domain inventory or matrix, lifecycle register, journey analysis or implementation detail is created by ATLAS-02.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
 This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
 
-The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 does not change that manifest.
+The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 and ATLAS-02 do not change that manifest.
 
 ---
 
@@ -69,7 +69,7 @@ The Atlas is a delivery map, not a second Product, Architecture, Domain or Roadm
 
 ## 1.3 Scope boundary
 
-ATLAS-01 defines the views, labels, entry rules and STOP rules for the complete approved roadmap. It does not populate substantive Feature Pack analysis. Later Atlas work may populate a view only from current upstream authority, approved evidence and the relevant governance decision.
+ATLAS-01 defined the views, labels, entry rules and STOP rules for the complete approved roadmap. ATLAS-02 populates only the Feature Pack Portfolio Register. Later Atlas work may populate another view only from current upstream authority, approved evidence and the relevant governance decision.
 
 The Atlas must preserve these boundaries:
 
@@ -496,15 +496,872 @@ The view must not become a duplicate of the North Star, Platform, Domain Map or 
 
 The portfolio map must eventually cover the complete approved Feature Pack portfolio exactly as defined by `docs/00_platform/05_ROADMAP_v1.0.0.md`. The Roadmap remains the authority for Feature Pack identity, outcome, scope, sequencing, dependencies, gates and release effect.
 
-ATLAS-01 defines the map but does not reproduce or analyse individual Feature Packs. It does not select FP-001 or begin Phase 7.
+ATLAS-01 defined the map. ATLAS-02 populates only the Feature Pack Portfolio Register from the frozen Roadmap. It does not select FP-001, prepare a Feature Pack or begin Phase 7.
 
-## 4.2 Population structure
+## Feature Pack Portfolio Register
 
-| Feature Pack | Roadmap anchor | Outcome relationship to mature platform | Entry dependencies | Introduces | Reuses | Extends | Affected domains | Lifecycle and journey impact | Gates | Proof boundary | Hardening categories | Future seams | Cross-pack risks | Atlas readiness |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| _Populate in a later Atlas task._ |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+This register is derived from the frozen Roadmap and does not change its Feature Pack identities, sequence, dependencies, gates or release effects. It covers all 17 approved Feature Packs in Roadmap order.
 
-Each future entry must point back to the corresponding Roadmap section. The Atlas may summarize a Roadmap relationship, but any disagreement is a Roadmap STOP and must not be corrected inside the Atlas.
+The domain classifications use only the frozen Domain Map names and ownership boundaries:
+
+- **Primary** means the Feature Pack introduces or materially establishes capability whose durable truth belongs to that domain.
+- **Supporting** means the Feature Pack interacts with the domain's existing authority.
+- **Consumer** means the Feature Pack uses an existing capability from that domain.
+
+These labels describe delivery involvement. They do not move ownership. Gate statuses are recorded as stated by the Roadmap and current Open Work tracker. They are not resolved by this register.
+
+### Portfolio summary
+
+| Feature Pack | Purpose | Delivery Position | Primary Outcome |
+|---|---|---|---|
+| FP-001 | Establish a trusted bilingual boundary from public entry to verified identity. | Phase 1, position 1, foundational | Verified individual account entry. |
+| FP-002 | Convert an approved offer into verified payment and valid access. | Phase 1, position 2, foundational | One reconciled payment and entitlement outcome. |
+| FP-003 | Make temperament assessment and report provenance part of the paid core. | Phase 2, position 3, foundational | Bilingual immutable assessment report. |
+| FP-004 | Gate personalised guidance through safe intake and eligibility. | Phase 2, position 4, foundational | Current eligibility or governed fallback outcome. |
+| FP-005 | Deliver the first safe paid plan, purchased library and feedback value. | Phase 2, position 5, foundational | Seven-day plan or approved General Wellness pathway. |
+| FP-006 | Make the core journey operable and ready for staged paid release. | Phase 3, position 6, foundational | Controlled pilot and release decisions. |
+| FP-007 | Prove governed live-session and replay value. | Phase 4, position 7, expansion | Protected live and replay experience. |
+| FP-008 | Prove the first native Nuwe Jy flagship edition. | Phase 4, position 8, expansion | Operable 60-day Nuwe Jy cohort. |
+| FP-009 | Validate genuine recurring value before Basic Membership sale. | Phase 4, position 9, expansion | Operational Basic Membership. |
+| FP-010 | Add governed recurring review and plan adjustment. | Phase 4, position 10, expansion | Safe monthly review or adjusted plan. |
+| FP-011 | Package proven recurring capabilities as Premium. | Phase 4, position 11, expansion | Versioned Premium bundle. |
+| FP-012 | Test a limited professional review service with controlled capacity. | Phase 5, position 12, maturity | Controlled practitioner-review pilot. |
+| FP-013 | Use external/community evidence to justify first-party community and challenges. | Phase 5, position 13, maturity | Moderated community and governed challenges. |
+| FP-014 | Extend programme evidence into broader habits, journals and progress. | Phase 5, position 14, maturity | Foundation programme and reflective progress capability. |
+| FP-015 | Add payment and capacity truth for scarce paid events. | Phase 6, position 15, maturity | Capacity-controlled event commerce. |
+| FP-016 | Add governed first-party experimentation when a real decision surface exists. | Phase 6, position 16, maturity | Auditable product learning. |
+| FP-017 | Activate a separately approved future product space or market. | Phase 6, position 17, later capability | Controlled future expansion. |
+
+## FP-001 — Trusted bilingual entry and verified identity
+
+### Purpose
+
+This Feature Pack establishes the trusted boundary between a public visitor and every protected NewYou journey. It solves the need for one canonical identity, bilingual launch-facing entry, verified access and controlled account support before purchase, assessment, health, plan or deletion actions can be used safely.
+
+### Intended Outcome
+
+A public visitor can choose Afrikaans or English, understand the launch-facing product and safety boundaries, create an individual 18+ account, verify email, recover access and use a controlled support/admin path without seeing unfinished product spaces.
+
+### Roadmap Position
+
+- Phase 1, Trusted entry and commercial truth.
+- Relative position: 1 of 17 and the first node on the approved core path.
+- Delivery character: foundational.
+
+### Approved Dependencies
+
+- Frozen Product Law, Architecture Law and Domain Law only.
+- No future product Feature Pack is a prerequisite.
+
+### Known Unlocks
+
+- `FP-002` purchase, verified payment and entitlement.
+- The protected identity boundary required by every later core journey and the staged paid-release path in `FP-006`.
+
+### High-Level Domain Involvement
+
+- **Primary:** Identity & Access.
+- **Supporting:** Privacy & Consent; Communications; Audit & Evidence.
+- **Consumer:** Content & Media; Analytics.
+
+### Known Gates
+
+- `OQ-034 — BLOCKS_THIS_FP`: authentication implementation architecture is required for the stated verified identity/session outcome.
+- `OQ-035 — BLOCKS_RELEASE_ONLY`: abuse-control thresholds and recovery behaviour are required before protected public or pilot release.
+- `OQ-036 — BLOCKS_RELEASE_ONLY`: email verification and mandatory notices require an approved launch channel policy.
+- `OQ-038 — FUTURE_ONLY`: named incident ownership is a paid-pilot and release condition owned by `FP-006`, not a reason to delay safe internal identity work.
+
+### Release Significance
+
+This provides the trusted entry capability that every protected core journey and the first paid pilot depends on. It is foundational, but it is not the participant-ready MVP by itself.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-002 — Purchase to verified payment and entitlement
+
+### Purpose
+
+This Feature Pack establishes the commercial truth needed for a paid product. It solves the risk that a browser return, provider callback or retry could grant access before payment is verified or multiply a purchase outcome.
+
+### Intended Outcome
+
+A participant can purchase one of the three approved South African/ZAR launch products through the launch payment gateway and receive exactly one valid component entitlement only after payment is verified and reconciled.
+
+### Roadmap Position
+
+- Phase 1, Trusted entry and commercial truth.
+- Relative position: 2 of 17, immediately after `FP-001` on the approved core path.
+- Delivery character: foundational.
+
+### Approved Dependencies
+
+- `FP-001`.
+- The approved initial product catalogue and versioned prices.
+
+### Known Unlocks
+
+- `FP-003` and the paid core capabilities that consume assessment, plan and library access.
+- The payment and entitlement relationship later reused by `FP-009`, `FP-011` and `FP-015` where their approved commercial outcomes apply.
+
+### High-Level Domain Involvement
+
+- **Primary:** Commerce; Entitlements.
+- **Supporting:** Identity & Access; Privacy & Consent; Audit & Evidence.
+- **Consumer:** Analytics.
+
+### Known Gates
+
+- `OQ-004 — BLOCKS_THIS_FP`: provider webhook, retry, refund, dispute and ambiguity behaviour is material to verified payment.
+- `OQ-035 — BLOCKS_RELEASE_ONLY`: payment and checkout abuse thresholds and recovery are required before paid public or pilot release.
+- `OQ-001 — BLOCKS_RELEASE_ONLY`: operating authority is required before production subscriptions, payment and sensitive processing are activated.
+- `OQ-002 — NON_BLOCKING_FOR_THIS_FP`: the three MVP prices are locked; future Basic Membership pricing is not needed here.
+- `OQ-036 — NON_BLOCKING_FOR_THIS_FP`: ordinary payment truth does not require a future reminder/channel decision beyond mandatory launch communication.
+
+### Release Significance
+
+This creates the commercial prerequisite for assessment, plan and purchased-library access. It is necessary for the paid core, but it is not by itself a participant-ready MVP.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-002`, with dependency and phase context in §§3.2, 5, 7 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-003 — Temperament provenance, assessment and immutable report
+
+### Purpose
+
+This Feature Pack makes temperament a trustworthy input to the core proposition. It solves the need to distinguish self-reported, book-derived and digitally assessed temperament, preserve the approved assessment history and deliver a report that can be reproduced and understood in both launch languages.
+
+### Intended Outcome
+
+A purchaser can use a self-reported, book-derived or digitally assessed temperament path, complete the approved assessment when entitled, receive a bilingual report with primary and secondary result and provenance, and retain immutable assessment/report history under deletion law.
+
+### Roadmap Position
+
+- Phase 2, Core participant value loop.
+- Relative position: 3 of 17 and the first assessment node after commercial access.
+- Delivery character: foundational.
+
+### Approved Dependencies
+
+- `FP-001` and `FP-002`.
+- Approved initial methodology and assessment content.
+
+### Known Unlocks
+
+- `FP-004` safety and eligibility work where approved temperament context is requested.
+- `FP-005` personalised-plan delivery, which requires the approved temperament input and report path.
+
+### High-Level Domain Involvement
+
+- **Primary:** Temperament.
+- **Supporting:** Content & Media; Privacy & Consent; Audit & Evidence.
+- **Consumer:** Entitlements; Identity & Access; Analytics.
+
+### Known Gates
+
+- `OQ-013 — BLOCKS_RELEASE_ONLY`: the bilingual report needs the approved governed translation and version path before release.
+- `OQ-006 — FUTURE_ONLY`: optional score-distance labels are not required for core launch scoring unless that scope is activated.
+- `OQ-009` and `OQ-029 — BLOCKS_RELEASE_ONLY`: retention and deletion categories must be sufficiently approved before paid pilot release.
+- Methodology, content and rights approval — `BLOCKS_THIS_FP` for the released assessment version.
+
+### Release Significance
+
+This is the assessment product capability and a required input to personalised plan delivery. It gives the paid core an authoritative, provenance-labelled temperament result rather than an unqualified personalisation claim.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-003`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-004 — Safe health onboarding and deterministic eligibility
+
+### Purpose
+
+This Feature Pack establishes the safety boundary before plan generation. It solves the risk that incomplete, high-risk or purpose-mismatched health information could be treated as permission for an automated personalised plan.
+
+### Intended Outcome
+
+A participant completes progressive, purpose-specific health and lifestyle onboarding and receives exactly one current eligibility outcome: `eligible_automated`, `general_wellness_only`, `professional_review_required` or `insufficient_information`.
+
+### Roadmap Position
+
+- Phase 2, Core participant value loop.
+- Relative position: 4 of 17, immediately before plan delivery on the approved core path.
+- Delivery character: foundational.
+
+### Approved Dependencies
+
+- `FP-001`.
+- `FP-003` where temperament context is requested.
+- Approved clinical eligibility and urgent-help content.
+
+### Known Unlocks
+
+- `FP-005` safe plan generation for eligible participants and the approved General Wellness fallback.
+- The safety boundary reused by the later controlled practitioner path in `FP-012`.
+
+### High-Level Domain Involvement
+
+- **Primary:** Health Records; Safety & Eligibility.
+- **Supporting:** Privacy & Consent; Audit & Evidence.
+- **Consumer:** Identity & Access; Content & Media; Analytics.
+
+### Known Gates
+
+- `OQ-005 — BLOCKS_THIS_FP`: the clinical eligibility matrix cannot be invented locally.
+- `OQ-008 — BLOCKS_THIS_FP`: urgent-safety wording and boundaries need approval before participant release.
+- `OQ-007 — FUTURE_ONLY`: laboratory validity belongs to a later laboratory-enabled path, not the initial intake unless that scope changes through authority.
+- `OQ-009` and `OQ-029 — BLOCKS_RELEASE_ONLY`: health and professional retention categories are required for pilot release.
+- `OQ-033 — NON_BLOCKING_FOR_THIS_FP`: a professional-review outcome can be recorded or routed without activating the practitioner service.
+
+### Release Significance
+
+This unlocks safe plan generation and a lawful General Wellness fallback. It keeps professional review downstream and does not activate a practitioner service.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-004`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-005 — Safe seven-day plan, purchased library and basic feedback
+
+### Purpose
+
+This Feature Pack delivers the first promised paid value. It solves the need for a safe, temperament-guided plan and purchased content experience that remains explainable, bilingual and useful without turning participant feedback into clinical authority.
+
+### Intended Outcome
+
+An eligible participant receives an immutable, explainable, bilingual seven-day plan or approved General Wellness Starter Pathway, can access purchased report and plan content, switch approved language and energy-unit presentation, and record lightweight daily or weekly progress and feedback.
+
+### Roadmap Position
+
+- Phase 2, Core participant value loop.
+- Relative position: 5 of 17 and the final participant-value node on the initial core path.
+- Delivery character: foundational.
+
+### Approved Dependencies
+
+- `FP-001` through `FP-004`.
+- Approved calculation, content, recipe/substitution, safety and bilingual versions.
+
+### Known Unlocks
+
+- `FP-006` controlled operations and staged paid release.
+- `FP-008` Nuwe Jy, `FP-010` recurring adjustment, `FP-012` practitioner review and `FP-014` foundation-programme work, each of which depends on the proven core plan path.
+
+### High-Level Domain Involvement
+
+- **Primary:** Plans & Nutrition; Habits, Journals & Progress.
+- **Supporting:** Content & Media; Safety & Eligibility; Temperament; Privacy & Consent; Audit & Evidence.
+- **Consumer:** Entitlements; Identity & Access; Analytics.
+
+### Known Gates
+
+- `OQ-010 — BLOCKS_THIS_FP`: calculation values and bounded weight-reduction rules are part of safe plan truth.
+- `OQ-013 — BLOCKS_THIS_FP`: the paid and safety-critical bilingual plan path needs approved locale and version semantics.
+- `OQ-016 — BLOCKS_RELEASE_ONLY`: publication, stale-approval and correction/withdrawal operations must be ready before pilot release.
+- `OQ-014 — NON_BLOCKING_FOR_THIS_FP`: advanced shared edge delivery is not required to prove plan correctness.
+- `OQ-011` and `OQ-012 — FUTURE_ONLY`: automatic monthly adjustment is excluded from this once-off MVP path and belongs to `FP-010`.
+
+### Release Significance
+
+This completes the participant-facing paid core journey. `FP-006` remains necessary before real paid pilot release because participant value alone does not establish operational readiness.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-005`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-006 — Controlled core operations and staged paid release
+
+### Purpose
+
+This Feature Pack turns a technically complete core journey into a service that named people can operate. It solves the release gap between working participant behaviour and a paid pilot that can be supported, observed, corrected, withdrawn and stopped safely.
+
+### Intended Outcome
+
+Named operators can run, support, observe, correct, withdraw, reconcile and safely stop the approved core journey through internal validation, the first 10 paid participants, review, expansion toward 25, a maximum of 50 in the first paid pilot, limited public release and general public release decisions.
+
+### Roadmap Position
+
+- Phase 3, Controlled paid evidence and pilot progression.
+- Relative position: 6 of 17 and the release/evidence boundary for the foundational core.
+- Delivery character: foundational.
+
+### Approved Dependencies
+
+- `FP-001` through `FP-005`.
+- Named product, clinical, content, commerce, legal/privacy, security and operations owners.
+
+### Known Unlocks
+
+- The Phase 4 branches: `FP-007`, `FP-008`, `FP-009`, `FP-010` and `FP-011`.
+- The Phase 5 and Phase 6 branches: `FP-012`, `FP-013`, `FP-014`, `FP-015`, `FP-016` and `FP-017`, subject to their own gates and evidence.
+
+### High-Level Domain Involvement
+
+- **Primary:** Audit & Evidence.
+- **Supporting:** Analytics; Identity & Access; Privacy & Consent; Commerce; Entitlements; Temperament; Health Records; Safety & Eligibility; Plans & Nutrition; Content & Media; Communications.
+
+### Known Gates
+
+- `OQ-001 — BLOCKS_RELEASE_ONLY`: operating authority must support production subscriptions and sensitive health processing.
+- `OQ-009` and `OQ-029 — BLOCKS_THIS_FP`: pilot operation needs approved enough retention categories for the records it handles.
+- `OQ-030`, `OQ-031` and `OQ-032 — BLOCKS_THIS_FP`: external processor deletion/export, deletion-safe restore and operational deletion/export behaviour must protect the pilot.
+- `OQ-035`, `OQ-036`, `OQ-037` and `OQ-038 — BLOCKS_RELEASE_ONLY`: abuse, communications, continuity and incident ownership are release-readiness conditions.
+- `OQ-039 — NON_BLOCKING_FOR_THIS_FP`: implementation-grade mapping remains scoped to later affected delivery work.
+- The Product Law cross-functional paid-pilot readiness gate remains required.
+
+### Release Significance
+
+This is the operational boundary for internal validation, the first 10 paid participants, expansion toward 25, the first pilot maximum of 50 and later limited or general public release decisions. It is the release backbone of the foundational journey.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-006`, with dependency and phase context in §§3.2, 5, 7, 8 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §§5 and 7`.
+
+## FP-007 — Governed live sessions and replay
+
+### Purpose
+
+This Feature Pack proves live value as a governed participant experience before scarce event commerce is considered. It solves the need for protected live access, recording and replay with clear provider, consent and recovery boundaries.
+
+### Intended Outcome
+
+A participant can discover and register for an approved live session, pass current entitlement and access checks, join protected playback and receive a governed replay where recording and consent rules allow. Operators can see provider or delivery failure without changing platform truth.
+
+### Roadmap Position
+
+- Phase 4, First recurring and flagship pathways.
+- Relative position: 7 of 17 and the first later branch after the controlled core release boundary.
+- Delivery character: expansion.
+
+### Approved Dependencies
+
+- `FP-006`.
+- An approved session owner and live/replay content and policy.
+
+### Known Unlocks
+
+- `FP-008` Nuwe Jy live integration.
+- `FP-009` recurring live value.
+- `FP-015` event commerce, together with the approved `FP-002` payment path and `FP-006` operational evidence.
+
+### High-Level Domain Involvement
+
+- **Primary:** Events & Live.
+- **Supporting:** Entitlements; Content & Media; Communications; Privacy & Consent; Audit & Evidence.
+- **Consumer:** Identity & Access; Analytics.
+
+### Known Gates
+
+- `OQ-020 — BLOCKS_THIS_FP`: the provider path and failure behaviour are part of the live/replay outcome.
+- `OQ-021 — BLOCKS_THIS_FP`: recording, attendee, replay and withdrawal rules require approval.
+- `OQ-036 — BLOCKS_THIS_FP` for a promised live notification journey.
+- `OQ-017 — NON_BLOCKING_FOR_THIS_FP`: reminders are optional until a governed reminder promise is added.
+- `OQ-022 — FUTURE_ONLY`: scarce reservations and flash-sale mechanics belong to `FP-015`.
+
+### Release Significance
+
+This unlocks governed live and replay value for Nuwe Jy and early Membership. It does not activate paid event commerce or scarce-capacity ticketing.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-007`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-008 — Native Nuwe Jy flagship edition
+
+### Purpose
+
+This Feature Pack makes Nuwe Jy the first concrete test of native programme delivery. It solves the need to turn the approved flagship experience into an operable scheduled cohort without building a generic programme platform before evidence requires one.
+
+### Intended Outcome
+
+The first native Nuwe Jy edition can operate as an approved 60-calendar-day scheduled cohort with a Today experience, daily releases, habits, check-ins, progress and recovery, temperament-aware delivery, central safety and plan integration, governed cohort community, live/replay, support, communications and compassionate completion evidence.
+
+### Roadmap Position
+
+- Phase 4, First recurring and flagship pathways.
+- Relative position: 8 of 17, a sibling branch with `FP-009` after the shared live and operational foundation.
+- Delivery character: expansion.
+- `FP-009` is not a hard prerequisite for this pack.
+
+### Approved Dependencies
+
+- `FP-005`, `FP-006` and `FP-007`.
+- Approved Nuwe Jy content/source inventory and edition owners.
+
+### Known Unlocks
+
+- `FP-013` first-party community and governed challenges, where the required evidence is present.
+- `FP-014` broader foundation-programme capability, using Nuwe Jy as the concrete programme acceptance path.
+
+### High-Level Domain Involvement
+
+- **Primary:** Programmes & Challenges.
+- **Supporting:** Habits, Journals & Progress; Community; Events & Live; Content & Media; Entitlements; Temperament; Safety & Eligibility; Plans & Nutrition; Communications; Privacy & Consent; Audit & Evidence.
+- **Consumer:** Identity & Access; Analytics.
+
+### Known Gates
+
+- `OQ-024 — BLOCKS_THIS_FP`: source content, media, rights and translation inventory must be approved.
+- `OQ-025 — BLOCKS_THIS_FP`: Nuwe Jy safety, milestone and completion rules must be approved.
+- `OQ-026 — BLOCKS_THIS_FP`: cohort, facilitator, moderator, support, live ownership and saleable capacity must be clear.
+- `OQ-027 — BLOCKS_THIS_FP`: scheduled communication channels, deduplication, caps and failure ownership are required.
+- `OQ-019 — BLOCKS_THIS_FP`: edition completion metrics are part of the product outcome.
+- `OQ-020`, `OQ-021`, `OQ-017` and `OQ-036 — BLOCKS_RELEASE_ONLY`: applicable live, recording, reminder and notification paths must be resolved before activation.
+- `OQ-023` and `OQ-028 — BLOCKS_RELEASE_ONLY`: governed external community operation and legacy cutover obligations must be clear before activation.
+- Inherited clinical, translation and retention gates remain applicable.
+
+### Release Significance
+
+This is the first native flagship edition and the concrete acceptance path for reusable programme, edition and cohort capability. It is an expansion outcome after the paid core has been proven and operated.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-008`, with dependency and phase context in §§3.2, 5, 9, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-009 — Basic Membership recurring value
+
+### Purpose
+
+This Feature Pack tests whether NewYou can sell recurring value honestly. It solves the need for an operational Membership contract with real content, live, community and Q&A value before recurring revenue is promised.
+
+### Intended Outcome
+
+A participant can buy and maintain Basic Monthly or Annual Membership and receive genuinely operational moderated community access, at least one approved member-content release per month, at least one live session per month, group Q&A submission and correct entitlement and cancellation behaviour.
+
+### Roadmap Position
+
+- Phase 4, First recurring and flagship pathways.
+- Relative position: 9 of 17, a sibling branch with `FP-008`; the Roadmap does not require `FP-008` to come first.
+- Delivery character: expansion.
+
+### Approved Dependencies
+
+- `FP-002`, `FP-006` and `FP-007`.
+- A governed community operating path and approved monthly value owners.
+- `FP-008` is useful evidence but is not a circular hard dependency.
+
+### Known Unlocks
+
+- `FP-011` Premium bundle, where the approved packaging uses the Membership contract.
+- Evidence for `FP-013` first-party community and governed challenges.
+
+### High-Level Domain Involvement
+
+- **Primary:** Commerce; Entitlements.
+- **Supporting:** Community; Content & Media; Events & Live; Communications; Identity & Access; Privacy & Consent; Audit & Evidence.
+- **Consumer:** Analytics.
+
+### Known Gates
+
+- `OQ-004 — BLOCKS_THIS_FP`: recurring billing, failed-payment, cancellation, refund and provider-delivery behaviour is the commercial contract.
+- `OQ-016 — BLOCKS_THIS_FP`: monthly approved content needs reliable publication and stale-approval recovery.
+- `OQ-023 — BLOCKS_THIS_FP`: the governed community path needs moderation, privacy, disclosure and escalation policy.
+- `OQ-020` and `OQ-021 — BLOCKS_RELEASE_ONLY`: any Membership-specific live promise must pass its operational gate.
+- `OQ-001` and `OQ-002 — BLOCKS_RELEASE_ONLY`: operating authority and evidence-based public pricing are required before sale.
+- `OQ-017` and `OQ-036 — BLOCKS_RELEASE_ONLY`: recurring reminders and notifications cannot be promised before channel, consent, quiet-hour and retry policy is approved.
+
+### Release Significance
+
+This enables Basic Membership only after its promised recurring value is operational through a complete billing period. It does not justify Premium, first-party community or event commerce by itself.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-009`, with dependency and phase context in §§3.2, 5, 10, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-010 — Recurring plan review and governed adjustment
+
+### Purpose
+
+This Feature Pack establishes a safe recurring review boundary after once-off plan delivery is useful. It solves the need for governed plan adjustment based on approved check-ins and trends without allowing progress data to become Safety authority.
+
+### Intended Outcome
+
+An entitled participant with sufficient approved check-ins can receive a monthly trend-based review and, where allowed, an immutable governed plan adjustment with explicit grace or incomplete-check-in behaviour and renewed safety evaluation.
+
+### Roadmap Position
+
+- Phase 4, First recurring and flagship pathways.
+- Relative position: 10 of 17, after stable once-off plan delivery and useful check-ins.
+- Delivery character: expansion.
+- `FP-009` is not required unless the adjustment is packaged through Membership.
+
+### Approved Dependencies
+
+- `FP-005` and `FP-006`.
+- Approved trend and check-in evidence and clinical/product review rules.
+- `FP-009` only when the adjustment is packaged through Membership.
+
+### Known Unlocks
+
+- The recurring adjustment capability used by `FP-011` Premium packaging.
+- A governed adjustment add-on where that commercial outcome is approved.
+
+### High-Level Domain Involvement
+
+- **Primary:** Plans & Nutrition.
+- **Supporting:** Habits, Journals & Progress; Health Records; Safety & Eligibility; Entitlements; Temperament; Content & Media; Privacy & Consent; Audit & Evidence; Commerce where an add-on is sold.
+- **Consumer:** Identity & Access; Analytics.
+
+### Known Gates
+
+- `OQ-003`, `OQ-011` and `OQ-012 — BLOCKS_THIS_FP`: monthly review contract, adjustment thresholds and review timing define the outcome.
+- `OQ-010 — BLOCKS_RELEASE_ONLY`: calculation approval is required if an adjustment changes approved calculation values.
+- `OQ-005 — BLOCKS_RELEASE_ONLY`: current eligibility and safety rules must still be applied before an adjusted plan is activated.
+- `OQ-018 — NON_BLOCKING_FOR_THIS_FP`: basic check-ins need not become private journals.
+- `OQ-004 — FUTURE_ONLY` unless a new recurring payment contract is included; packaged billing belongs to `FP-011`.
+
+### Release Significance
+
+This unlocks the plan-adjustment add-on and provides the capability prerequisite for Premium. It is deliberately later than the once-off MVP because recurring adjustment carries additional safety and review obligations.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-010`, with dependency and phase context in §§3.2, 5, 10 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-011 — Premium bundle around proven capability
+
+### Purpose
+
+This Feature Pack turns already-proven recurring capabilities into a commercial Premium offer. It solves the risk that Premium becomes a promise for unresolved clinical, billing or operational work or creates a second access model.
+
+### Intended Outcome
+
+Premium is sold as a versioned bundle of working recurring review and adjustment and approved benefits through the existing Commerce and Entitlements model, including governed reassessment rules where applicable, without promising unlimited practitioner access.
+
+### Roadmap Position
+
+- Phase 4, First recurring and flagship pathways.
+- Relative position: 11 of 17, after the applicable Membership and adjustment capabilities are proven.
+- Delivery character: expansion.
+
+### Approved Dependencies
+
+- `FP-010`.
+- `FP-009` when Premium uses the Membership contract.
+- `FP-002`, `FP-005` and `FP-006`.
+- Approved benefits and pricing.
+
+### Known Unlocks
+
+- The validated higher-value Premium commercial tier and its approved component benefits.
+- No later Feature Pack is an explicit prerequisite of this pack's outcome.
+
+### High-Level Domain Involvement
+
+- **Primary:** Commerce.
+- **Supporting:** Entitlements; Plans & Nutrition; Habits, Journals & Progress; Health Records; Safety & Eligibility; Content & Media; Communications; Privacy & Consent; Audit & Evidence.
+- **Consumer:** Identity & Access; Analytics.
+
+### Known Gates
+
+- `OQ-003`, `OQ-011` and `OQ-012 — BLOCKS_THIS_FP`: Premium cannot promise monthly review or adjustment before those rules operate.
+- `OQ-004 — BLOCKS_THIS_FP`: billing, failed-payment, cancellation, reassessment and refund consequences need validated provider behaviour.
+- `OQ-001` and `OQ-002 — BLOCKS_RELEASE_ONLY`: operating authority and evidence-based Premium pricing are required before public sale.
+- `OQ-036 — BLOCKS_RELEASE_ONLY`: recurring benefit communications need approved channel, consent and retry behaviour.
+- Existing Commerce and Entitlements ownership — `NON_BLOCKING_FOR_THIS_FP`: Product and Domain Law require reuse of the existing owners.
+
+### Release Significance
+
+This enables a validated higher-value commercial tier only after its component capabilities pass their own gates. It preserves one commercial and access model and does not create an unlimited practitioner expectation.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-011`, with dependency and phase context in §§3.2, 5, 10 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-012 — Controlled practitioner review pilot
+
+### Purpose
+
+This Feature Pack tests whether limited professional review is safe, useful and operable after automated plan delivery is stable. It solves the need for a capacity-controlled service without turning NewYou into an open practitioner marketplace.
+
+### Intended Outcome
+
+An eligible participant can purchase a limited practitioner-review service, provide explicit consent, receive a scoped active relationship and structured review outcome, and receive an approved modification, restriction, follow-up or referral with capacity and turnaround visible to operators and participants.
+
+### Roadmap Position
+
+- Phase 5, Professional care and evidence-led community/behaviour change.
+- Relative position: 12 of 17 and the first professional-care branch.
+- Delivery character: maturity.
+
+### Approved Dependencies
+
+- `FP-004`, `FP-005` and `FP-006`.
+- Authorised practitioner(s), explicit service price and approved turnaround and capacity.
+
+### Known Unlocks
+
+- A limited priced practitioner-review service with evidence about demand, safety, capacity and economics.
+- A governed professional-care pathway, without opening a practitioner marketplace.
+
+### High-Level Domain Involvement
+
+- **Primary:** Professional Care.
+- **Supporting:** Identity & Access; Privacy & Consent; Health Records; Safety & Eligibility; Plans & Nutrition; Commerce; Entitlements; Communications; Audit & Evidence.
+- **Consumer:** Analytics.
+
+### Known Gates
+
+- `OQ-033 — BLOCKS_THIS_FP`: professional record authority, participant access, addendum and disposition rules are necessary.
+- `OQ-001 — BLOCKS_THIS_FP`: practitioner contracting and sensitive professional processing require operating authority.
+- `OQ-009` and `OQ-029 — BLOCKS_THIS_FP`: professional and health retention categories must be approved before cases are sold.
+- Practitioner agreements and saleable-capacity approval — `BLOCKS_THIS_FP`.
+- `OQ-004 — BLOCKS_RELEASE_ONLY` if the service introduces a new recurring billing contract; a once-off review may reuse the approved payment path.
+
+### Release Significance
+
+This enables a limited, priced and capacity-controlled practitioner-review pilot. It validates professional care as a scarce service while preserving the automated MVP boundary.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-012`, with dependency and phase context in §§3.2, 5, 11 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-013 — First-party community and governed challenges
+
+### Purpose
+
+This Feature Pack moves first-party community work behind evidence from Nuwe Jy, Membership and governed external participation. It solves the need for NewYou-specific community and challenge value without building a generic social network or skipping moderation and privacy policy.
+
+### Intended Outcome
+
+Participants can join a first-party moderated community and safe governed challenges with current entitlement checks, privacy-aware profiles, private progress and recognition, reporting, moderation, sanctions, appeals and deletion or anonymisation behaviour.
+
+### Roadmap Position
+
+- Phase 5, Professional care and evidence-led community/behaviour change.
+- Relative position: 13 of 17, after the required Nuwe Jy or Membership evidence.
+- Delivery character: maturity.
+
+### Approved Dependencies
+
+- `FP-006`.
+- Evidence from `FP-008` and/or `FP-009`.
+- `FP-007` if live or challenge sessions are included.
+
+### Known Unlocks
+
+- A first-party community pilot and governed challenges where evidence supports them.
+- A NewYou-owned participation path beyond the governed external validation channel.
+
+### High-Level Domain Involvement
+
+- **Primary:** Community; Programmes & Challenges.
+- **Supporting:** Habits, Journals & Progress; Entitlements; Privacy & Consent; Content & Media; Communications; Safety & Eligibility; Audit & Evidence.
+- **Consumer:** Identity & Access; Analytics.
+
+### Known Gates
+
+- `OQ-023 — BLOCKS_THIS_FP`: first-party community needs operating, privacy, moderation and evidence policy.
+- `OQ-019 — BLOCKS_THIS_FP`: challenge completion and recognition rules must be approved before a challenge is published.
+- `OQ-018 — BLOCKS_RELEASE_ONLY` when private journals or attachments enter scope.
+- `OQ-017` and `OQ-036 — BLOCKS_RELEASE_ONLY`: reminders and notifications are conditional surfaces.
+- `OQ-035 — BLOCKS_RELEASE_ONLY`: distributed abuse thresholds are required before high-volume public community release.
+- Moderation staffing and safety escalation remain known operational gates.
+
+### Release Significance
+
+This enables first-party community and governed challenges only when external and flagship evidence justifies them. It is a maturity outcome, not an MVP prerequisite.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-013`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-014 — Foundation programme, habits and reflective progress
+
+### Purpose
+
+This Feature Pack extends the concrete Nuwe Jy programme evidence into a broader behaviour-change capability. It solves the need for structured programmes, habits, private reflections and compassionate progress without making a generic LMS an early prerequisite.
+
+### Intended Outcome
+
+Participants can enrol in a broader approved foundation programme, receive structured lessons and activities and habits, record private reflections and progress, recover after missed days and receive compassionate versioned completion or continuation outcomes.
+
+### Roadmap Position
+
+- Phase 5, Professional care and evidence-led community/behaviour change.
+- Relative position: 14 of 17, after Nuwe Jy or equivalent approved programme proof.
+- Delivery character: maturity.
+
+### Approved Dependencies
+
+- `FP-005` and `FP-006`.
+- `FP-008` or equivalent approved programme proof.
+- Approved programme content, translations, completion and communication rules.
+
+### Known Unlocks
+
+- A longer foundation programme and durable habit, journal and reflective-progress capability.
+- Broader programme delivery only after the concrete programme evidence supports generalisation.
+
+### High-Level Domain Involvement
+
+- **Primary:** Programmes & Challenges; Habits, Journals & Progress.
+- **Supporting:** Content & Media; Entitlements; Plans & Nutrition; Safety & Eligibility; Communications; Community; Privacy & Consent; Audit & Evidence.
+- **Consumer:** Identity & Access; Analytics.
+
+### Known Gates
+
+- `OQ-018 — BLOCKS_THIS_FP` for journal or attachment scope: private journal protection and deletion/export cannot be guessed.
+- `OQ-019 — BLOCKS_THIS_FP`: programme completion and participation rules need approval before publication.
+- `OQ-017` and `OQ-016 — BLOCKS_RELEASE_ONLY`: reminders and publication operations must be resolved for the promised delivery mode.
+- `OQ-013 — BLOCKS_RELEASE_ONLY`: required bilingual programme content needs the approved translation path.
+- `OQ-009` and `OQ-029 — BLOCKS_RELEASE_ONLY`: retention categories are required before a broader record set enters pilot or release.
+
+### Release Significance
+
+This enables the longer foundation programme and durable habit and reflective-progress capability. It keeps journals private and separate from clinical and community authority.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-014`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-015 — Event commerce and scarce capacity
+
+### Purpose
+
+This Feature Pack introduces scarce-capacity commerce only after ordinary live access and core operations are proven. It solves the need to sell paid events without treating checkout UI as proof that capacity, payment, ticket issuance and failure handling are correct.
+
+### Intended Outcome
+
+A participant can browse an approved paid event, obtain an expiring capacity hold, pay, receive a ticket, transfer, check in, cancel, refund or receive credit under the accepted event policy, with zero confirmed oversell under concurrency and failure.
+
+### Roadmap Position
+
+- Phase 6, Scarce commerce, experimentation and approved future expansion.
+- Relative position: 15 of 17 and the first scarce-capacity commerce path.
+- Delivery character: maturity.
+
+### Approved Dependencies
+
+- `FP-002`, `FP-006` and `FP-007`.
+- Approved event policy, provider path and event operator.
+
+### Known Unlocks
+
+- A paid event catalogue and capacity-controlled ticket commerce.
+
+### High-Level Domain Involvement
+
+- **Primary:** Events & Live.
+- **Supporting:** Commerce; Entitlements; Privacy & Consent; Communications; Content & Media; Audit & Evidence.
+- **Consumer:** Identity & Access; Analytics.
+
+### Known Gates
+
+- `OQ-022 — BLOCKS_THIS_FP`: reservation, expiry, waitlist and scarce-capacity protection are the core outcome.
+- `OQ-004 — BLOCKS_THIS_FP`: event payment and ticket issuance must reconcile with the provider path.
+- `OQ-035 — BLOCKS_THIS_FP`: admission, rate and abuse behaviour is part of safe scarce-capacity operation.
+- `OQ-020` and `OQ-021 — BLOCKS_RELEASE_ONLY` for live or recorded event variants.
+- `OQ-036` is a conditional release gate for event communications: it applies before an event communication promise is released. Roadmap §14 schedules it at the affected notification boundary; ordinary ticket commerce does not add that dependency.
+- `OQ-014 — NON_BLOCKING_FOR_THIS_FP`: ordinary event information delivery is not the capacity authority.
+
+### Release Significance
+
+This enables paid events with capacity and ticket truth. It is intentionally later than governed live sessions and is not part of the core MVP.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-015`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-016 — First-party experimentation and learning
+
+### Purpose
+
+This Feature Pack creates a governed way to learn from real product decisions after pilot measurement is already available. It solves the need for evidence-backed comparison without allowing experimentation to alter payment, entitlement, safety, consent, accessibility, security, accounting or clinical truth.
+
+### Intended Outcome
+
+Operators can run approved first-party A/B/n experiments on governed web/page and eligible message experiences with stable assignment, exposure evidence, protected-invariant exclusions, authoritative conversion and income reconciliation, privacy/deletion handling and durable auditable learning.
+
+### Roadmap Position
+
+- Phase 6, Scarce commerce, experimentation and approved future expansion.
+- Relative position: 16 of 17, after `FP-006` has established a real measurable decision surface.
+- Delivery character: maturity.
+
+### Approved Dependencies
+
+- `FP-006`.
+- A concrete approved experiment hypothesis and measurable governed surface.
+- `FP-002` and/or `FP-009` only when a commerce outcome is the readout.
+
+### Known Unlocks
+
+- Evidence-backed product, content and commerce learning.
+- Governed optimisation of public or eligible message surfaces where the approved decision warrants it.
+
+### High-Level Domain Involvement
+
+- **Primary:** Experimentation; Analytics.
+- **Supporting:** Content & Media; Communications; Commerce when the experiment readout is commercial; Privacy & Consent; Audit & Evidence.
+- **Consumer:** Identity & Access.
+
+### Known Gates
+
+- `OQ-040 — BLOCKS_THIS_FP`: assignment, exposure, measurement, statistical validity, privacy/deletion and failure/recovery proof are the pack outcome.
+- `OQ-014 — BLOCKS_RELEASE_ONLY` if experiment-sensitive shared edge delivery is proposed.
+- `OQ-013`, `OQ-015`, `OQ-016` and `OQ-036 — NON_BLOCKING_FOR_THIS_FP` until the selected experiment surface uses the corresponding content, search, publication or message mechanism.
+- `OQ-030` and `OQ-032 — BLOCKS_RELEASE_ONLY` for participant-facing experiments using external measurement processors.
+
+### Release Significance
+
+This enables auditable product learning after a real decision surface exists. It is not a generic feature-flag replacement and does not become a prerequisite for the first pilot's basic measurement.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-016`, with dependency and phase context in §§3.2, 5, 13 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+
+## FP-017 — Approved product-space or market expansion
+
+### Purpose
+
+This conditional Feature Pack protects the approved future direction without inventing a second product or market now. It solves the need to activate a concrete future expansion through shared platform boundaries only after Product, commercial, legal, clinical and market authority approves it.
+
+### Intended Outcome
+
+A concrete, separately approved future product space or market can activate through the shared identity, commerce, entitlement, content, safety, privacy, analytics and operational boundaries without exposing unfinished products or creating unrestricted generic tenancy.
+
+### Roadmap Position
+
+- Phase 6, Scarce commerce, experimentation and approved future expansion.
+- Relative position: 17 of 17, last in the current approved sequence and trigger-based.
+- Delivery character: later capability.
+
+### Approved Dependencies
+
+- `FP-006`.
+- The relevant proven shared capabilities.
+- A new explicit Product Law, commercial, legal and clinical direction identifying the product space or market.
+- No generic-tenancy assumption.
+
+### Known Unlocks
+
+- A deliberately approved future product-space or market activation.
+- Controlled reuse of shared platform capabilities after the concrete expansion receives its own authority and evidence.
+
+### High-Level Domain Involvement
+
+- **Conditional impact set from the Domain Map:** Identity & Access; Privacy & Consent; Temperament; Health Records; Safety & Eligibility; Plans & Nutrition; Content & Media; Programmes & Challenges; Habits, Journals & Progress; Commerce; Entitlements; Community; Events & Live; Professional Care; Communications; Experimentation; Analytics; Audit & Evidence.
+- **Primary:** Not assigned at Atlas level. The domain or domains owning the approved expansion outcome must be named by the new Product Law direction.
+- **Supporting:** Not assigned before that direction defines the concrete product or market scope.
+- **Consumer:** Not assigned before that direction defines the concrete product or market scope. No domain role is inferred merely because the shared platform can be reused.
+
+### Known Gates
+
+- Concrete product or market approval — `BLOCKS_THIS_FP`.
+- Market legal, payment, privacy and safety review — `BLOCKS_THIS_FP`.
+- Existing core gates — `NON_BLOCKING_FOR_THIS_FP` only where the shared mechanism and protected invariant remain unchanged; affected gates reopen at the relevant release boundary.
+- Generic multi-tenant or corporate platform work — `FUTURE_ONLY` and not an approved expansion path by itself.
+
+### Release Significance
+
+This is the controlled path for a future product-space or market activation. It is not a launch dependency and must remain invisible until a concrete approved direction exists.
+
+### Authority Anchors
+
+`05_ROADMAP_v1.0.0.md §6 FP-017`, with dependency and phase context in §§3.2, 5, 13, 14 and 16; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
 
 ---
 
@@ -960,7 +1817,7 @@ The Atlas is used for navigation in this order:
 11. Recheck Atlas relationships after an approved upstream amendment. Do not patch around a changed authority inside the Atlas.
 12. Stop when a relationship cannot be proven without missing policy, ownership, mechanism or evidence.
 
-This task does not perform steps 6 through 10. ATLAS-01 ends after defining the navigation and lifecycle governance contract.
+This ATLAS-02 task does not perform steps 6 through 10. It populates only the Feature Pack Portfolio Register. ATLAS-01 ended after defining the navigation and lifecycle governance contract; ATLAS-02 does not begin ATLAS-03 or any Phase 7 deliverable.
 
 ---
 
@@ -1044,6 +1901,8 @@ When STOP occurs, record:
 
 ## 26.1 ATLAS-01 completion standard
 
+This subsection records the completion standard for the ATLAS-01 contract layer. It remains the historical baseline for the ATLAS-02 update.
+
 ATLAS-01 is ready for review only when the evidence shows all of the following:
 
 | Requirement | Required evidence |
@@ -1064,9 +1923,9 @@ ATLAS-01 is ready for review only when the evidence shows all of the following:
 | No implementation or lower-level preparation was created | No product code, Feature Pack preparation, JIT Domain Dossier, TB, VS, HH or TOON exists as part of ATLAS-01. |
 | Atlas remains unfrozen | No freeze verdict or current-authority promotion is made by this artifact. |
 
-## 26.2 Review protocol
+## 26.2 ATLAS-01 review protocol
 
-The ATLAS-01 delivery report must:
+The ATLAS-01 delivery report used the following protocol:
 
 1. inspect the full diff;
 2. confirm the branch and changed-file set;
@@ -1077,4 +1936,17 @@ The ATLAS-01 delivery report must:
 7. record any contradiction found, or state that none was found; and
 8. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
 
-ATLAS-01 ends here. The next task must be separately named and authorised. This artifact does not execute the next task and does not begin ATLAS-02.
+ATLAS-01 ended with the contract captured above. ATLAS-02 adds only the Feature Pack Portfolio Register under that same authority boundary. The next Atlas content layer must be separately named and authorised; this artifact does not begin ATLAS-03.
+
+## 26.3 ATLAS-02 completion standard
+
+ATLAS-02 is ready for review only when the evidence shows all of the following:
+
+| Requirement | Evidence in this artifact |
+|---|---|
+| Complete portfolio coverage | The summary and register contain all 17 approved Roadmap Feature Packs in Roadmap order. |
+| Required entry structure | Each pack has Purpose, Intended Outcome, Roadmap Position, Approved Dependencies, Known Unlocks, High-Level Domain Involvement, Known Gates, Release Significance and Authority Anchors. |
+| Authority fidelity | Purpose, outcomes, positions, dependencies, unlocks and release significance derive from the frozen Roadmap; domain names and ownership boundaries derive from the frozen Domain Map; gate references remain tied to current authority. |
+| Dependency and gate discipline | No dependency, unlock, gate or domain role is added by inference; conditional FP-017 remains explicitly unassigned until its required future direction exists. |
+| Navigation scope | The register remains outcome-level delivery navigation and does not become implementation planning or another Atlas view. |
+| Working boundary | The artifact remains derived, working, non-authoritative and unfrozen, and does not begin ATLAS-03. |
