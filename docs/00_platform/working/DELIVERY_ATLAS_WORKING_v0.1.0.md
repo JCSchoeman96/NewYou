@@ -309,6 +309,93 @@ Closure requires all of the following:
 
 An artifact remains open, gated or stopped when any required evidence is missing or contradictory. Code completion alone is not lifecycle closure. Closure of a Feature Pack or lower-level artifact does not promote the Atlas or any handoff into Product Law, Architecture Law, Domain Law or Roadmap authority.
 
+## Decision Escalation Matrix
+
+Every planning or implementation discovery must be routed to the lowest correct authority that owns the decision. "Lowest correct" means the most specific authority that can decide the question without changing a higher-level rule. The Atlas may record the route and its downstream effect, but it must not decide for that authority.
+
+The detailed authority hierarchy remains the one in Section 1.1. For escalation and execution routing, the relevant path is:
+
+```text
+Product Law
+    → Architecture Law
+    → Domain Law
+    → Roadmap
+    → Delivery Atlas
+    → Feature Pack Contracts
+    → JIT Domain Dossiers
+    → TB / VS / HH
+    → Implementation
+```
+
+This abbreviated path does not remove the Architectural Proof, Release or Readiness boundaries defined in Section 1.1 and the later Atlas views. It shows where a discovery is routed before work continues.
+
+| Discovery Type | Example Question | Escalation Authority |
+|---|---|---|
+| Product truth | What should the platform/business do? | Product Law / Decision Register |
+| Commercial model | Pricing, packaging, business rules | Product Law / Commercial decisions |
+| Legal requirement | Compliance, contracts, obligations | Legal/Product authority |
+| Clinical/safety rule | Health, safety, professional judgement | Clinical/Safety authority |
+| Domain ownership | Who owns this durable truth? | Domain Map / Domain Law |
+| Lifecycle semantics | What states, transitions, guards exist? | Owning Domain |
+| Architecture mechanism | How should the platform support this? | Architecture Law |
+| Cross-domain interaction | How should domains communicate? | Architecture + affected Domains |
+| Delivery sequencing | What comes first? | Roadmap |
+| Feature Pack scope | Included/excluded work | Feature Pack Contract |
+| Implementation semantics | How exactly should code implement it? | JIT Domain Dossier / TB / VS / HH |
+| Execution ambiguity | Coding task unclear | TB / VS / HH contract |
+| Evidence problem | Cannot prove completion | Validation/evidence review |
+| Operational concern | Monitoring, support, ownership | Operating Model |
+
+### Lower-level artifacts do not resolve higher-level uncertainty
+
+Lower-level artifacts must not resolve higher-level uncertainty. In particular:
+
+- A TOON must not invent missing Product decisions.
+- A Vertical Slice must not redefine Domain ownership.
+- A JIT Dossier must not override Architecture Law.
+- Implementation code must not become the source of business truth.
+
+When a lower-level artifact discovers a question outside its authority, it records the question, the evidence, the affected work and the escalation route. It does not turn a plausible answer into a local rule.
+
+### Escalation response
+
+When uncertainty is discovered, the correct response is:
+
+```text
+identify owner
+    → escalate
+    → update correct authority artifact
+    → continue only after resolution
+```
+
+The receiving authority updates its own artifact. The Atlas then revalidates the affected relationship, gate or STOP condition before downstream work continues. If the authority declines to decide, the discovery remains open or stopped and the next delivery decision records that state.
+
+### Assumption prohibition
+
+Plausible assumptions are not acceptable when:
+
+- financial truth is affected;
+- health/safety truth is affected;
+- privacy/security boundaries are affected;
+- durable ownership is unclear;
+- lifecycle semantics are unclear; or
+- architecture constraints are violated.
+
+The absence of an immediate failure is not evidence that one of these assumptions is safe. Route the question to its owner and wait for the required resolution or authority decision.
+
+### Escalation STOP conditions
+
+A planner or coding agent must STOP when:
+
+- the required decision belongs to a higher authority layer;
+- two authority documents conflict;
+- ownership of durable truth is unclear;
+- a lifecycle cannot be correctly modelled;
+- implementation would require inventing business rules; or
+- acceptance criteria depend on unresolved policy.
+
+The STOP record must name the discovery, evidence, current authority boundary, escalation authority, affected work and the condition required before continuation. No lower-level artifact may silently absorb the unresolved decision.
+
 ## Future template registry
 
 Future authorized work will provide templates in `docs/templates/`. The templates will standardize the contracts and records described by this governance model:
@@ -965,6 +1052,7 @@ ATLAS-01 is ready for review only when the evidence shows all of the following:
 | Working status is explicit | The artifact is marked derived, working and non-authoritative, and says it does not authorise implementation. |
 | Scope is explicit | The artifact defines medium-resolution navigation across the complete approved roadmap. |
 | Delivery lifecycle governance is explicit | The Delivery Lifecycle Governance section defines the Roadmap-to-next-decision flow, Feature Pack, TB, VS and HH lifecycles, Grill-Me gates, handoff, continuation review and evidence/closure requirements. |
+| Decision escalation is explicit | The Decision Escalation Matrix routes discoveries to the lowest correct authority and defines lower-level boundaries, escalation response and STOP conditions. |
 | Future templates remain conceptual | The future template registry names the expected files and their purposes without creating any files under `docs/templates/`. |
 | Proposed views are defined | Sections 3 through 22 define the mature-platform view, portfolio map, registers, matrices, journeys, flows, proof, hardening, seams and risks without substantive pack analysis. |
 | Lifecycle boundary is explicit | Section 7 records the eventual state-machine requirements and limits Atlas lifecycle coverage to existence, ownership, known upstream semantics and the Feature Pack where full specification becomes mandatory. |
