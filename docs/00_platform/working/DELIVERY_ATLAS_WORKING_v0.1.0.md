@@ -1,18 +1,18 @@
 # Delivery Atlas working v0.1.0
 
-- **Artifact:** `ATLAS-02`
+- **Artifact:** `ATLAS-03`
 - **Document status:** **DERIVED DELIVERY PLANNING ARTIFACT**
 - **Working state:** **WORKING / NON-AUTHORITATIVE**
 - **Authority boundary:** **DOES NOT MODIFY PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW**
 - **Implementation boundary:** **DOES NOT AUTHORISE IMPLEMENTATION**
 - **Purpose:** Define the first medium-resolution delivery-navigation contract for the complete approved NewYou roadmap.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
-- **Current content state:** ATLAS-01 contract plus the ATLAS-02 Feature Pack Portfolio Register. The other Atlas views remain unpopulated. No Feature Pack preparation, standalone domain inventory or matrix, lifecycle register, journey analysis or implementation detail is created by ATLAS-02.
+- **Current content state:** ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register and the ATLAS-03 Platform Capability Inventory. The other Atlas views remain unpopulated. ATLAS-03 does not create a complete capability-to-Feature-Pack matrix, Feature Pack preparation, a standalone domain inventory or matrix, a lifecycle register, journey analysis or implementation detail.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
 This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
 
-The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 and ATLAS-02 do not change that manifest.
+The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01, ATLAS-02 and ATLAS-03 do not change that manifest.
 
 ---
 
@@ -69,7 +69,7 @@ The Atlas is a delivery map, not a second Product, Architecture, Domain or Roadm
 
 ## 1.3 Scope boundary
 
-ATLAS-01 defined the views, labels, entry rules and STOP rules for the complete approved roadmap. ATLAS-02 populates only the Feature Pack Portfolio Register. Later Atlas work may populate another view only from current upstream authority, approved evidence and the relevant governance decision.
+ATLAS-01 defined the views, labels, entry rules and STOP rules for the complete approved roadmap. ATLAS-02 populated the Feature Pack Portfolio Register. ATLAS-03 populates only the Platform Capability Inventory within the Capability Introduction / Reuse area. Later Atlas work may populate another view only from current upstream authority, approved evidence and the relevant governance decision.
 
 The Atlas must preserve these boundaries:
 
@@ -439,6 +439,8 @@ Each populated Atlas entry uses only the labels needed for its view. Multiple re
 | Axis | Permitted labels | Use |
 |---|---|---|
 | Authority basis | `PRODUCT`, `ARCHITECTURE`, `DOMAIN`, `ROADMAP`, `SUPPORTING`, `ATLAS_DERIVED`, `JIT`, `EVIDENCE`, `STOP` | Identifies where the statement comes from or where an unresolved matter must be routed. |
+| Delivery Character | `FOUNDATIONAL`, `SHARED_REUSE`, `LATER_SPECIALISED` | For the capability inventory, records how the capability participates in the platform's delivery evolution. |
+| Authority Scope | `DOMAIN_OWNED`, `CROSS_DOMAIN`, `PLATFORM_CONTROL` | For the capability inventory, records whether authority is held by one Domain, coordinated across Domain-owned truths or primarily a platform/operational control boundary. |
 | Delivery relationship | `INTRODUCE`, `REUSE`, `EXTEND`, `COMPOSE`, `PROJECT`, `GATED`, `FUTURE_SEAM` | Describes how a capability or boundary relates to delivery. |
 | Readiness | `VISIBLE`, `DEPENDENT`, `GATED`, `JIT_REQUIRED`, `PROVEN`, `STOPPED` | Shows whether a relationship is visible, blocked by a gate, ready for JIT specification, supported by executable evidence or stopped. |
 | Lifecycle coverage | `NONE`, `EXISTENCE_ONLY`, `UPSTREAM_SEMANTICS`, `FULL_SPEC_REQUIRED`, `PROOF_REQUIRED` | Separates lifecycle visibility from implementation-grade lifecycle design. |
@@ -1369,17 +1371,1086 @@ This is the controlled path for a future product-space or market activation. It 
 
 ## 5.1 Register rule
 
-This register shows where a shared capability first appears and how later Feature Packs use it. It prevents parallel authority, duplicated semantics and accidental reimplementation of a capability that the Roadmap intends to share.
+This area establishes the canonical medium-resolution platform capability vocabulary. It prevents parallel authority, duplicated semantics and accidental reimplementation of a capability that the Roadmap intends to share. ATLAS-03 establishes capability identity and two orthogonal classifications only. ATLAS-04 owns the complete capability-to-Feature-Pack introduction, reuse, extension and specialisation matrix.
 
-The register may describe capability-level reuse, extension or composition. It may not prescribe the internal mechanism, package, resource, route or file structure.
+The inventory may describe broad future reuse or extension context. It does not classify every Feature Pack relationship. `REUSE` means the same authority and invariant may be used again; it does not mean that later work may copy or fork the authority.
 
-## 5.2 Population structure
+### ATLAS-03 classification definitions
 
-| Capability | Product / Architecture / Domain anchor | First introduction point | Owning domain or authority | Reusing Feature Packs | Approved extension points | Invariant or safety dependency | JIT boundary | Evidence / gate | Status |
-|---|---|---|---|---|---|---|---|---|---|
-| _Populate in a later Atlas task._ |  |  |  |  |  |  |  |  |  |
+The inventory separates delivery evolution from authority shape. `Delivery Character` does not describe ownership, and `Authority Scope` does not replace `Authoritative Domain`.
 
-`REUSE` means the same authority and invariant are used again. It does not mean that later work may copy or fork the authority.
+| Axis | Label | Definition |
+|---|---|---|
+| Delivery Character | `FOUNDATIONAL` | Required early enough to become a reusable platform foundation for approved downstream outcomes. |
+| Delivery Character | `SHARED_REUSE` | A reusable capability that participates across multiple approved outcomes but is not best described primarily as a later specialised branch. |
+| Delivery Character | `LATER_SPECIALISED` | A capability intentionally activated or materially specialised only at a later approved maturity or Feature Pack stage. |
+| Authority Scope | `DOMAIN_OWNED` | One frozen Domain clearly owns the principal durable business truth even if many Feature Packs reuse the capability. |
+| Authority Scope | `CROSS_DOMAIN` | The capability coordinates, projects or composes multiple Domain-owned truths without becoming a second authoritative owner. |
+| Authority Scope | `PLATFORM_CONTROL` | The capability is primarily a platform or operational control boundary rather than a durable business-truth Domain, while affected Domains retain their business authority. |
+
+Every capability continues to name its actual `Authoritative Domain`, or explicitly records the no-single-Domain/platform-control boundary. No classification creates shared authoritative writes.
+
+## 5.2 Platform capability inventory
+
+The entries below are the canonical working vocabulary for reusable NewYou platform abilities. Their order follows the broad trusted-entry, paid-core, mature-platform and cross-cutting dependency logic in current authority. The order is not an implementation sequence and does not authorise delivery work.
+
+### Summary register
+
+| Capability ID | Capability | Delivery Character | Authority Scope | Authoritative Domain | Lifecycle | Security/Safety | Performance |
+|---|---|---|---|---|---|---|---|
+| CAP-001 | Canonical identity and authentication | FOUNDATIONAL | DOMAIN_OWNED | Identity & Access | YES | HIGH | BURST_SENSITIVE |
+| CAP-002 | Scoped authorisation and relationship access | FOUNDATIONAL | CROSS_DOMAIN | Identity & Access plus relationship owners | YES | HIGH | HIGH |
+| CAP-003 | Consent and purpose control | FOUNDATIONAL | DOMAIN_OWNED | Privacy & Consent | YES | HIGH | HIGH |
+| CAP-004 | Data rights, retention and deletion orchestration | FOUNDATIONAL | CROSS_DOMAIN | Privacy & Consent | YES | HIGH | HIGH |
+| CAP-005 | Public discovery and acquisition | FOUNDATIONAL | CROSS_DOMAIN | No single Domain; underlying owners retain truth | CONDITIONAL | MODERATE | MODERATE |
+| CAP-006 | Governed content, translation and publication | FOUNDATIONAL | DOMAIN_OWNED | Content & Media | YES | HIGH | HIGH |
+| CAP-007 | Explainable content discovery and relevance | SHARED_REUSE | CROSS_DOMAIN | Content & Media for source content; no separate relevance authority | NO | HIGH | HIGH |
+| CAP-008 | Protected media and content delivery | SHARED_REUSE | CROSS_DOMAIN | Content & Media | YES | HIGH | HIGH |
+| CAP-009 | Commercial catalogue and offer management | FOUNDATIONAL | DOMAIN_OWNED | Commerce | YES | MODERATE | MODERATE |
+| CAP-010 | Payment and commercial reconciliation | FOUNDATIONAL | DOMAIN_OWNED | Commerce | YES | HIGH | BURST_SENSITIVE |
+| CAP-011 | Entitlement and access-rights management | FOUNDATIONAL | DOMAIN_OWNED | Entitlements | YES | HIGH | HIGH |
+| CAP-012 | Temperament assessment and profile | FOUNDATIONAL | DOMAIN_OWNED | Temperament | YES | HIGH | MODERATE |
+| CAP-013 | Health and lifestyle records | FOUNDATIONAL | DOMAIN_OWNED | Health Records | YES | HIGH | MODERATE |
+| CAP-014 | Safety and eligibility routing | FOUNDATIONAL | DOMAIN_OWNED | Safety & Eligibility | YES | SAFETY_CRITICAL | HIGH |
+| CAP-015 | Deterministic plan generation and versioning | FOUNDATIONAL | DOMAIN_OWNED | Plans & Nutrition | YES | SAFETY_CRITICAL | MODERATE |
+| CAP-016 | Governed plan review and adjustment | LATER_SPECIALISED | DOMAIN_OWNED | Plans & Nutrition | YES | SAFETY_CRITICAL | MODERATE |
+| CAP-017 | Communications and notification delivery | FOUNDATIONAL | DOMAIN_OWNED | Communications | YES | HIGH | BURST_SENSITIVE |
+| CAP-018 | Programme and cohort delivery | LATER_SPECIALISED | DOMAIN_OWNED | Programmes & Challenges | YES | HIGH | BURST_SENSITIVE |
+| CAP-019 | Participant progress and feedback | SHARED_REUSE | DOMAIN_OWNED | Habits, Journals & Progress | YES | MODERATE | HIGH |
+| CAP-020 | Habits and private reflective practice | LATER_SPECIALISED | DOMAIN_OWNED | Habits, Journals & Progress | YES | HIGH | HIGH |
+| CAP-021 | Live-session and replay delivery | SHARED_REUSE | DOMAIN_OWNED | Events & Live | YES | HIGH | BURST_SENSITIVE |
+| CAP-022 | Recurring commercial access | LATER_SPECIALISED | CROSS_DOMAIN | Commerce, with Entitlements for access rights | YES | HIGH | BURST_SENSITIVE |
+| CAP-023 | Professional review and scoped care | LATER_SPECIALISED | DOMAIN_OWNED | Professional Care | YES | SAFETY_CRITICAL | MODERATE |
+| CAP-024 | Community participation and moderation | LATER_SPECIALISED | DOMAIN_OWNED | Community | YES | HIGH | BURST_SENSITIVE |
+| CAP-025 | Scarce event capacity and ticketing | LATER_SPECIALISED | CROSS_DOMAIN | Events & Live | YES | HIGH | BURST_SENSITIVE |
+| CAP-026 | Governed experimentation and learning | LATER_SPECIALISED | CROSS_DOMAIN | Experimentation | YES | HIGH | BURST_SENSITIVE |
+| CAP-027 | Analytics and measurement | FOUNDATIONAL | CROSS_DOMAIN | Analytics | YES | HIGH | HIGH |
+| CAP-028 | Audit and security evidence | FOUNDATIONAL | DOMAIN_OWNED | Audit & Evidence | YES | HIGH | HIGH |
+| CAP-029 | Operator work and support | FOUNDATIONAL | PLATFORM_CONTROL | No single Domain; source owners retain truth | YES | HIGH | MODERATE |
+| CAP-030 | Release, incident and recovery control | FOUNDATIONAL | PLATFORM_CONTROL | No single Domain; Architecture/Operations governs control and Audit & Evidence retains central evidence | YES | HIGH | BURST_SENSITIVE |
+| CAP-031 | Controlled product-space and market activation | LATER_SPECIALISED | PLATFORM_CONTROL | No single Domain; Product/Architecture direction and affected owners govern | CONDITIONAL | HIGH | HIGH |
+
+### CAP-001 — Canonical identity and authentication
+
+**Capability ID:** `CAP-001`
+
+**Canonical Name:** Canonical identity and authentication
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Identity & Access` owns the principal durable identity truth; supporting Domains do not gain ownership.
+
+**Purpose:** Give every protected journey one reconcilable human or system identity, verified account boundary and recoverable authentication context. Account creation, verification, session control and recovery remain one identity capability rather than separate login, reset or verification capabilities.
+
+**Authoritative Domain:** `Identity & Access` owns canonical identity, credentials, sessions, trusted devices, recovery and account closure state.
+
+**Supporting Domains:** `Privacy & Consent`; `Communications`; `Audit & Evidence`; all protected business Domains consume current actor context.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.1`; `03_ARCHITECTURE_v1.0.0.md §6.1`; `05_ROADMAP_v1.0.0.md §6 FP-001`.
+
+**Lifecycle Relevance:** `YES` — protected identity lifecycle; `Identity & Access`; earliest full specification point is `FP-001`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — credentials, recovery and session authority control every protected operation and must not expose health or privileged data.
+
+**Performance / Concurrency Significance:** `BURST_SENSITIVE` — registration, login, verification and recovery can create authentication and abuse-control bursts.
+
+**External Dependency Relevance:** Approved email delivery category through `Communications`; authentication implementation remains `JIT / GATED`.
+
+**Approved Future Reuse / Extension Context:** Reused by every protected participant, operator, practitioner and future product-space journey without creating parallel identities.
+
+**JIT Boundary:** Credential and session Resource/action contracts, recovery assurance, field policies and abuse-control implementation remain downstream.
+
+### CAP-002 — Scoped authorisation and relationship access
+
+**Capability ID:** `CAP-002`
+
+**Canonical Name:** Scoped authorisation and relationship access
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates identity grants and relationship-owned truth; each source Domain retains its authority and no shared writes are introduced.
+
+**Purpose:** Resolve whether an actor may perform a particular operation or read a particular field using role, relationship, purpose, scope, expiry and current authority. It keeps a practitioner role, purchaser identity, participant relationship and operator privilege distinct.
+
+**Authoritative Domain:** `Identity & Access` owns identity-side role and privilege grants. Each business Domain owns its own relationship or assignment truth; this capability has no shared business-truth owner.
+
+**Supporting Domains:** `Privacy & Consent`; `Professional Care`; `Commerce`; `Entitlements`; `Programmes & Challenges`; `Community`; `Events & Live`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §§3–5, 6.1 and 4.1`; `03_ARCHITECTURE_v1.0.0.md §6.2`; `05_ROADMAP_v1.0.0.md §1.1`.
+
+**Lifecycle Relevance:** `YES` — scoped-access lifecycle; `Identity & Access` governs identity-side grants and relationship-owning Domains govern their relationship truth; earliest full specification point is `FP-001`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — current scope and purpose checks prevent role leakage, payer access to recipient data and unauthorised professional or health access.
+
+**Performance / Concurrency Significance:** `HIGH` — protected actions need current, bounded authorisation decisions and safe revocation behaviour under concurrent requests.
+
+**External Dependency Relevance:** `NONE` as a business authority; external providers receive only bounded capability/data through owning Domains.
+
+**Approved Future Reuse / Extension Context:** Reused wherever a product, operator, practitioner, cohort, community or event relationship grants scoped access.
+
+**JIT Boundary:** Exact policy composition, field projections, relationship Resources and revocation propagation remain JIT.
+
+### CAP-003 — Consent and purpose control
+
+**Capability ID:** `CAP-003`
+
+**Canonical Name:** Consent and purpose control
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Privacy & Consent` owns the principal durable consent truth; supporting Domains do not gain ownership.
+
+**Purpose:** Record and evaluate purpose-specific consent and lawful-basis permissions so participant, marketing, professional, analytics and other processing decisions use current permission rather than a blanket account flag.
+
+**Authoritative Domain:** `Privacy & Consent` owns consent grants, withdrawals, current consent state and purpose boundaries.
+
+**Supporting Domains:** `Identity & Access`; `Health Records`; `Safety & Eligibility`; `Professional Care`; `Communications`; `Analytics`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.2 and §4`; `03_ARCHITECTURE_v1.0.0.md §6.3`; `00_PLATFORM_v1.2.1.md §§21C.19 and 21I.13`; `05_ROADMAP_v1.0.0.md §6 FP-001`.
+
+**Lifecycle Relevance:** `YES` — consent lifecycle; `Privacy & Consent`; earliest full specification point is `FP-001`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — processing purpose, participant control and professional sharing depend on current consent and lawful-basis checks.
+
+**Performance / Concurrency Significance:** `HIGH` — current consent must be checked reliably while withdrawal and access decisions race with delivery or processing requests.
+
+**External Dependency Relevance:** `NONE`; legal, clinical and channel policy remains `JIT / GATED` where current authority has not frozen it.
+
+**Approved Future Reuse / Extension Context:** Reused by health, professional, communications, analytics, community, media and future market activation without copying consent authority.
+
+**JIT Boundary:** Consent record semantics, wording, purpose catalogue, revocation propagation and legal-basis evidence remain downstream where not frozen.
+
+### CAP-004 — Data rights, retention and deletion orchestration
+
+**Capability ID:** `CAP-004`
+
+**Canonical Name:** Data rights, retention and deletion orchestration
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates rights requests across Domain-owned records; each data-owning Domain retains its authority and no shared writes are introduced.
+
+**Purpose:** Coordinate account closure, deletion, suppression, retention, legal holds and participant export across the Domains that own the underlying records. It verifies completion without becoming a shared-write replacement for those owners.
+
+**Authoritative Domain:** `Privacy & Consent` owns the request, policy and orchestration truth. Each data-owning Domain owns its record-level deletion, correction or export contract.
+
+**Supporting Domains:** `Identity & Access`; `Temperament`; `Health Records`; `Plans & Nutrition`; `Commerce`; `Entitlements`; `Professional Care`; `Analytics`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.2, §4 and §5`; `03_ARCHITECTURE_v1.0.0.md §11`; `00_PLATFORM_v1.2.1.md §21I`; `05_ROADMAP_v1.0.0.md §6 FP-006`.
+
+**Lifecycle Relevance:** `YES` — data-rights request lifecycle; `Privacy & Consent` coordinates and data-owning Domains fulfil their contracts; earliest full specification point is `FP-006`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — deletion must not resurrect access or sensitive records, and exports must expose only authorised data.
+
+**Performance / Concurrency Significance:** `HIGH` — large histories, exports, restore replay and cross-Domain completion checks can create long-running or bursty work.
+
+**External Dependency Relevance:** `JIT / GATED` — any external processor deletion/export path remains subject to approved policy and provider scope.
+
+**Approved Future Reuse / Extension Context:** Reused by every sensitive release tier, professional record, journal, community, analytics and future market path.
+
+**JIT Boundary:** Retention categories, legal holds, deletion/export action contracts, restore suppression and processor inventories remain downstream.
+
+### CAP-005 — Public discovery and acquisition
+
+**Capability ID:** `CAP-005`
+
+**Canonical Name:** Public discovery and acquisition
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `CROSS_DOMAIN` — composes public content, commercial, contact and measurement truths; each source Domain retains its authority and no shared writes are introduced.
+
+**Purpose:** Let a public visitor find useful bilingual content, understand the approved product or event, choose a relevant next step and form a permissioned mailing-list, account or purchase relationship without exposing unfinished product spaces. This is retained as a reusable cross-cutting acquisition boundary because the public-to-protected handoff recurs across approved content, product, event and future-market outcomes while the underlying authorities remain separate.
+
+**Authoritative Domain:** No single Domain owns this composite capability. `Content & Media` owns public content, `Commerce` owns product information, `Communications` owns subscriber contact state and `Analytics` owns acquisition evidence. None becomes a shared public-funnel authority.
+
+**Supporting Domains:** `Content & Media`; `Commerce`; `Communications`; `Analytics`; `Privacy & Consent`; `Identity & Access`.
+
+**Authority Anchors:** `05_ROADMAP_v1.0.0.md §§2, 6 FP-001 and 13`; `PLATFORM_OPERATING_MODEL_v1.0.0.md §15`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md §§3.1 and 5.1`; `04_DOMAIN_MAP_v1.0.0.md §7`.
+
+**Lifecycle Relevance:** `CONDITIONAL` — subscriber-contact lifecycle only where this acquisition boundary includes a governed mailing-list relationship; `Communications`; earliest full specification point is `FP-001`.
+
+**Security / Privacy / Safety Significance:** `MODERATE` — public discovery stays open, but consent, account boundaries, protected product visibility and health-safe messaging still apply.
+
+**Performance / Concurrency Significance:** `MODERATE` — public reads and campaign traffic may be broad or bursty, while source authority and protected paths must remain isolated.
+
+**External Dependency Relevance:** `JIT / GATED` — email, referral and external analytics providers remain bounded supporting systems, not acquisition authority.
+
+**Approved Future Reuse / Extension Context:** Reused by approved content, programme, event and future product-space discovery while preserving separate contact, account, purchaser and participant concepts.
+
+**JIT Boundary:** Exact acquisition surfaces, copy, attribution contract and provider configuration remain downstream.
+
+### CAP-006 — Governed content, translation and publication
+
+**Capability ID:** `CAP-006`
+
+**Canonical Name:** Governed content, translation and publication
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Content & Media` owns the principal durable content truth; supporting Domains do not gain ownership.
+
+**Purpose:** Produce, review, translate, approve, publish, correct and withdraw versioned content that can safely support public discovery, assessments, reports, plans, programmes, communications and events.
+
+**Authoritative Domain:** `Content & Media` owns conceptual content identity, immutable content versions, translation relationships, publication state, editorial media metadata and correction/withdrawal authority.
+
+**Supporting Domains:** `Privacy & Consent`; `Health Records`; `Safety & Eligibility`; `Plans & Nutrition`; `Programmes & Challenges`; `Communications`; `Events & Live`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.7`; `00_PLATFORM_v1.2.1.md §§21E.1–21E.10`; `PLATFORM_OPERATING_MODEL_v1.0.0.md §§9–13`; `05_ROADMAP_v1.0.0.md §§2 and 6 FP-005`.
+
+**Lifecycle Relevance:** `YES` — governed-content lifecycle; `Content & Media`; earliest full specification point is `FP-001`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — approved bilingual, paid, clinical, safety and consent content must not be delivered after withdrawal or without its required review.
+
+**Performance / Concurrency Significance:** `HIGH` — scheduled publication, corrections, withdrawals and downstream delivery can fan out across many surfaces.
+
+**External Dependency Relevance:** `NONE` for content authority; external media delivery and notification providers remain behind their own capabilities.
+
+**Approved Future Reuse / Extension Context:** Reused by all product, programme, plan, community, event and future market content without parallel editorial authority.
+
+**JIT Boundary:** Content and translation Resources, approval actions, scheduling, invalidation and publication implementation remain downstream.
+
+### CAP-007 — Explainable content discovery and relevance
+
+**Capability ID:** `CAP-007`
+
+**Canonical Name:** Explainable content discovery and relevance
+
+**Delivery Character:** `SHARED_REUSE`
+
+**Authority Scope:** `CROSS_DOMAIN` — projects content and permitted signals from multiple Domains; each source Domain retains its authority and no shared writes are introduced.
+
+**Purpose:** Help people discover approved content through deterministic search, taxonomy, freshness, entitlement and permitted relevance signals while showing why content is prioritised and preserving broader browsing.
+
+**Authoritative Domain:** `Content & Media` owns the content and taxonomy source. The relevance projection has no independent business truth; `Temperament`, `Health Records`, `Safety & Eligibility`, `Plans & Nutrition`, `Entitlements`, `Experimentation` and `Analytics` retain their own signals and decisions.
+
+**Supporting Domains:** `Temperament`; `Health Records`; `Safety & Eligibility`; `Plans & Nutrition`; `Entitlements`; `Experimentation`; `Analytics`; `Privacy & Consent`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §§6.7 and 9`; `00_PLATFORM_v1.2.1.md §§21E.5–21E.7 and 21E.12`; `03_ARCHITECTURE_v1.0.0.md §§10.2 and 10.5`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md §§5.1 and 12`.
+
+**Lifecycle Relevance:** `NO` — no independent lifecycle is asserted; source content and relevance-signal lifecycles remain with their owning Domains.
+
+**Security / Privacy / Safety Significance:** `HIGH` — health-derived relevance must be minimised and explainable, and safety-required content cannot be hidden by ordinary ranking.
+
+**Performance / Concurrency Significance:** `HIGH` — public search, feed reads, large taxonomies and concurrent discovery traffic need bounded reads and safe degradation.
+
+**External Dependency Relevance:** `JIT / GATED` — search and relevance implementation remains first-party and evidence-gated; semantic or external ranking is not assumed.
+
+**Approved Future Reuse / Extension Context:** Reused by public content, participant discovery, programmes, events and approved future product spaces.
+
+**JIT Boundary:** Ranking signals, query/resource design, projection freshness, caching and experiment integration remain JIT.
+
+### CAP-008 — Protected media and content delivery
+
+**Capability ID:** `CAP-008`
+
+**Canonical Name:** Protected media and content delivery
+
+**Delivery Character:** `SHARED_REUSE`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates media truth with access, consent and rights truths; each source Domain retains its authority and no shared writes are introduced.
+
+**Purpose:** Deliver public, purchased, member-only, practitioner-shared and replay media under current access, consent, rights and withdrawal policy. Media delivery is a capability, not a second content or entitlement authority.
+
+**Authoritative Domain:** `Content & Media` owns media identity, rights, derivatives, publication metadata and protected-delivery classification. `Entitlements` and source Domains own access and sharing truth.
+
+**Supporting Domains:** `Entitlements`; `Privacy & Consent`; `Events & Live`; `Commerce`; `Professional Care`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.7`; `03_ARCHITECTURE_v1.0.0.md §§7.4 and 10.3`; `00_PLATFORM_v1.2.1.md §21E.15`; `05_ROADMAP_v1.0.0.md §§6 FP-003 and FP-007`.
+
+**Lifecycle Relevance:** `YES` — protected-media lifecycle; `Content & Media`; earliest full specification point is `FP-003`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — protected reports, plans, recordings and practitioner-shared assets must respect current scope, consent, entitlement and withdrawal.
+
+**Performance / Concurrency Significance:** `HIGH` — media and replay delivery can fan out heavily, while access checks and withdrawal must remain current.
+
+**External Dependency Relevance:** Approved object-storage/CDN/media-delivery categories; live-video provider details belong to `CAP-021` and remain `JIT / GATED`.
+
+**Approved Future Reuse / Extension Context:** Reused by reports, plan libraries, programme media, live replay, events, community assets and future product spaces.
+
+**JIT Boundary:** Media Resource/derivative model, signed delivery mechanism, provider adapter, rights evidence and retention remain downstream.
+
+### CAP-009 — Commercial catalogue and offer management
+
+**Capability ID:** `CAP-009`
+
+**Canonical Name:** Commercial catalogue and offer management
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Commerce` owns the principal durable catalogue and offer truth; supporting Domains do not gain ownership.
+
+**Purpose:** Define which approved products, bundles, memberships, add-ons, gifts or events may be offered with versioned prices, discounts and commercial boundaries. Catalogue truth remains separate from payment and access truth.
+
+**Authoritative Domain:** `Commerce` owns commercial products, offers, price versions, discounts and purchaser/recipient commercial relationships.
+
+**Supporting Domains:** `Entitlements`; `Identity & Access`; `Content & Media`; `Events & Live`; `Privacy & Consent`; `Analytics`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.10`; `00_PLATFORM_v1.2.1.md §§21A.1, 21A.5, 21A.9 and 21A.13`; `05_ROADMAP_v1.0.0.md §§3.2 and 6 FP-002`.
+
+**Lifecycle Relevance:** `YES` — commercial-offer lifecycle; `Commerce`; earliest full specification point is `FP-002`.
+
+**Security / Privacy / Safety Significance:** `MODERATE` — catalogue visibility must not expose unfinished products, misrepresent approved health scope or let an offer bypass consent and access rules.
+
+**Performance / Concurrency Significance:** `MODERATE` — current catalogue and price reads may be broad, but price/version authority must remain consistent under checkout load.
+
+**External Dependency Relevance:** `NONE` as commercial authority; provider payment evidence enters through `CAP-010`.
+
+**Approved Future Reuse / Extension Context:** Reused by once-off products, memberships, Premium, gifts, event commerce and approved future market offers.
+
+**JIT Boundary:** Catalogue Resources, price-version actions, discount rules, purchaser/recipient handling and approval workflow remain downstream.
+
+### CAP-010 — Payment and commercial reconciliation
+
+**Capability ID:** `CAP-010`
+
+**Canonical Name:** Payment and commercial reconciliation
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Commerce` owns the principal durable payment and reconciliation truth; supporting Domains do not gain ownership.
+
+**Purpose:** Turn a purchase intent and provider evidence into one authoritative payment, refund or dispute outcome without granting access from an unverified browser return or duplicating effects under retries and ambiguity.
+
+**Authoritative Domain:** `Commerce` owns purchase, payment, refund, dispute, settlement and provider-independent reconciliation truth.
+
+**Supporting Domains:** `Identity & Access`; `Privacy & Consent`; `Entitlements`; `Events & Live`; `Audit & Evidence`; `Analytics`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.10`; `03_ARCHITECTURE_v1.0.0.md §§8.1–8.3`; `00_PLATFORM_v1.2.1.md §§21A.6, 21A.8, 21A.10 and 21A.12`; `05_ROADMAP_v1.0.0.md §6 FP-002`.
+
+**Lifecycle Relevance:** `YES` — payment-reconciliation lifecycle; `Commerce`; earliest full specification point is `FP-002`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — financial integrity, provider minimisation and purchaser/recipient separation protect both money and private participant data.
+
+**Performance / Concurrency Significance:** `BURST_SENSITIVE` — checkout contention, provider callback bursts, retries and reconciliation backlog can arrive together.
+
+**External Dependency Relevance:** `Paystack` launch gateway; future providers remain behind approved adapters and `JIT / GATED` behaviour.
+
+**Approved Future Reuse / Extension Context:** Reused by once-off plans, memberships, Premium, practitioner review and scarce-capacity event commerce without parallel payment truth.
+
+**JIT Boundary:** Provider adapter, retry/idempotency, ambiguity, refund/dispute reconciliation and commercial action contracts remain downstream.
+
+### CAP-011 — Entitlement and access-rights management
+
+**Capability ID:** `CAP-011`
+
+**Canonical Name:** Entitlement and access-rights management
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Entitlements` owns the principal durable access-rights truth; supporting Domains do not gain ownership.
+
+**Purpose:** Grant, redeem, consume, expire and revoke durable rights to reports, plans, programmes, memberships, add-ons, community, sessions or events while keeping access truth separate from payment and protected content.
+
+**Authoritative Domain:** `Entitlements` owns entitlement identity, scope, source, validity, expiry, revocation, redemption and consumption history.
+
+**Supporting Domains:** `Commerce`; `Identity & Access`; `Privacy & Consent`; `Temperament`; `Plans & Nutrition`; `Programmes & Challenges`; `Community`; `Events & Live`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.11`; `00_PLATFORM_v1.2.1.md §§21A.5, 21A.9 and 21A.13`; `05_ROADMAP_v1.0.0.md §§3.2 and 6 FP-002`.
+
+**Lifecycle Relevance:** `YES` — entitlement lifecycle; `Entitlements`; earliest full specification point is `FP-002`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — current access checks must prevent stale grants, duplicate access and payer access to recipient health or plan data.
+
+**Performance / Concurrency Significance:** `HIGH` — protected journeys create frequent current-access reads and grant/redeem/revoke races.
+
+**External Dependency Relevance:** `NONE` as authority; payment and provider evidence arrive through `Commerce`.
+
+**Approved Future Reuse / Extension Context:** Reused by assessment credits, paid plans, memberships, programme access, community, live replay, event tickets and future product spaces.
+
+**JIT Boundary:** Entitlement identity, grant/revoke actions, consumption rules, access projection and invalidation remain downstream.
+
+### CAP-012 — Temperament assessment and profile
+
+**Capability ID:** `CAP-012`
+
+**Canonical Name:** Temperament assessment and profile
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Temperament` owns the principal durable assessment and profile truth; supporting Domains do not gain ownership.
+
+**Purpose:** Accept approved self-reported, book-derived or digital temperament inputs, score and interpret them reproducibly, preserve provenance and provide an immutable bilingual report and current profile for approved product use.
+
+**Authoritative Domain:** `Temperament` owns methodology versions, assessment configuration, attempts, answers, raw scores, reviewed interpretation, current profile and report provenance.
+
+**Supporting Domains:** `Content & Media`; `Entitlements`; `Privacy & Consent`; `Plans & Nutrition`; `Programmes & Challenges`; `Analytics`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.3`; `00_PLATFORM_v1.2.1.md §§21B.1–21B.15`; `05_ROADMAP_v1.0.0.md §6 FP-003`.
+
+**Lifecycle Relevance:** `YES` — temperament-assessment lifecycle; `Temperament`; earliest full specification point is `FP-003`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — answers and results are personal, immutable under policy and must never be treated as medical authority.
+
+**Performance / Concurrency Significance:** `MODERATE` — assessment completion bursts and report reads need bounded scoring and history access.
+
+**External Dependency Relevance:** `NONE`; methodology, content, rights and translation approvals are authority gates rather than provider dependencies.
+
+**Approved Future Reuse / Extension Context:** Reused by safe plans, programmes, content relevance, professional review and approved future product families.
+
+**JIT Boundary:** Assessment Resources/actions, scoring implementation, provenance fields and report rendering remain downstream.
+
+### CAP-013 — Health and lifestyle records
+
+**Capability ID:** `CAP-013`
+
+**Canonical Name:** Health and lifestyle records
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Health Records` owns the principal durable health and lifestyle truth; supporting Domains do not gain ownership.
+
+**Purpose:** Collect, correct and expose only the progressive health, lifestyle, measurement and laboratory facts needed for an approved purpose, with provenance and current minimum-data views.
+
+**Authoritative Domain:** `Health Records` owns participant health/lifestyle intake facts, provenance, verification status, measurements, laboratory records and record corrections.
+
+**Supporting Domains:** `Privacy & Consent`; `Safety & Eligibility`; `Plans & Nutrition`; `Professional Care`; `Analytics`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.4`; `00_PLATFORM_v1.2.1.md §§21C.1–21C.4 and 21C.13–21C.14`; `05_ROADMAP_v1.0.0.md §6 FP-004`.
+
+**Lifecycle Relevance:** `YES` — health-record lifecycle; `Health Records`; earliest full specification point is `FP-004`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — health information is purpose-bound, minimum-access and safety-sensitive; unverified facts cannot silently become treatment authority.
+
+**Performance / Concurrency Significance:** `MODERATE` — onboarding and correction traffic is bounded, but historical access and current minimum-data reads must remain controlled.
+
+**External Dependency Relevance:** `JIT / GATED` for laboratory or measurement inputs; no external source is assumed for the initial intake path.
+
+**Approved Future Reuse / Extension Context:** Reused by eligibility, plans, professional review and approved future health or market paths without copying a health record into derived systems.
+
+**JIT Boundary:** Health Resources, provenance and correction semantics, access projections and laboratory integration remain downstream.
+
+### CAP-014 — Safety and eligibility routing
+
+**Capability ID:** `CAP-014`
+
+**Canonical Name:** Safety and eligibility routing
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Safety & Eligibility` owns the principal durable evaluation and restriction truth; supporting Domains do not gain ownership.
+
+**Purpose:** Apply approved safety and eligibility rules to current scoped facts and route a participant to automated guidance, General Wellness, professional review or insufficient-information handling without turning temperament or stale data into clinical authority.
+
+**Authoritative Domain:** `Safety & Eligibility` owns evaluations, outcomes, restrictions, safety cases, pauses, overrides and re-evaluation authority.
+
+**Supporting Domains:** `Health Records`; `Plans & Nutrition`; `Professional Care`; `Temperament`; `Privacy & Consent`; `Content & Media`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.5`; `00_PLATFORM_v1.2.1.md §§21C.5–21C.20`; `03_ARCHITECTURE_v1.0.0.md §§5, 6 and 14`; `05_ROADMAP_v1.0.0.md §6 FP-004`.
+
+**Lifecycle Relevance:** `YES` — safety-evaluation lifecycle; `Safety & Eligibility`; earliest full specification point is `FP-004`.
+
+**Security / Privacy / Safety Significance:** `SAFETY_CRITICAL` — high-risk or incomplete cases must fail closed, urgent guidance must be correct and safety can override personalisation.
+
+**Performance / Concurrency Significance:** `HIGH` — current safety decisions and re-evaluations must remain bounded and correct under onboarding or material-change bursts.
+
+**External Dependency Relevance:** `JIT / GATED` — clinical matrices, urgent wording, retention and any laboratory rules require the approved authority before affected release.
+
+**Approved Future Reuse / Extension Context:** Reused by plans, programmes, adjusted plans, practitioner review and future approved health outcomes.
+
+**JIT Boundary:** Clinical rule matrix, safety wording, override actions, case resources and re-evaluation mechanics remain downstream.
+
+### CAP-015 — Deterministic plan generation and versioning
+
+**Capability ID:** `CAP-015`
+
+**Canonical Name:** Deterministic plan generation and versioning
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Plans & Nutrition` owns the principal durable plan truth; supporting Domains do not gain ownership.
+
+**Purpose:** Generate an explainable, bilingual plan or approved General Wellness pathway from current approved inputs, calculations, content and safety authority, then preserve the delivered version and its provenance.
+
+**Authoritative Domain:** `Plans & Nutrition` owns plan generation requests and outcomes, immutable delivered snapshots, explanations, activation, correction and withdrawal.
+
+**Supporting Domains:** `Safety & Eligibility`; `Health Records`; `Temperament`; `Content & Media`; `Entitlements`; `Habits, Journals & Progress`; `Privacy & Consent`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.6`; `00_PLATFORM_v1.2.1.md §§21D.1–21D.8 and 21D.12–21D.13`; `05_ROADMAP_v1.0.0.md §6 FP-005`.
+
+**Lifecycle Relevance:** `YES` — plan-version lifecycle; `Plans & Nutrition`; earliest full specification point is `FP-005`.
+
+**Security / Privacy / Safety Significance:** `SAFETY_CRITICAL` — plan output must use current safety authority, approved calculation/content rules and explainable personalisation without making unsupported clinical claims.
+
+**Performance / Concurrency Significance:** `MODERATE` — generation must stay bounded during completion bursts and preserve immutable history without loading unnecessary records.
+
+**External Dependency Relevance:** `NONE` as authority; approved content, calculation and translation inputs are governed internal dependencies.
+
+**Approved Future Reuse / Extension Context:** Reused by once-off plans, programmes, recurring adjustment, practitioner-derived plans and approved future product spaces.
+
+**JIT Boundary:** Calculation implementation, generation orchestration, content linkage, plan Resources/actions and delivery mechanics remain downstream.
+
+### CAP-016 — Governed plan review and adjustment
+
+**Capability ID:** `CAP-016`
+
+**Canonical Name:** Governed plan review and adjustment
+
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Plans & Nutrition` owns the principal durable plan-adjustment truth; supporting Domains do not gain ownership.
+
+**Purpose:** Review approved check-ins and trends at the permitted cadence, apply renewed safety evaluation and create a governed immutable plan adjustment only where the approved rules allow it.
+
+**Authoritative Domain:** `Plans & Nutrition` owns review and adjustment outcomes. `Safety & Eligibility` remains the authority for current safety clearance, and `Habits, Journals & Progress` owns input facts.
+
+**Supporting Domains:** `Habits, Journals & Progress`; `Safety & Eligibility`; `Health Records`; `Temperament`; `Entitlements`; `Commerce`; `Privacy & Consent`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §§6.6 and 5`; `00_PLATFORM_v1.2.1.md §§21D.9–21D.11`; `05_ROADMAP_v1.0.0.md §6 FP-010`.
+
+**Lifecycle Relevance:** `YES` — governed-plan-adjustment lifecycle; `Plans & Nutrition`; earliest full specification point is `FP-010`.
+
+**Security / Privacy / Safety Significance:** `SAFETY_CRITICAL` — a trend or practitioner input cannot bypass current eligibility, approved thresholds or plan authority.
+
+**Performance / Concurrency Significance:** `MODERATE` — periodic reviews and bounded trend reads may batch, but adjustments must remain idempotent and current.
+
+**External Dependency Relevance:** `JIT / GATED` for approved clinical/product review rules; recurring billing uses `CAP-010` only when the commercial scope includes it.
+
+**Approved Future Reuse / Extension Context:** Reused by adjustment add-ons and Premium packaging after once-off plan delivery is proven.
+
+**JIT Boundary:** Review windows, thresholds, trend calculations, adjustment actions and safety re-evaluation mechanics remain downstream.
+
+### CAP-017 — Communications and notification delivery
+
+**Capability ID:** `CAP-017`
+
+**Canonical Name:** Communications and notification delivery
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Communications` owns the principal durable communication and delivery truth; supporting Domains do not gain ownership.
+
+**Purpose:** Create, select, deliver, retry and evidence communication intent across mailing-list, email and in-app channels while respecting consent, preferences, quiet hours, caps and the originating Domain's business truth.
+
+**Authoritative Domain:** `Communications` owns subscriber contact state, notification preferences, message intent, delivery attempts and provider evidence. It does not own templates, consent or originating business facts.
+
+**Supporting Domains:** `Content & Media`; `Privacy & Consent`; `Identity & Access`; `Commerce`; `Programmes & Challenges`; `Events & Live`; `Analytics`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.15`; `03_ARCHITECTURE_v1.0.0.md §10.4`; `PLATFORM_OPERATING_MODEL_v1.0.0.md §§7, 12 and 21`; `05_ROADMAP_v1.0.0.md §§6 FP-001 and FP-007`.
+
+**Lifecycle Relevance:** `YES` — communication-delivery lifecycle; `Communications`; earliest full specification point is `FP-001`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — messages can carry sensitive context, and consent/preferences must be rechecked without weakening mandatory safety or account notices.
+
+**Performance / Concurrency Significance:** `BURST_SENSITIVE` — programme, event and campaign fan-out can collide with provider rate limits, retries and backlog recovery.
+
+**External Dependency Relevance:** Email provider initially; future SMS/WhatsApp channels remain approved-category and `JIT / GATED`.
+
+**Approved Future Reuse / Extension Context:** Reused by identity, payment, programmes, membership, live, events, community, professional review and future product spaces.
+
+**JIT Boundary:** Message Resources, provider adapters, retry/quiet-hour scheduling, channel policy and in-app presentation remain downstream.
+
+### CAP-018 — Programme and cohort delivery
+
+**Capability ID:** `CAP-018`
+
+**Canonical Name:** Programme and cohort delivery
+
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Programmes & Challenges` owns the principal durable programme and cohort truth; supporting Domains do not gain ownership.
+
+**Purpose:** Define approved programmes and challenges, configure editions and cohorts, enrol participants, release scheduled material, measure participation and completion, and support catch-up or recovery without creating a generic LMS.
+
+**Authoritative Domain:** `Programmes & Challenges` owns programme/challenge definitions, versions, editions, cohorts, enrolment, participation and completion truth.
+
+**Supporting Domains:** `Content & Media`; `Entitlements`; `Habits, Journals & Progress`; `Temperament`; `Safety & Eligibility`; `Plans & Nutrition`; `Community`; `Events & Live`; `Communications`; `Privacy & Consent`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.8`; `00_PLATFORM_v1.2.1.md §§21F.1–21F.10 and 21H.2–21H.5`; `05_ROADMAP_v1.0.0.md §6 FP-008`.
+
+**Lifecycle Relevance:** `YES` — programme-delivery lifecycle; `Programmes & Challenges`; earliest full specification point is `FP-008`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — cohort access, participant/purchaser separation, safety routing, private progress and facilitator/moderator scope must remain controlled.
+
+**Performance / Concurrency Significance:** `BURST_SENSITIVE` — scheduled release, cohort fan-out, progress writes and communication catch-up can create concentrated load.
+
+**External Dependency Relevance:** `NONE` as programme authority; live, communications and media providers are separate gated capabilities.
+
+**Approved Future Reuse / Extension Context:** Nuwe Jy is the concrete acceptance path; later foundation programmes and governed challenges may extend the vocabulary after evidence.
+
+**JIT Boundary:** Programme Resources, edition/cohort contracts, schedule/recovery semantics, completion rules and delivery implementation remain downstream.
+
+### CAP-019 — Participant progress and feedback
+
+**Capability ID:** `CAP-019`
+
+**Canonical Name:** Participant progress and feedback
+
+**Delivery Character:** `SHARED_REUSE`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Habits, Journals & Progress` owns the principal durable progress and feedback truth; supporting Domains do not gain ownership.
+
+**Purpose:** Record lightweight daily or weekly progress, adherence and feedback so participants can see useful continuity and approved product teams can learn without turning basic feedback into clinical or journal authority.
+
+**Authoritative Domain:** `Habits, Journals & Progress` owns participant progress, adherence and feedback entries within the approved lightweight scope.
+
+**Supporting Domains:** `Plans & Nutrition`; `Programmes & Challenges`; `Safety & Eligibility`; `Analytics`; `Privacy & Consent`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.9 and §4`; `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md §§5.3–5.4`; `05_ROADMAP_v1.0.0.md §§6 FP-005 and FP-010`.
+
+**Lifecycle Relevance:** `YES` — participant-progress lifecycle; `Habits, Journals & Progress`; earliest full specification point is `FP-005`.
+
+**Security / Privacy / Safety Significance:** `MODERATE` — participant data is personal and must remain separate from clinical authority, public rankings and private journal content.
+
+**Performance / Concurrency Significance:** `HIGH` — repeated participant writes, programme bursts and progress-history reads can become material at scale.
+
+**External Dependency Relevance:** `NONE`; approved product analytics may consume minimum facts through `CAP-027`.
+
+**Approved Future Reuse / Extension Context:** Reused by plans, programmes, habits, adjustment review, community recognition and long-term progress views.
+
+**JIT Boundary:** Progress/feedback record shapes, aggregation, correction rules and participant presentation remain downstream.
+
+### CAP-020 — Habits and private reflective practice
+
+**Capability ID:** `CAP-020`
+
+**Canonical Name:** Habits and private reflective practice
+
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Habits, Journals & Progress` owns the principal durable habit and reflective-practice truth; supporting Domains do not gain ownership.
+
+**Purpose:** Support approved habit schedules, private journals, reflections, accountability and compassionate consistency without exposing private entries to community or allowing them to become clinical records by default.
+
+**Authoritative Domain:** `Habits, Journals & Progress` owns habit definitions, schedules, occurrences, private journal/reflection state, sharing state and progress indicators.
+
+**Supporting Domains:** `Programmes & Challenges`; `Plans & Nutrition`; `Professional Care` only for explicitly shared information; `Privacy & Consent`; `Communications`; `Analytics`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.9`; `00_PLATFORM_v1.2.1.md §§21F.12–21F.22`; `05_ROADMAP_v1.0.0.md §6 FP-014`.
+
+**Lifecycle Relevance:** `YES` — private-reflection lifecycle; `Habits, Journals & Progress`; earliest full specification point is `FP-014`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — journals and reflections are private by default, sharing is scoped and deletion/export must cover sensitive material and attachments.
+
+**Performance / Concurrency Significance:** `HIGH` — repeated occurrences, journal history and reminder/progress reads may create large histories and fan-out.
+
+**External Dependency Relevance:** `NONE`; reminder delivery uses `CAP-017` when separately approved.
+
+**Approved Future Reuse / Extension Context:** Reused by foundation programmes, Nuwe Jy, recurring review and approved community/accountability paths without making journals public.
+
+**JIT Boundary:** Habit/journal Resources, sharing rules, reminder mechanics, attachment handling and retention remain downstream.
+
+### CAP-021 — Live-session and replay delivery
+
+**Capability ID:** `CAP-021`
+
+**Canonical Name:** Live-session and replay delivery
+
+**Delivery Character:** `SHARED_REUSE`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Events & Live` owns the principal durable session and replay truth; supporting Domains do not gain ownership.
+
+**Purpose:** Publish governed live sessions, register entitled participants, protect playback, associate approved recordings/replays and expose provider failure without changing platform attendance or access truth.
+
+**Authoritative Domain:** `Events & Live` owns session definitions, occurrences, registration and live/replay participation truth. `Content & Media` owns media publication; `Entitlements` owns general access rights.
+
+**Supporting Domains:** `Entitlements`; `Identity & Access`; `Content & Media`; `Communications`; `Privacy & Consent`; `Programmes & Challenges`; `Audit & Evidence`; `Analytics`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.13`; `00_PLATFORM_v1.2.1.md §§21G.14–21G.16`; `03_ARCHITECTURE_v1.0.0.md §10.3`; `05_ROADMAP_v1.0.0.md §6 FP-007`.
+
+**Lifecycle Relevance:** `YES` — live-session lifecycle; `Events & Live`; earliest full specification point is `FP-007`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — entitlement, recording notice, consent, playback scope and participant privacy must remain current.
+
+**Performance / Concurrency Significance:** `BURST_SENSITIVE` — registration bursts, live connection fan-out, provider recovery and replay demand are concentrated.
+
+**External Dependency Relevance:** Approved `Restream`/`Cloudflare Stream` provider path; operational and recording semantics remain `JIT / GATED`.
+
+**Approved Future Reuse / Extension Context:** Reused by Nuwe Jy, Membership and approved event variants; it does not include scarce ticket commerce.
+
+**JIT Boundary:** Provider integration, playback authorisation, recording/replay Resources, consent and recovery implementation remain downstream.
+
+### CAP-022 — Recurring commercial access
+
+**Capability ID:** `CAP-022`
+
+**Canonical Name:** Recurring commercial access
+
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates Commerce contract truth with Entitlements access truth; each source Domain retains its authority and no shared writes are introduced.
+
+**Purpose:** Sell and maintain a recurring membership or add-on contract whose promised value, billing state, cancellation consequence and access rights remain coherent across Commerce and Entitlements.
+
+**Authoritative Domain:** `Commerce` owns the recurring commercial contract, billing periods and cancellation state. `Entitlements` owns the resulting access rights; there is no combined billing/access authority.
+
+**Supporting Domains:** `Content & Media`; `Community`; `Events & Live`; `Communications`; `Plans & Nutrition`; `Privacy & Consent`; `Audit & Evidence`; `Analytics`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §§6.10–6.11`; `00_PLATFORM_v1.2.1.md §§21A.5–21A.8 and 21A.11`; `05_ROADMAP_v1.0.0.md §6 FP-009`.
+
+**Lifecycle Relevance:** `YES` — recurring-access lifecycle; `Commerce` and `Entitlements`; earliest full specification point is `FP-009`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — recurring access, cancellation and failed payment must not expose private content or create unlimited practitioner expectations.
+
+**Performance / Concurrency Significance:** `BURST_SENSITIVE` — billing waves, failed-payment retries, access fan-out and monthly content/live value can cluster.
+
+**External Dependency Relevance:** `Paystack` through `CAP-010`; recurring billing, proration and retry behaviour remain `JIT / GATED`.
+
+**Approved Future Reuse / Extension Context:** Basic Membership and Premium may reuse the same recurring contract and entitlement boundary; later add-ons remain explicit.
+
+**JIT Boundary:** Subscription contract, provider semantics, cancellation/refund consequences, entitlement consequences and recurring-value operations remain downstream.
+
+### CAP-023 — Professional review and scoped care
+
+**Capability ID:** `CAP-023`
+
+**Canonical Name:** Professional review and scoped care
+
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Professional Care` owns the principal durable professional-review truth; supporting Domains do not gain ownership.
+
+**Purpose:** Provide a limited, capacity-controlled practitioner review with explicit consent, active scoped relationship, professional outcome, follow-up or referral while preserving the separate Safety and Plans authorities.
+
+**Authoritative Domain:** `Professional Care` owns practitioner relationship metadata, review cases, professional outcomes, platform-held record provenance, referral state and saleable capacity. `OQ-033` governs unresolved final professional-record authority.
+
+**Supporting Domains:** `Identity & Access`; `Privacy & Consent`; `Health Records`; `Safety & Eligibility`; `Plans & Nutrition`; `Commerce`; `Entitlements`; `Communications`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.14`; `00_PLATFORM_v1.2.1.md §§21C.17–21C.18`; `05_ROADMAP_v1.0.0.md §6 FP-012`.
+
+**Lifecycle Relevance:** `YES` — professional-review lifecycle; `Professional Care`; earliest full specification point is `FP-012`.
+
+**Security / Privacy / Safety Significance:** `SAFETY_CRITICAL` — professional access, records and outcomes are highly sensitive and must not silently change Safety or Plan truth.
+
+**Performance / Concurrency Significance:** `MODERATE` — scarce reviewer capacity and case queues matter more than raw throughput; histories remain bounded.
+
+**External Dependency Relevance:** Authorised practitioners and referral partners; contracting and professional-record rules remain `JIT / GATED`.
+
+**Approved Future Reuse / Extension Context:** Supports a limited practitioner pilot and later approved professional pathways without becoming an open marketplace.
+
+**JIT Boundary:** Professional record authority, relationship/case Resources, capacity allocation, contracts, referral semantics and downstream Safety/Plan commands remain unresolved.
+
+### CAP-024 — Community participation and moderation
+
+**Capability ID:** `CAP-024`
+
+**Canonical Name:** Community participation and moderation
+
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Community` owns the principal durable participation and moderation truth; supporting Domains do not gain ownership.
+
+**Purpose:** Let entitled participants join governed first-party groups and challenges while supporting reporting, moderation, sanctions, appeals, privacy boundaries and deletion/anonymisation without becoming a generic social network.
+
+**Authoritative Domain:** `Community` owns first-party groups, participation, community content, moderation cases, sanctions, appeals and community deletion/anonymisation behaviour.
+
+**Supporting Domains:** `Programmes & Challenges`; `Entitlements`; `Identity & Access`; `Privacy & Consent`; `Content & Media`; `Communications`; `Safety & Eligibility`; `Audit & Evidence`; `Analytics`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.12`; `00_PLATFORM_v1.2.1.md §§21G.1–21G.13`; `05_ROADMAP_v1.0.0.md §6 FP-013`.
+
+**Lifecycle Relevance:** `YES` — community-participation lifecycle; `Community`; earliest full specification point is `FP-013`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — private health information must stay out of community spaces, abuse must be moderated and participant identity/visibility must follow policy.
+
+**Performance / Concurrency Significance:** `BURST_SENSITIVE` — feed, discussion, moderation and challenge activity can create read, write and fan-out bursts.
+
+**External Dependency Relevance:** `NONE` for first-party authority; governed external community channels are evidence inputs, not a substitute for this capability.
+
+**Approved Future Reuse / Extension Context:** Extends Nuwe Jy, Membership and governed challenge evidence into a first-party participation path.
+
+**JIT Boundary:** Community Resources, moderation workflow, sanctions/appeals, privacy controls and deletion/anonymisation implementation remain downstream.
+
+### CAP-025 — Scarce event capacity and ticketing
+
+**Capability ID:** `CAP-025`
+
+**Canonical Name:** Scarce event capacity and ticketing
+
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates Events & Live capacity truth with Commerce payment truth; each source Domain retains its authority and no shared writes are introduced.
+
+**Purpose:** Protect scarce event inventory through capacity holds, expiry, payment reconciliation, ticket issuance, transfer, check-in, cancellation, refund or credit under an approved event policy with zero confirmed oversell.
+
+**Authoritative Domain:** `Events & Live` owns event capacity, reservation/hold, ticket, attendee, check-in and event-policy truth. `Commerce` owns payment and refund truth.
+
+**Supporting Domains:** `Commerce`; `Entitlements`; `Identity & Access`; `Privacy & Consent`; `Communications`; `Content & Media`; `Audit & Evidence`; `Analytics`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.13`; `00_PLATFORM_v1.2.1.md §§21G.17–21G.21`; `03_ARCHITECTURE_v1.0.0.md §10.3`; `05_ROADMAP_v1.0.0.md §6 FP-015`.
+
+**Lifecycle Relevance:** `YES` — event-capacity lifecycle; `Events & Live`; earliest full specification point is `FP-015`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — capacity/ticket authority, purchaser/holder/attendee separation and event policy must survive retries, abuse and provider ambiguity.
+
+**Performance / Concurrency Significance:** `BURST_SENSITIVE` — scarce-inventory contention, flash-sale admission, hold expiry and check-in bursts are correctness-sensitive.
+
+**External Dependency Relevance:** `Paystack` through `CAP-010`; live/replay providers only for affected variants; reservation semantics remain `JIT / GATED`.
+
+**Approved Future Reuse / Extension Context:** Reused by approved paid event catalogues and capacity-controlled participation; ordinary live access remains `CAP-021`.
+
+**JIT Boundary:** Hold/locking/expiry protocol, ticket Resources, concurrency proof, provider reconciliation and failure recovery remain downstream.
+
+### CAP-026 — Governed experimentation and learning
+
+**Capability ID:** `CAP-026`
+
+**Canonical Name:** Governed experimentation and learning
+
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates Experimentation assignment/exposure truth with source outcome and analytics truths; each source Domain retains its authority and no shared writes are introduced.
+
+**Purpose:** Configure approved experiments, assign eligible subjects, record exposure, compare authoritative outcomes and preserve auditable learning without changing safety, payment, entitlement, consent, accessibility, security or accounting truth.
+
+**Authoritative Domain:** `Experimentation` owns experiment configuration/version, variants, eligibility exclusions, assignment, exposure definition and governed decision/learning record. `Analytics` owns measurement facts and aggregates.
+
+**Supporting Domains:** `Analytics`; `Content & Media`; `Communications`; `Commerce`; `Identity & Access`; `Privacy & Consent`; `Audit & Evidence`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.16`; `03_ARCHITECTURE_v1.0.0.md §§10.4–10.5`; `00_PLATFORM_v1.2.1.md §§21K.6A, 21L.13 and 21L.23`; `05_ROADMAP_v1.0.0.md §6 FP-016`.
+
+**Lifecycle Relevance:** `YES` — experiment lifecycle; `Experimentation`; earliest full specification point is `FP-016`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — variants cannot weaken protected invariants, assignment must minimise identity/health detail and deletion must remove or suppress identifiable evidence where required.
+
+**Performance / Concurrency Significance:** `BURST_SENSITIVE` — assignment and exposure volume, concurrent variants, analytics lag and cache separation can create broad load.
+
+**External Dependency Relevance:** `JIT / GATED` — statistical and implementation tooling remains proof-gated; external processors are conditional.
+
+**Approved Future Reuse / Extension Context:** Reused for approved product, content, acquisition and commerce learning after a real measurable decision surface exists.
+
+**JIT Boundary:** Assignment algorithm, exposure contract, statistical method, cache isolation, anonymous-known continuity and analysis implementation remain downstream.
+
+### CAP-027 — Analytics and measurement
+
+**Capability ID:** `CAP-027`
+
+**Canonical Name:** Analytics and measurement
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `CROSS_DOMAIN` — projects and measures facts from multiple Domain-owned sources; each source Domain retains business authority and no shared writes are introduced.
+
+**Purpose:** Collect governed minimum analytical facts, derive rebuildable projections and aggregates, serve trustworthy dashboards/reports and measure product, behaviour, operational and experiment outcomes without becoming source-domain business truth.
+
+**Authoritative Domain:** `Analytics` owns analytical event facts, projections, aggregates, dashboards, attribution interpretations and experiment measurement evidence. Source Domains retain payment, entitlement, safety, plan, consent and other business truth.
+
+**Supporting Domains:** All authoritative Domains contribute approved minimum facts; `Privacy & Consent`; `Experimentation`; `Audit & Evidence`; `Communications`.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.17 and §5`; `PLATFORM_OPERATING_MODEL_v1.0.0.md §§17–20`; `03_ARCHITECTURE_v1.0.0.md §§8.4, 10.4 and 13`; `05_ROADMAP_v1.0.0.md §§6 FP-006 and FP-016`.
+
+**Lifecycle Relevance:** `YES` — analytics-evidence lifecycle; `Analytics`; earliest full specification point is `FP-006`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — linked behavioural or health-derived data must be minimised, access-controlled and deleted or suppressed under privacy rules.
+
+**Performance / Concurrency Significance:** `HIGH` — event volume, dashboard concurrency, large exports and rebuilds must not starve critical transactional work.
+
+**External Dependency Relevance:** External analytics/reporting systems are complementary evidence only; processor use remains `JIT / GATED`.
+
+**Approved Future Reuse / Extension Context:** Reused by every pilot, product, programme, event, community, professional and experimentation outcome as governed evidence.
+
+**JIT Boundary:** Event contracts, analytical storage/read models, metric definitions, dashboard/report shapes and processor deletion remain downstream.
+
+### CAP-028 — Audit and security evidence
+
+**Capability ID:** `CAP-028`
+
+**Canonical Name:** Audit and security evidence
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Audit & Evidence` owns the principal durable evidence truth; audited source Domains retain business truth and do not become shared-write owners.
+
+**Purpose:** Preserve restricted, minimum-necessary evidence of sensitive actions, privileged access, security events, incidents and release decisions so the platform can be reviewed without replacing the business facts being audited.
+
+**Authoritative Domain:** `Audit & Evidence` owns central append-only audit/security evidence, evidence links, incident/release evidence and evidence access/retention metadata. Source Domains own the underlying business transitions.
+
+**Supporting Domains:** `Identity & Access`; `Privacy & Consent`; `Commerce`; `Entitlements`; `Safety & Eligibility`; `Professional Care`; `Community`; `Analytics`; all sensitive Domains.
+
+**Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §6.18`; `03_ARCHITECTURE_v1.0.0.md §§12.3, 12.4 and 14`; `PLATFORM_OPERATING_MODEL_v1.0.0.md §§22, 25 and 28`; `05_ROADMAP_v1.0.0.md §6 FP-006`.
+
+**Lifecycle Relevance:** `YES` — audit-evidence lifecycle; `Audit & Evidence`; earliest full specification point is `FP-001`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — evidence must prove privileged and safety-sensitive actions without duplicating raw health or professional payloads.
+
+**Performance / Concurrency Significance:** `HIGH` — sensitive actions may generate high-cardinality evidence, security bursts, incident queries and large restricted exports.
+
+**External Dependency Relevance:** `NONE` as evidence authority; external observability systems may receive minimised telemetry but do not replace it.
+
+**Approved Future Reuse / Extension Context:** Reused across every protected Domain, release gate, incident review, professional case and future product-space activation.
+
+**JIT Boundary:** Evidence Resources, retention classes, incident linkage, secure review/export and mandatory-write handling remain downstream.
+
+### CAP-029 — Operator work and support
+
+**Capability ID:** `CAP-029`
+
+**Canonical Name:** Operator work and support
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `PLATFORM_CONTROL` — this is an operator/work presentation and control boundary, not a business-truth owner; source Domains retain business authority.
+
+**Purpose:** Give named staff a workflow-first way to see assigned, overdue, blocked or exceptional work, resolve permitted participant issues and hand off evidence without creating a universal business-task authority or bypassing Domain ownership.
+
+**Authoritative Domain:** No single Domain owns this composite capability. The Operating Model governs work presentation; source Domains own business actions and `Audit & Evidence` owns required central evidence.
+
+**Supporting Domains:** `Identity & Access`; `Commerce`; `Entitlements`; `Content & Media`; `Communications`; `Professional Care`; `Community`; `Events & Live`; `Analytics`; `Audit & Evidence`.
+
+**Authority Anchors:** `PLATFORM_OPERATING_MODEL_v1.0.0.md §§5–8 and 22`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md §6`; `04_DOMAIN_MAP_v1.0.0.md §4.1`; `05_ROADMAP_v1.0.0.md §6 FP-006`.
+
+**Lifecycle Relevance:** `YES` — operator-work lifecycle; source workflow owners govern the underlying work and the Operating Model supplies the presentation boundary; earliest full specification point is `FP-006`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — staff views and support actions require scoped authority, minimum data and safe handling of payment, health, professional and identity information.
+
+**Performance / Concurrency Significance:** `MODERATE` — queues, filters, dashboards and support searches need bounded projections without peak-time source-table scans.
+
+**External Dependency Relevance:** `NONE`; external provider dashboards are evidence/input surfaces and do not grant NewYou action authority.
+
+**Approved Future Reuse / Extension Context:** Reused by content, payment, entitlement, safety, programme, community, event and professional operations.
+
+**JIT Boundary:** Work projections, assignment/escalation semantics, role-specific actions, support privacy and operator UI composition remain downstream.
+
+### CAP-030 — Release, incident and recovery control
+
+**Capability ID:** `CAP-030`
+
+**Canonical Name:** Release, incident and recovery control
+
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `PLATFORM_CONTROL` — this is a release, incident and recovery control boundary, not a business-truth owner; affected Domains retain business authority.
+
+**Purpose:** Let accountable operators stage, observe, stop, roll back or recover a release and record the evidence needed to expand a paid or sensitive journey safely. This capability controls operation; it does not own the product facts it protects.
+
+**Authoritative Domain:** No single Domain owns the control capability. Architecture and the Operating Model govern release/recovery doctrine, affected Domains retain business truth and `Audit & Evidence` retains central decision evidence.
+
+**Supporting Domains:** `Identity & Access`; `Privacy & Consent`; `Commerce`; `Entitlements`; `Safety & Eligibility`; `Plans & Nutrition`; `Communications`; `Analytics`; `Audit & Evidence`.
+
+**Authority Anchors:** `03_ARCHITECTURE_v1.0.0.md §§12–14`; `PLATFORM_OPERATING_MODEL_v1.0.0.md §§21–28`; `04_DOMAIN_MAP_v1.0.0.md §6.18`; `05_ROADMAP_v1.0.0.md §§6 FP-006 and 8`.
+
+**Lifecycle Relevance:** `YES` — release-control lifecycle; Architecture/Operations governs control and `Audit & Evidence` records evidence; earliest full specification point is `FP-006`.
+
+**Security / Privacy / Safety Significance:** `HIGH` — a stop, rollback, restore or incident action must not weaken safety, privacy, payment, entitlement or accounting invariants.
+
+**Performance / Concurrency Significance:** `BURST_SENSITIVE` — failures, restore work, incident traffic and release transitions can create simultaneous operational pressure.
+
+**External Dependency Relevance:** `JIT / GATED` — hosting, backup, restore, provider and RPO/RTO choices remain downstream.
+
+**Approved Future Reuse / Extension Context:** Reused by every public, paid, professional, community, event and future market release tier.
+
+**JIT Boundary:** Deployment/restore products, RPO/RTO targets, rollback/forward-recovery procedures, incident runbooks and operational evidence contracts remain downstream.
+
+### CAP-031 — Controlled product-space and market activation
+
+**Capability ID:** `CAP-031`
+
+**Canonical Name:** Controlled product-space and market activation
+
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `PLATFORM_CONTROL` — this is an activation and governance boundary, not a business-truth owner; the affected Domains named by Product and Architecture authority retain business truth.
+
+**Purpose:** Activate a concrete, separately approved product space or market through shared platform boundaries without exposing unfinished products, inventing generic tenancy or duplicating identity, commerce, entitlement, content, safety or analytics truth.
+
+**Authoritative Domain:** No single Domain owns this activation capability. Product Law and Architecture govern the activation boundary; the Domain or Domains named by the approved direction own the resulting business truth.
+
+**Supporting Domains:** `Identity & Access`; `Privacy & Consent`; `Commerce`; `Entitlements`; `Content & Media`; `Safety & Eligibility`; `Plans & Nutrition`; `Communications`; `Analytics`; `Audit & Evidence`; any later affected Domain.
+
+**Authority Anchors:** `00_PLATFORM_v1.2.1.md §§21L.1–21L.3`; `03_ARCHITECTURE_v1.0.0.md §§3.1–3.3 and 17`; `04_DOMAIN_MAP_v1.0.0.md §9`; `05_ROADMAP_v1.0.0.md §6 FP-017`.
+
+**Lifecycle Relevance:** `CONDITIONAL` — product-space activation lifecycle; Product Law/Architecture and affected Domain owners govern it; earliest full specification point is `FP-017` after a concrete approved direction exists.
+
+**Security / Privacy / Safety Significance:** `HIGH` — unfinished products must remain invisible, market-specific safety/privacy/legal rules must be explicit and shared access must remain scoped.
+
+**Performance / Concurrency Significance:** `HIGH` — an approved expansion must identify its workload, data, concurrency and shared-resource impact before activation.
+
+**External Dependency Relevance:** `JIT / GATED` — market legal, payment, provider, privacy, clinical and operating approvals are required before activation.
+
+**Approved Future Reuse / Extension Context:** Provides the controlled path for a future approved product space or market and nothing more. Generic tenancy, corporate dashboards and speculative future products are not included.
+
+**JIT Boundary:** Product-space representation, market rules, activation/rollback contract, workload evidence and affected Domain/JIT detail remain unresolved until Product Law names the direction.
+
+## 5.3 ATLAS-03 coverage and quality audit
+
+ATLAS-03 records capability identity, Delivery Character and Authority Scope. It does not populate the complete capability-to-Feature-Pack relationship matrix.
+
+### Feature Pack coverage
+
+All 17 approved Feature Packs were read from the frozen Roadmap and the merged ATLAS-02 register. Each is explainable using the canonical vocabulary below or is an outcome composition that does not warrant a separate capability:
+
+| Feature Pack | Coverage result | Review note |
+|---|---|---|
+| FP-001 | Covered | Trusted entry, scoped access, consent, public discovery, governed content, communications, audit and operator support are represented. |
+| FP-002 | Covered | Catalogue, payment/reconciliation and entitlement authority are represented without merging money and access truth. |
+| FP-003 | Covered | Temperament assessment/profile, protected report/content delivery, entitlement, consent and audit are represented. |
+| FP-004 | Covered | Health records, safety/eligibility and scoped access are represented; professional review remains a later capability. |
+| FP-005 | Covered | Deterministic plans, governed content, entitlement, protected delivery, progress/feedback and safety are represented. |
+| FP-006 | Covered | Operator work, release/recovery control, analytics, audit and the foundational capabilities are represented. |
+| FP-007 | Covered | Live/replay delivery, protected media, entitlement, communications and consent are represented. |
+| FP-008 | Covered | Programme/cohort delivery, habits/progress, content, communications, live/replay and safety are represented. |
+| FP-009 | Covered | Recurring commercial access, entitlement, community, content, live/replay and communications are represented. |
+| FP-010 | Covered | Governed plan review/adjustment and progress inputs are represented; it does not create a second plan authority. |
+| FP-011 | Covered | Premium is a commercial composition of recurring access, plans, content and entitlement capabilities. |
+| FP-012 | Covered | Professional review/scoped care, safety, consent, plan, entitlement and operator evidence are represented. |
+| FP-013 | Covered | Community participation/moderation, programme/challenge, progress, consent, communications and audit are represented. |
+| FP-014 | Covered | Programme delivery, habits/private reflection, progress, content, communications and privacy are represented. |
+| FP-015 | Covered | Scarce event capacity/ticketing, payment, entitlement, live/replay, communications and audit are represented. |
+| FP-016 | Covered | Governed experimentation, analytics, content/communications, consent and audit are represented. |
+| FP-017 | Covered conditionally | Controlled product-space/market activation is represented without inventing generic tenancy or a speculative product. |
+
+This is a coverage audit, not the ATLAS-04 matrix. It does not label any capability as `introduced`, `reused`, `extended` or `specialised` for every Feature Pack.
+
+### Domain coverage
+
+All 18 frozen Domain names were checked against the inventory. No new Domain is introduced and no capability grants shared authoritative writes between Domains.
+
+| Domain | Coverage result |
+|---|---|
+| Identity & Access | Canonical identity, authentication and identity-side authorisation are represented. |
+| Privacy & Consent | Consent/purpose control and cross-Domain data-rights orchestration are represented. |
+| Temperament | Assessment, profile, provenance and report capability is represented. |
+| Health Records | Health/lifestyle facts, provenance and measurement capability is represented. |
+| Safety & Eligibility | Safety evaluation, eligibility, restriction and re-evaluation capability is represented. |
+| Plans & Nutrition | Deterministic plan delivery and governed adjustment are represented. |
+| Content & Media | Governed content, translation, publication, relevance and protected delivery are represented. |
+| Programmes & Challenges | Programme, edition, cohort, challenge and completion capability is represented. |
+| Habits, Journals & Progress | Progress/feedback and private habit/journal capability are represented separately. |
+| Commerce | Catalogue, offers, payment/reconciliation and recurring commercial access are represented. |
+| Entitlements | Access-rights, grant, redemption, consumption and revocation capability is represented. |
+| Community | First-party participation and moderation capability is represented. |
+| Events & Live | Live/replay and scarce-capacity ticketing capability are represented separately. |
+| Professional Care | Scoped professional review and care capability is represented. |
+| Communications | Subscriber, preference, notification and delivery capability is represented. |
+| Experimentation | Governed experiment configuration, assignment and learning capability is represented. |
+| Analytics | Governed measurement, projection, dashboard and experiment-evidence capability is represented. |
+| Audit & Evidence | Cross-cutting audit, security, incident and release evidence capability is represented. |
+
+### Classification audit
+
+Each of the 31 capabilities has exactly one Delivery Character and exactly one Authority Scope. The counts describe the inventory; they are not balancing targets.
+
+| Axis | Counts |
+|---|---|
+| Delivery Character | `FOUNDATIONAL` 18; `SHARED_REUSE` 4; `LATER_SPECIALISED` 9 |
+| Authority Scope | `DOMAIN_OWNED` 19; `CROSS_DOMAIN` 9; `PLATFORM_CONTROL` 3 |
+
+`DOMAIN_OWNED` entries identify one frozen authoritative Domain. `CROSS_DOMAIN` entries state that source Domains retain authority and introduce no shared writes. `PLATFORM_CONTROL` entries state that the capability is a platform or operational boundary and does not own business truth.
+
+### Lifecycle audit
+
+All lifecycle flags were reviewed against the rule that `YES` requires an identifiable lifecycle-bearing domain or operational concept. CAP-007 changed from `CONDITIONAL` to `NO` because its relevance projection has no independent lifecycle; source content and relevance signals retain their existing Domain lifecycles. CAP-005 remains `CONDITIONAL` only for a governed subscriber-contact relationship. No other lifecycle flag changed, and no states, transitions, guards or side effects were added.
+
+### Normalisation and rejection record
+
+The extraction pass merged or rejected candidates as follows:
+
+- Account registration, email verification, login, logout and reset were merged into `Canonical identity and authentication`; they are behaviours within one reusable identity capability.
+- Role grants, purchaser/participant separation, practitioner scope and relationship checks were grouped under `Scoped authorisation and relationship access`; no separate universal access subsystem was created.
+- Content identity, translation, publication, correction and withdrawal were grouped under `Governed content, translation and publication`; protected delivery was kept separate because access, rights and delivery failure have a distinct boundary.
+- Plan generation/versioning was kept separate from recurring review/adjustment because the latter is a later governed capability with distinct safety and commercial gates.
+- Lightweight progress/feedback was kept separate from habits and private reflective practice because journals, sharing and retention carry a different privacy and lifecycle boundary.
+- Commerce and Entitlements were kept separate because payment/contract truth and access-rights truth are explicitly different authorities.
+- `Command Centre`, `Checkout page`, `Participant Home`, `Send reset email`, `User`, `Payment` and `AssessmentResult` were rejected as UI surfaces, single actions or Resources/entities rather than capabilities.
+- `PostgreSQL`, `Oban`, `PubSub`, `LiveView`, `Redis`, `Cachex`, `ETS`, queues, routes, API endpoints, schemas and modules were rejected as implementation mechanisms or artifacts.
+- AI assistance, an AI recommendation engine, generic tenancy, generic LMS infrastructure and a generic feature-flag system were rejected as unsupported or explicitly deferred platform aspirations. Explainable content relevance remains a bounded approved capability over authoritative signals, not a new autonomous decision authority.
+
+### ATLAS-03 boundary result
+
+The inventory separates Delivery Character from Authority Scope. Domain-owned capabilities name one frozen Domain, cross-domain capabilities name the affected owners and preserve their authority, and platform-control capabilities do not become business-truth owners. No classification introduces shared writes. Lifecycle fields identify the meaningful concept, owner and earliest full-specification point only; no new states, transitions or implementation-grade lifecycle semantics are defined here. Performance fields record broad pressure only and do not select acceleration technology.
+
+No unresolved Product, Architecture, Domain or Roadmap question was silently answered. The inventory follows current authority and leaves clinical, legal, commercial, methodology, provider, performance and implementation decisions at their existing gates or JIT boundary.
+
+ATLAS-04 — Capability Introduction / Reuse Matrix is the only recommended next Atlas task. ATLAS-04 is not started by this artifact.
 
 ---
 
