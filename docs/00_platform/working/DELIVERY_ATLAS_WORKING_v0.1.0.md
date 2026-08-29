@@ -439,6 +439,8 @@ Each populated Atlas entry uses only the labels needed for its view. Multiple re
 | Axis | Permitted labels | Use |
 |---|---|---|
 | Authority basis | `PRODUCT`, `ARCHITECTURE`, `DOMAIN`, `ROADMAP`, `SUPPORTING`, `ATLAS_DERIVED`, `JIT`, `EVIDENCE`, `STOP` | Identifies where the statement comes from or where an unresolved matter must be routed. |
+| Delivery Character | `FOUNDATIONAL`, `SHARED_REUSE`, `LATER_SPECIALISED` | For the capability inventory, records how the capability participates in the platform's delivery evolution. |
+| Authority Scope | `DOMAIN_OWNED`, `CROSS_DOMAIN`, `PLATFORM_CONTROL` | For the capability inventory, records whether authority is held by one Domain, coordinated across Domain-owned truths or primarily a platform/operational control boundary. |
 | Delivery relationship | `INTRODUCE`, `REUSE`, `EXTEND`, `COMPOSE`, `PROJECT`, `GATED`, `FUTURE_SEAM` | Describes how a capability or boundary relates to delivery. |
 | Readiness | `VISIBLE`, `DEPENDENT`, `GATED`, `JIT_REQUIRED`, `PROVEN`, `STOPPED` | Shows whether a relationship is visible, blocked by a gate, ready for JIT specification, supported by executable evidence or stopped. |
 | Lifecycle coverage | `NONE`, `EXISTENCE_ONLY`, `UPSTREAM_SEMANTICS`, `FULL_SPEC_REQUIRED`, `PROOF_REQUIRED` | Separates lifecycle visibility from implementation-grade lifecycle design. |
@@ -1369,9 +1371,24 @@ This is the controlled path for a future product-space or market activation. It 
 
 ## 5.1 Register rule
 
-This area establishes the canonical medium-resolution platform capability vocabulary. It prevents parallel authority, duplicated semantics and accidental reimplementation of a capability that the Roadmap intends to share. ATLAS-03 establishes capability identity and classification only. ATLAS-04 owns the complete capability-to-Feature-Pack introduction, reuse, extension and specialisation matrix.
+This area establishes the canonical medium-resolution platform capability vocabulary. It prevents parallel authority, duplicated semantics and accidental reimplementation of a capability that the Roadmap intends to share. ATLAS-03 establishes capability identity and two orthogonal classifications only. ATLAS-04 owns the complete capability-to-Feature-Pack introduction, reuse, extension and specialisation matrix.
 
 The inventory may describe broad future reuse or extension context. It does not classify every Feature Pack relationship. `REUSE` means the same authority and invariant may be used again; it does not mean that later work may copy or fork the authority.
+
+### ATLAS-03 classification definitions
+
+The inventory separates delivery evolution from authority shape. `Delivery Character` does not describe ownership, and `Authority Scope` does not replace `Authoritative Domain`.
+
+| Axis | Label | Definition |
+|---|---|---|
+| Delivery Character | `FOUNDATIONAL` | Required early enough to become a reusable platform foundation for approved downstream outcomes. |
+| Delivery Character | `SHARED_REUSE` | A reusable capability that participates across multiple approved outcomes but is not best described primarily as a later specialised branch. |
+| Delivery Character | `LATER_SPECIALISED` | A capability intentionally activated or materially specialised only at a later approved maturity or Feature Pack stage. |
+| Authority Scope | `DOMAIN_OWNED` | One frozen Domain clearly owns the principal durable business truth even if many Feature Packs reuse the capability. |
+| Authority Scope | `CROSS_DOMAIN` | The capability coordinates, projects or composes multiple Domain-owned truths without becoming a second authoritative owner. |
+| Authority Scope | `PLATFORM_CONTROL` | The capability is primarily a platform or operational control boundary rather than a durable business-truth Domain, while affected Domains retain their business authority. |
+
+Every capability continues to name its actual `Authoritative Domain`, or explicitly records the no-single-Domain/platform-control boundary. No classification creates shared authoritative writes.
 
 ## 5.2 Platform capability inventory
 
@@ -1379,39 +1396,39 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 ### Summary register
 
-| Capability ID | Capability | Class | Authoritative Domain | Lifecycle | Security/Safety | Performance |
-|---|---|---|---|---|---|---|
-| CAP-001 | Canonical identity and authentication | FOUNDATIONAL | Identity & Access | YES | HIGH | BURST_SENSITIVE |
-| CAP-002 | Scoped authorisation and relationship access | CROSS-CUTTING | Identity & Access plus relationship owners | YES | HIGH | HIGH |
-| CAP-003 | Consent and purpose control | FOUNDATIONAL | Privacy & Consent | YES | HIGH | HIGH |
-| CAP-004 | Data rights, retention and deletion orchestration | CROSS-CUTTING | Privacy & Consent | YES | HIGH | HIGH |
-| CAP-005 | Public discovery and acquisition | CROSS-CUTTING | No single Domain; underlying owners retain truth | CONDITIONAL | MODERATE | MODERATE |
-| CAP-006 | Governed content, translation and publication | FOUNDATIONAL | Content & Media | YES | HIGH | HIGH |
-| CAP-007 | Explainable content discovery and relevance | SHARED | Content & Media for source content; no separate relevance authority | CONDITIONAL | HIGH | HIGH |
-| CAP-008 | Protected media and content delivery | SHARED | Content & Media | YES | HIGH | HIGH |
-| CAP-009 | Commercial catalogue and offer management | FOUNDATIONAL | Commerce | YES | MODERATE | MODERATE |
-| CAP-010 | Payment and commercial reconciliation | FOUNDATIONAL | Commerce | YES | HIGH | BURST_SENSITIVE |
-| CAP-011 | Entitlement and access-rights management | FOUNDATIONAL | Entitlements | YES | HIGH | HIGH |
-| CAP-012 | Temperament assessment and profile | FOUNDATIONAL | Temperament | YES | HIGH | MODERATE |
-| CAP-013 | Health and lifestyle records | FOUNDATIONAL | Health Records | YES | HIGH | MODERATE |
-| CAP-014 | Safety and eligibility routing | FOUNDATIONAL | Safety & Eligibility | YES | SAFETY_CRITICAL | HIGH |
-| CAP-015 | Deterministic plan generation and versioning | FOUNDATIONAL | Plans & Nutrition | YES | SAFETY_CRITICAL | MODERATE |
-| CAP-016 | Governed plan review and adjustment | LATER-SPECIALISED | Plans & Nutrition | YES | SAFETY_CRITICAL | MODERATE |
-| CAP-017 | Communications and notification delivery | FOUNDATIONAL | Communications | YES | HIGH | BURST_SENSITIVE |
-| CAP-018 | Programme and cohort delivery | LATER-SPECIALISED | Programmes & Challenges | YES | HIGH | BURST_SENSITIVE |
-| CAP-019 | Participant progress and feedback | SHARED | Habits, Journals & Progress | YES | MODERATE | HIGH |
-| CAP-020 | Habits and private reflective practice | LATER-SPECIALISED | Habits, Journals & Progress | YES | HIGH | HIGH |
-| CAP-021 | Live-session and replay delivery | SHARED | Events & Live | YES | HIGH | BURST_SENSITIVE |
-| CAP-022 | Recurring commercial access | LATER-SPECIALISED | Commerce, with Entitlements for access rights | YES | HIGH | BURST_SENSITIVE |
-| CAP-023 | Professional review and scoped care | LATER-SPECIALISED | Professional Care | YES | SAFETY_CRITICAL | MODERATE |
-| CAP-024 | Community participation and moderation | LATER-SPECIALISED | Community | YES | HIGH | BURST_SENSITIVE |
-| CAP-025 | Scarce event capacity and ticketing | LATER-SPECIALISED | Events & Live | YES | HIGH | BURST_SENSITIVE |
-| CAP-026 | Governed experimentation and learning | LATER-SPECIALISED | Experimentation | YES | HIGH | BURST_SENSITIVE |
-| CAP-027 | Analytics and measurement | CROSS-CUTTING | Analytics | YES | HIGH | HIGH |
-| CAP-028 | Audit and security evidence | CROSS-CUTTING | Audit & Evidence | YES | HIGH | HIGH |
-| CAP-029 | Operator work and support | CROSS-CUTTING | No single Domain; source owners retain truth | YES | HIGH | MODERATE |
-| CAP-030 | Release, incident and recovery control | CROSS-CUTTING | No single Domain; Architecture/Operations governs control and Audit & Evidence retains central evidence | YES | HIGH | BURST_SENSITIVE |
-| CAP-031 | Controlled product-space and market activation | LATER-SPECIALISED | No single Domain; Product/Architecture direction and affected owners govern | CONDITIONAL | HIGH | HIGH |
+| Capability ID | Capability | Delivery Character | Authority Scope | Authoritative Domain | Lifecycle | Security/Safety | Performance |
+|---|---|---|---|---|---|---|---|
+| CAP-001 | Canonical identity and authentication | FOUNDATIONAL | DOMAIN_OWNED | Identity & Access | YES | HIGH | BURST_SENSITIVE |
+| CAP-002 | Scoped authorisation and relationship access | FOUNDATIONAL | CROSS_DOMAIN | Identity & Access plus relationship owners | YES | HIGH | HIGH |
+| CAP-003 | Consent and purpose control | FOUNDATIONAL | DOMAIN_OWNED | Privacy & Consent | YES | HIGH | HIGH |
+| CAP-004 | Data rights, retention and deletion orchestration | FOUNDATIONAL | CROSS_DOMAIN | Privacy & Consent | YES | HIGH | HIGH |
+| CAP-005 | Public discovery and acquisition | FOUNDATIONAL | CROSS_DOMAIN | No single Domain; underlying owners retain truth | CONDITIONAL | MODERATE | MODERATE |
+| CAP-006 | Governed content, translation and publication | FOUNDATIONAL | DOMAIN_OWNED | Content & Media | YES | HIGH | HIGH |
+| CAP-007 | Explainable content discovery and relevance | SHARED_REUSE | CROSS_DOMAIN | Content & Media for source content; no separate relevance authority | NO | HIGH | HIGH |
+| CAP-008 | Protected media and content delivery | SHARED_REUSE | CROSS_DOMAIN | Content & Media | YES | HIGH | HIGH |
+| CAP-009 | Commercial catalogue and offer management | FOUNDATIONAL | DOMAIN_OWNED | Commerce | YES | MODERATE | MODERATE |
+| CAP-010 | Payment and commercial reconciliation | FOUNDATIONAL | DOMAIN_OWNED | Commerce | YES | HIGH | BURST_SENSITIVE |
+| CAP-011 | Entitlement and access-rights management | FOUNDATIONAL | DOMAIN_OWNED | Entitlements | YES | HIGH | HIGH |
+| CAP-012 | Temperament assessment and profile | FOUNDATIONAL | DOMAIN_OWNED | Temperament | YES | HIGH | MODERATE |
+| CAP-013 | Health and lifestyle records | FOUNDATIONAL | DOMAIN_OWNED | Health Records | YES | HIGH | MODERATE |
+| CAP-014 | Safety and eligibility routing | FOUNDATIONAL | DOMAIN_OWNED | Safety & Eligibility | YES | SAFETY_CRITICAL | HIGH |
+| CAP-015 | Deterministic plan generation and versioning | FOUNDATIONAL | DOMAIN_OWNED | Plans & Nutrition | YES | SAFETY_CRITICAL | MODERATE |
+| CAP-016 | Governed plan review and adjustment | LATER_SPECIALISED | DOMAIN_OWNED | Plans & Nutrition | YES | SAFETY_CRITICAL | MODERATE |
+| CAP-017 | Communications and notification delivery | FOUNDATIONAL | DOMAIN_OWNED | Communications | YES | HIGH | BURST_SENSITIVE |
+| CAP-018 | Programme and cohort delivery | LATER_SPECIALISED | DOMAIN_OWNED | Programmes & Challenges | YES | HIGH | BURST_SENSITIVE |
+| CAP-019 | Participant progress and feedback | SHARED_REUSE | DOMAIN_OWNED | Habits, Journals & Progress | YES | MODERATE | HIGH |
+| CAP-020 | Habits and private reflective practice | LATER_SPECIALISED | DOMAIN_OWNED | Habits, Journals & Progress | YES | HIGH | HIGH |
+| CAP-021 | Live-session and replay delivery | SHARED_REUSE | DOMAIN_OWNED | Events & Live | YES | HIGH | BURST_SENSITIVE |
+| CAP-022 | Recurring commercial access | LATER_SPECIALISED | CROSS_DOMAIN | Commerce, with Entitlements for access rights | YES | HIGH | BURST_SENSITIVE |
+| CAP-023 | Professional review and scoped care | LATER_SPECIALISED | DOMAIN_OWNED | Professional Care | YES | SAFETY_CRITICAL | MODERATE |
+| CAP-024 | Community participation and moderation | LATER_SPECIALISED | DOMAIN_OWNED | Community | YES | HIGH | BURST_SENSITIVE |
+| CAP-025 | Scarce event capacity and ticketing | LATER_SPECIALISED | CROSS_DOMAIN | Events & Live | YES | HIGH | BURST_SENSITIVE |
+| CAP-026 | Governed experimentation and learning | LATER_SPECIALISED | CROSS_DOMAIN | Experimentation | YES | HIGH | BURST_SENSITIVE |
+| CAP-027 | Analytics and measurement | FOUNDATIONAL | CROSS_DOMAIN | Analytics | YES | HIGH | HIGH |
+| CAP-028 | Audit and security evidence | FOUNDATIONAL | DOMAIN_OWNED | Audit & Evidence | YES | HIGH | HIGH |
+| CAP-029 | Operator work and support | FOUNDATIONAL | PLATFORM_CONTROL | No single Domain; source owners retain truth | YES | HIGH | MODERATE |
+| CAP-030 | Release, incident and recovery control | FOUNDATIONAL | PLATFORM_CONTROL | No single Domain; Architecture/Operations governs control and Audit & Evidence retains central evidence | YES | HIGH | BURST_SENSITIVE |
+| CAP-031 | Controlled product-space and market activation | LATER_SPECIALISED | PLATFORM_CONTROL | No single Domain; Product/Architecture direction and affected owners govern | CONDITIONAL | HIGH | HIGH |
 
 ### CAP-001 — Canonical identity and authentication
 
@@ -1419,7 +1436,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Canonical identity and authentication
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Identity & Access` owns the principal durable identity truth; supporting Domains do not gain ownership.
 
 **Purpose:** Give every protected journey one reconcilable human or system identity, verified account boundary and recoverable authentication context. Account creation, verification, session control and recovery remain one identity capability rather than separate login, reset or verification capabilities.
 
@@ -1447,7 +1466,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Scoped authorisation and relationship access
 
-**Capability Class:** `CROSS-CUTTING`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates identity grants and relationship-owned truth; each source Domain retains its authority and no shared writes are introduced.
 
 **Purpose:** Resolve whether an actor may perform a particular operation or read a particular field using role, relationship, purpose, scope, expiry and current authority. It keeps a practitioner role, purchaser identity, participant relationship and operator privilege distinct.
 
@@ -1475,7 +1496,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Consent and purpose control
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Privacy & Consent` owns the principal durable consent truth; supporting Domains do not gain ownership.
 
 **Purpose:** Record and evaluate purpose-specific consent and lawful-basis permissions so participant, marketing, professional, analytics and other processing decisions use current permission rather than a blanket account flag.
 
@@ -1503,7 +1526,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Data rights, retention and deletion orchestration
 
-**Capability Class:** `CROSS-CUTTING`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates rights requests across Domain-owned records; each data-owning Domain retains its authority and no shared writes are introduced.
 
 **Purpose:** Coordinate account closure, deletion, suppression, retention, legal holds and participant export across the Domains that own the underlying records. It verifies completion without becoming a shared-write replacement for those owners.
 
@@ -1531,7 +1556,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Public discovery and acquisition
 
-**Capability Class:** `CROSS-CUTTING`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `CROSS_DOMAIN` — composes public content, commercial, contact and measurement truths; each source Domain retains its authority and no shared writes are introduced.
 
 **Purpose:** Let a public visitor find useful bilingual content, understand the approved product or event, choose a relevant next step and form a permissioned mailing-list, account or purchase relationship without exposing unfinished product spaces. This is retained as a reusable cross-cutting acquisition boundary because the public-to-protected handoff recurs across approved content, product, event and future-market outcomes while the underlying authorities remain separate.
 
@@ -1541,7 +1568,7 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Authority Anchors:** `05_ROADMAP_v1.0.0.md §§2, 6 FP-001 and 13`; `PLATFORM_OPERATING_MODEL_v1.0.0.md §15`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md §§3.1 and 5.1`; `04_DOMAIN_MAP_v1.0.0.md §7`.
 
-**Lifecycle Relevance:** `CONDITIONAL` — public-acquisition lifecycle; `Communications` coordinates contact state while source Domains retain their truth; earliest full specification point is `FP-001`.
+**Lifecycle Relevance:** `CONDITIONAL` — subscriber-contact lifecycle only where this acquisition boundary includes a governed mailing-list relationship; `Communications`; earliest full specification point is `FP-001`.
 
 **Security / Privacy / Safety Significance:** `MODERATE` — public discovery stays open, but consent, account boundaries, protected product visibility and health-safe messaging still apply.
 
@@ -1559,7 +1586,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Governed content, translation and publication
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Content & Media` owns the principal durable content truth; supporting Domains do not gain ownership.
 
 **Purpose:** Produce, review, translate, approve, publish, correct and withdraw versioned content that can safely support public discovery, assessments, reports, plans, programmes, communications and events.
 
@@ -1587,7 +1616,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Explainable content discovery and relevance
 
-**Capability Class:** `SHARED`
+**Delivery Character:** `SHARED_REUSE`
+
+**Authority Scope:** `CROSS_DOMAIN` — projects content and permitted signals from multiple Domains; each source Domain retains its authority and no shared writes are introduced.
 
 **Purpose:** Help people discover approved content through deterministic search, taxonomy, freshness, entitlement and permitted relevance signals while showing why content is prioritised and preserving broader browsing.
 
@@ -1597,7 +1628,7 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Authority Anchors:** `04_DOMAIN_MAP_v1.0.0.md §§6.7 and 9`; `00_PLATFORM_v1.2.1.md §§21E.5–21E.7 and 21E.12`; `03_ARCHITECTURE_v1.0.0.md §§10.2 and 10.5`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md §§5.1 and 12`.
 
-**Lifecycle Relevance:** `CONDITIONAL` — relevance-projection lifecycle; `Content & Media` owns source content while `Analytics` and `Experimentation` govern evidence/configuration; earliest full specification point is `FP-014`.
+**Lifecycle Relevance:** `NO` — no independent lifecycle is asserted; source content and relevance-signal lifecycles remain with their owning Domains.
 
 **Security / Privacy / Safety Significance:** `HIGH` — health-derived relevance must be minimised and explainable, and safety-required content cannot be hidden by ordinary ranking.
 
@@ -1615,7 +1646,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Protected media and content delivery
 
-**Capability Class:** `SHARED`
+**Delivery Character:** `SHARED_REUSE`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates media truth with access, consent and rights truths; each source Domain retains its authority and no shared writes are introduced.
 
 **Purpose:** Deliver public, purchased, member-only, practitioner-shared and replay media under current access, consent, rights and withdrawal policy. Media delivery is a capability, not a second content or entitlement authority.
 
@@ -1643,7 +1676,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Commercial catalogue and offer management
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Commerce` owns the principal durable catalogue and offer truth; supporting Domains do not gain ownership.
 
 **Purpose:** Define which approved products, bundles, memberships, add-ons, gifts or events may be offered with versioned prices, discounts and commercial boundaries. Catalogue truth remains separate from payment and access truth.
 
@@ -1671,7 +1706,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Payment and commercial reconciliation
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Commerce` owns the principal durable payment and reconciliation truth; supporting Domains do not gain ownership.
 
 **Purpose:** Turn a purchase intent and provider evidence into one authoritative payment, refund or dispute outcome without granting access from an unverified browser return or duplicating effects under retries and ambiguity.
 
@@ -1699,7 +1736,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Entitlement and access-rights management
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Entitlements` owns the principal durable access-rights truth; supporting Domains do not gain ownership.
 
 **Purpose:** Grant, redeem, consume, expire and revoke durable rights to reports, plans, programmes, memberships, add-ons, community, sessions or events while keeping access truth separate from payment and protected content.
 
@@ -1727,7 +1766,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Temperament assessment and profile
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Temperament` owns the principal durable assessment and profile truth; supporting Domains do not gain ownership.
 
 **Purpose:** Accept approved self-reported, book-derived or digital temperament inputs, score and interpret them reproducibly, preserve provenance and provide an immutable bilingual report and current profile for approved product use.
 
@@ -1755,7 +1796,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Health and lifestyle records
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Health Records` owns the principal durable health and lifestyle truth; supporting Domains do not gain ownership.
 
 **Purpose:** Collect, correct and expose only the progressive health, lifestyle, measurement and laboratory facts needed for an approved purpose, with provenance and current minimum-data views.
 
@@ -1783,7 +1826,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Safety and eligibility routing
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Safety & Eligibility` owns the principal durable evaluation and restriction truth; supporting Domains do not gain ownership.
 
 **Purpose:** Apply approved safety and eligibility rules to current scoped facts and route a participant to automated guidance, General Wellness, professional review or insufficient-information handling without turning temperament or stale data into clinical authority.
 
@@ -1811,7 +1856,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Deterministic plan generation and versioning
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Plans & Nutrition` owns the principal durable plan truth; supporting Domains do not gain ownership.
 
 **Purpose:** Generate an explainable, bilingual plan or approved General Wellness pathway from current approved inputs, calculations, content and safety authority, then preserve the delivered version and its provenance.
 
@@ -1839,7 +1886,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Governed plan review and adjustment
 
-**Capability Class:** `LATER-SPECIALISED`
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Plans & Nutrition` owns the principal durable plan-adjustment truth; supporting Domains do not gain ownership.
 
 **Purpose:** Review approved check-ins and trends at the permitted cadence, apply renewed safety evaluation and create a governed immutable plan adjustment only where the approved rules allow it.
 
@@ -1867,7 +1916,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Communications and notification delivery
 
-**Capability Class:** `FOUNDATIONAL`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Communications` owns the principal durable communication and delivery truth; supporting Domains do not gain ownership.
 
 **Purpose:** Create, select, deliver, retry and evidence communication intent across mailing-list, email and in-app channels while respecting consent, preferences, quiet hours, caps and the originating Domain's business truth.
 
@@ -1895,7 +1946,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Programme and cohort delivery
 
-**Capability Class:** `LATER-SPECIALISED`
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Programmes & Challenges` owns the principal durable programme and cohort truth; supporting Domains do not gain ownership.
 
 **Purpose:** Define approved programmes and challenges, configure editions and cohorts, enrol participants, release scheduled material, measure participation and completion, and support catch-up or recovery without creating a generic LMS.
 
@@ -1923,7 +1976,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Participant progress and feedback
 
-**Capability Class:** `SHARED`
+**Delivery Character:** `SHARED_REUSE`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Habits, Journals & Progress` owns the principal durable progress and feedback truth; supporting Domains do not gain ownership.
 
 **Purpose:** Record lightweight daily or weekly progress, adherence and feedback so participants can see useful continuity and approved product teams can learn without turning basic feedback into clinical or journal authority.
 
@@ -1951,7 +2006,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Habits and private reflective practice
 
-**Capability Class:** `LATER-SPECIALISED`
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Habits, Journals & Progress` owns the principal durable habit and reflective-practice truth; supporting Domains do not gain ownership.
 
 **Purpose:** Support approved habit schedules, private journals, reflections, accountability and compassionate consistency without exposing private entries to community or allowing them to become clinical records by default.
 
@@ -1979,7 +2036,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Live-session and replay delivery
 
-**Capability Class:** `SHARED`
+**Delivery Character:** `SHARED_REUSE`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Events & Live` owns the principal durable session and replay truth; supporting Domains do not gain ownership.
 
 **Purpose:** Publish governed live sessions, register entitled participants, protect playback, associate approved recordings/replays and expose provider failure without changing platform attendance or access truth.
 
@@ -2007,7 +2066,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Recurring commercial access
 
-**Capability Class:** `LATER-SPECIALISED`
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates Commerce contract truth with Entitlements access truth; each source Domain retains its authority and no shared writes are introduced.
 
 **Purpose:** Sell and maintain a recurring membership or add-on contract whose promised value, billing state, cancellation consequence and access rights remain coherent across Commerce and Entitlements.
 
@@ -2035,7 +2096,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Professional review and scoped care
 
-**Capability Class:** `LATER-SPECIALISED`
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Professional Care` owns the principal durable professional-review truth; supporting Domains do not gain ownership.
 
 **Purpose:** Provide a limited, capacity-controlled practitioner review with explicit consent, active scoped relationship, professional outcome, follow-up or referral while preserving the separate Safety and Plans authorities.
 
@@ -2063,7 +2126,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Community participation and moderation
 
-**Capability Class:** `LATER-SPECIALISED`
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Community` owns the principal durable participation and moderation truth; supporting Domains do not gain ownership.
 
 **Purpose:** Let entitled participants join governed first-party groups and challenges while supporting reporting, moderation, sanctions, appeals, privacy boundaries and deletion/anonymisation without becoming a generic social network.
 
@@ -2091,7 +2156,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Scarce event capacity and ticketing
 
-**Capability Class:** `LATER-SPECIALISED`
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates Events & Live capacity truth with Commerce payment truth; each source Domain retains its authority and no shared writes are introduced.
 
 **Purpose:** Protect scarce event inventory through capacity holds, expiry, payment reconciliation, ticket issuance, transfer, check-in, cancellation, refund or credit under an approved event policy with zero confirmed oversell.
 
@@ -2119,7 +2186,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Governed experimentation and learning
 
-**Capability Class:** `LATER-SPECIALISED`
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `CROSS_DOMAIN` — coordinates Experimentation assignment/exposure truth with source outcome and analytics truths; each source Domain retains its authority and no shared writes are introduced.
 
 **Purpose:** Configure approved experiments, assign eligible subjects, record exposure, compare authoritative outcomes and preserve auditable learning without changing safety, payment, entitlement, consent, accessibility, security or accounting truth.
 
@@ -2147,7 +2216,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Analytics and measurement
 
-**Capability Class:** `CROSS-CUTTING`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `CROSS_DOMAIN` — projects and measures facts from multiple Domain-owned sources; each source Domain retains business authority and no shared writes are introduced.
 
 **Purpose:** Collect governed minimum analytical facts, derive rebuildable projections and aggregates, serve trustworthy dashboards/reports and measure product, behaviour, operational and experiment outcomes without becoming source-domain business truth.
 
@@ -2175,7 +2246,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Audit and security evidence
 
-**Capability Class:** `CROSS-CUTTING`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `DOMAIN_OWNED` — `Audit & Evidence` owns the principal durable evidence truth; audited source Domains retain business truth and do not become shared-write owners.
 
 **Purpose:** Preserve restricted, minimum-necessary evidence of sensitive actions, privileged access, security events, incidents and release decisions so the platform can be reviewed without replacing the business facts being audited.
 
@@ -2203,7 +2276,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Operator work and support
 
-**Capability Class:** `CROSS-CUTTING`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `PLATFORM_CONTROL` — this is an operator/work presentation and control boundary, not a business-truth owner; source Domains retain business authority.
 
 **Purpose:** Give named staff a workflow-first way to see assigned, overdue, blocked or exceptional work, resolve permitted participant issues and hand off evidence without creating a universal business-task authority or bypassing Domain ownership.
 
@@ -2231,7 +2306,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Release, incident and recovery control
 
-**Capability Class:** `CROSS-CUTTING`
+**Delivery Character:** `FOUNDATIONAL`
+
+**Authority Scope:** `PLATFORM_CONTROL` — this is a release, incident and recovery control boundary, not a business-truth owner; affected Domains retain business authority.
 
 **Purpose:** Let accountable operators stage, observe, stop, roll back or recover a release and record the evidence needed to expand a paid or sensitive journey safely. This capability controls operation; it does not own the product facts it protects.
 
@@ -2259,7 +2336,9 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 **Canonical Name:** Controlled product-space and market activation
 
-**Capability Class:** `LATER-SPECIALISED`
+**Delivery Character:** `LATER_SPECIALISED`
+
+**Authority Scope:** `PLATFORM_CONTROL` — this is an activation and governance boundary, not a business-truth owner; the affected Domains named by Product and Architecture authority retain business truth.
 
 **Purpose:** Activate a concrete, separately approved product space or market through shared platform boundaries without exposing unfinished products, inventing generic tenancy or duplicating identity, commerce, entitlement, content, safety or analytics truth.
 
@@ -2283,7 +2362,7 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 ## 5.3 ATLAS-03 coverage and quality audit
 
-ATLAS-03 records capability identity and classification. It does not populate the complete capability-to-Feature-Pack relationship matrix.
+ATLAS-03 records capability identity, Delivery Character and Authority Scope. It does not populate the complete capability-to-Feature-Pack relationship matrix.
 
 ### Feature Pack coverage
 
@@ -2336,6 +2415,21 @@ All 18 frozen Domain names were checked against the inventory. No new Domain is 
 | Analytics | Governed measurement, projection, dashboard and experiment-evidence capability is represented. |
 | Audit & Evidence | Cross-cutting audit, security, incident and release evidence capability is represented. |
 
+### Classification audit
+
+Each of the 31 capabilities has exactly one Delivery Character and exactly one Authority Scope. The counts describe the inventory; they are not balancing targets.
+
+| Axis | Counts |
+|---|---|
+| Delivery Character | `FOUNDATIONAL` 18; `SHARED_REUSE` 4; `LATER_SPECIALISED` 9 |
+| Authority Scope | `DOMAIN_OWNED` 19; `CROSS_DOMAIN` 9; `PLATFORM_CONTROL` 3 |
+
+`DOMAIN_OWNED` entries identify one frozen authoritative Domain. `CROSS_DOMAIN` entries state that source Domains retain authority and introduce no shared writes. `PLATFORM_CONTROL` entries state that the capability is a platform or operational boundary and does not own business truth.
+
+### Lifecycle audit
+
+All lifecycle flags were reviewed against the rule that `YES` requires an identifiable lifecycle-bearing domain or operational concept. CAP-007 changed from `CONDITIONAL` to `NO` because its relevance projection has no independent lifecycle; source content and relevance signals retain their existing Domain lifecycles. CAP-005 remains `CONDITIONAL` only for a governed subscriber-contact relationship. No other lifecycle flag changed, and no states, transitions, guards or side effects were added.
+
 ### Normalisation and rejection record
 
 The extraction pass merged or rejected candidates as follows:
@@ -2352,7 +2446,7 @@ The extraction pass merged or rejected candidates as follows:
 
 ### ATLAS-03 boundary result
 
-The inventory assigns one authoritative Domain where durable truth exists. Cross-cutting capabilities explicitly name the affected owners and do not introduce shared writes. Lifecycle fields identify the meaningful concept, owner and earliest full-specification point only; no new states, transitions or implementation-grade lifecycle semantics are defined here. Performance fields record broad pressure only and do not select acceleration technology.
+The inventory separates Delivery Character from Authority Scope. Domain-owned capabilities name one frozen Domain, cross-domain capabilities name the affected owners and preserve their authority, and platform-control capabilities do not become business-truth owners. No classification introduces shared writes. Lifecycle fields identify the meaningful concept, owner and earliest full-specification point only; no new states, transitions or implementation-grade lifecycle semantics are defined here. Performance fields record broad pressure only and do not select acceleration technology.
 
 No unresolved Product, Architecture, Domain or Roadmap question was silently answered. The inventory follows current authority and leaves clinical, legal, commercial, methodology, provider, performance and implementation decisions at their existing gates or JIT boundary.
 
