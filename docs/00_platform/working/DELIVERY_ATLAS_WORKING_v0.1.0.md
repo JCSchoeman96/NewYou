@@ -69,7 +69,7 @@ The Atlas is a delivery map, not a second Product, Architecture, Domain or Roadm
 
 ## 1.3 Scope boundary
 
-ATLAS-01 defined the views, labels, entry rules and STOP rules for the complete approved roadmap. ATLAS-02 populated the Feature Pack Portfolio Register. ATLAS-03 populates only the Platform Capability Inventory within the Capability Introduction / Reuse area. Later Atlas work may populate another view only from current upstream authority, approved evidence and the relevant governance decision.
+ATLAS-01 defined the views, labels, entry rules and STOP rules for the complete approved roadmap. ATLAS-02 populated the Feature Pack Portfolio Register. ATLAS-03 populated the Platform Capability Inventory within the Capability Introduction / Reuse area. ATLAS-04 now connects that vocabulary to the approved Feature Pack sequence. Later Atlas work may populate another view only from current upstream authority, approved evidence and the relevant governance decision.
 
 The Atlas must preserve these boundaries:
 
@@ -2362,7 +2362,7 @@ The entries below are the canonical working vocabulary for reusable NewYou platf
 
 ## 5.3 ATLAS-03 coverage and quality audit
 
-ATLAS-03 records capability identity, Delivery Character and Authority Scope. It does not populate the complete capability-to-Feature-Pack relationship matrix.
+ATLAS-03 records capability identity, Delivery Character and Authority Scope. The complete capability-to-Feature-Pack relationship matrix is recorded separately in §5.4; this audit does not label every matrix cell.
 
 ### Feature Pack coverage
 
@@ -2450,7 +2450,180 @@ The inventory separates Delivery Character from Authority Scope. Domain-owned ca
 
 No unresolved Product, Architecture, Domain or Roadmap question was silently answered. The inventory follows current authority and leaves clinical, legal, commercial, methodology, provider, performance and implementation decisions at their existing gates or JIT boundary.
 
-ATLAS-04 — Capability Introduction / Reuse Matrix is the only recommended next Atlas task. ATLAS-04 is not started by this artifact.
+ATLAS-04 — Capability Introduction / Reuse Matrix is recorded in §5.4. No ATLAS-05 work or downstream Feature Pack preparation is started by this artifact.
+
+---
+
+## 5.4 ATLAS-04 capability introduction / reuse matrix
+
+ATLAS-04 connects the 31 canonical capabilities to the 17 frozen Feature Packs. It answers where a capability first becomes materially required and where a later Feature Pack materially reuses, extends or specialises it. The matrix is a derived delivery-planning view. It does not redesign a capability, transfer Domain ownership or authorise implementation.
+
+### Source boundary and matrix rule
+
+The matrix uses the Feature Pack identities, names and order in `05_ROADMAP_v1.0.0.md §6` and the merged ATLAS-02 portfolio register above. Capability IDs, canonical names, classifications and ownership statements come from §5.2. Domain ownership remains governed by `04_DOMAIN_MAP_v1.0.0.md §§3–5` and the authoritative Domain named by each CAP entry.
+
+Only one dominant relationship is recorded in a cell. `E` and `S` already imply reuse of the established capability. A dash is intentional where the capability may exist elsewhere in the platform but is not material to the Feature Pack outcome at Atlas resolution. No Resource, schema, action, API, component, technology or lifecycle state is defined here.
+
+### Matrix relationship vocabulary
+
+| Symbol | Relationship | Meaning |
+|---|---|---|
+| `I` | `INTRODUCE` | First approved Feature Pack where the canonical capability becomes materially required as a delivered platform capability. |
+| `R` | `REUSE` | Feature Pack materially uses an established capability without changing its canonical authority or general semantics. |
+| `E` | `EXTEND` | Feature Pack materially broadens the reusable capability while preserving its canonical identity and authority boundary. |
+| `S` | `SPECIALISE` | Feature Pack applies an existing capability to a materially specialised approved context without creating a separate canonical capability. |
+| `—` | No material relationship | The capability is not materially relevant to the Feature Pack outcome at Atlas resolution. |
+
+### Main matrix
+
+| CAP | Capability | FP-001 | FP-002 | FP-003 | FP-004 | FP-005 | FP-006 | FP-007 | FP-008 | FP-009 | FP-010 | FP-011 | FP-012 | FP-013 | FP-014 | FP-015 | FP-016 | FP-017 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| CAP-001 | Canonical identity and authentication | I | R | R | R | R | R | R | R | R | R | R | R | R | R | R | — | R |
+| CAP-002 | Scoped authorisation and relationship access | I | R | R | R | R | R | R | R | R | R | R | R | R | R | R | — | R |
+| CAP-003 | Consent and purpose control | I | — | R | R | R | R | R | R | R | — | — | R | R | R | R | R | R |
+| CAP-004 | Data rights, retention and deletion orchestration | — | — | — | — | — | I | R | — | — | — | — | — | R | R | — | R | R |
+| CAP-005 | Public discovery and acquisition | I | — | — | — | — | — | R | — | — | — | — | — | — | — | R | — | — |
+| CAP-006 | Governed content, translation and publication | I | — | R | R | R | — | R | R | R | — | R | — | R | R | R | R | R |
+| CAP-007 | Explainable content discovery and relevance | — | — | — | — | — | — | I | — | — | — | — | — | — | — | R | — | — |
+| CAP-008 | Protected media and content delivery | — | — | I | — | R | — | R | R | R | — | R | — | — | — | S | — | — |
+| CAP-009 | Commercial catalogue and offer management | — | I | — | — | — | — | — | — | R | — | R | R | — | — | R | — | R |
+| CAP-010 | Payment and commercial reconciliation | — | I | — | — | — | R | — | — | R | — | R | R | — | — | R | — | — |
+| CAP-011 | Entitlement and access-rights management | — | I | R | — | R | R | R | R | R | R | R | R | R | R | R | — | R |
+| CAP-012 | Temperament assessment and profile | — | — | I | R | R | — | — | R | — | R | — | — | — | — | — | — | — |
+| CAP-013 | Health and lifestyle records | — | — | — | I | R | — | — | R | — | R | — | R | — | — | — | — | — |
+| CAP-014 | Safety and eligibility routing | — | — | — | I | R | — | — | R | — | R | — | R | R | R | — | — | R |
+| CAP-015 | Deterministic plan generation and versioning | — | — | — | — | I | — | — | R | — | R | R | R | — | — | — | — | — |
+| CAP-016 | Governed plan review and adjustment | — | — | — | — | — | — | — | — | — | I | R | — | — | — | — | — | — |
+| CAP-017 | Communications and notification delivery | I | — | — | — | — | R | — | R | — | — | — | R | — | R | — | R | — |
+| CAP-018 | Programme and cohort delivery | — | — | — | — | — | — | — | I | — | — | — | — | R | E | — | — | — |
+| CAP-019 | Participant progress and feedback | — | — | — | — | I | — | — | R | — | R | — | — | R | R | — | — | — |
+| CAP-020 | Habits and private reflective practice | — | — | — | — | — | — | — | — | — | — | — | — | — | I | — | — | — |
+| CAP-021 | Live-session and replay delivery | — | — | — | — | — | — | I | R | R | — | — | — | — | — | S | — | — |
+| CAP-022 | Recurring commercial access | — | — | — | — | — | — | — | — | I | — | R | — | — | — | — | — | — |
+| CAP-023 | Professional review and scoped care | — | — | — | — | — | — | — | — | — | — | — | I | — | — | — | — | — |
+| CAP-024 | Community participation and moderation | — | — | — | — | — | — | — | — | — | — | — | — | I | — | — | — | — |
+| CAP-025 | Scarce event capacity and ticketing | — | — | — | — | — | — | — | — | — | — | — | — | — | — | I | — | — |
+| CAP-026 | Governed experimentation and learning | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | I | — |
+| CAP-027 | Analytics and measurement | — | — | — | — | — | I | — | — | R | — | — | — | — | — | — | — | R |
+| CAP-028 | Audit and security evidence | I | R | R | R | R | R | R | R | R | R | — | R | R | — | R | R | R |
+| CAP-029 | Operator work and support | — | — | — | — | — | I | R | R | R | — | — | R | R | — | R | R | R |
+| CAP-030 | Release, incident and recovery control | — | — | — | — | — | I | — | — | — | — | — | — | — | — | R | R | R |
+| CAP-031 | Controlled product-space and market activation | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | I |
+
+### Feature Pack capability summary
+
+This reverse view contains CAP IDs only so a Feature Pack planning pass can retrieve one row without scanning the full matrix. A conditional `FP-017` row remains conditional on a separately approved product or market direction.
+
+| Feature Pack | Introduces | Reuses | Extends | Specialises |
+|---|---|---|---|---|
+| FP-001 | CAP-001, CAP-002, CAP-003, CAP-005, CAP-006, CAP-017, CAP-028 | — | — | — |
+| FP-002 | CAP-009, CAP-010, CAP-011 | CAP-001, CAP-002, CAP-028 | — | — |
+| FP-003 | CAP-008, CAP-012 | CAP-001, CAP-002, CAP-003, CAP-006, CAP-011, CAP-028 | — | — |
+| FP-004 | CAP-013, CAP-014 | CAP-001, CAP-002, CAP-003, CAP-006, CAP-012, CAP-028 | — | — |
+| FP-005 | CAP-015, CAP-019 | CAP-001, CAP-002, CAP-003, CAP-006, CAP-008, CAP-011, CAP-012, CAP-013, CAP-014, CAP-028 | — | — |
+| FP-006 | CAP-004, CAP-027, CAP-029, CAP-030 | CAP-001, CAP-002, CAP-003, CAP-010, CAP-011, CAP-017, CAP-028 | — | — |
+| FP-007 | CAP-007, CAP-021 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-005, CAP-006, CAP-008, CAP-011, CAP-028, CAP-029 | — | — |
+| FP-008 | CAP-018 | CAP-001, CAP-002, CAP-003, CAP-006, CAP-008, CAP-011, CAP-012, CAP-013, CAP-014, CAP-015, CAP-017, CAP-019, CAP-021, CAP-028, CAP-029 | — | — |
+| FP-009 | CAP-022 | CAP-001, CAP-002, CAP-003, CAP-006, CAP-008, CAP-009, CAP-010, CAP-011, CAP-021, CAP-027, CAP-028, CAP-029 | — | — |
+| FP-010 | CAP-016 | CAP-001, CAP-002, CAP-011, CAP-012, CAP-013, CAP-014, CAP-015, CAP-019, CAP-028 | — | — |
+| FP-011 | — | CAP-001, CAP-002, CAP-006, CAP-008, CAP-009, CAP-010, CAP-011, CAP-015, CAP-016, CAP-022 | — | — |
+| FP-012 | CAP-023 | CAP-001, CAP-002, CAP-003, CAP-009, CAP-010, CAP-011, CAP-013, CAP-014, CAP-015, CAP-017, CAP-028, CAP-029 | — | — |
+| FP-013 | CAP-024 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-006, CAP-011, CAP-014, CAP-018, CAP-019, CAP-028, CAP-029 | — | — |
+| FP-014 | CAP-020 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-006, CAP-011, CAP-014, CAP-017, CAP-019 | CAP-018 | — |
+| FP-015 | CAP-025 | CAP-001, CAP-002, CAP-003, CAP-005, CAP-006, CAP-007, CAP-009, CAP-010, CAP-011, CAP-028, CAP-029, CAP-030 | — | CAP-008, CAP-021 |
+| FP-016 | CAP-026 | CAP-003, CAP-004, CAP-006, CAP-017, CAP-028, CAP-029, CAP-030 | — | — |
+| FP-017 | CAP-031 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-006, CAP-009, CAP-011, CAP-014, CAP-027, CAP-028, CAP-029, CAP-030 | — | — |
+
+### Capability lineage view
+
+| Capability | Introduced | Later Reuse | Extensions | Specialisations |
+|---|---|---|---|---|
+| CAP-001 | FP-001 | FP-002, FP-003, FP-004, FP-005, FP-006, FP-007, FP-008, FP-009, FP-010, FP-011, FP-012, FP-013, FP-014, FP-015, FP-017 | — | — |
+| CAP-002 | FP-001 | FP-002, FP-003, FP-004, FP-005, FP-006, FP-007, FP-008, FP-009, FP-010, FP-011, FP-012, FP-013, FP-014, FP-015, FP-017 | — | — |
+| CAP-003 | FP-001 | FP-003, FP-004, FP-005, FP-006, FP-007, FP-008, FP-009, FP-012, FP-013, FP-014, FP-015, FP-016, FP-017 | — | — |
+| CAP-004 | FP-006 | FP-007, FP-013, FP-014, FP-016, FP-017 | — | — |
+| CAP-005 | FP-001 | FP-007, FP-015 | — | — |
+| CAP-006 | FP-001 | FP-003, FP-004, FP-005, FP-007, FP-008, FP-009, FP-011, FP-013, FP-014, FP-015, FP-016, FP-017 | — | — |
+| CAP-007 | FP-007 | FP-015 | — | — |
+| CAP-008 | FP-003 | FP-005, FP-007, FP-008, FP-009, FP-011 | — | FP-015 |
+| CAP-009 | FP-002 | FP-009, FP-011, FP-012, FP-015, FP-017 | — | — |
+| CAP-010 | FP-002 | FP-006, FP-009, FP-011, FP-012, FP-015 | — | — |
+| CAP-011 | FP-002 | FP-003, FP-005, FP-006, FP-007, FP-008, FP-009, FP-010, FP-011, FP-012, FP-013, FP-014, FP-015, FP-017 | — | — |
+| CAP-012 | FP-003 | FP-004, FP-005, FP-008, FP-010 | — | — |
+| CAP-013 | FP-004 | FP-005, FP-008, FP-010, FP-012 | — | — |
+| CAP-014 | FP-004 | FP-005, FP-008, FP-010, FP-012, FP-013, FP-014, FP-017 | — | — |
+| CAP-015 | FP-005 | FP-008, FP-010, FP-011, FP-012 | — | — |
+| CAP-016 | FP-010 | FP-011 | — | — |
+| CAP-017 | FP-001 | FP-006, FP-008, FP-012, FP-014, FP-016 | — | — |
+| CAP-018 | FP-008 | FP-013 | FP-014 | — |
+| CAP-019 | FP-005 | FP-008, FP-010, FP-013, FP-014 | — | — |
+| CAP-020 | FP-014 | — | — | — |
+| CAP-021 | FP-007 | FP-008, FP-009 | — | FP-015 |
+| CAP-022 | FP-009 | FP-011 | — | — |
+| CAP-023 | FP-012 | — | — | — |
+| CAP-024 | FP-013 | — | — | — |
+| CAP-025 | FP-015 | — | — | — |
+| CAP-026 | FP-016 | — | — | — |
+| CAP-027 | FP-006 | FP-009, FP-017 | — | — |
+| CAP-028 | FP-001 | FP-002, FP-003, FP-004, FP-005, FP-006, FP-007, FP-008, FP-009, FP-010, FP-012, FP-013, FP-015, FP-016, FP-017 | — | — |
+| CAP-029 | FP-006 | FP-007, FP-008, FP-009, FP-012, FP-013, FP-015, FP-016, FP-017 | — | — |
+| CAP-030 | FP-006 | FP-015, FP-016, FP-017 | — | — |
+| CAP-031 | FP-017 | — | — | — |
+
+### Exception / interpretation notes
+
+Only non-routine decisions are noted below. Routine `R` cells remain intentionally unannotated. The notes preserve source-Domain authority and do not define implementation or lifecycle semantics.
+
+| CAP | FP | Relationship | Why this classification matters | Authority Anchor |
+|---|---|---|---|---|
+| CAP-004 | FP-006 | `I` | FP-006 is the first outcome that explicitly requires pilot deletion/export, retention, restore and operational handling. Earlier privacy participation does not establish the complete orchestration capability. | `05_ROADMAP_v1.0.0.md §6 FP-006`; `04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-005 | FP-001 | `I` | Public discovery is introduced by the public-to-account boundary. Later live and event discovery reuse it; it is not a universal acquisition dependency for every protected pack. | `05_ROADMAP_v1.0.0.md §6 FP-001, §6 FP-007 and §6 FP-015`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-005` |
+| CAP-007 | FP-007 | `I` | FP-001's public entry is covered by CAP-005. FP-007 is the first outcome that explicitly requires participant discovery of an approved live session, so relevance is not pulled earlier. | `05_ROADMAP_v1.0.0.md §6 FP-001 and §6 FP-007`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-007` |
+| CAP-008 | FP-003 | `I` | The protected bilingual assessment report is the first material protected-content delivery outcome. This does not make Content & Media an entitlement owner. | `05_ROADMAP_v1.0.0.md §6 FP-003`; `04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-008 | FP-015 | `S` | Paid event variants apply protected or recorded media in a context with event policy, access and withdrawal constraints. Content & Media retains media authority; CAP-025 remains the separate capacity/ticketing capability. | `05_ROADMAP_v1.0.0.md §6 FP-015 and §12.3`; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| CAP-015 | FP-012 | `R` | A practitioner outcome may request an approved plan modification, but Plans & Nutrition owns any resulting plan version. Professional Care does not write plan truth. | `05_ROADMAP_v1.0.0.md §6 FP-012`; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| CAP-018 | FP-014 | `E` | FP-014 explicitly extends the concrete Nuwe Jy programme evidence into a broader foundation programme. Programmes & Challenges remains the sole programme/cohort authority. | `05_ROADMAP_v1.0.0.md §6 FP-014`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-018`; `04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-020 | FP-014 | `I` | FP-008's habits/check-ins are represented by CAP-019 at Atlas resolution. FP-014 is the first outcome that explicitly requires private reflections and the broader habit/journal boundary. | `05_ROADMAP_v1.0.0.md §6 FP-008 and §6 FP-014`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-019 and CAP-020` |
+| CAP-021 | FP-015 | `S` | FP-015 applies established live/replay delivery to an approved paid-event context. Events & Live retains session/replay authority; scarce capacity remains CAP-025. | `05_ROADMAP_v1.0.0.md §6 FP-007 and §6 FP-015`; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| CAP-022 | FP-009 | `I` | Basic Membership is the first approved recurring commercial outcome. FP-011 reuses the recurring contract boundary rather than creating a second Premium billing capability. | `05_ROADMAP_v1.0.0.md §6 FP-009 and §6 FP-011`; `04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-023 | FP-012 | `I` | The practitioner-review service is intentionally introduced as a limited, capacity-controlled pilot. It does not take ownership of Health, Safety or Plans truth. | `05_ROADMAP_v1.0.0.md §6 FP-012`; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| CAP-024 | FP-013 | `I` | FP-009's governed community evidence may use the approved external path. First-party community participation and moderation begin only when FP-013 is approved, so no first-party authority is inferred earlier. | `05_ROADMAP_v1.0.0.md §6 FP-009 and §6 FP-013`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-024` |
+| CAP-025 | FP-015 | `I` | FP-015 is the first approved scarce-capacity outcome. FP-007 live registration does not introduce holds, tickets or capacity authority. | `05_ROADMAP_v1.0.0.md §6 FP-007, §6 FP-015 and §12.3`; `04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-027 | FP-006 | `I` | FP-006 is the first outcome that requires controlled pilot observation and evidence. Earlier packs do not receive a generic analytics mark merely because their facts may later be measured. | `05_ROADMAP_v1.0.0.md §6 FP-006 and §§7–8`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-027` |
+| CAP-028 | FP-001 | `I` | The protected identity boundary is the first material audit/security-evidence outcome. Later marks occur where payment, safety, release, moderation, professional or event evidence is part of the approved outcome. | `05_ROADMAP_v1.0.0.md §6 FP-001 and §6 FP-006`; `04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-029 | FP-006 | `I` | FP-001's controlled support path does not establish a reusable operator-work capability. FP-006 first requires named staff to run, correct, reconcile and support the core journey. | `05_ROADMAP_v1.0.0.md §6 FP-001 and §6 FP-006`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-029` |
+| CAP-030 | FP-006 | `I` | FP-006 is the first release, stop, rollback and recovery boundary. Later event, experiment and future-activation marks reuse that control without moving business truth into platform operations. | `05_ROADMAP_v1.0.0.md §6 FP-006, §6 FP-015, §6 FP-016 and §6 FP-017`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-030` |
+| CAP-031 | FP-017 | `I` | The capability remains conditional and is introduced only by a concrete separately approved product-space or market direction. No hypothetical market, tenancy or specialist product is mapped earlier. | `05_ROADMAP_v1.0.0.md §6 FP-017 and §16`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-031` |
+
+### ATLAS-04 consistency and density audit
+
+The matrix accounts for every CAP × FP position, including intentional dashes. Counts are descriptive results, not balancing targets.
+
+| Audit | Result |
+|---|---|
+| Capability integrity | 31/31 CAP IDs and canonical names match §5.2; no CAP was added, removed, renamed, merged or split. |
+| Feature Pack integrity | 17/17 FP IDs, names and order match the Roadmap and ATLAS-02 register. |
+| Introduction integrity | 31 `I` cells; every CAP has exactly one introduction. No `R`, `E` or `S` occurs before its CAP's `I`. |
+| Relationship integrity | One dominant symbol per cell; 151 `R`, 1 `E` and 2 `S` cells. Every `E` and `S` appears in the exception review. |
+| Reverse lineage | Each CAP sequence reads left-to-right from introduction into later reuse, extension or specialisation; no relationship disappears and reappears as a duplicate capability. |
+| Feature Pack coverage | 17/17 Feature Packs have a summary row and are represented in the matrix; the conditional FP-017 boundary remains explicit. |
+| Domain ownership | 18/18 Domain names remain reviewed. Relationships do not transfer ownership or create shared authoritative writes; cross-Domain CAPs preserve source-Domain authority. |
+| Lifecycle boundary | No state, transition, guard, side effect or terminal state was created. The matrix only points to capability introduction or later delivery use. |
+| Scope boundary | No Resource/schema/action/API/component, technology, Domain × FP matrix, Feature Pack preparation, JIT dossier, TB, VS, HH, TOON or implementation code was added. |
+| ATLAS-05 boundary | ATLAS-05 was not started. |
+
+| Density measure | Count |
+|---|---:|
+| Total possible CAP × FP cells | 527 |
+| Material relationships | 185 |
+| `I` | 31 |
+| `R` | 151 |
+| `E` | 1 |
+| `S` | 2 |
+| `—` | 342 |
+| Material relationship density | 35.1% |
+
+The matrix remains intentionally selective: 342 of 527 positions are dashes, and the cross-cutting capabilities are marked only where the approved Feature Pack outcome makes their contribution material. No unresolved Product, Architecture, Domain or Roadmap question was solved inside ATLAS-04. Any future ambiguity belongs at the authority level named by the escalation matrix.
 
 ---
 
