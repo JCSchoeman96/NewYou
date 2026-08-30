@@ -1,18 +1,18 @@
 # Delivery Atlas working v0.1.0
 
-- **Artifact:** `ATLAS-05`
+- **Artifact:** `ATLAS-06`
 - **Document status:** **DERIVED DELIVERY PLANNING ARTIFACT**
 - **Working state:** **WORKING / NON-AUTHORITATIVE**
 - **Authority boundary:** **DOES NOT MODIFY PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW**
 - **Implementation boundary:** **DOES NOT AUTHORISE IMPLEMENTATION**
 - **Purpose:** Define the first medium-resolution delivery-navigation contract for the complete approved NewYou roadmap.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
-- **Current content state:** ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix and the ATLAS-05 Domain Participation Derivation & Exception Review. Sections 3 and 7 through 22 remain template-only. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory, Feature Pack preparation, a lifecycle register, journey analysis or implementation detail.
+- **Current content state:** ATLAS-01 through ATLAS-06 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review and the ATLAS-06 Lifecycle Derivation & JIT Projection Contract. Section 3 and Sections 8 through 22 remain template-only. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
 This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
 
-The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-05 do not change that manifest.
+The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-06 do not change that manifest.
 
 ---
 
@@ -69,7 +69,7 @@ The Atlas is a delivery map, not a second Product, Architecture, Domain or Roadm
 
 ## 1.3 Scope boundary
 
-ATLAS-01 defined the views, labels, entry rules and STOP rules for the complete approved roadmap. ATLAS-02 populated the Feature Pack Portfolio Register. ATLAS-03 populated the Platform Capability Inventory within the Capability Introduction / Reuse area. ATLAS-04 connected that vocabulary to the approved Feature Pack sequence. ATLAS-05 now defines how Domain participation is derived for an active Feature Pack and records only non-obvious relationship exceptions. Later Atlas work may populate another view only from current upstream authority, approved evidence and the relevant governance decision.
+ATLAS-01 defined the views, labels, entry rules and STOP rules for the complete approved roadmap. ATLAS-02 populated the Feature Pack Portfolio Register. ATLAS-03 populated the Platform Capability Inventory within the Capability Introduction / Reuse area. ATLAS-04 connected that vocabulary to the approved Feature Pack sequence. ATLAS-05 now defines how Domain participation is derived for an active Feature Pack and records only non-obvious relationship exceptions. ATLAS-06 defines how lifecycle obligations are derived and projected for an active Feature Pack without maintaining a permanent platform-wide lifecycle concept table. Later Atlas work may populate another view only from current upstream authority, approved evidence and the relevant governance decision.
 
 The Atlas must preserve these boundaries:
 
@@ -443,7 +443,7 @@ Each populated Atlas entry uses only the labels needed for its view. Multiple re
 | Authority Scope | `DOMAIN_OWNED`, `CROSS_DOMAIN`, `PLATFORM_CONTROL` | For the capability inventory, records whether authority is held by one Domain, coordinated across Domain-owned truths or primarily a platform/operational control boundary. |
 | Delivery relationship | `INTRODUCE`, `REUSE`, `EXTEND`, `COMPOSE`, `PROJECT`, `GATED`, `FUTURE_SEAM` | Describes how a capability or boundary relates to delivery. |
 | Readiness | `VISIBLE`, `DEPENDENT`, `GATED`, `JIT_REQUIRED`, `PROVEN`, `STOPPED` | Shows whether a relationship is visible, blocked by a gate, ready for JIT specification, supported by executable evidence or stopped. |
-| Lifecycle coverage | `NONE`, `EXISTENCE_ONLY`, `UPSTREAM_SEMANTICS`, `FULL_SPEC_REQUIRED`, `PROOF_REQUIRED` | Separates lifecycle visibility from implementation-grade lifecycle design. |
+| Lifecycle coverage | `NONE`, `EXISTENCE_ONLY`, `UPSTREAM_SEMANTICS`, `FULL_SPEC_REQUIRED`, `PROOF_REQUIRED`, `STOPPED` | Separates lifecycle visibility from implementation-grade lifecycle design and records when authority is insufficient. |
 | Temperature | `HOT`, `WARM`, `COLD`, `UNCLASSIFIED` | Records broad expected use character only. It does not set infrastructure. |
 | Pressure | `CONCURRENCY`, `BURST`, `DATABASE`, `ASYNC`, `PROVIDER`, `REALTIME`, `PROJECTION_FRESHNESS`, `EXPORT`, `NONE` | Records a broad pressure that may require later evidence. |
 | Risk | `PRODUCT_POLICY`, `OWNERSHIP`, `SAFETY`, `PRIVACY`, `SECURITY`, `LEGAL`, `CLINICAL`, `PROFESSIONAL`, `PROVIDER`, `FAILURE_RECOVERY`, `PERFORMANCE`, `SCOPE` | Identifies why a relationship or gate matters. |
@@ -2745,36 +2745,300 @@ For a STOP, record the exact source and section, the finding, the authority that
 
 ---
 
-# 7. Lifecycle coverage register
+# 7. Lifecycle derivation & JIT projection contract
 
-## 7.1 State-machine rule
+## 7.1 Purpose and permanent boundary
 
-Every meaningful domain concept with a lifecycle must eventually have:
+Section 7 is a permanent delivery contract for discovering lifecycle obligations when an approved Feature Pack becomes active. It is not a platform-wide lifecycle inventory and it does not define implementation-grade state machines.
+
+No permanent platform-wide lifecycle concept table is maintained.
+
+Permanent lifecycle rows: `0`.
+
+The permanent Atlas keeps the derivation rule, authority boundary, temporary projection contract, review triggers, STOP rules and closure audit. It does not enumerate future lifecycle concepts merely to make the mature platform look complete.
+
+Stable lifecycle metadata already exists through:
+
+- ATLAS-03 capability lifecycle relevance, broad concept, ownership, authority scope and JIT boundary;
+- ATLAS-04 Feature Pack capability materiality and sequencing;
+- ATLAS-05 Domain participation derivation and exceptions; and
+- frozen Product, Architecture, Domain and Roadmap authority.
+
+Concept-level lifecycle decomposition is produced only when the active Feature Pack and current authority provide enough evidence to do so safely.
+
+## 7.2 State-machine rule
+
+Every Domain concept with a meaningful lifecycle must eventually define:
 
 - states;
 - transitions;
 - transition guards;
 - side effects;
-- terminal states; and
-- correction, reversal or invalidation semantics where applicable.
+- terminal states;
+- correction semantics;
+- reversal semantics;
+- invalidation semantics where applicable;
+- concurrency implications where applicable; and
+- audit/evidence obligations where applicable.
 
-The Atlas records only:
+These complete semantics belong in the relevant JIT Domain Dossier unless a higher authority has already frozen them. The Atlas records the obligation and timing. It never invents the state names, transitions, guards, side effects, terminal behaviour or exact implementation representation.
 
-- that the lifecycle exists;
-- which domain owns it;
-- which upstream semantics are already known;
-- which delivery relationships depend on it; and
-- the Feature Pack where a complete implementation-grade specification becomes mandatory.
+## 7.3 Canonical inputs and authority boundary
 
-The Atlas must not invent exact Ash/resource-level lifecycle design. Exact state names, actions, validations, persistence representation, asynchronous mechanisms and other implementation semantics remain JIT unless an upstream authority already froze them.
+The derivation uses the following sources and does not create a second lifecycle authority:
 
-If a later delivery projection requires missing lifecycle semantics, the Atlas marks the entry `FULL_SPEC_REQUIRED` or `STOPPED` and routes it. It does not infer the missing transition.
+| Source | Lifecycle use |
+|---|---|
+| ATLAS-04 | Material `CAP-*` relationships for the active Feature Pack, including `I`, `R`, `E` or `S`. |
+| ATLAS-03 | Lifecycle relevance, broad concept, authoritative Domain, authority scope, performance/concurrency pressure and JIT boundary. |
+| Frozen Domain Map | Durable-truth ownership, cross-domain rules and platform-control boundaries. |
+| ATLAS-05 | Active-Feature-Pack Domain derivation, non-obvious exceptions and temporary projection handling. |
+| Product / Architecture / Roadmap authority | Frozen semantics, state-authority rules, proof expectations, gates and sequencing constraints. |
 
-## 7.2 Population structure
+The authority chain remains:
 
-| Lifecycle-bearing concept | Owning domain | Upstream lifecycle evidence | Atlas coverage | First delivery relevance | Feature Pack requiring full specification | Guards / side effects known at broad level | Terminal / correction / reversal concern | JIT dossier need | Blocking gate / STOP | Status |
-|---|---|---|---|---|---|---|---|---|---|---|
-| _Populate in a later Atlas task._ |  |  |  |  |  |  |  |  |  |  |
+~~~text
+Product Law
+    → Architecture Law
+    → Domain Law
+    → Roadmap
+    → Delivery Atlas
+    → Feature Pack preparation
+    → JIT Domain Dossier
+    → TB / VS / HH
+    → implementation
+~~~
+
+The frozen Domain Map controls ownership. ATLAS-03 supplies capability-level lifecycle context. ATLAS-04 supplies delivery materiality. ATLAS-05 supplies active-FP Domain derivation. A temporary projection cannot move ownership, add a Domain or introduce shared authoritative writes.
+
+## 7.4 Derivation path and procedure
+
+The deterministic path for an active Feature Pack is:
+
+~~~text
+Active Feature Pack
+    → ATLAS-04 material CAP relationships
+    → ATLAS-03 lifecycle relevance / owner / JIT boundary
+    → Frozen Domain ownership
+    → ATLAS-05 Domain projection and exceptions
+    → Product / Architecture / Roadmap gates
+    → temporary active-FP lifecycle projection
+    → Feature Pack Grill-Me
+    → JIT Domain Dossier
+    → TB / VS / HH where justified
+    → implementation
+~~~
+
+For each active Feature Pack:
+
+1. Confirm the exact approved `FP-*` outcome and read its ATLAS-04 Feature Pack capability summary.
+2. Collect every material `CAP-*` relationship marked `I`, `R`, `E` or `S`. A missing summary row or unresolved material CAP is a STOP.
+3. Read the relevant ATLAS-03 entries for lifecycle relevance, broad concept, owner, authority scope, JIT boundary and broad pressure. A `NO` lifecycle entry creates no independent lifecycle obligation.
+4. Resolve each durable truth through the frozen Domain Map. Preserve separate owners for `CROSS_DOMAIN` capabilities and preserve `PLATFORM_CONTROL` wording.
+5. Apply the ATLAS-05 Domain projection and relevant exception handling. Generic participation is a review signal, not proof that a Domain Dossier is required.
+6. Check Product, Architecture and Roadmap semantics, gates and proof expectations. Do not resolve an upstream question inside the Atlas.
+7. Create the temporary lifecycle projection described in §7.6. Create one row for each lifecycle obligation supported by the active evidence, not one row for every CAP by default.
+8. Take the projection through Feature Pack Grill-Me. Create or update the affected JIT Domain Dossier before implementation when the projection requires complete lifecycle semantics.
+
+If any step requires an invented business concept, owner, state, transition, mechanism or policy decision, mark the projection `STOPPED` and route it.
+
+## 7.5 Capability != lifecycle concept
+
+A canonical capability may contain no independent lifecycle, one lifecycle-bearing concept or multiple lifecycle-bearing concepts. A lifecycle-bearing concept does not automatically become a new canonical capability.
+
+Concept decomposition happens only when:
+
+- the Feature Pack is active; and
+- current Product, Architecture, Domain, Roadmap or approved Feature Pack evidence supports the decomposition.
+
+If one CAP contains multiple durable truths, the temporary projection may contain separate obligation rows for the separate owners. Those rows are not permanent Section 7 entries. If the concepts cannot be separated safely at the current authority level, use `STOPPED` rather than filling the gap with a plausible decomposition.
+
+## 7.6 Temporary lifecycle projection contract
+
+The active Feature Pack planner creates a temporary, non-authoritative projection. It is rebuilt when the selected Feature Pack, material CAP relationships, upstream gates or ownership evidence change. It must not become a second platform authority.
+
+| Field | Required meaning |
+|---|---|
+| Feature Pack | The exact active `FP-*`. |
+| CAP relationship | The relevant `CAP-*` and its ATLAS-04 relationship, `I`, `R`, `E` or `S`. |
+| Lifecycle concept | A medium-resolution concept supported by current authority and active-Feature-Pack evidence. |
+| Owning Domain / authority | The exact durable-truth owner, separate owners for separate truths, or an explicit platform-control boundary. |
+| Upstream semantics | Product, Architecture and Domain rules already frozen and the exact evidence references. |
+| Lifecycle coverage | One status from §7.7. This answers how much lifecycle specification is required now. |
+| Risk flags | Zero or more broad lifecycle correctness concerns from §7.8. These explain why the lifecycle may be difficult or dangerous. |
+| Full-spec location | The relevant JIT Domain Dossier or an existing frozen authority that already contains the complete semantics. |
+| Proof need | Whether a materially unproven architectural correctness claim requires explicit proof review. |
+| Gate / STOP | The named gate, authority escalation or `NONE`. |
+
+No temporary projection row is copied into a permanent lifecycle register. The projection may identify an obligation, timing, risk or gate. It may not define a Resource, action, schema, queue, cache, provider mechanism or exact state machine.
+
+## 7.7 Lifecycle coverage vocabulary
+
+Coverage status answers: "How much lifecycle specification is required now?" Use exactly one of the following values for each temporary lifecycle obligation.
+
+### `NONE`
+
+No independent lifecycle obligation exists for this active relationship.
+
+### `EXISTENCE_ONLY`
+
+A meaningful lifecycle is known to exist, but current Feature Pack work does not yet require complete semantics.
+
+### `UPSTREAM_SEMANTICS`
+
+Material lifecycle meaning is already frozen upstream and must be preserved, but implementation-grade specification is not yet required by this Feature Pack.
+
+### `FULL_SPEC_REQUIRED`
+
+The active Feature Pack cannot proceed safely without implementation-grade lifecycle specification.
+
+This status requires the relevant JIT Domain Dossier to explicitly define states, transitions, guards, side effects, terminal states, correction, reversal, invalidation where applicable, concurrency implications and audit/evidence obligations.
+
+### `PROOF_REQUIRED`
+
+The lifecycle exposes a materially unproven architectural correctness claim requiring explicit proof planning.
+
+`PROOF_REQUIRED` does not automatically mandate a Tracer Bullet. The Feature Pack contract must still decide `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` according to existing Roadmap rules.
+
+### `STOPPED`
+
+Required lifecycle semantics cannot be determined safely from current authority. Route to the correct upstream authority and do not guess.
+
+## 7.8 Coverage status versus risk flags
+
+Coverage status and risk flags are separate dimensions.
+
+Coverage status records the amount of lifecycle specification needed now. Risk flags record what makes the lifecycle potentially difficult or dangerous. A lifecycle may have `FULL_SPEC_REQUIRED` with `NONE` as its risk flag, or it may carry several risk flags without requiring full specification in the current Feature Pack.
+
+Permit only these broad risk flags where relevant:
+
+- `CORRECTION`
+- `REVERSAL`
+- `INVALIDATION`
+- `TERMINALITY`
+- `CONCURRENCY`
+- `STALE_DECISION`
+- `DUPLICATE_EXECUTION`
+- `PROVIDER_AMBIGUITY`
+- `ASYNC_DELAY`
+- `REVOCATION`
+- `DELETION_RESTORE`
+- `SAFETY_REEVALUATION`
+- `SCARCE_CAPACITY`
+- `NONE`
+
+Risk flags do not prescribe implementation. Section 7 may record `CONCURRENCY`, `DUPLICATE_EXECUTION`, provider ambiguity or delayed async consequences, but it must not select Redis, ETS, Cachex, GenServer, optimistic locking, row locks, indexes, queues, Oban, PubSub, TTLs, schemas or provider-specific retry mechanisms. Those decisions remain JIT and evidence-driven unless already frozen upstream.
+
+Preserve `authority != acceleration` and NewYou's simplest-correct-path-first doctrine.
+
+## 7.9 Cross-domain and platform-control lifecycle rules
+
+A cross-domain capability does not create a shared lifecycle owner. Where an active Feature Pack touches multiple durable truths, the temporary projection creates separate lifecycle obligations for the separate owners where required.
+
+Existing authority shapes include privacy orchestration versus data-owner record lifecycles, recurring Commerce contract versus Entitlement lifecycle, event capacity versus payment lifecycle, and platform-control release/recovery versus source-Domain business truth. Section 7 records these as ownership boundaries only. It does not define their states or transitions.
+
+A platform-control lifecycle is operational control, not a hidden owner of payment, entitlement, health, safety, plan, professional, event or participant business state. Affected Domains retain business authority. Audit & Evidence may retain central evidence without acquiring the underlying truth.
+
+If a projection would require shared authoritative writes or would make a coordinator the owner of another Domain's business state, mark it `STOPPED` and route the issue to Domain Law and Architecture Law.
+
+## 7.10 JIT Domain Dossier gate and proof boundary
+
+When an active lifecycle projection is `FULL_SPEC_REQUIRED`, the affected Domain's JIT Domain Dossier must contain complete implementation-grade lifecycle semantics before implementation of that lifecycle proceeds. The Dossier must satisfy the state-machine rule in §7.2.
+
+If the Dossier cannot define the lifecycle without resolving higher-level uncertainty, the projection remains `STOPPED`. No implementation agent may invent the missing state machine.
+
+`PROOF_REQUIRED` is a planning signal for a materially unproven correctness claim. The later Feature Pack contract owns the decision between `REUSE_EXISTING_PROOF` and `NEW_TRACER_BULLET`. No ceremonial Tracer Bullet is created by Section 7.
+
+## 7.11 Feature Pack Grill-Me role
+
+The active Feature Pack Grill-Me pressure-tests each material lifecycle projection. It asks:
+
+- What durable truth changes?
+- Who owns it?
+- Does a meaningful lifecycle exist?
+- What lifecycle semantics are already frozen?
+- Does this Feature Pack require complete specification now?
+- Can failure be corrected?
+- Can it be reversed?
+- Is there a terminal state?
+- Can the decision become stale?
+- Can execution duplicate?
+- Can external or provider state conflict?
+- Is concurrency correctness material?
+- Is safety re-evaluation involved?
+- Is proof already available?
+- Is a JIT Domain Dossier required?
+- Is any higher authority unresolved?
+
+Section 7 does not answer these questions globally. It records the temporary evidence-backed result and routes unresolved questions.
+
+## 7.12 Projection review triggers
+
+Do not create a large permanent lifecycle exception register. During active-Feature-Pack projection, trigger special review for:
+
+- ambiguous lifecycle owner;
+- multiple durable truths in one CAP;
+- cross-domain orchestration;
+- platform-control versus business-truth boundary;
+- irreversible or terminal action;
+- correction or reversal uncertainty;
+- external-provider ambiguity;
+- high-concurrency write path;
+- safety-critical re-evaluation;
+- deletion/restore interaction;
+- scarce capacity; or
+- unresolved Product, legal, clinical, commercial, provider or methodology gate.
+
+These are review triggers, not permanent lifecycle rows.
+
+## 7.13 Selective context rule
+
+A fresh Feature Pack agent should retrieve only:
+
+1. the active Feature Pack summary from ATLAS-04;
+2. the relevant CAP entries from ATLAS-03;
+3. relevant Domain participation and exceptions from ATLAS-05;
+4. this Section 7 derivation contract; and
+5. the exact upstream references required by those entries.
+
+The agent must not need to read the whole Delivery Atlas or reconstruct a permanent lifecycle table. The projection is selective because ATLAS-04 identifies material CAPs and ATLAS-05 identifies non-obvious Domain relationships.
+
+## 7.14 Lifecycle STOP and escalation rules
+
+STOP the active projection and report the exact `CAP-*`, Domain and `FP-*` when:
+
+- ATLAS-03 lifecycle ownership contradicts the frozen Domain Map;
+- a CAP requires lifecycle ownership not supported by current authority;
+- defining the lifecycle concept would require invention;
+- the state-machine rule conflicts with Product or Domain authority;
+- cross-domain handling would require shared authoritative writes;
+- platform control appears to acquire business truth;
+- a required Product, legal, clinical, commercial, provider or methodology decision is unresolved;
+- an implementation mechanism is required to decide lifecycle scope;
+- a mandatory governance rule outside the Atlas would need to change; or
+- Foundation Integrity validation fails.
+
+A STOP record names the exact source references, contradiction or missing decision, authority that must decide, affected CAP/Domain/Feature Pack relationship and minimum safe resolution. No Atlas-level guess is permitted.
+
+Known gates remain unresolved and are not amended by this contract. These include professional-record authority, event reservation architecture, payment and recurring provider semantics, clinical and calculation decisions, and the conditional future Product direction for FP-017. An active projection marks the relevant gate or `STOPPED` status rather than solving it.
+
+## 7.15 ATLAS-06 closure audit
+
+| Audit | Result |
+|---|---|
+| Permanent lifecycle rows | `0` |
+| ATLAS-03 lifecycle records | 31 CAP lifecycle records remain unchanged. |
+| ATLAS-04 materiality and sequencing | Existing CAP-to-Feature-Pack relationships remain unchanged. |
+| ATLAS-05 Domain derivation | Existing derivation, exceptions and ownership boundaries remain unchanged. |
+| Lifecycle concept invention | None. Concepts are decomposed only in an active-FP projection when evidence supports it. |
+| State-machine invention | None. No states, transitions, guards, side effects or terminal semantics are defined here. |
+| Correction and recovery invention | None. Correction, reversal, invalidation, concurrency and audit obligations remain JIT unless already frozen upstream. |
+| Authority boundary | No Product, Architecture, Domain, Roadmap or manifest authority changed. |
+| Temporary projection boundary | The active-FP projection is explicitly non-authoritative and produces no permanent lifecycle rows. |
+| JIT completeness | `FULL_SPEC_REQUIRED` explicitly gates complete state-machine specification in the affected JIT Domain Dossier. |
+| Proof/TB boundary | `PROOF_REQUIRED` flags proof planning and does not automatically create a Tracer Bullet. |
+| Selective derivation | An active Feature Pack can retrieve material CAPs, relevant Domain exceptions and required upstream references without reading the whole Atlas. |
+| ATLAS-07 | Not started. |
 
 ---
 
@@ -3313,3 +3577,46 @@ The ATLAS-05 delivery review uses the following protocol:
 7. confirm that no Product, Architecture, Domain, Roadmap or manifest file changed;
 8. record any contradiction found, or state that none was found; and
 9. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
+
+## 26.6 ATLAS-06 completion standard
+
+This subsection records the completion standard for the ATLAS-06 lifecycle derivation contract. It does not create lifecycle rows or begin ATLAS-07.
+
+ATLAS-06 is ready for review only when the evidence shows all of the following:
+
+| Requirement | Evidence in this artifact |
+|---|---|
+| No permanent lifecycle inventory | Section 7 states that no permanent platform-wide lifecycle concept table is maintained and records permanent lifecycle rows as `0`. |
+| Canonical derivation inputs | Section 7 uses ATLAS-03, ATLAS-04, ATLAS-05 and frozen Product, Architecture, Domain and Roadmap authority without creating a second lifecycle authority. |
+| Deterministic JIT path | Section 7 defines the active-Feature-Pack derivation path from material CAP relationships through temporary projection, Grill-Me, JIT Domain Dossier and justified proof or execution artifacts. |
+| Capability/concept distinction | Section 7 permits zero, one or multiple lifecycle-bearing concepts within a CAP and defers decomposition until active-FP evidence supports it. |
+| Temporary projection boundary | Section 7 defines the minimum projection fields and explicitly keeps the projection temporary and non-authoritative. |
+| Exact coverage vocabulary | Section 7 uses exactly `NONE`, `EXISTENCE_ONLY`, `UPSTREAM_SEMANTICS`, `FULL_SPEC_REQUIRED`, `PROOF_REQUIRED` and `STOPPED`. |
+| Separate risk vocabulary | Section 7 keeps coverage status separate from the controlled broad risk flags and does not require a risk flag for every lifecycle. |
+| Complete lifecycle gate | `FULL_SPEC_REQUIRED` explicitly gates complete implementation-grade lifecycle semantics in the affected JIT Domain Dossier before implementation proceeds. |
+| Proof boundary | `PROOF_REQUIRED` surfaces a materially unproven correctness claim but does not automatically create a Tracer Bullet; the later Feature Pack contract decides proof reuse or new proof. |
+| Cross-domain ownership | Section 7 preserves separate durable-truth owners and prevents a coordinator or platform-control lifecycle from acquiring another Domain's business authority. |
+| No premature mechanism selection | Section 7 records broad risk visibility without prescribing databases, locks, queues, caches, processes, provider mechanisms or schemas. |
+| No invented lifecycle semantics | No lifecycle concepts, states, transitions, guards, side effects or terminal semantics are invented in this contract. |
+| Upstream authority unchanged | No Product, Architecture, Domain, Roadmap, Open Work or current-authority manifest source is changed. |
+| Existing Atlas views unchanged | The 31 ATLAS-03 CAP lifecycle records, ATLAS-04 relationships and ATLAS-05 Domain derivation remain unchanged. |
+| Selective retrieval | A fresh Feature Pack agent can retrieve only the active-FP summary, relevant CAPs, relevant Domain projection or exceptions, this contract and required upstream references. |
+| ATLAS-07 boundary | ATLAS-07 is not started. |
+| Foundation integrity | Foundation Integrity Audit and applicable documentation tests pass. |
+| Working boundary | The Atlas remains `WORKING / NON-AUTHORITATIVE`, derived planning material and unfrozen. |
+
+## 26.7 ATLAS-06 review protocol
+
+The ATLAS-06 delivery review uses the following protocol:
+
+1. inspect the full diff;
+2. confirm the branch and changed-file set contain only the working Atlas;
+3. confirm the starting `main` SHA contains the approved ATLAS-05 baseline;
+4. run the Foundation Integrity Audit and existing documentation tests;
+5. run `git diff --check`;
+6. run a focused Section 7 audit for zero permanent lifecycle rows, the exact coverage vocabulary, the exact risk-flag vocabulary, status/risk separation, the `FULL_SPEC_REQUIRED` Dossier gate, the `PROOF_REQUIRED` proof/TB boundary, cross-domain ownership, platform-control boundaries, non-authoritative projection and selective retrieval;
+7. confirm that no lifecycle concept or implementation-grade state-machine semantics were invented;
+8. confirm that ATLAS-07, Feature Pack preparation, JIT Domain Dossiers, TBs, VSs, HHs and TOONs were not started;
+9. confirm that pre-existing untracked `AGENTS.md` and `.agents/` material remains untouched;
+10. record any contradiction or escalation with its exact CAP/Domain/Feature Pack, source references, deciding authority and minimum safe resolution; and
+11. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
