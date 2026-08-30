@@ -1,18 +1,18 @@
 # Delivery Atlas working v0.1.0
 
-- **Artifact:** `ATLAS-03`
+- **Artifact:** `ATLAS-05`
 - **Document status:** **DERIVED DELIVERY PLANNING ARTIFACT**
 - **Working state:** **WORKING / NON-AUTHORITATIVE**
 - **Authority boundary:** **DOES NOT MODIFY PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW**
 - **Implementation boundary:** **DOES NOT AUTHORISE IMPLEMENTATION**
 - **Purpose:** Define the first medium-resolution delivery-navigation contract for the complete approved NewYou roadmap.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
-- **Current content state:** ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register and the ATLAS-03 Platform Capability Inventory. The other Atlas views remain unpopulated. ATLAS-03 does not create a complete capability-to-Feature-Pack matrix, Feature Pack preparation, a standalone domain inventory or matrix, a lifecycle register, journey analysis or implementation detail.
+- **Current content state:** ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix and the ATLAS-05 Domain Participation Derivation & Exception Review. Sections 3 and 7 through 22 remain template-only. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory, Feature Pack preparation, a lifecycle register, journey analysis or implementation detail.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
 This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
 
-The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01, ATLAS-02 and ATLAS-03 do not change that manifest.
+The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-05 do not change that manifest.
 
 ---
 
@@ -69,7 +69,7 @@ The Atlas is a delivery map, not a second Product, Architecture, Domain or Roadm
 
 ## 1.3 Scope boundary
 
-ATLAS-01 defined the views, labels, entry rules and STOP rules for the complete approved roadmap. ATLAS-02 populated the Feature Pack Portfolio Register. ATLAS-03 populated the Platform Capability Inventory within the Capability Introduction / Reuse area. ATLAS-04 now connects that vocabulary to the approved Feature Pack sequence. Later Atlas work may populate another view only from current upstream authority, approved evidence and the relevant governance decision.
+ATLAS-01 defined the views, labels, entry rules and STOP rules for the complete approved roadmap. ATLAS-02 populated the Feature Pack Portfolio Register. ATLAS-03 populated the Platform Capability Inventory within the Capability Introduction / Reuse area. ATLAS-04 connected that vocabulary to the approved Feature Pack sequence. ATLAS-05 now defines how Domain participation is derived for an active Feature Pack and records only non-obvious relationship exceptions. Later Atlas work may populate another view only from current upstream authority, approved evidence and the relevant governance decision.
 
 The Atlas must preserve these boundaries:
 
@@ -2450,7 +2450,7 @@ The inventory separates Delivery Character from Authority Scope. Domain-owned ca
 
 No unresolved Product, Architecture, Domain or Roadmap question was silently answered. The inventory follows current authority and leaves clinical, legal, commercial, methodology, provider, performance and implementation decisions at their existing gates or JIT boundary.
 
-ATLAS-04 — Capability Introduction / Reuse Matrix is recorded in §5.4. No ATLAS-05 work or downstream Feature Pack preparation is started by this artifact.
+ATLAS-04 — Capability Introduction / Reuse Matrix is recorded in §5.4. ATLAS-05 — Domain Participation Derivation & Exception Review is recorded in §6. No downstream Feature Pack preparation is started by this artifact.
 
 ---
 
@@ -2610,7 +2610,7 @@ The matrix accounts for every CAP × FP position, including intentional dashes. 
 | Domain ownership | 18/18 Domain names remain reviewed. Relationships do not transfer ownership or create shared authoritative writes; cross-Domain CAPs preserve source-Domain authority. |
 | Lifecycle boundary | No state, transition, guard, side effect or terminal state was created. The matrix only points to capability introduction or later delivery use. |
 | Scope boundary | No Resource/schema/action/API/component, technology, Domain × FP matrix, Feature Pack preparation, JIT dossier, TB, VS, HH, TOON or implementation code was added. |
-| ATLAS-05 boundary | ATLAS-05 was not started. |
+| ATLAS-05 boundary | ATLAS-05 is recorded in §6 and intentionally maintains no permanent Domain × Feature Pack matrix. |
 
 | Density measure | Count |
 |---|---:|
@@ -2627,34 +2627,121 @@ The matrix remains intentionally selective: 342 of 527 positions are dashes, and
 
 ---
 
-# 6. Domain × Feature Pack matrix
+# 6. Domain participation derivation and exception review
 
-## 6.1 Matrix rule
+## 6.1 Purpose and permanence rule
 
-The matrix connects the exact domain names in `docs/00_platform/04_DOMAIN_MAP_v1.0.0.md` to the exact Feature Pack identities in the Roadmap. ATLAS-01 does not copy the row or column population.
+Domain × Feature Pack participation is a derived JIT view, not a permanently maintained Atlas matrix. ATLAS-05 intentionally does not populate the planned 18 × 17 = 306 cells. A permanent matrix would repeat information already held in the Domain Map, ATLAS-02, ATLAS-03 and ATLAS-04 and would create a second representation of derived truth.
 
-The matrix must not turn participation into ownership. A domain may participate by reading, contributing a durable consequence through its owner, exposing a projection or supplying a governed dependency without owning another domain's truth.
+The permanent Atlas records the derivation rule, authority precedence, non-obvious exceptions, the JIT projection contract and a coverage audit. It does not precompute the interaction semantics of inactive Feature Packs.
 
-## 6.2 Cell vocabulary
+### Canonical inputs
 
-Permitted cell labels are:
+| Source | Planning use |
+|---|---|
+| Frozen Domain Map | Establishes the exact Domain names, durable-truth ownership and no-shared-write boundary. |
+| ATLAS-02 Feature Pack Portfolio Register | Supplies each Feature Pack's high-level `Primary`, `Supporting` and `Consumer` involvement. |
+| ATLAS-03 Platform Capability Inventory | Supplies each material CAP's authority scope, authoritative Domain, supporting Domains and lifecycle owner. |
+| ATLAS-04 capability introduction / reuse matrix | Supplies the material CAPs introduced, reused, extended or specialised by each Feature Pack. |
 
-- `OWNER`: the domain owns the relevant durable truth for this outcome;
-- `PARTICIPATES`: the domain contributes an approved capability or outcome;
-- `READS`: the domain supplies a governed read dependency;
-- `CONSEQUENCE`: the domain receives or performs an owner-controlled durable consequence;
-- `PROJECTS`: the domain or its approved projection supplies derived information;
-- `GATED`: the relationship exists but cannot proceed until a named gate is resolved;
-- `JIT_CONFIRM`: the relationship is visible but implementation-grade scope remains to be confirmed;
-- `NOT_IN_SCOPE`: no participation is present in the approved outcome.
+The derivation chain is:
 
-## 6.3 Population structure
+```text
+Roadmap Feature Pack
+    → ATLAS-04 material CAPs
+    → ATLAS-03 CAP authority and support
+    → ATLAS-02 high-level Domain involvement
+    → temporary JIT Domain participation projection
+```
 
-| Domain \ Feature Pack | _Feature Pack_ | _Feature Pack_ | _Feature Pack_ |
-|---|---|---|---|
-| _Domain_ | _Cell_ | _Cell_ | _Cell_ |
+## 6.2 Authority precedence
 
-The final matrix must identify its source section and date. It must not create a second ownership matrix or alter the Domain Map.
+The following precedence applies whenever the sources appear to describe a relationship differently:
+
+```text
+Frozen Domain Map
+    > CAP authoritative ownership and authority scope
+    > Feature Pack participation view
+    > derived JIT projection
+```
+
+The Domain Map controls Domain identity and ownership. ATLAS-03 preserves that ownership at capability level, including explicit cross-domain and platform-control boundaries. ATLAS-02 and ATLAS-04 provide delivery context. A JIT projection is temporary planning material and cannot move ownership, introduce shared authoritative writes or create a new Domain.
+
+## 6.3 Derivation procedure
+
+For any Feature Pack, the planner reconstructs the candidate Domain set as follows:
+
+1. Read the Feature Pack row in the ATLAS-04 Feature Pack capability summary. Every `I`, `R`, `E` or `S` CAP in that row is a material capability relationship for this resolution.
+2. Resolve each material CAP through the ATLAS-03 inventory. Use its authoritative Domain, supporting Domains, authority scope and lifecycle owner. Preserve explicit `CROSS_DOMAIN` and `PLATFORM_CONTROL` wording rather than converting it into a single business owner.
+3. Compare the resulting candidate set with the ATLAS-02 `Primary`, `Supporting` and `Consumer` involvement. These labels provide delivery context. They do not override CAP authority or the Domain Map.
+4. For the selected active Feature Pack, take the candidate set to Grill-Me and identify which Domains actually require current JIT work. Generic supporting language is a signal to review, not an automatic request for a Domain Dossier.
+5. Produce the temporary projection described in §6.5. If a Domain, CAP authority or required relationship cannot be resolved from the four canonical inputs, record the exception and apply the STOP rule in §6.6.
+
+Routine participation is therefore reconstructed when needed. It is not memorised as a second Atlas matrix.
+
+## 6.4 Domain relationship exception register
+
+The register keeps only relationship cases that need an explicit reminder because a simple participation label could hide an authority boundary, a conditional owner or a planning gate. It does not enumerate routine Domain participation.
+
+| Exception | Feature Pack / CAP | Domain issue | Why it matters | JIT action | Status | Authority anchor |
+|---|---|---|---|---|---|---|
+| EX-001 | FP-001 through FP-015, FP-017 / CAP-002 | Cross-domain access relationship | Identity & Access owns identity-side grants. Each relationship-owning Domain keeps its own relationship or assignment truth. | Name the relationship owner for the active Feature Pack. Do not create a shared access owner. | REVIEWED / JIT_CONFIRM | §5.2 CAP-002; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| EX-002 | FP-001, FP-007, FP-015 / CAP-005, CAP-007 | Public discovery and relevance have no single funnel owner; relevance has no independent lifecycle. | Content, Commerce, Communications, source Domains and Analytics retain their own authority. A projection must not become a new acquisition or ranking authority. | Confirm only the source facts and affected Domain work for the selected public or live outcome. | REVIEWED / JIT_CONFIRM | §5.2 CAP-005 and CAP-007; `05_ROADMAP_v1.0.0.md §§6 FP-001, FP-007 and FP-015` |
+| EX-003 | FP-006, FP-007, FP-013, FP-014, FP-016, FP-017 / CAP-004 | Cross-domain privacy and deletion orchestration | Privacy & Consent owns the request and policy. Data-owning Domains fulfil record-level deletion, correction or export. | Map only the affected record owners for the active Feature Pack. Do not centralise their writes in the orchestration capability. | REVIEWED / JIT_CONFIRM | §5.2 CAP-004; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| EX-004 | FP-003, FP-005, FP-007, FP-008, FP-009, FP-011, FP-015 / CAP-008 | Protected media crosses content, access, consent and event boundaries. | Content & Media owns media truth. Entitlements and source Domains retain access and sharing truth. | Confirm protected-delivery consequences for the selected outcome without transferring authority to Content & Media or Entitlements. | REVIEWED / JIT_CONFIRM | §5.2 CAP-008; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| EX-005 | FP-009, FP-011 / CAP-022 | Recurring commercial access crosses Commerce and Entitlements. | Commerce owns the recurring contract and billing state. Entitlements owns the resulting access rights. | Keep contract, billing, cancellation and access-rights consequences separate in the active Feature Pack plan. | REVIEWED / JIT_CONFIRM | §5.2 CAP-022; `04_DOMAIN_MAP_v1.0.0.md §§6.10–6.11` |
+| EX-006 | FP-012 / CAP-023 | Professional review has a platform case owner but unresolved final professional-record authority. | Professional Care must not silently become the legal or external professional record authority. | Apply `OQ-033` before the active Feature Pack fixes professional record, access, addendum or disposition semantics. STOP if that authority is required and unresolved. | GATED / OQ-033 | §5.2 CAP-023; `05_ROADMAP_v1.0.0.md §6 FP-012`; `04_DOMAIN_MAP_v1.0.0.md §6.14` |
+| EX-007 | FP-015 / CAP-025 | Scarce event capacity crosses Events & Live and Commerce. | Events & Live owns capacity, reservations, tickets and attendance. Commerce owns payment and refund truth. | Confirm capacity and payment consequences together while preserving separate authoritative owners. Apply `OQ-022` and `OQ-004` at the affected boundary. | GATED / OQ-022, OQ-004 | §5.2 CAP-025; `05_ROADMAP_v1.0.0.md §6 FP-015`; `04_DOMAIN_MAP_v1.0.0.md §6.13` |
+| EX-008 | FP-006, FP-009, FP-017 / CAP-027; FP-016 / CAP-026 | Analytics, experimentation and source outcomes have different authority. | Analytics owns measurement evidence, Experimentation owns assignment and learning decisions, and source Domains own business outcomes. | Identify the real decision surface and minimum source facts for the active Feature Pack. Do not treat measurement or assignment as source-domain authority. Apply `OQ-040` for experimentation. | GATED / OQ-040 where applicable | §5.2 CAP-026 and CAP-027; `05_ROADMAP_v1.0.0.md §6 FP-016`; `04_DOMAIN_MAP_v1.0.0.md §§6.16–6.17` |
+| EX-009 | FP-006, FP-007, FP-008, FP-009, FP-012, FP-013, FP-015, FP-016, FP-017 / CAP-029; FP-006, FP-015, FP-016, FP-017 / CAP-030 | Operator, release, incident and recovery controls have no single business-truth owner. | Platform control governs work and release decisions. Affected Domains retain business truth, and Audit & Evidence retains central evidence. | Keep operator and release actions owner-controlled and identify only the evidence and recovery work required by the active Feature Pack. | REVIEWED / JIT_CONFIRM | §5.2 CAP-029 and CAP-030; `04_DOMAIN_MAP_v1.0.0.md §6.18` |
+| EX-010 | FP-017 / CAP-031 | Conditional future ownership is not yet assigned. | No concrete product or market direction exists from which the affected Domain set can be determined. | STOP until Product Law names the approved direction and its affected Domain owners. Do not infer a market, tenancy or specialist product boundary. | CONDITIONAL / STOP | §5.2 CAP-031; `05_ROADMAP_v1.0.0.md §6 FP-017`; `04_DOMAIN_MAP_v1.0.0.md §9` |
+
+The register is not a substitute for a dependency map or JIT Domain Dossier. It records why a future derivation needs care. It does not define reads, commands, consequences, projections, schemas or implementation behaviour.
+
+## 6.5 JIT projection contract
+
+ATLAS-05 creates no current-FP projection because no Feature Pack is selected by this pass. When a Feature Pack becomes active, its planner produces one temporary row for each Domain that actually requires JIT work. The projection uses these fields:
+
+| Field | Required content |
+|---|---|
+| Domain | One exact Domain Map name. |
+| Role in this FP | The evidence-backed role in the selected outcome, such as primary, supporting, consumer, platform control or gated participation. |
+| Relevant CAPs | CAP IDs from the ATLAS-04 Feature Pack row that explain the Domain's involvement. |
+| Existing authority | The Domain-owned truth, CAP authority scope and lifecycle owner already established upstream. |
+| Lifecycle impact | Whether the selected outcome touches an existing lifecycle and where full specification becomes mandatory. No state or transition is invented here. |
+| Durable consequence? | `YES`, `NO` or `CONFIRM` for whether the selected outcome may require an owner-controlled durable consequence. |
+| JIT dossier required? | `YES`, `NO` or `CONDITIONAL`, with the reason for the decision. |
+| Gate / STOP? | The named gate, unresolved authority or `NONE`. |
+
+This projection is temporary/current-FP planning material. It must be rebuilt when the selected Feature Pack, material CAP row, upstream gate or ownership evidence changes. No projection can amend the Domain Map, CAP authority or Feature Pack outcome.
+
+## 6.6 Coverage audit and STOP rule
+
+The ATLAS-05 review confirms that the current Atlas can derive a coherent candidate Domain set for every approved Feature Pack without maintaining a permanent Domain × Feature Pack matrix.
+
+| Audit | Result |
+|---|---|
+| Frozen Domain Map coverage | 18/18 approved Domain names and ownership boundaries are available to the derivation. |
+| ATLAS-02 coverage | 17/17 approved Feature Packs have high-level Domain involvement. |
+| ATLAS-04 coverage | 17/17 approved Feature Packs have a material CAP summary row. |
+| ATLAS-03 CAP resolution | Every material CAP referenced by ATLAS-04 has a §5.2 entry with authority scope and ownership/support information. |
+| Domain-set derivation | 17/17 Feature Packs can produce a candidate Domain set from the four canonical inputs. |
+| Cross-domain and platform-control review | CAPs with `CROSS_DOMAIN`, `PLATFORM_CONTROL`, conditional ownership or unresolved professional authority are recorded in the exception register. |
+| Conditional boundary | FP-017 remains conditional. Its affected Domain set is not assigned before a separately approved Product Law direction. |
+| Permanent matrix | 0 Domain × Feature Pack cells are maintained. The planned 306-cell matrix is intentionally not populated. |
+| Ownership safety | No Domain ownership transfer or shared authoritative write is introduced by this pass. |
+| Implementation boundary | No reads, commands, event flows, projections, schemas, Resources, APIs, PubSub, database consequences, JIT Dossiers or implementation tasks are created. |
+
+ATLAS-05 reports `STOP` and routes the finding upstream if any of the following occurs:
+
+- an approved Feature Pack has no ATLAS-04 summary row or a material CAP is missing from ATLAS-03;
+- ATLAS-02, ATLAS-03 or ATLAS-04 conflicts with the frozen Domain Map;
+- a CAP has contradictory authority, shared authoritative writes or no authority able to support its mapped Feature Pack use;
+- the candidate Domain set cannot be resolved without inventing lifecycle semantics or implementation interactions;
+- an active conditional Feature Pack lacks the Product, legal, clinical, commercial or market direction required to name its owners; or
+- a mandatory governance rule would have to change outside this working Atlas.
+
+For a STOP, record the exact source and section, the finding, the authority that must decide it, the affected Feature Pack/CAP relationship and the safe downstream action. Make no Atlas-level guess.
 
 ---
 
@@ -3194,3 +3281,35 @@ ATLAS-02 is ready for review only when the evidence shows all of the following:
 | Dependency and gate discipline | No dependency, unlock, gate or domain role is added by inference; conditional FP-017 remains explicitly unassigned until its required future direction exists. |
 | Navigation scope | The register remains outcome-level delivery navigation and does not become implementation planning or another Atlas view. |
 | Working boundary | The artifact remains derived, working, non-authoritative and unfrozen, and does not begin ATLAS-03. |
+
+## 26.4 ATLAS-05 completion standard
+
+ATLAS-05 is ready for review only when the evidence shows all of the following:
+
+| Requirement | Evidence in this artifact |
+|---|---|
+| Derivation rule exists | Section 6 identifies the four canonical inputs and the procedure for reconstructing a Feature Pack's candidate Domain set. |
+| Authority precedence is explicit | Section 6 places the frozen Domain Map above CAP authority, Feature Pack participation context and the temporary JIT projection. |
+| No duplicate matrix is maintained | Section 6 explicitly rejects the 18 × 17 = 306-cell permanent matrix and records zero maintained Domain × Feature Pack cells. |
+| Exception register exists | Section 6 records only cross-domain, platform-control, conditional or otherwise non-obvious relationships that require a future planner's attention. |
+| Ownership remains frozen | No exception or projection transfers Domain ownership, creates shared authoritative writes or alters the Domain Map. |
+| JIT projection contract exists | Section 6 defines the temporary current-Feature-Pack fields for Domain role, relevant CAPs, existing authority, lifecycle impact, durable consequence, dossier need and gate/STOP status. |
+| Implementation boundary is explicit | Section 6 defers reads, commands, consequences, projections, schemas, Resources, APIs, PubSub, database consequences and other implementation interactions to selected Feature Pack work. |
+| Coverage is complete | 17/17 Feature Packs have ATLAS-02 involvement and ATLAS-04 material CAP summary rows, and each material CAP resolves to an ATLAS-03 entry. |
+| Conditional scope is protected | FP-017 remains conditional and stops until a separately approved Product Law direction names the affected owners. |
+| STOP routing is explicit | Missing CAPs, contradictory authority, shared writes, unresolved lifecycle meaning, implementation dependency or an outside-Atlas governance change routes upstream without an Atlas guess. |
+| Working boundary is preserved | The artifact remains derived, working, non-authoritative and unfrozen; no authority document or current-authority manifest is changed. |
+
+## 26.5 ATLAS-05 review protocol
+
+The ATLAS-05 delivery review uses the following protocol:
+
+1. inspect the full diff;
+2. confirm the branch and changed-file set contain only the working Atlas;
+3. run the Foundation Integrity Audit and existing documentation tests;
+4. run `git diff --check`;
+5. confirm that no permanent Domain × Feature Pack matrix or lower-level implementation artifact was introduced;
+6. verify each exception against the cited ATLAS-02, ATLAS-03, ATLAS-04, Domain Map or Roadmap evidence;
+7. confirm that no Product, Architecture, Domain, Roadmap or manifest file changed;
+8. record any contradiction found, or state that none was found; and
+9. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
