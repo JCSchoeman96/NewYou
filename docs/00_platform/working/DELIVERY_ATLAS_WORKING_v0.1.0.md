@@ -1,18 +1,18 @@
 # Delivery Atlas working v0.1.0
 
-- **Artifact:** `ATLAS-10`
+- **Artifact:** `ATLAS-11`
 - **Document status:** **DERIVED DELIVERY PLANNING ARTIFACT**
 - **Working state:** **WORKING / NON-AUTHORITATIVE**
 - **Authority boundary:** **DOES NOT MODIFY PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW**
 - **Implementation boundary:** **DOES NOT AUTHORISE IMPLEMENTATION**
 - **Purpose:** Define the medium-resolution delivery-navigation contract for the complete approved NewYou roadmap and the just-in-time routing required to prepare an active outcome safely.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
-- **Current content state:** ATLAS-01 through ATLAS-10 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review, the ATLAS-06 Lifecycle Derivation & JIT Projection Contract, the ATLAS-07 Cross-Domain Dependency Derivation & JIT Projection Contract, the ATLAS-08 Participant Journey Boundaries & JIT Projection Contract, the ATLAS-09 Staff / Operator JIT Derivation Contract and the ATLAS-10 Frontend JIT Derivation Contract. Section 3 and Sections 12 through 22 remain template-only. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail. ATLAS-07 does not create an exhaustive global dependency graph, runtime interaction design or implementation detail. ATLAS-08 does not create an exhaustive global participant journey map, a Feature Pack-by-journey matrix, a participant-facing state machine or frontend implementation design. ATLAS-09 does not create a permanent Staff × Feature Pack journey map, a role-permission matrix, a universal Work lifecycle or operator UI design. ATLAS-10 does not create a permanent frontend surface row, Surface × Feature Pack matrix, second frontend taxonomy or frontend implementation design.
+- **Current content state:** ATLAS-01 through ATLAS-11 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review, the ATLAS-06 Lifecycle Derivation & JIT Projection Contract, the ATLAS-07 Cross-Domain Dependency Derivation & JIT Projection Contract, the ATLAS-08 Participant Journey Boundaries & JIT Projection Contract, the ATLAS-09 Staff / Operator JIT Derivation Contract, the ATLAS-10 Frontend JIT Derivation Contract and the ATLAS-11 Data Authority & Projection JIT Derivation Contract. Section 3 and Sections 13 through 22 remain template-only. Section 12 is a permanent derivation contract with zero permanent source→consumer rows and zero new Section-12 flow classes. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail. ATLAS-07 does not create an exhaustive global dependency graph, runtime interaction design or implementation detail. ATLAS-08 does not create an exhaustive global participant journey map, a Feature Pack-by-journey matrix, a participant-facing state machine or frontend implementation design. ATLAS-09 does not create a permanent Staff × Feature Pack journey map, a role-permission matrix, a universal Work lifecycle or operator UI design. ATLAS-10 does not create a permanent frontend surface row, Surface × Feature Pack matrix, second frontend taxonomy or frontend implementation design. ATLAS-11 does not create a permanent data-flow matrix, a second dependency taxonomy, a storage/transport mechanism or implementation design.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
 This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
 
-The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-10 do not change that manifest.
+The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-11 do not change that manifest.
 
 ---
 
@@ -4075,38 +4075,329 @@ On STOP, report the active Feature Pack, actor, experience outcome, relevant CAP
 
 ---
 
-# 12. Data authority and projection flows
+# 12. Data Authority & Projection JIT Derivation Contract
 
-## 12.1 Authority rule
+## 12.1 Purpose and permanence rule
 
-The Atlas preserves the frozen evidence-led architecture:
+This section helps an active Feature Pack planner answer:
 
-- each durable business truth has one domain owner;
-- PostgreSQL remains the default authority for structured business state;
-- durable binary ownership and business metadata remain governed by their approved boundaries;
-- external provider responses are evidence until the owning domain reconciles them;
-- projections, analytics, caches, LiveView state and realtime observation are not authoritative business state; and
-- current privacy, consent, access and safety policy is checked before protected delivery or projection use where required.
+> Which authoritative fact or evidence is needed, who owns it, who consumes it, for what purpose, under which existing dependency and authority contract, how fresh or rebuildable it may be, what happens on withdrawal, failure or ambiguity, and what JIT design or proof remains?
 
-The Atlas records authority and projection relationships at broad level. It must not turn a flow label into a storage schema, key format, cache contract or transport design.
+It does not answer:
 
-## 12.2 Flow classes
+> Which table, index, cache, Redis key, worker, queue, topic, TTL or API implements the relationship?
 
-| Flow class | Atlas question |
+No permanent source→consumer data-flow matrix is maintained. Architecture already defines authority and projection mechanisms; Domain Law defines durable-truth ownership; ATLAS-07 defines dependency classes and high-value seams; the Roadmap owns sequencing; and ATLAS-08/09/10 derive participant, operator and frontend delivery context.
+
+If a view can be deterministically reconstructed from stronger canonical views, do not permanently duplicate it unless permanent representation materially improves decision-making.
+
+Permanent source→consumer rows: `0`.
+
+New Section-12 flow classes: `0`.
+
+Section 12 creates no new owner, authority boundary, architecture mechanism, source-to-consumer matrix or dependency taxonomy.
+
+## 12.2 Existing authority and precedence
+
+Section 12 consumes existing authority only:
+
+| Source | Section-12 use |
 |---|---|
-| Authoritative state | Which domain owns the fact, and which upstream rule proves that ownership? |
-| Durable consequence | Which owner receives a consequence after an authoritative transition? |
-| External evidence | Which domain reconciles provider evidence and handles ambiguity? |
-| Derived projection | Which source facts are projected, for what purpose, and with what broad freshness and rebuild expectation? |
-| Privacy lifecycle | Which authority governs consent, deletion, retention, export or suppression across owners? |
-| Analytics / measurement | Which governed facts support the measure, and what remains non-authoritative? |
-| Presentation / observation | Which current authority is represented, and what happens when it is stale, unavailable or restricted? |
+| Product Law | Approved data use, privacy, safety and commercial constraints. |
+| Architecture Law | Authority, durability, projection, provider evidence, async, failure and scaling doctrine. |
+| Domain Law | Exact durable-truth owner and approved cross-domain relationships. |
+| Roadmap | Active Feature Pack outcome, gates and sequencing. |
+| ATLAS-04 | Material capabilities for the active Feature Pack. |
+| ATLAS-05 | Participating Domains and ownership-sensitive exceptions. |
+| ATLAS-06 | Lifecycle obligations and lifecycle ownership references. |
+| ATLAS-07 | Existing dependency class, seam, consequence and pressure vocabulary. |
+| ATLAS-08 | Participant consequence where relevant. |
+| ATLAS-09 | Operator consequence where relevant. |
+| ATLAS-10 | Frontend representation consequence where relevant. |
 
-## 12.3 Population structure
+The authority precedence is:
 
-| Source authority | Consuming surface / domain | Flow class | Purpose | Broad freshness | Privacy / deletion boundary | Failure or withdrawal effect | Feature Pack relationship | JIT design trigger | Status |
-|---|---|---|---|---|---|---|---|---|---|
-| _Populate in a later Atlas task._ |  |  |  |  |  |  |  |  |  |
+```text
+Product Law
+    → Architecture Law
+    → Domain Law
+    → Roadmap
+    → Atlas derivations
+    → temporary active-FP data projection
+    → JIT contracts / proof
+    → implementation
+```
+
+An ownership or architecture contradiction is a STOP. Section 12 records and routes it; it does not resolve it locally.
+
+## 12.3 Authority boundaries
+
+### Authority is not movement
+
+```text
+data moves
+    != authority moves
+```
+
+A consumer may read, reference, project, aggregate, cache, observe or retain authorised evidence without obtaining source mutation authority. Physical data presence does not establish Domain ownership.
+
+### Authority is not acceleration
+
+```text
+authority
+    != cache
+    != Redis
+    != ETS
+    != LiveView
+    != PubSub
+    != browser storage
+    != CDN
+```
+
+PostgreSQL remains the frozen default durable structured business authority unless stronger current Architecture says otherwise. Acceleration is evidence-gated. Section 12 must not select an acceleration mechanism. Later JIT work must preserve the authoritative source, allowed stale behaviour, invalidation/rebuild semantics, unavailable-acceleration behaviour and privacy/access constraints.
+
+### Source fact is not projection
+
+A projection may combine facts from one or more authoritative owners without becoming a new durable-truth owner. Participant Home, Command Centre, Work queues, dashboards, search projections, analytics aggregates, discovery projections and entitlement-aware delivery views remain projections. A projection does not create a Domain.
+
+### Owner-controlled consequence
+
+When one authoritative transition requires another Domain to establish its own durable truth:
+
+```text
+Domain A
+    → governed consequence / request / evidence
+    → Domain B authoritative boundary
+```
+
+Domain A must not directly mutate Domain B persistence. Section 12 references the existing ATLAS-07 dependency class or seam and does not prescribe a call, event, message, job, topic or transaction topology.
+
+### Provider evidence
+
+```text
+provider state
+    = evidence
+    != platform business truth
+```
+
+The owning platform Domain reconciles provider evidence into platform meaning. Provider ambiguity remains explicit. Section 12 does not freeze callback names, provider schemas, retries, routes, reconciliation jobs or provider-specific state machines.
+
+### Privacy, deletion and export
+
+Privacy & Consent may coordinate consent withdrawal, deletion, retention, export, suppression and legal/purpose governance. It does not acquire ownership of source-Domain records. Each source owner performs its approved consequence. Section 12 does not create a universal deletion Resource, universal source-record lifecycle or shared privacy write ownership. Existing legal and professional gates remain applicable where material.
+
+### Analytics, Audit and presentation
+
+```text
+Analytics
+    = governed derived measurement
+
+Audit & Evidence
+    = governed evidence
+
+neither
+    = source business authority
+```
+
+Analytics and Audit relationships are referenced only when an active Feature Pack materially needs them. Frontend, LiveView, dashboards, queues, PubSub and other observation mechanisms may represent authoritative state but do not create it. Long-lived consumers may require current-authority revalidation. Refresh intervals, polling, subscription topology and browser-cache behaviour remain downstream.
+
+## 12.4 Active-Feature-Pack derivation
+
+The deterministic derivation path is:
+
+```text
+Active Feature Pack
+    → approved Roadmap outcome
+    → ATLAS-04 material CAPs
+    → ATLAS-05 participating Domains
+    → ATLAS-06 lifecycle obligations
+    → ATLAS-07 dependency class / seam / pressure
+    → ATLAS-08 participant boundary where applicable
+    → ATLAS-09 operator projection where applicable
+    → ATLAS-10 frontend projection where applicable
+    → exact Domain Map ownership references
+    → exact Architecture authority / projection references
+    → temporary active-FP data authority / projection view
+    → Feature Pack Grill-Me
+    → JIT design / proof only where justified
+    → implementation
+```
+
+Section 12 does not derive a whole-platform data-flow graph. A temporary row is created only when the active Feature Pack materially requires the data relationship. The relevant ATLAS-07 class or seam is referenced, not redefined.
+
+## 12.5 Temporary active-FP data projection
+
+For an active Feature Pack, create one temporary, active-FP-specific, non-authoritative projection. Rebuild it when the active outcome, material CAPs, ownership evidence, gates or relevant upstream authority change.
+
+| Field | Required meaning |
+|---|---|
+| Active Feature Pack / approved outcome | Exact `FP-*` and Roadmap outcome. |
+| Source fact / evidence | Exact durable fact, provider evidence or projection being consumed; descriptive only and not a new enum. |
+| Owning Domain / authority | Exact Domain Map owner or existing platform-control authority. |
+| Consumer / purpose | Domain, participant/operator/frontend projection or external obligation consuming the data and why. |
+| ATLAS-07 relationship | Existing dependency class and seam where applicable. |
+| Mutation / consequence rule | Read-only/reference or owner-controlled consequence using existing authority. |
+| Lifecycle reference | Relevant ATLAS-06 obligation or `NONE`. |
+| Participant / operator / frontend reference | ATLAS-08/09/10 where applicable. |
+| Current-authority requirement | Existing revalidation requirement before use. |
+| Access / purpose / minimisation boundary | Current approved authority only. |
+| Retention / export / deletion / withdrawal effect | Broad owner-controlled consequence. |
+| Freshness / stale / rebuild expectation | Medium-resolution statement; no TTL taxonomy. |
+| Failure / ambiguity consequence | Broad business, operating or presentation effect only. |
+| External evidence | Existing provider/evidence requirement or `NONE`. |
+| Measurement / audit need | Existing evidence requirement or `NONE`. |
+| Performance pressure | Existing ATLAS-07 pressure category or `NONE`. |
+| JIT design need | `YES`, `NO` or `CONDITIONAL`, with reason. |
+| Proof need | Existing or proposed proof requirement or `NONE`; never auto-creates a TB. |
+| Gate / STOP | Existing gate/OQ or `NONE`. |
+| Provenance | Exact current paths, sections and identifiers. |
+
+Do not add an `Authority role` enum or a new Section-12 flow type field. Use existing Domain, Architecture and ATLAS-07 vocabulary.
+
+## 12.6 Freshness, stale use and rebuildability
+
+Freshness and rebuildability are data-specific JIT questions, not a new permanent taxonomy. Record them in plain medium-resolution language:
+
+- Must the consumer re-read current authority before action?
+- Is bounded-stale use safe for this purpose?
+- Is the representation a reproducible historical snapshot?
+- Can it be deterministically rebuilt from stronger authority?
+- Does external ambiguity require a pending state?
+- Would stale data create safety, privacy, payment, entitlement or capacity harm?
+
+Conceptually distinguish durable authoritative truth, required durable evidence, rebuildable projection and unresolved external evidence requiring reconciliation. Do not specify seconds, minutes, hours, cache TTLs, polling intervals or refresh timers. Do not create a permanent storage-class taxonomy.
+
+## 12.7 Failure, ambiguity and withdrawal
+
+The temporary projection may record broad consequences such as:
+
+- authoritative source unavailable;
+- projection stale;
+- projection unavailable;
+- provider evidence ambiguous;
+- downstream consequence pending;
+- authority revoked;
+- consent withdrawn;
+- source corrected;
+- source deleted;
+- analytics delayed; or
+- protected view restricted.
+
+These are delivery impacts only. Retries, reconciliation algorithms, compensation, restore procedures and Domain transition semantics remain owner/JIT responsibilities.
+
+## 12.8 No universal data-flow state machine
+
+Section 12 must not create generic lifecycles such as:
+
+```text
+CREATED
+    → PROJECTED
+    → CACHED
+    → INVALIDATED
+```
+
+or:
+
+```text
+PENDING
+    → SYNCED
+    → STALE
+    → REBUILT
+```
+
+ATLAS-06 remains lifecycle authority at delivery-planning level. Exact reconciliation and projection lifecycles belong to the appropriate owner/JIT contract.
+
+## 12.9 Purpose-shaped, not storage-shaped
+
+The temporary projection answers what fact or evidence is required, who owns it, who consumes it, why, whether the consumer can mutate it, which authority must be current, whether stale use is safe, whether it is rebuildable, what deletion or withdrawal means, what ambiguity or failure means and what evidence or proof remains.
+
+It does not define tables, columns, schemas, indexes, Redis keys, hashes, bitmaps, sets, ZSETs, TTLs, topics, queues, workers, GenServers or API routes.
+
+## 12.10 Performance and scarce-capacity boundary
+
+At Section-12 level, preserve broad pressure only and use the existing ATLAS-07 pressure vocabulary where applicable. Ask:
+
+- Is current authoritative data required?
+- Could stale data violate a hard invariant?
+- Is the path concurrency or burst sensitive?
+- Is it high-read or high-write?
+- Could it be paginated or streamed?
+- Could later acceleration be justified without creating a second authority?
+- Is proof likely before implementation?
+
+Do not select a performance mechanism. `OQ-039` remains the implementation-grade performance/scaling mapping gate.
+
+For scarce-capacity Feature Packs, Events & Live remains capacity authority, Commerce remains payment authority, ATLAS-07 preserves the dependency seam and `OQ-022` remains the architecture/performance gate. Exact locks, holds, expiry, Redis, queue or bitmap design remains JIT. No permanent flash-sale mechanism belongs here.
+
+## 12.11 Roadmap, Domain Map and ATLAS-07 boundaries
+
+Roadmap owns sequencing. Section 12 is projected for one active Feature Pack at a time and must not create `FP-001 data flows`, `FP-002 data flows` or any equivalent permanent matrix.
+
+Section 12 references exact Domain Map ownership rows and does not reproduce the 18 approved Domains, 48-row ownership matrix, Domain Architecture Profiles or the full Domain dependency matrix. If the required owner is unclear, STOP and route to Domain Law.
+
+Section 12 consumes ATLAS-07 and does not reproduce its dependency classes, seven seam rows, cycle rule, shared-write rule, provider rule, Analytics/Audit rule, proof/TB doctrine or pressure definitions. It adds only data-specific questions for consumption purpose, freshness, rebuildability, withdrawal and failure.
+
+Architecture remains the authority for durability, authority, cross-domain writes, async consequences, provider evidence, projections, privacy/security, failure/degradation and scaling. Section 12 keeps that restatement minimal and does not select mechanisms.
+
+## 12.12 Selective context contract
+
+A fresh active-FP planner should need only:
+
+1. the exact Roadmap Feature Pack entry;
+2. the active ATLAS-04 CAP row;
+3. the relevant ATLAS-05 Domain projection;
+4. the relevant ATLAS-06 lifecycle projection;
+5. the relevant ATLAS-07 class, seam and pressure;
+6. the applicable ATLAS-08 participant boundary;
+7. the applicable ATLAS-09 operator projection;
+8. the applicable ATLAS-10 frontend projection;
+9. exact Domain Map ownership references;
+10. exact Architecture references; and
+11. applicable OQs and gates.
+
+The planner should not need a permanent whole-platform data-flow matrix.
+
+## 12.13 JIT design and proof rule
+
+A data relationship does not automatically create a JIT Domain Dossier or Architecture contract. Set `JIT design need = YES` or `CONDITIONAL` only when implementation-grade semantics are genuinely unresolved, including owner-controlled consequences, sensitive access/minimisation, provider reconciliation, stale-data correctness, projection rebuild/invalidation, high-concurrency behaviour, deletion/withdrawal consequences, exact evidence retention or async durability.
+
+A material flow may require proof for payment→entitlement idempotency, scarce-capacity/payment races, stale safety prevention, provider ambiguity/recovery, deletion propagation, high-volume projection behaviour or experimentation consistency. Proof need does not create a Tracer Bullet. The later Feature Pack contract owns `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`.
+
+## 12.14 Existing gates and STOP conditions
+
+Carry only gates materially required by the active flow, including as applicable:
+
+- `OQ-004`;
+- `OQ-009`;
+- `OQ-014`;
+- `OQ-016`;
+- `OQ-022`;
+- `OQ-029` through `OQ-033`;
+- `OQ-037`;
+- `OQ-039`; and
+- `OQ-040`.
+
+Do not create a duplicate global OQ inventory or resolve any gate.
+
+STOP if:
+
+1. a durable truth lacks one clear authoritative owner;
+2. shared authoritative write ownership appears;
+3. a consumer requires direct mutation of another Domain's persistence;
+4. provider, cache, projection, Analytics, Audit, LiveView or browser state would become authoritative truth;
+5. a permanent source→consumer matrix is required only to restate Domain Law or ATLAS-07;
+6. a new Section-12 flow/dependency taxonomy is required without genuine unique value;
+7. provider state must be treated as business truth;
+8. privacy orchestration would acquire source-record ownership;
+9. Analytics or Audit would acquire source business authority;
+10. a synthetic cross-domain/data-flow lifecycle must be invented;
+11. exact tables, schemas, indexes, Redis structures, TTLs, topics, queues, workers or APIs must be fixed;
+12. safety, clinical, legal, accounting, professional or provider semantics must be invented;
+13. an unresolved OQ must be resolved locally;
+14. frozen Architecture or Domain Law would require semantic amendment; or
+15. Foundation Integrity fails.
+
+On STOP report the active Feature Pack, source fact/evidence, authoritative owner, consumer, existing ATLAS-07 relationship, conflicting source, deciding authority and minimum safe resolution. Do not guess.
 
 ---
 
@@ -4708,3 +4999,48 @@ The ATLAS-10 implementation review uses the following protocol:
 9. confirm no Feature Pack preparation, JIT Dossier, proof, slice, hardening or implementation artifact was created;
 10. record any contradiction or escalation with the exact active Feature Pack, actor, experience outcome, CAP, Domain, source, deciding authority and minimum safe resolution; and
 11. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
+
+## 26.16 ATLAS-11 completion standard
+
+ATLAS-11 is complete at its current scope only when the evidence shows all of the following:
+
+| Requirement | Evidence in this artifact |
+|---|---|
+| Permanent source→consumer rows | Section 12 states `0`; no permanent source→consumer matrix is maintained. |
+| Section 12 placeholder | The former Section-12 population placeholder is removed. |
+| Current seven-class taxonomy | The former Section-12 flow-class table is removed. |
+| New Section-12 taxonomy | Section 12 creates exactly `0` flow classes and no replacement flow enum. |
+| Architecture boundary | Architecture remains authority for durability, projection, provider evidence, async, failure and scaling mechanisms. |
+| Domain Map boundary | No ownership matrix or Domain ownership is duplicated or amended. |
+| ATLAS-07 boundary | Existing dependency classes, seams, evidence rules and pressure vocabulary are referenced rather than duplicated. |
+| Roadmap boundary | No Feature Pack-by-data-flow matrix or sequencing re-expression is created. |
+| Authority ≠ movement | Data movement, references, projections, aggregates, caches and observations do not transfer mutation authority. |
+| Authority ≠ acceleration | PostgreSQL authority remains distinct from cache, Redis, ETS, LiveView, PubSub, browser and CDN acceleration. |
+| Provider evidence | Provider state remains evidence and is not frozen as platform business truth. |
+| Privacy ownership | Privacy & Consent orchestrates rights; source Domains retain source-record ownership and fulfil consequences. |
+| Analytics / Audit boundary | Analytics remains derived measurement and Audit & Evidence remains governed evidence; neither becomes source authority. |
+| Lifecycle boundary | No universal data-flow lifecycle or state machine is created; ATLAS-06 remains lifecycle authority. |
+| Temporary projection | An explicit active-FP, non-authoritative data projection contract is defined. |
+| Freshness / rebuildability | Freshness, stale-use, rebuildability, withdrawal and failure questions are captured without TTLs or refresh mechanics. |
+| Performance boundary | Broad pressure is retained; mechanism selection remains JIT under `OQ-039` and applicable proof. |
+| Proof boundary | Proof need does not automatically create a Tracer Bullet. |
+| Selective context | The active-FP derivation path is deterministic and bounded to relevant upstream references. |
+| Section 13 boundary | Section 13 remains untouched and template-only. |
+| Downstream boundary | No Feature Pack preparation, JIT Domain/Architecture dossier, frontend contract, TB, VS, HH, TOON or implementation code is created. |
+| Authority manifest / working boundary | No upstream authority or manifest source changes; the Atlas remains working, non-authoritative, unfrozen and implementation-inert. |
+
+## 26.17 ATLAS-11 review protocol
+
+The ATLAS-11 implementation review uses the following protocol:
+
+1. inspect the full diff;
+2. confirm the starting `main` SHA, dedicated branch and synchronized `origin/main` baseline;
+3. confirm that only `docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.1.0.md` changed;
+4. run `git diff --check`;
+5. run the existing documentation/unit tests and Foundation Integrity Audit;
+6. run a focused Section 12 audit for zero permanent source→consumer rows, removed placeholder, removed seven-class taxonomy, zero replacement taxonomy, no ownership or Feature Pack matrix, no schemas/indexes/cache mechanisms, no universal data-flow lifecycle, referenced ATLAS-07 vocabulary, explicit temporary projection, freshness/rebuildability/withdrawal questions, JIT/proof rules and deterministic selective context;
+7. confirm Section 13 remains untouched and template-only;
+8. confirm no Product, Architecture, Domain, Roadmap, Decisions/Open Work or authority-manifest source changed;
+9. confirm no Feature Pack preparation, JIT Dossier, frontend contract, proof, slice, hardening or implementation artifact was created;
+10. record any contradiction or escalation with the active Feature Pack, source fact/evidence, owner, consumer, ATLAS-07 relationship, conflicting source, deciding authority and minimum safe resolution; and
+11. report `ATLAS-11 PASS` only when every requirement above is evidenced. Otherwise report `ATLAS-11 STOP` with the exact route.
