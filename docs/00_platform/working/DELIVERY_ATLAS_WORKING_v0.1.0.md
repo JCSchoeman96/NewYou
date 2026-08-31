@@ -1,18 +1,18 @@
 # Delivery Atlas working v0.1.0
 
-- **Artifact:** `ATLAS-09`
+- **Artifact:** `ATLAS-10`
 - **Document status:** **DERIVED DELIVERY PLANNING ARTIFACT**
 - **Working state:** **WORKING / NON-AUTHORITATIVE**
 - **Authority boundary:** **DOES NOT MODIFY PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW**
 - **Implementation boundary:** **DOES NOT AUTHORISE IMPLEMENTATION**
 - **Purpose:** Define the medium-resolution delivery-navigation contract for the complete approved NewYou roadmap and the just-in-time routing required to prepare an active outcome safely.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
-- **Current content state:** ATLAS-01 through ATLAS-09 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review, the ATLAS-06 Lifecycle Derivation & JIT Projection Contract, the ATLAS-07 Cross-Domain Dependency Derivation & JIT Projection Contract, the ATLAS-08 Participant Journey Boundaries & JIT Projection Contract and the ATLAS-09 Staff / Operator JIT Derivation Contract. Section 3 and Sections 11 through 22 remain template-only. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail. ATLAS-07 does not create an exhaustive global dependency graph, runtime interaction design or implementation detail. ATLAS-08 does not create an exhaustive global participant journey map, a Feature Pack-by-journey matrix, a participant-facing state machine or frontend implementation design. ATLAS-09 does not create a permanent Staff × Feature Pack journey map, a role-permission matrix, a universal Work lifecycle or operator UI design.
+- **Current content state:** ATLAS-01 through ATLAS-10 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review, the ATLAS-06 Lifecycle Derivation & JIT Projection Contract, the ATLAS-07 Cross-Domain Dependency Derivation & JIT Projection Contract, the ATLAS-08 Participant Journey Boundaries & JIT Projection Contract, the ATLAS-09 Staff / Operator JIT Derivation Contract and the ATLAS-10 Frontend JIT Derivation Contract. Section 3 and Sections 12 through 22 remain template-only. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail. ATLAS-07 does not create an exhaustive global dependency graph, runtime interaction design or implementation detail. ATLAS-08 does not create an exhaustive global participant journey map, a Feature Pack-by-journey matrix, a participant-facing state machine or frontend implementation design. ATLAS-09 does not create a permanent Staff × Feature Pack journey map, a role-permission matrix, a universal Work lifecycle or operator UI design. ATLAS-10 does not create a permanent frontend surface row, Surface × Feature Pack matrix, second frontend taxonomy or frontend implementation design.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
 This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
 
-The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-09 do not change that manifest.
+The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-10 do not change that manifest.
 
 ---
 
@@ -3760,28 +3760,318 @@ On STOP report the actor, active Feature Pack, relevant CAP, Domain, work or dec
 
 ---
 
-# 11. Frontend surface progression
+# 11. Frontend JIT Derivation Contract
 
-## 11.1 Frontend rule
+## 11.1 Purpose and permanence rule
 
-This view translates approved participant and operator outcomes into broad experience progression. It may show public, participant, staff, operator, dashboard, publishing or support surface categories.
+This section helps an active Feature Pack planner answer:
 
-The frozen `FRONTEND_EXPERIENCE_SYSTEM` remains subordinate to Product Law, Architecture, Domain Law and the Roadmap. The Atlas may record an experience seam, but it must not freeze:
+> What participant, public or operator experience must represent this approved outcome, which frozen frontend rules apply, and does the active Feature Pack require new JIT frontend design or only reuse of existing patterns?
 
-- routes or endpoints;
-- Phoenix or LiveView module names;
-- exact component or file structures;
-- token values, palette, fonts or package versions;
-- frontend business state machines; or
-- provider configuration.
+It does not answer:
 
-Frontend presentation state remains distinct from domain lifecycle state. Accessibility, bilingual delivery, SEO, privacy-safe measurement and graceful degradation are recorded as cross-cutting obligations when relevant.
+> What exact route, page, LiveView, component or file implements the experience?
 
-## 11.2 Population structure
+No permanent Frontend Surface × Feature Pack progression map or frontend surface register is maintained. The Roadmap already owns outcome sequencing, ATLAS-04 owns capability introduction/reuse/extension, ATLAS-08 owns participant-boundary derivation, ATLAS-09 owns operator-work derivation and the frozen `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md` owns stable frontend doctrine. Permanent surface rows would duplicate stronger sources, increase drift and encourage premature information architecture, routes, pages and components.
 
-| Experience surface category | Actor / journey | Outcome supported | Authority / access dependency | Frontend contract anchor | Feature Pack progression | Accessibility / bilingual / SEO concern | Analytics boundary | JIT frontend contract need | Status |
-|---|---|---|---|---|---|---|---|---|---|
-| _Populate in a later Atlas task._ |  |  |  |  |  |  |  |  |  |
+The Atlas permanence rule remains:
+
+> If a view can be deterministically reconstructed from stronger canonical views, do not permanently duplicate it unless permanent representation materially improves decision-making.
+
+Permanent frontend surface rows: `0`.
+
+## 11.2 Authority sources and precedence
+
+Section 11 creates no new frontend authority. It derives only the minimum temporary context required by an active Feature Pack.
+
+| Source | Frontend-planning use |
+|---|---|
+| Product Law | Approved product promise, participant/operator outcome and safety, privacy and commercial constraints. |
+| Architecture Law | Authoritative interaction, projection, failure/degradation and runtime boundaries. |
+| Domain Law | Durable-truth ownership and policy-sensitive relationships. |
+| Roadmap | Active Feature Pack outcome, sequencing, dependencies and gates. |
+| Platform Operating Model | Stable operator and human workflow doctrine. |
+| Frontend Experience System | Stable frontend, interaction, accessibility, responsive, design-system, SEO and measurement doctrine. |
+| ATLAS-04 | Material capabilities for the active Feature Pack. |
+| ATLAS-05 | Participating Domains and ownership-sensitive exceptions. |
+| ATLAS-06 | Lifecycle obligations reflected by the frontend. |
+| ATLAS-07 | Cross-domain dependency seams. |
+| ATLAS-08 | Participant-facing boundary where applicable. |
+| ATLAS-09 | Operator-work projection where applicable. |
+
+The precedence is:
+
+```text
+Product Law
+    → Architecture Law
+    → Domain Law
+    → Roadmap
+    → Platform Operating Model
+    → Frontend Experience System
+    → Atlas derivation
+    → temporary active-FP frontend projection
+    → JIT frontend contract where required
+    → implementation
+```
+
+If stronger authority conflicts or is incomplete, Section 11 records the conflict and routes it to the correct authority. It does not repair or resolve the conflict locally.
+
+## 11.3 Frontend Experience System reference boundary
+
+Section 11 references rather than reproduces the frozen `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md`. A future active Feature Pack loads only the exact relevant sections, including where applicable:
+
+- public, participant and operator experience;
+- frontend authority and presentation-state doctrine;
+- participant onboarding, purchase, recovery and plan/report delivery;
+- operator Work doctrine;
+- content, editorial and media experience;
+- token/design-system architecture and forms;
+- responsive and accessibility rules;
+- frontend presentation states;
+- dashboards and analytics UI;
+- SEO and public publishing;
+- integrations, embeds and observability;
+- the JIT frontend performance pass; and
+- deferred-detail and STOP boundaries.
+
+The Atlas does not formalise a second permanent frontend vocabulary. The active projection references the exact applicable FES surface or experience section rather than renaming the frozen concepts into a new Atlas enum.
+
+## 11.4 Presentation is not authority
+
+Preserve:
+
+```text
+presentation != business authority
+```
+
+Frontend state, route state, LiveView assigns, browser state, dashboards, queues and optimistic interactions must not create or replace Domain truth. The frontend represents current authoritative outcomes; it does not own identity, payment, entitlement, eligibility, safety, plans, professional outcomes, publication or accounting truth.
+
+## 11.5 Frontend surface is not implementation structure
+
+Preserve:
+
+```text
+frontend experience / surface
+    != route
+    != page
+    != LiveView
+    != component
+    != file
+```
+
+Section 11 may identify a medium-resolution visible experience outcome. It must not define URL paths, routes, endpoints, page names as implementation law, Phoenix modules, LiveViews, layouts, component files, CSS files, folder structure or API contracts. These remain JIT.
+
+## 11.6 Frontend surface is not a Domain
+
+A composed frontend experience may represent several Domain-owned truths but never becomes an owner. Participant Home does not own Plans, Programmes or Entitlements; checkout does not own Commerce; Work does not own Domain obligations; a dashboard does not own Analytics or source facts; account/settings does not create an Account Domain; and authoring UI does not own Content publication truth.
+
+No new Domain may be introduced because a surface exists.
+
+## 11.7 Frontend state is not business lifecycle
+
+The frozen FES already defines presentation state machines where appropriate. Section 11 does not reproduce form presentation states, asynchronous interaction states, dashboard trust/freshness states or loading/error/degraded states as new Atlas state machines.
+
+An active projection may reference the exact FES presentation-state rule when the active Feature Pack materially exercises it. Business lifecycles remain owned by Domains and ATLAS-06/JIT Domain Dossiers.
+
+## 11.8 Shared experience rule
+
+NewYou has one evolving participant Home/Today experience composing the next authorised action. Section 11 must not create permanent Assessment Home, Plan Home, Membership Home, Programme Home or Event Home concepts merely because separate Feature Packs contribute to those outcomes.
+
+A Feature Pack may extend or reuse an existing experience without creating a new top-level surface. Operator capabilities feed the existing Command Centre and Work doctrine rather than creating a new administration application per Feature Pack.
+
+## 11.9 Active-Feature-Pack derivation path
+
+The deterministic derivation path is:
+
+```text
+Active Feature Pack
+    → approved Roadmap outcome
+    → ATLAS-04 material CAPs
+    → ATLAS-05 participating Domains
+    → ATLAS-06 lifecycle obligations
+    → ATLAS-07 dependency seams
+    → applicable ATLAS-08 participant boundary
+    → applicable ATLAS-09 operator projection
+    → exact relevant Frontend Experience System rules
+    → temporary active-FP frontend projection
+    → Feature Pack Grill-Me
+    → JIT frontend contract only if justified
+    → implementation
+```
+
+Do not derive a mature whole-platform route or screen map.
+
+## 11.10 Temporary active-FP frontend projection
+
+For an active Feature Pack, create a temporary, active-FP-specific, non-authoritative projection. Rebuild it when upstream authority, Feature Pack materiality, ownership, gates or frontend authority changes.
+
+| Field | Required meaning |
+|---|---|
+| Active Feature Pack / approved outcome | Exact `FP-*` and Roadmap outcome. |
+| Actor / journey | Existing public, participant, operator or scoped relationship. |
+| Experience outcome | Medium-resolution visible outcome; never a screen specification. |
+| FES anchor | Exact relevant frozen Frontend Experience System section or rule. |
+| Relevant CAPs | Material ATLAS-04 CAP references. |
+| Domain references | Relevant ATLAS-05 participation and ownership references. |
+| Lifecycle references | Relevant ATLAS-06 lifecycle projection or `NONE`. |
+| Dependency references | Relevant ATLAS-07 dependency seam or `NONE`. |
+| Participant boundary | Relevant ATLAS-08 boundary or `NONE`. |
+| Operator projection | Relevant ATLAS-09 projection or `NONE`. |
+| Authority / access dependency | Existing current-authority requirement only. |
+| Presentation obligation | Relevant exact FES state or interaction reference, or `NONE`. |
+| Accessibility / bilingual / responsive obligation | Only materially exercised frozen obligations. |
+| SEO | `REQUIRED`, `NOT_APPLICABLE` or `CONDITIONAL`. |
+| Measurement concern | Existing privacy-safe measurement obligation only. |
+| User-visible failure / recovery consequence | Presentation consequence only. |
+| JIT frontend contract | `YES`, `NO` or `CONDITIONAL`, with reason. |
+| Gate / STOP | Existing gate/OQ or `NONE`. |
+| Provenance | Exact current source paths, sections and identifiers. |
+
+The projection does not become a new Product, Roadmap, Domain, lifecycle, frontend or implementation authority.
+
+## 11.11 Frontend JIT-contract trigger
+
+A separate JIT frontend contract is justified only when the active Feature Pack materially introduces or exercises frontend design that cannot be safely handled by straightforward reuse of frozen patterns. Possible triggers include:
+
+- a materially new interaction family;
+- a materially complex form or journey;
+- a new governed content-composition pattern;
+- a materially new operator workflow representation;
+- a new dashboard interaction family;
+- high-risk safety or privacy frontend behaviour;
+- a materially new provider-ambiguity or degraded interaction;
+- unusual responsive or accessibility pressure;
+- a materially new public/SEO experience contract; or
+- a genuinely reusable new component or pattern contract.
+
+Simple reuse of existing FES patterns may use `JIT frontend contract = NO`, with the reason recorded. A Feature Pack having UI does not automatically require a separate frontend contract.
+
+## 11.12 Design-system and component boundary
+
+Section 11 must not define exact palette, fonts, spacing values, radii, token numbers, Tailwind configuration, CSS filenames, a complete component inventory or package versions. It references the frozen FES token/design-system architecture only as required.
+
+No permanent component catalogue is created. A reusable component or pattern still requires a real use case, meaningful reuse, understood states, accessibility behaviour and responsive behaviour. Therefore:
+
+```text
+Feature Pack has UI
+    != new reusable component required
+```
+
+Component decisions remain JIT.
+
+## 11.13 Accessibility, bilingual and responsive rule
+
+Accessibility, bilingual delivery and responsive behaviour are baseline frontend correctness requirements. Section 11 does not copy the complete FES checklist. An active projection records only materially exercised obligations, such as approved bilingual content, an accessibility-critical interaction, long bilingual labels, a complex responsive form, a mobile-safe operator action, an accessible chart alternative, print representation or a reduced-motion-sensitive interaction.
+
+Exact frontend implementation remains JIT.
+
+## 11.14 SEO rule
+
+SEO remains FES-owned baseline correctness for relevant public slices. The active projection may classify it as `REQUIRED`, `NOT_APPLICABLE` or `CONDITIONAL` and cite the exact FES rule.
+
+Section 11 does not create an SEO Domain, SEO Feature Pack, URL catalogue, route map or schema catalogue. Exact page and schema implementation remains JIT.
+
+## 11.15 Analytics and measurement rule
+
+Frontend measurement remains evidence, not business authority. Section 11 does not create a permanent event catalogue, KPI catalogue, funnel implementation, provider configuration, dashboard catalogue or tracking-script design.
+
+The temporary projection records only the current privacy-safe measurement requirement and authoritative source.
+
+## 11.16 Failure and degraded experience
+
+An active projection may identify broad user-visible consequences such as pending, validating, conflict, restricted, unavailable, delayed, degraded or requires attention. These are frontend/presentation consequences.
+
+Section 11 must not invent Domain recovery, provider reconciliation, retry semantics, lifecycle state or cancellation/refund behaviour. Those semantics are referenced through upstream authority and ATLAS-06/07/08/09.
+
+## 11.17 Frontend performance
+
+Later implementation slices reference the frozen FES sequence:
+
+```text
+BUILD CORRECTLY
+    → VERIFY CORRECTNESS
+    → COMPLETE THE SLICE
+    → HIGH-LEVERAGE PERFORMANCE PASS
+    → ACCEPTANCE
+    → STOP
+```
+
+Section 11 must not prescribe Redis, ETS/Cachex, GenServers, PubSub topics, replicas, database indexes, cache TTLs or exact asset/preload strategy. These remain evidence-driven JIT decisions.
+
+## 11.18 Roadmap and ATLAS-08/ATLAS-09 boundary
+
+Do not create a frontend rendering of Roadmap sequencing such as `FP-001 → account`, `FP-002 → checkout` or `FP-003 → assessment`. That adds no new authority and encourages a false one-Feature-Pack/one-surface assumption. The Roadmap remains the source of sequencing and ATLAS-04 remains the source of capability introduction and reuse.
+
+Preserve:
+
+```text
+ATLAS-08
+    → participant boundary / outcome
+
+ATLAS-09
+    → operator work / attention requirement
+
+ATLAS-10 temporary projection
+    → frontend representation obligation
+```
+
+Section 11 consumes only the relevant active-FP ATLAS-08 and ATLAS-09 projections. It does not copy participant-boundary rows or operator workflow into a permanent frontend table.
+
+## 11.19 Selective context contract
+
+A fresh active-Feature-Pack planner should need only:
+
+1. the exact Roadmap Feature Pack entry;
+2. the active ATLAS-04 CAP row;
+3. relevant ATLAS-05 Domain references;
+4. the relevant ATLAS-06 lifecycle projection;
+5. relevant ATLAS-07 dependency seams;
+6. the applicable ATLAS-08 participant boundary;
+7. the applicable ATLAS-09 operator projection;
+8. the exact relevant FES sections; and
+9. applicable gates and OQs.
+
+The temporary frontend projection is rebuilt from these sources. A whole-platform frontend progression map is not required.
+
+## 11.20 Existing gates and STOP conditions
+
+Preserve existing gates only where materially relevant, including as applicable:
+
+- `OQ-034`;
+- `OQ-035`;
+- `OQ-036`;
+- `OQ-004`;
+- `OQ-005`;
+- `OQ-008`;
+- `OQ-010`;
+- `OQ-013`;
+- `OQ-015`;
+- `OQ-016`;
+- `OQ-020`;
+- `OQ-021`;
+- `OQ-022`;
+- `OQ-023`;
+- `OQ-029` through `OQ-033`; and
+- `OQ-040`.
+
+Section 11 does not duplicate Open Work or resolve these gates.
+
+STOP if:
+
+- a new Product experience or promise must be invented;
+- a frontend surface would imply a new Domain or cross-domain write owner;
+- presentation state would become business authority;
+- a permanent Surface × Feature Pack map is required only to restate Roadmap sequencing;
+- exact routes, pages, LiveViews, components or files are required;
+- Section 11 needs to substantially duplicate or semantically amend frozen FES doctrine;
+- exact palette, font or token values are required;
+- a speculative component catalogue is required;
+- frontend convenience requires inventing business lifecycle semantics;
+- safety, clinical, legal, privacy, accounting or provider semantics must be invented;
+- an unresolved OQ must be resolved locally; or
+- Foundation Integrity fails.
+
+On STOP, report the active Feature Pack, actor, experience outcome, relevant CAP, Domain, conflicting source, deciding authority and minimum safe resolution. Do not guess.
 
 ---
 
@@ -4375,3 +4665,46 @@ The ATLAS-09 implementation review uses the following protocol:
 8. confirm no upstream authority, authority manifest, JIT dossier, proof, slice, hardening or implementation artifact changed;
 9. record any contradiction or escalation with the exact actor, active Feature Pack, CAP, Domain, source, deciding authority and minimum safe resolution; and
 10. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
+
+## 26.14 ATLAS-10 completion standard
+
+ATLAS-10 is complete at its current scope only when the evidence shows all of the following:
+
+| Requirement | Evidence in this artifact |
+|---|---|
+| Permanent frontend surface rows are zero | Section 11 states `0`; no permanent surface register or Surface × Feature Pack rows exist. |
+| Old Section 11 placeholder is removed | Section 11 contains the Frontend JIT Derivation Contract and no population placeholder. |
+| No Surface × Feature Pack matrix exists | Frontend context is derived for the active Feature Pack only. |
+| No second frontend taxonomy is created | Section 11 references exact frozen Frontend Experience System sections rather than defining a new permanent enum. |
+| Frozen frontend doctrine is not duplicated | Stable frontend, interaction, design-system, accessibility, SEO, analytics and performance rules remain in the frozen Frontend Experience System. |
+| Roadmap sequencing is not duplicated | Roadmap remains the source of Feature Pack outcomes, sequencing, dependencies and gates; ATLAS-04 remains the source of capability introduction and reuse. |
+| ATLAS-08 participant boundaries are not duplicated | Section 11 consumes only the applicable temporary participant boundary and does not create a journey map or participant table. |
+| ATLAS-09 operator workflow is not duplicated | Section 11 consumes only the applicable operator projection and does not create a Work, role or operator table. |
+| Presentation remains non-authoritative | Frontend state, routes, LiveView assigns, dashboards, queues and optimistic interactions cannot create or replace Domain truth. |
+| Frontend surface is not implementation structure | No routes, pages, LiveViews, modules, layouts, components, files, CSS, folders or API contracts are defined. |
+| No business lifecycle is created | Presentation states are referenced through FES; Domain lifecycle remains governed by ATLAS-06 and JIT Domain Dossiers. |
+| Temporary active-FP projection is explicit | Section 11.10 defines the bounded, rebuildable and non-authoritative projection fields. |
+| JIT frontend-contract trigger is explicit | Section 11.11 distinguishes new frontend design triggers from straightforward reuse. |
+| Selective context is deterministic | Section 11.19 defines the Roadmap → ATLAS-04 through ATLAS-09 → FES → temporary projection path. |
+| Existing gates remain unresolved | Section 11.20 references applicable OQs without resolving or duplicating them. |
+| Section 12 was not started | Section 12 remains the existing authority/flow template with its population placeholder and no populated rows. |
+| Working boundary is preserved | The Atlas remains derived, working, non-authoritative, unfrozen and excluded from the authority manifest; no upstream source changed. |
+| Downstream work is stopped | No FP-001 preparation, frontend implementation contract, JIT Domain Dossier, TB, VS, HH, TOON or implementation code is created. |
+
+Permanent frontend surface rows: `0`.
+
+## 26.15 ATLAS-10 review protocol
+
+The ATLAS-10 implementation review uses the following protocol:
+
+1. inspect the full diff;
+2. confirm the starting `main` SHA, branch and synchronized `origin/main` baseline;
+3. confirm that only the working Atlas changed;
+4. run `git diff --check`;
+5. run the existing documentation tests and Foundation Integrity Audit;
+6. run a focused Section 11 audit for zero permanent frontend rows, removed placeholder, no Surface × Feature Pack matrix, no new taxonomy, no routes/pages/components/files, no token or component catalogue, no duplicated FES state machines, no Roadmap re-expression, no ATLAS-08/09 duplication, explicit temporary projection, explicit JIT trigger and deterministic selective context;
+7. confirm Section 12 remains untouched and template-only;
+8. confirm no Product, Architecture, Domain, Roadmap, Decisions/Open Work or authority-manifest source changed;
+9. confirm no Feature Pack preparation, JIT Dossier, proof, slice, hardening or implementation artifact was created;
+10. record any contradiction or escalation with the exact active Feature Pack, actor, experience outcome, CAP, Domain, source, deciding authority and minimum safe resolution; and
+11. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
