@@ -1,13 +1,13 @@
 # Delivery Atlas working v0.1.0
 
-- **Artifact:** `ATLAS-07`
+- **Artifact:** `ATLAS-08`
 - **Document status:** **DERIVED DELIVERY PLANNING ARTIFACT**
 - **Working state:** **WORKING / NON-AUTHORITATIVE**
 - **Authority boundary:** **DOES NOT MODIFY PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW**
 - **Implementation boundary:** **DOES NOT AUTHORISE IMPLEMENTATION**
 - **Purpose:** Define the first medium-resolution delivery-navigation contract for the complete approved NewYou roadmap.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
-- **Current content state:** ATLAS-01 through ATLAS-07 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review, the ATLAS-06 Lifecycle Derivation & JIT Projection Contract and the ATLAS-07 Cross-Domain Dependency Derivation & JIT Projection Contract. Section 3 and Sections 9 through 22 remain template-only. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail. ATLAS-07 does not create an exhaustive global dependency graph, runtime interaction design or implementation detail.
+- **Current content state:** ATLAS-01 through ATLAS-08 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review, the ATLAS-06 Lifecycle Derivation & JIT Projection Contract, the ATLAS-07 Cross-Domain Dependency Derivation & JIT Projection Contract and the ATLAS-08 Participant Journey Boundaries & JIT Projection Contract. Section 3 and Sections 10 through 22 remain template-only. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail. ATLAS-07 does not create an exhaustive global dependency graph, runtime interaction design or implementation detail. ATLAS-08 does not create an exhaustive global participant journey map, a Feature Pack-by-journey matrix, a participant-facing state machine or frontend implementation design.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
 This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
@@ -3361,29 +3361,173 @@ ATLAS-07 remains a derived, working, non-authoritative and unfrozen planning con
 
 ---
 
-# 9. Participant journey progression
+# 9. Participant Journey Boundaries & JIT Projection Contract
 
-## 9.1 Journey rule
+## 9.1 Purpose and permanence rule
 
-This view may show how participant outcomes progress across the Roadmap, using approved Product Law journey language and the relevant Feature Pack outcome. It must not add a promise, entitlement, clinical route or product-space behaviour absent from upstream authority.
+This section helps an active Feature Pack planner answer:
 
-It must distinguish:
+> What participant-facing boundary or outcome is materially crossed by this Feature Pack, and what existing safety, privacy, identity, access, entitlement or recovery invariant must remain true?
 
-- public discovery and free access;
-- protected or purchased access;
-- safety and eligibility routing;
-- delivery, use, feedback and recovery;
-- recurring or programme progression;
-- professional escalation; and
-- deletion, correction, withdrawal and long-term access boundaries where relevant.
+It does not answer:
 
-These are planning lenses. They are not frontend routes, screens or implementation workflows.
+> What exact pages, screens, forms, navigation steps or interaction sequence will the participant use?
 
-## 9.2 Population structure
+No exhaustive global participant journey map is permanently maintained. Most journey sequencing and outcomes are already represented by Product Law, the Roadmap, ATLAS-02, ATLAS-03, ATLAS-04, ATLAS-05, ATLAS-06, ATLAS-07 and the `FRONTEND_EXPERIENCE_SYSTEM`. Permanent Section 9 content exists only where a participant-centric boundary materially improves future decision safety and would otherwise require repeated cross-source reconstruction.
 
-| Participant outcome / milestone | Product Law anchor | First relevant Feature Pack | Prerequisite relationship | Reused capability | Safety / privacy boundary | Feedback or recovery seam | Later progression | JIT boundary | Status |
-|---|---|---|---|---|---|---|---|---|---|
-| _Populate in a later Atlas task._ |  |  |  |  |  |  |  |  |  |
+The Atlas permanence principle applies:
+
+> If a view can be deterministically reconstructed from stronger canonical views, do not permanently duplicate it unless permanent representation materially improves decision-making.
+
+The permanent register below is therefore a small reference-oriented index of authority-sensitive participant boundaries. It is derived planning material, not a new journey authority.
+
+## 9.2 Journey boundaries
+
+### Participant journey != Product Roadmap
+
+Section 9 does not restate the 17 Feature Packs as a second sequence. The Roadmap remains authoritative for Feature Pack outcomes, prerequisites, sequencing, gates and release effects.
+
+### Participant journey != Domain lifecycle
+
+Lifecycle-bearing truths remain governed by ATLAS-06 and the relevant JIT Domain Dossier. Section 9 does not create participant-facing lifecycle states or merge separate Domain lifecycles into one journey state machine.
+
+### Participant journey != cross-domain dependency graph
+
+Section 9 references ATLAS-07 where a participant outcome depends on multiple Domain-owned truths. It does not recreate dependency rows, transfer ownership or introduce shared authoritative writes.
+
+### Participant journey != frontend flow
+
+The `FRONTEND_EXPERIENCE_SYSTEM` and later JIT frontend work own routes, pages, screens, forms, buttons, navigation, loaders, redirects, interaction sequencing, exact copy and component hierarchy. Section 9 records only medium-resolution participant outcomes and boundaries.
+
+No performance implementation belongs in Section 9. It must not prescribe caching, CDN behaviour, Redis, browser storage, queues, PubSub, realtime mechanisms, indexes, APIs or prefetching.
+
+## 9.3 Canonical inputs and authority precedence
+
+| Source | Participant-journey use |
+|---|---|
+| Product Law | Approved participant promises, safety/privacy/commercial constraints and mature outcome. |
+| Roadmap | Approved Feature Pack outcomes, prerequisites, sequencing and gates. |
+| ATLAS-03 / ATLAS-04 | Relevant capability identity and active-Feature-Pack materiality. |
+| ATLAS-05 | Participating Domains and ownership-sensitive exceptions. |
+| ATLAS-06 | Lifecycle obligations and JIT lifecycle requirements. |
+| ATLAS-07 | Cross-domain dependency direction and exceptional seams. |
+| `FRONTEND_EXPERIENCE_SYSTEM` | Downstream experience, accessibility, bilingual and interaction constraints. |
+
+The precedence is:
+
+```text
+Product Law
+    > Architecture / Domain Law where relevant
+    > Roadmap
+    > canonical capability and Atlas derivations
+    > temporary participant journey projection
+    > frontend / JIT implementation
+```
+
+A participant journey projection cannot create a new Product promise, entitlement, safety outcome, professional-care right, lifecycle state, Feature Pack or frontend requirement not supported upstream.
+
+## 9.4 Permanent participant boundary register
+
+The register keeps only boundaries whose omission could make future participant planning unsafe or repeatedly expensive. The labels below are conceptual planning categories, not lifecycle states or an approved participant vocabulary. No row exists merely because a Feature Pack exists.
+
+| Boundary / invariant | Authority anchors | Relevant CAP / FP references | Prerequisite | Safety / privacy / access constraint | Recovery / exit seam | Approved later seam | JIT boundary |
+|---|---|---|---|---|---|---|---|
+| Public discovery → protected identity/access | Product Law §§8, 12, 15; Platform §§7.3, 21J; Roadmap §6 FP-001 | CAP-001, CAP-002, CAP-005 / FP-001 | Approved public entry and current account/verification boundary. | Protected participant access must not bypass identity, age, terms/privacy or current authorisation. | Account recovery and access revocation remain Identity & Access concerns; no protected access is inferred from presentation state. | Every later protected Feature Pack reuses the same identity/access boundary. | Exact authentication, recovery, field and frontend interaction semantics remain JIT. |
+| Purchase/access acquisition → entitled delivery | Product Law §§11–12; Platform §§21A, 21L.4–21L.7; Roadmap §§3.2, 6 FP-002 | CAP-009, CAP-010, CAP-011, CAP-022 / FP-002 and later applicable packs | Approved offer or access source plus authoritative commercial reconciliation. | Commerce/payment truth and Entitlements/access truth remain distinct; provider or client-visible success is not entitlement authority; purchaser and participant remain distinct. | Pending, failed, revoked or expired access is handled through existing authority; no access recovery is invented here. | Membership, programme, live, event and future product access reuse the explicit entitlement boundary. | Provider, recurring, refund, grant, redemption and entitlement mechanics remain JIT/gated. |
+| Safety/eligibility → governed personalised outcome | Product Law §§8–9, 12, 15; Platform §§12, 21C, 21D; Roadmap §§5–6 FP-004/FP-005 | CAP-013, CAP-014, CAP-015 / FP-004 and FP-005 | Required progressive health information and a current approved safety/eligibility decision. | Personalised guidance must not bypass Safety & Eligibility; no clinical thresholds, methodology or fallback rule is invented. | Safety re-evaluation, restriction, professional referral, correction and withdrawal remain owner-controlled and lifecycle-referenced through ATLAS-06. | The same safety boundary is reused by Nuwe Jy, adjustment, practitioner and later approved health outcomes. | Clinical rules, calculations, wording, re-evaluation and plan-generation semantics remain JIT/gated. |
+| Delivery → progress / feedback / recovery | Product Law §§5.4, 8–9; Platform §§21F, 21H; Roadmap §§3.1, 6 FP-005/FP-008/FP-014 | CAP-018, CAP-019, CAP-020 / FP-005, FP-008 and FP-014 | An authorised delivered outcome and the relevant participant context. | Progress and feedback do not become clinical, journal or completion authority by implication; missed time must not silently fabricate failure or erase progress. | Interruption, pause, catch-up, resume, recovery and exit remain broad participant consequences; lifecycle detail references ATLAS-06. | Programme, habit, reflective-progress and long-term maintenance experiences may reuse the boundary when separately approved. | Exact progress, completion, journal, reminder and participant-facing interaction semantics remain JIT. |
+| One-off → recurring / programme relationship | Product Law §§5.4, 18–19; Platform §§21A, 21F, 21H, 21L.8–21L.9; Roadmap §6 FP-008–FP-011/FP-014 | CAP-018, CAP-022 / FP-008–FP-011 and FP-014 | An approved recurring product, programme or participation entitlement and its applicable release gate. | Recurring commercial contract, access rights, programme enrolment and participation remain distinct; no renewal or membership promise is invented. | Cancellation, expiry, pause, restart and re-entry follow the applicable upstream contract; no automatic continuation is implied. | Basic, Premium, Nuwe Jy and later approved programme relationships reuse existing commercial, entitlement and programme authority. | Exact renewal, adjustment, pacing, enrolment and recovery semantics remain JIT/gated. |
+| Self-service → professional review | Product Law §§5.2, 5.6, 8, 15; Platform §§12.3, 16, 21L.10; Roadmap §6 FP-012 | CAP-014, CAP-015, CAP-023 / FP-012 | An approved professional-review path, explicit consent and applicable active scoped relationship. | Professional Care does not acquire Health, Safety or Plan ownership; access remains scoped, expiring, auditable and capacity-controlled. `OQ-033` remains unresolved where professional-record authority is required. | Referral, restriction, non-acceptance, review completion or withdrawal are broad seams only; no professional lifecycle is invented. | Only the controlled practitioner-review pilot and later approved professional service use this boundary. | Exact case, record, access, disposition and communication semantics remain JIT/gated. |
+| Correction / withdrawal / revocation / deletion / re-entry | Product Law §§8, 12, 19A; Platform §§21I, 21J; Roadmap §§6 FP-006 and 18 | CAP-003, CAP-004, CAP-028, CAP-030 / FP-006 and later affected packs | Current authority, applicable consent/rights decision and the relevant owner-controlled record boundary. | Consent, access revocation, correction, account closure and full deletion remain distinct; re-entry must not resurrect data that current deletion authority makes unavailable. | Recovery may include retry, re-entry, closure recovery or a safe exit, but never an invented restore path or storage mechanism. | Affected current and future products inherit the same privacy, retention, deletion and release-control boundaries. | Category-specific retention, deletion, export, restore, invalidation and operational mechanics remain JIT/gated. |
+
+Permanent participant boundary rows: `7`.
+
+Global participant journey-map rows: `0`.
+
+## 9.5 Active-Feature-Pack derivation path
+
+The deterministic path for an active Feature Pack is:
+
+```text
+Active Feature Pack
+    → approved Product / Roadmap outcome
+    → ATLAS-04 material CAPs
+    → ATLAS-05 Domain participation
+    → ATLAS-06 lifecycle obligations
+    → ATLAS-07 dependency seams
+    → applicable permanent participant boundaries
+    → temporary active-FP participant journey projection
+    → Feature Pack Grill-Me
+    → JIT frontend / Domain planning
+    → implementation
+```
+
+Do not build a whole-platform participant journey before selecting the active Feature Pack. The planner should:
+
+1. confirm the exact approved Feature Pack outcome;
+2. retrieve its ATLAS-04 material CAP row;
+3. resolve relevant ownership, lifecycle and dependency references through ATLAS-05, ATLAS-06 and ATLAS-07;
+4. select only the permanent participant boundary rows materially crossed by that outcome;
+5. create the temporary projection in §9.6;
+6. take the projection through Feature Pack Grill-Me; and
+7. create only the JIT frontend or Domain planning artifacts genuinely required by the approved outcome.
+
+## 9.6 Temporary active-FP participant journey projection
+
+The active Feature Pack planner creates a temporary, non-authoritative projection. It is rebuilt when the Feature Pack, upstream authority, CAP materiality, ownership evidence or applicable gate changes.
+
+| Field | Required meaning |
+|---|---|
+| Active Feature Pack / approved outcome | Exact `FP-*` and approved Roadmap outcome. |
+| Participant outcome / milestone | Medium-resolution participant-visible result; not a screen or interaction sequence. |
+| Entry condition / prerequisite | What must already be true before the outcome can be pursued. |
+| Relevant CAPs | Material ATLAS-04 capability references. |
+| Domain references | Relevant ATLAS-05 ownership and participation references. |
+| Lifecycle references | Relevant ATLAS-06 projection or `NONE`; no lifecycle states are invented. |
+| Dependency references | Relevant ATLAS-07 seam or `NONE`; no dependency rows are recreated. |
+| Safety / privacy / access boundary | Existing authority and named gate only. |
+| Failure / recovery / exit consequence | Broad participant consequence, without retry, redirect, restore or provider mechanics. |
+| Approved later progression | Existing downstream Product or Roadmap seam only. |
+| Frontend/JIT work | `YES`, `NO` or `CONDITIONAL`; `YES` does not authorise implementation. |
+| Gate / STOP | Named existing gate or `NONE`. |
+| Provenance | Exact current source paths, sections, IDs and gate references. |
+
+The projection does not become a new Roadmap or Product authority. It does not create a Domain Dossier, frontend contract, TB or VS automatically; the active Feature Pack Grill-Me determines what is genuinely required.
+
+## 9.7 Frontend/JIT rule
+
+`Frontend/JIT work = YES` means only:
+
+> This active participant outcome requires later implementation-grade experience specification.
+
+Later frontend JIT work may define screens, routes, components, forms, navigation, redirects, exact validation UX, loading/error states and interaction choreography. Section 9 must not.
+
+## 9.8 Safety, privacy, access and recovery rules
+
+Section 9 preserves existing authority and gates. It may keep visible that:
+
+- eligibility precedes personalised guidance;
+- a blocked or uncertain safety outcome follows an approved fallback or professional route where Product Law permits;
+- identity, payment, entitlement, programme membership and professional relationship remain distinct;
+- consent and professional access remain scoped, expiring and auditable;
+- correction, withdrawal, revocation, deletion and account closure remain distinct; and
+- recovery or re-entry cannot resurrect deleted or invalidated data.
+
+Section 9 must not create clinical thresholds, contraindications, calculation logic, renewal mechanics, professional policy, retention durations, deletion mechanisms or provider behaviour. Existing gates such as `OQ-033`, `OQ-022`, `OQ-004`, `OQ-005`, `OQ-008`, `OQ-010`, `OQ-011`, `OQ-019`, `OQ-025`, `OQ-009` and `OQ-029` through `OQ-032` remain at their existing authority level where materially relevant. Conditional `FP-017` remains conditional and is not given an inferred participant journey.
+
+## 9.9 Selective context and JIT boundary
+
+A fresh active-Feature-Pack planner should need only:
+
+1. Product and Roadmap material for the active outcome;
+2. the active ATLAS-04 CAP row;
+3. relevant ATLAS-05 Domain references;
+4. relevant ATLAS-06 lifecycle projections;
+5. relevant ATLAS-07 dependency seams;
+6. applicable Section 9 participant-boundary rows; and
+7. the exact `FRONTEND_EXPERIENCE_SYSTEM` sections required for later planning.
+
+The planner should not need a whole-platform participant journey map. A participant boundary does not automatically require a Domain Dossier, frontend contract, TB or VS. The active Feature Pack Grill-Me routes only the genuinely required work.
 
 ---
 
@@ -3941,4 +4085,42 @@ The ATLAS-07 delivery review uses the following protocol:
 7. confirm no runtime mechanism, implementation artifact, synthetic lifecycle or upstream authority change was introduced;
 8. confirm that pre-existing untracked `AGENTS.md` and `.agents/` material remains untouched;
 9. record any contradiction or escalation with its exact FP/CAP/Domain, source references, deciding authority and minimum safe resolution; and
+10. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
+
+## 26.10 ATLAS-08 completion standard
+
+ATLAS-08 is ready for review only when the evidence shows all of the following:
+
+| Requirement | Evidence in this artifact |
+|---|---|
+| No exhaustive permanent participant journey map | Section 9 records `0` global journey-map rows and keeps only the compact boundary register. |
+| Old Section 9 placeholder removed | Section 9 contains no population placeholder and no comprehensive mature-platform journey table. |
+| Permanent boundary register stays compact | Section 9 contains `7` participant-boundary/invariant rows and no row per Feature Pack. |
+| Product/Roadmap outcomes remain authoritative | Section 9 references Product Law and the Roadmap without creating a second participant timeline or Feature Pack-by-journey matrix. |
+| ATLAS-05 Domain semantics are not duplicated | Section 9 references Domain participation and ownership-sensitive exceptions rather than creating a Domain × Feature Pack or journey matrix. |
+| ATLAS-06 lifecycle semantics are not duplicated | Section 9 references lifecycle obligations and creates no participant-facing state machine or lifecycle states. |
+| ATLAS-07 dependency semantics are not duplicated | Section 9 references dependency seams and creates no replacement dependency graph or shared-write rule. |
+| Frontend boundary is preserved | No routes, pages, screens, forms, buttons, navigation, loaders, redirects, components, exact copy or interaction workflows are defined. |
+| No Product promises are invented | Every permanent boundary and projection field is constrained to existing upstream authority and named gates. |
+| Safety/privacy/access authority is preserved | Eligibility, consent, purchaser/participant separation, professional scope, entitlement, revocation, deletion and recovery boundaries remain references to existing authority. |
+| Active-FP projection is temporary and non-authoritative | Section 9.6 defines the active-FP derivation path, required fields, rebuild trigger and non-authoritative boundary. |
+| Selective context is deterministic | Section 9.9 defines the bounded Product/Roadmap → ATLAS-04 → ATLAS-05/06/07 → participant-boundary retrieval path. |
+| No unnecessary JIT/TB/VS artifacts are created | Section 9.6 and §9.9 require Feature Pack Grill-Me to determine whether downstream artifacts are genuinely required. |
+| Section 10 remains untouched | Staff/operator journey progression remains a template-only section and was not populated or redesigned by ATLAS-08. |
+| Working boundary is preserved | The Atlas remains derived, working, non-authoritative, unfrozen and excluded from the authority manifest; no upstream document changed. |
+| Next work is stopped | ATLAS-09, staff/operator journey work, FP-001 preparation, JIT Dossiers, TBs, VSs, HHs and TOONs are not started by this change. |
+
+## 26.11 ATLAS-08 review protocol
+
+The ATLAS-08 delivery review uses the following protocol:
+
+1. inspect the full diff;
+2. confirm the starting `main` SHA contains the approved ATLAS-07 baseline;
+3. confirm the branch and changed-file set contain only the working Atlas;
+4. run the Foundation Integrity Audit and existing documentation tests;
+5. run `git diff --check`;
+6. run a focused Section 9 audit for zero global journey-map rows, no placeholder, a compact permanent boundary register, no Feature Pack-by-journey matrix, no UI design, no lifecycle states, preserved safety/privacy/access references, temporary non-authoritative projection and untouched Section 10;
+7. confirm that no Product, Architecture, Domain, Roadmap or authority-manifest change was introduced;
+8. confirm that pre-existing untracked `AGENTS.md` and `.agents/` material remains untouched;
+9. record any contradiction or escalation with its exact participant outcome, Feature Pack, CAP, Domain, source references, deciding authority and minimum safe resolution; and
 10. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
