@@ -1,18 +1,18 @@
 # Delivery Atlas working v0.1.0
 
-- **Artifact:** `ATLAS-08`
+- **Artifact:** `ATLAS-09`
 - **Document status:** **DERIVED DELIVERY PLANNING ARTIFACT**
 - **Working state:** **WORKING / NON-AUTHORITATIVE**
 - **Authority boundary:** **DOES NOT MODIFY PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW**
 - **Implementation boundary:** **DOES NOT AUTHORISE IMPLEMENTATION**
-- **Purpose:** Define the first medium-resolution delivery-navigation contract for the complete approved NewYou roadmap.
+- **Purpose:** Define the medium-resolution delivery-navigation contract for the complete approved NewYou roadmap and the just-in-time routing required to prepare an active outcome safely.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
-- **Current content state:** ATLAS-01 through ATLAS-08 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review, the ATLAS-06 Lifecycle Derivation & JIT Projection Contract, the ATLAS-07 Cross-Domain Dependency Derivation & JIT Projection Contract and the ATLAS-08 Participant Journey Boundaries & JIT Projection Contract. Section 3 and Sections 10 through 22 remain template-only. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail. ATLAS-07 does not create an exhaustive global dependency graph, runtime interaction design or implementation detail. ATLAS-08 does not create an exhaustive global participant journey map, a Feature Pack-by-journey matrix, a participant-facing state machine or frontend implementation design.
+- **Current content state:** ATLAS-01 through ATLAS-09 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review, the ATLAS-06 Lifecycle Derivation & JIT Projection Contract, the ATLAS-07 Cross-Domain Dependency Derivation & JIT Projection Contract, the ATLAS-08 Participant Journey Boundaries & JIT Projection Contract and the ATLAS-09 Staff / Operator JIT Derivation Contract. Section 3 and Sections 11 through 22 remain template-only. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail. ATLAS-07 does not create an exhaustive global dependency graph, runtime interaction design or implementation detail. ATLAS-08 does not create an exhaustive global participant journey map, a Feature Pack-by-journey matrix, a participant-facing state machine or frontend implementation design. ATLAS-09 does not create a permanent Staff × Feature Pack journey map, a role-permission matrix, a universal Work lifecycle or operator UI design.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
 This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
 
-The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-07 do not change that manifest.
+The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-09 do not change that manifest.
 
 ---
 
@@ -3531,19 +3531,232 @@ The planner should not need a whole-platform participant journey map. A particip
 
 ---
 
-# 10. Staff/operator journey progression
+# 10. Staff / Operator JIT Derivation Contract
 
-## 10.1 Journey rule
+## 10.1 Purpose and permanence rule
 
-This view follows the operating model's workflow-first approach. It may show how staff, reviewers, operators, moderators, analysts and other approved actors encounter work, exceptions, decisions and evidence as capabilities enter operation.
+This section helps an active Feature Pack planner answer:
 
-Operator navigation groupings, work queues, dashboards and timelines are projections over domain-owned truth. They do not create a universal Task domain or a second business-write API.
+> Which approved actor requires attention, decision or action for this Feature Pack, which Domain owns the underlying truth, and which existing Operating Model rule governs the human workflow?
 
-## 10.2 Population structure
+It does not define the complete mature staff workflow, queue, dashboard, screen or permission model.
 
-| Actor / role | Operating outcome | Work or decision encountered | Required authority / relationship | Upstream operating anchor | First relevant Feature Pack | Exception / escalation path | Evidence / audit need | JIT boundary | Status |
-|---|---|---|---|---|---|---|---|---|---|
-| _Populate in a later Atlas task._ |  |  |  |  |  |  |  |  |  |
+No permanent Staff × Feature Pack journey map or actor/work register is maintained. Stable operator doctrine is already frozen in `docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md`, and frontend operator doctrine is already frozen in `docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md`. Permanent operator rows would duplicate stronger authority, increase drift and encourage premature workflow, permission or UI design.
+
+The permanence rule is:
+
+> If a view can be deterministically reconstructed from stronger canonical views, do not permanently duplicate it unless permanent representation materially improves decision-making.
+
+Permanent actor/work rows: `0`.
+
+## 10.2 Authority sources and precedence
+
+Section 10 creates no operator authority. It routes active-Feature-Pack planning through the existing authority chain:
+
+| Source | Operator-planning use |
+|---|---|
+| Product Law | Approved actors and commercial, safety, privacy and professional constraints. |
+| Architecture Law | State authority, durable execution, provider/evidence and projection boundaries. |
+| Domain Law | Durable-truth ownership and cross-domain mutation rules. |
+| Roadmap | Active Feature Pack outcome, operating requirement, gates and release effect. |
+| Platform Operating Model | Stable human and workflow doctrine. |
+| Frontend Experience System | Operator interaction and experience doctrine. |
+| ATLAS-04 | Material capabilities for the active Feature Pack. |
+| ATLAS-05 | Participating Domains and ownership-sensitive exceptions. |
+| ATLAS-06 | Lifecycle obligations and lifecycle ownership references. |
+| ATLAS-07 | Cross-domain dependency seams and authority direction. |
+| ATLAS-08 | Participant boundary where operator work protects a participant outcome. |
+
+The precedence is:
+
+```text
+Product Law
+    → Architecture Law
+    → Domain Law
+    → Roadmap
+    → Platform Operating Model
+    → Frontend Experience System
+    → Atlas derivation
+    → temporary active-FP operator projection
+    → JIT implementation
+```
+
+The temporary projection cannot override any stronger source. If a stronger source is contradictory, incomplete or requires a new policy, Section 10 records the escalation and does not guess.
+
+## 10.3 Operating Model reference boundary
+
+Section 10 references rather than reproduces the frozen Platform Operating Model. A future active Feature Pack loads only the exact relevant sections, including as applicable:
+
+- staff roles and operator organisation;
+- Command Centre and operator information architecture;
+- Work presentation and guards;
+- Work, Notification and Toast distinction;
+- notes, timelines and support context;
+- content, review, translation and publication operations;
+- analytics and dashboard governance;
+- scheduling and periodic operations;
+- mobile operating requirements;
+- performance and JIT handoff rules; and
+- operating-model STOP conditions.
+
+The Frontend Experience System remains the source for operator experience, interaction, dashboard presentation and frontend JIT boundaries. Section 10 does not copy its operator doctrine or define routes, screens, tables, cards, filters, navigation or components.
+
+## 10.4 Role is not authority
+
+Preserve:
+
+```text
+role
+≠ relationship
+≠ purpose
+≠ scope
+≠ business authority
+```
+
+The operator projection must never infer durable business authority from a role name. In particular:
+
+- Support does not gain Health authority;
+- Finance does not gain Entitlement ownership;
+- Moderator does not gain unrestricted Community authority;
+- Data Analyst does not gain source-data mutation rights;
+- Developer/Platform does not gain unrelated participant access;
+- Super Admin is not a universal business-policy bypass; and
+- Practitioner authority remains scoped by approved relationship, consent and professional rules.
+
+No permanent role-permission matrix is created. Exact policy, relationship, purpose, scope, consent, separation-of-duty and action guards remain with the relevant Product, Domain, Operating Model or JIT authority.
+
+## 10.5 Work is attention, not authority
+
+The frozen Platform Operating Model rule remains:
+
+> Work is attention, not authority.
+
+A queue or work item exposes a Domain-owned obligation or decision to an authorised actor. It does not create the underlying business truth, a second business-write API or a new operator-owned lifecycle. Queue visibility must not imply action permission. Resolving a Work projection requires the owning Domain's outcome and guard to succeed.
+
+Do not create a `Task`, `Work`, `Assignment`, `Review` or `Admin` Domain. Do not reproduce the Operating Model's common presentation states as an Atlas lifecycle. Domain-specific lifecycles remain governed by ATLAS-06 and the relevant JIT Domain Dossier.
+
+## 10.6 Operator surfaces are projections
+
+The following remain projections or operating surfaces over existing authority:
+
+```text
+Command Centre
+queue
+dashboard
+timeline
+analytics view
+saved view
+notification
+```
+
+They do not own underlying business facts. Dashboards, work queues, timelines, analytics and audit views must not acquire hidden write authority.
+
+Preserve the existing distinction:
+
+- Work = action required;
+- Notification = useful information; and
+- Toast = transient acknowledgement.
+
+Required work must never exist only in ephemeral frontend state. Section 10 does not duplicate channel, notification or dashboard implementation design.
+
+## 10.7 Active-Feature-Pack derivation path
+
+The deterministic derivation path is:
+
+```text
+Active Feature Pack
+    → approved Roadmap operating outcome
+    → ATLAS-04 material CAPs
+    → ATLAS-05 participating Domains
+    → ATLAS-06 lifecycle obligations
+    → ATLAS-07 dependency seams
+    → ATLAS-08 participant boundary where applicable
+    → relevant Platform Operating Model rules
+    → relevant Frontend Experience System rules
+    → temporary active-FP operator projection
+    → Feature Pack Grill-Me
+    → required JIT Domain / workflow / frontend planning
+    → implementation
+```
+
+Do not derive whole-platform operator workflow before selecting the active Feature Pack. Operator work enters only when the approved outcome requires it. FP-006 is the first major controlled core-operations and release boundary; it is not permission to pre-design every later practitioner, event, moderation, experimentation or future-market workflow.
+
+## 10.8 Temporary active-FP operator projection
+
+For an active Feature Pack, create a temporary, active-FP-specific, non-authoritative projection. It is rebuilt when relevant authority, CAP materiality, ownership evidence or gates change.
+
+| Field | Required meaning |
+|---|---|
+| Active Feature Pack / operating outcome | Exact `FP-*` and approved Roadmap outcome. |
+| Actor / scoped relationship | Existing approved role or relationship; never invent a role. |
+| Required attention / decision / action class | Medium-resolution operator need. |
+| Owning Domain / platform-control authority | Owner of the underlying truth or legitimate platform-control boundary. |
+| Relevant CAPs | Material ATLAS-04 CAP references. |
+| Domain references | Relevant ATLAS-05 participation and ownership references. |
+| Lifecycle references | Relevant ATLAS-06 projection or `NONE`. |
+| Dependency references | Relevant ATLAS-07 seam or `NONE`. |
+| Participant boundary | Relevant ATLAS-08 boundary or `NONE`. |
+| Operating Model anchor | Exact frozen Operating Model section or rule. |
+| Current authority guard | Existing role, relationship, purpose and scope requirement. |
+| Exception / escalation seam | Broad existing escalation, gate or authority route. |
+| Evidence / audit requirement | Existing evidence obligation only. |
+| Frontend / JIT need | `YES`, `NO` or `CONDITIONAL`. |
+| Gate / STOP | Existing OQ, gate or `NONE`. |
+| Provenance | Exact current source paths, sections and identifiers. |
+
+The projection is task-shaped, not database-shaped. It answers who needs to act or decide, what needs attention, why, who owns the truth, what authority permits the actor, what happens if work cannot proceed, what evidence matters and what JIT work remains.
+
+It must not define database tables, schemas, Resources, actions, queue names, routes, page names, components, exact filters, worker names, PubSub topics or Redis structures.
+
+## 10.9 Review, approval and escalation boundary
+
+Section 10 may identify that an active Feature Pack needs review, approval, assignment, changes requested, escalation or exception handling. It must not invent an approval hierarchy, reviewer role, self-approval rule, separation-of-duty matrix, SLA, escalation timer or retry schedule.
+
+Use existing Product, Domain, Operating Model and named OQ authority. An operator need does not automatically create a JIT Domain Dossier, workflow contract, frontend contract, Tracer Bullet, Vertical Slice or Horizontal Hardening task. Feature Pack Grill-Me determines which artifacts are genuinely required.
+
+## 10.10 Evidence, scheduling and analytics boundary
+
+Evidence does not become business authority. Audit & Evidence may retain proof of operator action, decision, approval, escalation, assignment, incident, release or correction while the owning Domain retains the business outcome. No permanent evidence catalogue is created here.
+
+When an active Feature Pack has business-significant scheduling, reference the frozen requirement for durable execution and current-authority revalidation. Do not prescribe worker names, queue names, cron expressions, retry counts, Redis, GenServers or PubSub.
+
+Do not create a dashboard catalogue, KPI register, universal reporting model or dashboard builder. Dashboard visibility does not imply source-data mutation, drill-down permission or export permission.
+
+## 10.11 Selective context contract
+
+A fresh active-Feature-Pack planner should need only:
+
+1. the exact Roadmap Feature Pack entry;
+2. the active ATLAS-04 CAP row;
+3. relevant ATLAS-05 Domain references;
+4. the relevant ATLAS-06 lifecycle projection;
+5. relevant ATLAS-07 dependency seams;
+6. the relevant ATLAS-08 participant boundary;
+7. exact relevant Platform Operating Model sections;
+8. exact relevant Frontend Experience System sections; and
+9. applicable gates and OQs.
+
+It should not need a permanent whole-platform staff journey table. A temporary projection is rebuilt when its upstream inputs change.
+
+## 10.12 Existing gates and STOP conditions
+
+Preserve named gates only where materially relevant, including as applicable:
+
+- `OQ-004`;
+- `OQ-009`;
+- `OQ-016`;
+- `OQ-020`;
+- `OQ-021`;
+- `OQ-022`;
+- `OQ-023`;
+- `OQ-029` through `OQ-033`; and
+- `OQ-035` through `OQ-040`.
+
+Do not create an Open Work duplicate or resolve these gates in Section 10.
+
+STOP if a new role, role-based authority, universal Task/Work/Admin Domain, universal business Work lifecycle, hidden projection authority, direct foreign write, invented permission or professional/clinical/legal/accounting/provider rule is required. Also STOP if exact frontend design, a frozen Operating Model modification, an unresolved OQ resolution or an Atlas-level assumption is needed.
+
+On STOP report the actor, active Feature Pack, relevant CAP, Domain, work or decision, conflicting source, deciding authority and minimum safe resolution. Do not guess.
 
 ---
 
@@ -4123,4 +4336,42 @@ The ATLAS-08 delivery review uses the following protocol:
 7. confirm that no Product, Architecture, Domain, Roadmap or authority-manifest change was introduced;
 8. confirm that pre-existing untracked `AGENTS.md` and `.agents/` material remains untouched;
 9. record any contradiction or escalation with its exact participant outcome, Feature Pack, CAP, Domain, source references, deciding authority and minimum safe resolution; and
+10. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
+
+## 26.12 ATLAS-09 completion standard
+
+ATLAS-09 is complete at its current scope only when the evidence shows all of the following:
+
+| Requirement | Evidence in this artifact |
+|---|---|
+| Permanent operator rows are zero | Section 10 records permanent actor/work rows as `0`. |
+| Old Section 10 placeholder is removed | Section 10 contains a derivation contract and no Staff × Feature Pack population table. |
+| No permanent Staff × Feature Pack map exists | Operator context is active-FP-only and reconstructed from stronger canonical views. |
+| Platform Operating Model is not duplicated | Section 10 references exact Operating Model anchors without copying complete role, Command Centre, Work, cadence, dashboard, support, scheduling or mobile doctrine. |
+| Frontend operator doctrine is not duplicated | Section 10 references the frozen Frontend Experience System and creates no route, screen, dashboard or component design. |
+| Role authority is preserved | The role, relationship, purpose, scope and business-authority distinction is explicit; no role-permission matrix exists. |
+| Work authority is preserved | Work remains attention over Domain-owned truth; no universal Task, Work, Assignment, Review or Admin Domain or business lifecycle is created. |
+| Projection authority is preserved | Command Centre, queues, dashboards, timelines, analytics, saved views and notifications remain projections. |
+| Active-FP projection is defined | The temporary, non-authoritative projection has bounded task-shaped fields and exact provenance. |
+| Selective context is deterministic | Roadmap → ATLAS-04 → ATLAS-05 → ATLAS-06 → ATLAS-07 → ATLAS-08 → relevant operating/frontend anchors → temporary projection is explicit. |
+| Existing gates remain unresolved | Named OQs are referenced only where relevant and are not resolved or duplicated. |
+| JIT artifacts remain gated | Feature Pack Grill-Me decides whether Domain, workflow, frontend, proof or hardening artifacts are genuinely required. |
+| Next work is stopped | Section 11, FP-001 preparation, JIT Dossiers, TBs, VSs, HHs, TOONs and implementation code are not started. |
+| Authority and working boundary remain intact | No Product, Architecture, Domain, Roadmap, Open Work or authority-manifest source is changed; the Atlas remains working, non-authoritative, unfrozen and implementation-inert. |
+
+Permanent actor/work rows: `0`.
+
+## 26.13 ATLAS-09 review protocol
+
+The ATLAS-09 implementation review uses the following protocol:
+
+1. inspect the full diff;
+2. confirm the starting `main` SHA, branch and synchronized `origin/main` baseline;
+3. confirm that only the working Atlas changed;
+4. run `git diff --check`;
+5. run the existing documentation tests and Foundation Integrity Audit;
+6. run a focused Section 10 audit for zero permanent actor/work rows, removed placeholder, no Staff × Feature Pack matrix, no role-permission matrix, no universal Task/Admin Domain, no duplicated Work lifecycle, no frontend/dashboard design and temporary non-authoritative projection;
+7. confirm Section 11 remains untouched;
+8. confirm no upstream authority, authority manifest, JIT dossier, proof, slice, hardening or implementation artifact changed;
+9. record any contradiction or escalation with the exact actor, active Feature Pack, CAP, Domain, source, deciding authority and minimum safe resolution; and
 10. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
