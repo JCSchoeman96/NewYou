@@ -1,18 +1,18 @@
 # Delivery Atlas working v0.1.0
 
-- **Artifact:** `ATLAS-06`
+- **Artifact:** `ATLAS-07`
 - **Document status:** **DERIVED DELIVERY PLANNING ARTIFACT**
 - **Working state:** **WORKING / NON-AUTHORITATIVE**
 - **Authority boundary:** **DOES NOT MODIFY PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW**
 - **Implementation boundary:** **DOES NOT AUTHORISE IMPLEMENTATION**
 - **Purpose:** Define the first medium-resolution delivery-navigation contract for the complete approved NewYou roadmap.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
-- **Current content state:** ATLAS-01 through ATLAS-06 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review and the ATLAS-06 Lifecycle Derivation & JIT Projection Contract. Section 3 and Sections 8 through 22 remain template-only. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail.
+- **Current content state:** ATLAS-01 through ATLAS-07 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review, the ATLAS-06 Lifecycle Derivation & JIT Projection Contract and the ATLAS-07 Cross-Domain Dependency Derivation & JIT Projection Contract. Section 3 and Sections 9 through 22 remain template-only. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail. ATLAS-07 does not create an exhaustive global dependency graph, runtime interaction design or implementation detail.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
 This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
 
-The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-06 do not change that manifest.
+The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-07 do not change that manifest.
 
 ---
 
@@ -3038,45 +3038,326 @@ Known gates remain unresolved and are not amended by this contract. These includ
 | JIT completeness | `FULL_SPEC_REQUIRED` explicitly gates complete state-machine specification in the affected JIT Domain Dossier. |
 | Proof/TB boundary | `PROOF_REQUIRED` flags proof planning and does not automatically create a Tracer Bullet. |
 | Selective derivation | An active Feature Pack can retrieve material CAPs, relevant Domain exceptions and required upstream references without reading the whole Atlas. |
-| ATLAS-07 | Not started. |
+| ATLAS-07 | Section 8 is a separate dependency derivation contract; ATLAS-06 does not define its content. |
 
 ---
 
-# 8. Cross-domain dependency map
+# 8. Cross-Domain Dependency Derivation & JIT Projection Contract
 
-## 8.1 Dependency rule
+ATLAS-07 defines how cross-domain dependency planning is derived when an approved Feature Pack becomes active. It is a delivery-navigation contract, not a second Domain or Architecture authority.
 
-The dependency map records domain-level direction and delivery impact. It does not define calls, events, messages, topics, queues, schemas or modules.
+## 8.1 Permanence rule
 
-Permitted edge classes are:
+No exhaustive global Domain → Domain dependency graph is permanently maintained.
 
-- authoritative read dependency;
-- owner-controlled command or durable consequence;
-- projection or observation dependency;
-- privacy, deletion or consent orchestration;
-- audit or evidence dependency;
-- external-provider evidence dependency; and
-- future or gated dependency.
+Most dependency direction can already be derived from the frozen Domain Map, ATLAS-03 CAP authority and support, ATLAS-04 Feature Pack capability materiality, ATLAS-05 active-Feature-Pack Domain derivation, ATLAS-06 lifecycle derivation and Architecture state-authority rules. A permanent full graph would duplicate stronger sources, drift as those sources change and encourage premature interaction design.
 
-Each edge must identify the source domain, target owner, business purpose, authority direction, affected Feature Packs, broad failure consequence and exact upstream reference.
+Permanent Section 8 content contains only information whose absence would make future JIT dependency planning materially unsafe or expensive. The permanent view records dependency invariants and a small reference-oriented exception register. It does not precompute all Domain → Domain relationships.
 
-## 8.2 Cycle rule
+Permanent global dependency-graph rows: `0`.
 
-Read composition can be cyclic without creating a control defect. A circular authoritative dependency exists when domains require one another to mutate authoritative state in an unresolvable loop. That condition is a global STOP.
+A relationship qualifies for permanent exception visibility when it is stable across multiple approved Feature Packs, or is a single approved high-risk or architecture-sensitive seam whose omission would make future planning unsafe; is difficult to reconstruct from the canonical sources at the point of work; is authority-level rather than implementation-level; and is useful for preventing an ownership, shared-write or circular-authority mistake. A routine relationship that fails this test remains derivable or JIT-only.
 
-The Atlas must preserve the Domain Map rules that:
+## 8.2 Canonical inputs
 
-- one domain owns each major durable truth;
-- relationships do not transfer mutation authority;
-- cross-boundary writes invoke the owner;
-- projections, caches, analytics, PubSub observations and provider state do not become hidden authority; and
-- privacy and audit orchestration does not acquire ownership of the records it governs or proves.
+Section 8 uses these sources and does not create a second dependency authority:
 
-## 8.3 Population structure
+| Source | Dependency use |
+|---|---|
+| Frozen Domain Map | Durable-truth ownership, allowed direction and circular-authority review. |
+| Architecture Law | State authority, cross-boundary mutation, evidence, projection and failure rules. |
+| ATLAS-03 | CAP authority scope, authoritative Domain and supporting Domains. |
+| ATLAS-04 | Material CAPs for the active Feature Pack. |
+| ATLAS-05 | Candidate Domain set and authority-sensitive Domain exceptions. |
+| ATLAS-06 | Active lifecycle obligations and lifecycle ownership. |
+| Roadmap / Product gates | Conditional or unresolved delivery constraints. |
 
-| From | To / owner | Edge class | Delivery effect | Lifecycle or invariant affected | Failure / recovery concern | Feature Pack relationship | Upstream reference | Readiness |
-|---|---|---|---|---|---|---|---|---|
-| _Populate in a later Atlas task._ |  |  |  |  |  |  |  |  |
+## 8.3 Authority precedence
+
+The dependency projection may never override durable-truth ownership, state authority, Product policy, Roadmap sequencing or lifecycle ownership.
+
+```text
+Product / Architecture / Domain Law
+    > CAP authority
+    > Feature Pack materiality
+    > derived Domain participation
+    > derived dependency projection
+```
+
+Roadmap sequencing and named Product gates remain upstream constraints alongside this precedence. They can make a dependency conditional and are never overridden by the projection.
+
+The frozen Domain Map controls who owns durable business truth. CAP authority preserves that ownership at capability level. Feature Pack materiality determines what matters now. Domain participation and dependency projections are derived planning views and cannot create a new owner, Domain, lifecycle or shared write.
+
+## 8.4 Conceptual dependency classes
+
+These are the six and only six Section 8 dependency classes. They describe planning relationships, not implementation interfaces.
+
+### `AUTHORITATIVE_READ`
+
+One Domain requires current authoritative truth owned by another Domain. The read does not grant mutation authority.
+
+### `OWNER_CONTROLLED_CONSEQUENCE`
+
+One outcome requires a durable consequence in another Domain. The target Domain owns and validates its own mutation. The dependency must not become a direct foreign write.
+
+### `DERIVED_PROJECTION`
+
+A Domain or approved projection exposes derived, rebuildable or read-oriented information based on source-owned truth. The projection never becomes authority.
+
+### `ORCHESTRATION_WITHOUT_OWNERSHIP`
+
+A coordinating Domain or platform capability manages a process that crosses multiple Domain-owned truths without owning those truths. Privacy and consent orchestration are examples at the conceptual level. No concrete workflow mechanism is defined here.
+
+### `EVIDENCE_OBSERVATION`
+
+Audit, Analytics, provider evidence or operational observation records or observes outcomes without becoming business authority.
+
+### `CONDITIONAL_GATED_SEAM`
+
+The dependency is visible but cannot be safely finalized until a named Product, Domain, Architecture, legal, clinical, professional, provider or Roadmap gate is resolved.
+
+## 8.5 Runtime interaction boundary
+
+Section 8 must not prescribe Ash actions, direct function calls, HTTP/API calls, commands, domain events, PubSub topics, queues, Oban jobs, GenServers, Redis, tables, schemas, foreign keys, indexes, cache keys, TTLs, retries or provider callback implementation.
+
+This is permitted:
+
+```text
+Commerce
+    → OWNER_CONTROLLED_CONSEQUENCE
+    → Entitlements
+```
+
+Any statement that selects a concrete call, API, command, event, message, topic, queue, worker or cross-domain write path is outside the Atlas boundary and belongs to JIT work. The permitted statement records authority direction only.
+
+## 8.6 Active-Feature-Pack derivation path
+
+The deterministic workflow for an active Feature Pack is:
+
+```text
+Active Feature Pack
+    → ATLAS-04 material CAP relationships
+    → ATLAS-03 CAP authority/support
+    → ATLAS-05 Domain projection and exceptions
+    → ATLAS-06 lifecycle obligations
+    → Domain Map + Architecture authority
+    → temporary dependency projection
+    → Feature Pack Grill-Me
+    → JIT Domain Dossiers / proof review
+    → TB / VS / HH where justified
+    → implementation
+```
+
+For each active Feature Pack:
+
+1. Confirm the exact approved `FP-*` outcome and its ATLAS-04 Feature Pack capability row.
+2. Collect only the material CAP relationships marked `I`, `R`, `E` or `S` for that Feature Pack.
+3. Resolve each material CAP through ATLAS-03. Preserve its authority scope, authoritative Domain, supporting Domains, lifecycle owner and broad pressure.
+4. Use ATLAS-05 to identify candidate Domains and relevant authority-sensitive exceptions. Generic participation is a review signal, not proof that every candidate Domain needs a dependency row or JIT Dossier.
+5. Use ATLAS-06 for lifecycle-bearing truths. Keep separate owners for separate durable truths and reference the active lifecycle projection rather than creating a synthetic cross-domain state machine.
+6. Recheck the relationship against the Domain Map and Architecture authority. Preserve provider-as-evidence, projection-as-non-authority, privacy/audit orchestration and platform-control boundaries.
+7. Create one temporary dependency row only when the active Feature Pack materially requires the relationship. Do not create one row for every pair of candidate Domains.
+8. Mark a relationship `CONDITIONAL_GATED_SEAM` when an existing gate prevents safe finalisation. If classifying the relationship requires inventing Product, Domain, lifecycle or implementation semantics, STOP.
+9. Take the temporary projection through Feature Pack Grill-Me, then create only the JIT Domain Dossiers and proof work required by the active outcome.
+
+If any canonical input is missing, contradictory or insufficient to classify the relationship without invention, record the exact source, CAP, Domain and Feature Pack and apply the STOP rules below.
+
+## 8.7 Temporary active-FP dependency projection
+
+The active Feature Pack planner creates a temporary, non-authoritative projection. A dependency row exists only when the active Feature Pack materially requires the relationship.
+
+| Field | Required meaning |
+|---|---|
+| Feature Pack / CAP | Exact active `FP-*`, relevant `CAP-*` and ATLAS-04 relationship. |
+| Source Domain / context | Domain or platform-control context requiring the dependency. This is not automatically the owner of the source truth. |
+| Target owner | Domain owning the durable truth involved, or the explicit platform-control boundary where no business Domain owns it. |
+| Dependency class | Exactly one of the six Section 8 conceptual classes. |
+| Business purpose | Why this active Feature Pack materially needs the relationship. |
+| Authority direction | Which side owns the relevant truth and mutation authority, including what the source side may not mutate. |
+| Lifecycle reference | Relevant ATLAS-06 lifecycle projection or `NONE`. No lifecycle state or transition is invented here. |
+| Broad failure consequence | High-level consequence if the dependency is unavailable, stale, duplicated or inconsistent. |
+| Pressure flags | Existing broad pressure categories only where materially relevant. |
+| Gate / STOP | Existing named gate, escalation or `NONE`. |
+| JIT Dossier need | `YES`, `NO` or `CONDITIONAL`, with the reason. |
+| Proof need | Whether a materially unproven architectural correctness claim requires proof review. |
+| Provenance / source references | Exact current source paths and sections, CAP/decision/requirement/flow references or named gates supporting the row. |
+| Authority basis | One permitted Section 2.2 basis: `PRODUCT`, `ARCHITECTURE`, `DOMAIN`, `ROADMAP`, `SUPPORTING`, `ATLAS_DERIVED`, `JIT`, `EVIDENCE` or `STOP`. This identifies the source of the statement, not a new dependency authority. |
+| Readiness | One permitted Section 2.2 label: `VISIBLE`, `DEPENDENT`, `GATED`, `JIT_REQUIRED`, `PROVEN` or `STOPPED`. Keep readiness separate from pressure and risk. |
+
+The projection is temporary, active-Feature-Pack-specific and non-authoritative. Rebuild it when relevant Product, Architecture, Domain or Roadmap authority, CAP relationships, gates or ownership evidence change. It must never become the permanent global dependency graph.
+
+## 8.8 Failure consequence boundary
+
+The temporary projection may identify broad failure classes such as:
+
+- unavailable authoritative truth;
+- stale decision;
+- duplicate consequence;
+- owner rejection;
+- provider ambiguity;
+- delayed consequence;
+- partial orchestration;
+- projection lag;
+- revoked authority;
+- unavailable evidence;
+- capacity conflict; or
+- safety re-evaluation mismatch.
+
+These labels describe delivery impact only. Recovery implementation, retry behaviour and reconciliation mechanics belong to JIT Architecture/Domain work and later executable evidence.
+
+## 8.9 Pressure and performance boundary
+
+The projection may reference these existing broad pressure categories where the active relationship makes them material:
+
+- `CONCURRENCY`;
+- `BURST`;
+- `DATABASE`;
+- `ASYNC`;
+- `PROVIDER`;
+- `REALTIME`;
+- `PROJECTION_FRESHNESS`;
+- `EXPORT`; or
+- `NONE`.
+
+Pressure does not select a mechanism. Section 8 must not prescribe Redis structures, Cachex, ETS, GenServers, PgBouncer, read replicas, Oban, PubSub, indexes or TTLs. Preserve `authority != acceleration` and the simplest-correct-path-first rule.
+
+## 8.10 Cycle rule
+
+Read composition may form cycles:
+
+```text
+A reads B
+B reads A
+```
+
+That shape is not automatically an authority defect.
+
+An unresolved circular authoritative mutation dependency exists when a directed cycle of Domains exists:
+
+```text
+D1 requires D2 to mutate authoritative state
+D2 requires D3 to mutate authoritative state
+...
+Dn requires D1 to mutate authoritative state
+```
+
+and no Domain in that cycle can safely establish its own durable consequence independently. The two-Domain case is:
+
+```text
+A requires B to mutate authoritative state
+AND
+B requires A to mutate authoritative state
+AND
+neither can safely establish its own durable consequence independently
+```
+
+This is a global STOP. On detection, report the active Feature Pack, relevant CAPs, every Domain in the cycle (including Domain A and Domain B for the two-Domain case), authoritative truths involved, current source references and the authority level that must resolve the dependency. Do not invent an ordering, event or call pattern to work around it.
+
+## 8.11 Shared-write rule
+
+STOP any dependency shape that implies:
+
+- direct mutation of another Domain's durable truth;
+- two Domains owning the same lifecycle state;
+- shared write ownership; or
+- projection, cache, provider or Analytics/Audit state replacing source authority.
+
+Cross-domain consequences remain owner-controlled. The target owner validates and records its own durable truth through the authority boundary already established upstream.
+
+## 8.12 Cross-domain lifecycle integration
+
+Section 8 does not duplicate ATLAS-06. For a dependency that touches lifecycle-bearing truths, the temporary projection references the relevant ATLAS-06 lifecycle obligation. If separate Domains own separate durable lifecycle truths, the dependency projection preserves those separate owners.
+
+Do not merge separate lifecycles into a synthetic cross-domain state machine. If coordination requires a new orchestration lifecycle, that lifecycle must have a clear authority owner or an explicit platform-control boundary. Otherwise mark the projection `STOPPED` and route it.
+
+## 8.13 Permanent dependency invariant and exception register
+
+The register below is reference-oriented. It keeps only the approved high-value seams and points to ATLAS-05 where an existing exception explains the planning concern. It does not copy ATLAS-05 exception prose, enumerate CAPs or Feature Packs, define runtime interactions or create a second dependency authority.
+
+| Seam | Relevant ATLAS-05 exception | Permanent dependency invariant | Gate if any | Authority anchor |
+|---|---|---|---|---|
+| Identity grants vs relationship truth | `EX-001` | Identity & Access owns identity-side privilege/grant truth. The relationship-owning Domain retains relationship or assignment truth. | `NONE` | ATLAS-03 `CAP-002`; Domain Map §§4–5 |
+| Health → Safety → Plan consequences | `NONE`, standard authority derivation | Health Records owns source health facts. Safety & Eligibility owns safety/eligibility decisions. Plans & Nutrition owns plan truth. No Domain writes another Domain's truth directly. | `OQ-005...OQ-011` where applicable | ATLAS-03 `CAP-013`, `CAP-014`, `CAP-015`; Domain Map §§4–5 |
+| Commerce contract vs Entitlements access | `EX-005` | Commerce owns commercial, payment and recurring-contract truth. Entitlements owns access-right truth. | `OQ-004` where provider or recurring semantics apply | ATLAS-03 `CAP-010`, `CAP-011`, `CAP-022`; Domain Map §§4–5 |
+| Privacy orchestration vs source records | `EX-003` | Privacy & Consent may coordinate rights requests and policy. Each source Domain retains record truth and owner-controlled fulfilment. | `OQ-009`, `OQ-029...OQ-032` where applicable | ATLAS-03 `CAP-004`; Domain Map §§4–5 |
+| Professional Care → Safety / Plans | `EX-006` | Professional Care cannot acquire Health, Safety or Plan authority merely by reviewing or recommending. | `OQ-033` | ATLAS-03 `CAP-023`; Domain Map §6.14 |
+| Events capacity vs Commerce payment | `EX-007` | Events & Live owns capacity, reservation and ticket truth. Commerce owns payment and refund truth. | `OQ-022`, `OQ-004` | ATLAS-03 `CAP-025`; Domain Map §6.13 |
+| Experimentation / Analytics / source outcomes | `EX-008` | Experimentation owns assignment and learning decisions. Analytics owns measurement evidence. Source Domains retain business outcomes. | `OQ-040` | ATLAS-03 `CAP-026`, `CAP-027`; Domain Map §§6.16–6.17 |
+
+Permanent seam register rows: `7`. The cycle STOP, shared-write STOP, provider-evidence rule and cross-cutting evidence rules are permanent invariants and are not counted as additional seam rows.
+
+## 8.14 Provider evidence rule
+
+External provider state is evidence, not business authority. The relevant platform Domain owns reconciliation and durable truth. If provider ambiguity materially affects an active dependency, record it in the temporary projection's failure consequence, gate and proof need. Do not create a permanent provider dependency owner or prescribe callback, retry or reconciliation implementation.
+
+## 8.15 Audit and Analytics rule
+
+Audit & Evidence and Analytics may observe or retain evidence according to their authority. They do not gain authority over source-Domain business truth. Do not create permanent rows for every source → Analytics or source → Audit relationship. Derive those relationships only when the active Feature Pack materially requires them.
+
+## 8.16 Selective context contract
+
+A fresh active-Feature-Pack planner should need only:
+
+1. the active Feature Pack row from ATLAS-04;
+2. relevant CAP entries from ATLAS-03;
+3. relevant ATLAS-05 Domain projection and exceptions;
+4. relevant ATLAS-06 lifecycle projections;
+5. these Section 8 dependency rules; and
+6. the exact Domain Map, Architecture, Product or Roadmap references required by those relationships.
+
+The planner should not need to read the entire Atlas or reconstruct a global dependency graph. This selective context keeps the dependency review bounded while retaining the authority-sensitive seams that are unsafe to rediscover informally.
+
+## 8.17 JIT Domain Dossier rule
+
+A dependency does not automatically require a JIT Domain Dossier. A Dossier is required when the active Feature Pack needs implementation-grade semantics that are not already frozen, including owner-controlled consequence semantics, lifecycle effects, failure/reconciliation behaviour or sensitive cross-domain access.
+
+If existing authority and current implementation already make the relationship clear, reuse that evidence. Do not create a ceremonial Dossier. If the relationship cannot be specified without resolving higher-level uncertainty, mark it `STOPPED` and route it.
+
+## 8.18 Proof and Tracer Bullet rule
+
+A dependency may set `Proof need` when a material architectural correctness claim remains unproven. Examples include concurrency across separately owned truths, provider ambiguity, cross-domain recovery, duplicate business consequences, scarce-capacity/payment races or stale safety decisions.
+
+Proof need does not create a Tracer Bullet. The later Feature Pack contract decides `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`. No ceremonial TB is created by Section 8.
+
+## 8.19 Existing gates and conditional seams
+
+Section 8 does not resolve existing gates. Preserve, where relevant:
+
+- `OQ-033` for professional-record authority;
+- `OQ-022` for event reservation architecture;
+- `OQ-004` for provider payment and recurring semantics;
+- `OQ-040` for the experimentation boundary;
+- clinical and calculation decisions; and
+- future Product direction gates.
+
+Use `CONDITIONAL_GATED_SEAM`, `GATED` or `STOPPED` according to the existing Atlas vocabulary and current evidence. Do not invent a resolution. FP-017 remains conditional until a separately approved Product direction names its affected owners.
+
+## 8.20 Permanence principle
+
+If a view can be deterministically reconstructed from stronger canonical views, do not permanently duplicate it unless permanent representation materially improves decision-making.
+
+Dependency invariants and exceptional authority-sensitive seams pass this test. The complete dependency graph does not.
+
+## 8.21 ATLAS-07 closure audit
+
+| Audit | Result |
+|---|---|
+| Permanent global dependency-graph rows | `0` |
+| Section 8 population placeholder | None remains |
+| Conceptual dependency classes | Exactly `6`: `AUTHORITATIVE_READ`, `OWNER_CONTROLLED_CONSEQUENCE`, `DERIVED_PROJECTION`, `ORCHESTRATION_WITHOUT_OWNERSHIP`, `EVIDENCE_OBSERVATION`, `CONDITIONAL_GATED_SEAM` |
+| Permanent seam register | `7` small reference-oriented rows; no routine Domain-pair enumeration |
+| ATLAS-05 exception handling | Existing exception IDs are referenced; their explanations are not duplicated |
+| Ownership safety | No shared authoritative writes or ownership transfers introduced |
+| Cycle safety | Circular authoritative mutation is a global STOP; read cycles remain allowed |
+| Provider/evidence authority | Provider, projection, Analytics and Audit state cannot become hidden business authority |
+| Lifecycle integration | ATLAS-06 is referenced; no synthetic cross-domain state machine is created |
+| Runtime boundary | No calls, events, messages, topics, queues, Resources, schemas, modules or mechanisms are defined |
+| Current hard STOP | None identified in the approved ATLAS-07 scope; the documented STOP rules remain active for future projections |
+| CAP/FP relationships | ATLAS-03 and ATLAS-04 remain unchanged |
+| Selective derivation | Active-FP dependency rows are created only for material relationships from the canonical derivation path |
+| Next Atlas section | ATLAS-08 and participant-journey work were not started |
+
+ATLAS-07 remains a derived, working, non-authoritative and unfrozen planning contract. It does not prepare FP-001, create JIT Domain Dossiers, TBs, VSs, HHs or TOONs, or authorize implementation.
 
 ---
 
@@ -3601,7 +3882,7 @@ ATLAS-06 is ready for review only when the evidence shows all of the following:
 | Upstream authority unchanged | No Product, Architecture, Domain, Roadmap, Open Work or current-authority manifest source is changed. |
 | Existing Atlas views unchanged | The 31 ATLAS-03 CAP lifecycle records, ATLAS-04 relationships and ATLAS-05 Domain derivation remain unchanged. |
 | Selective retrieval | A fresh Feature Pack agent can retrieve only the active-FP summary, relevant CAPs, relevant Domain projection or exceptions, this contract and required upstream references. |
-| ATLAS-07 boundary | ATLAS-07 is not started. |
+| ATLAS-07 boundary | ATLAS-06 does not define Section 8 dependency content; ATLAS-07 is a separate contract. |
 | Foundation integrity | Foundation Integrity Audit and applicable documentation tests pass. |
 | Working boundary | The Atlas remains `WORKING / NON-AUTHORITATIVE`, derived planning material and unfrozen. |
 
@@ -3620,3 +3901,44 @@ The ATLAS-06 delivery review uses the following protocol:
 9. confirm that pre-existing untracked `AGENTS.md` and `.agents/` material remains untouched;
 10. record any contradiction or escalation with its exact CAP/Domain/Feature Pack, source references, deciding authority and minimum safe resolution; and
 11. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
+
+## 26.8 ATLAS-07 completion standard
+
+ATLAS-07 is ready for review only when the evidence shows all of the following:
+
+| Requirement | Evidence in this artifact |
+|---|---|
+| No exhaustive permanent graph | Section 8 records `0` permanent global dependency-graph rows and no routine Domain-pair enumeration. |
+| No Section 8 placeholder | The former population-oriented table is removed and no Section 8 placeholder remains. |
+| Exactly six conceptual classes | Section 8 defines exactly `AUTHORITATIVE_READ`, `OWNER_CONTROLLED_CONSEQUENCE`, `DERIVED_PROJECTION`, `ORCHESTRATION_WITHOUT_OWNERSHIP`, `EVIDENCE_OBSERVATION` and `CONDITIONAL_GATED_SEAM`. |
+| Permanent seams stay compact | The reference-oriented register contains `7` approved high-value seams; global safety rules are invariants, not graph rows. |
+| ATLAS-05 is referenced, not copied | The register points to existing ATLAS-05 exception IDs and does not duplicate their full explanations. |
+| Canonical inputs are explicit | Section 8 uses the Domain Map, Architecture Law, ATLAS-03, ATLAS-04, ATLAS-05, ATLAS-06 and applicable Roadmap/Product gates. |
+| Authority precedence is explicit | Product, Architecture and Domain Law outrank CAP authority, Feature Pack materiality, Domain participation and the dependency projection. |
+| Deterministic active-FP derivation | Material ATLAS-04 CAPs flow through ATLAS-03, ATLAS-05, ATLAS-06 and upstream authority into one temporary projection only when the relationship is materially required. |
+| Ownership remains frozen | No dependency transfers durable-truth ownership, creates shared authoritative writes or gives a coordinator business authority. |
+| Cycle STOP is explicit | Read cycles remain allowed; unresolved circular authoritative mutation is a global STOP with exact FP/CAP/Domain reporting. |
+| Provider and evidence authority is protected | Provider, projection, Analytics and Audit state remain evidence or derived state rather than source-domain business authority. |
+| Lifecycle integration is preserved | Section 8 references ATLAS-06 and does not create a synthetic cross-domain state machine. |
+| Proof and TB boundary is preserved | Proof need informs the later Feature Pack contract and does not create a TB automatically. |
+| Runtime boundary is preserved | No calls, events, messages, topics, queues, Resources, schemas, modules, caches or provider mechanisms are defined. |
+| Existing views remain unchanged | ATLAS-03 CAP ownership, ATLAS-04 relationships and ATLAS-05 exception semantics are not amended. |
+| Selective context is explicit | A fresh active-FP planner can use the selected CAPs, relevant Domain exceptions, lifecycle projection, Section 8 rules and exact upstream references without a global graph. |
+| Foundation remains intact | The existing Foundation Integrity Audit and applicable documentation tests pass. |
+| Working boundary is preserved | The Atlas remains derived, working, non-authoritative and unfrozen, and no authority document or manifest changes. |
+| Next work is stopped | ATLAS-08, participant-journey work, FP-001 preparation, JIT Dossiers, TBs, VSs, HHs and TOONs were not started. |
+
+## 26.9 ATLAS-07 review protocol
+
+The ATLAS-07 delivery review uses the following protocol:
+
+1. inspect the full diff;
+2. confirm the starting `main` SHA contains the approved ATLAS-06 baseline;
+3. confirm the branch and changed-file set contain only the working Atlas;
+4. run the Foundation Integrity Audit and existing documentation tests;
+5. run `git diff --check`;
+6. run a focused Section 8 audit for zero global dependency-graph rows, no placeholder, exactly six conceptual classes, seven reference-oriented seams, ATLAS-05 reference discipline, active-FP-only projection, selective context and the permanent safety boundaries;
+7. confirm no runtime mechanism, implementation artifact, synthetic lifecycle or upstream authority change was introduced;
+8. confirm that pre-existing untracked `AGENTS.md` and `.agents/` material remains untouched;
+9. record any contradiction or escalation with its exact FP/CAP/Domain, source references, deciding authority and minimum safe resolution; and
+10. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
