@@ -100,7 +100,7 @@ ATLAS-04 was checked against the current matrix and reverse summary. FP-001 has 
 | `CAP-001` | `I` | Canonical identity and authentication | Identity & Access owns canonical identity, credentials, sessions, devices, recovery and account-closure state | The approved outcome requires one recoverable identity, verified email and authenticated access boundary | `04_DOMAIN_MAP_v1.0.0.md §6.1`; `03_ARCHITECTURE_v1.0.0.md §6.1`; `05_ROADMAP_v1.0.0.md §6 FP-001` | `YES` for implementation-grade identity, verification, session, recovery and abuse-boundary detail |
 | `CAP-002` | `I` | Scoped authorisation and relationship access | Identity & Access owns identity-side grants; relationship-owning Domains retain relationship truth | The pack must protect current actor, scope, purpose, expiry and revocation without creating a shared access owner | `04_DOMAIN_MAP_v1.0.0.md §§3-5, 6.1`; `03_ARCHITECTURE_v1.0.0.md §6.2`; `05_ROADMAP_v1.0.0.md §1.1` | `YES` for exact policy composition, field projection and revocation behaviour where required |
 | `CAP-003` | `I` | Consent and purpose control | Privacy & Consent owns purpose-specific consent and lawful-basis state | Terms/privacy and purpose boundaries must be respected and remain distinct from identity and role authority | `04_DOMAIN_MAP_v1.0.0.md §§4, 6.2`; `03_ARCHITECTURE_v1.0.0.md §6.3`; `00_PLATFORM_v1.2.1.md §§21C.19, 21I.13` | `CONDITIONAL`; current law may be sufficient unless exact entry-purpose and withdrawal semantics are needed |
-| `CAP-005` | `I` | Public discovery and acquisition | No single owner; Content, Communications, source Domains, Privacy and Identity retain their own truth | FP-001 introduces the public-to-account boundary and must keep useful public discovery separate from forced signup or protected access | `05_ROADMAP_v1.0.0.md §6 FP-001`; `00_PLATFORM_v1.2.1.md §§7.2-7.3`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md §§3.1, 5.1` | `CONDITIONAL`; exact public copy and acquisition surfaces are downstream only if materially new |
+| `CAP-005` | `I` | Public discovery and acquisition | No single Domain owns CAP-005. Content & Media owns public content. Commerce owns product information. Communications owns subscriber/contact state. Analytics owns acquisition evidence. Each source Domain retains its own truth. | FP-001 introduces the public-to-account boundary and must keep useful public discovery separate from forced signup or protected access | `05_ROADMAP_v1.0.0.md §6 FP-001`; `00_PLATFORM_v1.2.1.md §§7.2-7.3`; `04_DOMAIN_MAP_v1.0.0.md §6.5`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md §§3.1, 5.1` | `CONDITIONAL`; exact public copy and acquisition surfaces are downstream only if materially new |
 | `CAP-006` | `I` | Governed content, translation and publication | Content & Media owns content versions, locale branches, approval and publication | Launch-facing product, safety, terms and onboarding understanding depends on governed approved bilingual content | `04_DOMAIN_MAP_v1.0.0.md §6.7`; `00_PLATFORM_v1.2.1.md §§21E.1-21E.10`; `PLATFORM_OPERATING_MODEL_v1.0.0.md §§9-13` | `CONDITIONAL`; frozen content and translation law may support reuse, with exact detail only if the active slice needs it |
 | `CAP-017` | `I` | Communications and notification delivery | Communications owns subscriber contact, message intent, delivery status and provider evidence; it does not own canonical account email or originating business facts | Verification and recovery are part of the outcome and need durable, retry-aware, privacy-sensitive delivery consequences | `04_DOMAIN_MAP_v1.0.0.md §6.15`; `03_ARCHITECTURE_v1.0.0.md §10.4`; `PLATFORM_OPERATING_MODEL_v1.0.0.md §§7, 12, 21`; `01_DECISIONS_v1.2.2.md DEC-261-DEC-263` | `YES` for the domain contract around verification/recovery intent, deduplication, retry, failure and provider evidence; OQ-036 remains unresolved |
 | `CAP-028` | `I` | Audit and security evidence | Audit & Evidence owns restricted append-only evidence; source Domains retain business truth | Sensitive identity, recovery, privilege, support and security actions require minimised, auditable evidence | `04_DOMAIN_MAP_v1.0.0.md §6.18`; `03_ARCHITECTURE_v1.0.0.md §§12.3, 12.4, 14`; `PLATFORM_OPERATING_MODEL_v1.0.0.md §§22, 25, 28` | `CONDITIONAL`; the current evidence boundary may suffice until exact FP-001 evidence events and retention are needed |
@@ -122,13 +122,13 @@ The approved starting set is the six Domains named by the Roadmap. The role, dur
 
 `Affected Domain` is not the same as `Change Domain`, and neither implies a JIT dossier. The durable-consequence column identifies whether the Domain's own truth may change or be persisted by the outcome. A dossier is selected only where Phase 7C would otherwise need to invent implementation-grade Domain semantics.
 
-Commerce is deliberately absent. `CAP-005` has generic Commerce support in the capability inventory, but the explicit FP-001 Roadmap affected set and current Domain authority do not make Commerce a participating FP-001 Domain.
+Commerce is deliberately absent. The permanent CAP-005 authority is federated, not FP-specific: no single Domain owns the composite. Content & Media owns public content; Commerce owns product information; Communications owns subscriber/contact state; Analytics owns acquisition evidence. For FP-001, the Roadmap affected-Domain set excludes Commerce. Generic CAP-005 Commerce authority therefore does not make Commerce an actual FP-001 participant.
 
 ## 8. Phase 7B dossier discovery
 
 ### Required dossiers
 
-1. **Identity & Access: `YES`.** Phase 7C cannot truthfully finalise the verified-identity outcome without implementation-grade clarification of the account/identity boundary, verification gate, session and device revocation, graduated recovery, scoped grants, duplicate/retry handling, authority reconstruction and abuse/security boundary. The dossier must preserve current Domain and Architecture law and must not resolve `OQ-034` or select a package or mechanism.
+1. **Identity & Access: `YES`.** Phase 7C cannot truthfully finalise the verified-identity outcome without implementation-grade clarification of the account/identity boundary, verification gate, session and device revocation, graduated recovery, scoped grants, duplicate/retry handling, authority reconstruction and abuse/security boundary. Phase 7A does not resolve `OQ-034`. If Phase 7B is authorised, this dossier may define implementation-grade Identity & Access Resources, actions, policies and lifecycle semantics, evaluate the authentication implementation architecture and produce the design and evidence needed for explicit `OQ-034` resolution. It may select concrete mechanisms only where current Architecture Law and the `OQ-034` authority permit. `OQ-034` remains owner-controlled and may not be silently or unilaterally resolved or overridden by the dossier.
 2. **Communications: `YES`.** Verification and recovery delivery are material consequences of the selected outcome. Phase 7C needs a domain-level contract for message intent, destination distinction, privacy minimisation, retry/deduplication, terminal failure and provider evidence. The dossier must not choose a provider/channel policy or resolve `OQ-036`.
 
 ### Conditional candidates
@@ -214,7 +214,7 @@ Conditional candidates remain Privacy & Consent, Content & Media and Audit & Evi
 
 | OQ | Classification | Protected behaviour | Deciding authority and Phase 7A effect |
 |---|---|---|---|
-| `OQ-034` | `BLOCKS_THIS_FP` | The verified identity/session outcome cannot be accepted without the approved authentication implementation architecture and proof boundary. | Architecture/Product authority and the applicable evidence boundary decide. Phase 7A may define scope and dossier discovery, but must not resolve it. Phase 7C/development-entry acceptance stops while it remains unresolved. |
+| `OQ-034` | `BLOCKS_THIS_FP` | The verified identity/session outcome cannot be accepted without the approved authentication implementation architecture and proof boundary. | Architecture/Product authority and the applicable evidence boundary decide. Phase 7A identifies the block and must not resolve or locally reinterpret it. An authorised Phase 7B dossier may supply implementation-grade design and evidence for that owner-controlled resolution, but may not silently or unilaterally resolve or override the OQ. Phase 7C/development-entry acceptance stops while it remains unresolved. |
 
 ### 10.6 Non-blocking / later gates
 
@@ -228,21 +228,25 @@ Conditional candidates remain Privacy & Consent, Content & Media and Audit & Evi
 
 ### 10.7 Entry STOP condition
 
-While `OQ-034` remains unresolved, Phase 7A and the selected Phase 7B dossiers may:
+While `OQ-034` remains unresolved:
+
+Phase 7A may:
 
 - preserve the approved outcome and boundaries;
-- define the authoritative Domain and communication contracts at the required planning level;
-- record known lifecycle, security, privacy, frontend, data and performance obligations;
-- identify unresolved gates and route them to their owners; and
-- prepare questions needed for Phase 7C.
+- identify the `OQ-034` block and select the required dossier;
+- record known obligations; and
+- route the question to its owning authority.
 
-They may not:
+If separately authorised, the Phase 7B Identity & Access dossier may:
 
-- resolve or locally reinterpret `OQ-034`;
-- select an authentication package, exact implementation mechanism or implementation-grade state/schema contract;
-- accept the verified identity/session outcome as development-ready;
-- finalise proof classification or create a TB; or
-- start executable development.
+- define implementation-grade Identity & Access Resources, actions, policies and lifecycle semantics;
+- evaluate the authentication implementation architecture;
+- select concrete mechanisms where current Architecture Law and the `OQ-034` authority permit; and
+- produce the design and evidence needed for explicit owner-controlled `OQ-034` resolution.
+
+Phase 7A may not resolve or locally reinterpret `OQ-034`. A Phase 7B dossier may support that resolution but may not silently or unilaterally resolve or override it.
+
+Until `OQ-034` is explicitly resolved under its owning authority, neither Phase 7C acceptance nor development entry may proceed. This Phase 7A artifact does not accept the verified identity/session outcome as development-ready, finalise proof classification, create a TB or start executable development.
 
 Any new contradiction in Product, Architecture, Domain ownership or Roadmap truth is a STOP and must be routed to the owning authority rather than absorbed here.
 
@@ -332,20 +336,9 @@ No REUSE_EXISTING_PROOF or NEW_TRACER_BULLET decision is made here.
 No TB ID or proof artifact is created.
 ```
 
-## 16. Known later Roadmap authority debt
+## 16. Phase 7A handoff and provenance
 
-```text
-KNOWN LATER ROADMAP AUTHORITY DEBT:
-FP-015 lists OQ-036 as a Major Gate but does not assign it a local four-way classification.
-This does not affect FP-001.
-Resolve before canonical FP-015 preparation/finalisation.
-```
-
-This handoff does not amend the Roadmap or Atlas.
-
-## 17. Phase 7A handoff and provenance
-
-If Phase 7B and then Phase 7C are separately authorised, they receive:
+If Phase 7B and then Phase 7C are separately authorised, Phase 7B may use this handoff to produce the implementation-grade dossier design and evidence needed for owner-controlled `OQ-034` resolution before Phase 7C. Phase 7C may proceed only after that gate is explicitly resolved and then approves the Final Feature Pack Contract. They receive:
 
 - the approved Roadmap outcome and validation objective;
 - exactly seven material introduced capabilities: `CAP-001`, `CAP-002`, `CAP-003`, `CAP-005`, `CAP-006`, `CAP-017`, `CAP-028`;
@@ -376,7 +369,7 @@ If Phase 7B and then Phase 7C are separately authorised, they receive:
 
 No archive document was needed. No global matrix, global journey, permanent FP-specific state machine or Atlas expansion was used.
 
-## 18. Scope audit and STOP review
+## 17. Scope audit and STOP review
 
 This working artifact contains planning categories only. It does not create:
 
