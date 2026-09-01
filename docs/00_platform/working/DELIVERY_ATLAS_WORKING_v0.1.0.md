@@ -10,7 +10,7 @@
 - **Current content state:** ATLAS-01 through ATLAS-11 are complete at their current scope: ATLAS-01 contract, the ATLAS-02 Feature Pack Portfolio Register, the ATLAS-03 Platform Capability Inventory, the ATLAS-04 Capability Introduction / Reuse Matrix, the ATLAS-05 Domain Participation Derivation & Exception Review, the ATLAS-06 Lifecycle Derivation & JIT Projection Contract, the ATLAS-07 Cross-Domain Dependency Derivation & JIT Projection Contract, the ATLAS-08 Participant Journey Boundaries & JIT Projection Contract, the ATLAS-09 Staff / Operator JIT Derivation Contract, the ATLAS-10 Frontend JIT Derivation Contract and the ATLAS-11 Data Authority & Projection JIT Derivation Contract. Section 3 and Sections 13 through 22 remain template-only. Section 12 is a permanent derivation contract with zero permanent source→consumer rows and zero new Section-12 flow classes. Section 7 is a permanent derivation contract with zero permanent lifecycle rows. ATLAS-05 does not create a permanent Domain × Feature Pack matrix, a standalone domain inventory or a lifecycle inventory. ATLAS-06 does not create Feature Pack preparation, journey analysis or implementation detail. ATLAS-07 does not create an exhaustive global dependency graph, runtime interaction design or implementation detail. ATLAS-08 does not create an exhaustive global participant journey map, a Feature Pack-by-journey matrix, a participant-facing state machine or frontend implementation design. ATLAS-09 does not create a permanent Staff × Feature Pack journey map, a role-permission matrix, a universal Work lifecycle or operator UI design. ATLAS-10 does not create a permanent frontend surface row, Surface × Feature Pack matrix, second frontend taxonomy or frontend implementation design. ATLAS-11 does not create a permanent data-flow matrix, a second dependency taxonomy, a storage/transport mechanism or implementation design.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 
-This document is the initial Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through preparation, implementation, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
+This document is the current Delivery Atlas working artifact. It gives later delivery planning a common set of views and labels and defines the controlled lifecycle that moves an approved roadmap outcome through canonical Phase 7, proof, execution, evidence, handoff and the next delivery decision. It leaves implementation-grade design to the affected Feature Pack and just-in-time (JIT) Domain Dossiers.
 
 The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` unless an explicit repository governance decision requires a later metadata change. ATLAS-01 through ATLAS-11 do not change that manifest.
 
@@ -20,21 +20,26 @@ The working artifact remains outside `docs/00_platform/CURRENT_AUTHORITY_MANIFES
 
 ## 1.1 Authority hierarchy
 
-The Delivery Atlas is subordinate to every upstream authority. The governing delivery chain is:
+The Delivery Atlas is subordinate to every upstream authority. The authority hierarchy is:
 
 ```text
 Product Law
     → Architecture Law
     → Domain Law
     → Roadmap
-    → Delivery Atlas
-    → Feature Pack Contracts
-    → JIT Domain Dossiers
-    → Architectural Proof
-    → Vertical Slices
-    → Horizontal Hardening
-    → Release / Readiness
 ```
+
+The authority hierarchy ends at the Roadmap. Delivery work is navigated through a separate derived flow:
+
+```text
+approved Roadmap Feature Pack
+    + applicable upstream authority
+    → Delivery Atlas derived navigation
+    → canonical Phase 7
+    → downstream executable stages
+```
+
+The Atlas does not become an authority tier merely because it points a planner to the next required artifact or gate.
 
 The current sources that establish this chain are:
 
@@ -82,6 +87,8 @@ The Atlas must preserve these boundaries:
 
 ## 1.4 Explicit non-authority
 
+> No Atlas-derived fact may authorise implementation unless it resolves to stronger upstream authority or an approved downstream JIT / Final Feature Pack Contract.
+
 The Atlas must not:
 
 - amend, reinterpret or silently repair Product, Architecture, Domain or Roadmap authority;
@@ -113,22 +120,24 @@ The Atlas may record the first. It must defer the second unless an upstream sour
 
 The Delivery Atlas governs how an approved roadmap outcome moves from a delivery relationship into implementation and returns as verified evidence. It makes the required handoffs and review points visible without authorising implementation or creating lower-level contracts.
 
-The operating flow is:
+The canonical planning and execution handoff is:
 
 ```text
-Roadmap
-    → Delivery Atlas
-    → Feature Pack preparation
-    → TB / VS / HH preparation
-    → Grill-Me review
-    → Implementation
-    → Evidence collection
-    → Implementation handoff
-    → Continuation review
-    → Next delivery decision
+Roadmap selects approved Feature Pack
+    → Delivery Atlas derived navigation
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / Tracer Bullet only when required
+    → Vertical Slices
+    → Horizontal Hardening
+    → Release / Readiness
 ```
 
-The Roadmap supplies the approved outcome, scope, sequencing, dependencies and gates. The Atlas derives the delivery relationships and identifies the next required planning boundary. Feature Pack preparation turns an approved outcome into a controlled implementation boundary. TB, VS and HH preparation defines the proof, behaviour or hardening objective at the correct level. Grill-Me confirms that the proposed boundary is understood before meaningful implementation planning. Implementation then produces evidence, a handoff and a continuation decision.
+The Roadmap supplies the approved outcome, scope, sequencing, dependencies and gates. The Atlas derives the delivery relationships and identifies the next required planning boundary. Phase 7A creates the Feature Pack Skeleton and preliminary Gate Manifest. Phase 7B creates only the required implementation-grade JIT Domain Dossiers. Phase 7C resolves the blocking gates and produces the Final Feature Pack Contract, which is the development-entry authority. The approved contract then records `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`; no ceremonial TB is created. Architectural Proof or a Tracer Bullet is used only when the contract requires it, followed by Vertical Slices, Horizontal Hardening and Release / Readiness. Evidence collection, Implementation Handoff and Continuation Review support those downstream decisions and do not create an additional authority tier.
+
+Grill-Me is a review gate within the applicable preparation boundary. It does not precede Phase 7A, replace the Final Feature Pack Contract, or authorise implementation. No executable development begins before the Phase 8 entry conditions represented by the approved contract and required proof are satisfied.
 
 This governance section is a working contract beneath the authority hierarchy in Section 1.1. It does not modify Product Law, Architecture Law, Domain Law or the Roadmap. It does not authorise implementation, freeze an implementation mechanism or replace a Feature Pack Contract, JIT Domain Dossier, Architectural Proof, Vertical Slice, Horizontal Hardening artifact, release decision or readiness decision.
 
@@ -143,15 +152,15 @@ The Feature Pack lifecycle moves an approved roadmap outcome into a controlled i
 Every Feature Pack follows these stages in order, with a gate or explicit decision recorded when a stage cannot proceed:
 
 1. **Selection.** Select an approved Roadmap outcome. Do not create a new outcome or expand the approved scope inside the Atlas.
-2. **Discovery.** Gather the relevant authority documents, existing evidence, affected domains, dependencies, assumptions, policies, lifecycle concerns and open questions.
-3. **Grill-Me.** Review the proposed outcome boundary and expose assumptions, dependencies, invalidation risks, future capability risks, affected domains and policy or lifecycle implications.
-4. **Domain/architecture preparation.** Prepare the domain and architecture material needed for implementation-grade planning. This work must preserve domain ownership, architectural constraints, policy gates and known failure behaviour.
-5. **Feature Pack contract approval.** Approve the Feature Pack Contract only after the outcome, boundary, dependencies, gates, acceptance criteria and required preparation are clear. ATLAS-01 defines this approval point but does not create the contract.
-6. **TB/VS/HH selection.** Select the smallest applicable proof, behaviour and hardening boundaries. Record why each selected artifact is needed and what evidence it must produce.
-7. **Implementation.** Execute only the approved Feature Pack Contract and lower-level contracts. Any material scope change returns to the relevant authority or review gate.
-8. **Evidence review.** Compare implementation evidence with the acceptance criteria, assumptions, architecture, domain rules, lifecycle expectations, policies and operational requirements.
-9. **Handoff.** Produce the Implementation Handoff with the final impact, evidence, limitations and operational requirements.
-10. **Closure.** Record whether the Feature Pack is complete, needs more implementation or hardening, is blocked, or is ready for a next delivery decision. Closure requires the evidence and handoff requirements in this section.
+2. **Delivery Atlas navigation.** Load only the relevant derived views and trace each material claim to current upstream authority.
+3. **Phase 7A — Feature Pack Skeleton + preliminary Gate Manifest.** Record the approved outcome, validation objective, type, boundaries, dependencies, affected Domains, known decisions, blocking questions and preliminary gates. This Atlas does not create the Skeleton or Manifest.
+4. **Phase 7B — required JIT Domain Dossiers.** Create only the implementation-grade Domain dossiers required by the approved outcome and preliminary gates. Preserve ownership and stop on unresolved authority.
+5. **Phase 7C — Final Feature Pack Contract.** Resolve or explicitly exclude blocking gates, finalize the boundary and acceptance criteria, and approve the development-entry contract. This Atlas does not create the contract.
+6. **Proof classification.** Record `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` in the approved Feature Pack Contract. Do not create a ceremonial TB.
+7. **Architectural Proof / Tracer Bullet, when required.** Execute only the proof boundary authorized by the Final Feature Pack Contract and required Phase 8 entry conditions.
+8. **Vertical Slices.** Deliver complete production-quality behaviours within the approved boundary.
+9. **Horizontal Hardening.** Apply evidence-led hardening after the behaviour is correct and its failure or pressure is understood.
+10. **Release / Readiness.** Review acceptance, proof, security/privacy, performance, operational and recovery evidence, then record the release/readiness decision, handoff, closure and next delivery decision.
 
 The Feature Pack lifecycle may stop at any stage when authority, ownership, policy, evidence or scope is unresolved. A stopped stage is recorded and routed. It is not passed by filling the gap with an Atlas assumption.
 
@@ -313,21 +322,25 @@ An artifact remains open, gated or stopped when any required evidence is missing
 
 Every planning or implementation discovery must be routed to the lowest correct authority that owns the decision. "Lowest correct" means the most specific authority that can decide the question without changing a higher-level rule. The Atlas may record the route and its downstream effect, but it must not decide for that authority.
 
-The detailed authority hierarchy remains the one in Section 1.1. For escalation and execution routing, the relevant path is:
+The authority hierarchy remains the one in Section 1.1. For delivery navigation after an approved Roadmap outcome, the relevant path is:
 
 ```text
 Product Law
     → Architecture Law
     → Domain Law
     → Roadmap
-    → Delivery Atlas
-    → Feature Pack Contracts
-    → JIT Domain Dossiers
-    → TB / VS / HH
-    → Implementation
+    → Delivery Atlas derived navigation
+    → Phase 7A Skeleton + preliminary Gate Manifest
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ```
 
-This abbreviated path does not remove the Architectural Proof, Release or Readiness boundaries defined in Section 1.1 and the later Atlas views. It shows where a discovery is routed before work continues.
+This path does not make the Atlas an authority level. It shows where a discovery is routed before work continues and preserves the Final Feature Pack Contract as the development-entry authority.
 
 | Discovery Type | Example Question | Escalation Authority |
 |---|---|---|
@@ -2484,8 +2497,8 @@ Only one dominant relationship is recorded in a cell. `E` and `S` already imply 
 | CAP-004 | Data rights, retention and deletion orchestration | — | — | — | — | — | I | R | — | — | — | — | — | R | R | — | R | R |
 | CAP-005 | Public discovery and acquisition | I | — | — | — | — | — | R | — | — | — | — | — | — | — | R | — | — |
 | CAP-006 | Governed content, translation and publication | I | — | R | R | R | — | R | R | R | — | R | — | R | R | R | R | R |
-| CAP-007 | Explainable content discovery and relevance | — | — | — | — | — | — | I | — | — | — | — | — | — | — | R | — | — |
-| CAP-008 | Protected media and content delivery | — | — | I | — | R | — | R | R | R | — | R | — | — | — | S | — | — |
+| CAP-007 | Explainable content discovery and relevance | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+| CAP-008 | Protected media and content delivery | — | — | I | — | R | — | R | R | R | — | R | — | — | — | — | — | — |
 | CAP-009 | Commercial catalogue and offer management | — | I | — | — | — | — | — | — | R | — | R | R | — | — | R | — | R |
 | CAP-010 | Payment and commercial reconciliation | — | I | — | — | — | R | — | — | R | — | R | R | — | — | R | — | — |
 | CAP-011 | Entitlement and access-rights management | — | I | R | — | R | R | R | R | R | R | R | R | R | R | R | — | R |
@@ -2498,14 +2511,14 @@ Only one dominant relationship is recorded in a cell. `E` and `S` already imply 
 | CAP-018 | Programme and cohort delivery | — | — | — | — | — | — | — | I | — | — | — | — | R | E | — | — | — |
 | CAP-019 | Participant progress and feedback | — | — | — | — | I | — | — | R | — | R | — | — | R | R | — | — | — |
 | CAP-020 | Habits and private reflective practice | — | — | — | — | — | — | — | — | — | — | — | — | — | I | — | — | — |
-| CAP-021 | Live-session and replay delivery | — | — | — | — | — | — | I | R | R | — | — | — | — | — | S | — | — |
+| CAP-021 | Live-session and replay delivery | — | — | — | — | — | — | I | R | R | — | — | — | — | — | — | — | — |
 | CAP-022 | Recurring commercial access | — | — | — | — | — | — | — | — | I | — | R | — | — | — | — | — | — |
 | CAP-023 | Professional review and scoped care | — | — | — | — | — | — | — | — | — | — | — | I | — | — | — | — | — |
 | CAP-024 | Community participation and moderation | — | — | — | — | — | — | — | — | — | — | — | — | I | — | — | — | — |
 | CAP-025 | Scarce event capacity and ticketing | — | — | — | — | — | — | — | — | — | — | — | — | — | — | I | — | — |
 | CAP-026 | Governed experimentation and learning | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | I | — |
-| CAP-027 | Analytics and measurement | — | — | — | — | — | I | — | — | R | — | — | — | — | — | — | — | R |
-| CAP-028 | Audit and security evidence | I | R | R | R | R | R | R | R | R | R | — | R | R | — | R | R | R |
+| CAP-027 | Analytics and measurement | — | — | — | — | — | I | — | R | R | — | — | — | R | R | — | R | R |
+| CAP-028 | Audit and security evidence | I | R | R | R | R | R | R | R | R | R | R | R | R | R | R | R | R |
 | CAP-029 | Operator work and support | — | — | — | — | — | I | R | R | R | — | — | R | R | — | R | R | R |
 | CAP-030 | Release, incident and recovery control | — | — | — | — | — | I | — | — | — | — | — | — | — | — | R | R | R |
 | CAP-031 | Controlled product-space and market activation | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | I |
@@ -2522,16 +2535,16 @@ This reverse view contains CAP IDs only so a Feature Pack planning pass can retr
 | FP-004 | CAP-013, CAP-014 | CAP-001, CAP-002, CAP-003, CAP-006, CAP-012, CAP-028 | — | — |
 | FP-005 | CAP-015, CAP-019 | CAP-001, CAP-002, CAP-003, CAP-006, CAP-008, CAP-011, CAP-012, CAP-013, CAP-014, CAP-028 | — | — |
 | FP-006 | CAP-004, CAP-027, CAP-029, CAP-030 | CAP-001, CAP-002, CAP-003, CAP-010, CAP-011, CAP-017, CAP-028 | — | — |
-| FP-007 | CAP-007, CAP-021 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-005, CAP-006, CAP-008, CAP-011, CAP-028, CAP-029 | — | — |
-| FP-008 | CAP-018 | CAP-001, CAP-002, CAP-003, CAP-006, CAP-008, CAP-011, CAP-012, CAP-013, CAP-014, CAP-015, CAP-017, CAP-019, CAP-021, CAP-028, CAP-029 | — | — |
+| FP-007 | CAP-021 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-005, CAP-006, CAP-008, CAP-011, CAP-028, CAP-029 | — | — |
+| FP-008 | CAP-018 | CAP-001, CAP-002, CAP-003, CAP-006, CAP-008, CAP-011, CAP-012, CAP-013, CAP-014, CAP-015, CAP-017, CAP-019, CAP-021, CAP-027, CAP-028, CAP-029 | — | — |
 | FP-009 | CAP-022 | CAP-001, CAP-002, CAP-003, CAP-006, CAP-008, CAP-009, CAP-010, CAP-011, CAP-021, CAP-027, CAP-028, CAP-029 | — | — |
 | FP-010 | CAP-016 | CAP-001, CAP-002, CAP-011, CAP-012, CAP-013, CAP-014, CAP-015, CAP-019, CAP-028 | — | — |
-| FP-011 | — | CAP-001, CAP-002, CAP-006, CAP-008, CAP-009, CAP-010, CAP-011, CAP-015, CAP-016, CAP-022 | — | — |
+| FP-011 | — | CAP-001, CAP-002, CAP-006, CAP-008, CAP-009, CAP-010, CAP-011, CAP-015, CAP-016, CAP-022, CAP-028 | — | — |
 | FP-012 | CAP-023 | CAP-001, CAP-002, CAP-003, CAP-009, CAP-010, CAP-011, CAP-013, CAP-014, CAP-015, CAP-017, CAP-028, CAP-029 | — | — |
-| FP-013 | CAP-024 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-006, CAP-011, CAP-014, CAP-018, CAP-019, CAP-028, CAP-029 | — | — |
-| FP-014 | CAP-020 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-006, CAP-011, CAP-014, CAP-017, CAP-019 | CAP-018 | — |
-| FP-015 | CAP-025 | CAP-001, CAP-002, CAP-003, CAP-005, CAP-006, CAP-007, CAP-009, CAP-010, CAP-011, CAP-028, CAP-029, CAP-030 | — | CAP-008, CAP-021 |
-| FP-016 | CAP-026 | CAP-003, CAP-004, CAP-006, CAP-017, CAP-028, CAP-029, CAP-030 | — | — |
+| FP-013 | CAP-024 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-006, CAP-011, CAP-014, CAP-018, CAP-019, CAP-027, CAP-028, CAP-029 | — | — |
+| FP-014 | CAP-020 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-006, CAP-011, CAP-014, CAP-017, CAP-019, CAP-027, CAP-028 | CAP-018 | — |
+| FP-015 | CAP-025 | CAP-001, CAP-002, CAP-003, CAP-005, CAP-006, CAP-009, CAP-010, CAP-011, CAP-028, CAP-029, CAP-030 | — | — |
+| FP-016 | CAP-026 | CAP-003, CAP-004, CAP-006, CAP-017, CAP-027, CAP-028, CAP-029, CAP-030 | — | — |
 | FP-017 | CAP-031 | CAP-001, CAP-002, CAP-003, CAP-004, CAP-006, CAP-009, CAP-011, CAP-014, CAP-027, CAP-028, CAP-029, CAP-030 | — | — |
 
 ### Capability lineage view
@@ -2544,8 +2557,8 @@ This reverse view contains CAP IDs only so a Feature Pack planning pass can retr
 | CAP-004 | FP-006 | FP-007, FP-013, FP-014, FP-016, FP-017 | — | — |
 | CAP-005 | FP-001 | FP-007, FP-015 | — | — |
 | CAP-006 | FP-001 | FP-003, FP-004, FP-005, FP-007, FP-008, FP-009, FP-011, FP-013, FP-014, FP-015, FP-016, FP-017 | — | — |
-| CAP-007 | FP-007 | FP-015 | — | — |
-| CAP-008 | FP-003 | FP-005, FP-007, FP-008, FP-009, FP-011 | — | FP-015 |
+| CAP-007 | — (Roadmap-deferred) | — | — | — |
+| CAP-008 | FP-003 | FP-005, FP-007, FP-008, FP-009, FP-011 | — | — |
 | CAP-009 | FP-002 | FP-009, FP-011, FP-012, FP-015, FP-017 | — | — |
 | CAP-010 | FP-002 | FP-006, FP-009, FP-011, FP-012, FP-015 | — | — |
 | CAP-011 | FP-002 | FP-003, FP-005, FP-006, FP-007, FP-008, FP-009, FP-010, FP-011, FP-012, FP-013, FP-014, FP-015, FP-017 | — | — |
@@ -2558,14 +2571,14 @@ This reverse view contains CAP IDs only so a Feature Pack planning pass can retr
 | CAP-018 | FP-008 | FP-013 | FP-014 | — |
 | CAP-019 | FP-005 | FP-008, FP-010, FP-013, FP-014 | — | — |
 | CAP-020 | FP-014 | — | — | — |
-| CAP-021 | FP-007 | FP-008, FP-009 | — | FP-015 |
+| CAP-021 | FP-007 | FP-008, FP-009 | — | — |
 | CAP-022 | FP-009 | FP-011 | — | — |
 | CAP-023 | FP-012 | — | — | — |
 | CAP-024 | FP-013 | — | — | — |
 | CAP-025 | FP-015 | — | — | — |
 | CAP-026 | FP-016 | — | — | — |
-| CAP-027 | FP-006 | FP-009, FP-017 | — | — |
-| CAP-028 | FP-001 | FP-002, FP-003, FP-004, FP-005, FP-006, FP-007, FP-008, FP-009, FP-010, FP-012, FP-013, FP-015, FP-016, FP-017 | — | — |
+| CAP-027 | FP-006 | FP-008, FP-009, FP-013, FP-014, FP-016, FP-017 | — | — |
+| CAP-028 | FP-001 | FP-002, FP-003, FP-004, FP-005, FP-006, FP-007, FP-008, FP-009, FP-010, FP-011, FP-012, FP-013, FP-014, FP-015, FP-016, FP-017 | — | — |
 | CAP-029 | FP-006 | FP-007, FP-008, FP-009, FP-012, FP-013, FP-015, FP-016, FP-017 | — | — |
 | CAP-030 | FP-006 | FP-015, FP-016, FP-017 | — | — |
 | CAP-031 | FP-017 | — | — | — |
@@ -2578,19 +2591,19 @@ Only non-routine decisions are noted below. Routine `R` cells remain intentional
 |---|---|---|---|---|
 | CAP-004 | FP-006 | `I` | FP-006 is the first outcome that explicitly requires pilot deletion/export, retention, restore and operational handling. Earlier privacy participation does not establish the complete orchestration capability. | `05_ROADMAP_v1.0.0.md §6 FP-006`; `04_DOMAIN_MAP_v1.0.0.md §4` |
 | CAP-005 | FP-001 | `I` | Public discovery is introduced by the public-to-account boundary. Later live and event discovery reuse it; it is not a universal acquisition dependency for every protected pack. | `05_ROADMAP_v1.0.0.md §6 FP-001, §6 FP-007 and §6 FP-015`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-005` |
-| CAP-007 | FP-007 | `I` | FP-001's public entry is covered by CAP-005. FP-007 is the first outcome that explicitly requires participant discovery of an approved live session, so relevance is not pulled earlier. | `05_ROADMAP_v1.0.0.md §6 FP-001 and §6 FP-007`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-007` |
 | CAP-008 | FP-003 | `I` | The protected bilingual assessment report is the first material protected-content delivery outcome. This does not make Content & Media an entitlement owner. | `05_ROADMAP_v1.0.0.md §6 FP-003`; `04_DOMAIN_MAP_v1.0.0.md §4` |
-| CAP-008 | FP-015 | `S` | Paid event variants apply protected or recorded media in a context with event policy, access and withdrawal constraints. Content & Media retains media authority; CAP-025 remains the separate capacity/ticketing capability. | `05_ROADMAP_v1.0.0.md §6 FP-015 and §12.3`; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
 | CAP-015 | FP-012 | `R` | A practitioner outcome may request an approved plan modification, but Plans & Nutrition owns any resulting plan version. Professional Care does not write plan truth. | `05_ROADMAP_v1.0.0.md §6 FP-012`; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
 | CAP-018 | FP-014 | `E` | FP-014 explicitly extends the concrete Nuwe Jy programme evidence into a broader foundation programme. Programmes & Challenges remains the sole programme/cohort authority. | `05_ROADMAP_v1.0.0.md §6 FP-014`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-018`; `04_DOMAIN_MAP_v1.0.0.md §4` |
 | CAP-020 | FP-014 | `I` | FP-008's habits/check-ins are represented by CAP-019 at Atlas resolution. FP-014 is the first outcome that explicitly requires private reflections and the broader habit/journal boundary. | `05_ROADMAP_v1.0.0.md §6 FP-008 and §6 FP-014`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-019 and CAP-020` |
-| CAP-021 | FP-015 | `S` | FP-015 applies established live/replay delivery to an approved paid-event context. Events & Live retains session/replay authority; scarce capacity remains CAP-025. | `05_ROADMAP_v1.0.0.md §6 FP-007 and §6 FP-015`; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
 | CAP-022 | FP-009 | `I` | Basic Membership is the first approved recurring commercial outcome. FP-011 reuses the recurring contract boundary rather than creating a second Premium billing capability. | `05_ROADMAP_v1.0.0.md §6 FP-009 and §6 FP-011`; `04_DOMAIN_MAP_v1.0.0.md §4` |
 | CAP-023 | FP-012 | `I` | The practitioner-review service is intentionally introduced as a limited, capacity-controlled pilot. It does not take ownership of Health, Safety or Plans truth. | `05_ROADMAP_v1.0.0.md §6 FP-012`; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
 | CAP-024 | FP-013 | `I` | FP-009's governed community evidence may use the approved external path. First-party community participation and moderation begin only when FP-013 is approved, so no first-party authority is inferred earlier. | `05_ROADMAP_v1.0.0.md §6 FP-009 and §6 FP-013`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-024` |
 | CAP-025 | FP-015 | `I` | FP-015 is the first approved scarce-capacity outcome. FP-007 live registration does not introduce holds, tickets or capacity authority. | `05_ROADMAP_v1.0.0.md §6 FP-007, §6 FP-015 and §12.3`; `04_DOMAIN_MAP_v1.0.0.md §4` |
 | CAP-027 | FP-006 | `I` | FP-006 is the first outcome that requires controlled pilot observation and evidence. Earlier packs do not receive a generic analytics mark merely because their facts may later be measured. | `05_ROADMAP_v1.0.0.md §6 FP-006 and §§7–8`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-027` |
+| CAP-027 | FP-008, FP-013, FP-014 | `R` | These programme and challenge outcomes explicitly require approved completion or participation metrics through `OQ-019`; Analytics remains measurement authority and source Domains retain business truth. | `05_ROADMAP_v1.0.0.md §6 FP-008, §6 FP-013 and §6 FP-014`; `04_DOMAIN_MAP_v1.0.0.md §6.17` |
+| CAP-027 | FP-016 | `R` | Experiment exposure, conversion/income reconciliation and durable learning evidence make Analytics materially central to the approved experimentation outcome. | `05_ROADMAP_v1.0.0.md §6 FP-016`; `04_DOMAIN_MAP_v1.0.0.md §§6.16–6.17`; `OQ-040` |
 | CAP-028 | FP-001 | `I` | The protected identity boundary is the first material audit/security-evidence outcome. Later marks occur where payment, safety, release, moderation, professional or event evidence is part of the approved outcome. | `05_ROADMAP_v1.0.0.md §6 FP-001 and §6 FP-006`; `04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-028 | FP-011, FP-014 | `R` | Premium's sensitive commercial/release boundary and the foundation programme's private-data, retention, completion and recovery obligations require the minimum audit/security evidence owned by Audit & Evidence. | `05_ROADMAP_v1.0.0.md §6 FP-011 and §6 FP-014`; `00_PLATFORM_v1.2.1.md §§21H, 21I`; `04_DOMAIN_MAP_v1.0.0.md §6.18` |
 | CAP-029 | FP-006 | `I` | FP-001's controlled support path does not establish a reusable operator-work capability. FP-006 first requires named staff to run, correct, reconcile and support the core journey. | `05_ROADMAP_v1.0.0.md §6 FP-001 and §6 FP-006`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-029` |
 | CAP-030 | FP-006 | `I` | FP-006 is the first release, stop, rollback and recovery boundary. Later event, experiment and future-activation marks reuse that control without moving business truth into platform operations. | `05_ROADMAP_v1.0.0.md §6 FP-006, §6 FP-015, §6 FP-016 and §6 FP-017`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-030` |
 | CAP-031 | FP-017 | `I` | The capability remains conditional and is introduced only by a concrete separately approved product-space or market direction. No hypothetical market, tenancy or specialist product is mapped earlier. | `05_ROADMAP_v1.0.0.md §6 FP-017 and §16`; `DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-031` |
@@ -2603,9 +2616,9 @@ The matrix accounts for every CAP × FP position, including intentional dashes. 
 |---|---|
 | Capability integrity | 31/31 CAP IDs and canonical names match §5.2; no CAP was added, removed, renamed, merged or split. |
 | Feature Pack integrity | 17/17 FP IDs, names and order match the Roadmap and ATLAS-02 register. |
-| Introduction integrity | 31 `I` cells; every CAP has exactly one introduction. No `R`, `E` or `S` occurs before its CAP's `I`. |
-| Relationship integrity | One dominant symbol per cell; 151 `R`, 1 `E` and 2 `S` cells. Every `E` and `S` appears in the exception review. |
-| Reverse lineage | Each CAP sequence reads left-to-right from introduction into later reuse, extension or specialisation; no relationship disappears and reappears as a duplicate capability. |
+| Introduction integrity | 30 currently approved material introductions; every such CAP has exactly one `I`. CAP-007 is explicitly Roadmap-deferred with zero current material cells. No `R`, `E` or `S` occurs before an approved introduction. |
+| Relationship integrity | One dominant symbol per cell; 156 `R`, 1 `E` and 0 `S` cells. Every `E` remains in the exception review; conditional FP-015 media/live variants are no longer permanent matrix relationships. |
+| Reverse lineage | Each CAP sequence reads left-to-right from an approved introduction into later reuse, extension or specialisation. A deferred CAP has no lineage entry until a concrete approved introduction exists. |
 | Feature Pack coverage | 17/17 Feature Packs have a summary row and are represented in the matrix; the conditional FP-017 boundary remains explicit. |
 | Domain ownership | 18/18 Domain names remain reviewed. Relationships do not transfer ownership or create shared authoritative writes; cross-Domain CAPs preserve source-Domain authority. |
 | Lifecycle boundary | No state, transition, guard, side effect or terminal state was created. The matrix only points to capability introduction or later delivery use. |
@@ -2615,15 +2628,15 @@ The matrix accounts for every CAP × FP position, including intentional dashes. 
 | Density measure | Count |
 |---|---:|
 | Total possible CAP × FP cells | 527 |
-| Material relationships | 185 |
-| `I` | 31 |
-| `R` | 151 |
+| Material relationships | 187 |
+| `I` | 30 |
+| `R` | 156 |
 | `E` | 1 |
-| `S` | 2 |
-| `—` | 342 |
-| Material relationship density | 35.1% |
+| `S` | 0 |
+| `—` | 340 |
+| Material relationship density | 35.5% |
 
-The matrix remains intentionally selective: 342 of 527 positions are dashes, and the cross-cutting capabilities are marked only where the approved Feature Pack outcome makes their contribution material. No unresolved Product, Architecture, Domain or Roadmap question was solved inside ATLAS-04. Any future ambiguity belongs at the authority level named by the escalation matrix.
+The matrix remains intentionally selective: 340 of 527 positions are dashes, and the cross-cutting capabilities are marked only where the approved Feature Pack outcome makes their contribution material. CAP-007 remains a valid capability but has no current material introduction, reuse, extension or specialisation. No unresolved Product, Architecture, Domain or Roadmap question was solved inside ATLAS-04. Any future ambiguity belongs at the authority level named by the escalation matrix.
 
 ---
 
@@ -2651,6 +2664,7 @@ Roadmap Feature Pack
     → ATLAS-04 material CAPs
     → ATLAS-03 CAP authority and support
     → ATLAS-02 high-level Domain involvement
+    → Domain Map and authority-sensitive exceptions
     → temporary JIT Domain participation projection
 ```
 
@@ -2686,13 +2700,13 @@ The register keeps only relationship cases that need an explicit reminder becaus
 | Exception | Feature Pack / CAP | Domain issue | Why it matters | JIT action | Status | Authority anchor |
 |---|---|---|---|---|---|---|
 | EX-001 | FP-001 through FP-015, FP-017 / CAP-002 | Cross-domain access relationship | Identity & Access owns identity-side grants. Each relationship-owning Domain keeps its own relationship or assignment truth. | Name the relationship owner for the active Feature Pack. Do not create a shared access owner. | REVIEWED / JIT_CONFIRM | §5.2 CAP-002; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
-| EX-002 | FP-001, FP-007, FP-015 / CAP-005, CAP-007 | Public discovery and relevance have no single funnel owner; relevance has no independent lifecycle. | Content, Commerce, Communications, source Domains and Analytics retain their own authority. A projection must not become a new acquisition or ranking authority. | Confirm only the source facts and affected Domain work for the selected public or live outcome. | REVIEWED / JIT_CONFIRM | §5.2 CAP-005 and CAP-007; `05_ROADMAP_v1.0.0.md §§6 FP-001, FP-007 and FP-015` |
+| EX-002 | FP-001, FP-007, FP-015 / CAP-005; CAP-007 deferred | Public discovery and relevance have no single funnel owner; relevance has no independent current lifecycle. | Content, Commerce, Communications, source Domains and Analytics retain their own authority. A projection must not become a new acquisition or ranking authority. CAP-007 is not permanently assigned to FP-007 or FP-015. | Confirm only the source facts and affected Domain work for the selected public or live outcome. Route richer search/relevance through a later concrete approved Feature Pack. | REVIEWED / JIT_CONFIRM | §5.2 CAP-005 and CAP-007; `05_ROADMAP_v1.0.0.md §§6 FP-001, FP-007 and FP-015` |
 | EX-003 | FP-006, FP-007, FP-013, FP-014, FP-016, FP-017 / CAP-004 | Cross-domain privacy and deletion orchestration | Privacy & Consent owns the request and policy. Data-owning Domains fulfil record-level deletion, correction or export. | Map only the affected record owners for the active Feature Pack. Do not centralise their writes in the orchestration capability. | REVIEWED / JIT_CONFIRM | §5.2 CAP-004; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
-| EX-004 | FP-003, FP-005, FP-007, FP-008, FP-009, FP-011, FP-015 / CAP-008 | Protected media crosses content, access, consent and event boundaries. | Content & Media owns media truth. Entitlements and source Domains retain access and sharing truth. | Confirm protected-delivery consequences for the selected outcome without transferring authority to Content & Media or Entitlements. | REVIEWED / JIT_CONFIRM | §5.2 CAP-008; `04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| EX-004 | FP-003, FP-005, FP-007, FP-008, FP-009, FP-011 / CAP-008; FP-015 only if a live/recorded variant is approved | Protected media crosses content, access, consent and event boundaries. | Content & Media owns media truth. Entitlements and source Domains retain access and sharing truth. FP-015 scarce-capacity commerce does not intrinsically require protected media. | Confirm protected-delivery consequences only for the selected outcome and approved media variant, without transferring authority to Content & Media or Entitlements. | REVIEWED / JIT_CONFIRM | §5.2 CAP-008; `04_DOMAIN_MAP_v1.0.0.md §§4–5`; `05_ROADMAP_v1.0.0.md §6 FP-015` |
 | EX-005 | FP-009, FP-011 / CAP-022 | Recurring commercial access crosses Commerce and Entitlements. | Commerce owns the recurring contract and billing state. Entitlements owns the resulting access rights. | Keep contract, billing, cancellation and access-rights consequences separate in the active Feature Pack plan. | REVIEWED / JIT_CONFIRM | §5.2 CAP-022; `04_DOMAIN_MAP_v1.0.0.md §§6.10–6.11` |
 | EX-006 | FP-012 / CAP-023 | Professional review has a platform case owner but unresolved final professional-record authority. | Professional Care must not silently become the legal or external professional record authority. | Apply `OQ-033` before the active Feature Pack fixes professional record, access, addendum or disposition semantics. STOP if that authority is required and unresolved. | GATED / OQ-033 | §5.2 CAP-023; `05_ROADMAP_v1.0.0.md §6 FP-012`; `04_DOMAIN_MAP_v1.0.0.md §6.14` |
 | EX-007 | FP-015 / CAP-025 | Scarce event capacity crosses Events & Live and Commerce. | Events & Live owns capacity, reservations, tickets and attendance. Commerce owns payment and refund truth. | Confirm capacity and payment consequences together while preserving separate authoritative owners. Apply `OQ-022` and `OQ-004` at the affected boundary. | GATED / OQ-022, OQ-004 | §5.2 CAP-025; `05_ROADMAP_v1.0.0.md §6 FP-015`; `04_DOMAIN_MAP_v1.0.0.md §6.13` |
-| EX-008 | FP-006, FP-009, FP-017 / CAP-027; FP-016 / CAP-026 | Analytics, experimentation and source outcomes have different authority. | Analytics owns measurement evidence, Experimentation owns assignment and learning decisions, and source Domains own business outcomes. | Identify the real decision surface and minimum source facts for the active Feature Pack. Do not treat measurement or assignment as source-domain authority. Apply `OQ-040` for experimentation. | GATED / OQ-040 where applicable | §5.2 CAP-026 and CAP-027; `05_ROADMAP_v1.0.0.md §6 FP-016`; `04_DOMAIN_MAP_v1.0.0.md §§6.16–6.17` |
+| EX-008 | FP-006, FP-008, FP-009, FP-013, FP-014, FP-017 / CAP-027; FP-016 / CAP-026, CAP-027 | Analytics, experimentation and source outcomes have different authority. | Analytics owns measurement evidence, Experimentation owns assignment and learning decisions, and source Domains own business outcomes. `OQ-019` makes completion/participation metrics material for the named programme and challenge packs; `OQ-040` governs experimentation. | Identify the real decision surface and minimum source facts for the active Feature Pack. Do not treat measurement or assignment as source-domain authority. Apply the named OQ at the affected boundary. | GATED / OQ-019 or OQ-040 where applicable | §5.2 CAP-026 and CAP-027; `05_ROADMAP_v1.0.0.md §§6 FP-008, FP-013, FP-014 and FP-016`; `04_DOMAIN_MAP_v1.0.0.md §§6.16–6.17` |
 | EX-009 | FP-006, FP-007, FP-008, FP-009, FP-012, FP-013, FP-015, FP-016, FP-017 / CAP-029; FP-006, FP-015, FP-016, FP-017 / CAP-030 | Operator, release, incident and recovery controls have no single business-truth owner. | Platform control governs work and release decisions. Affected Domains retain business truth, and Audit & Evidence retains central evidence. | Keep operator and release actions owner-controlled and identify only the evidence and recovery work required by the active Feature Pack. | REVIEWED / JIT_CONFIRM | §5.2 CAP-029 and CAP-030; `04_DOMAIN_MAP_v1.0.0.md §6.18` |
 | EX-010 | FP-017 / CAP-031 | Conditional future ownership is not yet assigned. | No concrete product or market direction exists from which the affected Domain set can be determined. | STOP until Product Law names the approved direction and its affected Domain owners. Do not infer a market, tenancy or specialist product boundary. | CONDITIONAL / STOP | §5.2 CAP-031; `05_ROADMAP_v1.0.0.md §6 FP-017`; `04_DOMAIN_MAP_v1.0.0.md §9` |
 
@@ -2724,7 +2738,7 @@ The ATLAS-05 review confirms that the current Atlas can derive a coherent candid
 | Frozen Domain Map coverage | 18/18 approved Domain names and ownership boundaries are available to the derivation. |
 | ATLAS-02 coverage | 17/17 approved Feature Packs have high-level Domain involvement. |
 | ATLAS-04 coverage | 17/17 approved Feature Packs have a material CAP summary row. |
-| ATLAS-03 CAP resolution | Every material CAP referenced by ATLAS-04 has a §5.2 entry with authority scope and ownership/support information. |
+| ATLAS-03 CAP resolution | Every material CAP referenced by ATLAS-04 has a §5.2 entry with authority scope and ownership/support information; 30 CAPs have currently approved material introductions and CAP-007 is explicitly deferred with zero current material cells. |
 | Domain-set derivation | 17/17 Feature Packs can produce a candidate Domain set from the four canonical inputs. |
 | Cross-domain and platform-control review | CAPs with `CROSS_DOMAIN`, `PLATFORM_CONTROL`, conditional ownership or unresolved professional authority are recorded in the exception register. |
 | Conditional boundary | FP-017 remains conditional. Its affected Domain set is not assigned before a separately approved Product Law direction. |
@@ -2795,19 +2809,16 @@ The derivation uses the following sources and does not create a second lifecycle
 | ATLAS-05 | Active-Feature-Pack Domain derivation, non-obvious exceptions and temporary projection handling. |
 | Product / Architecture / Roadmap authority | Frozen semantics, state-authority rules, proof expectations, gates and sequencing constraints. |
 
-The authority chain remains:
+The authority hierarchy remains:
 
 ~~~text
 Product Law
     → Architecture Law
     → Domain Law
     → Roadmap
-    → Delivery Atlas
-    → Feature Pack preparation
-    → JIT Domain Dossier
-    → TB / VS / HH
-    → implementation
 ~~~
+
+For lifecycle delivery navigation, the derived path continues from the Roadmap through the Atlas into canonical Phase 7 and the downstream execution stages.
 
 The frozen Domain Map controls ownership. ATLAS-03 supplies capability-level lifecycle context. ATLAS-04 supplies delivery materiality. ATLAS-05 supplies active-FP Domain derivation. A temporary projection cannot move ownership, add a Domain or introduce shared authoritative writes.
 
@@ -2823,10 +2834,15 @@ Active Feature Pack
     → ATLAS-05 Domain projection and exceptions
     → Product / Architecture / Roadmap gates
     → temporary active-FP lifecycle projection
-    → Feature Pack Grill-Me
-    → JIT Domain Dossier
-    → TB / VS / HH where justified
-    → implementation
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Feature Pack Grill-Me within preparation
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ~~~
 
 For each active Feature Pack:
@@ -3090,7 +3106,7 @@ The frozen Domain Map controls who owns durable business truth. CAP authority pr
 
 ## 8.4 Conceptual dependency classes
 
-These are the six and only six Section 8 dependency classes. They describe planning relationships, not implementation interfaces.
+These are the five and only five Section 8 dependency classes. They describe planning relationships, not implementation interfaces. Conditionality is readiness metadata, not a sixth relationship type.
 
 ### `AUTHORITATIVE_READ`
 
@@ -3112,9 +3128,17 @@ A coordinating Domain or platform capability manages a process that crosses mult
 
 Audit, Analytics, provider evidence or operational observation records or observes outcomes without becoming business authority.
 
-### `CONDITIONAL_GATED_SEAM`
+### Conditionality and readiness
 
-The dependency is visible but cannot be safely finalized until a named Product, Domain, Architecture, legal, clinical, professional, provider or Roadmap gate is resolved.
+Any of the five relationship classes may be conditional or gated. Record that condition with the existing `Readiness` and `Gate / STOP` fields. For example, an owner-controlled consequence may be recorded as:
+
+```text
+OWNER_CONTROLLED_CONSEQUENCE
+    + Readiness = GATED
+    + Gate = OQ-022
+```
+
+Do not turn a named gate into a relationship class. If the relationship itself cannot be identified without resolving the gate, retain its best-supported class and mark the projection `STOPPED` rather than inventing a sixth class.
 
 ## 8.5 Runtime interaction boundary
 
@@ -3142,10 +3166,15 @@ Active Feature Pack
     → ATLAS-06 lifecycle obligations
     → Domain Map + Architecture authority
     → temporary dependency projection
-    → Feature Pack Grill-Me
-    → JIT Domain Dossiers / proof review
-    → TB / VS / HH where justified
-    → implementation
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Feature Pack Grill-Me within preparation
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ```
 
 For each active Feature Pack:
@@ -3157,8 +3186,8 @@ For each active Feature Pack:
 5. Use ATLAS-06 for lifecycle-bearing truths. Keep separate owners for separate durable truths and reference the active lifecycle projection rather than creating a synthetic cross-domain state machine.
 6. Recheck the relationship against the Domain Map and Architecture authority. Preserve provider-as-evidence, projection-as-non-authority, privacy/audit orchestration and platform-control boundaries.
 7. Create one temporary dependency row only when the active Feature Pack materially requires the relationship. Do not create one row for every pair of candidate Domains.
-8. Mark a relationship `CONDITIONAL_GATED_SEAM` when an existing gate prevents safe finalisation. If classifying the relationship requires inventing Product, Domain, lifecycle or implementation semantics, STOP.
-9. Take the temporary projection through Feature Pack Grill-Me, then create only the JIT Domain Dossiers and proof work required by the active outcome.
+8. Classify the relationship with one of the five Section 8 classes. When an existing gate prevents safe finalisation, set `Readiness = GATED` and record the named `Gate / STOP`; do not create a conditional relationship class. If classifying the relationship requires inventing Product, Domain, lifecycle or implementation semantics, STOP.
+9. Take the temporary projection through Phase 7A and Feature Pack Grill-Me, then create only the Phase 7B JIT Domain Dossiers and later proof work required by the active outcome.
 
 If any canonical input is missing, contradictory or insufficient to classify the relationship without invention, record the exact source, CAP, Domain and Feature Pack and apply the STOP rules below.
 
@@ -3171,7 +3200,7 @@ The active Feature Pack planner creates a temporary, non-authoritative projectio
 | Feature Pack / CAP | Exact active `FP-*`, relevant `CAP-*` and ATLAS-04 relationship. |
 | Source Domain / context | Domain or platform-control context requiring the dependency. This is not automatically the owner of the source truth. |
 | Target owner | Domain owning the durable truth involved, or the explicit platform-control boundary where no business Domain owns it. |
-| Dependency class | Exactly one of the six Section 8 conceptual classes. |
+| Dependency class | Exactly one of the five Section 8 conceptual classes. Conditionality is recorded separately in `Readiness` and `Gate / STOP`. |
 | Business purpose | Why this active Feature Pack materially needs the relationship. |
 | Authority direction | Which side owns the relevant truth and mutation authority, including what the source side may not mutate. |
 | Lifecycle reference | Relevant ATLAS-06 lifecycle projection or `NONE`. No lifecycle state or transition is invented here. |
@@ -3330,7 +3359,7 @@ Section 8 does not resolve existing gates. Preserve, where relevant:
 - clinical and calculation decisions; and
 - future Product direction gates.
 
-Use `CONDITIONAL_GATED_SEAM`, `GATED` or `STOPPED` according to the existing Atlas vocabulary and current evidence. Do not invent a resolution. FP-017 remains conditional until a separately approved Product direction names its affected owners.
+Use one of the five relationship classes together with `Readiness = GATED` or `STOPPED` and the existing `Gate / STOP` field according to the current evidence. Do not invent a resolution or a sixth class. FP-017 remains conditional until a separately approved Product direction names its affected owners.
 
 ## 8.20 Permanence principle
 
@@ -3344,7 +3373,7 @@ Dependency invariants and exceptional authority-sensitive seams pass this test. 
 |---|---|
 | Permanent global dependency-graph rows | `0` |
 | Section 8 population placeholder | None remains |
-| Conceptual dependency classes | Exactly `6`: `AUTHORITATIVE_READ`, `OWNER_CONTROLLED_CONSEQUENCE`, `DERIVED_PROJECTION`, `ORCHESTRATION_WITHOUT_OWNERSHIP`, `EVIDENCE_OBSERVATION`, `CONDITIONAL_GATED_SEAM` |
+| Conceptual dependency classes | Exactly `5`: `AUTHORITATIVE_READ`, `OWNER_CONTROLLED_CONSEQUENCE`, `DERIVED_PROJECTION`, `ORCHESTRATION_WITHOUT_OWNERSHIP`, `EVIDENCE_OBSERVATION`; conditionality is separate readiness metadata |
 | Permanent seam register | `7` small reference-oriented rows; no routine Domain-pair enumeration |
 | ATLAS-05 exception handling | Existing exception IDs are referenced; their explanations are not duplicated |
 | Ownership safety | No shared authoritative writes or ownership transfers introduced |
@@ -3353,7 +3382,7 @@ Dependency invariants and exceptional authority-sensitive seams pass this test. 
 | Lifecycle integration | ATLAS-06 is referenced; no synthetic cross-domain state machine is created |
 | Runtime boundary | No calls, events, messages, topics, queues, Resources, schemas, modules or mechanisms are defined |
 | Current hard STOP | None identified in the approved ATLAS-07 scope; the documented STOP rules remain active for future projections |
-| CAP/FP relationships | ATLAS-03 and ATLAS-04 remain unchanged |
+| CAP/FP relationships | ATLAS-03 remains unchanged; ATLAS-04 uses the corrected permanent matrix and deferred-introduction rule |
 | Selective derivation | Active-FP dependency rows are created only for material relationships from the canonical derivation path |
 | Next Atlas section | ATLAS-08 and participant-journey work were not started |
 
@@ -3421,7 +3450,21 @@ Product Law
     > Roadmap
     > canonical capability and Atlas derivations
     > temporary participant journey projection
-    > frontend / JIT implementation
+```
+
+The downstream handoff from that temporary projection is:
+
+```text
+temporary participant journey projection
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Feature Pack Grill-Me within preparation
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ```
 
 A participant journey projection cannot create a new Product promise, entitlement, safety outcome, professional-care right, lifecycle state, Feature Pack or frontend requirement not supported upstream.
@@ -3457,9 +3500,15 @@ Active Feature Pack
     → ATLAS-07 dependency seams
     → applicable permanent participant boundaries
     → temporary active-FP participant journey projection
-    → Feature Pack Grill-Me
-    → JIT frontend / Domain planning
-    → implementation
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Feature Pack Grill-Me within preparation
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ```
 
 Do not build a whole-platform participant journey before selecting the active Feature Pack. The planner should:
@@ -3578,7 +3627,21 @@ Product Law
     → Frontend Experience System
     → Atlas derivation
     → temporary active-FP operator projection
-    → JIT implementation
+```
+
+The downstream handoff from that temporary projection is:
+
+```text
+temporary active-FP operator projection
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Feature Pack Grill-Me within preparation
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ```
 
 The temporary projection cannot override any stronger source. If a stronger source is contradictory, incomplete or requires a new policy, Section 10 records the escalation and does not guess.
@@ -3674,9 +3737,15 @@ Active Feature Pack
     → relevant Platform Operating Model rules
     → relevant Frontend Experience System rules
     → temporary active-FP operator projection
-    → Feature Pack Grill-Me
-    → required JIT Domain / workflow / frontend planning
-    → implementation
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Feature Pack Grill-Me within preparation
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ```
 
 Do not derive whole-platform operator workflow before selecting the active Feature Pack. Operator work enters only when the approved outcome requires it. FP-006 is the first major controlled core-operations and release boundary; it is not permission to pre-design every later practitioner, event, moderation, experimentation or future-market workflow.
@@ -3810,8 +3879,21 @@ Product Law
     → Frontend Experience System
     → Atlas derivation
     → temporary active-FP frontend projection
-    → JIT frontend contract where required
-    → implementation
+```
+
+The downstream handoff from that temporary projection is:
+
+```text
+temporary active-FP frontend projection
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Feature Pack Grill-Me within preparation
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ```
 
 If stronger authority conflicts or is incomplete, Section 11 records the conflict and routes it to the correct authority. It does not repair or resolve the conflict locally.
@@ -3894,9 +3976,15 @@ Active Feature Pack
     → applicable ATLAS-09 operator projection
     → exact relevant Frontend Experience System rules
     → temporary active-FP frontend projection
-    → Feature Pack Grill-Me
-    → JIT frontend contract only if justified
-    → implementation
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Feature Pack Grill-Me within preparation
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ```
 
 Do not derive a mature whole-platform route or screen map.
@@ -4124,8 +4212,21 @@ Product Law
     → Roadmap
     → Atlas derivations
     → temporary active-FP data projection
-    → JIT contracts / proof
-    → implementation
+```
+
+The downstream handoff from that temporary projection is:
+
+```text
+temporary active-FP data projection
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Feature Pack Grill-Me within preparation
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ```
 
 An ownership or architecture contradiction is a STOP. Section 12 records and routes it; it does not resolve it locally.
@@ -4218,9 +4319,15 @@ Active Feature Pack
     → exact Domain Map ownership references
     → exact Architecture authority / projection references
     → temporary active-FP data authority / projection view
-    → Feature Pack Grill-Me
-    → JIT design / proof only where justified
-    → implementation
+    → Phase 7A Feature Pack Skeleton + preliminary Gate Manifest
+    → Feature Pack Grill-Me within preparation
+    → Phase 7B required JIT Domain Dossiers
+    → Phase 7C Final Feature Pack Contract
+    → explicit proof classification
+    → Architectural Proof / TB when required
+    → VS
+    → HH
+    → Release / Readiness
 ```
 
 Section 12 does not derive a whole-platform data-flow graph. A temporary row is created only when the active Feature Pack materially requires the data relationship. The relevant ATLAS-07 class or seam is referenced, not redefined.
@@ -4623,15 +4730,15 @@ The Atlas is used for navigation in this order:
 3. Use the Atlas to find shared capabilities, domain participation, lifecycle coverage, journeys, integrations, measurement, risks, proof and hardening relationships.
 4. Confirm every Atlas statement against its exact upstream source.
 5. Treat a missing implementation detail as a JIT boundary, not as an invitation to fill it in here.
-6. Prepare a Feature Pack only when a separate task authorises the applicable Phase 7 work.
-7. Create only the JIT Domain Dossiers required by that approved Feature Pack.
-8. Resolve or explicitly exclude blocking gates before the final Feature Pack contract.
-9. Choose `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` in the approved Feature Pack contract.
-10. Create TB, VS, HH or TOON artifacts only under the authority and sequence already defined upstream.
+6. Under a separate authorised task, enter Phase 7A: create the Feature Pack Skeleton and preliminary Gate Manifest.
+7. Under that approved boundary, enter Phase 7B: create only the required JIT Domain Dossiers.
+8. Resolve or explicitly exclude blocking gates, then enter Phase 7C: approve the Final Feature Pack Contract as the development-entry authority.
+9. Classify proof as `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` in that approved contract.
+10. Create Architectural Proof / a Tracer Bullet only when required, then proceed through VS, HH and Release / Readiness under their applicable contracts and gates.
 11. Recheck Atlas relationships after an approved upstream amendment. Do not patch around a changed authority inside the Atlas.
-12. Stop when a relationship cannot be proven without missing policy, ownership, mechanism or evidence.
+12. Stop when a relationship cannot be proven without missing policy, ownership, mechanism or evidence. The Atlas itself creates none of the Phase 7, proof, slice, hardening or release artifacts.
 
-This ATLAS-02 task does not perform steps 6 through 10. It populates only the Feature Pack Portfolio Register. ATLAS-01 ended after defining the navigation and lifecycle governance contract; ATLAS-02 does not begin ATLAS-03 or any Phase 7 deliverable.
+The historical ATLAS-02 population work performed only the Feature Pack Portfolio Register. ATLAS-03 through ATLAS-11 are now recorded in Sections 5 through 12. This current working artifact still does not perform the Phase 7A through Release / Readiness steps above or authorize any Phase 7 deliverable.
 
 ---
 
@@ -4750,7 +4857,7 @@ The ATLAS-01 delivery report used the following protocol:
 7. record any contradiction found, or state that none was found; and
 8. report `PASS` only when every requirement above is evidenced. Otherwise report `STOP` with the exact route.
 
-ATLAS-01 ended with the contract captured above. ATLAS-02 adds only the Feature Pack Portfolio Register under that same authority boundary. The next Atlas content layer must be separately named and authorised; this artifact does not begin ATLAS-03.
+ATLAS-01 historically ended with the contract captured above, and ATLAS-02 subsequently added the Feature Pack Portfolio Register under that same authority boundary. ATLAS-03 through ATLAS-11 are captured in the later sections of this current working artifact. None of those Atlas views authorises Phase 7, implementation or a lower-level artifact.
 
 ## 26.3 ATLAS-02 completion standard
 
@@ -4763,7 +4870,7 @@ ATLAS-02 is ready for review only when the evidence shows all of the following:
 | Authority fidelity | Purpose, outcomes, positions, dependencies, unlocks and release significance derive from the frozen Roadmap; domain names and ownership boundaries derive from the frozen Domain Map; gate references remain tied to current authority. |
 | Dependency and gate discipline | No dependency, unlock, gate or domain role is added by inference; conditional FP-017 remains explicitly unassigned until its required future direction exists. |
 | Navigation scope | The register remains outcome-level delivery navigation and does not become implementation planning or another Atlas view. |
-| Working boundary | The artifact remains derived, working, non-authoritative and unfrozen, and does not begin ATLAS-03. |
+| Working boundary | The artifact remains derived, working, non-authoritative and unfrozen; later ATLAS-03 through ATLAS-11 views remain derived and do not authorise Phase 7 or implementation. |
 
 ## 26.4 ATLAS-05 completion standard
 
@@ -4848,7 +4955,7 @@ ATLAS-07 is ready for review only when the evidence shows all of the following:
 |---|---|
 | No exhaustive permanent graph | Section 8 records `0` permanent global dependency-graph rows and no routine Domain-pair enumeration. |
 | No Section 8 placeholder | The former population-oriented table is removed and no Section 8 placeholder remains. |
-| Exactly six conceptual classes | Section 8 defines exactly `AUTHORITATIVE_READ`, `OWNER_CONTROLLED_CONSEQUENCE`, `DERIVED_PROJECTION`, `ORCHESTRATION_WITHOUT_OWNERSHIP`, `EVIDENCE_OBSERVATION` and `CONDITIONAL_GATED_SEAM`. |
+| Exactly five conceptual classes | Section 8 defines exactly `AUTHORITATIVE_READ`, `OWNER_CONTROLLED_CONSEQUENCE`, `DERIVED_PROJECTION`, `ORCHESTRATION_WITHOUT_OWNERSHIP` and `EVIDENCE_OBSERVATION`; conditionality is expressed through readiness and gate metadata. |
 | Permanent seams stay compact | The reference-oriented register contains `7` approved high-value seams; global safety rules are invariants, not graph rows. |
 | ATLAS-05 is referenced, not copied | The register points to existing ATLAS-05 exception IDs and does not duplicate their full explanations. |
 | Canonical inputs are explicit | Section 8 uses the Domain Map, Architecture Law, ATLAS-03, ATLAS-04, ATLAS-05, ATLAS-06 and applicable Roadmap/Product gates. |
@@ -4860,7 +4967,7 @@ ATLAS-07 is ready for review only when the evidence shows all of the following:
 | Lifecycle integration is preserved | Section 8 references ATLAS-06 and does not create a synthetic cross-domain state machine. |
 | Proof and TB boundary is preserved | Proof need informs the later Feature Pack contract and does not create a TB automatically. |
 | Runtime boundary is preserved | No calls, events, messages, topics, queues, Resources, schemas, modules, caches or provider mechanisms are defined. |
-| Existing views remain unchanged | ATLAS-03 CAP ownership, ATLAS-04 relationships and ATLAS-05 exception semantics are not amended. |
+| Existing views remain aligned | ATLAS-03 CAP ownership is unchanged; corrected ATLAS-04 relationships and the dependent ATLAS-05 exception semantics remain derived from current authority. |
 | Selective context is explicit | A fresh active-FP planner can use the selected CAPs, relevant Domain exceptions, lifecycle projection, Section 8 rules and exact upstream references without a global graph. |
 | Foundation remains intact | The existing Foundation Integrity Audit and applicable documentation tests pass. |
 | Working boundary is preserved | The Atlas remains derived, working, non-authoritative and unfrozen, and no authority document or manifest changes. |
@@ -4875,7 +4982,7 @@ The ATLAS-07 delivery review uses the following protocol:
 3. confirm the branch and changed-file set contain only the working Atlas;
 4. run the Foundation Integrity Audit and existing documentation tests;
 5. run `git diff --check`;
-6. run a focused Section 8 audit for zero global dependency-graph rows, no placeholder, exactly six conceptual classes, seven reference-oriented seams, ATLAS-05 reference discipline, active-FP-only projection, selective context and the permanent safety boundaries;
+6. run a focused Section 8 audit for zero global dependency-graph rows, no placeholder, exactly five conceptual classes with separate readiness/gate metadata, seven reference-oriented seams, ATLAS-05 reference discipline, active-FP-only projection, selective context and the permanent safety boundaries;
 7. confirm no runtime mechanism, implementation artifact, synthetic lifecycle or upstream authority change was introduced;
 8. confirm that pre-existing untracked `AGENTS.md` and `.agents/` material remains untouched;
 9. record any contradiction or escalation with its exact FP/CAP/Domain, source references, deciding authority and minimum safe resolution; and
