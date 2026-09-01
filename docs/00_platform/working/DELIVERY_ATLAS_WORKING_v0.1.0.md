@@ -2558,7 +2558,7 @@ This reverse view contains CAP IDs only so a Feature Pack planning pass can retr
 | CAP-005 | FP-001 | FP-007, FP-015 | — | — |
 | CAP-006 | FP-001 | FP-003, FP-004, FP-005, FP-007, FP-008, FP-009, FP-011, FP-013, FP-014, FP-015, FP-016, FP-017 | — | — |
 | CAP-007 | — (Roadmap-deferred) | — | — | — |
-| CAP-008 | FP-003 | FP-005, FP-007, FP-008, FP-009, FP-011 | — | FP-015 |
+| CAP-008 | FP-003 | FP-005, FP-007, FP-008, FP-009, FP-011 | — | — |
 | CAP-009 | FP-002 | FP-009, FP-011, FP-012, FP-015, FP-017 | — | — |
 | CAP-010 | FP-002 | FP-006, FP-009, FP-011, FP-012, FP-015 | — | — |
 | CAP-011 | FP-002 | FP-003, FP-005, FP-006, FP-007, FP-008, FP-009, FP-010, FP-011, FP-012, FP-013, FP-014, FP-015, FP-017 | — | — |
