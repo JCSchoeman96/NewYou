@@ -24,7 +24,7 @@ Phase 7A Skeleton
 
 The dossier starts from `main` at `2836e87f281c23877128a786fb1ff5a64e5f44e9`, the approved Phase 7A skeleton and current Product, Architecture, Domain and Roadmap authority. It covers Identity & Access only for the FP-001 outcome: a public visitor can become a verified individual 18+ account holder, authenticate, recover access and traverse a controlled support/admin boundary without exposing unfinished product spaces.
 
-In scope are the minimum account, email verification, password/magic-link authentication, session, device assurance, recovery, primary-email change, identity-side grant, compromise and duplicate-reconciliation contracts needed for that outcome. Social login, passkeys, native clients, generic tenancy, participant-ready MFA configuration, full deletion orchestration, relationship permissions, Commerce and Communications implementation remain outside this dossier.
+In scope are the minimum account, email verification, password/magic-link authentication, session, device assurance, recovery, primary-email change, identity-side grant, compromise and duplicate-reconciliation contracts needed for that outcome. Social login, passkeys, native clients, generic tenancy, participant MFA user experience/configuration, full deletion orchestration, relationship permissions, Commerce and Communications implementation remain outside this dossier.
 
 This is a planning contract, not a claim that `OQ-034` is already resolved. Exact threshold values remain `OQ-035`; notification provider/channel policy remains `OQ-036`.
 
@@ -53,38 +53,56 @@ anonymous request
 
 ## D. Resource map first
 
-### D.1 Accepted resources
+### D.1 Domain concepts and physical Ash representations
+
+The following mapping separates business concepts from physical Resources. The physical Resource set is an outcome, not a target:
+
+| Domain concept | Physical Ash representation | Durable authority/invariant |
+|---|---|---|
+| Account / canonical identity | `NewYou.Identity.Account`, the authenticated AshAuthentication subject | One canonical email/identity; orthogonal account, verification and security dimensions |
+| Authentication credential | Account authentication fields/actions, including the sensitive `hashed_password` field expected by stable AshAuthentication v4; no separate credential Resource | One password authority on Account; hash replacement/revocation and credential version are authoritative |
+| Verification, reset, magic-link and recovery proof | `AshAuthentication.TokenResource` framework Resource with purpose/JTI, token metadata/presence, expiry and revocation; no parallel SecurityChallenge Resource | One deterministic presented-proof decision; the framework stores token information/revocation state, not raw presented secrets, and a token proves only its configured purpose |
+| Browser/API authentication token | `AshAuthentication.TokenResource`; first-party browser transport is a secure cookie | Token presence/revocation and expiry; no public/external bearer client in FP-001 |
+| Application session | `NewYou.Identity.Session` | User-visible session identity, inactivity/absolute expiry and individual/global revocation; validity also requires its linked token to pass |
+| Trusted device / device assurance | `NewYou.Identity.DeviceAssurance` | Consent, server-side fingerprint, expiry and revocation; never high-risk step-up authority |
+| MFA factor | Account-protected MFA fields/actions using the selected stable TOTP primitive | Enrollment confirmation, protected secret, last-use replay boundary, disable/revoke and recovery/reset policy; no separate MFA Resource is required for FP-001 |
+| Identity-side role/grant | `NewYou.Identity.IdentityGrant` | Scoped, approved, expiring/revocable role authority; no relationship permission |
+| Graduated recovery | `NewYou.Identity.RecoveryCase` | Durable assurance, hold/manual review, completion and replay/concurrency state |
+| Duplicate reconciliation | `NewYou.Identity.ReconciliationCase` | Review, conflict, applied decision and immutable provenance |
+| Primary email change | Durable pending-change fields/state on Account plus purpose-bound TokenResource proof | One active operation per Account; target email, operation/version, delay/review and supersession survive restart |
+
+Physical Ash Resource set: `Account`, framework `TokenResource`, `Session`, `DeviceAssurance`, `IdentityGrant`, `RecoveryCase`, and `ReconciliationCase` (seven Resources total, including the framework Resource). `Credential` and `SecurityChallenge` remain domain concepts implemented by Account and TokenResource respectively. Email change is not a separate Resource because FP-001 permits one pending primary-email operation per Account and its authoritative fields are part of Account identity truth.
 
 #### 1. Account
 
-* **Purpose/owner/authority:** Canonical human identity and individual account; owned by Identity & Access; PostgreSQL is durable authority.
+* **Purpose/owner/authority:** Canonical human identity and individual account; owned by Identity & Access; PostgreSQL is durable authority. Account is the authenticated AshAuthentication Resource.
 * **Identifier and key categories:** UUIDv7 opaque primary identifier; canonicalised email identity key; immutable creation/provenance metadata; no identifier is a bearer secret.
-* **Attributes:** required first name, surname, canonical email, preferred language, 18+ confirmation, terms/privacy acceptance references, verification timestamp, account lifecycle state, security-hold/compromise markers, closure/recovery markers, and optimistic version. Phone and city are optional. Full DOB, health and medical data are absent.
-* **Relationships:** many Credentials, Challenges, Sessions, Device Assurances, Grants and Reconciliation Cases; external references to communications intent, Privacy consent and owning business-domain records are identifiers/provenance only.
+* **Attributes:** required first name, surname, canonical email, preferred language, 18+ confirmation, terms/privacy acceptance references, email verification timestamp/state, account lifecycle state, security posture, password hash and credential version, MFA enrollment/last-use metadata, and optimistic version. Phone and city are optional. Full DOB, health and medical data are absent. Email-change fields are `pending_new_canonical_email`, `email_change_operation_id`, requested/reauthenticated/confirmed/delay/review/applied/cancelled/expired timestamps, superseded-by reference and operation version.
+* **Relationships:** Sessions, Device Assurances, Identity Grants, Recovery Cases and Reconciliation Cases; framework TokenResource records reference the Account. Credentials and Challenges are logical concepts, not child Resources. External references to communications intent, Privacy consent and owning business-domain records are identifiers/provenance only.
 * **Sensitive/immutability:** email, security state, closure state and acceptance references are restricted; name/language are personal; provenance, creation and closure facts are append-only or superseding. Current fields may change only through named actions.
 * **Retention/closure:** account closure is not full deletion. Identity retains only what approved retention/deletion contracts permit; full deletion orchestration belongs to Privacy & Consent.
 * **Authoritative actions:** `register`, `mark_email_verified`, `change_primary_email`, `place_security_hold`, `release_security_hold`, `close`, and `restore_after_recovery`.
 * **Policy/audit/integration:** self-service field policy plus current session/assurance; staff actions require scoped grant and reason. Audit material lifecycle transitions. Communications receives intent, never verification truth; Privacy is checked, not written by Identity.
 * **Persistence:** independent persistence is required because identity, verification gate, closure and security state must survive restart and be queried by every protected Domain.
 
-#### 2. Authentication Credential
+#### 2. Authentication Credential (domain concept; no separate Ash Resource)
 
-* **Purpose/owner/authority:** Password credential and authentication-method status for one Account; Identity & Access/PostgreSQL.
+* **Purpose/owner/authority:** Password credential and authentication-method status for one Account; Identity & Access/PostgreSQL, implemented by Account's stable AshAuthentication fields/actions.
 * **Attributes:** account reference, method (`password` or optional `magic_link` capability), password hash metadata, credential status, created/changed/revoked timestamps, and version. Raw passwords, magic-link tokens and recovery secrets are never persisted.
 * **Relationships:** belongs to Account; invalidates linked Sessions and Device Assurances when a security-changing action requires it.
 * **Sensitive/immutability:** hash and security metadata are highly restricted; hashes are replaceable, raw secrets never recoverable. History is retained only as minimal security evidence.
 * **Lifecycle/actions:** password credential `absent → active → replaced/revoked`; `set_password`, `authenticate_password`, `reset_password`, `revoke_credential`. Magic link is an authentication strategy, not a second identity.
 * **Policy/audit/integration:** password fields are sensitive and write-only; authentication returns a generic failure. Password hashing is delegated to the selected maintained provider. Credential changes emit revocation/security consequences and audit evidence.
-* **Persistence:** independent persistence is required for credential rotation, compromise containment and assurance checks.
+* **Persistence:** no independent persistence; Account is the single password authority. A separate Credential Resource would duplicate the stable framework's `hashed_password` expectation and create contradictory credential lifecycle state.
 
-#### 3. Security Challenge
+#### 3. Security Challenge (domain concept; TokenResource representation)
 
-* **Purpose/owner/authority:** One-purpose, bounded proof capability for email verification, password reset, recovery proof or email-change confirmation; Identity & Access/PostgreSQL.
+* **Purpose/owner/authority:** One-purpose, bounded proof capability for email verification, password reset, recovery proof or email-change confirmation; implemented by the AshAuthentication TokenResource under Identity & Access/PostgreSQL.
 * **Attributes:** UUIDv7 id, account reference where known, purpose, secret fingerprint/hash, issued/expiry/consumed/revoked timestamps, supersession reference, attempt/usage metadata, and correlation/provenance. The presented secret is never stored.
 * **Relationships:** belongs to Account or a Recovery Case; may be linked to an Email Change attempt by purpose/reference. Communications receives a separate intent id.
 * **Lifecycle/actions:** `issued → valid → consumed`; `issued → expired`, `revoked` or `superseded`; replay is a terminal rejected observation, not a second transition.
 * **Policy/audit/integration:** purpose-specific action only; no generic “verify anything” endpoint. Confirmation establishes Identity truth only after server-side fingerprint, purpose, expiry and account-state checks.
-* **Persistence:** independent persistence is required for single-use replay control, expiry, replacement and crash-safe proof consumption.
+* **Persistence:** TokenResource persistence is required for single-use replay control, expiry, replacement and crash-safe proof consumption; no parallel challenge store is permitted.
 
 #### 4. Session
 
@@ -92,7 +110,7 @@ anonymous request
 * **Attributes:** UUIDv7 id, account, credential/method, opaque token fingerprint or framework token reference, assurance level, user-agent/device summary, created/last-seen timestamps, inactivity/absolute expiry, revoked timestamp/reason, and version.
 * **Relationships:** belongs to Account and may reference Device Assurance; never embeds relationship authority or consent.
 * **Sensitive/immutability:** token fingerprints and network/device security evidence are highly restricted; token secret is never stored. Creation and revocation facts are append-only; last-seen is mutable bounded telemetry/security state.
-* **Lifecycle/actions:** `active → expired`, `revoked` or `logged_out`; session-specific and global revocation are distinct actions.
+* **Lifecycle/actions:** `active → expired`, `revoked` or `logged_out`; session-specific and global revocation are distinct actions. A Session is valid only when its own state/expiry and linked TokenResource acceptance both pass, and Account is open/normal or otherwise explicitly permitted.
 * **Policy/audit/integration:** secure HttpOnly cookie transport; every protected Ash action rechecks current session/revocation and required assurance. LiveView only reconstructs current actor context. Audit creation for privileged/high-risk sessions and revocation, not raw tokens.
 * **Persistence:** independent persistence is required for multi-node reconstruction, visible session listing and revocation.
 
@@ -101,7 +119,7 @@ anonymous request
 * **Purpose/owner/authority:** Limited, participant-consented trust associated with a device/session family; Identity & Access/PostgreSQL.
 * **Attributes:** UUIDv7 id, account, device-token fingerprint, name, assurance level, created/last-used, expiry, revoked timestamp/reason and version. No raw fingerprinting payload or invasive device profile is required.
 * **Relationships:** belongs to Account; can authorise session convenience but not high-risk step-up.
-* **Lifecycle/actions:** `pending → trusted → expired/revoked`; suspicious activity and credential/security changes revoke it.
+* **Lifecycle/actions:** `pending → trusted → expired/revoked`; suspicious activity and credential/security changes revoke it. The browser artifact is only a random opaque cookie value; server-side fingerprint and state are authoritative.
 * **Policy/audit/integration:** explicit consent, stricter staff policy, no bypass of email change, export, deletion, MFA or other high-risk step-up. Audit grant/revoke and suspicious invalidation.
 * **Persistence:** independent persistence is required by locked trusted-device policy and user-visible revocation.
 
@@ -115,7 +133,7 @@ anonymous request
 * **Policy/audit/integration:** no self-approval; MFA and named actor required; least privilege, narrow scope, expiry and review. Business Domains re-evaluate their own relationship/purpose/consent authority.
 * **Persistence:** independent persistence is required for scoped policy, revocation, review and audit.
 
-#### 7. Recovery Case
+#### 7. Recovery Case (physical Ash Resource)
 
 * **Purpose/owner/authority:** Graduated automated/manual recovery coordination and assurance state; Identity & Access/PostgreSQL.
 * **Attributes:** UUIDv7 id, claimant/account reference where known, requested method, assurance level, state, hold/review requirements, reviewer/approver references, expiry, completion/cancellation/failure timestamps, operation identity and version. It stores references to evidence, not raw identity documents or secrets.
@@ -125,7 +143,7 @@ anonymous request
 * **Policy/audit/integration:** non-enumerating claimant boundary; stronger assurance and second-person approval for privileged users; all completion effects remain Identity-only. Communications receives notice intent, not proof authority.
 * **Persistence:** independent persistence is required for graduated assurance, manual review, duplicate/replay control, crash recovery and support audit.
 
-#### 8. Reconciliation Case
+#### 8. Reconciliation Case (physical Ash Resource)
 
 * **Purpose/owner/authority:** Safe duplicate-identity detection, review and merge provenance; Identity & Access/PostgreSQL.
 * **Attributes:** candidate accounts, detection basis, verification evidence references, reviewer/approver, conflict set, selected canonical account, status, timestamps, and reversal/correction references. No demographic-only automatic merge.
@@ -162,17 +180,25 @@ Identity provides a current actor reference and identity-side grants. Privacy & 
 
 ## F. Lifecycle state machines
 
-### F.1 Account / identity
+### F.1 Orthogonal Account / identity dimensions
 
-States: `unverified`, `verified`, `security_hold`, `closed_recoverable`, `closed_terminal`. Creation enters `unverified` only after all registration validations commit. `unverified → verified` is initiated only by consuming a valid email challenge. `unverified/verified → security_hold` is initiated by authorised compromise containment. `security_hold → verified` requires verified recovery and current security review. `verified/unverified/security_hold → closed_recoverable` is an authorised closure action. `closed_recoverable → verified` is governed restoration after recovery; `closed_recoverable → closed_terminal` is the identity-side terminal closure only when the applicable deletion/retention authority permits it.
+Recovery does not create a synthetic Account super-state. The authoritative dimensions are evaluated independently:
 
-Guards are canonical-email uniqueness, 18+ confirmation, terms/privacy acceptance, valid current actor/assurance, no contradictory hold, and current Privacy checks where required. Side effects are challenge/communication intent, credential/session/device revocation, security hold, and minimum audit evidence. Registration retry is idempotent by client operation identity where supplied and by canonical-email uniqueness otherwise; public responses remain non-enumerating. Account state is never inferred from delivery, LiveView assigns or cache. A mistaken hold is corrected by an authorised release; terminal closure cannot be reversed by login or recovery and does not imply complete cross-domain deletion.
+**Account lifecycle:** states `open`, `closed_recoverable`, `closed_terminal`. Registration creates `open` only after minimum-field, 18+, terms/privacy and canonical-email checks. `open → closed_recoverable` is an authorised closure action; reopening requires the applicable current actor and recovery/closure guard but does not alter verification or security posture. `closed_recoverable → closed_terminal` is terminal identity closure only when retention/deletion authority permits it. Terminal closure is never reopened by login or recovery.
 
-### F.2 Email verification
+**Email verification:** states `unverified`, `verified`. `unverified → verified` is initiated only by consuming a valid TokenResource proof whose purpose is email verification. No Account reopening, recovery completion or hold release can perform this transition. Verification is not reversed by an email-change delay; a new email requires its own proof and the applied change establishes the new address's verification state. Correction is a new purpose-bound proof and audit evidence.
+
+**Security posture:** states `normal`, `held`. `normal → held` is authorised compromise containment; it revokes required sessions/devices and freezes sensitive actions. `held → normal` requires verified recovery/security review and is initiated by an authorised release action. Hold release does not modify email verification. A mistaken hold is corrected by release; a terminal closure cannot be reversed. Both transitions are conditional on Account version, idempotent by operation identity, serialized against sensitive Account changes, and audited.
+
+Explicit composition invariant: `recovery completion != email verification`; `security-hold release != email verification`; `account reopening != email verification`.
+
+Guards and side effects remain dimension-specific: canonical email/registration gates apply to creation; proof purpose/expiry/presence applies to verification; current security authority applies to hold/release; closure and restoration use closure policy. Current effective protected access is composed from `Account lifecycle = open`, `Email verification = verified` where the capability requires it, `Security posture = normal`, valid Session/Token, assurance, Identity Grant, owning-Domain relationship and Privacy purpose/consent. It is never encoded as one Account enum.
+
+### F.2 Email verification (TokenResource proof lifecycle)
 
 States: `issued`, `valid`, `consumed`, `expired`, `superseded`, `revoked`. Issuance follows account creation or an allowed resend. Resend atomically supersedes the prior active challenge for the same account/purpose and creates one durable communication intent. Consumption locks or conditionally updates the challenge and Account in one short transaction; exactly one consumer can establish verification. Expiry is time-derived and cleanup is non-authoritative. Replayed, expired or superseded secrets return a safe generic result and create bounded audit/telemetry. Delivery or provider status never changes `verified`; only proof consumption does. Correction is a new challenge, never mutation of consumed history; a mistaken revocation is handled by a new issuance.
 
-### F.3 Credential
+### F.3 Credential (Account authentication fields/actions)
 
 States: `absent`, `active`, `replaced`, `revoked`. Password authentication validates a hash with bounded cost and generic failure. Reset replaces the credential only after a valid reset/recovery proof, invalidates affected sessions/devices and records a security event. A replacement is atomic with its credential version and revocation consequence. Old credentials cannot authenticate; retries with the same operation identity return the committed result. Credential revocation is not undone; correction requires a new authenticated credential and evidence.
 
@@ -190,7 +216,7 @@ Recovery is a lifecycle on Account plus `RecoveryCase` semantics and Security Ch
 
 ### F.7 Primary-email change
 
-The action lifecycle is `requested → reauthenticated → new_address_pending → confirmed → delayed/reviewed → applied`, with `cancelled`, `expired`, `rejected` and `held` terminals. Reauthentication proves control of the current session; a new-address challenge proves the new address; old-address notification is a Communications consequence, not proof. The current canonical email remains unchanged until the authoritative apply transaction succeeds. Concurrent changes serialize on Account version and active-change purpose; the newest explicitly accepted operation supersedes older pending challenges. Loss of old address uses graduated recovery, never informal support override. Applying the change rotates relevant session/device assurance according to risk policy, preserves old-address provenance and audits the consequence.
+The action lifecycle is `requested → reauthenticated → new_address_pending → confirmed → delayed/reviewed → applied`, with `cancelled`, `expired`, `rejected`, `superseded` and `held` terminals. The authoritative pending operation lives on Account: target new canonical email, operation identity, all material timestamps, delay/review state, supersession/cancellation/expiry markers, provenance and optimistic version. Reauthentication proves control of the current session; a TokenResource challenge whose purpose is `email_change_confirmation` proves the new address; proof consumption alone never applies the change. Old-address notification is a Communications consequence, not proof. The current canonical email remains unchanged until the authoritative Account apply transaction succeeds. Concurrent changes serialize on Account version and active-change purpose; the newest explicitly accepted operation supersedes older pending challenges. Loss of old address uses graduated recovery, never informal support override. Applying the change rotates relevant session/device assurance according to risk policy, preserves old-address provenance and audits the consequence. A pending operation survives restart and is resumed, cancelled or expired from durable Account state; correction creates a new operation rather than rewriting history.
 
 ### F.8 Identity grants
 
@@ -206,7 +232,7 @@ All actions run through Ash/application interfaces, use the smallest transaction
 
 | Action | Actor/guard and validation | Transaction, retry and concurrency | Consequences/evidence |
 |---|---|---|---|
-| `register` | Anonymous; required minimum fields, canonical email, 18+, terms/privacy and language; non-enumerating duplicate response | Unique canonical-email constraint plus operation id; one Account and Credential transition; concurrent same-email requests converge | Verification intent after commit; registration event; no account existence leak |
+| `register` | Anonymous; required minimum fields, canonical email, 18+, terms/privacy and language; non-enumerating duplicate response | Unique canonical-email constraint plus operation id; one Account transition including its password hash; concurrent same-email requests converge | Verification intent after commit; registration event; no account existence leak |
 | `issue/resend_verification` | Account owner with allowed unverified state; purpose and resend admission boundary | Replace active challenge conditionally; one active purpose challenge; duplicate request id returns result | Durable Communications intent; requested/superseded audit; delivery cannot verify |
 | `consume_verification` | Anonymous proof presenter; fingerprint/purpose/expiry/Account checks | Atomic challenge-consume + Account verify; replay safe | Verification evidence and optional session consequence; no raw token |
 | `authenticate_password` | Anonymous; email/password; current Account state, hold and verification capability checks | Hash outside DB lock where possible; create Session only after re-read; generic failure | Login success/failure class, risk signal; no enumeration |
@@ -256,46 +282,72 @@ Session/device revocation required to prevent access is atomic Identity work. Li
 
 ### K.1 Recommended smallest path
 
-The primary hypothesis is maintained Ash Authentication plus its Phoenix integration, at implementation-time compatible current versions, configured for the existing Ash 3.x application:
+The primary hypothesis is maintained stable Ash Authentication v4 plus stable Ash Authentication Phoenix v2, configured for the existing Ash 3.x application. Current review snapshots are `ash_authentication 4.14.2` and `ash_authentication_phoenix 2.17.3` (accessed 2026-09-01); these are evidence snapshots, not future pins:
 
 * email/password as the required strategy and optional email magic-link strategy around the same Account;
 * Argon2id through the maintained Ash Authentication hash-provider boundary, with cost benchmarked and bounded for the deployment budget;
 * confirmation add-on for new-account email proof and monitored primary-email changes, with interaction required where the browser must not mutate state by GET;
 * password reset/recovery strategy for ordinary recovery, extended by Identity-owned graduated/manual Recovery Case and security-hold actions;
 * Token Resource with stored token presence enabled for durable revocation semantics where needed, secret material hashed/fingerprinted, one-purpose challenges, bounded expiry and no raw token persistence;
-* secure HttpOnly, Secure, appropriate SameSite browser cookie transport; session identity is server-governed and linked to a durable Session record or framework token reference. No bearer API is needed for FP-001: `API/Bearer = NONE` unless a later approved client requires it;
+* secure HttpOnly, Secure, appropriate SameSite browser cookie transport; session identity is server-governed and linked to a durable Session record and framework token reference. `PUBLIC / EXTERNAL API BEARER AUTHENTICATION = NONE FOR FP-001`; internal first-party authentication token mechanisms remain permitted where required by the selected Ash Authentication browser/session architecture;
 * Phoenix/Plug browser CSRF protection on cookie-authenticated state-changing requests, with LiveView event handling remaining server-authorised and current-state checked;
 * Ash Authentication Phoenix LiveSession/on-mount integration to reconstruct authenticated subjects on LiveView mount/reconnect, followed by Identity policy checks for current session, grant and hold state. A LiveView process is never session authority;
-* participant MFA remains optional; privileged staff/practitioner MFA and high-risk step-up are integration boundaries requiring a maintained MFA authenticator and proof, not a bespoke FP-001 cryptosystem;
+* participant MFA remains optional; privileged staff/practitioner MFA and high-risk step-up use the stable `NimbleTOTP 1.0.0` primitive behind Identity-owned enrollment/verification state. Ash Authentication v5 TOTP is not adopted because it is release-candidate functionality;
 * trusted device is an Identity-owned persisted Device Assurance record and is not silently delegated to browser local storage or a library convenience flag;
 * secrets/keys are supplied by deployment secret management, rotated with overlapping verification and explicit revocation/recovery testing; no signing secret is committed.
 
-### K.2 What the framework handles and what Identity owns
+### K.2 Physical framework mapping and deterministic proof decision
 
-Ash Authentication provides the maintained strategy, password hashing boundary, token/challenge plumbing, confirmation/reset flow, authentication plugs and Phoenix LiveView subject propagation. The official documentation states that the current ecosystem supports password and magic-link strategies, confirmation, a Token Resource, token presence storage and Phoenix LiveSession integration.
+Ash Authentication provides the maintained strategy, password hashing boundary, token/challenge plumbing, confirmation/reset flow, authentication plugs and Phoenix LiveView subject propagation. `AshAuthentication.TokenResource` is a physical Ash Resource inside Identity & Access, not a new Domain authority. It stores the framework's token metadata/JTI/presence and revocation representation—not raw presented tokens—for confirmation, reset, magic-link and sign-in tokens, with purpose and expiry checked by the strategy. TokenResource is the only physical proof-token store.
 
-Identity still owns Account lifecycle, verified-capability gates, graduated/manual recovery, holds, session/device policy, email-change delay/risk consequences, identity-side grants, duplicate reconciliation, non-enumerating public result mapping, domain seams, audit minimisation and all current-authority rechecks. Communications owns message intent/delivery; the library is not permitted to become provider or verification authority.
+The deterministic proof rule is: a presented token is acceptable only if its signature/format is valid, its purpose matches the requested action, its expiry is current, its JTI/token presence is acceptable under the configured token policy, it has not been revoked or consumed, and the linked Account/RecoveryCase/email-change operation is still in the required state. Failure of any check is fail-closed. TokenResource acceptance proves only the configured proof; it does not itself verify an email, complete recovery or apply an email change.
 
-### K.3 Extension and risk boundary
+The logical `Security Challenge` concept is therefore implemented by TokenResource. No parallel `SecurityChallenge` Resource or token table is allowed. Account authentication fields are the sole credential authority; TokenResource is token/proof authority; Session is application session authority; these do not duplicate one another.
+
+### K.3 What the framework handles and what Identity owns
+
+Identity still owns Account lifecycle dimensions, verified-capability gates, graduated/manual recovery, holds, session/device policy, email-change durable fields/delay/risk consequences, identity-side grants, duplicate reconciliation, non-enumerating public result mapping, domain seams, audit minimisation and all current-authority rechecks. Communications owns message intent/delivery; the library is not permitted to become provider or verification authority.
+
+`Session` is retained as a physical NewYou Resource because TokenResource does not own user-visible inactivity/absolute session policy, device/session metadata or product-level individual session listing. A session is valid only when Session is open/within both expiry rules, Account is open and permitted, security posture is `normal`, and its linked TokenResource token is accepted and not revoked. Thus `Token active + Session revoked` is always invalid, and `Token revoked + Session active` is always invalid; the stricter result fails closed. Logout-everywhere revokes all applicable Sessions and their linked tokens using the maintained framework add-on/TokenResource path plus the Identity session boundary.
+
+### K.4 MFA, trusted device and high-risk step-up selection
+
+**Participant MFA:** optional enrollment is `not_enrolled → pending → active → revoked`; setup creates a secret in protected Account MFA fields or an explicitly protected Identity factor representation, shows it once through a bounded setup flow, and activates only after a valid TOTP confirmation. The secret is encrypted/protected at rest, never logged or returned after setup; `last_totp_at`/equivalent prevents same-period replay. Disable/revoke requires current authentication plus step-up; reset uses graduated recovery and audit. OQ-035 governs brute-force thresholds. Participant MFA does not become mandatory except where a high-risk action requires step-up.
+
+**Privileged MFA:** staff/practitioner access requires an active MFA factor and a current privileged Identity Grant. Enrollment, reset and disable are named, audited and cannot be self-approved; privileged reset requires second-person approval. Break-glass requires stronger assurance, named reason/scope, short expiry, alert and review. A credential/recovery compromise revokes the factor's usable assurance and requires re-enrollment or governed reset.
+
+**TOTP primitive:** stable `NimbleTOTP 1.0.0` is the selected small primitive for code generation/validation and replay-window support. It does not own Account, MFA enrollment or authorization. Ash Authentication v5 RC's TOTP strategy is explicitly rejected for this dossier; v5 RC documentation is not treated as stable v4 behavior. The selected primitive still requires Identity-owned brute-force admission, secret protection, last-use replay control, audit and recovery integration.
+
+**Trusted device:** browser receives only a random opaque device artifact in a Secure, HttpOnly, appropriate-SameSite cookie. Identity stores a server-side hash/fingerprint, Account, consent, name, assurance class, created/last-used, expiry, rotation and revocation reason in `DeviceAssurance`. No invasive fingerprinting or localStorage authority is used. Device loss is explicit revocation followed by fresh enrollment. Credential change, recovery, suspicious activity, global logout and compromise invalidate it. Each node reconstructs it from PostgreSQL; no local process is authoritative.
+
+**High-risk step-up:** triggers include primary-email change, disabling MFA, sensitive export/deletion, unusually sensitive professional-record access, sign-out-all-devices and suspicious-security changes. The proof is current password reauthentication plus active MFA/TOTP where enrolled/required, or the separately governed stronger privileged recovery proof. Elevated assurance is a short-lived, purpose-bound, session/account-linked server record or claim whose use is checked against current Session, Account posture, operation identity and expiry. It is single-purpose, replay-controlled, expires on logout/security change/recovery and is reconstructed fail-closed after reconnect/restart. Trusted device never satisfies it by itself.
+
+Recovery interacts with MFA by preferring an existing verified factor, otherwise verified email plus graduated assurance; unavailable MFA enters hold/manual review, and privileged recovery requires second-person approval. Recovery completion revokes sessions/devices and does not activate MFA, verify email or apply an email change without those independent proofs.
+
+### K.5 Extension and risk boundary
 
 The main lifecycle mismatch is that a turn-key authentication package does not by itself encode NewYou's graduated manual recovery, domain-aware merge, scoped staff/break-glass grants, relationship/consent composition or exact session/device invalidation policy. Those are application/domain actions around the framework boundary. The framework's token-presence and stored-token options must be proven for the required revocation model; a self-contained token accepted without presence would be unsafe for global revocation.
 
-Custom authentication is rejected unless proof shows a frozen requirement cannot be met safely by the maintained path. A custom password, token, cookie or cryptographic implementation would increase attack surface, maintenance and rotation risk without an identified requirement benefit. A separate identity provider is also rejected for FP-001 because it adds a new operational/provider boundary while the required local email/password flow is available.
+Custom authentication is rejected unless proof shows a frozen requirement cannot be met safely by the maintained path. A custom password, token, cookie or cryptographic implementation would increase attack surface, maintenance and rotation risk without an identified requirement benefit. A separate identity provider is also rejected for FP-001 because it adds a new operational/provider boundary while the required local email/password flow is available. Adopting Ash Authentication v5 RC solely for TOTP is rejected because the selected stable v4 + small maintained primitive path satisfies the frozen MFA boundary without RC adoption.
 
-### K.4 Evidence required before implementation acceptance
+### K.6 Evidence required before implementation acceptance
 
 The later tracer-bullet/proof boundary must verify pinned compatible versions, Argon2id cost/resource envelope, confirmation and reset replay/expiry, token hashing/presence/revocation, cookie/session fixation behaviour, CSRF, LiveView disconnected/connected reconstruction, multi-node shared PostgreSQL behaviour, restart/reconnect, global/session-specific revocation, manual recovery/hold races, privileged MFA/step-up and secret rotation. It must include failure injection and no-enumeration tests. This is evidence still required, not a final proof classification.
 
-### K.5 Current technical source record
+### K.7 Current technical source record
 
 Research was limited to OQ-034 and used current official primary documentation accessed 2026-09-01:
 
-* [Ash Authentication v4.14.2 — Get started](https://ash-authentication.hexdocs.pm/get-started.html): current password/magic-link installation path, Token Resource, secret handling and Plug/session/bearer integration.
+* [Ash Authentication v4.14.2 — Get started](https://ash-authentication.hexdocs.pm/get-started.html): current password/magic-link installation path, authenticated-resource password fields, Token Resource, secret handling and Plug/session/bearer integration.
 * [Ash Authentication v4.14.2 — Tokens](https://ash-authentication.hexdocs.pm/tokens.html): token presence storage, `store_all_tokens?`, sign-in tokens and LiveView exchange use.
-* [Ash Authentication v4.14.1 — Confirmation](https://ash-authentication.hexdocs.pm/dsl-ashauthentication-addon-confirmation.html): confirmation for account/email changes, token lifetime, interaction and hijacking protections.
-* [Ash Authentication Phoenix v2.17.2 — LiveSession](https://ash-authentication-phoenix.hexdocs.pm/AshAuthentication.Phoenix.LiveSession.html): copying authenticated subjects into LiveView session/assigns and token-expiry/presence behaviour.
+* [Ash Authentication v4.14.2 — Confirmation](https://ash-authentication.hexdocs.pm/dsl-ashauthentication-addon-confirmation.html): confirmation for account/email changes, token lifetime, interaction and hijacking protections.
+* [Ash Authentication v4.14.2 — API reference](https://ash-authentication.hexdocs.pm/api-reference.html): `TokenResource`, logout-everywhere, `AshAuthentication.Supervisor`, token expunger and Argon2 provider boundaries.
+* [Ash Authentication Phoenix v2.17.3 — Router](https://ash-authentication-phoenix.hexdocs.pm/AshAuthentication.Phoenix.Router.html): stable Phoenix routes and CSRF-aware sign-out integration.
+* [Ash Authentication Phoenix v2.17.3 — LiveSession](https://ash-authentication-phoenix.hexdocs.pm/AshAuthentication.Phoenix.LiveSession.html): copying authenticated subjects into LiveView session/assigns and token-expiry/presence behaviour.
 * [Plug v1.20.3 — Plug.Session](https://plug.hexdocs.pm/Plug.Session.html): cookie/session options and CSRF consideration.
 * [Phoenix LiveView v1.2.11 — LiveView](https://phoenix-live-view.hexdocs.pm/Phoenix.LiveView.html): LiveView process and `on_mount` authentication boundary.
+* [NimbleTOTP v1.0.0](https://hexdocs.pm/nimble_totp/): small TOTP primitive, secret generation, time-window validation and same-period replay protection.
+* [Ash Authentication v5.0.0-rc.1 change log](https://ash-authentication.hexdocs.pm/5.0.0-rc.1/changelog.html): evidence that TOTP is RC-only in the reviewed v5 line; not selected as stable v4 architecture.
 
 Versions are evidence snapshots, not package pins or authority amendments.
 
@@ -303,15 +355,15 @@ Versions are evidence snapshots, not package pins or authority amendments.
 
 **READY_FOR_EXPLICIT_RESOLUTION**
 
-Recommended resolution: approve the maintained Ash Authentication/Ash Authentication Phoenix path for FP-001 email/password plus optional magic-link authentication, Argon2id, confirmation/reset facilities, stored/presence-checked tokens, secure first-party browser cookies, Phoenix CSRF and LiveView integration, with the Identity-owned Account/Session/Device Assurance/Recovery Case/Grant lifecycles and current-authority policy described in this dossier. `API/Bearer = NONE` and trusted-device cryptography remain outside the public FP-001 API; trusted device is an Identity-owned persisted record. Exact versions and cost values are selected and benchmarked at implementation/proof time within the approved compatibility window.
+Recommended resolution: approve stable Ash Authentication v4 and stable Ash Authentication Phoenix v2 for FP-001 email/password plus optional magic-link authentication, Argon2id, confirmation/reset facilities, the framework TokenResource, secure first-party browser cookies, Phoenix CSRF and LiveView integration, with the Identity-owned Account/Session/Device Assurance/Recovery Case/Grant lifecycles and current-authority policy described in this dossier. `PUBLIC / EXTERNAL API BEARER AUTHENTICATION = NONE FOR FP-001`; internal first-party authentication token mechanisms remain permitted where required by the selected browser/session architecture. Trusted-device cryptography remains server-authoritative in Identity. Exact compatible pins and cost values are selected and benchmarked at implementation/proof time.
 
-This satisfies Product and Architecture law because it keeps one canonical identity, uses maintained security primitives, preserves PostgreSQL durable authority, supports revocation/reconstruction across nodes, treats email proof as server-authoritative, composes authentication with current grants/relationships/consent, and avoids a universal privileged bypass. Alternatives rejected are custom authentication, external identity-provider infrastructure, browser-local session authority and a Redis/ETS/GenServer identity store.
+This satisfies Product and Architecture law because it keeps one canonical identity, uses maintained security primitives, preserves PostgreSQL durable authority, supports revocation/reconstruction across nodes, treats email proof as server-authoritative, composes authentication with current grants/relationships/consent, and avoids a universal privileged bypass. Alternatives rejected are custom authentication, external identity-provider infrastructure, browser-local session authority, Ash Authentication v5 RC adoption, and a Redis/ETS/GenServer identity store.
 
-Residual risks are package/configuration drift, hash-cost overload, token-presence misconfiguration, incomplete MFA integration, recovery abuse and provider outage. Required evidence is listed in K.4 and remains a later executable proof obligation. The authority document to amend later is `docs/00_platform/01_DECISIONS_v1.2.2.md`, under owner-controlled `OQ-034`; this PR must not amend it.
+Residual risks are package/configuration drift, hash-cost overload, token-presence misconfiguration, incomplete MFA integration, recovery abuse and provider outage. Required evidence is listed in K.6 and remains a later executable proof obligation. The authority document to amend later is `docs/00_platform/01_DECISIONS_v1.2.2.md`, under owner-controlled `OQ-034`; this PR must not amend it.
 
 Suggested concise resolution wording:
 
-> Resolve OQ-034 for FP-001 by approving maintained Ash Authentication and Ash Authentication Phoenix, at then-current compatible pinned versions, for email/password plus optional magic-link authentication, Argon2id password hashing, confirmation/reset, stored presence-checked tokens, secure first-party browser sessions, CSRF protection and LiveView actor reconstruction. Identity & Access remains authoritative for Account, verification gates, Session/Device Assurance, graduated recovery, revocation, scoped grants, compromise, duplicate reconciliation and all current-policy checks. API/bearer tokens are not required for FP-001. Exact cost, MFA/step-up integration, key rotation and revocation/restart/multi-node behaviour require executable proof before development-entry acceptance.
+> Resolve OQ-034 for FP-001 by approving stable Ash Authentication v4 and stable Ash Authentication Phoenix v2, at then-current compatible pinned versions, for email/password plus optional magic-link authentication, Argon2id password hashing, confirmation/reset, the framework TokenResource, secure first-party browser sessions, CSRF protection and LiveView actor reconstruction. Approve a small stable TOTP primitive integration for participant-optional MFA, high-risk step-up and mandatory privileged MFA; do not adopt Ash Authentication v5 RC solely for TOTP. Identity & Access remains authoritative for Account, verification gates, Session/Device Assurance, MFA lifecycle, graduated recovery, revocation, scoped grants, compromise, duplicate reconciliation and all current-policy checks. Public/external API bearer authentication is not required for FP-001; internal first-party authentication token mechanisms remain permitted. Exact cost, MFA integration, key rotation and revocation/restart/multi-node behaviour require executable proof before development-entry acceptance.
 
 ## M. OQ-035 boundary
 
@@ -326,13 +378,13 @@ Required constraint/query decisions are:
 | Resource | Integrity and critical indexes |
 |---|---|
 | Account | unique canonical email; indexes on canonical email lookup, state+verification, security hold, and closure review; FK-safe references from all child resources |
-| Credential | unique account+method; index account+active method; sensitive hash excluded from public projections |
-| Security Challenge | unique secret fingerprint; index account+purpose+active/expiry; index expiry for cleanup; conditional uniqueness for one active challenge per account/purpose; FK to Account/Recovery Case |
+| TokenResource | framework JTI/presence identity and purpose-aware token lookup; framework-defined token/revocation indexes and expiry cleanup index; FK/reference to Account where supported; it stores metadata/revocation state, not raw tokens |
 | Session | unique token fingerprint; index account+active, account+last-seen, expiry and revocation boundary; FK to Account; no raw cookie/token column |
 | Device Assurance | unique account+device-fingerprint/purpose while active; index account+active and expiry; FK to Account |
 | Identity Grant | index subject+active+expiry, role/scope review and revocation; conditional uniqueness only for the exact grant identity key; FK to Account; immutable approver/reason history |
 | Recovery Case | unique active case/operation identity as applicable; index account+state+expiry, reviewer queue status+updated, and claimant-safe lookup; FK to Account where known; no raw recovery evidence |
 | Reconciliation Case | indexes each candidate account, status+updated, selected canonical account and conflict review; FKs preserve source accounts; no cascade that destroys provenance |
+| Account email change | Account's pending-operation fields indexed by account+pending state and operation identity; unique canonical email remains the authoritative conflict guard |
 
 Query paths must be bounded: login by canonical email, session validation by token fingerprint, protected action by session/account/grant state, challenge by fingerprint/purpose, and support lists by bounded status/time pages. No login/session validation scans, load-all session/grant history or unbounded reconciliation query is permitted. Exact SQL/migrations are deferred to implementation and proof.
 
@@ -355,7 +407,7 @@ Distributed locks are not required by the model. PostgreSQL uniqueness, conditio
 
 ## P. Hot / warm / cold data
 
-* **HOT:** canonical-email login lookup, active session validation, active challenge proof, active hold/grant checks, and OQ-035 velocity state. PostgreSQL indexed authority for identity/session/challenge/grant; velocity mechanism remains OQ-035 shared and non-authoritative. No cache may bypass revocation. Proof: p90 ≤100ms for suitable hot interactions excluding password hashing/provider latency, no scans, burst and multi-node tests.
+* **HOT:** canonical-email login lookup, active Session/TokenResource validation, active proof acceptance, active hold/grant checks, and OQ-035 velocity state. PostgreSQL indexed authority for Account/TokenResource/Session/Grant; velocity mechanism remains OQ-035 shared and non-authoritative. No cache may bypass revocation. Proof: p90 ≤100ms for suitable hot interactions excluding password hashing/provider latency, no scans, burst and multi-node tests.
 * **WARM:** bounded active-session/device lists, recent recovery/support/reconciliation status and current grant review projections. PostgreSQL first; safe rebuildable read acceleration only after evidence. Pagination required. Empty-cache and revocation tests required.
 * **COLD:** credential history metadata, consumed/expired challenge history, reconciliation provenance and security evidence. PostgreSQL/Audit authority, append-only or superseding records, retention-controlled bounded queries. No participant load-all.
 
@@ -367,12 +419,12 @@ Distributed locks are not required by the model. PostgreSQL uniqueness, conditio
 | Redis | POTENTIALLY_APPLICABLE | Only for OQ-035 distributed velocity/risk state if proof selects it; never identity/session/grant authority and exact keys/TTL/failure mode remain unresolved. |
 | ETS | NONE initially | No identity authority or required cache is demonstrated; reconsider only for reconstructible safe lookup acceleration. |
 | Cachex | NONE initially | No cache abstraction is justified before measured lookup pressure and invalidation proof. |
-| GenServer | NONE | No process owns durable identity state or required global coordination. |
+| GenServer | APPLICABLE — FRAMEWORK INTERNAL MAINTENANCE | AshAuthentication supervision and TokenResource expiry/revocation cleanup may run supervised periodic processes; they are not Identity business authority, durable session authority or distributed coordination authority. No custom Identity GenServer is proposed. |
 | Oban | APPLICABLE | Default durable executor for post-commit Communications/security consequences when the affected contract is ready; no generic event bus. |
 | PubSub | APPLICABLE | Best-effort revocation/freshness observation only; never durable delivery or authorization. |
 | Browser-local storage | NONE for authority | May hold safe UI convenience only; no session, challenge, credential, grant or authoritative security secret. |
 | CDN | NONE for Identity authority | Public governed content may use approved content policy; authenticated identity/session responses are not CDN authority. |
-| API/bearer tokens | NONE for FP-001 | No approved native/API consumer requires them; re-open only through a later scope decision. |
+| Public/external API bearer authentication | NONE FOR FP-001 | No approved native or public bearer client requires it. Internal first-party authentication token mechanisms remain permitted where required by the selected AshAuthentication browser/session architecture. |
 | Trusted-device library state | NONE | Device Assurance is persisted Identity state with explicit expiry/revocation. |
 
 ## R. Security review
@@ -423,7 +475,7 @@ The proof must test empty-cache/restart behaviour for any later acceleration, qu
 No source directories are created. If implementation is authorised, follow the existing Ash/Phoenix convention if one is established; otherwise use the smallest domain-oriented structure:
 
 * `NewYou.Identity` (or the repository's established Identity & Access Domain context) for Ash code interfaces and boundary orchestration;
-* `NewYou.Identity.Account`, `Credential`, `SecurityChallenge`, `Session`, `DeviceAssurance`, `IdentityGrant` and `ReconciliationCase` as coherent Ash Resources;
+* `NewYou.Identity.Account`, `Session`, `DeviceAssurance`, `IdentityGrant`, `RecoveryCase` and `ReconciliationCase` as NewYou Ash Resources, plus the framework `AshAuthentication.TokenResource`;
 * an application-owned recovery/email-change boundary module only if the action orchestration cannot remain on the relevant resource; no generic `Services` or `Utils` dump;
 * an Ash Authentication adapter/configuration boundary for maintained strategies, hash provider, token resource and Phoenix plugs;
 * a Communications intent adapter boundary, not provider calls inside identity transactions;
@@ -455,7 +507,7 @@ Resource names represent business concepts, not database tables, screens or work
 
 ### `FUTURE_ONLY`
 
-* Social login, passkeys, API/bearer clients, native clients, generic tenancy, full deletion orchestration, operator-work capability, men’s/specialist spaces and future relationship Domains.
+* Social login, passkeys, public/external bearer clients, native clients, generic tenancy, full deletion orchestration, operator-work capability, men’s/specialist spaces and future relationship Domains.
 
 No item is classified as a blocker merely because implementation detail is not yet selected.
 
@@ -465,16 +517,16 @@ No item is classified as a blocker merely because implementation detail is not y
 |---|---|---|---|---|---|---|
 | IAM-01 | Eight-resource minimum set | Domain Map §6.1; Phase 7A §9 | one resource per workflow; table-driven model | Independent invariants/lifecycles without resource sprawl; recovery review requires durable state | Ash resource/policy tests | New independent lifecycle appears |
 | IAM-02 | PostgreSQL identity authority | Architecture §§7–8 | Redis/ETS/cache/process authority | durable, reconstructible, constraint-capable | restart/multi-node proof | measured bottleneck with preserved authority |
-| IAM-03 | Maintained Ash Authentication primary hypothesis | OQ-034; Ash official docs | custom auth; external IdP | maintained primitives fit Ash/Phoenix and reduce crypto risk | K.4 proof set | material unmet frozen requirement |
+| IAM-03 | Maintained stable Ash Authentication primary hypothesis | OQ-034; Ash official docs | custom auth; external IdP; v5 RC | maintained primitives fit Ash/Phoenix and reduce crypto risk | K.6 proof set | material unmet frozen requirement |
 | IAM-04 | Argon2id with benchmarked bounded cost | Architecture §6.1; DEC-244 | unbounded/high-cost hash; weaker fallback | preferred frozen direction with resource governance | hash benchmark/burst proof | unacceptable resource envelope |
-| IAM-05 | Secure browser session; API/bearer none | Architecture §6.1; FP-001 scope | public bearer API; browser-local token | smallest approved web boundary | fixation/CSRF/revocation proof | approved client scope |
+| IAM-05 | Secure browser session; public/external bearer none | Architecture §6.1; FP-001 scope | public/external bearer API; browser-local token | smallest approved web boundary | fixation/CSRF/revocation proof | approved client scope |
 | IAM-06 | Persist Device Assurance | DEC-249; 21J.6 | browser-only trust; no trust | locked revocable/expiring trust needs authority | revocation/step-up proof | Product scope removes trusted devices |
 | IAM-07 | Account action, not Email Change resource | ownership/minimum model | separate change resource | avoids duplicate email truth while preserving lifecycle | race/rollback tests | independent retention/review needed |
 | IAM-08 | Generic Security Challenge by purpose | replay/control invariant | separate token resources | fewer resources with closed purpose guard | cross-purpose/replay proof | purpose-specific independent retention emerges |
 | IAM-09 | Recovery Case and reconciliation remain durable concepts | DEC-250/252 | ephemeral support workflow | manual review, provenance and crash recovery require state | duplicate/manual/recovery proof | authority moves upstream |
 | IAM-10 | Oban for durable consequences; PubSub observation only | Architecture §§8–9; DEC-267 | generic event bus; PubSub delivery | preserves must-not-lose boundary and small scope | crash/duplicate/reorder proof | Communications contract selects another lawful executor |
-| IAM-11 | Redis/ETS/Cachex/GenServer not identity authority | Architecture §7.3; OQ-035 | multilayer auth stack | no evidence requires acceleration yet | empty-cache/failure proof if introduced | measured need and explicit contract |
-| IAM-12 | OQ-034 ready for explicit owner resolution | OQ-034 owner-controlled | silently resolve; defer indefinitely | architecture hypothesis and evidence boundary are concrete | owner decision plus K.4 proof | owner finds contradiction |
+| IAM-11 | Redis/ETS/Cachex not identity authority; framework GenServer only for maintenance | Architecture §7.3; OQ-035 | multilayer auth stack; custom process | no evidence requires acceleration; framework cleanup is not business authority | empty-cache/failure proof; supervisor/restart proof | measured need or framework change |
+| IAM-12 | OQ-034 ready for explicit owner resolution | OQ-034 owner-controlled | silently resolve; defer indefinitely | primary auth, TokenResource, Session/revocation, MFA, trusted device, step-up and recovery interaction are all selected | owner decision plus K.6 proof | owner finds contradiction |
 
 ## Z. STOP review
 
