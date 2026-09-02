@@ -29,22 +29,22 @@
     },
     {
       "document_id": "DECISION_REGISTER",
-      "canonical_filename": "01_DECISIONS_v1.2.2.md",
-      "semver": "1.2.2",
-      "repository_path": "docs/00_platform/01_DECISIONS_v1.2.2.md",
+      "canonical_filename": "01_DECISIONS_v1.2.3.md",
+      "semver": "1.2.3",
+      "repository_path": "docs/00_platform/01_DECISIONS_v1.2.3.md",
       "authority_class": "DECISION_REGISTER",
-      "sha256": "198f0afa6e9ad07f20d67996b4ee3f585bcb2963a2f22afb28fe91d278641c31",
-      "superseded_version": "1.2.1",
+      "sha256": "f1b01c8b398673325ca8b7ed36dfb4d4e4b6126830f33fbcd32e8d9229b58a06",
+      "superseded_version": "1.2.2",
       "lifecycle": "current"
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.28.md",
-      "semver": "1.2.28",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.28.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.29.md",
+      "semver": "1.2.29",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.29.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "1d0cb00f3365414d772a11de5cd74b8051bf3e1b71a912f13708e28d0544ce0f",
-      "superseded_version": "1.2.27",
+      "sha256": "8a22207e19731d2e8d485afbd92a204048d34d845104f45dbd024630bc69ccc3",
+      "superseded_version": "1.2.28",
       "lifecycle": "current"
     },
     {
@@ -178,6 +178,16 @@
       "lifecycle": "historical"
     },
     {
+      "document_id": "DECISION_REGISTER_V1_2_2",
+      "canonical_filename": "01_DECISIONS_v1.2.2.md",
+      "semver": "1.2.2",
+      "repository_path": "docs/00_platform/archive/01_DECISIONS_v1.2.2.md",
+      "authority_class": "DECISION_REGISTER_HISTORICAL",
+      "sha256": "198f0afa6e9ad07f20d67996b4ee3f585bcb2963a2f22afb28fe91d278641c31",
+      "superseded_version": "1.2.3",
+      "lifecycle": "historical"
+    },
+    {
       "document_id": "OPEN_WORK_V1_2_27",
       "canonical_filename": "02_OPEN_WORK_v1.2.27.md",
       "semver": "1.2.27",
@@ -187,6 +197,17 @@
       "superseded_version": "1.2.28",
       "lifecycle": "historical",
       "provenance_sha256": "db50ff91eac66033c58824c6e139a74ddbce58ab2292a0655de68ef223bccc42"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_28",
+      "canonical_filename": "02_OPEN_WORK_v1.2.28.md",
+      "semver": "1.2.28",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "1d0cb00f3365414d772a11de5cd74b8051bf3e1b71a912f13708e28d0544ce0f",
+      "superseded_version": "1.2.29",
+      "lifecycle": "historical",
+      "provenance_sha256": "1d0cb00f3365414d772a11de5cd74b8051bf3e1b71a912f13708e28d0544ce0f"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL_WORKING_V0_2_0",
