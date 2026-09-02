@@ -14,7 +14,7 @@ This non-semantic governance correction formalises `OQ-040`, an already-consumed
 
 ## v1.2.3 Patch Scope
 
-This patch prepares the authority record for the explicit OQ-034 architecture/security resolution in Task 3. It adds no Product Law semantics, changes no existing DEC status, meaning or numbering, does not resolve OQ-035 or OQ-036, and does not claim executable authentication proof.
+This patch records the explicit OQ-034 architecture/security resolution from the merged FP-001 Identity & Access JIT Domain Dossier. It adds no Product Law semantics, changes no existing DEC status, meaning or numbering, does not resolve OQ-035 or OQ-036, and does not claim executable authentication proof.
 
 ## v1.2.1 Patch Scope
 
@@ -1387,8 +1387,23 @@ Define verification levels, job deadlines, processor retries, pending states, pa
 Define responsible record authority, participant-access boundary, addendum process and final disposition for practitioner records.
 
 ## OQ-034 — Authentication implementation architecture
-**Status:** ARCHITECTURE / SECURITY REVIEW
-Select and validate authentication, MFA, recovery, trusted-device and step-up implementation details after domain modelling.
+**Status: RESOLVED / ARCHITECTURE SELECTION**
+
+The architecture selection is resolved from the merged FP-001 Identity & Access JIT Domain Dossier. The approved planning contract is:
+
+- stable Ash Authentication v4 and stable Ash Authentication Phoenix v2;
+- email/password authentication with optional magic-link capability;
+- Argon2id password hashing;
+- an Identity-owned Token Resource configured using the `AshAuthentication.TokenResource` Resource extension;
+- secure first-party browser-session architecture with CSRF protection and LiveView actor reconstruction;
+- participant-optional MFA, mandatory privileged MFA and high-risk participant step-up;
+- NimbleTOTP architecture with Account-owned encrypted TOTP state;
+- AshCloak v0.4.0 as the security floor; any later compatible stable release requires explicit review;
+- DeviceAssurance and RecoveryCase concepts;
+- fail-closed Session + Token + Account/security validity composition;
+- no public or external API bearer authentication for FP-001; internal first-party framework token mechanisms remain permitted.
+
+This resolves architecture selection only. Executable authentication proof is not complete and remains a Phase 8 proof obligation. The proof boundary includes exact compatible dependency pins, Argon2 cost, token replay/revocation, confirmation/reset/magic-link replay, session fixation, CSRF, TOTP concurrency/replay, encryption/key rotation, trusted-device invalidation, recovery races, restart/reconnect, multi-node behaviour, and representative load/failure injection.
 
 ## OQ-035 — Abuse-control thresholds
 **Status:** SECURITY / OPERATIONS REVIEW
