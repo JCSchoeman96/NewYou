@@ -1403,7 +1403,7 @@ The architecture selection is resolved from the merged FP-001 Identity & Access 
 - fail-closed Session + Token + Account/security validity composition;
 - no public or external API bearer authentication for FP-001; internal first-party framework token mechanisms remain permitted.
 
-This resolves architecture selection only. Executable authentication proof is not complete and remains a Phase 8 proof obligation. The proof boundary includes exact compatible dependency pins, Argon2 cost, token replay/revocation, confirmation/reset/magic-link replay, session fixation, CSRF, TOTP concurrency/replay, encryption/key rotation, trusted-device invalidation, recovery races, restart/reconnect, multi-node behaviour, and representative load/failure injection.
+This resolves architecture selection only. Executable authentication proof is not complete and remains a Phase 8 proof obligation. The proof boundary includes pinned compatible versions, Argon2id cost/resource envelope, confirmation, reset and magic-link replay/expiry, token hashing/presence/revocation, cookie/session fixation, CSRF, LiveView disconnected/connected reconstruction, multi-node shared PostgreSQL behaviour, restart/reconnect, global/session-specific revocation, manual recovery/hold races, privileged MFA/step-up, secret rotation, failure injection, and no-enumeration tests.
 
 ## OQ-035 — Abuse-control thresholds
 **Status:** SECURITY / OPERATIONS REVIEW
