@@ -8,8 +8,8 @@ For foundation/default planning and delivery-preparation work, read **only** the
 
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.2.1.md`
-3. `01_DECISIONS_v1.2.2.md`
-4. `02_OPEN_WORK_v1.2.28.md`
+3. `01_DECISIONS_v1.2.3.md`
+4. `02_OPEN_WORK_v1.2.29.md`
 5. `03_ARCHITECTURE_v1.0.0.md`
 6. `04_DOMAIN_MAP_v1.0.0.md`
 7. `05_ROADMAP_v1.0.0.md`
@@ -70,7 +70,9 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/04_DOMAIN_MAP_WORKING_v0.2.0.md`
 - `archive/05_ROADMAP_WORKING_v0.1.0.md`
 - `archive/01_DECISIONS_v1.2.1.md` — preserved superseded Decision Register.
+- `archive/01_DECISIONS_v1.2.2.md`
 - `archive/02_OPEN_WORK_v1.2.27.md` — preserved pre-compaction Open Work snapshot.
+- `archive/02_OPEN_WORK_v1.2.28.md`
 - `archive/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md` — preserved pre-freeze Operating Model working provenance.
 - `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.1.0.md` — preserved pre-hardening Frontend Experience System source provenance.
 - `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md` — preserved final pre-freeze Frontend Experience System working provenance.
@@ -93,7 +95,28 @@ Product Law
 ## Current State
 
 - PLANNING FOUNDATION: READY
+- CURRENT PHASE: PHASE 7B / JIT DOMAIN DOSSIER AND PIPELINE-GOVERNANCE PREPARATION
+- LAST APPROVED MILESTONE: PHASE 7A COMPLETE; IDENTITY & ACCESS JIT DOMAIN DOSSIER COMPLETE; OQ-034 ARCHITECTURE SELECTION RESOLVED
+- FP-001 PHASE 7A: COMPLETE
+- IDENTITY & ACCESS JIT DOMAIN DOSSIER: COMPLETE / MERGED
+- OQ-034 ARCHITECTURE SELECTION: RESOLVED
+- OQ-035: SECURITY / OPERATIONS REVIEW; UNRESOLVED; RELEASE-ONLY SCOPE
+- OQ-036: VENDOR / OPERATIONS REVIEW; UNRESOLVED; RELEASE-ONLY SCOPE
+- COMMUNICATIONS DOSSIER: REQUIRED / NOT_STARTED
+- PRIVACY & CONSENT DOSSIER: CONDITIONAL / PENDING EXPLICIT ADJUDICATION
+- CONTENT & MEDIA DOSSIER: CONDITIONAL / PENDING EXPLICIT ADJUDICATION
+- AUDIT & EVIDENCE DOSSIER: CONDITIONAL / PENDING EXPLICIT ADJUDICATION
+- ANALYTICS DOSSIER: NOT REQUIRED
 - NEXT: PHASE 7 / FP-001 PREPARATION
+- NEXT GOVERNANCE / DELIVERY-PIPELINE TASK: HARDEN-02
+- NEXT FP-001 PHASE-7B DOMAIN TASK AFTER HARDEN-02: COMMUNICATIONS JIT DOMAIN DOSSIER
+- PHASE 7C: BLOCKED / NOT_STARTED pending the required Communications dossier and explicit conditional-dossier dispositions.
+- PROOF CLASSIFICATION: NOT FINALISED
 - EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS
+- DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS-12 NOT_STARTED; DERIVED / NON-AUTHORITATIVE
+
+HARDEN-02 is governance sequencing only and is not a Roadmap gate, Product requirement, FP-001 dependency or blocking OQ.
 
 Foundation readiness does not authorise implementation. Do not begin FP-001 execution, JIT Domain Dossiers, TOON generation, Architectural Proof, Vertical Slices or implementation unless a later approved task explicitly authorises the applicable preparation and execution gates.
+
+FOUNDATION INTEGRITY PATCH COMPLETE. NO FURTHER FOUNDATION EXPANSION WITHOUT AN UPSTREAM CONTRADICTION.
