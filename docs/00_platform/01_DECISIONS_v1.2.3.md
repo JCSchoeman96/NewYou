@@ -14,7 +14,7 @@ This non-semantic governance correction formalises `OQ-040`, an already-consumed
 
 ## v1.2.3 Patch Scope
 
-This non-semantic architecture/security resolution records the explicit resolution of OQ-034 from the merged FP-001 Identity & Access JIT Domain Dossier. It adds no Product Law semantics, changes no existing DEC status, meaning or numbering, does not resolve OQ-035 or OQ-036, and does not claim executable authentication proof.
+This patch prepares the authority record for the explicit OQ-034 architecture/security resolution in Task 3. It adds no Product Law semantics, changes no existing DEC status, meaning or numbering, does not resolve OQ-035 or OQ-036, and does not claim executable authentication proof.
 
 ## v1.2.1 Patch Scope
 
