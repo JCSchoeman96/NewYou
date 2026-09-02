@@ -17,7 +17,7 @@
   - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`
   - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`
 - **Last updated:** 2026-09-02
-- **Current planning position:** FP-001 is in **Phase 7B / JIT Domain Dossier and pipeline-governance preparation**; the Identity & Access JIT Domain Dossier is **COMPLETE / MERGED** and OQ-034 architecture selection is **RESOLVED**; **HARDEN-02** is the next governance / delivery-pipeline task. **PLANNING FOUNDATION: READY**. **NEXT: PHASE 7 / FP-001 PREPARATION.** **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** This is delivery preparation only and does not authorise implementation.
+- **Current planning position:** The current position is **Phase 7B pipeline-governance preparation for FP-001**; the Identity & Access JIT Domain Dossier is **COMPLETE / MERGED** and OQ-034 architecture selection is **RESOLVED**; **HARDEN-02** is the next governance task. **PLANNING FOUNDATION: READY**. **NEXT: PHASE 7 / FP-001 PREPARATION.** **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** This is delivery preparation only and does not authorise implementation.
 
 ---
 
@@ -217,7 +217,6 @@ These gates may permit planning to continue, but each blocks the affected produc
 - **OQ-030:** external processor deletion/export inventory;
 - **OQ-031:** backup restore/deletion replay;
 - **OQ-032:** export/deletion operations;
-- **OQ-034:** authentication implementation architecture;
 - **OQ-035:** abuse-control thresholds; **accepted implementation/proof candidate note:** Hammer is the preferred application-layer candidate behind a platform-owned replaceable boundary; Redis-backed/shared semantics are preferred where cross-node velocity coherence is required, but concrete package version/backend/algorithm and all thresholds remain proof/JIT decisions;
 - **OQ-036:** notification providers/channel policy;
 - **OQ-037:** RPO/RTO;
@@ -853,7 +852,7 @@ LAST APPROVED MILESTONE: PHASE 7A COMPLETE; IDENTITY & ACCESS JIT DOMAIN DOSSIER
 
 REQUIRED DOSSIERS:
 - IDENTITY & ACCESS: COMPLETE / MERGED
-- COMMUNICATIONS: REQUIRED / NOT STARTED
+- COMMUNICATIONS: REQUIRED / NOT_STARTED
 
 CONDITIONAL DOSSIER DISPOSITIONS:
 - PRIVACY & CONSENT: CONDITIONAL / PENDING EXPLICIT ADJUDICATION
@@ -865,7 +864,7 @@ OPEN GATES:
 - OQ-035: SECURITY / OPERATIONS REVIEW; UNRESOLVED; RELEASE-ONLY SCOPE
 - OQ-036: VENDOR / OPERATIONS REVIEW; UNRESOLVED; RELEASE-ONLY SCOPE
 
-PHASE 7C: BLOCKED / NOT STARTED pending the required Communications dossier and explicit conditional-dossier dispositions.
+PHASE 7C: BLOCKED / NOT_STARTED pending the required Communications dossier and explicit conditional-dossier dispositions.
 PROOF CLASSIFICATION: NOT FINALISED.
 EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.
 
@@ -873,10 +872,10 @@ NEXT GOVERNANCE / DELIVERY-PIPELINE TASK: HARDEN-02.
 NEXT FP-001 PHASE-7B DOMAIN TASK AFTER HARDEN-02: COMMUNICATIONS JIT DOMAIN DOSSIER.
 HARDEN-02 is governance sequencing, not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ.
 
-DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS-12 NOT STARTED. Atlas remains derived, non-authoritative navigation.
+DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS-12 NOT_STARTED. Atlas remains derived, non-authoritative navigation.
 ```
 
-The Foundation Readiness Audit is complete and passed with no blockers, material contradictions, unowned durable truths or unrouted blocking gates. The planning foundation is ready for a separate Phase 7 delivery-preparation task.
+The Foundation Readiness Audit is complete and passed with no blockers, material contradictions, unowned durable truths or unrouted blocking gates. HARDEN-02 is the current Phase 7B pipeline-governance task.
 
 FOUNDATION INTEGRITY PATCH COMPLETE. NO FURTHER FOUNDATION EXPANSION WITHOUT AN UPSTREAM CONTRADICTION.
 
