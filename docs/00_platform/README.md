@@ -7,9 +7,9 @@ This directory separates current platform authority from deep evidence and histo
 For foundation/default planning and delivery-preparation work, read **only** these current-authority documents first:
 
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
-2. `00_PLATFORM_v1.2.1.md`
-3. `01_DECISIONS_v1.2.3.md`
-4. `02_OPEN_WORK_v1.2.29.md`
+2. `00_PLATFORM_v1.3.0.md`
+3. `01_DECISIONS_v1.3.0.md`
+4. `02_OPEN_WORK_v1.2.30.md`
 5. `03_ARCHITECTURE_v1.0.0.md`
 6. `04_DOMAIN_MAP_v1.0.0.md`
 7. `05_ROADMAP_v1.0.0.md`
@@ -73,6 +73,9 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/01_DECISIONS_v1.2.2.md`
 - `archive/02_OPEN_WORK_v1.2.27.md` — preserved pre-compaction Open Work snapshot.
 - `archive/02_OPEN_WORK_v1.2.28.md`
+- `archive/02_OPEN_WORK_v1.2.29.md`
+- `archive/00_PLATFORM_v1.2.1.md`
+- `archive/01_DECISIONS_v1.2.3.md`
 - `archive/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md` — preserved pre-freeze Operating Model working provenance.
 - `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.1.0.md` — preserved pre-hardening Frontend Experience System source provenance.
 - `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md` — preserved final pre-freeze Frontend Experience System working provenance.
