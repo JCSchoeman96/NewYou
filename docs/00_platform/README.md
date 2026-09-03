@@ -7,9 +7,9 @@ This directory separates current platform authority from deep evidence and histo
 For foundation/default planning and delivery-preparation work, read **only** these current-authority documents first:
 
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
-2. `00_PLATFORM_v1.2.1.md`
-3. `01_DECISIONS_v1.2.3.md`
-4. `02_OPEN_WORK_v1.2.29.md`
+2. `00_PLATFORM_v1.3.0.md`
+3. `01_DECISIONS_v1.3.0.md`
+4. `02_OPEN_WORK_v1.2.30.md`
 5. `03_ARCHITECTURE_v1.0.0.md`
 6. `04_DOMAIN_MAP_v1.0.0.md`
 7. `05_ROADMAP_v1.0.0.md`
@@ -73,10 +73,14 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/01_DECISIONS_v1.2.2.md`
 - `archive/02_OPEN_WORK_v1.2.27.md` — preserved pre-compaction Open Work snapshot.
 - `archive/02_OPEN_WORK_v1.2.28.md`
+- `archive/02_OPEN_WORK_v1.2.29.md`
+- `archive/00_PLATFORM_v1.2.1.md`
+- `archive/01_DECISIONS_v1.2.3.md`
 - `archive/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md` — preserved pre-freeze Operating Model working provenance.
 - `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.1.0.md` — preserved pre-hardening Frontend Experience System source provenance.
 - `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md` — preserved final pre-freeze Frontend Experience System working provenance.
 - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md` — preserved original foundation-readiness evidence.
+- `archive/TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0.md` — completed non-authoritative Stage 1 evidence for the targeted Product amendment programme (Research & Feedback, Voting, Interactive Tools, Platform Member Reference). Historical working input only; not Product Law.
 
 Archive files are historical evidence only and are never current authority. Never use an archived document to override a current authoritative document.
 
@@ -95,8 +99,13 @@ Product Law
 ## Current State
 
 - PLANNING FOUNDATION: READY
-- CURRENT PHASE: PHASE 7B / JIT DOMAIN DOSSIER AND PIPELINE-GOVERNANCE PREPARATION
-- LAST APPROVED MILESTONE: PHASE 7A COMPLETE; IDENTITY & ACCESS JIT DOMAIN DOSSIER COMPLETE; OQ-034 ARCHITECTURE SELECTION RESOLVED
+- CURRENT AUTHORITY-STAGE PROGRAMME: TARGETED PRODUCT AMENDMENT → FP-001 DEVELOPMENT ENTRY READINESS
+- TARGETED PRODUCT AMENDMENT STAGE 1 (GRILL): COMPLETE
+- TARGETED PRODUCT AMENDMENT STAGE 2 (PRODUCT LAW AMENDMENT): COMPLETE
+- NEXT AUTHORISED AUTHORITY-STAGE WORK: STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS (`NOT_STARTED`)
+- STAGE 3A.2 — GOVERNED AR-000 AMENDMENT: NOT_STARTED (dependent on approved Stage 3A.1)
+- STAGE 3B — INDEPENDENT ARCHITECTURE/ENGINEERING CLASSIFICATION: NOT_STARTED
+- LATER ARCHITECTURE / ENGINEERING STANDARDS / DOMAIN / ROADMAP / ATLAS / HARDEN-02 / FP-001 RECONCILIATION: DOWNSTREAM / NOT CURRENT
 - FP-001 PHASE 7A: COMPLETE
 - IDENTITY & ACCESS JIT DOMAIN DOSSIER: COMPLETE / MERGED
 - OQ-034 ARCHITECTURE SELECTION: RESOLVED
@@ -107,15 +116,12 @@ Product Law
 - CONTENT & MEDIA DOSSIER: CONDITIONAL / PENDING EXPLICIT ADJUDICATION
 - AUDIT & EVIDENCE DOSSIER: CONDITIONAL / PENDING EXPLICIT ADJUDICATION
 - ANALYTICS DOSSIER: NOT REQUIRED
-- NEXT: PHASE 7 / FP-001 PREPARATION
-- NEXT GOVERNANCE / DELIVERY-PIPELINE TASK: HARDEN-02
-- NEXT FP-001 PHASE-7B DOMAIN TASK AFTER HARDEN-02: COMMUNICATIONS JIT DOMAIN DOSSIER
 - PHASE 7C: BLOCKED / NOT_STARTED pending the required Communications dossier and explicit conditional-dossier dispositions.
 - PROOF CLASSIFICATION: NOT FINALISED
 - EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS
 - DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS-12 NOT_STARTED; DERIVED / NON-AUTHORITATIVE
 
-HARDEN-02 is governance sequencing only and is not a Roadmap gate, Product requirement, FP-001 dependency or blocking OQ.
+Ordinary FP-001 Phase 7B preparation and HARDEN-02 remain in the approved overall programme but are **not** the immediate current task while the targeted amendment programme is active. HARDEN-02 resumes only after Product → AR-000 → Architecture → Domain → Roadmap → warranted Atlas reconciliation reaches the approved HARDEN-02 point.
 
 Foundation readiness does not authorise implementation. Do not begin FP-001 execution, JIT Domain Dossiers, TOON generation, Architectural Proof, Vertical Slices or implementation unless a later approved task explicitly authorises the applicable preparation and execution gates.
 

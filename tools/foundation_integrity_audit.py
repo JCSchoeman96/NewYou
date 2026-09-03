@@ -730,8 +730,14 @@ def _check_production_graph(
     )
     readiness_ok = (
         "PLANNING FOUNDATION: READY" in readiness_text
-        and "NEXT: PHASE 7 / FP-001 PREPARATION" in readiness_text
         and "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS" in readiness_text
+        and (
+            "NEXT: PHASE 7 / FP-001 PREPARATION" in readiness_text
+            or (
+                "STAGE 3A.1" in readiness_text
+                and "NOT_STARTED" in readiness_text
+            )
+        )
     )
     _record_check(
         report,

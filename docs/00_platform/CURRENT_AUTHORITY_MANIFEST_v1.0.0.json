@@ -17,35 +17,36 @@
     },
     {
       "document_id": "PLATFORM_BASELINE",
-      "canonical_filename": "00_PLATFORM_v1.2.1.md",
-      "semver": "1.2.1",
-      "repository_path": "docs/00_platform/00_PLATFORM_v1.2.1.md",
+      "canonical_filename": "00_PLATFORM_v1.3.0.md",
+      "semver": "1.3.0",
+      "repository_path": "docs/00_platform/00_PLATFORM_v1.3.0.md",
       "authority_class": "PLATFORM_PRODUCT_LAW",
-      "sha256": "56a2b9a5db42a81e287f0c61deae37d6bbce5b19f48f67732584160b455f935a",
-      "superseded_version": null,
+      "sha256": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
+      "superseded_version": "1.2.1",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "56a2b9a5db42a81e287f0c61deae37d6bbce5b19f48f67732584160b455f935a"
+      "provenance_sha256": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445"
     },
     {
       "document_id": "DECISION_REGISTER",
-      "canonical_filename": "01_DECISIONS_v1.2.3.md",
-      "semver": "1.2.3",
-      "repository_path": "docs/00_platform/01_DECISIONS_v1.2.3.md",
+      "canonical_filename": "01_DECISIONS_v1.3.0.md",
+      "semver": "1.3.0",
+      "repository_path": "docs/00_platform/01_DECISIONS_v1.3.0.md",
       "authority_class": "DECISION_REGISTER",
-      "sha256": "f1b01c8b398673325ca8b7ed36dfb4d4e4b6126830f33fbcd32e8d9229b58a06",
-      "superseded_version": "1.2.2",
+      "sha256": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
+      "superseded_version": "1.2.3",
       "lifecycle": "current"
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.29.md",
-      "semver": "1.2.29",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.29.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.30.md",
+      "semver": "1.2.30",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.30.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "8a22207e19731d2e8d485afbd92a204048d34d845104f45dbd024630bc69ccc3",
-      "superseded_version": "1.2.28",
-      "lifecycle": "current"
+      "sha256": "eaf9a8717c82c18cf48014df36e1cf7feeadc10367086b93a5a44a2029f3dc92",
+      "superseded_version": "1.2.29",
+      "lifecycle": "current",
+      "provenance_sha256": "eaf9a8717c82c18cf48014df36e1cf7feeadc10367086b93a5a44a2029f3dc92"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -241,6 +242,46 @@
       "superseded_version": "1.0.0",
       "lifecycle": "historical",
       "provenance_sha256": "635cd997641409f876e9d6d5ff00b61aecffef8d75d310bec24f2e897f286aa4"
+    },
+    {
+      "document_id": "PLATFORM_BASELINE_V1_2_1",
+      "canonical_filename": "00_PLATFORM_v1.2.1.md",
+      "semver": "1.2.1",
+      "repository_path": "docs/00_platform/archive/00_PLATFORM_v1.2.1.md",
+      "authority_class": "PLATFORM_PRODUCT_LAW_HISTORICAL",
+      "sha256": "56a2b9a5db42a81e287f0c61deae37d6bbce5b19f48f67732584160b455f935a",
+      "superseded_version": "1.3.0",
+      "lifecycle": "historical"
+    },
+    {
+      "document_id": "DECISION_REGISTER_V1_2_3",
+      "canonical_filename": "01_DECISIONS_v1.2.3.md",
+      "semver": "1.2.3",
+      "repository_path": "docs/00_platform/archive/01_DECISIONS_v1.2.3.md",
+      "authority_class": "DECISION_REGISTER_HISTORICAL",
+      "sha256": "f1b01c8b398673325ca8b7ed36dfb4d4e4b6126830f33fbcd32e8d9229b58a06",
+      "superseded_version": "1.3.0",
+      "lifecycle": "historical"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_29",
+      "canonical_filename": "02_OPEN_WORK_v1.2.29.md",
+      "semver": "1.2.29",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.29.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "8a22207e19731d2e8d485afbd92a204048d34d845104f45dbd024630bc69ccc3",
+      "superseded_version": "1.2.30",
+      "lifecycle": "historical"
+    },
+    {
+      "document_id": "TARGETED_PRODUCT_AMENDMENT_GRILL",
+      "canonical_filename": "TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0.md",
+      "semver": "0.5.0",
+      "repository_path": "docs/00_platform/archive/TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0.md",
+      "authority_class": "TARGETED_PRODUCT_AMENDMENT_GRILL_HISTORICAL_EVIDENCE",
+      "sha256": "666f013617b0ba02d0bb0af66035055ec82b5558da75dd3cce28b6a433be19df",
+      "superseded_version": null,
+      "lifecycle": "historical"
     }
   ],
   "integrity_rules": {
@@ -251,7 +292,7 @@
       "context_index": "docs/00_platform/README.md"
     },
     "expected_counts": {
-      "decisions": 293,
+      "decisions": 298,
       "open_questions": 40,
       "architecture_law": 327,
       "architecture_requirements": 417,
@@ -264,7 +305,7 @@
       "DEC": {
         "prefix": "DEC",
         "start": 1,
-        "end": 293,
+        "end": 298,
         "width": 3
       },
       "OQ": {
