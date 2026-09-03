@@ -9,7 +9,7 @@ For foundation/default planning and delivery-preparation work, read **only** the
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
-4. `02_OPEN_WORK_v1.2.31.md`
+4. `02_OPEN_WORK_v1.2.32.md`
 5. `03_ARCHITECTURE_v1.0.0.md`
 6. `04_DOMAIN_MAP_v1.0.0.md`
 7. `05_ROADMAP_v1.0.0.md`
@@ -37,7 +37,6 @@ The frozen Frontend Experience System is current authority for affected frontend
 
 - `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register; remains working/non-authoritative provenance.
 - `working/DELIVERY_ATLAS_WORKING_v0.1.0.md` — derived Delivery Atlas navigation for approved Feature Pack planning; remains working/non-authoritative and is intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
-- `working/TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md` — non-authoritative Stage 3A.1 Product-Law AR-000 delta analysis; it does not amend AR-000 and is intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 
 ## Delivery Atlas routing
 
@@ -53,7 +52,7 @@ Do not load the whole Atlas by default. Load only the relevant sections: the Fea
 
 Use `reference/` only when the current authority requires exact evidence or identifier-level reasoning:
 
-- `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md` — exact ARQ source tracing.
+- `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md` — current cumulative ARQ source tracing and Stage 3A.2 amendment.
 - `reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md` — exact ARC legislative reasoning.
 - `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md` — detailed FLOW evidence.
 - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` — current machine-backed foundation integrity evidence.
@@ -76,6 +75,7 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/02_OPEN_WORK_v1.2.28.md`
 - `archive/02_OPEN_WORK_v1.2.29.md`
 - `archive/02_OPEN_WORK_v1.2.30.md` — preserved pre-Stage-3A.1 Open Work snapshot.
+- `archive/02_OPEN_WORK_v1.2.31.md` — preserved pre-Stage-3A.2 Open Work snapshot.
 - `archive/00_PLATFORM_v1.2.1.md`
 - `archive/01_DECISIONS_v1.2.3.md`
 - `archive/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md` — preserved pre-freeze Operating Model working provenance.
@@ -83,6 +83,8 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.2.0.md` — preserved final pre-freeze Frontend Experience System working provenance.
 - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md` — preserved original foundation-readiness evidence.
 - `archive/TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0.md` — completed non-authoritative Stage 1 evidence for the targeted Product amendment programme (Research & Feedback, Voting, Interactive Tools, Platform Member Reference). Historical working input only; not Product Law.
+- `archive/TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md` — completed non-authoritative Stage 3A.1 evidence; historical input to the governed v1.1.0 AR-000 amendment.
+- `archive/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md` — preserved frozen AR-000 v1.0.0 register; historical predecessor of the current v1.1.0 successor.
 
 Archive files are historical evidence only and are never current authority. Never use an archived document to override a current authoritative document.
 
@@ -104,9 +106,12 @@ Product Law
 - CURRENT AUTHORITY-STAGE PROGRAMME: TARGETED PRODUCT AMENDMENT → FP-001 DEVELOPMENT ENTRY READINESS
 - TARGETED PRODUCT AMENDMENT STAGE 1 (GRILL): COMPLETE
 - TARGETED PRODUCT AMENDMENT STAGE 2 (PRODUCT LAW AMENDMENT): COMPLETE
-- STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS: COMPLETE
-- NEXT AUTHORISED AUTHORITY-STAGE WORK: STAGE 3A.2 — GOVERNED AR-000 AMENDMENT (`NOT_STARTED / NEXT`; dependent on reviewed Stage 3A.1)
-- STAGE 3B — INDEPENDENT ARCHITECTURE/ENGINEERING CLASSIFICATION: NOT_STARTED
+- STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS: COMPLETE / ARCHIVED AS HISTORICAL EVIDENCE
+- STAGE 3A.2 — GOVERNED AR-000 AMENDMENT: COMPLETE
+- NEXT AUTHORISED AUTHORITY-STAGE WORK: STAGE 3B — INDEPENDENT ARCHITECTURE/ENGINEERING CLASSIFICATION (`NOT_STARTED / NEXT`)
+- ARCHITECTURE GRILL: NOT_STARTED
+- ENGINEERING-POLICY GRILL: NOT_STARTED
+- ARCHITECTURE AMENDMENT: NOT_STARTED
 - LATER ARCHITECTURE / ENGINEERING STANDARDS / DOMAIN / ROADMAP / ATLAS / HARDEN-02 / FP-001 RECONCILIATION: DOWNSTREAM / NOT CURRENT
 - FP-001 PHASE 7A: COMPLETE
 - IDENTITY & ACCESS JIT DOMAIN DOSSIER: COMPLETE / MERGED
