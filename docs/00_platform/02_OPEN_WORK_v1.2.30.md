@@ -17,7 +17,7 @@
   - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`
   - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`
 - **Last updated:** 2026-09-03
-- **Current planning position:** The current position is **Phase 7B pipeline-governance preparation for FP-001**; the Identity & Access JIT Domain Dossier is **COMPLETE / MERGED** and OQ-034 architecture selection is **RESOLVED**; **HARDEN-02** is the next governance task. **PLANNING FOUNDATION: READY**. **NEXT: PHASE 7 / FP-001 PREPARATION.** **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** This is delivery preparation only and does not authorise implementation.
+- **Current planning position:** The **Targeted Product Amendment Programme** is the current authority-stage workstream. Stage 1 (Targeted Product Amendment Grill) and Stage 2 (governed Product Law amendment) are **COMPLETE**. **NEXT AUTHORISED AUTHORITY-STAGE WORK: Stage 3A.1 — Product-Law AR-000 Delta Analysis** (`NOT_STARTED`). Stage 3A.2, Stage 3B and later Architecture/Domain/Roadmap/Atlas/HARDEN-02/FP-001 reconciliation remain **downstream / not current**. **PLANNING FOUNDATION: READY**. **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** FP-001 Phase 7A, the Identity & Access JIT Domain Dossier and OQ-034 resolution remain factual completed milestones, but ordinary Phase 7B continuation and HARDEN-02 are suspended until the targeted amendment programme reaches its approved downstream reconciliation point.
 
 ---
 
@@ -25,7 +25,7 @@
 ## Historical changelog
 
 - Planning-state SemVer transition: `v1.2.29 → v1.2.30`.
-- Records Targeted Product Amendment Programme state: Stage 1 Grill complete; Stage 2 Product Law amendment current; downstream Stages 3A.1, 3A.2 and 3B not started.
+- Records Targeted Product Amendment Programme state: Stage 1 Grill complete; Stage 2 Product Law amendment complete; Stage 3A.1 next/not started; downstream Stages 3A.2, 3B and later reconciliation not current. Corrects stale Phase 7B/HARDEN-02 routing that contradicted §12.
 - Does not amend North Star/MVP, Architecture, Domain Map, Roadmap, FP-001 or authorise implementation.
 
 Historical planning-state entries are preserved in `archive/02_OPEN_WORK_CHANGELOG_v1.0.0.md`. That archive artifact is evidence only; this file's numbered sections are the current Open Work authority.
@@ -850,11 +850,18 @@ Implementation remains stopped unless every Development Entry Hard Stop conditio
 # 9. Immediate Next Action
 
 ```text
-CURRENT FEATURE PACK: FP-001
-CURRENT PHASE: PHASE 7B / JIT DOMAIN DOSSIER AND PIPELINE-GOVERNANCE PREPARATION
-LAST APPROVED MILESTONE: PHASE 7A COMPLETE; IDENTITY & ACCESS JIT DOMAIN DOSSIER COMPLETE; OQ-034 ARCHITECTURE SELECTION RESOLVED
+CURRENT AUTHORITY-STAGE PROGRAMME: TARGETED PRODUCT AMENDMENT → FP-001 DEVELOPMENT ENTRY READINESS
+STAGE 1 — TARGETED PRODUCT AMENDMENT GRILL: COMPLETE
+STAGE 2 — GOVERNED PRODUCT LAW AMENDMENT: COMPLETE
+NEXT AUTHORISED AUTHORITY-STAGE WORK: STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS (NOT_STARTED)
+STAGE 3A.2 — GOVERNED AR-000 AMENDMENT: NOT_STARTED (dependent on approved Stage 3A.1)
+STAGE 3B — INDEPENDENT ARCHITECTURE/ENGINEERING CLASSIFICATION: NOT_STARTED
+LATER ARCHITECTURE / ENGINEERING STANDARDS / DOMAIN PRESSURE TEST / ROADMAP / ATLAS / HARDEN-02 / FP-001 RECONCILIATION: DOWNSTREAM / NOT CURRENT
 
-REQUIRED DOSSIERS:
+CURRENT FEATURE PACK (FACTUAL, NOT CURRENT TASK): FP-001
+LAST APPROVED FP-001 MILESTONE: PHASE 7A COMPLETE; IDENTITY & ACCESS JIT DOMAIN DOSSIER COMPLETE / MERGED; OQ-034 ARCHITECTURE SELECTION RESOLVED
+
+REQUIRED DOSSIERS (FACTUAL STATE):
 - IDENTITY & ACCESS: COMPLETE / MERGED
 - COMMUNICATIONS: REQUIRED / NOT_STARTED
 
@@ -872,14 +879,12 @@ PHASE 7C: BLOCKED / NOT_STARTED pending the required Communications dossier and 
 PROOF CLASSIFICATION: NOT FINALISED.
 EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.
 
-NEXT GOVERNANCE / DELIVERY-PIPELINE TASK: HARDEN-02.
-NEXT FP-001 PHASE-7B DOMAIN TASK AFTER HARDEN-02: COMMUNICATIONS JIT DOMAIN DOSSIER.
-HARDEN-02 is governance sequencing, not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ.
+ORDINARY PHASE 7B CONTINUATION AND HARDEN-02: SUSPENDED / DOWNSTREAM until Product → AR-000 → Architecture → Domain → Roadmap → warranted Atlas reconciliation reaches the approved HARDEN-02 point. HARDEN-02 remains in the approved overall programme but is not the immediate next task while the targeted amendment programme is active.
 
 DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS-12 NOT_STARTED. Atlas remains derived, non-authoritative navigation.
 ```
 
-The Foundation Readiness Audit is complete and passed with no blockers, material contradictions, unowned durable truths or unrouted blocking gates. HARDEN-02 is the current Phase 7B pipeline-governance task.
+The Foundation Readiness Audit is complete and passed with no blockers, material contradictions, unowned durable truths or unrouted blocking gates. The targeted Product amendment programme is now the current authority-stage routing surface; Stage 3A.1 is next and not started.
 
 FOUNDATION INTEGRITY PATCH COMPLETE. NO FURTHER FOUNDATION EXPANSION WITHOUT AN UPSTREAM CONTRADICTION.
 
@@ -945,18 +950,18 @@ Additional STOP conditions include:
 STOP means surface the blocker at the correct level. It does not mean silently reconcile, guess or redesign upstream law.
 # 12. Targeted Product Amendment Programme
 
-This section tracks the governed Targeted Amendment → FP-001 Development Entry Readiness programme. Stage 1 working input: `TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0` (non-authoritative evidence only).
+This section tracks the governed Targeted Amendment → FP-001 Development Entry Readiness programme. Stage 1 working input: `archive/TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0.md` (non-authoritative historical evidence only).
 
 ## 12.1 Programme state
 
 | Stage | Scope | Status |
 |---|---|---|
 | Stage 1 | Targeted Product Amendment Grill (four capability areas + cross-capability pressure test) | **COMPLETE** |
-| Stage 2 | Governed Product Law amendment encoding approved Grill decisions | **IN_PROGRESS / CURRENT** — successor artifacts drafted on branch for review |
-| Stage 3A.1 | Product-Law AR-000 delta analysis | **NOT_STARTED** |
-| Stage 3A.2 | Governed AR-000 amendment | **NOT_STARTED** |
+| Stage 2 | Governed Product Law amendment encoding approved Grill decisions | **COMPLETE** |
+| Stage 3A.1 | Product-Law AR-000 delta analysis | **NOT_STARTED / NEXT** |
+| Stage 3A.2 | Governed AR-000 amendment | **NOT_STARTED** — dependent on approved Stage 3A.1 |
 | Stage 3B | Independent Architecture/Engineering classification (Errors & Diagnostics, Observability, Native Compute/Rustler, Engineering Quality) | **NOT_STARTED** |
-| Later | Architecture/Domain/Roadmap/HARDEN-02/FP-001 reconciliation work | **NOT_STARTED** — blocked on prior stages |
+| Later | Architecture/Engineering Standards/Domain/Roadmap/Atlas/HARDEN-02/FP-001 reconciliation | **DOWNSTREAM / NOT CURRENT** — resumes only after the approved Product → AR-000 → Architecture → Domain → Roadmap → warranted Atlas sequence reaches the HARDEN-02 point |
 
 **Baseline reviewed for Stage 1:** `main` at `ad71191b17b297ac9dc683c18141e1c546fa9850`.
 
@@ -972,9 +977,9 @@ The Stage 2 Product amendment encodes exactly four Product-level areas plus cros
 
 Explicitly **not** in Stage 2 scope: ARQ/ARC creation, Architecture amendment, Domain Map amendment, Roadmap amendment, new Domains, new Feature Packs, FP-001 contract/dossier changes, HARDEN-02 execution, or implementation.
 
-## 12.3 Mandatory stop after Stage 2 PR
+## 12.3 Mandatory stop before Stage 3A.1
 
-After the Stage 2 Product-law PR is opened and evidence reported, work must **STOP** pending human review. Do not begin Stage 3A.1, append ARQs, perform Stage 3A.2 or 3B, amend Architecture, create Engineering Standards, amend Domain Map or Roadmap, create Domains or Feature Packs, reconcile Delivery Atlas, execute HARDEN-02, modify FP-001 artifacts, or implement any capability.
+Stage 2 Product Law amendment is complete in the current authority pack. Work must **STOP** before Stage 3A.1 until explicit human review approves beginning the Product-Law AR-000 delta analysis. Do not begin Stage 3A.1, append ARQs, perform Stage 3A.2 or 3B, amend Architecture, create Engineering Standards, amend Domain Map or Roadmap, create Domains or Feature Packs, reconcile Delivery Atlas, execute HARDEN-02, modify FP-001 artifacts, or implement any capability without explicit authorisation for that later stage.
 
 ## 12.4 North Star / MVP note
 

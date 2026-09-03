@@ -43,10 +43,10 @@
       "semver": "1.2.30",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.30.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "1003ca5cbc396a11f72ca5031fe4a96d5aa738a28f9f14e325ac5aef05ed8905",
+      "sha256": "eaf9a8717c82c18cf48014df36e1cf7feeadc10367086b93a5a44a2029f3dc92",
       "superseded_version": "1.2.29",
       "lifecycle": "current",
-      "provenance_sha256": "1003ca5cbc396a11f72ca5031fe4a96d5aa738a28f9f14e325ac5aef05ed8905"
+      "provenance_sha256": "eaf9a8717c82c18cf48014df36e1cf7feeadc10367086b93a5a44a2029f3dc92"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -271,6 +271,16 @@
       "authority_class": "PLANNING_TRACKER_HISTORICAL",
       "sha256": "8a22207e19731d2e8d485afbd92a204048d34d845104f45dbd024630bc69ccc3",
       "superseded_version": "1.2.30",
+      "lifecycle": "historical"
+    },
+    {
+      "document_id": "TARGETED_PRODUCT_AMENDMENT_GRILL",
+      "canonical_filename": "TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0.md",
+      "semver": "0.5.0",
+      "repository_path": "docs/00_platform/archive/TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0.md",
+      "authority_class": "TARGETED_PRODUCT_AMENDMENT_GRILL_HISTORICAL_EVIDENCE",
+      "sha256": "666f013617b0ba02d0bb0af66035055ec82b5558da75dd3cce28b6a433be19df",
+      "superseded_version": null,
       "lifecycle": "historical"
     }
   ],
