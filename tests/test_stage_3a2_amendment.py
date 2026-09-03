@@ -166,6 +166,31 @@ class Stage3A2AmendmentIntegrityTests(unittest.TestCase):
             for excluded in ("Errors & Diagnostics", "Observability refinement", "Native Compute", "Rustler", "Engineering Quality"):
                 self.assertNotIn(excluded, block)
 
+    def test_member_reference_arqs_preserve_qualified_product_meaning(self):
+        iam_011_start = self.successor_text.index("### ARQ-IAM-011")
+        iam_012_start = self.successor_text.index("### ARQ-IAM-012", iam_011_start)
+        iam_011 = self.successor_text[iam_011_start:iam_012_start]
+
+        for reason in ("security", "privacy", "integrity", "reconciliation", "equivalent operational-correctness"):
+            self.assertIn(reason, iam_011)
+        self.assertIn("legitimately reactivated", iam_011)
+        self.assertIn("new Platform Member Reference", iam_011)
+        self.assertIn("old reference remains permanently non-reusable", iam_011)
+        self.assertIn("routine vanity changes are not a Product requirement", iam_011)
+
+        iam_013_start = self.successor_text.index("### ARQ-IAM-013")
+        iam_013_end = self.successor_text.index("### ARQ-STATE-008", iam_013_start)
+        iam_013 = self.successor_text[iam_013_start:iam_013_end]
+
+        self.assertIn(
+            "not obviously sequential in a way that unnecessarily exposes Account growth or materially simplifies enumeration",
+            iam_013,
+        )
+        self.assertIn("compatible with an error-detection/check mechanism", iam_013)
+        self.assertNotRegex(iam_013, r"must be[^.]*error-detectable")
+        self.assertIn("exact representation", iam_013)
+        self.assertIn("`VG`", iam_013)
+
     def test_all_descriptive_clusters_and_linked_themes_are_mapped(self):
         cluster_rows = _table_rows(
             self.successor_text,

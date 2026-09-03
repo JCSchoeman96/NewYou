@@ -116,11 +116,11 @@
       "semver": "1.1.0",
       "repository_path": "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
       "authority_class": "ARCHITECTURE_REQUIREMENTS_EVIDENCE",
-      "sha256": "cae49d37862c291b93d0d746a3978e08ee122b5476a56af37f940aa55ce9024d",
+      "sha256": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91",
       "superseded_version": "1.0.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "cae49d37862c291b93d0d746a3978e08ee122b5476a56af37f940aa55ce9024d"
+      "provenance_sha256": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91"
     },
     {
       "document_id": "ARCHITECTURE_LAW",
