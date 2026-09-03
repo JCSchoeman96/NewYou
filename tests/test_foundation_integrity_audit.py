@@ -57,6 +57,32 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             )
             self.assertEqual("DEC definition count is 1, expected 2", decision_count_check["message"])
 
+    def test_completed_stage_3a1_readiness_wording_is_accepted(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_clean_fixture(root)
+            readme = root / "docs" / "00_platform" / "README.md"
+            readme.write_text(
+                "\n".join(
+                    [f"`{entry['canonical_filename']}`" for entry in manifest["governing_documents"]]
+                    + [
+                        "PLANNING FOUNDATION: READY",
+                        "STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS: COMPLETE",
+                        "STAGE 3A.2 — GOVERNED AR-000 AMENDMENT (NOT_STARTED / NEXT)",
+                        "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, root / "manifest.json")
+
+            readiness_check = next(
+                check for check in report["checks"] if check["name"] == "readiness_wording"
+            )
+            self.assertEqual("PASS", readiness_check["status"])
+
     def test_source_at_freeze_references_are_not_stale(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -728,16 +728,17 @@ def _check_production_graph(
         for relative in readiness_paths
         if (root / relative).is_file()
     )
+    legacy_next = "NEXT: PHASE 7 / FP-001 PREPARATION" in readiness_text
+    stage_3a1_started = "STAGE 3A.1" in readiness_text and "NOT_STARTED" in readiness_text
+    stage_3a1_complete = (
+        "STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS: COMPLETE" in readiness_text
+        and "STAGE 3A.2 — GOVERNED AR-000 AMENDMENT" in readiness_text
+        and "NOT_STARTED / NEXT" in readiness_text
+    )
     readiness_ok = (
         "PLANNING FOUNDATION: READY" in readiness_text
         and "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS" in readiness_text
-        and (
-            "NEXT: PHASE 7 / FP-001 PREPARATION" in readiness_text
-            or (
-                "STAGE 3A.1" in readiness_text
-                and "NOT_STARTED" in readiness_text
-            )
-        )
+        and (legacy_next or stage_3a1_started or stage_3a1_complete)
     )
     _record_check(
         report,
