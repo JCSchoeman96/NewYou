@@ -33,8 +33,8 @@ CLASSIFICATIONS = (
 
 EXPECTED_CLASSIFICATIONS = {
     "EXISTING_ARQ_SUFFICIENT": 0,
-    "EXISTING_ARQ_SOURCE_REFRESH_REQUIRED": 8,
-    "EXISTING_ARQ_AMENDMENT_REQUIRED": 41,
+    "EXISTING_ARQ_SOURCE_REFRESH_REQUIRED": 5,
+    "EXISTING_ARQ_AMENDMENT_REQUIRED": 44,
     "NEW_ARQ_REQUIRED": 15,
     "NO_ARQ_REQUIRED": 2,
     "UPSTREAM_PRODUCT_CONTRADICTION": 0,
@@ -107,6 +107,30 @@ def _evidence_rows(text: str) -> tuple[list[dict[str, str]], dict[str, int]]:
             rows.append(row)
 
     return rows, header_widths
+
+
+def _table_rows_in_section(
+    text: str,
+    heading: str,
+    next_heading: str,
+) -> list[dict[str, str]]:
+    section = text[text.index(heading) : text.index(next_heading)]
+    lines = section.splitlines()
+    table_index = next(index for index, line in enumerate(lines) if line.startswith("| "))
+    headers = _cells(lines[table_index])
+    rows = []
+    for line in lines[table_index + 2 :]:
+        if not line.startswith("|"):
+            break
+        if line.startswith("|---"):
+            continue
+        fields = _cells(line)
+        if len(fields) != len(headers):
+            raise AssertionError(
+                f"{heading}: expected {len(headers)} cells, got {len(fields)}: {line}"
+            )
+        rows.append(dict(zip(headers, fields)))
+    return rows
 
 
 class Stage3A1AnalysisIntegrityTests(unittest.TestCase):
@@ -189,6 +213,90 @@ class Stage3A1AnalysisIntegrityTests(unittest.TestCase):
             summaries,
         )
         self.assertEqual(66, sum(summaries.values()))
+
+    def test_source_provenance_targets_match_exact_product_semantics(self):
+        text = ARTIFACT.read_text(encoding="utf-8")
+        source_rows = _table_rows_in_section(
+            text,
+            "### Source propagation only",
+            "### Existing ARQs genuinely requiring semantic amendment",
+        )
+        source_targets = {
+            row["Evidence row"]: set(re.findall(r"ARQ-[A-Z]+-\d{3}\b", row["Exact existing ARQ(s)"]))
+            for row in source_rows
+        }
+        self.assertEqual(
+            {
+                "Vote limits and retried/concurrent submissions": {
+                    "ARQ-PERF-025",
+                    "ARQ-PERF-026",
+                    "ARQ-PERF-027",
+                    "ARQ-PERF-041",
+                },
+                "Proportionate voting anti-abuse controls": {"ARQ-SEC-001"},
+                "Material calculation changes create governed versions": {"ARQ-STATE-002"},
+                "Dashboards and visualisations remain derived": {
+                    "ARQ-AN-001",
+                    "ARQ-AN-022",
+                    "ARQ-AN-127",
+                    "ARQ-AN-161",
+                },
+                "Analytics, dashboards, leaderboards and reports remain derived": {
+                    "ARQ-AN-001",
+                    "ARQ-AN-022",
+                    "ARQ-AN-127",
+                    "ARQ-AN-161",
+                },
+            },
+            source_targets,
+        )
+
+        additive_source_rows = _table_rows_in_section(
+            text,
+            "### Valid source propagation attached to reclassified additive rows",
+            "### Existing ARQs preserved unchanged as related evidence",
+        )
+        self.assertEqual(
+            {
+                "Governed research publication and lifecycle (reclassified)": {
+                    "ARQ-STATE-002"
+                },
+                "Persisted interactive-result version provenance (reclassified)": {
+                    "ARQ-STATE-002"
+                },
+                "Interactive correction and recalculation preserve history (reclassified)": {
+                    "ARQ-STATE-002"
+                },
+            },
+            {
+                row["Evidence row"]: set(
+                    re.findall(r"ARQ-[A-Z]+-\d{3}\b", row["Exact existing ARQ(s)"])
+                )
+                for row in additive_source_rows
+            },
+        )
+
+        source_scope = text[
+            text.index("### Source propagation only") : text.index(
+                "### Existing ARQs preserved unchanged as related evidence"
+            )
+        ]
+        for forbidden in (
+            "ARQ-ASYNC-002",
+            "ARQ-CONTENT-003",
+            "ARQ-PERF-032",
+            "ARQ-PERF-037",
+            "ARQ-PERF-049",
+            "ARQ-AN-014",
+            "ARQ-AN-141",
+            "ARQ-PERF-114",
+            "ARQ-AN-015",
+            "ARQ-AN-142",
+            "ARQ-AN-144",
+            "ARQ-PERF-033",
+            "ARQ-AN-180",
+        ):
+            self.assertNotIn(forbidden, source_scope)
 
     def test_all_candidate_clusters_reach_stage_3a2_handoff(self):
         text = ARTIFACT.read_text(encoding="utf-8")
