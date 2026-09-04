@@ -356,22 +356,22 @@ The Architecture Grill remains `NOT_STARTED / NEXT` after this classification. T
 
 ## External primary sources consulted
 
-Access date for all sources below: 2026-09-04. No package version is pinned by this artifact.
+Access date for all sources below: 2026-09-04. HexDocs links refer to the stable release documentation available at access time; no prerelease or `main` documentation was used. No package version or dependency constraint is adopted by this artifact.
 
-| Source | Use |
-|---|---|
-| [Ash error handling](https://hexdocs.pm/ash/error-handling.html) | Current Ash error/result conventions and framework-native extension points |
-| [Splode HexDocs](https://hexdocs.pm/splode/Splode.html) | Current structured error framework model used by Ash |
-| [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) | Problem Details scope and HTTP representation semantics |
-| [Erlang NIF User's Guide](https://www.erlang.org/doc/apps/erts/erl_nif.html) | NIF execution, scheduler, resource and failure-safety considerations |
-| [Rustler HexDocs](https://hexdocs.pm/rustler/Rustler.html) | Current Rustler/NIF integration surface; no selection or version decision made |
-| [Telemetry HexDocs](https://hexdocs.pm/telemetry/Telemetry.html) | Event/handler model and bounded handler implications |
-| [OpenTelemetry Erlang documentation](https://opentelemetry.io/docs/languages/erlang/) | Interoperability context; does not justify a vendor mandate |
-| [Elixir typespecs](https://hexdocs.pm/elixir/typespecs.html) | Typespec purpose and implementation-level usage |
-| [Credo HexDocs](https://hexdocs.pm/credo/overview.html) | Static-analysis tooling context |
-| [Dialyzer documentation](https://www.erlang.org/doc/apps/dialyzer/dialyzer.html) | Success-typing analysis context |
-| [ExUnit HexDocs](https://hexdocs.pm/ex_unit/ExUnit.html) | Test tooling context |
-| [StreamData HexDocs](https://hexdocs.pm/stream_data/StreamData.html) | Property-testing tooling context |
+| Source | Status at access time | Use |
+|---|---|---|
+| [Ash error handling](https://hexdocs.pm/ash/error-handling.html) | Stable release HexDocs | Current Ash error/result conventions and framework-native extension points |
+| [Splode HexDocs](https://hexdocs.pm/splode/Splode.html) | Stable release HexDocs | Current structured error framework model used by Ash |
+| [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) | IETF Proposed Standard | Problem Details scope and HTTP representation semantics |
+| [Erlang NIF User's Guide](https://www.erlang.org/doc/apps/erts/erl_nif.html) | Current stable OTP documentation | NIF execution, scheduler, resource and failure-safety considerations |
+| [Rustler HexDocs](https://hexdocs.pm/rustler/Rustler.html) | Stable release HexDocs | Current Rustler/NIF integration surface; no selection or version decision made |
+| [Telemetry HexDocs](https://hexdocs.pm/telemetry/Telemetry.html) | Stable release HexDocs | Event/handler model and bounded handler implications |
+| [OpenTelemetry Erlang documentation](https://opentelemetry.io/docs/languages/erlang/) | Official documentation; tracing stable, metrics/logs development | Interoperability context; does not justify a vendor mandate |
+| [Elixir typespecs](https://hexdocs.pm/elixir/typespecs.html) | Stable release HexDocs | Typespec purpose and implementation-level usage |
+| [Credo HexDocs](https://hexdocs.pm/credo/overview.html) | Stable release HexDocs | Static-analysis tooling context |
+| [Dialyzer documentation](https://www.erlang.org/doc/apps/dialyzer/dialyzer.html) | Current stable OTP documentation | Success-typing analysis context |
+| [ExUnit HexDocs](https://hexdocs.pm/ex_unit/ExUnit.html) | Stable release HexDocs | Test tooling context |
+| [StreamData HexDocs](https://hexdocs.pm/stream_data/StreamData.html) | Stable release HexDocs | Property-testing tooling context |
 
 These sources inform classification only. They do not override the live repository authority and do not authorize dependency installation, implementation or package selection.
 
