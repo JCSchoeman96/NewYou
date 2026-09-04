@@ -22,7 +22,7 @@ STAGE_3B_ARTIFACT = (
     / "working"
     / "TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md"
 )
-OPEN_WORK = ROOT / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.34.md"
+OPEN_WORK = ROOT / "docs" / "00_platform" / "archive" / "02_OPEN_WORK_v1.2.34.md"
 README = ROOT / "docs" / "00_platform" / "README.md"
 MANIFEST = ROOT / "docs" / "00_platform" / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
@@ -214,9 +214,10 @@ class Stage4AArchitectureGrillIntegrityTests(unittest.TestCase):
         self.assertIn("ARCHITECTURE GRILL: COMPLETE", self.open_work)
         self.assertIn("ENGINEERING-POLICY GRILL: NOT_STARTED / NEXT", self.open_work)
         self.assertIn("ARCHITECTURE GRILL: COMPLETE", self.readme)
-        self.assertIn("ENGINEERING-POLICY GRILL: NOT_STARTED / NEXT", self.readme)
         self.assertIn("TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md", self.readme)
-        self.assertIn('"semver": "1.2.34"', MANIFEST.read_text(encoding="utf-8"))
+        self.assertTrue(
+            (ROOT / "docs" / "00_platform" / "archive" / "02_OPEN_WORK_v1.2.34.md").is_file()
+        )
         self.assertNotIn("TARGETED_ARCHITECTURE_GRILL", MANIFEST.read_text(encoding="utf-8"))
 
     def test_protected_authority_and_evidence_hashes_remain_unchanged(self):

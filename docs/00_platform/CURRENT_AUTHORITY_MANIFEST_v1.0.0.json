@@ -39,14 +39,14 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.34.md",
-      "semver": "1.2.34",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.34.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.35.md",
+      "semver": "1.2.35",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.35.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "2a45d350643199000993474c77d61c0ebf68f13921641b40432e6616ad927598",
-      "superseded_version": "1.2.33",
+      "sha256": "772ec84d590e73b0963e798ac5ea30fa77bbf98d5ec3685bde69474367c70ff1",
+      "superseded_version": "1.2.34",
       "lifecycle": "current",
-      "provenance_sha256": "2a45d350643199000993474c77d61c0ebf68f13921641b40432e6616ad927598"
+      "provenance_sha256": "772ec84d590e73b0963e798ac5ea30fa77bbf98d5ec3685bde69474367c70ff1"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
