@@ -9,7 +9,7 @@ For foundation/default planning and delivery-preparation work, read **only** the
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
-4. `02_OPEN_WORK_v1.2.33.md`
+4. `02_OPEN_WORK_v1.2.34.md`
 5. `03_ARCHITECTURE_v1.0.0.md`
 6. `04_DOMAIN_MAP_v1.0.0.md`
 7. `05_ROADMAP_v1.0.0.md`
@@ -38,6 +38,7 @@ The frozen Frontend Experience System is current authority for affected frontend
 - `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register; remains working/non-authoritative provenance.
 - `working/DELIVERY_ATLAS_WORKING_v0.1.0.md` — derived Delivery Atlas navigation for approved Feature Pack planning; remains working/non-authoritative and is intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md` — non-authoritative Stage 3B classification; it does not amend Product Law, AR-000, Architecture Law or Engineering Standards and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
+- `working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md` — non-authoritative Stage 4A Architecture Grill evidence; it does not amend Product Law, AR-000 or Architecture Law, creates no ARC identifiers, and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 
 ## Delivery Atlas routing
 
@@ -78,6 +79,7 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/02_OPEN_WORK_v1.2.30.md` — preserved pre-Stage-3A.1 Open Work snapshot.
 - `archive/02_OPEN_WORK_v1.2.31.md` — preserved pre-Stage-3A.2 Open Work snapshot.
 - `archive/02_OPEN_WORK_v1.2.32.md` — preserved pre-Stage-3B Open Work snapshot.
+- `archive/02_OPEN_WORK_v1.2.33.md` — preserved pre-Stage-4A Open Work snapshot.
 - `archive/00_PLATFORM_v1.2.1.md`
 - `archive/01_DECISIONS_v1.2.3.md`
 - `archive/PLATFORM_OPERATING_MODEL_WORKING_v0.2.0.md` — preserved pre-freeze Operating Model working provenance.
@@ -111,9 +113,10 @@ Product Law
 - STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS: COMPLETE / ARCHIVED AS HISTORICAL EVIDENCE
 - STAGE 3A.2 — GOVERNED AR-000 AMENDMENT: COMPLETE
 - STAGE 3B — INDEPENDENT ARCHITECTURE/ENGINEERING CLASSIFICATION: COMPLETE
-- NEXT AUTHORISED AUTHORITY-STAGE WORK: ARCHITECTURE GRILL (`NOT_STARTED / NEXT`)
-- ARCHITECTURE GRILL: NOT_STARTED / NEXT
-- ENGINEERING-POLICY GRILL: NOT_STARTED
+- STAGE 4A — PRODUCT-DERIVED ARCHITECTURE GRILL: COMPLETE
+- NEXT AUTHORISED AUTHORITY-STAGE WORK: ENGINEERING-POLICY GRILL (`NOT_STARTED / NEXT`)
+- ARCHITECTURE GRILL: COMPLETE
+- ENGINEERING-POLICY GRILL: NOT_STARTED / NEXT
 - ARCHITECTURE AMENDMENT: NOT_STARTED
 - LATER ARCHITECTURE / ENGINEERING STANDARDS / DOMAIN / ROADMAP / ATLAS / HARDEN-02 / FP-001 RECONCILIATION: DOWNSTREAM / NOT CURRENT
 - FP-001 PHASE 7A: COMPLETE
