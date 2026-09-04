@@ -10,7 +10,7 @@ ARTIFACT = (
     Path(__file__).resolve().parents[1]
     / "docs"
     / "00_platform"
-    / "working"
+    / "archive"
     / "TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md"
 )
 

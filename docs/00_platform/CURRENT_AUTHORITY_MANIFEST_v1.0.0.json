@@ -39,14 +39,14 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.31.md",
-      "semver": "1.2.31",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.31.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.32.md",
+      "semver": "1.2.32",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.32.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "3a3747e3496f7b39c4db142cf08d566b7b7c0dc3e77453947aa89fd451f8ab30",
-      "superseded_version": "1.2.30",
+      "sha256": "ed68c4c5264f07226de3844801402e97e4acd9ed4bbeda086fad284559ddbf63",
+      "superseded_version": "1.2.31",
       "lifecycle": "current",
-      "provenance_sha256": "3a3747e3496f7b39c4db142cf08d566b7b7c0dc3e77453947aa89fd451f8ab30"
+      "provenance_sha256": "ed68c4c5264f07226de3844801402e97e4acd9ed4bbeda086fad284559ddbf63"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -112,15 +112,15 @@
   "reference_documents": [
     {
       "document_id": "ARCHITECTURE_REQUIREMENTS",
-      "canonical_filename": "ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md",
-      "semver": "1.0.0",
-      "repository_path": "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md",
+      "canonical_filename": "ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
       "authority_class": "ARCHITECTURE_REQUIREMENTS_EVIDENCE",
-      "sha256": "cdf09ecced658635572a20e4f2feb04120b4f856e81762ef5af9ba179a11c40e",
-      "superseded_version": "0.22.0",
+      "sha256": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91",
+      "superseded_version": "1.0.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "cdf09ecced658635572a20e4f2feb04120b4f856e81762ef5af9ba179a11c40e"
+      "provenance_sha256": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91"
     },
     {
       "document_id": "ARCHITECTURE_LAW",
@@ -285,6 +285,17 @@
       "provenance_sha256": "eaf9a8717c82c18cf48014df36e1cf7feeadc10367086b93a5a44a2029f3dc92"
     },
     {
+      "document_id": "OPEN_WORK_V1_2_31",
+      "canonical_filename": "02_OPEN_WORK_v1.2.31.md",
+      "semver": "1.2.31",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.31.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "3a3747e3496f7b39c4db142cf08d566b7b7c0dc3e77453947aa89fd451f8ab30",
+      "superseded_version": "1.2.32",
+      "lifecycle": "historical",
+      "provenance_sha256": "3a3747e3496f7b39c4db142cf08d566b7b7c0dc3e77453947aa89fd451f8ab30"
+    },
+    {
       "document_id": "TARGETED_PRODUCT_AMENDMENT_GRILL",
       "canonical_filename": "TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0.md",
       "semver": "0.5.0",
@@ -293,6 +304,30 @@
       "sha256": "666f013617b0ba02d0bb0af66035055ec82b5558da75dd3cce28b6a433be19df",
       "superseded_version": null,
       "lifecycle": "historical"
+    },
+    {
+      "document_id": "ARCHITECTURE_REQUIREMENTS_V1_0_0",
+      "canonical_filename": "ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/archive/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md",
+      "authority_class": "ARCHITECTURE_REQUIREMENTS_HISTORICAL",
+      "sha256": "cdf09ecced658635572a20e4f2feb04120b4f856e81762ef5af9ba179a11c40e",
+      "superseded_version": "1.1.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "cdf09ecced658635572a20e4f2feb04120b4f856e81762ef5af9ba179a11c40e"
+    },
+    {
+      "document_id": "TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS",
+      "canonical_filename": "TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md",
+      "semver": "0.1.0",
+      "repository_path": "docs/00_platform/archive/TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md",
+      "authority_class": "TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_HISTORICAL_EVIDENCE",
+      "sha256": "6e79048122328a6b763961c32b0bc809ed2c80148c7052303eb11fd8086dd969",
+      "superseded_version": null,
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "6e79048122328a6b763961c32b0bc809ed2c80148c7052303eb11fd8086dd969"
     }
   ],
   "integrity_rules": {
@@ -306,7 +341,7 @@
       "decisions": 298,
       "open_questions": 40,
       "architecture_law": 327,
-      "architecture_requirements": 417,
+      "architecture_requirements": 433,
       "reference_flows": 12,
       "domains": 18,
       "ownership_rows": 48,
@@ -358,7 +393,7 @@
         "(?<!archive/)05_ROADMAP_WORKING_v0\\.1\\.0\\.md",
         "(?<!archive/)03_ARCHITECTURE_WORKING_v0\\.1\\.0\\.md",
         "(?<!reference/)ARCHITECTURE_LAW_WORKING_v0\\.35\\.0\\.md",
-        "(?<!reference/)ARCHITECTURE_REQUIREMENTS_WORKING_v1\\.0\\.0\\.md",
+        "(?<!reference/)(?<!archive/)ARCHITECTURE_REQUIREMENTS_WORKING_v1\\.0\\.0\\.md",
         "(?<!reference/)REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0\\.2\\.0\\.md",
         "CORE_DOCS_AMENDMENT_AND_PRESERVATION_AUDIT_v1\\.2\\.1_2026-08-16\\.md"
       ],
