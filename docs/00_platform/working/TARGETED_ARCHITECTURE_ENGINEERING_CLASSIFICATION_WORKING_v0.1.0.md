@@ -42,7 +42,7 @@ Every local proposition key below has exactly one primary classification:
 - `REJECT_UNNECESSARY_COMPLEXITY`
 - `UPSTREAM_CONTRADICTION_STOP`
 
-The keys such as `A-01` and `C-04-A` are local labels for this working artifact. They are not ARQ, ARC, DEC, OQ, CAP, FP, TB, VS or HH identifiers.
+The keys such as `A-01` and `C-04` are local labels for this working artifact. They are not ARQ, ARC, DEC, OQ, CAP, FP, TB, VS or HH identifiers.
 
 ## Authority and evidence baseline
 
@@ -128,7 +128,7 @@ No proposition exposed a Product Law, AR-000 or current Architecture contradicti
 |---|---|---|---|---|---|---|
 | A-01 | An authoritative application operation owns the result and error semantics consumed by HTTP, LiveView, workers and other callers. Delivery code must not recreate business outcomes. | Independent Stage 3B Errors & Diagnostics brief. | `03_ARCHITECTURE` §§4.1–4.3, 8; `ARC-027`, `ARC-028`, `ARC-031`, `ARC-033`, `ARC-046`, `ARC-048`; `FLOW-01`–`FLOW-12`. | The boundary already exists. A new global error framework would duplicate it. | `ALREADY_GOVERNED_NO_CHANGE` | No further action. Later implementation may choose surface adapters inside the existing boundary. STOP: none. |
 | A-02 | HTTP/provider transport status, browser return state, callback state and queue execution state must not become application or business authority. Pending, retryable, terminal and unknown outcomes remain distinguishable. | Independent brief, including transport/protocol versus application semantics. | `03_ARCHITECTURE` §§7, 8.3, 10.4, 12.1; `ARC-052`, `ARC-147`, `ARC-154`, `ARC-161`, `ARC-232`; `ARQ-PERF-028`, `ARQ-PERF-039`, `ARQ-PERF-094`; `FLOW-02`. | Current law already separates evidence, authority, pending state and retry/terminal behaviour. | `ALREADY_GOVERNED_NO_CHANGE` | No new status taxonomy or provider authority. Surface-specific presentation remains downstream. STOP: none. |
-| A-03 | Decide whether a minimum cross-boundary error/result contract is required for application, HTTP/API, LiveView, background-worker and provider boundaries. It would need to preserve authority, pending/unknown state, retry/terminal semantics and safe/public versus internal separation without choosing a package or envelope here. | Independent brief. The question is architectural only if the invariant changes the platform boundary. | `03_ARCHITECTURE` §§4, 8, 10.4, 12.1; `ARC-027`, `ARC-028`, `ARC-046`, `ARC-048`, `ARC-161`, `ARC-232`; `ARQ-PERF-094`, `ARQ-PERF-150`. | Existing law covers each ingredient but does not state one minimum cross-surface contract or whether one is required. This is a bounded architecture question, not a decision to use RFC Problem Details. | `ARCHITECTURE_GRILL_REQUIRED` | Architecture Grill question: must Architecture establish a minimum cross-boundary error/result invariant, and what is its smallest scope? Engineering-policy follow-up may define mappings after the invariant is decided. Do not decide an envelope, HTTP media type or global code registry here. Future evidence: a real cross-surface ambiguity, duplicate business interpretation, or required API boundary. STOP: no upstream contradiction. |
+| A-03 | Decide whether a minimum cross-boundary error/result contract is required for application, HTTP/API, LiveView, background-worker and provider boundaries. It would need to preserve authority, pending/unknown state, retry/terminal semantics and safe/public versus internal separation without choosing a package or envelope here. | Independent brief. The question is architectural only if the invariant changes the platform boundary. | `03_ARCHITECTURE` §§4, 8, 10.4, 12.1; `ARC-027`, `ARC-028`, `ARC-046`, `ARC-048`, `ARC-161`, `ARC-232`; `ARQ-PERF-094`, `ARQ-PERF-150`. | Current Architecture already establishes this durable cross-surface invariant through the authoritative application operation, thin delivery layers and approved application contracts. The lack of one consolidated sentence is not a semantic gap, and RFC Problem Details is only a possible later representation. | `ALREADY_GOVERNED_NO_CHANGE` | No further Architecture work. Existing law governs the invariant. Ash/Splode mapping, HTTP representation, LiveView presentation, localisation, redaction and labels belong under A-08 or a real approved API/JIT contract. Future evidence: none is needed for Architecture; a concrete implementation may still trigger A-08. STOP: no upstream contradiction. |
 | A-04 | Participant-safe or public messages must be separate from internal diagnostic detail, provider payloads, stack traces and sensitive data. | Independent brief. | `03_ARCHITECTURE` §§10.4, 12.3, 14; `ARC-131`, `ARC-132`, `ARC-232`, `ARC-267`, `ARC-270`, `ARC-290`; `ARQ-IAM-007`; `04_DOMAIN_MAP` §§2, 4. | The separation, minimisation and access boundaries already exist. | `ALREADY_GOVERNED_NO_CHANGE` | No public exposure of internal diagnostics. Redaction and message-writing conventions can be considered later as Engineering Policy. STOP: none. |
 | A-05 | Trace ID, correlation context, diagnostic occurrence/reference value, business/resource identity and actor identity remain distinct. Diagnostic IDs do not grant authority or replace causation, subject or durable business identifiers. | Independent brief. | `03_ARCHITECTURE` §§4, 7, 8, 12.3; `ARC-046`, `ARC-151`, `ARC-154`, `ARC-268`, `ARC-270`; `ARQ-IAM-007`; `FLOW-01`, `FLOW-02`. | The durable distinction and non-authority rule already exist. A participant-facing occurrence ID is a separate product/support decision and is not silently assumed. | `ALREADY_GOVERNED_NO_CHANGE` | No shared identity abstraction or business error ID is created. Naming and field conventions may be policy work only if a real implementation requires them. STOP: none. |
 | A-06 | Expose a stable occurrence/reference ID to participants or support on every surface. | Independent brief, supportability question. | Current law requires diagnostic evidence, correlation and supportable operations, but no current Product Law requirement requires a participant-facing occurrence ID on every surface. | A global reference contract could be useful later, but no current incident, API, support workflow or participant need establishes it. | `DEFER_NO_CURRENT_EVIDENCE` | Do not add a public identifier contract now. Revisit after a real support workflow, incident pattern or API contract demonstrates that correlation alone is insufficient. STOP: none. |
@@ -159,8 +159,8 @@ No proposition exposed a Product Law, AR-000 or current Architecture contradicti
 |---|---|---|---|---|---|---|
 | C-01 | Ordinary Elixir/BEAM code is the default for pure deterministic logic and ordinary application work. | Independent Stage 3B Native Compute brief. | `03_ARCHITECTURE` §§4.2–4.3; `ARC-033`, `ARC-044`, `ARC-045`; `ARQ-SYS-005`, `ARQ-PERF-002`; `05_ROADMAP` §3.2. | The default is already explicit. | `ALREADY_GOVERNED_NO_CHANGE` | No native component is introduced. STOP: none. |
 | C-02 | Optimisation must follow a measured bottleneck and the simplest lawful response. Native compute is an escape hatch, not a hypothetical performance feature. | Independent brief, evidence-gated optimisation question. | `03_ARCHITECTURE` §§4.3, 13; `ARC-057`, `ARC-058`, `ARC-291`–`ARC-327`; `ARQ-PERF-002`, `ARQ-PERF-019`, `ARQ-PERF-021`–`ARQ-PERF-024`; `REFERENCE_FLOW_PRESSURE_TESTS` Phase 3 contract. | Evidence-gated optimisation and staged proof are already governed. No current executable workload proves a native need. | `ALREADY_GOVERNED_NO_CHANGE` | No benchmark, NIF or Rustler work is started in Stage 3B. STOP: none. |
-| C-03 | If measured workload evidence shows ordinary BEAM cannot meet a required CPU/resource envelope safely or economically, Architecture must decide whether a bounded native seam is permitted and what boundary it preserves. The question includes CPU-bound versus blocking/native-I/O work and NIF versus port/external worker options, without selecting one here. | Independent brief. This is architectural only because it may change an execution-model boundary. | `03_ARCHITECTURE` §§4.3, 8, 12.1, 13; `ARC-033`, `ARC-057`–`ARC-058`, `ARC-291`–`ARC-327`; `ARQ-PERF-019`, `ARQ-PERF-021`–`ARQ-PERF-024`; no current executable workload evidence. | Current law permits controlled escape hatches in principle but does not decide a native execution seam. It must remain conditional on measured need. | `ARCHITECTURE_GRILL_REQUIRED` | Architecture Grill question: what evidence and boundary tests must pass before any native execution seam is permitted, and which workload classes belong outside a NIF? Do not answer NIF, Rustler, port or service selection here. Future trigger: repeatable representative profiling showing a material unmet requirement after ordinary BEAM, query, async and topology options are tested. STOP: no upstream contradiction. |
-| C-04 | A native component, if later admitted, needs scheduler/resource/failure/timeout/cancellation/deployment/observability/test/fallback/security constraints. The durable invariant and the implementation proof must be separated. | Independent brief, including dirty schedulers, memory ownership, panic/crash containment and portability. | Architecture already requires bounded resources, failure isolation, recovery, observability, security and evidence: `03_ARCHITECTURE` §§12–15; `ARC-058`, `ARC-131`, `ARC-267`–`ARC-290`, `ARC-291`–`ARC-327`; Erlang NIF and Rustler primary documentation. | The invariant would govern any admitted native seam, while choices such as dirty scheduler use, ownership APIs, build matrix, test harness and fallback mechanism can vary. | `SPLIT_ARCHITECTURE_AND_ENGINEERING_POLICY` | Split: `C-04-A` Architecture must decide the minimum native failure/resource/authority boundary. `C-04-P` Engineering Policy must decide how teams prove scheduler safety, memory bounds, panic/crash containment, timeout/cancellation behaviour, build portability, observability, tests, fallback/recovery and security review. Do not create a native standard now. Future trigger: an approved C-03 workload. STOP: none. |
+| C-03 | If measured workload evidence shows ordinary BEAM cannot meet a required CPU/resource envelope safely or economically, Architecture must decide whether a bounded native seam is permitted and what boundary it preserves. The question includes CPU-bound versus blocking/native-I/O work and NIF versus port/external worker options, without selecting one here. | Independent brief. This is architectural only because it may change an execution-model boundary. | `03_ARCHITECTURE` §§4.3, 8, 12.1, 13; `ARC-033`, `ARC-057`–`ARC-058`, `ARC-291`–`ARC-327`; `ARQ-PERF-019`, `ARQ-PERF-021`–`ARQ-PERF-024`; no current executable workload evidence. | Existing evidence-first escape-hatch law is sufficient until a real workload exists. `ARC-057` and `ARC-058` already require justification, bounded scope and invariant preservation; there is no current native seam to decide. | `DEFER_NO_CURRENT_EVIDENCE` | Defer all native-seam decisions. Reopen only when representative profiling demonstrates a material unmet requirement after ordinary BEAM, query/data-shape, async and topology alternatives are tested safely and economically. If reopened, Architecture may then decide whether a native seam is permitted, which workload classes remain outside a NIF and which boundary must be preserved. Do not answer those questions now. STOP: no upstream contradiction. |
+| C-04 | A native component, if later admitted, needs scheduler/resource/failure/timeout/cancellation/deployment/observability/test/fallback/security constraints. The durable invariant and the implementation proof must be separated. | Independent brief, including dirty schedulers, memory ownership, panic/crash containment and portability. | Architecture already requires bounded resources, failure isolation, recovery, observability, security and evidence: `03_ARCHITECTURE` §§12–15; `ARC-058`, `ARC-131`, `ARC-267`–`ARC-290`, `ARC-291`–`ARC-327`; Erlang NIF and Rustler primary documentation. | C-04 is wholly contingent on a native seam that has not been admitted and no current workload triggers that decision. Its checklist is valuable future reopening/proof evidence, not present Architecture or Engineering-Policy scope. | `DEFER_NO_CURRENT_EVIDENCE` | Defer the native safety checklist as current Grill work. Retain it as future reopening criteria: if C-03 is later triggered and Architecture admits a native seam, reclassify/split as appropriate between the minimum native failure/resource/authority boundary and the engineering proof of scheduler safety, memory bounds, panic/crash containment, timeout/cancellation, portability, observability, testing, fallback/recovery and security. Do not select Rustler, add Rust or create a native standard now. Future trigger: an approved, measured C-03 workload. STOP: none. |
 | C-05 | Native code may not contain business rules, durable business authority, authoritative state mutation or a second business-law layer. | Independent brief, explicit anti-authority rule. | `03_ARCHITECTURE` §§4.2–4.3, 7, 8; `ARC-033`, `ARC-044`–`ARC-049`, `ARC-057`–`ARC-058`; `04_DOMAIN_MAP` §§2, 4. | Current application/domain authority and controlled escape-hatch law already prohibit this. | `ALREADY_GOVERNED_NO_CHANGE` | A native component, if ever approved, remains subordinate computation/infrastructure. STOP: none. |
 | C-06 | Make Rustler/NIFs the standard native-compute path for the platform or add a Rust toolchain before a measured need exists. | Independent brief, Rustler selection pressure test. | `03_ARCHITECTURE` §§4.3, 13; `ARC-057`–`ARC-058`, `ARC-291`–`ARC-327`; `05_ROADMAP` §3.2; no current workload or native component. | The proposal confuses one implementation option with an architecture requirement and creates build, deployment and security burden without value. | `REJECT_UNNECESSARY_COMPLEXITY` | Reject the platform-wide baseline. Reopen only after C-03 evidence and an approved Architecture decision. STOP: none. |
 | C-07 | Evaluate and select Rustler for a real workload now, before profiling ordinary BEAM and other lawful options. | Independent brief, actual Rustler-selection question. | `03_ARCHITECTURE` §§4.3, 13; `ARC-057`, `ARC-058`, `ARC-291`–`ARC-327`; `ARQ-PERF-019`; no current executable workload, `mix.exs`, `Cargo.toml` or native component in the reviewed baseline. | The selection may become legitimate, but current evidence does not identify a workload, envelope, safety case or portability need. | `DEFER_NO_CURRENT_EVIDENCE` | Do not add Rustler or Rust dependencies. Revisit with representative profiles, BEAM/query/async comparisons, failure evidence, deployment constraints and a security review. STOP: none. |
@@ -176,7 +176,7 @@ No proposition exposed a Product Law, AR-000 or current Architecture contradicti
 | D-04 | Testing should rise with consequence and complexity, including unit/integration/acceptance, property/invariant, concurrency, failure/recovery and boundary tests where the risk warrants it. | Independent brief, test proportionality question. | `03_ARCHITECTURE` §§8, 12–15; `ARC-070`, `ARC-076`, `ARC-161`, `ARC-284`–`ARC-286`, `ARC-291`–`ARC-327`; `ARQ-PERF-021`–`ARQ-PERF-024`, `ARQ-PERF-112`, `ARQ-PERF-156`; current ExUnit and StreamData documentation. | The architecture names proof obligations, but test selection and depth are engineering practice. | `ENGINEERING_POLICY_GRILL_REQUIRED` | Engineering-Policy Grill question: how should teams choose test depth for pure helpers, authoritative transitions, privacy/security code, financial/entitlement flows, concurrent workflows, migrations, provider adapters and UI helpers? No universal test matrix is written here. Future evidence: first affected Feature Pack and its risk classification. STOP: none. |
 | D-05 | Code review, CI evidence, security/privacy checks, maintainability checks and proof records should demonstrate that implementation preserves current law. | Independent brief, review and CI evidence question. | `03_ARCHITECTURE` §§12.3–12.4, 14–15; `ARC-131`, `ARC-267`–`ARC-290`, `ARC-284`–`ARC-286`; `PLATFORM_OPERATING_MODEL` §§3, 9; `05_ROADMAP` release gates. | The cross-platform invariants are already Architecture. The review checklist, CI evidence shape, security scan choice and maintainability practice are policy. | `ENGINEERING_POLICY_GRILL_REQUIRED` | Engineering-Policy Grill question: what minimum evidence must a change carry, by risk class, for review, CI, security/privacy and operational proof? Do not manufacture CI stages or make CI a second authority. Future evidence: selected implementation slice, release gate or incident finding. STOP: none. |
 | D-06 | Production migrations are reviewed code, safe across rolling deployment, tested for lock/runtime/failure/rollback impact and observable. | Independent brief, migration-safety question. | `03_ARCHITECTURE` §§7.2, 12.1, 13, 15; `ARC-070`, `ARC-076`, `ARC-284`–`ARC-286`; `ARQ-PERF-081`, `ARQ-PERF-156`; `FLOW-08`. | The durable migration-safety requirement already exists. | `ALREADY_GOVERNED_NO_CHANGE` | Do not create a new migration law. Exact migration checklists are later policy/JIT work. STOP: none. |
-| D-07 | Architecture-boundary tests or dependency checks should catch direct cross-boundary persistence, authority bypass, unsafe cache use and other violations. The durable boundary and the test/check practice must be separated. | Independent brief, architecture-boundary test question. | `03_ARCHITECTURE` §15 enforcement matrix; `ARC-027`, `ARC-046`, `ARC-048`, `ARC-052`, `ARC-058`, `ARC-154`; `04_DOMAIN_MAP` §§2, 4. | The invariant is already architectural. Whether every boundary is checked by static analysis, tests, review or another mechanism is policy and may vary by risk. | `SPLIT_ARCHITECTURE_AND_ENGINEERING_POLICY` | Split: `D-07-A` preserves the existing durable authority/boundary invariant. `D-07-P` asks Engineering Policy which automated checks are valuable, maintainable and proportionate. Do not create a new Architecture identifier or universal checker. Future evidence: an approved codebase and a demonstrated boundary-bypass risk. STOP: none. |
+| D-07 | Architecture-boundary tests or dependency checks should catch direct cross-boundary persistence, authority bypass, unsafe cache use and other violations. The durable boundary and the test/check practice must be separated. | Independent brief, architecture-boundary test question. | `03_ARCHITECTURE` §15 enforcement matrix; `ARC-027`, `ARC-046`, `ARC-048`, `ARC-052`, `ARC-058`, `ARC-154`; `04_DOMAIN_MAP` §§2, 4. | Existing Architecture and Domain authority/no-bypass rules already define the durable invariant. Whether every boundary is checked by static analysis, tests, review or another mechanism is policy and may vary by risk. | `ENGINEERING_POLICY_GRILL_REQUIRED` | Engineering-Policy Grill question: which static checks, dependency checks, architecture-boundary tests, review checks or CI evidence are valuable, maintainable and proportionate for proving the already-governed boundary? Existing Architecture is the mandatory constraint; there is no remaining Architecture decision. Do not create a universal checker. Future evidence: an approved codebase and a demonstrated boundary-bypass risk. STOP: none. |
 | D-08 | Apply maximum documentation, typespec, test, review and CI ceremony uniformly to every function and change. | Independent brief, explicit proportionality pressure test. | `03_ARCHITECTURE` §§13, 15; `ARC-291`–`ARC-327`; `05_ROADMAP` anti-overengineering and development-friction rules. | Uniform maximum ceremony conflicts with risk-proportional proof and adds friction without protecting a durable invariant. | `REJECT_UNNECESSARY_COMPLEXITY` | Reject. Reopen only if a named failure class shows that the proportional model cannot protect a particular risk class. STOP: none. |
 | D-09 | Manufacture CI stages, coverage thresholds or tool adoption solely to make the repository look mature before implementation risk or delivery scope exists. | Independent brief, anti-ceremony/tooling pressure test. | `03_ARCHITECTURE` §§13, 15; `ARC-284`–`ARC-286`, `ARC-291`–`ARC-327`; `05_ROADMAP` §§3.2, 4; no application implementation baseline. | The proposal creates ceremony before there is a repository, capability or evidence need. | `REJECT_UNNECESSARY_COMPLEXITY` | Reject. Reopen when an approved implementation slice, release gate or incident requires a specific check with a named failure mode. STOP: none. |
 
@@ -188,15 +188,15 @@ The following tests were run against the candidate concerns. They validate the c
 
 | Pressure case | Result |
 |---|---|
-| HTTP status versus application/business error | Transport evidence cannot establish business authority under A-02. A-03 remains the only Architecture question because the minimum cross-surface contract is not explicitly stated. |
+| HTTP status versus application/business error | Transport evidence cannot establish business authority under A-02. Existing ARC-027, ARC-028 and ARC-048 already govern the cross-surface authority invariant; A-08 routes representation and mapping conventions to Engineering Policy. |
 | Safe participant message versus internal diagnostic detail | Existing minimisation, access and redaction law covers the split under A-04. |
 | Occurrence/reference ID versus trace/correlation ID | Existing correlation and non-authority rules cover the identity separation under A-05. A participant-facing occurrence contract is unsupported and deferred under A-06. |
 | Validation/domain/application failure versus system/provider failure | Existing error-class-aware retry and terminal/reconciliation law covers the durable behaviour under A-07. Ash/Splode mapping is a policy question under A-08. |
 | Provider failure versus platform business state | Provider evidence stays behind adapters and cannot rewrite originating truth under A-02 and A-11. |
 | Retryable, unresolved and terminal failure | Existing bounded, owned retry and pending/reconciliation rules cover the distinction under A-02 and A-07. |
 | Privacy, redaction and supportability | Public detail is minimised and diagnostic evidence is restricted under A-04 and A-11. Support-facing occurrence IDs remain deferred until a support need is evidenced. |
-| Stable public contract versus implementation detail | A-03 asks whether a minimum invariant is needed. A-09 defers choosing RFC Problem Details until an actual HTTP/API boundary exists. |
-| HTTP/API, LiveView and background-worker differences | Surface differences do not permit business-rule duplication. A-03 is scoped to the shared invariant, while A-08 covers implementation mapping later. |
+| Stable public contract versus implementation detail | Existing Architecture governs the shared authority invariant. A-09 defers choosing RFC Problem Details until an actual HTTP/API boundary exists, while A-08 routes implementation mapping later. |
+| HTTP/API, LiveView and background-worker differences | Surface differences do not permit business-rule duplication under existing Architecture. A-08 covers the later implementation mapping. |
 
 ### Observability
 
@@ -218,15 +218,15 @@ The following tests were run against the candidate concerns. They validate the c
 |---|---|
 | CPU-bound hotspot | Profile first. A measured unmet envelope can trigger C-03; hypothetical speed is covered by C-02 and C-07. |
 | Long-running native call | It cannot become a generic substitute for durable async or worker isolation under C-08. |
-| NIF crash or Rust panic | The future native invariant and engineering proof are split under C-04. No native code is admitted now. |
-| Scheduler starvation | C-03 and C-04 route execution-class and safety questions to Architecture and Policy only after evidence. |
-| Native memory growth or ownership bug | C-04 requires a bounded resource/failure invariant and proof of ownership/bounds later. |
+| NIF crash or Rust panic | The future native invariant and engineering proof checklist are retained under deferred C-04. No native code is admitted now. |
+| Scheduler starvation | C-03 and C-04 remain deferred; execution-class and safety questions reopen only after native-workload evidence. |
+| Native memory growth or ownership bug | C-04 retains bounded resource/failure and ownership proof as future reopening criteria. |
 | Malformed input | Native code remains subordinate computation; validation and authority stay in the application boundary under C-05. |
 | Node restart | Durable authority and recovery remain outside native execution under C-05 and C-08. |
-| Deployment portability or toolchain failure | No Rustler baseline is adopted. If C-03 opens, portability becomes part of C-04 policy proof. |
+| Deployment portability or toolchain failure | No Rustler baseline is adopted. If C-03 reopens, portability becomes part of the C-04 proof checklist. |
 | Concurrency | Current transaction/idempotency law remains in the application and database boundary; native computation cannot become authority. |
-| Timeout/cancellation | A native call does not supply durable cancellation or reconciliation by itself. The later boundary decision must preserve those semantics. |
-| Telemetry | Native work would need bounded diagnostic signals without making telemetry authoritative, covered by C-04. |
+| Timeout/cancellation | A native call does not supply durable cancellation or reconciliation by itself. If native work is later admitted, C-04 retains this as a proof criterion. |
+| Telemetry | Any later native work would need bounded diagnostic signals without making telemetry authoritative; this remains a C-04 reopening criterion. |
 | Fallback/recovery | A fallback is a later implementation proof, not a reason to introduce a native seam now. |
 | Authoritative business-state mutation | Explicitly excluded by C-05. |
 
@@ -249,9 +249,9 @@ The queue boundary is intentionally narrow:
 
 | Concern | Durable WHAT | Implementation HOW | Result |
 |---|---|---|---|
-| Cross-surface errors | Whether one minimum authority/status/public-diagnostic invariant is required across boundaries | Ash/Splode mappings, envelopes, labels, messages and surface adapters | A-03 Architecture Grill; A-08 Engineering-Policy Grill |
-| Native compute | Whether and where a measured native seam may exist, with no native business authority | Dirty-scheduler or equivalent choice, memory ownership, build, tests, panic handling, timeout/cancellation, fallback and security evidence | C-03 Architecture Grill; C-04 split |
-| Boundary enforcement | Existing application/domain authority and no-bypass invariant | Static checks, dependency checks, tests, review and CI evidence selected by risk | D-07 split |
+| Cross-surface errors | Existing authority/status/public-diagnostic invariant governed by `ARC-027`, `ARC-028` and `ARC-048` | Ash/Splode mappings, envelopes, labels, messages and surface adapters | A-03 already governed; A-08 Engineering-Policy Grill |
+| Native compute | Existing evidence-gated escape-hatch constraints; no native seam is admitted without a real workload | Dirty-scheduler or equivalent choice, memory ownership, build, tests, panic handling, timeout/cancellation, fallback and security evidence if later triggered | C-03 and C-04 deferred |
+| Boundary enforcement | Existing application/domain authority and no-bypass invariant | Static checks, dependency checks, tests, review and CI evidence selected by risk | D-07 Engineering-Policy Grill |
 | Observability | Existing separation of operational, domain-outcome, audit/security and business/reporting evidence | Event names, fields, dashboards, ownership, retention workflows and backend integration | B-01–B-07 already governed; B-09 policy |
 | General quality | Existing proof and hard-invariant requirements | Documentation, typespecs, linting, tests, CI, review and dependency hygiene | D-01/D-06 already governed; D-02–D-05 policy |
 
@@ -263,11 +263,11 @@ The test result is not a claim that every current concern is fully implemented. 
 
 | Primary classification | Count |
 |---|---:|
-| `ALREADY_GOVERNED_NO_CHANGE` | 18 |
-| `ARCHITECTURE_GRILL_REQUIRED` | 2 |
-| `ENGINEERING_POLICY_GRILL_REQUIRED` | 6 |
-| `SPLIT_ARCHITECTURE_AND_ENGINEERING_POLICY` | 2 |
-| `DEFER_NO_CURRENT_EVIDENCE` | 3 |
+| `ALREADY_GOVERNED_NO_CHANGE` | 19 |
+| `ARCHITECTURE_GRILL_REQUIRED` | 0 |
+| `ENGINEERING_POLICY_GRILL_REQUIRED` | 7 |
+| `SPLIT_ARCHITECTURE_AND_ENGINEERING_POLICY` | 0 |
+| `DEFER_NO_CURRENT_EVIDENCE` | 5 |
 | `REJECT_UNNECESSARY_COMPLEXITY` | 7 |
 | `UPSTREAM_CONTRADICTION_STOP` | 0 |
 | **Total propositions** | **38** |
@@ -278,6 +278,7 @@ No new law or policy is required for these propositions:
 
 - **A-01** — authoritative application operation owns result/error semantics. Evidence: `03_ARCHITECTURE` §§4.1–4.3, 8; `ARC-027`, `ARC-028`, `ARC-031`, `ARC-033`, `ARC-046`, `ARC-048`.
 - **A-02** — transport, provider and queue state cannot become business authority; pending/retry/terminal/unknown states remain distinct. Evidence: `03_ARCHITECTURE` §§7, 8.3, 12.1; `ARC-052`, `ARC-147`, `ARC-154`, `ARC-161`, `ARC-232`.
+- **A-03** — the cross-surface authority/result invariant is already governed by the authoritative application operation, thin delivery layers and approved application contracts. Evidence: `03_ARCHITECTURE` §§4, 8, 10.4, 12.1; `ARC-027`, `ARC-028`, `ARC-046`, `ARC-048`, `ARC-161`, `ARC-232`.
 - **A-04** — safe public messages and internal diagnostics remain separate. Evidence: `03_ARCHITECTURE` §§10.4, 12.3, 14; `ARC-131`, `ARC-132`, `ARC-232`, `ARC-267`, `ARC-270`, `ARC-290`.
 - **A-05** — diagnostic identity does not replace trace, actor, subject, resource or business authority. Evidence: `03_ARCHITECTURE` §§4, 7, 8, 12.3; `ARC-046`, `ARC-151`, `ARC-154`, `ARC-268`, `ARC-270`.
 - **A-07** — error classes drive bounded retry, terminal handling, reconciliation and recovery. Evidence: `03_ARCHITECTURE` §§8.2–8.3, 12.1; `ARC-147`, `ARC-154`, `ARC-161`, `ARC-232`.
@@ -297,15 +298,19 @@ No new law or policy is required for these propositions:
 
 ### Queue B: Architecture Grill
 
-These are the only unsplit Architecture Grill inputs:
+No independent Stage 3B proposition currently requires an Architecture-level decision. A-03 and D-07 are constrained by existing Architecture Law, while C-03 and C-04 are deferred until native-workload evidence exists.
 
-- **A-03** — Must Architecture establish a minimum cross-boundary error/result invariant spanning application, HTTP/API, LiveView, workers and provider boundaries? The Grill must set the smallest invariant and explicitly leave envelopes, packages, labels and surface mappings downstream.
-- **C-03** — What measured evidence and boundary tests are required before a native execution seam is permitted, and which CPU-bound, blocking or native-I/O workloads must use a different boundary? The Grill must not select Rustler merely because it is available.
+### Architecture Grill provenance
 
-Split Architecture responsibilities, not duplicate propositions:
+This zero-count independent queue does not cancel or skip the programme's Architecture Grill. The Architecture Grill remains `NOT_STARTED / NEXT` because the governed Product-derived AR-000 v1.1.0 amendment from Stage 3A.2 is a separate input stream.
 
-- **C-04-A** — Set the minimum native failure/resource/authority boundary if C-03 is admitted.
-- **D-07-A** — Preserve the existing application/domain authority and no-bypass invariant as the durable architectural WHAT.
+Architecture Grill input stream A — Product-derived:
+
+- Stage 3A.2's governed AR-000 v1.1.0 additions and their downstream Architecture closure.
+
+Architecture Grill input stream B — independent Stage 3B:
+
+- Zero current propositions.
 
 ### Queue C: Engineering-Policy Grill
 
@@ -317,11 +322,7 @@ These are the only unsplit Engineering-Policy Grill inputs:
 - **D-03** — Which formatting, lint, static analysis, typespec, dependency and reproducible-build checks provide value, with what scope and failure policy?
 - **D-04** — How should teams choose test depth for pure helpers, authoritative transitions, privacy/security code, financial/entitlement flows, concurrency, migrations, provider adapters and UI helpers?
 - **D-05** — What review, CI, security/privacy and proof evidence must accompany a change by risk class, without making CI a second authority?
-
-Split Engineering-Policy responsibilities, not duplicate propositions:
-
-- **C-04-P** — Define how a later native component proves scheduler safety, memory bounds, panic/crash containment, timeout/cancellation, build portability, observability, tests, fallback/recovery and security.
-- **D-07-P** — Choose which static checks, dependency checks, tests, review checks or CI evidence are maintainable and proportionate for boundary protection.
+- **D-07** — Which static checks, dependency checks, architecture-boundary tests, review checks or CI evidence are valuable, maintainable and proportionate for proving the already-governed boundary?
 
 ### Queue D: Deferred / rejected
 
@@ -329,6 +330,8 @@ Deferred until evidence exists:
 
 - **A-06** — Participant/support occurrence ID on every surface. Reopen for a real support workflow, incident pattern, API contract or demonstrated need beyond correlation.
 - **A-09** — RFC 9457 as a universal API representation. Reopen when a real HTTP/API boundary and interoperability requirement are approved.
+- **C-03** — Native execution seam. Reopen only when representative profiling demonstrates a material unmet requirement after ordinary BEAM, query/data-shape, async and topology alternatives are tested safely and economically; Architecture may then decide the seam and workload boundary.
+- **C-04** — Native scheduler/resource/failure/timeout/cancellation/deployment/observability/test/fallback/security checklist. Reopen only with an approved, measured C-03 workload; then split the minimum durable boundary from the engineering proof as appropriate.
 - **C-07** — Rustler selection for an actual workload now. Reopen with representative profiling, ordinary BEAM/query/async comparison, deployment constraints, failure evidence and security review.
 
 Rejected for the current programme:
@@ -352,7 +355,7 @@ Rejected for the current programme:
 - **Governed identifiers:** none created. Existing identifiers are cited only as evidence.
 - **Implementation:** none performed.
 
-The Architecture Grill remains `NOT_STARTED / NEXT` after this classification. The Engineering-Policy Grill remains `NOT_STARTED`. A zero-count Architecture queue would not reorder the programme; this artifact has two bounded Architecture questions in any case.
+The Architecture Grill remains `NOT_STARTED / NEXT` after this classification because the governed Product-derived AR-000 v1.1.0 input stream remains downstream work. The independent Stage 3B Architecture queue contributes zero current propositions. The Engineering-Policy Grill remains `NOT_STARTED`.
 
 ## External primary sources consulted
 
@@ -379,7 +382,7 @@ These sources inform classification only. They do not override the live reposito
 
 This artifact is ready for independent review as one bounded Stage 3B input. After review of the exact PR head:
 
-1. Architecture Grill may consume Queue B.
+1. Architecture Grill may consume the separate Product-derived Stage 3A.2 / AR-000 v1.1.0 input stream; Stage 3B contributes no current independent Architecture proposition.
 2. Engineering-Policy Grill may consume Queue C.
 3. No later stage may treat Queue A as new law.
 4. Deferred/rejected items require their named evidence trigger before reconsideration.

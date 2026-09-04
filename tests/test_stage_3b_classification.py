@@ -27,11 +27,11 @@ CLASSIFICATIONS = {
 }
 
 EXPECTED_COUNTS = {
-    "ALREADY_GOVERNED_NO_CHANGE": 18,
-    "ARCHITECTURE_GRILL_REQUIRED": 2,
-    "ENGINEERING_POLICY_GRILL_REQUIRED": 6,
-    "SPLIT_ARCHITECTURE_AND_ENGINEERING_POLICY": 2,
-    "DEFER_NO_CURRENT_EVIDENCE": 3,
+    "ALREADY_GOVERNED_NO_CHANGE": 19,
+    "ARCHITECTURE_GRILL_REQUIRED": 0,
+    "ENGINEERING_POLICY_GRILL_REQUIRED": 7,
+    "SPLIT_ARCHITECTURE_AND_ENGINEERING_POLICY": 0,
+    "DEFER_NO_CURRENT_EVIDENCE": 5,
     "REJECT_UNNECESSARY_COMPLEXITY": 7,
     "UPSTREAM_CONTRADICTION_STOP": 0,
 }
@@ -51,13 +51,14 @@ EXPECTED_QUEUES = {
         "B-05",
         "B-06",
         "B-07",
+        "A-03",
         "C-01",
         "C-02",
         "C-05",
         "D-01",
         "D-06",
     },
-    "Queue B: Architecture Grill": {"A-03", "C-03", "C-04-A", "D-07-A"},
+    "Queue B: Architecture Grill": set(),
     "Queue C: Engineering-Policy Grill": {
         "A-08",
         "B-09",
@@ -65,12 +66,13 @@ EXPECTED_QUEUES = {
         "D-03",
         "D-04",
         "D-05",
-        "C-04-P",
-        "D-07-P",
+        "D-07",
     },
     "Queue D: Deferred / rejected": {
         "A-06",
         "A-09",
+        "C-03",
+        "C-04",
         "C-07",
         "A-10",
         "B-08",
@@ -152,6 +154,24 @@ class Stage3BClassificationIntegrityTests(unittest.TestCase):
                 "Routing, rejected mechanism, revisit and STOP",
             ):
                 self.assertTrue(row[field], f"{row['Key']} missing {field}")
+
+        rows_by_key = {row["Key"]: row for row in self.rows}
+        self.assertEqual(
+            "ALREADY_GOVERNED_NO_CHANGE",
+            rows_by_key["A-03"]["Primary classification"].strip("`"),
+        )
+        self.assertEqual(
+            "DEFER_NO_CURRENT_EVIDENCE",
+            rows_by_key["C-03"]["Primary classification"].strip("`"),
+        )
+        self.assertEqual(
+            "DEFER_NO_CURRENT_EVIDENCE",
+            rows_by_key["C-04"]["Primary classification"].strip("`"),
+        )
+        self.assertEqual(
+            "ENGINEERING_POLICY_GRILL_REQUIRED",
+            rows_by_key["D-07"]["Primary classification"].strip("`"),
+        )
 
     def test_queues_cover_register_without_architecture_policy_duplication(self):
         queue_a = _queue_keys(

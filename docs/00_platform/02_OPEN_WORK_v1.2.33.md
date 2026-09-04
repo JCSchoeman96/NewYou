@@ -27,7 +27,7 @@
 
 - Planning-state SemVer transition: `v1.2.32 → v1.2.33`.
 - Records Stage 3B Independent Architecture/Engineering Classification complete in `working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md`; the artifact is non-authoritative and pending exact-head independent review.
-- Stage 3B classified 38 independent propositions: 2 Architecture Grill inputs, 6 Engineering-Policy Grill inputs, 2 split inputs, 3 deferred inputs, 7 rejected inputs and 18 already governed inputs; no upstream contradiction was found.
+- Stage 3B classified 38 independent propositions: 0 Architecture Grill inputs, 7 Engineering-Policy Grill inputs, 0 split inputs, 5 deferred inputs, 7 rejected inputs and 19 already governed inputs; no upstream contradiction was found. The independent Stage 3B input stream contributes zero current Architecture decisions; Architecture Grill remains next because the separate governed Product-derived AR-000 v1.1.0 input stream from Stage 3A.2 still requires downstream closure.
 - Keeps Architecture Grill as the next authorised stage and leaves Engineering-Policy Grill, Architecture amendment and later reconciliation downstream.
 - Preserves the non-authoritative Stage 3A.1 analysis at `archive/TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md`; it is historical evidence, not active working authority.
 - Routes current AR-000 to `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md` and preserves v1.0.0 in the archive.
@@ -995,7 +995,7 @@ Explicitly **not** in Stage 2 scope: ARQ/ARC creation, Architecture amendment, D
 
 Stage 3A.2 is complete in `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`. The successor preserves all 417 v1.0.0 ARQs, appends the approved v1.3.0 Product-Law provenance and additive coverage, creates no Architecture decisions, and records the complete Stage 3A.1 analysis as historical evidence at `archive/TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md`.
 
-Stage 3B is complete as classification only in `working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md`. It creates no Product Law, ARQ, Architecture Law, Engineering Standard, Domain, Roadmap, Feature Pack or implementation artifact. Its exact PR head requires independent human/reviewer certification before the next stage is treated as approved.
+Stage 3B is complete as classification only in `working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md`. It creates no Product Law, ARQ, Architecture Law, Engineering Standard, Domain, Roadmap, Feature Pack or implementation artifact. Its independent input stream contributes zero current Architecture Grill propositions after authority-placement correction. Architecture Grill remains `NOT_STARTED / NEXT` because the separate governed Product-derived AR-000 v1.1.0 input stream from Stage 3A.2 still requires downstream Architecture closure. Its exact PR head requires independent human/reviewer certification before the next stage is treated as approved.
 
 After the exact Stage 3B PR head is reported, work must **STOP** pending independent review of that head. Do not merge it, begin the Architecture Grill, begin the Engineering-Policy Grill, amend Architecture Law, create ARC identifiers, amend the Domain Map or Roadmap, create Domains or Feature Packs, reconcile the Delivery Atlas, execute HARDEN-02, modify FP-001 artifacts, or implement any capability before the next separately authorised stage.
 
