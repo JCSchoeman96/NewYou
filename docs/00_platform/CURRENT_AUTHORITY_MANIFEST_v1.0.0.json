@@ -39,26 +39,26 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.35.md",
-      "semver": "1.2.35",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.35.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.36.md",
+      "semver": "1.2.36",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.36.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "772ec84d590e73b0963e798ac5ea30fa77bbf98d5ec3685bde69474367c70ff1",
-      "superseded_version": "1.2.34",
+      "sha256": "69b7c00a6b134cdfe80ecb8e2cb5b10350159c95bdbb79067bcb3225dbb3d34c",
+      "superseded_version": "1.2.35",
       "lifecycle": "current",
-      "provenance_sha256": "772ec84d590e73b0963e798ac5ea30fa77bbf98d5ec3685bde69474367c70ff1"
+      "provenance_sha256": "69b7c00a6b134cdfe80ecb8e2cb5b10350159c95bdbb79067bcb3225dbb3d34c"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
-      "canonical_filename": "03_ARCHITECTURE_v1.0.0.md",
-      "semver": "1.0.0",
-      "repository_path": "docs/00_platform/03_ARCHITECTURE_v1.0.0.md",
+      "canonical_filename": "03_ARCHITECTURE_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/03_ARCHITECTURE_v1.1.0.md",
       "authority_class": "ARCHITECTURE_SYNTHESIS",
-      "sha256": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b",
-      "superseded_version": "0.1.0",
+      "sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
+      "superseded_version": "1.0.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b"
+      "provenance_sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852"
     },
     {
       "document_id": "DOMAIN_MAP",
@@ -124,27 +124,27 @@
     },
     {
       "document_id": "ARCHITECTURE_LAW",
-      "canonical_filename": "ARCHITECTURE_LAW_WORKING_v0.35.0.md",
-      "semver": "0.35.0",
-      "repository_path": "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md",
+      "canonical_filename": "ARCHITECTURE_LAW_WORKING_v0.36.0.md",
+      "semver": "0.36.0",
+      "repository_path": "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
       "authority_class": "ARCHITECTURE_LAW_EVIDENCE",
-      "sha256": "a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639",
-      "superseded_version": "0.34.0",
+      "sha256": "26ff1e7a7e40945e501793c2bfb2ede9c01ae03f7949383ae724e3b031fa4faa",
+      "superseded_version": "0.35.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639"
+      "provenance_sha256": "26ff1e7a7e40945e501793c2bfb2ede9c01ae03f7949383ae724e3b031fa4faa"
     },
     {
       "document_id": "REFERENCE_FLOW_PRESSURE_TESTS",
-      "canonical_filename": "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
-      "semver": "0.2.0",
-      "repository_path": "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
+      "canonical_filename": "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+      "semver": "0.3.0",
+      "repository_path": "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
       "authority_class": "REFERENCE_FLOW_EVIDENCE",
-      "sha256": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20",
-      "superseded_version": "0.1.0",
+      "sha256": "0d8e25170ae692df39f7f771189f95ab76ab64f2701823fb2cde214946650d3f",
+      "superseded_version": "0.2.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20"
+      "provenance_sha256": "0d8e25170ae692df39f7f771189f95ab76ab64f2701823fb2cde214946650d3f"
     },
     {
       "document_id": "FOUNDATION_INTEGRITY_AUDIT",
@@ -328,6 +328,53 @@
       "lifecycle": "historical",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "6e79048122328a6b763961c32b0bc809ed2c80148c7052303eb11fd8086dd969"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_35",
+      "canonical_filename": "02_OPEN_WORK_v1.2.35.md",
+      "semver": "1.2.35",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.35.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "772ec84d590e73b0963e798ac5ea30fa77bbf98d5ec3685bde69474367c70ff1",
+      "superseded_version": "1.2.36",
+      "lifecycle": "historical",
+      "provenance_sha256": "772ec84d590e73b0963e798ac5ea30fa77bbf98d5ec3685bde69474367c70ff1"
+    },
+    {
+      "document_id": "ARCHITECTURE_SYNTHESIS_V1_0_0",
+      "canonical_filename": "03_ARCHITECTURE_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/archive/03_ARCHITECTURE_v1.0.0.md",
+      "authority_class": "ARCHITECTURE_SYNTHESIS_HISTORICAL",
+      "sha256": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b",
+      "superseded_version": "1.1.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b"
+    },
+    {
+      "document_id": "ARCHITECTURE_LAW_V0_35_0",
+      "canonical_filename": "ARCHITECTURE_LAW_WORKING_v0.35.0.md",
+      "semver": "0.35.0",
+      "repository_path": "docs/00_platform/archive/ARCHITECTURE_LAW_WORKING_v0.35.0.md",
+      "authority_class": "ARCHITECTURE_LAW_HISTORICAL_EVIDENCE",
+      "sha256": "a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639",
+      "superseded_version": "0.36.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639"
+    },
+    {
+      "document_id": "REFERENCE_FLOW_PRESSURE_TESTS_V0_2_0",
+      "canonical_filename": "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
+      "semver": "0.2.0",
+      "repository_path": "docs/00_platform/archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
+      "authority_class": "REFERENCE_FLOW_HISTORICAL_EVIDENCE",
+      "sha256": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20",
+      "superseded_version": "0.3.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20"
     }
   ],
   "integrity_rules": {
@@ -340,7 +387,7 @@
     "expected_counts": {
       "decisions": 298,
       "open_questions": 40,
-      "architecture_law": 327,
+      "architecture_law": 332,
       "architecture_requirements": 433,
       "reference_flows": 12,
       "domains": 18,
@@ -363,7 +410,7 @@
       "ARC": {
         "prefix": "ARC",
         "start": 1,
-        "end": 327,
+        "end": 332,
         "width": 3
       },
       "FLOW": {
@@ -392,9 +439,11 @@
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.(?:[0-9]|1[0-9]|2[0-6])\\.md",
         "(?<!archive/)05_ROADMAP_WORKING_v0\\.1\\.0\\.md",
         "(?<!archive/)03_ARCHITECTURE_WORKING_v0\\.1\\.0\\.md",
-        "(?<!reference/)ARCHITECTURE_LAW_WORKING_v0\\.35\\.0\\.md",
+        "(?<!reference/)ARCHITECTURE_LAW_WORKING_v0\\.36\\.0\\.md",
+        "(?<!archive/)ARCHITECTURE_LAW_WORKING_v0\\.35\\.0\\.md",
         "(?<!reference/)(?<!archive/)ARCHITECTURE_REQUIREMENTS_WORKING_v1\\.0\\.0\\.md",
-        "(?<!reference/)REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0\\.2\\.0\\.md",
+        "(?<!reference/)REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0\\.3\\.0\\.md",
+        "(?<!archive/)REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0\\.2\\.0\\.md",
         "CORE_DOCS_AMENDMENT_AND_PRESERVATION_AUDIT_v1\\.2\\.1_2026-08-16\\.md"
       ],
       "reference_header_lines": 35,

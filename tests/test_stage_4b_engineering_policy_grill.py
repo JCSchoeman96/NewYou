@@ -28,7 +28,7 @@ STAGE_4A_ARTIFACT = (
     / "working"
     / "TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md"
 )
-OPEN_WORK = ROOT / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.35.md"
+OPEN_WORK = ROOT / "docs" / "00_platform" / "archive" / "02_OPEN_WORK_v1.2.35.md"
 README = ROOT / "docs" / "00_platform" / "README.md"
 MANIFEST = ROOT / "docs" / "00_platform" / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
@@ -50,13 +50,13 @@ PROTECTED_HASHES = {
     "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
     "docs/00_platform/00_PLATFORM_v1.3.0.md": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
     "docs/00_platform/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
-    "docs/00_platform/03_ARCHITECTURE_v1.0.0.md": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b",
+    "docs/00_platform/archive/03_ARCHITECTURE_v1.0.0.md": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b",
     "docs/00_platform/04_DOMAIN_MAP_v1.0.0.md": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
     "docs/00_platform/05_ROADMAP_v1.0.0.md": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
     "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
     "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91",
-    "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md": "a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639",
-    "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20",
+    "docs/00_platform/archive/ARCHITECTURE_LAW_WORKING_v0.35.0.md": "a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639",
+    "docs/00_platform/archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20",
 }
 
 
@@ -176,14 +176,16 @@ class Stage4BEngineeringPolicyGrillIntegrityTests(unittest.TestCase):
         )
 
     def test_planning_routes_architecture_amendment_next_after_stage_4b(self):
-        for source in (self.open_work, self.readme):
-            self.assertIn("ARCHITECTURE GRILL: COMPLETE", source)
-            self.assertIn("ENGINEERING-POLICY GRILL: COMPLETE", source)
-            self.assertIn("ARCHITECTURE AMENDMENT: NOT_STARTED / NEXT", source)
-            self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", source)
-            self.assertNotIn("ENGINEERING-POLICY GRILL: NOT_STARTED / NEXT", source)
+        self.assertIn("ARCHITECTURE GRILL: COMPLETE", self.open_work)
+        self.assertIn("ENGINEERING-POLICY GRILL: COMPLETE", self.open_work)
+        self.assertIn("ARCHITECTURE AMENDMENT: NOT_STARTED / NEXT", self.open_work)
+        self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
+        self.assertIn("ARCHITECTURE GRILL: COMPLETE", self.readme)
+        self.assertIn("ENGINEERING-POLICY GRILL: COMPLETE", self.readme)
+        self.assertIn("ARCHITECTURE AMENDMENT: COMPLETE", self.readme)
+        self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.readme)
         self.assertIn("TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md", self.readme)
-        self.assertIn('"semver": "1.2.35"', self.manifest)
+        self.assertIn('"semver": "1.2.36"', self.manifest)
         self.assertNotIn("TARGETED_ENGINEERING_POLICY_GRILL", self.manifest)
         self.assertIn("Engineering Standards remain downstream", self.text)
 
@@ -194,7 +196,7 @@ class Stage4BEngineeringPolicyGrillIntegrityTests(unittest.TestCase):
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
         self.assertEqual(
             "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b",
-            _sha256(ROOT / "docs/00_platform/03_ARCHITECTURE_v1.0.0.md"),
+            _sha256(ROOT / "docs/00_platform/archive/03_ARCHITECTURE_v1.0.0.md"),
         )
         self.assertIn("Engineering-Policy Grill begun: **no**", self.stage_4a)
         queue_c = self.stage_3b[
