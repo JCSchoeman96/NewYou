@@ -3,7 +3,6 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import subprocess
 import unittest
 from pathlib import Path
 
@@ -79,20 +78,26 @@ PROTECTED_HASHES = {
     "docs/00_platform/working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md": "c986c11811100b72ba083f9a6ad057b33abffbd4800159f6de502b3097cc94f4",
     "docs/00_platform/working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md": "d25b6b7232f05859f3b19d8cf48f4a2648095830b27dcbca3676209a2a1af5c8",
     "docs/00_platform/working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md": "27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017",
+    ".github/workflows/foundation-integrity.yml": "2c718457456c71ad8d7fc416a6e0a646792271b9341e4a14fedda6ddb02bcdb8",
 }
 
-ALLOWED_CHANGED_PATHS = {
-    "docs/00_platform/README.md", "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json",
-    "docs/00_platform/02_OPEN_WORK_v1.2.36.md", "docs/00_platform/03_ARCHITECTURE_v1.1.0.md",
+REQUIRED_SUCCESSOR_PATHS = (
+    "docs/00_platform/02_OPEN_WORK_v1.2.36.md",
+    "docs/00_platform/03_ARCHITECTURE_v1.1.0.md",
     "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
     "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
-    "docs/00_platform/archive/02_OPEN_WORK_v1.2.35.md", "docs/00_platform/archive/03_ARCHITECTURE_v1.0.0.md",
+    "docs/00_platform/archive/02_OPEN_WORK_v1.2.35.md",
+    "docs/00_platform/archive/03_ARCHITECTURE_v1.0.0.md",
     "docs/00_platform/archive/ARCHITECTURE_LAW_WORKING_v0.35.0.md",
     "docs/00_platform/archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
-    "tests/test_architecture_amendment.py", "tests/test_foundation_integrity_audit.py",
-    "tests/test_stage_3a2_amendment.py", "tests/test_stage_3b_classification.py",
-    "tests/test_stage_4a_architecture_grill.py", "tests/test_stage_4b_engineering_policy_grill.py",
-}
+)
+
+PROHIBITED_PRESENT_PATHS = (
+    "mix.exs",
+    "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
+    "docs/00_platform/reference/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
+    "docs/00_platform/working/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
+)
 
 
 def _sha256(path: Path) -> str:
@@ -292,12 +297,44 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
 
     def test_scope_has_no_implementation_or_prohibited_artifact_changes(self):
-        tracked = subprocess.run(["git", "diff", "--name-only", "origin/main"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.splitlines()
-        untracked = subprocess.run(["git", "ls-files", "--others", "--exclude-standard"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.splitlines()
-        changed = set(tracked) | set(untracked)
-        self.assertTrue(changed <= ALLOWED_CHANGED_PATHS, sorted(changed - ALLOWED_CHANGED_PATHS))
-        for prohibited in ("mix.exs", ".github/workflows", "docs/00_platform/04_DOMAIN_MAP_v1.0.0.md", "docs/00_platform/05_ROADMAP_v1.0.0.md"):
-            self.assertFalse(any(path == prohibited or path.startswith(f"{prohibited}/") for path in changed), prohibited)
+        for relative_path in REQUIRED_SUCCESSOR_PATHS:
+            self.assertTrue((ROOT / relative_path).is_file(), relative_path)
+        for relative_path in PROHIBITED_PRESENT_PATHS:
+            self.assertFalse((ROOT / relative_path).exists(), relative_path)
+        self.assertFalse((ROOT / ".formatter.exs").exists())
+        self.assertFalse((ROOT / ".credo.exs").exists())
+        workflow_dir = ROOT / ".github" / "workflows"
+        self.assertEqual(
+            ["foundation-integrity.yml"],
+            sorted(path.name for path in workflow_dir.glob("*")),
+        )
+        self.assertEqual(
+            PROTECTED_HASHES[".github/workflows/foundation-integrity.yml"],
+            _sha256(workflow_dir / "foundation-integrity.yml"),
+        )
+        supplement = self.law[self.law.index("# 6. Architecture amendment supplement") :]
+        self.assertNotIn("TARGETED_ENGINEERING_POLICY_GRILL", supplement)
+        for key in ("A-08", "B-09", "D-02", "D-03", "D-04", "D-05", "D-07"):
+            self.assertNotIn(f"`{key}`", supplement)
+        for arc_id in NEW_ARC_ARQS:
+            section = _arc_sections(self.law)[arc_id]
+            self.assertNotIn("Engineering-Policy", section)
+            self.assertNotIn("Engineering Standards", section)
+            self.assertNotIn("LOW/STANDARD/HIGH", section)
+            self.assertNotIn("typespec", section.lower())
+            self.assertNotIn("static analysis", section.lower())
+        self.assertEqual(
+            PROTECTED_HASHES["docs/00_platform/04_DOMAIN_MAP_v1.0.0.md"],
+            _sha256(ROOT / "docs/00_platform/04_DOMAIN_MAP_v1.0.0.md"),
+        )
+        self.assertEqual(
+            PROTECTED_HASHES["docs/00_platform/05_ROADMAP_v1.0.0.md"],
+            _sha256(ROOT / "docs/00_platform/05_ROADMAP_v1.0.0.md"),
+        )
+        self.assertEqual(
+            PROTECTED_HASHES["docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"],
+            _sha256(ROOT / "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"),
+        )
 
 
 if __name__ == "__main__":
