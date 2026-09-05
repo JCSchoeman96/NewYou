@@ -39,14 +39,14 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.36.md",
-      "semver": "1.2.36",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.36.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.37.md",
+      "semver": "1.2.37",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.37.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "69b7c00a6b134cdfe80ecb8e2cb5b10350159c95bdbb79067bcb3225dbb3d34c",
-      "superseded_version": "1.2.35",
+      "sha256": "09d59d615a9aab0d85b590747c932098a1b1164a45ece3a69659d5d49d49ee42",
+      "superseded_version": "1.2.36",
       "lifecycle": "current",
-      "provenance_sha256": "69b7c00a6b134cdfe80ecb8e2cb5b10350159c95bdbb79067bcb3225dbb3d34c"
+      "provenance_sha256": "09d59d615a9aab0d85b590747c932098a1b1164a45ece3a69659d5d49d49ee42"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -62,15 +62,15 @@
     },
     {
       "document_id": "DOMAIN_MAP",
-      "canonical_filename": "04_DOMAIN_MAP_v1.0.0.md",
-      "semver": "1.0.0",
-      "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.0.0.md",
+      "canonical_filename": "04_DOMAIN_MAP_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md",
       "authority_class": "DOMAIN_LAW",
-      "sha256": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
-      "superseded_version": "0.2.0",
+      "sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
+      "superseded_version": "1.0.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a"
+      "provenance_sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2"
     },
     {
       "document_id": "ROADMAP",
@@ -375,6 +375,29 @@
       "lifecycle": "historical",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_36",
+      "canonical_filename": "02_OPEN_WORK_v1.2.36.md",
+      "semver": "1.2.36",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.36.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "69b7c00a6b134cdfe80ecb8e2cb5b10350159c95bdbb79067bcb3225dbb3d34c",
+      "superseded_version": "1.2.37",
+      "lifecycle": "historical",
+      "provenance_sha256": "69b7c00a6b134cdfe80ecb8e2cb5b10350159c95bdbb79067bcb3225dbb3d34c"
+    },
+    {
+      "document_id": "DOMAIN_MAP_V1_0_0",
+      "canonical_filename": "04_DOMAIN_MAP_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md",
+      "authority_class": "DOMAIN_LAW_HISTORICAL",
+      "sha256": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
+      "superseded_version": "1.1.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a"
     }
   ],
   "integrity_rules": {
@@ -390,8 +413,8 @@
       "architecture_law": 332,
       "architecture_requirements": 433,
       "reference_flows": 12,
-      "domains": 18,
-      "ownership_rows": 48,
+      "domains": 20,
+      "ownership_rows": 61,
       "feature_packs": 17
     },
     "contiguous_ranges": {
@@ -444,7 +467,9 @@
         "(?<!reference/)(?<!archive/)ARCHITECTURE_REQUIREMENTS_WORKING_v1\\.0\\.0\\.md",
         "(?<!reference/)REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0\\.3\\.0\\.md",
         "(?<!archive/)REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0\\.2\\.0\\.md",
-        "CORE_DOCS_AMENDMENT_AND_PRESERVATION_AUDIT_v1\\.2\\.1_2026-08-16\\.md"
+        "CORE_DOCS_AMENDMENT_AND_PRESERVATION_AUDIT_v1\\.2\\.1_2026-08-16\\.md",
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.36\\.md",
+        "(?<!archive/)04_DOMAIN_MAP_v1\\.0\\.0\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",
