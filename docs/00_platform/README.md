@@ -9,8 +9,8 @@ For foundation/default planning and delivery-preparation work, read **only** the
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
-4. `02_OPEN_WORK_v1.2.35.md`
-5. `03_ARCHITECTURE_v1.0.0.md`
+4. `02_OPEN_WORK_v1.2.36.md`
+5. `03_ARCHITECTURE_v1.1.0.md`
 6. `04_DOMAIN_MAP_v1.0.0.md`
 7. `05_ROADMAP_v1.0.0.md`
 8. `PLATFORM_OPERATING_MODEL_v1.0.0.md`
@@ -56,8 +56,8 @@ Do not load the whole Atlas by default. Load only the relevant sections: the Fea
 Use `reference/` only when the current authority requires exact evidence or identifier-level reasoning:
 
 - `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md` — current cumulative ARQ source tracing and Stage 3A.2 amendment.
-- `reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md` — exact ARC legislative reasoning.
-- `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md` — detailed FLOW evidence.
+- `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md` — exact ARC legislative reasoning, including the Architecture-amendment successor.
+- `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md` — detailed FLOW evidence and the seven targeted Architecture-amendment reviews.
 - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` — current machine-backed foundation integrity evidence.
 
 These documents are valuable evidence, but they are not default context for routine planning or delivery preparation.
@@ -91,6 +91,10 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0.md` — completed non-authoritative Stage 1 evidence for the targeted Product amendment programme (Research & Feedback, Voting, Interactive Tools, Platform Member Reference). Historical working input only; not Product Law.
 - `archive/TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md` — completed non-authoritative Stage 3A.1 evidence; historical input to the governed v1.1.0 AR-000 amendment.
 - `archive/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md` — preserved frozen AR-000 v1.0.0 register; historical predecessor of the current v1.1.0 successor.
+- `archive/02_OPEN_WORK_v1.2.35.md` — preserved pre-Architecture-amendment Open Work successor.
+- `archive/03_ARCHITECTURE_v1.0.0.md` — preserved frozen Architecture synthesis predecessor.
+- `archive/ARCHITECTURE_LAW_WORKING_v0.35.0.md` — preserved pre-Architecture-amendment Architecture Law predecessor.
+- `archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md` — preserved pre-Architecture-amendment Reference Flow predecessor.
 
 Archive files are historical evidence only and are never current authority. Never use an archived document to override a current authoritative document.
 
@@ -109,7 +113,7 @@ Product Law
 ## Current State
 
 - PLANNING FOUNDATION: READY
-- CURRENT AUTHORITY-STAGE PROGRAMME: TARGETED PRODUCT AMENDMENT → FP-001 DEVELOPMENT ENTRY READINESS
+- CURRENT AUTHORITY-STAGE PROGRAMME: TARGETED PRODUCT AMENDMENT → ARCHITECTURE AMENDMENT COMPLETE; DOWNSTREAM STANDARDS/DOMAIN ROUTING ONLY
 - TARGETED PRODUCT AMENDMENT STAGE 1 (GRILL): COMPLETE
 - TARGETED PRODUCT AMENDMENT STAGE 2 (PRODUCT LAW AMENDMENT): COMPLETE
 - STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS: COMPLETE / ARCHIVED AS HISTORICAL EVIDENCE
@@ -117,11 +121,12 @@ Product Law
 - STAGE 3B — INDEPENDENT ARCHITECTURE/ENGINEERING CLASSIFICATION: COMPLETE
 - STAGE 4A — PRODUCT-DERIVED ARCHITECTURE GRILL: COMPLETE
 - STAGE 4B — ENGINEERING-POLICY GRILL: COMPLETE
-- NEXT AUTHORISED AUTHORITY-STAGE WORK: ARCHITECTURE AMENDMENT (`NOT_STARTED / NEXT`)
 - ARCHITECTURE GRILL: COMPLETE
 - ENGINEERING-POLICY GRILL: COMPLETE
-- ARCHITECTURE AMENDMENT: NOT_STARTED / NEXT
-- LATER ARCHITECTURE / ENGINEERING STANDARDS / DOMAIN / ROADMAP / ATLAS / HARDEN-02 / FP-001 RECONCILIATION: DOWNSTREAM / NOT CURRENT
+- ARCHITECTURE AMENDMENT: COMPLETE — current law `v0.36.0`, synthesis `v1.1.0`, targeted flows `v0.3.0`
+- ENGINEERING STANDARDS: DOWNSTREAM / AUTHORISED ONLY ACCORDING TO THE APPROVED PROGRAMME SEQUENCE
+- DOMAIN PRESSURE TEST / AMENDMENT: DOWNSTREAM / NOT CURRENT
+- ROADMAP / ATLAS / HARDEN-02 / FP-001 RECONCILIATION: DOWNSTREAM / NOT CURRENT
 - FP-001 PHASE 7A: COMPLETE
 - IDENTITY & ACCESS JIT DOMAIN DOSSIER: COMPLETE / MERGED
 - OQ-034 ARCHITECTURE SELECTION: RESOLVED
