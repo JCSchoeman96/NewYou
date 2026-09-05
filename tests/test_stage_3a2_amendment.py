@@ -360,7 +360,7 @@ class Stage3A2AmendmentIntegrityTests(unittest.TestCase):
         )
         self.assertEqual("1.1.0", current["ARCHITECTURE_REQUIREMENTS"]["semver"])
         self.assertEqual("1.0.0", current["ARCHITECTURE_REQUIREMENTS"]["superseded_version"])
-        self.assertEqual("1.2.36", current["OPEN_WORK"]["semver"])
+        self.assertEqual("1.2.37", current["OPEN_WORK"]["semver"])
         self.assertIn("ARCHITECTURE_REQUIREMENTS_V1_0_0", historical)
         self.assertIn("TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS", historical)
         self.assertEqual("historical", historical["ARCHITECTURE_REQUIREMENTS_V1_0_0"]["lifecycle"])

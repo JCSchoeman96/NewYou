@@ -51,7 +51,7 @@ PROTECTED_HASHES = {
     "docs/00_platform/00_PLATFORM_v1.3.0.md": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
     "docs/00_platform/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
     "docs/00_platform/archive/03_ARCHITECTURE_v1.0.0.md": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b",
-    "docs/00_platform/04_DOMAIN_MAP_v1.0.0.md": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
+    "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
     "docs/00_platform/05_ROADMAP_v1.0.0.md": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
     "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
     "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91",
@@ -185,7 +185,7 @@ class Stage4BEngineeringPolicyGrillIntegrityTests(unittest.TestCase):
         self.assertIn("ARCHITECTURE AMENDMENT: COMPLETE", self.readme)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.readme)
         self.assertIn("TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md", self.readme)
-        self.assertIn('"semver": "1.2.36"', self.manifest)
+        self.assertIn('"semver": "1.2.37"', self.manifest)
         self.assertNotIn("TARGETED_ENGINEERING_POLICY_GRILL", self.manifest)
         self.assertIn("Engineering Standards remain downstream", self.text)
 
