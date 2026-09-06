@@ -12,7 +12,7 @@ DOCS = ROOT / "docs" / "00_platform"
 DOMAIN_MAP = DOCS / "04_DOMAIN_MAP_v1.1.0.md"
 DOMAIN_MAP_PREDECESSOR = DOCS / "archive" / "04_DOMAIN_MAP_v1.0.0.md"
 EVIDENCE = DOCS / "working" / "TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.37.md"
+OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.37.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.36.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
@@ -51,7 +51,7 @@ PROTECTED_HASHES = {
     "docs/00_platform/00_PLATFORM_v1.3.0.md": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
     "docs/00_platform/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
     "docs/00_platform/03_ARCHITECTURE_v1.1.0.md": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
-    "docs/00_platform/05_ROADMAP_v1.0.0.md": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
+    "docs/00_platform/archive/05_ROADMAP_v1.0.0.md": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
     "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
     "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3",
     "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91",
@@ -65,7 +65,7 @@ PROTECTED_HASHES = {
 }
 
 REQUIRED_SUCCESSOR_PATHS = (
-    "docs/00_platform/02_OPEN_WORK_v1.2.37.md",
+    "docs/00_platform/archive/02_OPEN_WORK_v1.2.37.md",
     "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.36.md",
     "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md",
@@ -270,16 +270,18 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         self.assertIn("ENGINEERING STANDARDS: DOWNSTREAM", self.open_work)
         self.assertIn("04_DOMAIN_MAP_v1.1.0.md", self.readme)
-        self.assertIn("02_OPEN_WORK_v1.2.37.md", self.readme)
+        self.assertIn("archive/02_OPEN_WORK_v1.2.37.md", self.readme)
         self.assertIn("DOMAIN AMENDMENT: COMPLETE", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.37", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.37.md", current["OPEN_WORK"]["repository_path"])
-        self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
+        historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
+        self.assertEqual("1.2.38", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.38.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("historical", historical["OPEN_WORK_V1_2_37"]["lifecycle"])
+        self.assertEqual(_sha256(OPEN_WORK), historical["OPEN_WORK_V1_2_37"]["sha256"])
         self.assertEqual("1.1.0", current["DOMAIN_MAP"]["semver"])
         self.assertEqual("docs/00_platform/04_DOMAIN_MAP_v1.1.0.md", current["DOMAIN_MAP"]["repository_path"])
         self.assertEqual(_sha256(DOMAIN_MAP), current["DOMAIN_MAP"]["sha256"])

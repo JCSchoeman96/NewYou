@@ -69,7 +69,7 @@ PROTECTED_HASHES = {
     "docs/00_platform/00_PLATFORM_v1.3.0.md": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
     "docs/00_platform/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
     "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
-    "docs/00_platform/05_ROADMAP_v1.0.0.md": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
+    "docs/00_platform/archive/05_ROADMAP_v1.0.0.md": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
     "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
     "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91",
     "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
@@ -279,7 +279,7 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         current = {entry["document_id"]: entry for section in ("governing_documents", "reference_documents") for entry in self.manifest[section]}
         expected = {
-            "OPEN_WORK": ("1.2.37", "docs/00_platform/02_OPEN_WORK_v1.2.37.md"),
+            "OPEN_WORK": ("1.2.38", "docs/00_platform/02_OPEN_WORK_v1.2.38.md"),
             "ARCHITECTURE_SYNTHESIS": ("1.1.0", "docs/00_platform/03_ARCHITECTURE_v1.1.0.md"),
             "DOMAIN_MAP": ("1.1.0", "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md"),
             "ARCHITECTURE_LAW": ("0.36.0", "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md"),
@@ -329,8 +329,8 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
             _sha256(ROOT / "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md"),
         )
         self.assertEqual(
-            PROTECTED_HASHES["docs/00_platform/05_ROADMAP_v1.0.0.md"],
-            _sha256(ROOT / "docs/00_platform/05_ROADMAP_v1.0.0.md"),
+            PROTECTED_HASHES["docs/00_platform/archive/05_ROADMAP_v1.0.0.md"],
+            _sha256(ROOT / "docs/00_platform/archive/05_ROADMAP_v1.0.0.md"),
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"],
