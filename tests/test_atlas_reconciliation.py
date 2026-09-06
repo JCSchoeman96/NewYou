@@ -113,6 +113,47 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertNotIn("05_ROADMAP_v1.0.0.md", sources)
         self.assertNotIn("02_OPEN_WORK_v1.2.28.md", sources)
 
+    def test_section_54_capability_count_matches_inventory_and_matrix(self):
+        inventory = _section(
+            self.atlas,
+            "### Summary register",
+            "### CAP-001 — Canonical identity and authentication",
+        )
+        inventory_caps = re.findall(r"^\| (CAP-\d{3}) \|", inventory, re.MULTILINE)
+        self.assertEqual(
+            [f"CAP-{number:03d}" for number in range(1, 34)],
+            inventory_caps,
+        )
+        self.assertEqual(33, len(inventory_caps))
+        self.assertNotIn("CAP-034", inventory_caps)
+
+        atlas04 = _section(self.atlas, "## 5.4 ATLAS-04", "### Source boundary and matrix rule")
+        declared = re.search(
+            r"ATLAS-04 connects the (\d+) canonical capabilities to the (\d+) frozen Feature Packs",
+            atlas04,
+        )
+        self.assertIsNotNone(declared)
+        self.assertEqual(len(inventory_caps), int(declared.group(1)))
+        self.assertEqual(17, int(declared.group(2)))
+
+        matrix = _section(self.atlas, "### Main matrix", "### Feature Pack capability summary")
+        matrix_caps = [
+            cells[0]
+            for line in matrix.splitlines()
+            if line.lstrip().startswith("|")
+            for cells in [[c.strip() for c in line.strip()[1:-1].split("|")]]
+            if cells and re.fullmatch(r"CAP-\d{3}", cells[0])
+        ]
+        self.assertEqual(inventory_caps, matrix_caps)
+        self.assertEqual(33, len(matrix_caps))
+        header = next(
+            line
+            for line in matrix.splitlines()
+            if line.lstrip().startswith("|") and "FP-001" in line
+        )
+        self.assertEqual(17, len(re.findall(r"FP-\d{3}", header)))
+        self.assertNotIn("FP-018", header)
+
     def test_feature_pack_and_domain_counts(self):
         self.assertIn("Feature Pack count remains **17**", self.open_work)
         self.assertIn("Domain count is **20**", self.open_work)

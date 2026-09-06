@@ -2543,7 +2543,7 @@ ATLAS-04 — Capability Introduction / Reuse Matrix is recorded in §5.4. ATLAS-
 
 ## 5.4 ATLAS-04 capability introduction / reuse matrix
 
-ATLAS-04 connects the 31 canonical capabilities to the 17 frozen Feature Packs. It answers where a capability first becomes materially required and where a later Feature Pack materially reuses, extends or specialises it. The matrix is a derived delivery-planning view. It does not redesign a capability, transfer Domain ownership or authorise implementation.
+ATLAS-04 connects the 33 canonical capabilities to the 17 frozen Feature Packs. It answers where a capability first becomes materially required and where a later Feature Pack materially reuses, extends or specialises it. The matrix is a derived delivery-planning view. It does not redesign a capability, transfer Domain ownership or authorise implementation.
 
 ### Source boundary and matrix rule
 
