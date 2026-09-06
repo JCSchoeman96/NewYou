@@ -39,14 +39,14 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.37.md",
-      "semver": "1.2.37",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.37.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.38.md",
+      "semver": "1.2.38",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.38.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "09d59d615a9aab0d85b590747c932098a1b1164a45ece3a69659d5d49d49ee42",
-      "superseded_version": "1.2.36",
+      "sha256": "b5710e3cd3348668ae9d9a7b586343e4b18ba4c1bb7e59ae5c4a69927de188f6",
+      "superseded_version": "1.2.37",
       "lifecycle": "current",
-      "provenance_sha256": "09d59d615a9aab0d85b590747c932098a1b1164a45ece3a69659d5d49d49ee42"
+      "provenance_sha256": "b5710e3cd3348668ae9d9a7b586343e4b18ba4c1bb7e59ae5c4a69927de188f6"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -74,15 +74,15 @@
     },
     {
       "document_id": "ROADMAP",
-      "canonical_filename": "05_ROADMAP_v1.0.0.md",
-      "semver": "1.0.0",
-      "repository_path": "docs/00_platform/05_ROADMAP_v1.0.0.md",
+      "canonical_filename": "05_ROADMAP_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/05_ROADMAP_v1.1.0.md",
       "authority_class": "ROADMAP",
-      "sha256": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
-      "superseded_version": "0.1.0",
+      "sha256": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613",
+      "superseded_version": "1.0.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20"
+      "provenance_sha256": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",
@@ -398,6 +398,29 @@
       "lifecycle": "historical",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_37",
+      "canonical_filename": "02_OPEN_WORK_v1.2.37.md",
+      "semver": "1.2.37",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.37.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "09d59d615a9aab0d85b590747c932098a1b1164a45ece3a69659d5d49d49ee42",
+      "superseded_version": "1.2.38",
+      "lifecycle": "historical",
+      "provenance_sha256": "09d59d615a9aab0d85b590747c932098a1b1164a45ece3a69659d5d49d49ee42"
+    },
+    {
+      "document_id": "ROADMAP_V1_0_0",
+      "canonical_filename": "05_ROADMAP_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/archive/05_ROADMAP_v1.0.0.md",
+      "authority_class": "ROADMAP_HISTORICAL",
+      "sha256": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
+      "superseded_version": "1.1.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20"
     }
   ],
   "integrity_rules": {
@@ -469,7 +492,9 @@
         "(?<!archive/)REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0\\.2\\.0\\.md",
         "CORE_DOCS_AMENDMENT_AND_PRESERVATION_AUDIT_v1\\.2\\.1_2026-08-16\\.md",
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.36\\.md",
-        "(?<!archive/)04_DOMAIN_MAP_v1\\.0\\.0\\.md"
+        "(?<!archive/)04_DOMAIN_MAP_v1\\.0\\.0\\.md",
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.37\\.md",
+        "(?<!archive/)05_ROADMAP_v1\\.0\\.0\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",

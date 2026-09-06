@@ -9,10 +9,10 @@ For foundation/default planning and delivery-preparation work, read **only** the
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
-4. `02_OPEN_WORK_v1.2.37.md`
+4. `02_OPEN_WORK_v1.2.38.md`
 5. `03_ARCHITECTURE_v1.1.0.md`
 6. `04_DOMAIN_MAP_v1.1.0.md`
-7. `05_ROADMAP_v1.0.0.md`
+7. `05_ROADMAP_v1.1.0.md`
 8. `PLATFORM_OPERATING_MODEL_v1.0.0.md`
 
 For frontend, UI, public-experience, design-system, accessibility, SEO, analytics-UI or Feature Pack planning, additionally load:
@@ -41,6 +41,7 @@ The frozen Frontend Experience System is current authority for affected frontend
 - `working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md` — non-authoritative Stage 4A Architecture Grill evidence; it does not amend Product Law, AR-000 or Architecture Law, creates no ARC identifiers, and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md` — non-authoritative Stage 4B Engineering-Policy Grill evidence; it does not amend Product Law, AR-000 or Architecture Law, does not create Engineering Standards, does not install dependencies, and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md` — non-authoritative targeted Domain pressure-test evidence; it does not itself create Domain Law. Domain Law is created only by the versioned Domain Map successor.
+- `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` — non-authoritative Stage Roadmap Sequencing Grill evidence; it does not itself create Roadmap Law. Roadmap Law is created only by the versioned Roadmap successor.
 
 ## Delivery Atlas routing
 
@@ -98,6 +99,8 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md` — preserved pre-Architecture-amendment Reference Flow predecessor.
 - `archive/02_OPEN_WORK_v1.2.36.md` — preserved pre-Domain-amendment Open Work successor.
 - `archive/04_DOMAIN_MAP_v1.0.0.md` — preserved frozen Domain Map predecessor.
+- `archive/02_OPEN_WORK_v1.2.37.md` — preserved pre-Roadmap-amendment Open Work successor.
+- `archive/05_ROADMAP_v1.0.0.md` — preserved frozen Roadmap predecessor.
 
 Archive files are historical evidence only and are never current authority. Never use an archived document to override a current authoritative document.
 
@@ -116,7 +119,7 @@ Product Law
 ## Current State
 
 - PLANNING FOUNDATION: READY
-- CURRENT AUTHORITY-STAGE PROGRAMME: TARGETED PRODUCT AMENDMENT → DOMAIN AMENDMENT COMPLETE; ROADMAP SEQUENCING GRILL NEXT
+- CURRENT AUTHORITY-STAGE PROGRAMME: TARGETED PRODUCT AMENDMENT → ROADMAP AMENDMENT COMPLETE; ATLAS RECONCILIATION NEXT
 - TARGETED PRODUCT AMENDMENT STAGE 1 (GRILL): COMPLETE
 - TARGETED PRODUCT AMENDMENT STAGE 2 (PRODUCT LAW AMENDMENT): COMPLETE
 - STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS: COMPLETE / ARCHIVED AS HISTORICAL EVIDENCE
@@ -129,10 +132,11 @@ Product Law
 - ARCHITECTURE AMENDMENT: COMPLETE — current law `v0.36.0`, synthesis `v1.1.0`, targeted flows `v0.3.0`
 - DOMAIN PRESSURE TEST: COMPLETE
 - DOMAIN AMENDMENT: COMPLETE — current Domain Law `v1.1.0`; 20 Domains; Domain 19 Research & Feedback; Domain 20 Voting & Balloting
+- ROADMAP SEQUENCING GRILL: COMPLETE
+- ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.0`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
 - ENGINEERING STANDARDS: DOWNSTREAM / SEPARATE TRACK / NOT STARTED
-- ROADMAP SEQUENCING GRILL: NEXT / NOT STARTED
-- ROADMAP / ATLAS / HARDEN-02 / FP-001 RECONCILIATION: DOWNSTREAM / NOT CURRENT
-- `ROADMAP_REVIEW_REQUIRED`
+- `ATLAS_RECONCILIATION_REQUIRED`
+- HARDEN-02 / FP-001 RECONCILIATION: DOWNSTREAM / NOT CURRENT
 - `FP001_RECONCILIATION_REQUIRED`
 - FP-001 PHASE 7A: COMPLETE
 - IDENTITY & ACCESS JIT DOMAIN DOSSIER: COMPLETE / MERGED
