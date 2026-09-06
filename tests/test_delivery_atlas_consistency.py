@@ -5,9 +5,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ATLAS_PATH = ROOT / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.1.0.md"
+ATLAS_PATH = ROOT / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.0.md"
 
-CAP_IDS = [f"CAP-{number:03d}" for number in range(1, 32)]
+CAP_IDS = [f"CAP-{number:03d}" for number in range(1, 34)]
 FP_IDS = [f"FP-{number:03d}" for number in range(1, 18)]
 SYMBOLS = ("I", "R", "E", "S")
 ALL_SYMBOLS = (*SYMBOLS, "—")
@@ -16,6 +16,12 @@ VIEW_LABELS = {
     "R": "Later Reuse",
     "E": "Extensions",
     "S": "Specialisations",
+}
+ZERO_INTRODUCTION_CAPS = ["CAP-007", "CAP-032", "CAP-033"]
+DEFERRED_LINEAGE = {
+    "CAP-007": "— (Roadmap-deferred)",
+    "CAP-032": "— (FUTURE-GATED / FEATURE-PACK-UNASSIGNED)",
+    "CAP-033": "— (FUTURE-GATED / FEATURE-PACK-UNASSIGNED)",
 }
 
 
@@ -111,7 +117,7 @@ class DeliveryAtlasConsistencyTests(unittest.TestCase):
     def test_matrix_structure_and_symbols(self):
         self.assertEqual(CAP_IDS, list(self.matrix))
         self.assertEqual(FP_IDS, self.feature_ids)
-        self.assertEqual(31, len(self.matrix))
+        self.assertEqual(33, len(self.matrix))
         self.assertEqual(17, len(self.feature_ids))
 
         cells = []
@@ -119,7 +125,7 @@ class DeliveryAtlasConsistencyTests(unittest.TestCase):
             self.assertEqual(17, len(self.matrix[cap]))
             cells.extend(self.matrix[cap][fp] for fp in FP_IDS)
 
-        self.assertEqual(527, len(cells))
+        self.assertEqual(561, len(cells))
         self.assertTrue(
             all(cell in ALL_SYMBOLS for cell in cells),
             "matrix contains a symbol outside I/R/E/S/—",
@@ -131,7 +137,7 @@ class DeliveryAtlasConsistencyTests(unittest.TestCase):
         )
         self.assertEqual(
             {symbol: counts.get(symbol, 0) for symbol in ALL_SYMBOLS},
-            {"I": 30, "R": 156, "E": 1, "S": 0, "—": 340},
+            {"I": 30, "R": 156, "E": 1, "S": 0, "—": 374},
         )
         self.assertEqual(187, sum(counts[symbol] for symbol in SYMBOLS))
 
@@ -186,13 +192,15 @@ class DeliveryAtlasConsistencyTests(unittest.TestCase):
                     f"{cap}: lineage {label} does not reverse the matrix",
                 )
 
-    def test_cap007_is_roadmap_deferred(self):
-        self.assertTrue(all(self.matrix["CAP-007"][fp] == "—" for fp in FP_IDS))
-        self.assertEqual("— (Roadmap-deferred)", self.lineage_raw["CAP-007"][0])
-        self.assertEqual(
-            {symbol: set() for symbol in SYMBOLS},
-            self.lineage["CAP-007"],
-        )
+    def test_deferred_and_unassigned_caps(self):
+        for cap, label in DEFERRED_LINEAGE.items():
+            self.assertTrue(all(self.matrix[cap][fp] == "—" for fp in FP_IDS), cap)
+            self.assertEqual(label, self.lineage_raw[cap][0], cap)
+            self.assertEqual(
+                {symbol: set() for symbol in SYMBOLS},
+                self.lineage[cap],
+                cap,
+            )
 
     def test_introduction_ordering(self):
         zero_introduction_caps = []
@@ -213,7 +221,7 @@ class DeliveryAtlasConsistencyTests(unittest.TestCase):
                         f"{cap} / {fp}: material relationship precedes introduction",
                     )
 
-        self.assertEqual(["CAP-007"], zero_introduction_caps)
+        self.assertEqual(ZERO_INTRODUCTION_CAPS, zero_introduction_caps)
 
     def test_atlas07_has_five_classes_and_seven_seams(self):
         classes_block = _section(
