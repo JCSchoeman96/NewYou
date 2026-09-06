@@ -12,7 +12,7 @@ DOCS = ROOT / "docs" / "00_platform"
 ROADMAP = DOCS / "05_ROADMAP_v1.1.0.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.0.0.md"
 EVIDENCE = DOCS / "working" / "TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.38.md"
+OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.38.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.37.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
@@ -33,13 +33,13 @@ PROTECTED_HASHES = {
     "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md": "0d8e25170ae692df39f7f771189f95ab76ab64f2701823fb2cde214946650d3f",
     "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
-    "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
+    "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
     "docs/00_platform/working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md": "6a4efe4ad4625e2278321d4ae6a4c9147ec3d35d8d80a41e2638a4bee02bb582",
     ".github/workflows/foundation-integrity.yml": "2c718457456c71ad8d7fc416a6e0a646792271b9341e4a14fedda6ddb02bcdb8",
 }
 
 REQUIRED_SUCCESSOR_PATHS = (
-    "docs/00_platform/02_OPEN_WORK_v1.2.38.md",
+    "docs/00_platform/archive/02_OPEN_WORK_v1.2.38.md",
     "docs/00_platform/05_ROADMAP_v1.1.0.md",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.37.md",
     "docs/00_platform/archive/05_ROADMAP_v1.0.0.md",
@@ -49,6 +49,7 @@ REQUIRED_SUCCESSOR_PATHS = (
 PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/05_ROADMAP_v1.0.0.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.37.md",
+    "docs/00_platform/02_OPEN_WORK_v1.2.38.md",
     "mix.exs",
     "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
     "docs/00_platform/reference/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
@@ -217,17 +218,17 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertLess(self.open_work.index("## 12.4 "), self.open_work.index("## 12.5 "))
         self.assertLess(self.open_work.index("## 12.5 "), self.open_work.index("## 12.6 "))
         self.assertIn("05_ROADMAP_v1.1.0.md", self.readme)
-        self.assertIn("02_OPEN_WORK_v1.2.38.md", self.readme)
+        self.assertIn("archive/02_OPEN_WORK_v1.2.38.md", self.readme)
         self.assertIn("ROADMAP AMENDMENT: COMPLETE", self.readme)
-        self.assertIn("ATLAS_RECONCILIATION_REQUIRED", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.38", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.38.md", current["OPEN_WORK"]["repository_path"])
-        self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
+        self.assertEqual("1.2.39", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.39.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("historical", {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["lifecycle"])
+        self.assertEqual(_sha256(OPEN_WORK), {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["sha256"])
         self.assertEqual("1.1.0", current["ROADMAP"]["semver"])
         self.assertEqual("docs/00_platform/05_ROADMAP_v1.1.0.md", current["ROADMAP"]["repository_path"])
         self.assertEqual(_sha256(ROADMAP), current["ROADMAP"]["sha256"])
@@ -260,9 +261,9 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
             self.assertFalse((ROOT / relative_path).exists(), relative_path)
         self.assertFalse((ROOT / ".formatter.exs").exists())
         self.assertFalse((ROOT / ".credo.exs").exists())
-        atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.1.0.md").read_bytes()
+        atlas = (DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md").read_bytes()
         self.assertEqual(
-            PROTECTED_HASHES["docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.1.0.md"],
+            PROTECTED_HASHES["docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md"],
             hashlib.sha256(atlas).hexdigest(),
         )
         workflow_dir = ROOT / ".github" / "workflows"
