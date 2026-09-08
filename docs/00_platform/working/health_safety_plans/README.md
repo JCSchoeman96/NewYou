@@ -34,7 +34,7 @@ Live repository authority always wins.
 
 The detailed discovery source is:
 
-`HEALTH_SAFETY_PLAN_PREJIT_DISCOVERY_WORKING_v0.42.0.md`
+`../../archive/HEALTH_SAFETY_PLAN_PREJIT_DISCOVERY_WORKING_v0.42.0.md`
 
 It is historical / working evidence and should not be loaded by default.
 Use it only when exact pressure-test or decision provenance is required.
