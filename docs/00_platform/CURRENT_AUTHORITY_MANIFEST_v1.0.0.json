@@ -39,14 +39,14 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.39.md",
-      "semver": "1.2.39",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.39.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.40.md",
+      "semver": "1.2.40",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.40.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21",
-      "superseded_version": "1.2.38",
+      "sha256": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e",
+      "superseded_version": "1.2.39",
       "lifecycle": "current",
-      "provenance_sha256": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21"
+      "provenance_sha256": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -432,6 +432,17 @@
       "superseded_version": "1.2.39",
       "lifecycle": "historical",
       "provenance_sha256": "b5710e3cd3348668ae9d9a7b586343e4b18ba4c1bb7e59ae5c4a69927de188f6"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_39",
+      "canonical_filename": "02_OPEN_WORK_v1.2.39.md",
+      "semver": "1.2.39",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21",
+      "superseded_version": "1.2.40",
+      "lifecycle": "historical",
+      "provenance_sha256": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21"
     }
   ],
   "integrity_rules": {
