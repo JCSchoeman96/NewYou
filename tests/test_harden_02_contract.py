@@ -29,10 +29,10 @@ PROTECTED_UPSTREAM_HASHES = {
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21",
 }
 
+# Superseded active Open Work path only. Do not permanently forbid later Engineering
+# Standards or application bootstrap artifacts.
 PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/02_OPEN_WORK_v1.2.39.md",
-    "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
-    "mix.exs",
 )
 
 
@@ -55,6 +55,9 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         self.assertIn("OPEN / PENDING INDEPENDENT CERTIFICATION", self.contract)
         self.assertIn("execution **NOT AUTHORISED**", self.contract)
         self.assertNotIn("CURRENT_AUTHORITY_MANIFEST", self.contract.split("Authority class")[0])
+        self.assertNotIn("ee3f9d2", self.contract)
+        self.assertNotIn("6e9ab62", self.contract)
+        self.assertNotIn("REUSE_HARDENING", self.contract)
 
     def test_objective_and_governance_boundary(self):
         self.assertIn(
@@ -74,12 +77,13 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         self.assertIn("H02-1", self.contract)
         self.assertIn("H02-2", self.contract)
         self.assertIn("H02-3", self.contract)
+        self.assertIn("I-01", self.contract)
+        self.assertIn("I-13", self.contract)
 
     def test_store_cer_explicitly_excluded(self):
         self.assertIn("Store Blueprint / CER is OUT OF SCOPE", self.contract)
         self.assertIn("working/commerce_entitlements/*", self.contract)
         self.assertIn("I-13 — Store/CER exclusion", self.contract)
-        # No Store SHA baseline inside contract
         self.assertIsNone(re.search(r"Store default branch `main`: `[0-9a-f]{40}`", self.contract))
         self.assertNotIn("486a1c74f5b738d488fdd54118002e90ec67bd49", self.contract)
         self.assertNotIn("77a272c3887a7ab46e84a7fed02163d964e37b9b", self.contract)
@@ -88,7 +92,6 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.open_work)
         self.assertIn("narrow FP-001 PMR reconciliation then Communications", self.open_work)
-        # Ordered consequence in contract
         self.assertIn("NEXT = FP001_RECONCILIATION_REQUIRED", self.contract)
         self.assertIn("Communications JIT Domain Dossier", self.contract)
         self.assertIn(
@@ -96,12 +99,39 @@ class Harden02ContractDraftingTests(unittest.TestCase):
             self.contract,
         )
 
-    def test_execution_not_authorised_and_not_complete(self):
+    def test_execution_requires_merge_and_post_merge_certification(self):
         self.assertIn("HARDEN-02 EXECUTION: NOT STARTED", self.open_work)
-        self.assertIn("NOT AUTHORISED BY CONTRACT DRAFTING ALONE", self.open_work)
+        self.assertIn("REQUIRES MERGE + POST-MERGE CERTIFICATION OF MAIN", self.open_work)
+        self.assertIn("pre-merge exact-head review is not execution authority", self.open_work)
+        self.assertIn("merged unchanged", self.open_work)
+        self.assertIn("post-merge certified", self.open_work)
+        self.assertIn("REQUIRES MERGE + POST-MERGE CERTIFICATION OF MAIN", self.readme)
+        self.assertIn("merged unchanged", self.readme)
+        self.assertIn("post-merge certified", self.readme)
+        self.assertIn(
+            "merged unchanged and the resulting `main` is independently post-merge certified",
+            self.contract,
+        )
+        self.assertIn(
+            "pre-merge exact-head certification of this PR is **not** sufficient",
+            self.contract,
+        )
         self.assertNotIn("HARDEN-02 EXECUTION: COMPLETE", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.readme)
+
+    def test_engineering_standards_and_implementation_remain_not_started(self):
+        self.assertIn(
+            "ENGINEERING STANDARDS: DOWNSTREAM / SEPARATE TRACK / NOT STARTED",
+            self.open_work,
+        )
+        self.assertIn(
+            "ENGINEERING STANDARDS: DOWNSTREAM / SEPARATE TRACK / NOT STARTED",
+            self.readme,
+        )
+        self.assertIn("Engineering Standards: **NOT STARTED**", self.contract)
+        self.assertIn("Application code: **UNCHANGED by this contract stage**", self.contract)
+        self.assertIn("application source code", self.contract)
 
     def test_counts_and_fp001_state_unchanged(self):
         self.assertIn("Domain count is **20**", self.open_work)
@@ -131,7 +161,7 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_39"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_39"]["sha256"])
 
-    def test_upstream_authority_and_fp001_artifacts_unchanged(self):
+    def test_upstream_authority_and_fp001_hashes_unchanged(self):
         for relative_path, expected_hash in PROTECTED_UPSTREAM_HASHES.items():
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
         for relative_path in PROHIBITED_PRESENT_PATHS:

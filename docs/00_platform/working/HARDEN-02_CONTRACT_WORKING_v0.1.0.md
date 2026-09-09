@@ -14,7 +14,7 @@
 
 ### Revision log
 
-- `v0.1.0` — initial HARDEN-02 governance contract after independent analysis review and accepted human scope decisions H02-1 / H02-2 / H02-3.
+- `v0.1.0` — initial HARDEN-02 governance contract after independent analysis review and accepted human scope decisions H02-1 / H02-2 / H02-3; pre-merge correction removes unreproducible local HARDEN-01 plan SHAs, clarifies merge + post-merge execution entry, and clarifies that package/reuse taxonomy is not applicable.
 
 ---
 
@@ -53,12 +53,13 @@ HARDEN-02 exists to prove and harden Phase-7 delivery-pipeline governance integr
 | Source | Class | Recovered meaning |
 |---|---|---|
 | `archive/02_OPEN_WORK_v1.2.29.md` | HISTORICAL AUTHORITY | HARDEN-02 is governance sequencing, not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ; next FP-001 domain task after HARDEN-02 was Communications |
-| HARDEN-01 design/plan commits `ee3f9d2`, `6e9ab62` | HISTORICAL WORKING EVIDENCE | Deferred a “Phase-7 structural test” as a HARDEN-02 deliverable; kept HARDEN-02 out of HARDEN-01 |
-| PR #24 (`docs/resolve-oq034-and-sync-fp001-state`) | HISTORICAL COMPLETION EVIDENCE | HARDEN-01 complete; left HARDEN-02 as next governance task |
+| PR #24 (`docs/resolve-oq034-and-sync-fp001-state`) | HISTORICAL COMPLETION EVIDENCE | HARDEN-01 / OQ-034 state sync complete on canonical GitHub; left HARDEN-02 as next governance / delivery-pipeline task without starting Communications, Phase 7C or implementation |
 | `archive/02_OPEN_WORK_v1.2.30.md` … `v1.2.38.md` | HISTORICAL AUTHORITY | HARDEN-02 suspended through targeted amendment programme until Atlas reconciliation |
 | `archive/02_OPEN_WORK_v1.2.39.md` | HISTORICAL AUTHORITY (this PR) | Post-Atlas routing: `HARDEN-02_CONTRACT_REQUIRED` |
 
 Historical material recovers intended HARDEN-02 semantics. It does not override current Roadmap/Domain PMR reconciliation requirements or current Open Work routing.
+
+Non-canonical / unreproducible local-only HARDEN-01 plan SHAs are intentionally **not** cited here. The current structural invariant suite I-01…I-13 does not depend on them.
 
 ---
 
@@ -116,7 +117,7 @@ Historical material recovers intended HARDEN-02 semantics. It does not override 
 
 ## 6. Reuse classification
 
-`REUSE_HARDENING` of **existing NewYou Phase-7 governance mechanisms and routing evidence**, not Store or application packages.
+The preliminary package/reuse classification taxonomy is **not applicable** to the accepted HARDEN-02 scope. HARDEN-02 is governance hardening of existing NewYou Phase-7 controls and routing evidence; it is not cross-repository or application-package reuse hardening. No new governed classification identifier is created.
 
 HARDEN-02 proves governance integrity. It does not build a new product capability and does not harden reusable commerce packages.
 
@@ -124,28 +125,27 @@ HARDEN-02 proves governance integrity. It does not build a new product capabilit
 
 ## 7. Recovered historical structural-test intent
 
-### Historical source
+### Reproducible historical sources
 
-HARDEN-01 execution plan (`6e9ab62`, `docs/superpowers/plans/2026-09-02-harden01-oq034-state-sync.md`):
+Canonical, independently retrievable evidence used for HARDEN-02 structural intent:
 
-> “No Phase-7 structural test belongs in this PR. That test is a HARDEN-02 deliverable.”
+- `archive/02_OPEN_WORK_v1.2.29.md` — HARDEN-02 as Phase 7B pipeline-governance sequencing, not Product/Roadmap/OQ/FP dependency; Communications as the then-next FP-001 domain task after HARDEN-02;
+- PR #24 completion state on canonical GitHub — HARDEN-01 / OQ-034 routing sync completed without starting Communications, Phase 7C, proof or implementation;
+- `PLATFORM_OPERATING_MODEL_v1.0.0.md` — Phase 7 handoff shape: Skeleton + Gate Manifest → required JIT Domain Dossiers → Final Feature Pack Contract;
+- current Open Work successor — Development Entry Hard Stop and post-amendment programme routing;
+- accepted human decisions H02-1 / H02-2 / H02-3.
 
-### Failure the historical deferral intended to prevent
+### Failure mode the governance hardening must prevent
 
-HARDEN-01 synchronised OQ-034 / FP-001 routing state but deliberately left unchecked:
+After HARDEN-01 / Atlas reconciliation and the targeted amendment programme, the remaining unchecked governance risks include:
 
-- whether Phase-7 preparation state, dossier requirements, gate dispositions and development-entry stops remain structurally coherent;
-- whether governance sequencing could be mistaken for Product/Roadmap/OQ dependency;
-- whether later agents could skip gates or treat governance completion as implementation authority.
+- Phase-7 preparation state, dossier requirements, gate dispositions and development-entry stops becoming incoherent;
+- governance sequencing being mistaken for a Product/Roadmap/OQ dependency;
+- later agents skipping gates, skipping FP-001 reconciliation, or treating governance completion as implementation authority.
 
 ### Current derivation rule
 
-That historical sentence is a **candidate proof obligation**, not current law and not the entire HARDEN-02 objective. The current invariant suite below is derived from:
-
-- Operating Model Phase-7 handoff;
-- current Open Work Phase 7 / Development Entry Hard Stop;
-- post-amendment FP-001 / PMR reconciliation requirement;
-- accepted decisions H02-1 / H02-2 / H02-3.
+The current structural invariant suite I-01…I-13 is derived from **current** Operating Model / Open Work / post-amendment FP-001–PMR authority plus accepted H02-1 / H02-2 / H02-3. Historical Open Work and PR #24 recover sequencing intent; they do not invent Product or Architecture law and are not themselves the complete HARDEN-02 objective.
 
 ---
 
@@ -261,11 +261,14 @@ No Store repository SHA, CER proof obligation, CER exit condition or Store/CER i
 | State | Meaning |
 |---|---|
 | `HARDEN-02_CONTRACT_REQUIRED` | Pre-contract historical routing (closed by creating this contract) |
-| `HARDEN-02 CONTRACT: OPEN / PENDING CERTIFICATION` | This PR / unreviewed contract head |
-| `HARDEN-02 CONTRACT: COMPLETE / CERTIFIED` | Independent review + CI + post-merge certification of the contract |
-| `HARDEN-02 EXECUTION: NOT STARTED / NEXT` | Allowed only after contract certification |
+| `HARDEN-02 CONTRACT: OPEN / PENDING CERTIFICATION` | This PR / pre-merge exact-head review state |
+| `HARDEN-02 CONTRACT: COMPLETE / CERTIFIED` | Independent pre-merge review + exact-head CI + merge of the certified head unchanged + independent post-merge certification of the resulting `main` |
+| `HARDEN-02 EXECUTION: NOT STARTED` | Remains until the contract reaches COMPLETE / CERTIFIED under the row above |
+| `HARDEN-02 EXECUTION: NEXT / AUTHORISED` | Allowed only after the certified contract head is merged unchanged and the resulting `main` merge state is independently post-merge certified |
 | `HARDEN-02 EXECUTION: COMPLETE / CERTIFIED` | All I-01…I-13 proofs pass; NEXT = `FP001_RECONCILIATION_REQUIRED` |
 | Terminal failure | STOP and escalate to owning authority; do not invent law |
+
+**Execution entry rule:** pre-merge exact-head certification of this PR is **not** sufficient to start HARDEN-02 execution. HARDEN-02 execution becomes NEXT / authorised only after the certified contract head is merged unchanged and the resulting `main` is independently post-merge certified.
 
 HARDEN-02 remains governance sequencing. It is not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ.
 

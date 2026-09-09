@@ -24,7 +24,7 @@
   - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`
   - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`
 - **Last updated:** 2026-09-09
-- **Current planning position:** The **Targeted Product Amendment Programme** through Domain amendment, Roadmap amendment and warranted Delivery Atlas reconciliation remains **COMPLETE**. Domain count is **20**. Feature Pack count remains **17**. Current Roadmap remains `05_ROADMAP_v1.1.0.md`. Current Delivery Atlas remains `working/DELIVERY_ATLAS_WORKING_v0.2.0.md`. The HARDEN-02 working governance contract is drafted at `working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md` and is **OPEN / PENDING INDEPENDENT CERTIFICATION**. **NEXT ROUTING:** `HARDEN-02_EXECUTION_REQUIRED` only after that contract is independently certified; do not begin HARDEN-02 execution, FP-001 reconciliation, Communications or implementation from this tracker update alone. Accepted human scope: H02-1 Phase-7 governance/structural hardening only; H02-2 Store/CER out of scope; H02-3 post-HARDEN-02 resume order is narrow `FP001_RECONCILIATION_REQUIRED` then Communications. Engineering Standards remain a separate downstream track. **PLANNING FOUNDATION: READY**. **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** FP-001 artifacts are not amended here.
+- **Current planning position:** The **Targeted Product Amendment Programme** through Domain amendment, Roadmap amendment and warranted Delivery Atlas reconciliation remains **COMPLETE**. Domain count is **20**. Feature Pack count remains **17**. Current Roadmap remains `05_ROADMAP_v1.1.0.md`. Current Delivery Atlas remains `working/DELIVERY_ATLAS_WORKING_v0.2.0.md`. The HARDEN-02 working governance contract is drafted at `working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md` and is **OPEN / PENDING INDEPENDENT PRE-MERGE REVIEW**. **NEXT ROUTING:** `HARDEN-02_EXECUTION_REQUIRED` only after the certified contract head is merged unchanged and the resulting `main` is independently post-merge certified; pre-merge exact-head review is not execution authority. Do not begin HARDEN-02 execution, FP-001 reconciliation, Communications or implementation from this tracker update alone. Accepted human scope: H02-1 Phase-7 governance/structural hardening only; H02-2 Store/CER out of scope; H02-3 post-HARDEN-02 resume order is narrow `FP001_RECONCILIATION_REQUIRED` then Communications. Engineering Standards remain a separate downstream track. **PLANNING FOUNDATION: READY**. **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** FP-001 artifacts are not amended here.
 
 ---
 
@@ -33,7 +33,7 @@
 
 - Planning-state SemVer transition: `v1.2.39 → v1.2.40`.
 - Records HARDEN-02 contract drafting: `working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md` (WORKING GOVERNANCE CONTRACT; not Product/Architecture/Domain/Roadmap Law).
-- Closes `HARDEN-02_CONTRACT_REQUIRED` as a drafting gate and routes **NEXT** to `HARDEN-02_EXECUTION_REQUIRED` subject to independent certification of the contract head; does **not** execute HARDEN-02, mark HARDEN-02 complete, reconcile FP-001, start Communications, or authorise implementation.
+- Closes `HARDEN-02_CONTRACT_REQUIRED` as a drafting gate and routes **NEXT** to `HARDEN-02_EXECUTION_REQUIRED` only after the certified contract head is merged unchanged and the resulting `main` is independently post-merge certified; does **not** execute HARDEN-02, mark HARDEN-02 complete, reconcile FP-001, start Communications, or authorise implementation.
 - Locks accepted human decisions H02-1 / H02-2 / H02-3: Phase-7 pipeline governance only; Store/CER excluded; post-HARDEN-02 resume order is narrow FP-001 PMR reconciliation then Communications.
 - Preserves `FP001_RECONCILIATION_REQUIRED` without amending FP-001 Skeleton, Gate Manifest, Identity dossier, Communications dossier, Final Contract or proof classification.
 - Engineering Standards remain a separate downstream track and are not started here.
@@ -638,7 +638,7 @@ The Roadmap works backward from the approved mature platform, defines the smalle
 
 **Current Roadmap amendment:** PASS — additive v1.1.0 successor after accepted Roadmap Sequencing Grill decisions; Feature Pack count remains 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED; Interactive Tools purpose-distributed; no upstream contradiction.
 
-**Next programme routing after HARDEN-02 contract drafting:** `HARDEN-02_EXECUTION_REQUIRED` subject to independent certification of the HARDEN-02 contract head; then narrow `FP001_RECONCILIATION_REQUIRED`; then Communications JIT Domain Dossier. This tracker update drafts the HARDEN-02 contract only and does not execute HARDEN-02.
+**Next programme routing after HARDEN-02 contract drafting:** `HARDEN-02_EXECUTION_REQUIRED` only after the certified contract head is merged unchanged and the resulting `main` is independently post-merge certified; then narrow `FP001_RECONCILIATION_REQUIRED`; then Communications JIT Domain Dossier. Pre-merge exact-head review is not execution authority. This tracker update drafts the HARDEN-02 contract only and does not execute HARDEN-02.
 
 ## Phase 7 — Feature Pack Preparation + JIT Domain Dossiers
 
@@ -888,7 +888,7 @@ ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING
 ENGINEERING STANDARDS: DOWNSTREAM / SEPARATE TRACK / NOT STARTED
 HARDEN-02 CONTRACT: OPEN / PENDING INDEPENDENT CERTIFICATION — `working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md`
 HARDEN-02_EXECUTION_REQUIRED
-HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED BY CONTRACT DRAFTING ALONE
+HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED BY CONTRACT DRAFTING OR PRE-MERGE CERTIFICATION ALONE; REQUIRES MERGE + POST-MERGE CERTIFICATION OF MAIN
 FP001_RECONCILIATION_REQUIRED — DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION
 COMMUNICATIONS JIT DOMAIN DOSSIER — DOWNSTREAM AFTER NARROW FP-001 RECONCILIATION
 
@@ -913,13 +913,13 @@ PHASE 7C: BLOCKED / NOT_STARTED pending the required Communications dossier and 
 PROOF CLASSIFICATION: NOT FINALISED.
 EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.
 
-ORDINARY PHASE 7B CONTINUATION REMAINS SUSPENDED / DOWNSTREAM. HARDEN-02 contract is drafted and pending independent certification; HARDEN-02 execution is not authorised by this tracker update. After certified HARDEN-02 execution, resume order is narrow FP-001 PMR reconciliation, then Communications.
+ORDINARY PHASE 7B CONTINUATION REMAINS SUSPENDED / DOWNSTREAM. HARDEN-02 contract is drafted and pending independent pre-merge review, merge, and post-merge certification; HARDEN-02 execution is not authorised by this tracker update or by pre-merge exact-head certification alone. After certified HARDEN-02 execution, resume order is narrow FP-001 PMR reconciliation, then Communications.
 
 DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS RECONCILIATION COMPLETE AT `working/DELIVERY_ATLAS_WORKING_v0.2.0.md`; ATLAS-12 NOT_STARTED (undefined view-population contract; reconciliation is not ATLAS-12). Atlas remains derived, non-authoritative navigation.
 HARDEN-02 ACCEPTED SCOPE: H02-1 governance/structural only; H02-2 Store/CER excluded; H02-3 FP-001 reconciliation before Communications.
 ```
 
-The Foundation Readiness Audit is complete and passed with no blockers, material contradictions, unowned durable truths or unrouted blocking gates. The targeted Product amendment programme has completed Product → AR-000 → Architecture → Domain → Roadmap → warranted Atlas reconciliation. Engineering Standards remain a separate downstream track. The HARDEN-02 contract is drafted and awaits independent certification of this exact contract PR head. Do not merge, execute HARDEN-02, reconcile FP-001, start Communications or implement from this update alone.
+The Foundation Readiness Audit is complete and passed with no blockers, material contradictions, unowned durable truths or unrouted blocking gates. The targeted Product amendment programme has completed Product → AR-000 → Architecture → Domain → Roadmap → warranted Atlas reconciliation. Engineering Standards remain a separate downstream track. The HARDEN-02 contract is drafted and awaits independent pre-merge review of this exact contract PR head, then merge unchanged, then independent post-merge certification of `main` before HARDEN-02 execution. Do not execute HARDEN-02, reconcile FP-001, start Communications or implement from this update or from pre-merge certification alone.
 
 FOUNDATION INTEGRITY PATCH COMPLETE. NO FURTHER FOUNDATION EXPANSION WITHOUT AN UPSTREAM CONTRADICTION.
 
@@ -1003,7 +1003,7 @@ This section tracks the governed Targeted Amendment → FP-001 Development Entry
 | Domain amendment | Additive Domain Law successor implementing accepted human Domain decisions | **COMPLETE** — current successor is `04_DOMAIN_MAP_v1.1.0.md`; predecessor is `archive/04_DOMAIN_MAP_v1.0.0.md`; 20 Domains |
 | Roadmap Sequencing Grill | Sequencing decisions for PMR / Research / Voting / Interactive Tools | **COMPLETE** — non-authoritative evidence in `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` |
 | Roadmap amendment | Additive Roadmap successor implementing accepted human Roadmap decisions | **COMPLETE** — current successor is `05_ROADMAP_v1.1.0.md`; predecessor is `archive/05_ROADMAP_v1.0.0.md`; Feature Packs remain 17 |
-| Later | Engineering Standards / HARDEN-02 execution / FP-001 reconciliation | **DOWNSTREAM** — HARDEN-02 contract is drafted (`working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md`) and pending certification; HARDEN-02 execution is next after certification; Engineering Standards remain a separate track; FP-001 reconciliation remains after certified HARDEN-02 execution; Communications remains after FP-001 reconciliation; this update does not execute HARDEN-02 or amend FP-001 |
+| Later | Engineering Standards / HARDEN-02 execution / FP-001 reconciliation | **DOWNSTREAM** — HARDEN-02 contract is drafted (`working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md`) and pending pre-merge review + merge + post-merge certification; HARDEN-02 execution is next only after that merged/`main` post-merge certification; Engineering Standards remain a separate track; FP-001 reconciliation remains after certified HARDEN-02 execution; Communications remains after FP-001 reconciliation; this update does not execute HARDEN-02 or amend FP-001 |
 
 **Baseline reviewed for Stage 1:** `main` at `ad71191b17b297ac9dc683c18141e1c546fa9850`.
 **Stage 3A.1 analysis baseline:** `main` at `0aa6b5990e333988c3617a43db495d6fc6c85cd4`.
@@ -1065,9 +1065,9 @@ The governed Roadmap amendment is complete in `05_ROADMAP_v1.1.0.md`. Predecesso
 - `RQ-3` ACCEPT WITH REFINEMENT — Voting & Balloting is mature **FUTURE-GATED / FEATURE-PACK-UNASSIGNED**; not required by FP-008 or FP-013; no Voting/Competitions Feature Pack now.
 - `RQ-4` ACCEPT WITH REFINEMENT — Interactive Tools have no Feature Pack and no generic activation point; purpose-distributed only.
 
-Feature Pack count remains **17**. Atlas reconciliation is **COMPLETE**. HARDEN-02 contract is drafted and pending certification. `HARDEN-02_EXECUTION_REQUIRED` after certification. Engineering Standards, HARDEN-02 execution, FP-001 reconciliation, Communications, JIT dossiers for Domains 19 and 20, Resource/schema design and implementation are not started here.
+Feature Pack count remains **17**. Atlas reconciliation is **COMPLETE**. HARDEN-02 contract is drafted and pending pre-merge review + merge + post-merge certification. `HARDEN-02_EXECUTION_REQUIRED` only after the certified contract head is merged unchanged and the resulting `main` is independently post-merge certified. Engineering Standards, HARDEN-02 execution, FP-001 reconciliation, Communications, JIT dossiers for Domains 19 and 20, Resource/schema design and implementation are not started here.
 
-After the exact HARDEN-02 contract PR head is reported, work must **STOP** pending independent review of that head. Do not merge it, execute HARDEN-02, write Engineering Standards, modify FP-001 artifacts, create the Communications dossier, create JIT dossiers for Research & Feedback or Voting & Balloting, or implement any capability.
+After the exact HARDEN-02 contract PR head is reported, work must **STOP** pending independent pre-merge review of that head. Do not execute HARDEN-02 from pre-merge certification alone. Do not write Engineering Standards, modify FP-001 artifacts, create the Communications dossier, create JIT dossiers for Research & Feedback or Voting & Balloting, or implement any capability from this stage.
 
 ## 12.7 — Delivery Atlas reconciliation
 
@@ -1075,11 +1075,11 @@ After the exact HARDEN-02 contract PR head is reported, work must **STOP** pendi
 
 Atlas reconciliation remains complete as derived navigation. This Open Work successor records HARDEN-02 contract drafting only. It did not create Product, Architecture, Domain or Roadmap law, did not amend FP-001 artifacts, did not execute HARDEN-02, and did not authorise implementation.
 
-**Next:** `HARDEN-02_EXECUTION_REQUIRED` after independent certification of the HARDEN-02 contract PR head; then narrow `FP001_RECONCILIATION_REQUIRED`; then Communications.
+**Next:** `HARDEN-02_EXECUTION_REQUIRED` only after the certified contract head is merged unchanged and the resulting `main` is independently post-merge certified; then narrow `FP001_RECONCILIATION_REQUIRED`; then Communications.
 
 ## 12.8 — HARDEN-02 contract drafting
 
-**Status:** OPEN / PENDING INDEPENDENT CERTIFICATION — working governance contract `working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md`.
+**Status:** OPEN / PENDING INDEPENDENT PRE-MERGE REVIEW — working governance contract `working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md`. HARDEN-02 execution becomes NEXT only after merge of the certified head unchanged and independent post-merge certification of `main`.
 
 Accepted human decisions:
 

@@ -37,7 +37,7 @@ The frozen Frontend Experience System is current authority for affected frontend
 
 - `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register; remains working/non-authoritative provenance.
 - `working/DELIVERY_ATLAS_WORKING_v0.2.0.md` — derived Delivery Atlas navigation for approved Feature Pack planning after post-Roadmap reconciliation; remains working/non-authoritative and is intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Predecessor preserved at `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`.
-- `working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md` — HARDEN-02 Phase-7 delivery-pipeline governance contract; WORKING GOVERNANCE CONTRACT only; not Product/Architecture/Domain/Roadmap Law; OPEN / PENDING INDEPENDENT CERTIFICATION; execution not authorised by drafting alone; intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
+- `working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md` — HARDEN-02 Phase-7 delivery-pipeline governance contract; WORKING GOVERNANCE CONTRACT only; not Product/Architecture/Domain/Roadmap Law; OPEN / PENDING INDEPENDENT PRE-MERGE REVIEW; execution authorised only after merge of the certified head unchanged plus independent post-merge certification of `main`; intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md` — non-authoritative Stage 3B classification; it does not amend Product Law, AR-000, Architecture Law or Engineering Standards and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md` — non-authoritative Stage 4A Architecture Grill evidence; it does not amend Product Law, AR-000 or Architecture Law, creates no ARC identifiers, and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md` — non-authoritative Stage 4B Engineering-Policy Grill evidence; it does not amend Product Law, AR-000 or Architecture Law, does not create Engineering Standards, does not install dependencies, and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
@@ -140,9 +140,9 @@ Product Law
 - ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.0`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
 - ENGINEERING STANDARDS: DOWNSTREAM / SEPARATE TRACK / NOT STARTED
 - ATLAS RECONCILIATION: COMPLETE — `working/DELIVERY_ATLAS_WORKING_v0.2.0.md` (derived / non-authoritative)
-- HARDEN-02 CONTRACT: OPEN / PENDING INDEPENDENT CERTIFICATION — `working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md`
+- HARDEN-02 CONTRACT: OPEN / PENDING INDEPENDENT PRE-MERGE REVIEW — `working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md`
 - `HARDEN-02_EXECUTION_REQUIRED`
-- HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED BY CONTRACT DRAFTING ALONE
+- HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED BY CONTRACT DRAFTING OR PRE-MERGE CERTIFICATION ALONE; REQUIRES MERGE + POST-MERGE CERTIFICATION OF MAIN
 - `FP001_RECONCILIATION_REQUIRED` — DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION
 - COMMUNICATIONS JIT DOMAIN DOSSIER — DOWNSTREAM AFTER NARROW FP-001 RECONCILIATION
 - FP-001 PHASE 7A: COMPLETE
@@ -160,7 +160,7 @@ Product Law
 - EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS
 - DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS RECONCILIATION COMPLETE; ATLAS-12 NOT_STARTED (not this reconciliation); DERIVED / NON-AUTHORITATIVE
 
-Ordinary FP-001 Phase 7B preparation remains suspended/downstream. The HARDEN-02 working governance contract is drafted and **OPEN / PENDING INDEPENDENT CERTIFICATION**. **NEXT** after contract certification is HARDEN-02 execution (`HARDEN-02_EXECUTION_REQUIRED`). Do not skip certification or treat drafting as execution authority. After certified HARDEN-02 execution, resume order is narrow `FP001_RECONCILIATION_REQUIRED`, then Communications. Store/CER remains an explicitly separate parallel stream.
+Ordinary FP-001 Phase 7B preparation remains suspended/downstream. The HARDEN-02 working governance contract is drafted and **OPEN / PENDING INDEPENDENT PRE-MERGE REVIEW**. HARDEN-02 execution (`HARDEN-02_EXECUTION_REQUIRED`) becomes NEXT only after the certified contract head is merged unchanged and the resulting `main` is independently post-merge certified. Pre-merge exact-head review is not execution authority. After certified HARDEN-02 execution, resume order is narrow `FP001_RECONCILIATION_REQUIRED`, then Communications. Store/CER remains an explicitly separate parallel stream.
 
 Foundation readiness does not authorise implementation. Do not begin FP-001 execution, JIT Domain Dossiers, TOON generation, Architectural Proof, Vertical Slices or implementation unless a later approved task explicitly authorises the applicable preparation and execution gates.
 
