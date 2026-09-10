@@ -1,0 +1,64 @@
+{
+  "pack_id": "NEWYOU_CER_FINAL_COMPACT_PACK",
+  "pack_version": "0.2.1",
+  "status": "PASS \u2014 PARK CER",
+  "deep_source": {
+    "filename": "NEWYOU_CER_PREJIT_DISCOVERY_WORKING_v0.30.3.md",
+    "sha256": "2966502d50e593359809b0c14071db725b544670a8ab9788daab8418a12131f4"
+  },
+  "semantic_stabilisation_audit": {
+    "filename": "NEWYOU_CER_PREJIT_STABILISATION_AUDIT_WORKING_v0.2.0.md",
+    "sha256": "05d6ac9cac911be98e69c9fd16c2465e04334e7d8dc5af8d983d0d6bcddeb9f7",
+    "audited_source": "NEWYOU_CER_PREJIT_DISCOVERY_WORKING_v0.30.1.md",
+    "scope": "semantic"
+  },
+  "mechanical_recertification": {
+    "filename": "NEWYOU_CER_PREJIT_STABILISATION_MECHANICAL_RECERTIFICATION_v0.2.2.md",
+    "sha256": "8c9e00ab3fb74b8739d1180cfe4b3ef9beb201d4b3c2f38bdb5509daea944af6",
+    "certified_source": "NEWYOU_CER_PREJIT_DISCOVERY_WORKING_v0.30.3.md",
+    "scope": "current-routing / exact-byte mechanical"
+  },
+  "provenance_patch_proof": {
+    "prior_pack": "NEWYOU_CER_FINAL_COMPACT_PACK_v0.2.0",
+    "semantic_core_recompressed": false,
+    "allowed_metadata_only_transform_verified": true,
+    "pt_register_unchanged": true,
+    "accepted_delta_policy_bodies_unchanged": true
+  },
+  "live_baselines": {
+    "newyou_main": "1c899f58c9d5fb61d15d0263ee0b6ec595f5f614",
+    "store_hardening_subscriptions": "54871ef3bdda42f067ed5dbd398305151610c060"
+  },
+  "files": [
+    {
+      "path": "docs/00_platform/working/commerce_entitlements/README.md",
+      "sha256": "8f7e2f79e375e0c8a5f2ad11840563c803c9066d6e3ffc97d36fd002100fa1e5",
+      "bytes": 3095
+    },
+    {
+      "path": "docs/00_platform/working/commerce_entitlements/NEWYOU_CER_PREJIT_CONTRACT_WORKING_v0.2.1.md",
+      "sha256": "e825d5beeb98d4a46bd863840f21b54bfa89fd026d8beecf8c4db007a3cdf193",
+      "bytes": 17898
+    },
+    {
+      "path": "docs/00_platform/working/commerce_entitlements/NEWYOU_CER_UPSTREAM_DELTA_REGISTER_WORKING_v0.2.1.md",
+      "sha256": "eff45924cfd8d7c95c0d7cd727bc0a21c178ffa304de125d0cc23c53a250eea8",
+      "bytes": 26526
+    },
+    {
+      "path": "docs/00_platform/working/commerce_entitlements/NEWYOU_CER_EVIDENCE_INDEX_WORKING_v0.2.1.md",
+      "sha256": "774009f9922d8be7f80b9ddb560154d90e6913ba304b50eaa90b39398de4d217",
+      "bytes": 19775
+    },
+    {
+      "path": "docs/00_platform/working/commerce_entitlements/NEWYOU_CER_COMPRESSION_AUDIT_WORKING_v0.2.1.md",
+      "sha256": "9cf60d1fa0348eb7a8d44cb987a9f58516ef2475c3d2087ef93f177b6d73b8ca",
+      "bytes": 3543
+    },
+    {
+      "path": "docs/00_platform/working/commerce_entitlements/NEWYOU_CER_SOURCE_COMPACT_VERIFICATION_WORKING_v0.2.1.md",
+      "sha256": "b6a0de1df6bc7da4a8d5ad76b04710e4117fa821fbe95f9856d767dae3194cfd",
+      "bytes": 3167
+    }
+  ]
+}
