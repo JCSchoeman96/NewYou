@@ -8,7 +8,7 @@
 - **Source SHA-256:** `2966502d50e593359809b0c14071db725b544670a8ab9788daab8418a12131f4`
 - **Mechanical recertification:** `v0.2.2` — `8c9e00ab3fb74b8739d1180cfe4b3ef9beb201d4b3c2f38bdb5509daea944af6`
 - **Compact pack:** `NEWYOU_CER_FINAL_COMPACT_PACK_v0.2.1`
-- **Compression audit:** `NEWYOU_CER_COMPRESSION_AUDIT_WORKING_v0.2.1.md` — `9cf60d1fa0348eb7a8d44cb987a9f58516ef2475c3d2087ef93f177b6d73b8ca`
+- **Compression audit:** `NEWYOU_CER_COMPRESSION_AUDIT_WORKING_v0.2.1.md` — `84900b351d909eaed01f22fd77e8a6f3da608ae332a49a959214dc0d0e5bdba9`
 - **Repository mutation:** NONE
 
 # 1. Exact source checks
