@@ -1,43 +1,75 @@
-# Commerce / Entitlements / Recurring Membership Pre-JIT Working Stream
+# Commerce / Entitlements / Recurring Membership Pre-JIT Working Pack
 
-**Status:** WORKING / NON-AUTHORITATIVE  
-**Implementation:** NOT AUTHORISED BY THIS STREAM  
-**Current discovery version:** v0.1.0
+- **Status:** FINAL COMPACT WORKING PACK / NON-AUTHORITATIVE
+- **Pack version:** `v0.2.1`
+- **Deep source:** `NEWYOU_CER_PREJIT_DISCOVERY_WORKING_v0.30.3.md`
+- **Deep-source SHA-256:** `2966502d50e593359809b0c14071db725b544670a8ab9788daab8418a12131f4`
+- **Semantic stabilisation audit:** `NEWYOU_CER_PREJIT_STABILISATION_AUDIT_WORKING_v0.2.0.md`
+- **Mechanical recertification:** `NEWYOU_CER_PREJIT_STABILISATION_MECHANICAL_RECERTIFICATION_v0.2.2.md`
+- **Implementation:** NOT AUTHORISED
+- **Authority:** NONE
 
-This directory contains the living pre-JIT discovery for Commerce + Entitlements + recurring Membership/subscription commercial semantics.
+This pack compresses the completed broad Commerce / Entitlements / recurring Membership Pre-JIT discovery. It does not amend Product Law, Architecture Law, Domain Law, Roadmap, Open Work, Feature Pack contracts or JIT Domain Dossiers.
 
-These files do not amend Product Law, Architecture Law, Domain Law, Roadmap, Open Work, Feature Pack contracts or JIT Domain Dossiers.
+Live governed NewYou authority always wins.
 
-Live repository authority always wins.
+## Read order
 
-## Current document
+1. `NEWYOU_CER_PREJIT_CONTRACT_WORKING_v0.2.1.md` — default compact CER context.
+2. `NEWYOU_CER_UPSTREAM_DELTA_REGISTER_WORKING_v0.2.1.md` — all thirteen accepted but not-yet-governed CER upstream deltas; exact accepted policy-direction sections preserved.
+3. `NEWYOU_CER_EVIDENCE_INDEX_WORKING_v0.2.1.md` — all twenty PTs, Store reuse evidence, provider gate and cross-stream routing.
+4. `NEWYOU_CER_COMPRESSION_AUDIT_WORKING_v0.2.1.md` — compression-preservation audit.
+5. `NEWYOU_CER_SOURCE_COMPACT_VERIFICATION_WORKING_v0.2.1.md` — exact source↔compact verification.
+6. `PACK_MANIFEST_v0.2.1.json` — exact hash inventory.
 
-`NEWYOU_CER_PREJIT_DISCOVERY_WORKING_v0.1.0.md`
+## Deep evidence
 
-Read this first for the current accepted pressure-test findings, working recommendations, Store Blueprint reuse evidence, unresolved provider gates and next pressure-test sequence.
+Exact detailed source: `NEWYOU_CER_PREJIT_DISCOVERY_WORKING_v0.30.3.md`
 
-## Versioning rule
+SHA-256: `2966502d50e593359809b0c14071db725b544670a8ab9788daab8418a12131f4`
 
-This stream uses SemVer while it remains working/non-authoritative:
+Do not load the deep source by default. Use it when exact PT reasoning, Store implementation evidence, provider evidence, historical supersession or accepted-delta provenance is required.
 
-- minor bump for a new accepted pressure test, working doctrine, material recommendation/reuse conclusion or upstream delta;
-- patch bump for non-semantic evidence refresh, hygiene, terminology or source-baseline corrections;
-- no automatic `v1.0.0`; a stable/frozen compact handoff requires an explicit decision.
+## Current audited baselines
 
-Previous versioned files must remain in the repository. Accepted findings are never silently deleted; later conclusions refine or explicitly supersede prior wording with provenance.
+NewYou `main`: `1c899f58c9d5fb61d15d0263ee0b6ec595f5f614`
 
-## Store evidence rule
+Current routed authority:
+`PROJECT_NORTH_STAR_AND_MVP_v1.2.1`
+→ `00_PLATFORM_v1.3.0`
+→ `01_DECISIONS_v1.3.0`
+→ `02_OPEN_WORK_v1.2.40`
+→ `03_ARCHITECTURE_v1.1.0`
+→ `04_DOMAIN_MAP_v1.1.0`
+→ `05_ROADMAP_v1.1.0`
+→ `PLATFORM_OPERATING_MODEL_v1.0.0`
+→ frontend system when relevant.
 
-Store Blueprint is an active moving evidence source, not NewYou authority. Material Store conclusions must identify the exact branch/head SHA used and distinguish merged, in-progress and user-reported local/unpushed work.
+Store Blueprint Hardening:
+- `main`: `56f06d028ec38896f5a927f54dc7adfcb20034a3`
+- `hardening/subscriptions`: `54871ef3bdda42f067ed5dbd398305151610c060`
 
-A changed Store head invalidates prior Store implementation certification for that new head, but does not itself alter NewYou doctrine.
+## Cross-stream boundaries
 
-## Anti-drift rule
+HSP remains owner of `HSP-UPD-001`, `HSP-UPD-005`, `HSP-UPD-006`, `HSP-UPD-007`, `HSP-UPD-008`.
 
-Do not let Paystack or Store Blueprint define NewYou's commercial truth.
+Privacy remains owner of `PRIV-WD-002` / `PRIV-UPD-002`.
 
-Use:
+## Provider boundary
 
-`NewYou authority → pressure test → invariant → Store/provider evidence → reuse/hardening recommendation → next test`
+`OQ-004` remains open.
 
-Provider-specific validation is performed against the NewYou contract, not the other way around.
+`NewYou semantics → provider-independent invariant → Paystack validation → mechanism`
+
+Provider state is evidence, never NewYou Product/Commerce/Entitlements authority.
+
+## Closure rule
+
+Broad CER discovery is closed at `CER-PT-020`.
+
+Do not create `CER-PT-021` merely because implementation representation remains undecided.
+
+After exact compact verification:
+
+`PASS — PARK CER`
+→ HSP + Privacy + CER cross-stream upstream-delta adjudication.
