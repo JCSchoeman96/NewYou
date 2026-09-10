@@ -47,17 +47,17 @@
     },
     {
       "path": "docs/00_platform/working/commerce_entitlements/NEWYOU_CER_EVIDENCE_INDEX_WORKING_v0.2.1.md",
-      "sha256": "774009f9922d8be7f80b9ddb560154d90e6913ba304b50eaa90b39398de4d217",
+      "sha256": "03da0afb92080695804803d055e9ac13e6960e986b158f06a1fa39f6710a5b94",
       "bytes": 19775
     },
     {
       "path": "docs/00_platform/working/commerce_entitlements/NEWYOU_CER_COMPRESSION_AUDIT_WORKING_v0.2.1.md",
-      "sha256": "9cf60d1fa0348eb7a8d44cb987a9f58516ef2475c3d2087ef93f177b6d73b8ca",
+      "sha256": "84900b351d909eaed01f22fd77e8a6f3da608ae332a49a959214dc0d0e5bdba9",
       "bytes": 3543
     },
     {
       "path": "docs/00_platform/working/commerce_entitlements/NEWYOU_CER_SOURCE_COMPACT_VERIFICATION_WORKING_v0.2.1.md",
-      "sha256": "b6a0de1df6bc7da4a8d5ad76b04710e4117fa821fbe95f9856d767dae3194cfd",
+      "sha256": "8778d52b8eaba35fe3ed61a1d49bcb5fc19501c562890787e131f4e04f9ec4b0",
       "bytes": 3167
     }
   ]
