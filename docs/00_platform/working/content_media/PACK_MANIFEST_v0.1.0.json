@@ -1,0 +1,89 @@
+{
+  "pack_id": "NEWYOU_CM_FINAL_COMPACT_PACK",
+  "pack_version": "0.1.0",
+  "status": "PASS — PARK BROAD C&M / BEACON REUSE DISCOVERY",
+  "implementation_authority": "NONE",
+  "deep_source": {
+    "path": "docs/00_platform/archive/BEACON_REUSE_GRILL_AND_EXTRACTION_WORKING_v0.42.1.md",
+    "filename": "BEACON_REUSE_GRILL_AND_EXTRACTION_WORKING_v0.42.1.md",
+    "sha256": "08823adec046ae7222aff83725ded76a0bed68f629a1b7466a18acdc8efc4291",
+    "bytes": 593586,
+    "lifecycle": "deep working evidence / intended archive placement"
+  },
+  "stabilisation_audit": {
+    "filename": "NEWYOU_CM_PREJIT_STABILISATION_AUDIT_WORKING_v0.1.0.md",
+    "sha256": "afdd3c1b76bc92fefef2d8c32bebda17a55d7e98a54b0c55278ae3c84b024269",
+    "audited_source": "BEACON_REUSE_GRILL_AND_EXTRACTION_WORKING_v0.42.0.md",
+    "outcome": "PASS WITH NON-BLOCKING CORRECTIONS"
+  },
+  "mechanical_recertification": {
+    "filename": "NEWYOU_CM_PREJIT_STABILISATION_MECHANICAL_RECERTIFICATION_v0.1.1.md",
+    "sha256": "8c55614946ffa57baba0c880692e4c96c8b113f207e6e9a8ef778f1f5ed63cac",
+    "certified_source": "BEACON_REUSE_GRILL_AND_EXTRACTION_WORKING_v0.42.1.md",
+    "outcome": "PASS"
+  },
+  "live_baselines": {
+    "newyou_main": "be6b9ea4bdfc5a638a24affa20e6c75cd9fc321f",
+    "beacon_stable_tag": "v0.5.1",
+    "beacon_tagged_commit": "97024750c88d7ccce34e21e802d8936c8e83c573",
+    "beacon_live_admin_stable_tag": "v0.4.3"
+  },
+  "coverage": {
+    "accepted_grills": "GRILL-01...GRILL-41",
+    "working_deltas": "CM-UPD-001...CM-UPD-013",
+    "closed_branches": [
+      "Template / GRILL-19",
+      "Content governance / GRILL-30",
+      "Media / GRILL-38",
+      "Public addressability & discovery / GRILL-41"
+    ]
+  },
+  "normal_read_order": [
+    "README.md",
+    "NEWYOU_CM_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+    "NEWYOU_CM_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md",
+    "NEWYOU_CM_EVIDENCE_INDEX_WORKING_v0.1.0.md"
+  ],
+  "files": [
+    {
+      "path": "docs/00_platform/working/content_media/NEWYOU_CM_COMPRESSION_AUDIT_WORKING_v0.1.0.md",
+      "sha256": "0131a08c935e12aa6a1c245d695ab160eab84fb95fb030699e41e2e62f9b9aa2",
+      "bytes": 8078
+    },
+    {
+      "path": "docs/00_platform/working/content_media/NEWYOU_CM_EVIDENCE_INDEX_WORKING_v0.1.0.md",
+      "sha256": "345bbedc9e08785f7d3a14435d7d87c5dc9d76c144734b6da8dfd46129b1ca31",
+      "bytes": 11675
+    },
+    {
+      "path": "docs/00_platform/working/content_media/NEWYOU_CM_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+      "sha256": "af1e85529194f554c421431d651fb04790549ab86285347876d56483660bb387",
+      "bytes": 26043
+    },
+    {
+      "path": "docs/00_platform/working/content_media/NEWYOU_CM_PREJIT_STABILISATION_AUDIT_WORKING_v0.1.0.md",
+      "sha256": "afdd3c1b76bc92fefef2d8c32bebda17a55d7e98a54b0c55278ae3c84b024269",
+      "bytes": 14810
+    },
+    {
+      "path": "docs/00_platform/working/content_media/NEWYOU_CM_PREJIT_STABILISATION_MECHANICAL_RECERTIFICATION_v0.1.1.md",
+      "sha256": "8c55614946ffa57baba0c880692e4c96c8b113f207e6e9a8ef778f1f5ed63cac",
+      "bytes": 3314
+    },
+    {
+      "path": "docs/00_platform/working/content_media/NEWYOU_CM_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md",
+      "sha256": "e4d4cc04fc1cdfd75c9ce738d6443e345989b9eee1080dac9f91c1f435641971",
+      "bytes": 5753
+    },
+    {
+      "path": "docs/00_platform/working/content_media/NEWYOU_CM_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md",
+      "sha256": "e9aa244a7e68fea98db79f62ab5e48851c6e3ce92404b35d099ce239f18f5dcd",
+      "bytes": 10422
+    },
+    {
+      "path": "docs/00_platform/working/content_media/README.md",
+      "sha256": "dd9dc18e6c21039e176b5b2bc16a3fa599570a9af397c6a9ec82bdd550a3c2da",
+      "bytes": 3450
+    }
+  ]
+}
