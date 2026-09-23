@@ -279,7 +279,7 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         current = {entry["document_id"]: entry for section in ("governing_documents", "reference_documents") for entry in self.manifest[section]}
         expected = {
-            "OPEN_WORK": ("1.2.41", "docs/00_platform/02_OPEN_WORK_v1.2.41.md"),
+            "OPEN_WORK": ("1.2.42", "docs/00_platform/02_OPEN_WORK_v1.2.42.md"),
             "ARCHITECTURE_SYNTHESIS": ("1.1.0", "docs/00_platform/03_ARCHITECTURE_v1.1.0.md"),
             "DOMAIN_MAP": ("1.1.0", "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md"),
             "ARCHITECTURE_LAW": ("0.36.0", "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md"),
