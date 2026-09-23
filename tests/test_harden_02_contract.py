@@ -83,6 +83,7 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         self.assertIn("H02-2", self.contract)
         self.assertIn("H02-3", self.contract)
         self.assertIn("H02-3R", self.contract)
+        self.assertIn("Routing-refinement baseline SHA:** `91c1e64f9a99ede8be77040287173d450c1043ff`", self.contract)
         self.assertIn("I-01", self.contract)
         self.assertIn("I-13", self.contract)
 
