@@ -9,9 +9,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.40.md"
-OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.39.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md"
+CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.41.md"
+OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
@@ -27,12 +28,16 @@ PROTECTED_UPSTREAM_HASHES = {
     "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21",
+    "docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e",
+    "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md": "71615d3363a91a7e6002d907c6edd474fbd87f77bdfc6a38f5b11afd240a5626",
 }
 
 # Superseded active Open Work path only. Do not permanently forbid later Engineering
 # Standards or application bootstrap artifacts.
 PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/02_OPEN_WORK_v1.2.39.md",
+    "docs/00_platform/02_OPEN_WORK_v1.2.40.md",
+    "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md",
 )
 
 
@@ -77,6 +82,7 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         self.assertIn("H02-1", self.contract)
         self.assertIn("H02-2", self.contract)
         self.assertIn("H02-3", self.contract)
+        self.assertIn("H02-3R", self.contract)
         self.assertIn("I-01", self.contract)
         self.assertIn("I-13", self.contract)
 
@@ -90,14 +96,22 @@ class Harden02ContractDraftingTests(unittest.TestCase):
 
     def test_downstream_resume_order(self):
         self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.open_work)
+        self.assertIn("ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", self.open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.open_work)
-        self.assertIn("narrow FP-001 PMR reconciliation then Communications", self.open_work)
-        self.assertIn("NEXT = FP001_RECONCILIATION_REQUIRED", self.contract)
-        self.assertIn("Communications JIT Domain Dossier", self.contract)
+        self.assertIn(
+            "Engineering Standards Authority Promotion → narrow FP-001 PMR reconciliation → Communications JIT",
+            self.contract,
+        )
+        self.assertIn("NEXT = ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", self.contract)
+        self.assertIn(
+            "After independently certified Engineering Standards Authority Promotion",
+            self.contract,
+        )
         self.assertIn(
             "After independently certified narrow FP-001 PMR reconciliation",
             self.contract,
         )
+        self.assertIn("Communications JIT Domain Dossier", self.contract)
 
     def test_execution_requires_merge_and_post_merge_certification(self):
         self.assertIn("HARDEN-02 EXECUTION: NOT STARTED", self.open_work)
@@ -120,16 +134,18 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.readme)
 
-    def test_engineering_standards_and_implementation_remain_not_started(self):
-        self.assertIn(
-            "ENGINEERING STANDARDS: DOWNSTREAM / SEPARATE TRACK / NOT STARTED",
-            self.open_work,
+    def test_engineering_standards_promotion_is_routed_but_not_started(self):
+        marker = (
+            "ENGINEERING STANDARDS AUTHORITY PROMOTION: "
+            "DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED"
         )
+        self.assertIn(marker, self.open_work)
+        self.assertIn(marker, self.readme)
+        self.assertIn("Engineering Standards: **NOT STARTED by HARDEN-02**", self.contract)
         self.assertIn(
-            "ENGINEERING STANDARDS: DOWNSTREAM / SEPARATE TRACK / NOT STARTED",
-            self.readme,
+            "Engineering Standards Authority Promotion: **NOT EXECUTED by HARDEN-02**",
+            self.contract,
         )
-        self.assertIn("Engineering Standards: **NOT STARTED**", self.contract)
         self.assertIn("Application code: **UNCHANGED by this contract stage**", self.contract)
         self.assertIn("application source code", self.contract)
 
@@ -144,22 +160,25 @@ class Harden02ContractDraftingTests(unittest.TestCase):
     def test_open_work_readme_manifest_coherent(self):
         self.assertTrue(OPEN_WORK.is_file())
         self.assertTrue(OPEN_WORK_PREDECESSOR.is_file())
-        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.39.md").exists())
-        self.assertIn("v1.2.39 → v1.2.40", self.open_work)
-        self.assertIn("02_OPEN_WORK_v1.2.40.md", self.readme)
-        self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.1.0.md", self.readme)
+        self.assertTrue(CONTRACT_PREDECESSOR.is_file())
+        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.40.md").exists())
+        self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md").exists())
+        self.assertIn("v1.2.40 → v1.2.41", self.open_work)
+        self.assertIn("02_OPEN_WORK_v1.2.41.md", self.readme)
+        self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.2.0.md", self.readme)
         self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.readme)
+        self.assertIn("ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.40", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.40.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.41", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.41.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
-        self.assertEqual("historical", historical["OPEN_WORK_V1_2_39"]["lifecycle"])
-        self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_39"]["sha256"])
+        self.assertEqual("historical", historical["OPEN_WORK_V1_2_40"]["lifecycle"])
+        self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_40"]["sha256"])
 
     def test_upstream_authority_and_fp001_hashes_unchanged(self):
         for relative_path, expected_hash in PROTECTED_UPSTREAM_HASHES.items():
