@@ -65,7 +65,7 @@ class Harden02ExecutionIntegrityTests(unittest.TestCase):
         for marker in (
             "ATLAS RECONCILIATION: COMPLETE",
             "LAST APPROVED FP-001 MILESTONE: PHASE 7A COMPLETE",
-            "IDENTITY & ACCESS JIT DOMAIN DOSSIER: COMPLETE / MERGED",
+            "IDENTITY & ACCESS: COMPLETE / MERGED",
         ):
             self.assertIn(marker, self.open_work)
 
