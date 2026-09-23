@@ -1,6 +1,6 @@
 # 02_OPEN_WORK_v1.2.42.md
 
-- **Document status:** HARDEN-02 EXECUTION CANDIDATE OPEN-WORK SUCCESSOR v1.2.42
+- **Document status:** HARDEN-02 CONTRACT CERTIFICATION BLOCKER / EXECUTION PREPARATION SUCCESSOR v1.2.42
 - **Authoritative for:** Remaining unresolved planning questions, expert/vendor/architecture/operations gates, post-grilling deliverables, planning and delivery sequencing, and planning/development stop conditions
 - **Not authoritative for:** Locked product decisions, platform truth, implementation details, Ash Resources, schemas, or legal and clinical conclusions
 - **Related documents:**
@@ -24,7 +24,7 @@
   - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`
   - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`
 - **Last updated:** 2026-09-23
-- **Current planning position:** The **Targeted Product Amendment Programme** through Domain amendment, Roadmap amendment and Atlas reconciliation remains **COMPLETE**. Domain count is **20**. Feature Pack count remains **17**. Current Roadmap remains `05_ROADMAP_v1.1.0.md`. Current Delivery Atlas is the routing-only successor `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`. The HARDEN-02 contract `working/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` has satisfied its execution-entry lifecycle: certified head `b1b0431152481006bbc1eff33cc9844a1b8c1ad5` merged unchanged via PR #37 into `main` `2599638334b761ddef8e5568d0a38c3207eef722`; post-merge Foundation Integrity run `35875423226` passed on that merge commit; independent post-merge certification is recorded PASS. `HARDEN-02_EXECUTION_REQUIRED` is therefore the single current programme stage. This successor records the HARDEN-02 execution candidate and I-01…I-13 machine-checkable evidence; the execution is **not yet COMPLETE / CERTIFIED** until this exact execution head is independently reviewed, merged unchanged and the resulting `main` is independently post-merge certified. Engineering Standards Authority Promotion remains **DOWNSTREAM / NOT STARTED** until that certification. `FP001_RECONCILIATION_REQUIRED` remains after certified Engineering Standards Authority Promotion, followed by Communications. **PLANNING FOUNDATION: READY**. **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** FP-001 artifacts are not amended here.
+- **Current planning position:** The **Targeted Product Amendment Programme** through Domain amendment, Roadmap amendment and Atlas reconciliation remains **COMPLETE**. Domain count is **20**. Feature Pack count remains **17**. Current Roadmap remains `05_ROADMAP_v1.1.0.md`. Current Delivery Atlas is the routing-only successor `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`. PR #37 head `b1b0431152481006bbc1eff33cc9844a1b8c1ad5` was merged unchanged into `main` `2599638334b761ddef8e5568d0a38c3207eef722`, and post-merge Foundation Integrity run `35875423226` passed. However, the contract requires independent pre-merge review plus independent post-merge certification before execution becomes authorised, and no such certification is repository-verifiable from PR #37 reviews/comments. Therefore the contract remains **OPEN / PENDING INDEPENDENT CERTIFICATION** and HARDEN-02 execution remains **NOT STARTED / NOT AUTHORISED**. This PR may prepare deterministic proof tooling and correct stale routing, but it must not claim execution completion or advance Engineering Standards. `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED`, `FP001_RECONCILIATION_REQUIRED`, Communications, Phase 7C, proof classification and executable development remain downstream / blocked. **PLANNING FOUNDATION: READY**. **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** FP-001 artifacts are not amended here.
 
 ---
 
@@ -32,7 +32,7 @@
 ## Historical changelog
 
 - Planning-state SemVer transition: `v1.2.41 → v1.2.42`.
-- Records the satisfied HARDEN-02 contract execution-entry gate: certified PR #37 head `b1b0431152481006bbc1eff33cc9844a1b8c1ad5`, merge `main` `2599638334b761ddef8e5568d0a38c3207eef722`, successful post-merge Foundation Integrity run `35875423226`, and independent post-merge certification PASS.
+- Records verified merge/CI facts for PR #37 but also the unresolved certification blocker: the required independent pre-merge review and independent post-merge certification are not repository-verifiable, so execution entry remains closed.
 - Keeps `HARDEN-02_EXECUTION_REQUIRED` as the single current programme stage while this execution candidate awaits independent exact-head certification, merge unchanged and post-merge certification.
 - Adds machine-checkable HARDEN-02 execution evidence for I-01…I-13, including the full H02-3R downstream route through remaining Phase 7B/7C, proof classification and Phase 8 entry gates.
 - Advances the derived Delivery Atlas `v0.2.0 → v0.2.1` only to correct stale current Open Work routing; Atlas remains derived/non-authoritative and does not become `ATLAS-12`.
@@ -880,7 +880,7 @@ Implementation remains stopped unless every Development Entry Hard Stop conditio
 # 9. Immediate Next Action
 
 ```text
-CURRENT AUTHORITY-STAGE PROGRAMME: TARGETED PRODUCT AMENDMENT → ROADMAP AMENDMENT → ATLAS RECONCILIATION COMPLETE; HARDEN-02 CONTRACT COMPLETE / CERTIFIED FOR EXECUTION ENTRY; HARDEN-02 EXECUTION CANDIDATE CURRENT / PENDING INDEPENDENT CERTIFICATION
+CURRENT AUTHORITY-STAGE PROGRAMME: TARGETED PRODUCT AMENDMENT → ROADMAP AMENDMENT → ATLAS RECONCILIATION COMPLETE; HARDEN-02 CONTRACT OPEN / PENDING INDEPENDENT CERTIFICATION; HARDEN-02 EXECUTION NOT STARTED
 STAGE 1 — TARGETED PRODUCT AMENDMENT GRILL: COMPLETE
 STAGE 2 — GOVERNED PRODUCT LAW AMENDMENT: COMPLETE
 STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS: COMPLETE
@@ -895,9 +895,8 @@ ROADMAP SEQUENCING GRILL: COMPLETE
 ROADMAP AMENDMENT: COMPLETE — current Roadmap `05_ROADMAP_v1.1.0.md`; predecessor `archive/05_ROADMAP_v1.0.0.md`; Feature Packs 17
 ATLAS RECONCILIATION: COMPLETE — current routing-only Atlas successor `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`; predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; original reconciliation baseline `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`; DERIVED / NON-AUTHORITATIVE; not ATLAS-12
 ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED
-HARDEN-02 CONTRACT: COMPLETE / CERTIFIED FOR EXECUTION ENTRY — `working/HARDEN-02_CONTRACT_WORKING_v0.2.0.md`; PR #37 head `b1b0431152481006bbc1eff33cc9844a1b8c1ad5`; merged `main` `2599638334b761ddef8e5568d0a38c3207eef722`; post-merge certification PASS
-HARDEN-02_EXECUTION_REQUIRED
-HARDEN-02 EXECUTION: CANDIDATE COMPLETE / PENDING INDEPENDENT EXACT-HEAD CERTIFICATION; downstream advancement requires merge of the certified execution head unchanged plus independent post-merge certification of resulting `main`
+HARDEN-02 CONTRACT: OPEN / PENDING INDEPENDENT CERTIFICATION — `working/HARDEN-02_CONTRACT_WORKING_v0.2.0.md`; PR #37 head `b1b0431152481006bbc1eff33cc9844a1b8c1ad5` merged unchanged into `main` `2599638334b761ddef8e5568d0a38c3207eef722`; run `35875423226` PASS; required independent certification evidence is not repository-verifiable
+HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED — contract certification evidence must close first
 FP001_RECONCILIATION_REQUIRED — DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION
 COMMUNICATIONS JIT DOMAIN DOSSIER — DOWNSTREAM AFTER NARROW FP-001 RECONCILIATION
 
@@ -922,13 +921,13 @@ PHASE 7C: BLOCKED / NOT_STARTED pending the required Communications dossier and 
 PROOF CLASSIFICATION: NOT FINALISED.
 EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.
 
-ORDINARY PHASE 7B CONTINUATION REMAINS SUSPENDED / DOWNSTREAM. HARDEN-02 contract v0.2.0 is COMPLETE / CERTIFIED for execution entry. The current `HARDEN-02_EXECUTION_REQUIRED` candidate proves I-01…I-13 and remains pending independent exact-head certification, merge unchanged and post-merge certification. Only after that certified execution completion does Engineering Standards Authority Promotion become current; narrow FP-001 PMR reconciliation remains after certified standards promotion, followed by Communications.
+ORDINARY PHASE 7B CONTINUATION REMAINS SUSPENDED / DOWNSTREAM. HARDEN-02 contract v0.2.0 remains OPEN / PENDING INDEPENDENT CERTIFICATION because the required independent certification evidence is not repository-verifiable. HARDEN-02 execution is NOT STARTED / NOT AUTHORISED. This draft branch may prepare proof tooling, but only a genuinely certified contract state may make execution current. Engineering Standards Authority Promotion remains after certified HARDEN-02 execution; narrow FP-001 PMR reconciliation remains after certified standards promotion, followed by Communications.
 
 DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS RECONCILIATION COMPLETE AT `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`; ATLAS-12 NOT_STARTED (undefined view-population contract; reconciliation is not ATLAS-12). Atlas remains derived, non-authoritative navigation.
 HARDEN-02 ACCEPTED SCOPE: H02-1 governance/structural only; H02-2 Store/CER excluded; H02-3 remains historical for FP-001 reconciliation before Communications; H02-3R inserts Engineering Standards Authority Promotion immediately after certified HARDEN-02 execution.
 ```
 
-The Foundation Readiness Audit remains complete with no blocker reopened. The targeted Product amendment programme has completed Product → AR-000 → Architecture → Domain → Roadmap → warranted Atlas reconciliation. HARDEN-02 contract entry is independently certified and execution is now the current governed stage. This successor records the execution candidate; it does not certify that execution or advance Engineering Standards Authority Promotion. Do not promote Engineering Standards, reconcile FP-001, start Communications or implement until the execution candidate is independently certified, merged unchanged and the resulting `main` is independently post-merge certified.
+The Foundation Readiness Audit remains complete with no upstream blocker reopened. The targeted Product amendment programme has completed Product → AR-000 → Architecture → Domain → Roadmap → warranted Atlas reconciliation. HARDEN-02 contract merge and CI are verified, but the contract's required independent certification evidence is not repository-verifiable. HARDEN-02 execution therefore remains NOT STARTED / NOT AUTHORISED. Do not promote Engineering Standards, reconcile FP-001, start Communications or implement until that contract certification gate is genuinely closed and then HARDEN-02 execution is separately completed/certified.
 
 FOUNDATION INTEGRITY PATCH COMPLETE. NO FURTHER FOUNDATION EXPANSION WITHOUT AN UPSTREAM CONTRADICTION.
 
@@ -1074,9 +1073,9 @@ The governed Roadmap amendment is complete in `05_ROADMAP_v1.1.0.md`. Predecesso
 - `RQ-3` ACCEPT WITH REFINEMENT — Voting & Balloting is mature **FUTURE-GATED / FEATURE-PACK-UNASSIGNED**; not required by FP-008 or FP-013; no Voting/Competitions Feature Pack now.
 - `RQ-4` ACCEPT WITH REFINEMENT — Interactive Tools have no Feature Pack and no generic activation point; purpose-distributed only.
 
-Feature Pack count remains **17**. Atlas reconciliation remains **COMPLETE**; routing-only Atlas successor v0.2.1 corrects stale current-source navigation without changing authority. HARDEN-02 contract v0.2.0 is COMPLETE / CERTIFIED for execution entry at `main` `2599638334b761ddef8e5568d0a38c3207eef722`. `HARDEN-02_EXECUTION_REQUIRED` is the current stage and its execution candidate remains pending exact-head certification, merge unchanged and post-merge certification. Engineering Standards Authority Promotion, FP-001 reconciliation, Communications, JIT dossiers for Domains 19 and 20, Resource/schema design and application implementation remain downstream / not started here.
+Feature Pack count remains **17**. Atlas reconciliation remains **COMPLETE**; routing-only Atlas successor v0.2.1 corrects stale current-source navigation without changing authority. HARDEN-02 contract v0.2.0 remains OPEN / PENDING INDEPENDENT CERTIFICATION: merge/CI facts are verified, but independent certification evidence is not repository-verifiable. HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED. Engineering Standards Authority Promotion, FP-001 reconciliation, Communications, JIT dossiers for Domains 19 and 20, Resource/schema design and application implementation remain downstream / not started here.
 
-The HARDEN-02 contract entry gate is satisfied. This execution candidate must now **STOP** pending independent review of its exact head. If that head changes, re-run the execution proofs and re-certify. Do not begin Engineering Standards Authority Promotion from pre-merge execution certification alone; merge the certified execution head unchanged and independently post-merge certify resulting `main` first. Do not modify FP-001 artifacts, create the Communications dossier, create JIT dossiers for Research & Feedback or Voting & Balloting, or implement any capability from this stage.
+The HARDEN-02 contract entry gate is **not evidenced as satisfied**. Work must **STOP** at contract certification. Do not treat this draft execution preparation as authorisation. Obtain a genuinely independent certification record for the contract lifecycle, then re-baseline execution from the certified repository state. Do not begin Engineering Standards Authority Promotion, modify FP-001 artifacts, create the Communications dossier, create JIT dossiers for Research & Feedback or Voting & Balloting, or implement any capability from this stage.
 
 ## 12.7 — Delivery Atlas reconciliation
 
@@ -1084,11 +1083,11 @@ The HARDEN-02 contract entry gate is satisfied. This execution candidate must no
 
 Atlas reconciliation remains complete as derived navigation. Atlas v0.2.1 is a routing-only HARDEN-02 execution patch correcting stale references that described archived Open Work as current. It creates no Product, Architecture, Domain or Roadmap law, does not amend FP-001 artifacts, does not execute Engineering Standards Authority Promotion and does not authorise application implementation.
 
-**Current:** `HARDEN-02_EXECUTION_REQUIRED` — execution candidate pending independent exact-head certification, merge unchanged and post-merge certification. **Conditional downstream route after certified execution:** `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED` → certified standards promotion → narrow `FP001_RECONCILIATION_REQUIRED` → Communications → remaining Phase 7B/7C → proof classification → Phase 8 only when Development Entry Hard Stop conditions pass.
+**Current:** HARDEN-02 contract remains `OPEN / PENDING INDEPENDENT CERTIFICATION`; execution is `NOT STARTED / NOT AUTHORISED`. **Conditional downstream route only after genuine contract certification and later certified execution:** `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED` → certified standards promotion → narrow `FP001_RECONCILIATION_REQUIRED` → Communications → remaining Phase 7B/7C → proof classification → Phase 8 only when Development Entry Hard Stop conditions pass.
 
 ## 12.8 — HARDEN-02 contract and execution
 
-**Status:** CONTRACT COMPLETE / CERTIFIED FOR EXECUTION ENTRY; HARDEN-02 EXECUTION CANDIDATE COMPLETE / PENDING INDEPENDENT EXACT-HEAD CERTIFICATION. Contract: `working/HARDEN-02_CONTRACT_WORKING_v0.2.0.md`. Certified contract head: `b1b0431152481006bbc1eff33cc9844a1b8c1ad5`. Certified merge baseline: `main` `2599638334b761ddef8e5568d0a38c3207eef722`. Post-merge Foundation Integrity run `35875423226`: PASS. Independent post-merge certification: PASS.
+**Status:** CONTRACT OPEN / PENDING INDEPENDENT CERTIFICATION; HARDEN-02 EXECUTION NOT STARTED / NOT AUTHORISED. Contract: `working/HARDEN-02_CONTRACT_WORKING_v0.2.0.md`. PR #37 head `b1b0431152481006bbc1eff33cc9844a1b8c1ad5` and merge baseline `main` `2599638334b761ddef8e5568d0a38c3207eef722` are verified; post-merge Foundation Integrity run `35875423226` is PASS. The contract-required independent pre-merge review and independent post-merge certification are not repository-verifiable, so those facts do not authorise execution.
 
 Accepted human decisions:
 
@@ -1097,4 +1096,4 @@ Accepted human decisions:
 - `H02-3` — Historical accepted route: certified HARDEN-02 execution completion routed NEXT to narrow `FP001_RECONCILIATION_REQUIRED`, then Communications. **SUPERSEDED IN PART** on 2026-09-23 only for the immediate post-HARDEN-02 NEXT stage.
 - `H02-3R` — ACCEPTED 2026-09-23: certified HARDEN-02 execution completion routes NEXT to `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED`; after that supporting-authority promotion is complete / certified, narrow `FP001_RECONCILIATION_REQUIRED` becomes NEXT, then Communications and remaining Phase-7B/7C work under ordinary gates.
 
-This successor executes only the bounded HARDEN-02 governance hardening permitted by the certified contract: machine-checkable I-01…I-13 evidence, routing-state reconciliation and derived Atlas current-source correction. It does **not** self-certify HARDEN-02 execution, execute or freeze Engineering Standards Authority Promotion, reconcile FP-001, start Communications, or authorise application implementation.
+This draft successor prepares HARDEN-02 proof tooling and routing corrections but does **not** execute HARDEN-02 because the contract certification gate is not repository-verifiably closed. It does not self-certify the contract, execute or freeze Engineering Standards Authority Promotion, reconcile FP-001, start Communications, or authorise application implementation.
