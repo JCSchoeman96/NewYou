@@ -362,7 +362,10 @@ class Stage3A2AmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual("1.0.0", current["ARCHITECTURE_REQUIREMENTS"]["superseded_version"])
         self.assertEqual("1.2.41", current["OPEN_WORK"]["semver"])
         self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.41.md", current["OPEN_WORK"]["repository_path"])
-        self.assertEqual(_sha256(ROOT / current["OPEN_WORK"]["repository_path"]), current["OPEN_WORK"]["sha256"])
+        self.assertEqual(
+            hashlib.sha256((ROOT / current["OPEN_WORK"]["repository_path"]).read_bytes()).hexdigest(),
+            current["OPEN_WORK"]["sha256"],
+        )
         self.assertIn("ARCHITECTURE_REQUIREMENTS_V1_0_0", historical)
         self.assertIn("TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS", historical)
         self.assertEqual("historical", historical["ARCHITECTURE_REQUIREMENTS_V1_0_0"]["lifecycle"])
