@@ -11,8 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.40.md"
-OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.39.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.41.md"
+OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
 ATLAS_STAGE_OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.39.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
@@ -27,6 +27,8 @@ PROTECTED_HASHES = {
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.38.md": "b5710e3cd3348668ae9d9a7b586343e4b18ba4c1bb7e59ae5c4a69927de188f6",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21",
+    "docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e",
+    "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md": "71615d3363a91a7e6002d907c6edd474fbd87f77bdfc6a38f5b11afd240a5626",
     "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
@@ -40,6 +42,7 @@ PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.1.0.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.38.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.39.md",
+    "docs/00_platform/02_OPEN_WORK_v1.2.40.md",
     "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
     "docs/00_platform/reference/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
     "docs/00_platform/working/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
@@ -71,8 +74,12 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
             _sha256(ATLAS_PREDECESSOR),
         )
         self.assertEqual(
-            PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md"],
+            PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md"],
             _sha256(OPEN_WORK_PREDECESSOR),
+        )
+        self.assertEqual(
+            PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md"],
+            _sha256(ATLAS_STAGE_OPEN_WORK),
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.38.md"],
@@ -80,11 +87,13 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         )
         self.assertTrue(ATLAS.is_file())
         self.assertIn("v0.1.0 → v0.2.0", self.atlas)
-        self.assertIn("v1.2.39 → v1.2.40", self.open_work)
+        self.assertIn("v1.2.40 → v1.2.41", self.open_work)
+        self.assertIn("v1.2.39 → v1.2.40", OPEN_WORK_PREDECESSOR.read_text(encoding="utf-8"))
         self.assertIn("v1.2.38 → v1.2.39", ATLAS_STAGE_OPEN_WORK.read_text(encoding="utf-8"))
         self.assertFalse((DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.1.0.md").exists())
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.38.md").exists())
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.39.md").exists())
+        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.40.md").exists())
 
     def test_atlas_remains_non_authoritative_and_outside_manifest(self):
         self.assertIn("WORKING / NON-AUTHORITATIVE", self.atlas)
@@ -244,18 +253,20 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.0.md", self.readme)
         self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.readme)
-        self.assertIn("02_OPEN_WORK_v1.2.40.md", self.readme)
+        self.assertIn("02_OPEN_WORK_v1.2.41.md", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.40", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.40.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.41", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.41.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
+        self.assertEqual("historical", historical["OPEN_WORK_V1_2_40"]["lifecycle"])
+        self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_40"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_39"]["lifecycle"])
-        self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_39"]["sha256"])
+        self.assertEqual(_sha256(ATLAS_STAGE_OPEN_WORK), historical["OPEN_WORK_V1_2_39"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_38"]["lifecycle"])
 
     def test_upstream_law_and_fp001_unchanged(self):
@@ -263,9 +274,10 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
         for relative_path in PROHIBITED_PRESENT_PATHS:
             self.assertFalse((ROOT / relative_path).exists(), relative_path)
-        # Atlas must not invent HARDEN-02 law; later contract drafting may create the working artifact.
+        # Atlas must not invent HARDEN-02 law; later governed successors may advance independently.
         self.assertIn("HARDEN-02 artifacts are not amended by this successor", self.atlas)
-        self.assertTrue((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md").is_file())
+        self.assertTrue((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md").is_file())
+        self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md").is_file())
 
 
 if __name__ == "__main__":
