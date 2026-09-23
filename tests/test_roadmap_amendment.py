@@ -225,8 +225,9 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.40", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.40.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.41", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.41.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual(_sha256(ROOT / current["OPEN_WORK"]["repository_path"]), current["OPEN_WORK"]["sha256"])
         self.assertEqual("historical", {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK), {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["sha256"])
         self.assertEqual("1.1.0", current["ROADMAP"]["semver"])
