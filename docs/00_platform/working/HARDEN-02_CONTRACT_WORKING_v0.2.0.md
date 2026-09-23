@@ -9,6 +9,7 @@
 - **Conflict rule:** Live Product / Architecture / Domain / Roadmap / Operating Model / current Open Work authority wins. This contract may not invent Product or Architecture law. Atlas remains derived navigation only and does not create HARDEN-02 law.
 - **Baseline repository:** `https://github.com/JCSchoeman96/NewYou`
 - **Contract drafting baseline SHA:** `5bd3e840d92cab8a0c159ef7156b6187e4a1e0b2`
+- **Routing-refinement baseline SHA:** `91c1e64f9a99ede8be77040287173d450c1043ff`
 - **Accepted human scope decisions:** `H02-1`, `H02-2`, `H02-3` (2026-09-09), `H02-3R` (2026-09-23; routing refinement)
 - **Last updated:** 2026-09-23
 
