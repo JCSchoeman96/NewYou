@@ -33,7 +33,7 @@
 
 - Planning-state SemVer transition: `v1.2.41 → v1.2.42`.
 - Records verified merge/CI facts for PR #37 but also the unresolved certification blocker: the required independent pre-merge review and independent post-merge certification are not repository-verifiable, so execution entry remains closed.
-- Keeps `HARDEN-02_EXECUTION_REQUIRED` as the single current programme stage while this execution candidate awaits independent exact-head certification, merge unchanged and post-merge certification.
+- Records that the predecessor routing expected `HARDEN-02_EXECUTION_REQUIRED` only after contract certification; this successor now fails closed because that independent certification evidence is not repository-verifiable.
 - Adds machine-checkable HARDEN-02 execution evidence for I-01…I-13, including the full H02-3R downstream route through remaining Phase 7B/7C, proof classification and Phase 8 entry gates.
 - Advances the derived Delivery Atlas `v0.2.0 → v0.2.1` only to correct stale current Open Work routing; Atlas remains derived/non-authoritative and does not become `ATLAS-12`.
 - Engineering Standards Authority Promotion remains downstream / not started; no Engineering Standards authority module is created or frozen.
@@ -41,7 +41,7 @@
 - Does not amend North Star/MVP, Product Law, Decision Register, AR-000, Architecture Law, Architecture synthesis, Reference Flows, Domain Map, Roadmap, Operating Model, Frontend Experience System or FP-001, and does not authorise application implementation.
 - Planning-state SemVer transition: `v1.2.40 → v1.2.41`.
 - Records the accepted 2026-09-23 HARDEN-02 routing refinement in `working/HARDEN-02_CONTRACT_WORKING_v0.2.0.md`; preserves `v0.1.0` as historical working evidence.
-- Preserves `HARDEN-02_EXECUTION_REQUIRED` as the only current NEXT stage, and preserves the rule that execution starts only after the certified contract head is merged unchanged and resulting `main` is independently post-merge certified.
+- Preserves the historical v1.2.41 contingent route in which `HARDEN-02_EXECUTION_REQUIRED` could become NEXT only after the certified contract head was merged unchanged and resulting `main` independently post-merge certified; that prerequisite is not currently evidenced.
 - Records `H02-3R`: certified HARDEN-02 execution routes NEXT to `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED`; H02-3 remains historical evidence of the earlier immediate FP-001 route and is superseded only on that routing point.
 - Routes narrow `FP001_RECONCILIATION_REQUIRED` only after Engineering Standards Authority Promotion is complete / certified; Communications remains after FP-001 reconciliation.
 - Engineering Standards authority promotion is routed but **NOT STARTED** here; this successor creates no Engineering Standards authority module and does not freeze or execute standards.
@@ -647,7 +647,7 @@ The Roadmap works backward from the approved mature platform, defines the smalle
 
 **Current Roadmap amendment:** PASS — additive v1.1.0 successor after accepted Roadmap Sequencing Grill decisions; Feature Pack count remains 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED; Interactive Tools purpose-distributed; no upstream contradiction.
 
-**Current programme stage after certified HARDEN-02 contract entry:** `HARDEN-02_EXECUTION_REQUIRED`. The execution-entry condition is satisfied at `main` `2599638334b761ddef8e5568d0a38c3207eef722`. This successor records the execution candidate only; Engineering Standards Authority Promotion becomes current only after the exact execution head is independently certified, merged unchanged and the resulting `main` is independently post-merge certified. The downstream route remains Engineering Standards Authority Promotion → narrow `FP001_RECONCILIATION_REQUIRED` → Communications JIT Domain Dossier → remaining required/conditional Phase 7B → Phase 7C → proof classification → Phase 8 only when Development Entry Hard Stop conditions pass.
+**Current programme blocker:** HARDEN-02 contract certification remains OPEN / PENDING INDEPENDENT CERTIFICATION. PR #37 merge and CI are verified, but the required independent certification evidence is not repository-verifiable, so execution remains NOT STARTED / NOT AUTHORISED. Only after that contract gate is genuinely closed may HARDEN-02 execution become current. The conditional downstream route after later certified execution remains Engineering Standards Authority Promotion → narrow `FP001_RECONCILIATION_REQUIRED` → Communications JIT Domain Dossier → remaining required/conditional Phase 7B → Phase 7C → proof classification → Phase 8 only when Development Entry Hard Stop conditions pass.
 
 ## Phase 7 — Feature Pack Preparation + JIT Domain Dossiers
 
@@ -931,7 +931,7 @@ The Foundation Readiness Audit remains complete with no upstream blocker reopene
 
 FOUNDATION INTEGRITY PATCH COMPLETE. NO FURTHER FOUNDATION EXPANSION WITHOUT AN UPSTREAM CONTRADICTION.
 
-This tracker successor records the bounded HARDEN-02 execution candidate and its machine-checkable governance evidence. It does not self-certify HARDEN-02 execution, execute or freeze Engineering Standards Authority Promotion, create the Communications JIT Domain Dossier, perform FP-001 reconciliation, start Phase 7C, generate TOON prompts, perform Architectural Proof, create Vertical Slices or implement application behaviour. The Identity & Access JIT Domain Dossier remains complete / merged and FP-001 artifacts remain unreconciled for PMR. Executable development remains stopped until the applicable Phase 7 and Development Entry Hard Stop requirements are satisfied.
+This tracker successor prepares bounded HARDEN-02 proof tooling and machine-checkable governance checks while execution remains NOT STARTED / NOT AUTHORISED. It does not self-certify the contract, execute HARDEN-02, execute or freeze Engineering Standards Authority Promotion, create the Communications JIT Domain Dossier, perform FP-001 reconciliation, start Phase 7C, generate TOON prompts, perform Architectural Proof, create Vertical Slices or implement application behaviour. The Identity & Access JIT Domain Dossier remains complete / merged and FP-001 artifacts remain unreconciled for PMR. Executable development remains stopped until the applicable Phase 7 and Development Entry Hard Stop requirements are satisfied.
 
 # 10. Minimal Tools
 
@@ -1011,7 +1011,7 @@ This section tracks the governed Targeted Amendment → FP-001 Development Entry
 | Domain amendment | Additive Domain Law successor implementing accepted human Domain decisions | **COMPLETE** — current successor is `04_DOMAIN_MAP_v1.1.0.md`; predecessor is `archive/04_DOMAIN_MAP_v1.0.0.md`; 20 Domains |
 | Roadmap Sequencing Grill | Sequencing decisions for PMR / Research / Voting / Interactive Tools | **COMPLETE** — non-authoritative evidence in `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` |
 | Roadmap amendment | Additive Roadmap successor implementing accepted human Roadmap decisions | **COMPLETE** — current successor is `05_ROADMAP_v1.1.0.md`; predecessor is `archive/05_ROADMAP_v1.0.0.md`; Feature Packs remain 17 |
-| Current / later | HARDEN-02 execution / Engineering Standards Authority Promotion / FP-001 reconciliation | **CURRENT:** HARDEN-02 execution candidate under `HARDEN-02_EXECUTION_REQUIRED`, with contract execution-entry certification complete at `main` `2599638334b761ddef8e5568d0a38c3207eef722`. **DOWNSTREAM:** Engineering Standards Authority Promotion only after execution exact-head certification + merge unchanged + post-merge certification; FP-001 reconciliation only after certified standards promotion; Communications after reconciliation. FP-001 remains unamended. |
+| Current / later | HARDEN-02 contract certification / execution / Engineering Standards Authority Promotion / FP-001 reconciliation | **CURRENT BLOCKER:** contract remains OPEN / PENDING INDEPENDENT CERTIFICATION because independent certification evidence is not repository-verifiable; HARDEN-02 execution is NOT STARTED / NOT AUTHORISED. **DOWNSTREAM:** after genuine contract certification, HARDEN-02 execution; after certified execution, Engineering Standards Authority Promotion; after certified standards promotion, FP-001 reconciliation; then Communications. FP-001 remains unamended. |
 
 **Baseline reviewed for Stage 1:** `main` at `ad71191b17b297ac9dc683c18141e1c546fa9850`.
 **Stage 3A.1 analysis baseline:** `main` at `0aa6b5990e333988c3617a43db495d6fc6c85cd4`.
