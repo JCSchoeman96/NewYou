@@ -11,8 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.41.md"
-OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.42.md"
+OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
@@ -29,6 +29,7 @@ PROTECTED_UPSTREAM_HASHES = {
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e",
+    "docs/00_platform/archive/02_OPEN_WORK_v1.2.41.md": "85dd9946cf5684b0907f49e973ef75b59541c0f265ac46d44465d1527535da62",
     "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md": "71615d3363a91a7e6002d907c6edd474fbd87f77bdfc6a38f5b11afd240a5626",
 }
 
@@ -37,6 +38,7 @@ PROTECTED_UPSTREAM_HASHES = {
 PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/02_OPEN_WORK_v1.2.39.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.40.md",
+    "docs/00_platform/02_OPEN_WORK_v1.2.41.md",
     "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md",
 )
 
@@ -114,24 +116,17 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         )
         self.assertIn("Communications JIT Domain Dossier", self.contract)
 
-    def test_execution_requires_merge_and_post_merge_certification(self):
-        self.assertIn("HARDEN-02 EXECUTION: NOT STARTED", self.open_work)
-        self.assertIn("REQUIRES MERGE + POST-MERGE CERTIFICATION OF MAIN", self.open_work)
-        self.assertIn("pre-merge exact-head review is not execution authority", self.open_work)
-        self.assertIn("merged unchanged", self.open_work)
-        self.assertIn("post-merge certified", self.open_work)
-        self.assertIn("REQUIRES MERGE + POST-MERGE CERTIFICATION OF MAIN", self.readme)
-        self.assertIn("merged unchanged", self.readme)
-        self.assertIn("post-merge certified", self.readme)
-        self.assertIn(
-            "merged unchanged and the resulting `main` is independently post-merge certified",
-            self.contract,
-        )
-        self.assertIn(
-            "pre-merge exact-head certification of this PR is **not** sufficient",
-            self.contract,
-        )
-        self.assertNotIn("HARDEN-02 EXECUTION: COMPLETE", self.open_work)
+    def test_contract_entry_is_certified_but_execution_needs_own_certification(self):
+        self.assertIn("HARDEN-02 CONTRACT: COMPLETE / CERTIFIED FOR EXECUTION ENTRY", self.open_work)
+        self.assertIn("2599638334b761ddef8e5568d0a38c3207eef722", self.open_work)
+        self.assertIn("35875423226", self.open_work)
+        self.assertIn("HARDEN-02 EXECUTION: CANDIDATE COMPLETE / PENDING INDEPENDENT EXACT-HEAD CERTIFICATION", self.open_work)
+        self.assertIn("certified execution head unchanged", self.open_work)
+        self.assertIn("post-merge certification", self.open_work)
+        self.assertIn("HARDEN-02 CONTRACT: COMPLETE / CERTIFIED FOR EXECUTION ENTRY", self.readme)
+        self.assertIn("HARDEN-02 EXECUTION: CANDIDATE COMPLETE / PENDING INDEPENDENT EXACT-HEAD CERTIFICATION", self.readme)
+        self.assertIn("pre-merge exact-head certification of this PR is **not** sufficient", self.contract)
+        self.assertNotIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.readme)
 
@@ -164,8 +159,8 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         self.assertTrue(CONTRACT_PREDECESSOR.is_file())
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.40.md").exists())
         self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md").exists())
-        self.assertIn("v1.2.40 → v1.2.41", self.open_work)
-        self.assertIn("02_OPEN_WORK_v1.2.41.md", self.readme)
+        self.assertIn("v1.2.41 → v1.2.42", self.open_work)
+        self.assertIn("02_OPEN_WORK_v1.2.42.md", self.readme)
         self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.2.0.md", self.readme)
         self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.readme)
         self.assertIn("ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", self.readme)
@@ -174,12 +169,12 @@ class Harden02ContractDraftingTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.41", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.41.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.42", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.42.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
-        self.assertEqual("historical", historical["OPEN_WORK_V1_2_40"]["lifecycle"])
-        self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_40"]["sha256"])
+        self.assertEqual("historical", historical["OPEN_WORK_V1_2_41"]["lifecycle"])
+        self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_41"]["sha256"])
 
     def test_upstream_authority_and_fp001_hashes_unchanged(self):
         for relative_path, expected_hash in PROTECTED_UPSTREAM_HASHES.items():
