@@ -254,7 +254,7 @@ No Store repository SHA, CER proof obligation, CER exit condition or Store/CER i
 | FP-001 PMR reconciliation | `OUT_OF_SCOPE` | Downstream after certified Engineering Standards Authority Promotion |
 | Communications dossier | `OUT_OF_SCOPE` | Downstream after reconciliation |
 | Store/CER/subscriptions/Paystack/OQ-004 | `OUT_OF_SCOPE` | Parallel / later commercial work |
-| Engineering Standards design/freeze | `OUT_OF_SCOPE FOR HARDEN-02 EXECUTION / POST-H02_NEXT` | Separate supporting-authority promotion stage |
+| Engineering Standards design/freeze | `OUT_OF_SCOPE_FOR_HARDEN_02` | Separate supporting-authority promotion stage; becomes NEXT only after certified HARDEN-02 execution |
 | Application code / Ash / migrations | `OUT_OF_SCOPE` | Implementation stop |
 | New Product/Architecture/Domain/Roadmap law | `OUT_OF_SCOPE` / escalate if contradiction found | STOP |
 
