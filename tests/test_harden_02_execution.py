@@ -64,7 +64,7 @@ class Harden02ExecutionIntegrityTests(unittest.TestCase):
     def test_i02_completed_stages_stay_completed(self):
         for marker in (
             "ATLAS RECONCILIATION: COMPLETE",
-            "FP-001 PHASE 7A: COMPLETE",
+            "LAST APPROVED FP-001 MILESTONE: PHASE 7A COMPLETE",
             "IDENTITY & ACCESS JIT DOMAIN DOSSIER: COMPLETE / MERGED",
         ):
             self.assertIn(marker, self.open_work)
@@ -118,7 +118,7 @@ class Harden02ExecutionIntegrityTests(unittest.TestCase):
             self.contract,
         )
         self.assertIn(
-            "does not create Product, Architecture, Domain or Roadmap law",
+            "Does not amend North Star/MVP, Product Law, Decision Register, AR-000, Architecture Law",
             self.open_work,
         )
 
