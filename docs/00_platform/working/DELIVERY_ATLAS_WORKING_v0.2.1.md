@@ -601,7 +601,7 @@ This provides the trusted entry capability that every protected core journey and
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.1.0.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.1.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.3.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.39.md`.
+`05_ROADMAP_v1.1.0.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.1.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.3.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.42.md`.
 
 ## FP-002 — Purchase to verified payment and entitlement
 
