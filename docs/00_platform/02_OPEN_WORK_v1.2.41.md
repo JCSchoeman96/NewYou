@@ -1074,7 +1074,7 @@ After the exact HARDEN-02 contract PR head is reported, work must **STOP** pendi
 
 **Status:** COMPLETE as derived / non-authoritative navigation successor `working/DELIVERY_ATLAS_WORKING_v0.2.0.md` (predecessor `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`).
 
-Atlas reconciliation remains complete as derived navigation. This Open Work successor records HARDEN-02 contract drafting only. It did not create Product, Architecture, Domain or Roadmap law, did not amend FP-001 artifacts, did not execute HARDEN-02, and did not authorise implementation.
+Atlas reconciliation remains complete as derived navigation. The predecessor `archive/02_OPEN_WORK_v1.2.40.md` recorded HARDEN-02 contract drafting; this successor preserves that completed state and records only the H02-3R post-HARDEN-02 routing refinement. It does not create Product, Architecture, Domain or Roadmap law, does not amend FP-001 artifacts, does not execute HARDEN-02 or Engineering Standards Authority Promotion, and does not authorise implementation.
 
 **Next:** `HARDEN-02_EXECUTION_REQUIRED` only after the certified contract head is merged unchanged and the resulting `main` is independently post-merge certified; after certified HARDEN-02 execution, `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED`; after that promotion is complete / certified, narrow `FP001_RECONCILIATION_REQUIRED`; then Communications.
 
