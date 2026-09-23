@@ -29,6 +29,31 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _section(text: str, start: str, end: str) -> str:
+    start_index = text.index(start)
+    end_index = text.index(end, start_index)
+    return text[start_index:end_index]
+
+
+def _fenced_text(section: str) -> str:
+    match = re.search(r"```text\n(.*?)\n```", section, re.DOTALL)
+    if match is None:
+        raise AssertionError("expected fenced text block")
+    return match.group(1)
+
+
+def _state_lines(text: str) -> list[str]:
+    section = _section(text, "# 9. Immediate Next Action", "# 10. Minimal Tools")
+    return [line.strip() for line in _fenced_text(section).splitlines() if line.strip()]
+
+
+def _one_prefixed(lines: list[str], prefix: str) -> str:
+    matches = [line for line in lines if line.startswith(prefix)]
+    if len(matches) != 1:
+        raise AssertionError(f"expected exactly one {prefix!r} line, found {len(matches)}: {matches}")
+    return matches[0]
+
+
 class Harden02ExecutionIntegrityTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -38,60 +63,98 @@ class Harden02ExecutionIntegrityTests(unittest.TestCase):
         cls.atlas = ATLAS.read_text(encoding="utf-8")
         cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 
-    def test_execution_entry_evidence_is_pinned_and_contract_unchanged(self):
+    def test_execution_entry_fails_closed_without_verifiable_independent_certification(self):
         self.assertEqual(CONTRACT_SHA256, _sha256(CONTRACT))
-        self.assertIn("b1b0431152481006bbc1eff33cc9844a1b8c1ad5", self.open_work)
-        self.assertIn("2599638334b761ddef8e5568d0a38c3207eef722", self.open_work)
-        self.assertIn("35875423226", self.open_work)
-        self.assertIn("independent post-merge certification is recorded PASS", self.open_work)
-        self.assertIn("CONTRACT COMPLETE / CERTIFIED FOR EXECUTION ENTRY", self.open_work)
-
+        lifecycle = _section(
+            self.contract,
+            "## 11. Lifecycle obligations",
+            "## 12. Concurrency / idempotency / retry obligations",
+        )
+        self.assertIn("HARDEN-02 CONTRACT: OPEN / PENDING CERTIFICATION", lifecycle)
+        self.assertIn("Independent pre-merge review", lifecycle)
+        self.assertIn("independent post-merge certification", lifecycle)
+        state = _state_lines(self.open_work)
+        contract_state = _one_prefixed(state, "HARDEN-02 CONTRACT:")
+        execution_state = _one_prefixed(state, "HARDEN-02 EXECUTION:")
+        self.assertIn("OPEN / PENDING INDEPENDENT CERTIFICATION", contract_state)
+        self.assertIn("not repository-verifiable", contract_state)
+        self.assertIn("NOT STARTED / NOT AUTHORISED", execution_state)
+        self.assertNotIn("HARDEN-02_EXECUTION_REQUIRED", state)
+        self.assertNotIn("COMPLETE / CERTIFIED FOR EXECUTION ENTRY", "\n".join(state))
+        self.assertNotIn("CANDIDATE COMPLETE", "\n".join(state))
+        self.assertIn("b1b0431152481006bbc1eff33cc9844a1b8c1ad5", contract_state)
+        self.assertIn("2599638334b761ddef8e5568d0a38c3207eef722", contract_state)
+        self.assertIn("35875423226", contract_state)
     def test_i01_single_current_stage(self):
-        self.assertIn(
-            "`HARDEN-02_EXECUTION_REQUIRED` is therefore the single current programme stage",
-            self.open_work,
-        )
-        self.assertIn(
-            "HARDEN-02 EXECUTION: CANDIDATE COMPLETE / PENDING INDEPENDENT EXACT-HEAD CERTIFICATION",
-            self.open_work,
-        )
-        self.assertIn(
-            "ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED",
-            self.open_work,
-        )
-        self.assertNotIn("ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT", self.open_work)
-        self.assertNotIn("HARDEN-02 CONTRACT DRAFTED / PENDING CERTIFICATION", self.open_work)
-
+        state = _state_lines(self.open_work)
+        contract_state = _one_prefixed(state, "HARDEN-02 CONTRACT:")
+        execution_state = _one_prefixed(state, "HARDEN-02 EXECUTION:")
+        self.assertIn("OPEN / PENDING INDEPENDENT CERTIFICATION", contract_state)
+        self.assertIn("NOT STARTED / NOT AUTHORISED", execution_state)
+        self.assertNotIn("HARDEN-02_EXECUTION_REQUIRED", state)
+        for prefix in (
+            "ENGINEERING STANDARDS AUTHORITY PROMOTION:",
+            "FP001_RECONCILIATION_REQUIRED",
+            "COMMUNICATIONS JIT DOMAIN DOSSIER",
+        ):
+            line = _one_prefixed(state, prefix)
+            self.assertNotRegex(line, r"\b(?:CURRENT|NEXT)\b", line)
     def test_i02_completed_stages_stay_completed(self):
-        for marker in (
-            "ATLAS RECONCILIATION: COMPLETE",
-            "LAST APPROVED FP-001 MILESTONE: PHASE 7A COMPLETE",
-            "IDENTITY & ACCESS: COMPLETE / MERGED",
+        state = _state_lines(self.open_work)
+        for prefix in (
+            "STAGE 1 — TARGETED PRODUCT AMENDMENT GRILL:",
+            "STAGE 2 — GOVERNED PRODUCT LAW AMENDMENT:",
+            "STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS:",
+            "STAGE 3A.2 — GOVERNED AR-000 AMENDMENT:",
+            "STAGE 3B — INDEPENDENT ARCHITECTURE/ENGINEERING CLASSIFICATION:",
+            "ARCHITECTURE GRILL:",
+            "ENGINEERING-POLICY GRILL:",
+            "ARCHITECTURE AMENDMENT:",
+            "DOMAIN PRESSURE TEST:",
+            "DOMAIN AMENDMENT:",
+            "ROADMAP SEQUENCING GRILL:",
+            "ROADMAP AMENDMENT:",
+            "ATLAS RECONCILIATION:",
         ):
-            self.assertIn(marker, self.open_work)
-
+            line = _one_prefixed(state, prefix)
+            self.assertIn("COMPLETE", line)
+            self.assertNotRegex(line, r"\b(?:NOT_STARTED|BLOCKED|IN_PROGRESS)\b", line)
+        milestone = _one_prefixed(state, "LAST APPROVED FP-001 MILESTONE:")
+        self.assertIn("PHASE 7A COMPLETE", milestone)
+        self.assertIn("IDENTITY & ACCESS JIT DOMAIN DOSSIER COMPLETE / MERGED", milestone)
     def test_i03_downstream_cannot_masquerade_as_current(self):
-        self.assertIn("ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM", self.open_work)
-        self.assertIn(
-            "FP001_RECONCILIATION_REQUIRED — DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION",
-            self.open_work,
-        )
-        self.assertIn(
-            "COMMUNICATIONS JIT DOMAIN DOSSIER — DOWNSTREAM AFTER NARROW FP-001 RECONCILIATION",
-            self.open_work,
-        )
-        self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
-
+        state = _state_lines(self.open_work)
+        expectations = {
+            "ENGINEERING STANDARDS AUTHORITY PROMOTION:": ("DOWNSTREAM", "NOT STARTED"),
+            "FP001_RECONCILIATION_REQUIRED": ("DOWNSTREAM",),
+            "COMMUNICATIONS JIT DOMAIN DOSSIER": ("DOWNSTREAM",),
+            "PHASE 7C:": ("BLOCKED / NOT_STARTED",),
+            "PROOF CLASSIFICATION:": ("NOT FINALISED",),
+            "EXECUTABLE DEVELOPMENT:": ("BLOCKED",),
+        }
+        for prefix, required in expectations.items():
+            line = _one_prefixed(state, prefix)
+            for marker in required:
+                self.assertIn(marker, line)
+            self.assertNotRegex(line, r"\b(?:CURRENT|NEXT|COMPLETE / CERTIFIED)\b", line)
     def test_i04_phase7_progression_coherence(self):
-        for marker in (
-            "Phase 7A Skeleton + Gate Manifest",
-            "required JIT Domain Dossiers",
-            "Final Feature Pack Contract",
-            "proof classification",
-            "Phase 8 only when Development Entry Hard Stop passes",
-        ):
-            self.assertIn(marker, self.contract)
-
+        invariant = _section(self.contract, "### I-04 — Phase-7 progression coherence", "### I-05")
+        sequence = [line.strip() for line in _fenced_text(invariant).splitlines() if line.strip()]
+        self.assertEqual(
+            [
+                "Phase 7A Skeleton + Gate Manifest",
+                "→ required JIT Domain Dossiers",
+                "→ Final Feature Pack Contract",
+                "→ proof classification",
+                "→ Phase 8 only when Development Entry Hard Stop passes",
+            ],
+            sequence,
+        )
+        state = _state_lines(self.open_work)
+        self.assertEqual("- COMMUNICATIONS: REQUIRED / NOT_STARTED", _one_prefixed(state, "- COMMUNICATIONS:"))
+        self.assertIn("BLOCKED / NOT_STARTED", _one_prefixed(state, "PHASE 7C:"))
+        self.assertEqual("PROOF CLASSIFICATION: NOT FINALISED.", _one_prefixed(state, "PROOF CLASSIFICATION:"))
+        self.assertIn("BLOCKED", _one_prefixed(state, "EXECUTABLE DEVELOPMENT:"))
     def test_i05_required_communications_cannot_be_skipped(self):
         self.assertIn("COMMUNICATIONS: REQUIRED / NOT_STARTED", self.open_work)
         self.assertIn("Communications remains REQUIRED / NOT_STARTED", self.contract)
