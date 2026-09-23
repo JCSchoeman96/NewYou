@@ -649,7 +649,7 @@ This creates the commercial prerequisite for assessment, plan and purchased-libr
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-002`, with dependency and phase context in §§3.2, 5, 7 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-002`, with dependency and phase context in §§3.2, 5, 7 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `05_ROADMAP_v1.0.0.md §14` and historical-at-freeze unresolved-work context in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-003 — Temperament provenance, assessment and immutable report
 
@@ -696,7 +696,7 @@ This is the assessment product capability and a required input to personalised p
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-003`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-003`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-004 — Safe health onboarding and deterministic eligibility
 
@@ -745,7 +745,7 @@ This unlocks safe plan generation and a lawful General Wellness fallback. It kee
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-004`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-004`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-005 — Safe seven-day plan, purchased library and basic feedback
 
@@ -793,7 +793,7 @@ This completes the participant-facing paid core journey. `FP-006` remains necess
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-005`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-005`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-006 — Controlled core operations and staged paid release
 
@@ -841,7 +841,7 @@ This is the operational boundary for internal validation, the first 10 paid part
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-006`, with dependency and phase context in §§3.2, 5, 7, 8 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §§5 and 7`.
+`05_ROADMAP_v1.0.0.md §6 FP-006`, with dependency and phase context in §§3.2, 5, 7, 8 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §§5 and 7`.
 
 ## FP-007 — Governed live sessions and replay
 
@@ -890,7 +890,7 @@ This unlocks governed live and replay value for Nuwe Jy and early Membership. It
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-007`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-007`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-008 — Native Nuwe Jy flagship edition
 
@@ -942,7 +942,7 @@ This is the first native flagship edition and the concrete acceptance path for r
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-008`, with dependency and phase context in §§3.2, 5, 9, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-008`, with dependency and phase context in §§3.2, 5, 9, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-009 — Basic Membership recurring value
 
@@ -992,7 +992,7 @@ This enables Basic Membership only after its promised recurring value is operati
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-009`, with dependency and phase context in §§3.2, 5, 10, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-009`, with dependency and phase context in §§3.2, 5, 10, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `05_ROADMAP_v1.0.0.md §14` and historical-at-freeze unresolved-work context in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-010 — Recurring plan review and governed adjustment
 
@@ -1042,7 +1042,7 @@ This unlocks the plan-adjustment add-on and provides the capability prerequisite
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-010`, with dependency and phase context in §§3.2, 5, 10 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-010`, with dependency and phase context in §§3.2, 5, 10 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-011 — Premium bundle around proven capability
 
@@ -1092,7 +1092,7 @@ This enables a validated higher-value commercial tier only after its component c
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-011`, with dependency and phase context in §§3.2, 5, 10 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-011`, with dependency and phase context in §§3.2, 5, 10 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `05_ROADMAP_v1.0.0.md §14` and historical-at-freeze unresolved-work context in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-012 — Controlled practitioner review pilot
 
@@ -1140,7 +1140,7 @@ This enables a limited, priced and capacity-controlled practitioner-review pilot
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-012`, with dependency and phase context in §§3.2, 5, 11 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-012`, with dependency and phase context in §§3.2, 5, 11 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-013 — First-party community and governed challenges
 
@@ -1190,7 +1190,7 @@ This enables first-party community and governed challenges only when external an
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-013`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-013`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-014 — Foundation programme, habits and reflective progress
 
@@ -1239,7 +1239,7 @@ This enables the longer foundation programme and durable habit and reflective-pr
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-014`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-014`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-015 — Event commerce and scarce capacity
 
@@ -1287,7 +1287,7 @@ This enables paid events with capacity and ticket truth. It is intentionally lat
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-015`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-015`, with dependency and phase context in §§3.2, 5, 12 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-016 — First-party experimentation and learning
 
@@ -1335,7 +1335,7 @@ This enables auditable product learning after a real decision surface exists. It
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-016`, with dependency and phase context in §§3.2, 5, 13 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-016`, with dependency and phase context in §§3.2, 5, 13 and 14; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-017 — Approved product-space or market expansion
 
@@ -1385,7 +1385,7 @@ This is the controlled path for a future product-space or market activation. It 
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.0.0.md §6 FP-017`, with dependency and phase context in §§3.2, 5, 13, 14 and 16; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `02_OPEN_WORK_v1.2.28.md §5`.
+`05_ROADMAP_v1.0.0.md §6 FP-017`, with dependency and phase context in §§3.2, 5, 13, 14 and 16; `04_DOMAIN_MAP_v1.0.0.md §§3–5`; historical-at-freeze gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ---
 
