@@ -156,50 +156,81 @@ class Harden02ExecutionIntegrityTests(unittest.TestCase):
         self.assertEqual("PROOF CLASSIFICATION: NOT FINALISED.", _one_prefixed(state, "PROOF CLASSIFICATION:"))
         self.assertIn("BLOCKED", _one_prefixed(state, "EXECUTABLE DEVELOPMENT:"))
     def test_i05_required_communications_cannot_be_skipped(self):
-        self.assertIn("COMMUNICATIONS: REQUIRED / NOT_STARTED", self.open_work)
-        self.assertIn("Communications remains REQUIRED / NOT_STARTED", self.contract)
-
+        state = _state_lines(self.open_work)
+        dossier = _one_prefixed(state, "- COMMUNICATIONS:")
+        self.assertEqual("- COMMUNICATIONS: REQUIRED / NOT_STARTED", dossier)
+        active = [
+            line for line in state
+            if "COMMUNICATIONS" in line.upper()
+            and re.search(r"\b(?:COMPLETE|OPTIONAL|NOT REQUIRED)\b", line)
+        ]
+        self.assertEqual([], active)
     def test_i06_conditional_dossiers_keep_explicit_dispositions(self):
-        for marker in (
-            "PRIVACY & CONSENT: CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-            "CONTENT & MEDIA: CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-            "AUDIT & EVIDENCE: CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-            "ANALYTICS: NOT REQUIRED",
-        ):
-            self.assertIn(marker, self.open_work)
-
+        state = _state_lines(self.open_work)
+        expected = {
+            "- PRIVACY & CONSENT:": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
+            "- CONTENT & MEDIA:": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
+            "- AUDIT & EVIDENCE:": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
+            "- ANALYTICS:": "NOT REQUIRED",
+        }
+        for prefix, disposition in expected.items():
+            self.assertEqual(f"{prefix} {disposition}", _one_prefixed(state, prefix))
     def test_i07_phase7c_fails_closed(self):
-        self.assertIn("PHASE 7C: BLOCKED / NOT_STARTED", self.open_work)
-        self.assertIn("Phase 7C remains BLOCKED / NOT_STARTED", self.contract)
-
+        state = _state_lines(self.open_work)
+        unresolved_required = "REQUIRED / NOT_STARTED" in _one_prefixed(state, "- COMMUNICATIONS:")
+        unresolved_conditional = any(
+            "PENDING EXPLICIT ADJUDICATION" in _one_prefixed(state, prefix)
+            for prefix in ("- PRIVACY & CONSENT:", "- CONTENT & MEDIA:", "- AUDIT & EVIDENCE:")
+        )
+        self.assertTrue(unresolved_required or unresolved_conditional)
+        phase7c = _one_prefixed(state, "PHASE 7C:")
+        self.assertIn("BLOCKED / NOT_STARTED", phase7c)
+        self.assertNotRegex(phase7c, r"\b(?:READY|COMPLETE|AUTHORISED)\b")
     def test_i08_proof_classification_is_not_finalised(self):
-        self.assertIn("PROOF CLASSIFICATION: NOT FINALISED", self.open_work)
-        self.assertIn("Proof classification remains NOT FINALISED", self.contract)
-
+        state = _state_lines(self.open_work)
+        self.assertIn("BLOCKED / NOT_STARTED", _one_prefixed(state, "PHASE 7C:"))
+        proof = _one_prefixed(state, "PROOF CLASSIFICATION:")
+        self.assertEqual("PROOF CLASSIFICATION: NOT FINALISED.", proof)
+        self.assertNotRegex(proof, r"\b(?:COMPLETE|APPROVED)\b")
     def test_i09_authority_separation(self):
+        state = _state_lines(self.open_work)
+        active_harden = [
+            _one_prefixed(state, "HARDEN-02 CONTRACT:"),
+            _one_prefixed(state, "HARDEN-02 EXECUTION:"),
+        ]
+        for line in active_harden:
+            for forbidden in (
+                "Product requirement",
+                "Roadmap gate",
+                "blocking OQ",
+                "Feature Pack",
+                "Horizontal Hardening",
+                "Store hardening",
+                "Commerce/Entitlements hardening",
+            ):
+                self.assertNotIn(forbidden, line)
         self.assertIn(
-            "not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ",
+            "HARDEN-02 remains governance sequencing. It is not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ.",
             self.contract,
         )
-        self.assertIn(
-            "Does not amend North Star/MVP, Product Law, Decision Register, AR-000, Architecture Law",
-            self.open_work,
-        )
-
     def test_i10_pmr_reconciliation_remains_required_and_unperformed(self):
-        self.assertIn("FP001_RECONCILIATION_REQUIRED", self.open_work)
         self.assertEqual(FP001_SHA256, _sha256(FP001))
         self.assertEqual(IDENTITY_SHA256, _sha256(IDENTITY))
+        state = _state_lines(self.open_work)
+        fp001 = _one_prefixed(state, "FP001_RECONCILIATION_REQUIRED")
+        self.assertIn("DOWNSTREAM", fp001)
+        self.assertNotRegex(fp001, r"\b(?:CURRENT|NEXT|COMPLETE)\b")
         self.assertIn("FP-001 reconciliation: **NOT PERFORMED by HARDEN-02**", self.contract)
-
     def test_i11_implementation_stop_remains_closed(self):
+        state = _state_lines(self.open_work)
+        executable = _one_prefixed(state, "EXECUTABLE DEVELOPMENT:")
+        self.assertIn("BLOCKED", executable)
+        self.assertNotRegex(executable, r"\b(?:READY|AUTHORISED|ENABLED)\b")
+        hard_stop = _section(self.open_work, "## Development Entry Hard Stop", "# 9. Immediate Next Action")
         self.assertIn(
-            "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
-            self.open_work,
+            "Implementation remains stopped unless every Development Entry Hard Stop condition above is satisfied.",
+            hard_stop,
         )
-        self.assertIn("Application code / Ash / migrations", self.contract)
-        self.assertIn("OUT_OF_SCOPE", self.contract)
-
     def test_i12_full_post_harden02_route_is_ordered(self):
         section = self.contract.split("## 18. Downstream consequence", 1)[1].split("---", 1)[0]
         standards = section.index("NEXT = ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED")
@@ -207,7 +238,6 @@ class Harden02ExecutionIntegrityTests(unittest.TestCase):
         communications = section.index("Communications JIT Domain Dossier", fp001)
         self.assertLess(standards, fp001)
         self.assertLess(fp001, communications)
-
         tail = section[section.index("subject to then-current authority") :]
         ordered = [
             "remaining required/conditional Phase-7B work",
@@ -217,12 +247,21 @@ class Harden02ExecutionIntegrityTests(unittest.TestCase):
         ]
         positions = [tail.index(marker) for marker in ordered]
         self.assertEqual(sorted(positions), positions)
-
+        state = _state_lines(self.open_work)
+        for prefix in (
+            "ENGINEERING STANDARDS AUTHORITY PROMOTION:",
+            "FP001_RECONCILIATION_REQUIRED",
+            "COMMUNICATIONS JIT DOMAIN DOSSIER",
+        ):
+            self.assertNotRegex(_one_prefixed(state, prefix), r"\b(?:CURRENT|NEXT)\b")
     def test_i13_store_cer_remains_excluded(self):
+        state = _state_lines(self.open_work)
+        store_lines = [line for line in state if "STORE/CER" in line.upper()]
+        self.assertGreaterEqual(len(store_lines), 1)
+        for line in store_lines:
+            self.assertRegex(line, r"(?i)(excluded|separate|H02-2)")
+            self.assertNotRegex(line, r"(?i)(CURRENT|NEXT|implementation path|proof obligation|exit condition)")
         self.assertIn("Store Blueprint / CER: **EXCLUDED**", self.contract)
-        self.assertIn("Store/CER exclusion", self.contract)
-        self.assertIn("Store/CER remains an explicitly separate parallel stream", self.readme)
-
     def test_versioned_execution_successors_and_manifest_are_coherent(self):
         self.assertEqual(OPEN_WORK_PREDECESSOR_SHA256, _sha256(OPEN_WORK_PREDECESSOR))
         self.assertEqual(ATLAS_PREDECESSOR_SHA256, _sha256(ATLAS_PREDECESSOR))
@@ -253,19 +292,22 @@ class Harden02ExecutionIntegrityTests(unittest.TestCase):
         )
 
     def test_atlas_current_source_is_not_archived_open_work(self):
-        sources = self.atlas.split("## 1.1 Authority hierarchy", 1)[1].split(
-            "## 1.2 Purpose", 1
-        )[0]
-        self.assertIn("02_OPEN_WORK_v1.2.42.md", sources)
-        self.assertNotIn("02_OPEN_WORK_v1.2.39.md", sources)
-        self.assertNotIn("02_OPEN_WORK_v1.2.41.md", sources)
-        self.assertNotIn(
-            "current gate and planning routing in `02_OPEN_WORK_v1.2.39.md`",
-            self.atlas,
-        )
-        self.assertIn("current gate and planning routing in `02_OPEN_WORK_v1.2.42.md`", self.atlas)
-        self.assertIn("routing-only HARDEN-02 execution correction", self.atlas)
-
+        current_refs = []
+        ambiguous = []
+        for line_number, line in enumerate(self.atlas.splitlines(), start=1):
+            refs = re.findall(r"(?:archive/)?02_OPEN_WORK_v(\d+\.\d+\.\d+)\.md", line)
+            for version in refs:
+                if version == "1.2.42":
+                    current_refs.append((line_number, line))
+                    continue
+                if re.search(r"\bcurrent\b", line, re.IGNORECASE):
+                    ambiguous.append((line_number, line))
+                if "historical-at-freeze" not in line and "archive/02_OPEN_WORK_" not in line:
+                    ambiguous.append((line_number, line))
+        self.assertTrue(current_refs)
+        self.assertEqual([], ambiguous)
+        self.assertNotIn("current gate definitions in `02_OPEN_WORK_v1.2.28.md", self.atlas)
+        self.assertNotIn("current unresolved-work context in `02_OPEN_WORK_v1.2.28.md", self.atlas)
 
 if __name__ == "__main__":
     unittest.main()
