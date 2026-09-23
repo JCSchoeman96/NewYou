@@ -32,7 +32,7 @@ PROTECTED_UPSTREAM_HASHES = {
     "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md": "71615d3363a91a7e6002d907c6edd474fbd87f77bdfc6a38f5b11afd240a5626",
 }
 
-# Superseded active Open Work path only. Do not permanently forbid later Engineering
+# Superseded active routing paths only. Do not permanently forbid later Engineering
 # Standards or application bootstrap artifacts.
 PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/02_OPEN_WORK_v1.2.39.md",
