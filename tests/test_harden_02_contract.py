@@ -98,7 +98,6 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         self.assertNotIn("77a272c3887a7ab46e84a7fed02163d964e37b9b", self.contract)
 
     def test_downstream_resume_order(self):
-        self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.open_work)
         self.assertIn("ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", self.open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.open_work)
         self.assertIn(
@@ -115,21 +114,19 @@ class Harden02ContractDraftingTests(unittest.TestCase):
             self.contract,
         )
         self.assertIn("Communications JIT Domain Dossier", self.contract)
-
-    def test_contract_entry_is_certified_but_execution_needs_own_certification(self):
-        self.assertIn("HARDEN-02 CONTRACT: COMPLETE / CERTIFIED FOR EXECUTION ENTRY", self.open_work)
+        self.assertNotIn("HARDEN-02_EXECUTION_REQUIRED\n", self.open_work)
+    def test_contract_entry_remains_blocked_without_verifiable_independent_certification(self):
+        self.assertIn("HARDEN-02 CONTRACT: OPEN / PENDING INDEPENDENT CERTIFICATION", self.open_work)
         self.assertIn("2599638334b761ddef8e5568d0a38c3207eef722", self.open_work)
         self.assertIn("35875423226", self.open_work)
-        self.assertIn("HARDEN-02 EXECUTION: CANDIDATE COMPLETE / PENDING INDEPENDENT EXACT-HEAD CERTIFICATION", self.open_work)
-        self.assertIn("certified execution head unchanged", self.open_work)
-        self.assertIn("post-merge certification", self.open_work)
-        self.assertIn("HARDEN-02 CONTRACT: COMPLETE / CERTIFIED FOR EXECUTION ENTRY", self.readme)
-        self.assertIn("HARDEN-02 EXECUTION: CANDIDATE COMPLETE / PENDING INDEPENDENT EXACT-HEAD CERTIFICATION", self.readme)
+        self.assertIn("HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED", self.open_work)
+        self.assertIn("not repository-verifiable", self.open_work)
+        self.assertIn("HARDEN-02 CONTRACT: OPEN / PENDING INDEPENDENT CERTIFICATION", self.readme)
+        self.assertIn("HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED", self.readme)
         self.assertIn("pre-merge exact-head certification of this PR is **not** sufficient", self.contract)
         self.assertNotIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.readme)
-
     def test_engineering_standards_promotion_is_routed_but_not_started(self):
         marker = (
             "ENGINEERING STANDARDS AUTHORITY PROMOTION: "
@@ -162,7 +159,8 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         self.assertIn("v1.2.41 → v1.2.42", self.open_work)
         self.assertIn("02_OPEN_WORK_v1.2.42.md", self.readme)
         self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.2.0.md", self.readme)
-        self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.readme)
+        self.assertIn("OPEN / PENDING INDEPENDENT CERTIFICATION", self.readme)
+        self.assertIn("HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED", self.readme)
         self.assertIn("ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", self.readme)
         current = {
             entry["document_id"]: entry
@@ -175,7 +173,6 @@ class Harden02ContractDraftingTests(unittest.TestCase):
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_41"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_41"]["sha256"])
-
     def test_upstream_authority_and_fp001_hashes_unchanged(self):
         for relative_path, expected_hash in PROTECTED_UPSTREAM_HASHES.items():
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
