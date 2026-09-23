@@ -142,6 +142,15 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertNotIn("05_ROADMAP_v1.0.0.md", sources)
         self.assertNotIn("02_OPEN_WORK_v1.2.28.md", sources)
 
+        ambiguous = []
+        for line_number, line in enumerate(self.atlas.splitlines(), start=1):
+            if "02_OPEN_WORK_v1.2.28.md" not in line:
+                continue
+            if "historical-at-freeze" not in line or "archive/02_OPEN_WORK_v1.2.28.md" not in line:
+                ambiguous.append((line_number, line))
+            if re.search(r"\bcurrent\b", line, re.IGNORECASE):
+                ambiguous.append((line_number, line))
+        self.assertEqual([], ambiguous)
     def test_section_54_capability_count_matches_inventory_and_matrix(self):
         inventory = _section(
             self.atlas,
@@ -259,11 +268,13 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
 
     def test_open_work_readme_routing(self):
         self.assertIn("ATLAS RECONCILIATION: COMPLETE", self.open_work)
-        self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.open_work)
+        self.assertIn("HARDEN-02 CONTRACT: OPEN / PENDING INDEPENDENT CERTIFICATION", self.open_work)
+        self.assertIn("HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED", self.open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.1.md", self.readme)
-        self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.readme)
+        self.assertIn("HARDEN-02 CONTRACT: OPEN / PENDING INDEPENDENT CERTIFICATION", self.readme)
+        self.assertIn("HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED", self.readme)
         self.assertIn("02_OPEN_WORK_v1.2.42.md", self.readme)
         current = {
             entry["document_id"]: entry
@@ -279,7 +290,6 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_39"]["lifecycle"])
         self.assertEqual(_sha256(ATLAS_STAGE_OPEN_WORK), historical["OPEN_WORK_V1_2_39"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_38"]["lifecycle"])
-
     def test_upstream_law_and_fp001_unchanged(self):
         for relative_path, expected_hash in PROTECTED_HASHES.items():
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
