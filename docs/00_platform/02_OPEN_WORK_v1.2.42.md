@@ -1098,4 +1098,3 @@ Accepted human decisions:
 - `H02-3R` — ACCEPTED 2026-09-23: certified HARDEN-02 execution completion routes NEXT to `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED`; after that supporting-authority promotion is complete / certified, narrow `FP001_RECONCILIATION_REQUIRED` becomes NEXT, then Communications and remaining Phase-7B/7C work under ordinary gates.
 
 This successor executes only the bounded HARDEN-02 governance hardening permitted by the certified contract: machine-checkable I-01…I-13 evidence, routing-state reconciliation and derived Atlas current-source correction. It does **not** self-certify HARDEN-02 execution, execute or freeze Engineering Standards Authority Promotion, reconcile FP-001, start Communications, or authorise application implementation.
-
