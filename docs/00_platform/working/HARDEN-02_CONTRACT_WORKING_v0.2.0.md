@@ -250,7 +250,7 @@ No Store repository SHA, CER proof obligation, CER exit condition or Store/CER i
 | Manifest Open Work successor hash parity | `PROOF_REQUIRED` (this PR) | FIA |
 | Upstream Product/Architecture/Domain/Roadmap hashes unchanged | `PROOF_REQUIRED` (this PR) | Contract-stage tests |
 | HARDEN-02 execution substantive governance tests | `IMPLEMENTATION_AND_PROOF_REQUIRED` | Later execution PR only |
-| FP-001 PMR reconciliation | `OUT_OF_SCOPE` | Downstream after certified HARDEN-02 |
+| FP-001 PMR reconciliation | `OUT_OF_SCOPE` | Downstream after certified Engineering Standards Authority Promotion |
 | Communications dossier | `OUT_OF_SCOPE` | Downstream after reconciliation |
 | Store/CER/subscriptions/Paystack/OQ-004 | `OUT_OF_SCOPE` | Parallel / later commercial work |
 | Engineering Standards design/freeze | `OUT_OF_SCOPE FOR HARDEN-02 EXECUTION / POST-H02_NEXT` | Separate supporting-authority promotion stage |
@@ -271,9 +271,9 @@ No Store repository SHA, CER proof obligation, CER exit condition or Store/CER i
 | `HARDEN-02 EXECUTION: NOT STARTED` | Remains until the contract reaches COMPLETE / CERTIFIED under the row above |
 | `HARDEN-02 EXECUTION: NEXT / AUTHORISED` | Allowed only after the certified contract head is merged unchanged and the resulting `main` merge state is independently post-merge certified |
 | `HARDEN-02 EXECUTION: COMPLETE / CERTIFIED` | All I-01…I-13 proofs pass; NEXT = `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED` |
-
-The later external state `ENGINEERING STANDARDS PROMOTION: COMPLETE / CERTIFIED → NEXT = FP001_RECONCILIATION_REQUIRED` is owned by current Open Work / the promotion authority package, not by HARDEN-02.
 | Terminal failure | STOP and escalate to owning authority; do not invent law |
+
+The later external state `ENGINEERING STANDARDS PROMOTION: COMPLETE / CERTIFIED → NEXT = FP001_RECONCILIATION_REQUIRED` is owned by current Open Work and the later separately governed promotion stage, not by HARDEN-02.
 
 **Execution entry rule:** pre-merge exact-head certification of this PR is **not** sufficient to start HARDEN-02 execution. HARDEN-02 execution becomes NEXT / authorised only after the certified contract head is merged unchanged and the resulting `main` is independently post-merge certified.
 
