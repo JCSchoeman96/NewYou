@@ -60,6 +60,7 @@ class Harden02ExecutionIntegrityTests(unittest.TestCase):
             self.open_work,
         )
         self.assertNotIn("ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT", self.open_work)
+        self.assertNotIn("HARDEN-02 CONTRACT DRAFTED / PENDING CERTIFICATION", self.open_work)
 
     def test_i02_completed_stages_stay_completed(self):
         for marker in (
@@ -195,6 +196,11 @@ class Harden02ExecutionIntegrityTests(unittest.TestCase):
         self.assertIn("02_OPEN_WORK_v1.2.42.md", sources)
         self.assertNotIn("02_OPEN_WORK_v1.2.39.md", sources)
         self.assertNotIn("02_OPEN_WORK_v1.2.41.md", sources)
+        self.assertNotIn(
+            "current gate and planning routing in `02_OPEN_WORK_v1.2.39.md`",
+            self.atlas,
+        )
+        self.assertIn("current gate and planning routing in `02_OPEN_WORK_v1.2.42.md`", self.atlas)
         self.assertIn("routing-only HARDEN-02 execution correction", self.atlas)
 
 
