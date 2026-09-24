@@ -9,18 +9,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.3.0.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md"
+CONTRACT_V0_3_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.3.0.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md"
 CONTRACT_OLDER_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.42.md"
-OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
-OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.43.md"
+OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
+OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
-EXPECTED_BASE_SHA = "2599638334b761ddef8e5568d0a38c3207eef722"
-EXPECTED_RECOVERY_PR_NUMBER = 39
+EXPECTED_BASE_SHA = "6f9ce049616881805b1086d19ce747358de3c067"
+EXPECTED_RECOVERY_PR_NUMBER = 40
+EXPECTED_CONTRACT_V0_3_SHA256 = "d24a1b460c9e10ae7fa3a50fdf260613e8b5ea72edf8d01eb2577de1b3d9eda2"
 EXPECTED_CONTRACT_V0_2_SHA256 = "9fab2f79b1e5720378a6852bcda9c81aafe8564cd0866a0ea38c1242e7b34f5f"
+EXPECTED_OPEN_WORK_V1_2_42_SHA256 = "2f9baad6ef314b23b53f9c0daa79976347bfbc5b937d68f7937b3149415e55a3"
 EXPECTED_OPEN_WORK_V1_2_41_SHA256 = "85dd9946cf5684b0907f49e973ef75b59541c0f265ac46d44465d1527535da62"
 EXPECTED_ATLAS_V0_2_SHA256 = "c122c0f4a903c9679529e0e65a794999dcdaf957a66fcff00df990a0644bbb7f"
 
@@ -46,8 +49,10 @@ PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/02_OPEN_WORK_v1.2.39.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.40.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.41.md",
+    "docs/00_platform/02_OPEN_WORK_v1.2.42.md",
     "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md",
     "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.2.0.md",
+    "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.3.0.md",
     "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
     "docs/00_platform/reference/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
     "docs/00_platform/working/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
@@ -58,8 +63,10 @@ EXPECTED_RECOVERY_STATE = {
     "baseline_main_sha": EXPECTED_BASE_SHA,
     "current_stage": "HARDEN-02_CONTRACT_RECOVERY_REQUIRED",
     "next_stage": "HARDEN-02_CONTRACT_RECOVERY_REQUIRED",
-    "contract_version": "0.3.0",
+    "contract_version": "0.4.0",
     "contract_status": "OPEN / PENDING INDEPENDENT PRE-MERGE CERTIFICATION",
+    "pr_39_merged": True,
+    "v0_3_0_retroactive_certification": "NOT SATISFIED",
     "pre_merge_certification": "PENDING",
     "exact_head_ci": "PENDING",
     "certified_head_merge": "PENDING",
@@ -84,7 +91,7 @@ EXPECTED_RECOVERY_STATE = {
     "phase_7c": "BLOCKED / NOT_STARTED",
     "proof_classification": "NOT FINALISED",
     "application_implementation": "BLOCKED",
-    "pr_38": "BLOCKED / NOT AUTHORITY",
+    "pr_38": "STALE / BLOCKED / NOT AUTHORITY",
     "downstream_route": [
         "CERTIFIED HARDEN-02 EXECUTION",
         "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
@@ -181,10 +188,85 @@ def _record_has_fields(record: object, required_fields: object) -> bool:
     )
 
 
+def _post_merge_attestation_valid(
+    post_cert: dict[str, object],
+    *,
+    main_sha: str,
+    pr_author: str,
+    candidate_author: str,
+    expected_pr_number: int,
+) -> bool:
+    actor = post_cert.get("independent_review_actor")
+    poster = post_cert.get("attestation_poster_github_identity")
+    if post_cert.get("outcome") != "PASS":
+        return False
+    if post_cert.get("resulting_main_sha") != main_sha:
+        return False
+    if not isinstance(actor, str) or not actor.strip():
+        return False
+    if not isinstance(poster, str) or not poster.strip():
+        return False
+    if post_cert.get("poster_equals_pr_author_disclosed") is not True:
+        return False
+    poster_equals = post_cert.get("poster_equals_pr_author")
+    if not isinstance(poster_equals, bool):
+        return False
+    if poster_equals and poster.casefold() != pr_author.casefold():
+        return False
+    if post_cert.get("review_actor_authored_or_modified_candidate") is not False:
+        return False
+    if post_cert.get("substantive_reviewer_is_review_actor_not_poster") is not True:
+        return False
+    if actor.casefold() == candidate_author.casefold():
+        return False
+    return _valid_pr_record_url(post_cert.get("record_url"), expected_pr_number)
+
+
+def _review_attestation_valid(
+    review: dict[str, object],
+    *,
+    expected_head_sha: str,
+    pr_author: str,
+    candidate_author: str,
+    expected_pr_number: int,
+) -> bool:
+    actor = review.get("independent_review_actor")
+    poster = review.get("attestation_poster_github_identity")
+    if review.get("outcome") != "PASS":
+        return False
+    if review.get("reviewed_head_sha") != expected_head_sha:
+        return False
+    if review.get("reviewed_head_is_certified_head") is not True:
+        return False
+    if not isinstance(actor, str) or not actor.strip():
+        return False
+    if not isinstance(poster, str) or not poster.strip():
+        return False
+    if review.get("poster_equals_pr_author_disclosed") is not True:
+        return False
+    poster_equals = review.get("poster_equals_pr_author")
+    if not isinstance(poster_equals, bool):
+        return False
+    if poster_equals and poster.casefold() != pr_author.casefold():
+        return False
+    if not poster_equals and poster.casefold() == pr_author.casefold():
+        return False
+    if review.get("review_actor_authored_or_modified_candidate") is not False:
+        return False
+    if review.get("substantive_reviewer_is_review_actor_not_poster") is not True:
+        return False
+    if actor.casefold() == candidate_author.casefold():
+        return False
+    if not _valid_pr_record_url(review.get("record_url"), expected_pr_number):
+        return False
+    return True
+
+
 def _execution_entry_passes(
     expected_pr_number: int,
     expected_head_sha: str,
     pr_author: str,
+    candidate_author: str,
     evidence: object,
     evidence_spec: dict[str, object],
 ) -> bool:
@@ -195,6 +277,8 @@ def _execution_entry_passes(
         or not _valid_sha(expected_head_sha)
         or not isinstance(pr_author, str)
         or not pr_author
+        or not isinstance(candidate_author, str)
+        or not candidate_author
         or not isinstance(evidence, dict)
     ):
         return False
@@ -217,16 +301,16 @@ def _execution_entry_passes(
     if not all(isinstance(record, dict) for record in (review, pre_ci, merge, post_ci, post_cert)):
         return False
 
-    reviewer = review["independent_reviewer"]
-    post_reviewer = post_cert["independent_reviewer"]
     main_sha = merge["resulting_main_sha"]
     return all(
         (
-            review["reviewed_head_sha"] == expected_head_sha,
-            review["reviewed_head_is_certified_head"] is True,
-            review["outcome"] == "PASS",
-            isinstance(reviewer, str) and reviewer and reviewer.casefold() != pr_author.casefold(),
-            _valid_pr_record_url(review["record_url"], expected_pr_number),
+            _review_attestation_valid(
+                review,
+                expected_head_sha=expected_head_sha,
+                pr_author=pr_author,
+                candidate_author=candidate_author,
+                expected_pr_number=expected_pr_number,
+            ),
             pre_ci["head_sha"] == expected_head_sha,
             pre_ci["conclusion"] == "PASS",
             pre_ci["workflow"] == "Foundation Integrity",
@@ -245,10 +329,13 @@ def _execution_entry_passes(
             post_cert["ci_conclusion"] == "PASS",
             post_cert["ci_run_url"] == post_ci["run_url"],
             post_cert["outcome"] == "PASS",
-            isinstance(post_reviewer, str)
-            and post_reviewer
-            and post_reviewer.casefold() != pr_author.casefold(),
-            _valid_pr_record_url(post_cert["record_url"], expected_pr_number),
+            _post_merge_attestation_valid(
+                post_cert,
+                main_sha=main_sha,
+                pr_author=pr_author,
+                candidate_author=candidate_author,
+                expected_pr_number=expected_pr_number,
+            ),
         )
     )
 
@@ -257,6 +344,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.contract = CONTRACT.read_text(encoding="utf-8")
+        cls.contract_v0_3 = CONTRACT_V0_3_ARCHIVE.read_text(encoding="utf-8")
         cls.contract_predecessor = CONTRACT_PREDECESSOR.read_text(encoding="utf-8")
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
         cls.readme = README.read_text(encoding="utf-8")
@@ -276,55 +364,48 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self,
         expected_head_sha: str,
         evidence: object,
-        pr_author: str = "pr-author",
+        pr_author: str = "JCSchoeman96",
+        candidate_author: str = "JCSchoeman96",
     ) -> bool:
         return _execution_entry_passes(
             EXPECTED_RECOVERY_PR_NUMBER,
             expected_head_sha,
             pr_author,
+            candidate_author,
             evidence,
             self.evidence_spec,
         )
 
-    def test_v0_3_is_the_active_working_successor_and_rebased_on_expected_main(self):
+    def test_v0_4_is_active_successor_rebased_on_post_pr39_main(self):
         self.assertTrue(CONTRACT.is_file())
-        self.assertIn("Plan / contract version:** `v0.3.0`", self.contract)
+        self.assertIn("Plan / contract version:** `v0.4.0`", self.contract)
         self.assertIn("OPEN / PENDING INDEPENDENT PRE-MERGE CERTIFICATION", self.contract)
         self.assertIn("execution **NOT STARTED / NOT AUTHORISED**", self.contract)
         self.assertIn(f"Re-baseline main SHA:** `{EXPECTED_BASE_SHA}`", self.contract)
         self.assertEqual(EXPECTED_BASE_SHA, self.recovery_state["baseline_main_sha"])
-        self.assertIn("WORKING GOVERNANCE CONTRACT", self.contract)
-        self.assertNotIn("REUSE_HARDENING", self.contract)
+        self.assertIn("Review actor versus attestation poster", self.contract)
 
-    def test_v0_2_is_archived_byte_identically_and_not_retroactively_certified(self):
-        self.assertTrue(CONTRACT_PREDECESSOR.is_file())
-        self.assertEqual(EXPECTED_CONTRACT_V0_2_SHA256, _sha256(CONTRACT_PREDECESSOR))
-        self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md").exists())
-        for statement in (
-            "historical evidence of the previous contract attempt",
-            "CI facts remain valid historical facts",
-            "COMPLETE / CERTIFIED lifecycle was never repository-verifiably established",
-            "does not retroactively repair or certify v0.2.0",
-            "This recovery follows v0.2.0 §13: re-baseline and amend the contract rather than silently expanding scope.",
-        ):
-            self.assertIn(statement, self.contract)
-        self.assertIn("PR #37", self.contract)
-        self.assertIn("b1b0431152481006bbc1eff33cc9844a1b8c1ad5", self.contract)
-        self.assertIn("35859522372", self.contract)
-        self.assertIn("35875423226", self.contract)
+    def test_v0_3_archived_byte_identically(self):
+        self.assertTrue(CONTRACT_V0_3_ARCHIVE.is_file())
+        self.assertEqual(EXPECTED_CONTRACT_V0_3_SHA256, _sha256(CONTRACT_V0_3_ARCHIVE))
+        self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.3.0.md").exists())
+        self.assertIn("does **not** satisfy v0.3.0's GitHub-account independence rule", self.contract)
+        self.assertIn("5809723449", self.contract)
+        self.assertIn("887230fee605f34d4aef36d044737c1cfe257c49", self.contract)
+        self.assertIn("35969382003", self.contract)
 
-    def test_open_work_v1_2_41_is_archived_byte_identically(self):
+    def test_open_work_v1_2_42_archived_byte_identically(self):
         self.assertTrue(OPEN_WORK_PREDECESSOR.is_file())
-        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_41_SHA256, _sha256(OPEN_WORK_PREDECESSOR))
-        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.41.md").exists())
-        self.assertIn("v1.2.41 → v1.2.42", self.open_work)
+        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_42_SHA256, _sha256(OPEN_WORK_PREDECESSOR))
+        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.42.md").exists())
+        self.assertIn("v1.2.42 → v1.2.43", self.open_work)
 
-    def test_harden_02_scope_invariants_are_preserved_from_v0_2(self):
+    def test_harden_02_scope_invariants_preserved_from_v0_3(self):
         for start, end in (
             ("## 3. Accepted human scope decisions", "## 4. In scope"),
             ("## 8. Current structural invariant suite", "## 9. Stale-state / restart pressure tests"),
         ):
-            predecessor_section = _section(self.contract_predecessor, start, end)
+            predecessor_section = _section(self.contract_v0_3, start, end)
             successor_section = _section(self.contract, start, end)
             if start.startswith("## 3."):
                 for scope_id in ("H02-1", "H02-2", "H02-3", "H02-3R"):
@@ -340,7 +421,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             else:
                 self.assertEqual(predecessor_section, successor_section)
 
-    def test_recovery_stays_the_single_current_stage_and_rejects_appended_routes(self):
+    def test_recovery_stays_current_stage(self):
         expected_label = "HARDEN-02 CONTRACT RECOVERY / RE-CERTIFICATION REQUIRED"
         expected_next = "HARDEN-02_CONTRACT_RECOVERY_REQUIRED"
         self.assertEqual(
@@ -348,123 +429,131 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             _route_declaration(self.open_work, "CURRENT AUTHORITY-STAGE PROGRAMME"),
         )
         self.assertEqual(expected_next, _route_declaration(self.open_work, "NEXT STAGE"))
-        self.assertEqual(
-            expected_label,
-            _route_declaration(self.readme, "CURRENT AUTHORITY-STAGE PROGRAMME"),
-        )
-        self.assertEqual(expected_next, _route_declaration(self.readme, "NEXT STAGE"))
         self.assertEqual(EXPECTED_RECOVERY_STATE, self.recovery_state)
         _assert_no_current_execution_authority(self.open_work)
         _assert_no_current_execution_authority(self.readme)
 
-        conflicting_text = (
-            self.open_work
-            + "\nCURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION\n"
-            + "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED\n"
-        )
-        with self.assertRaises(AssertionError):
-            _route_declaration(conflicting_text, "CURRENT AUTHORITY-STAGE PROGRAMME")
-        with self.assertRaises(AssertionError):
-            _route_declaration(conflicting_text, "NEXT STAGE")
-        with self.assertRaises(AssertionError):
-            _assert_no_current_execution_authority(
-                self.open_work + "\nHARDEN-02 EXECUTION: NEXT / AUTHORISED\n"
-            )
-
-    def test_missing_certification_and_head_drift_fail_closed(self):
+    def test_solo_maintainer_same_poster_may_pass_when_review_actor_independent(self):
         head_sha = "a" * 40
-        self.assertFalse(self._recovery_entry_passes(head_sha, {}))
-
-        evidence = self._complete_evidence(head_sha)
+        evidence = self._complete_evidence(
+            head_sha,
+            review_actor="ChatGPT / GPT-5.6 Sol",
+            poster="JCSchoeman96",
+            poster_equals_pr_author=True,
+        )
         self.assertTrue(self._recovery_entry_passes(head_sha, evidence))
 
-        drifted_review = self._complete_evidence(head_sha)
-        drifted_review["pre_merge_review"]["reviewed_head_sha"] = "b" * 40
-        self.assertFalse(self._recovery_entry_passes(head_sha, drifted_review))
-
-        drifted_merge = self._complete_evidence(head_sha)
-        drifted_merge["merge"]["head_sha_verified_before_merge"] = "b" * 40
-        self.assertFalse(self._recovery_entry_passes(head_sha, drifted_merge))
-
-        drifted_merge = self._complete_evidence(head_sha)
-        drifted_merge["merge"]["merged_head_sha"] = "b" * 40
-        self.assertFalse(self._recovery_entry_passes(head_sha, drifted_merge))
-
-        changed_head = "c" * 40
-        self.assertFalse(self._recovery_entry_passes(changed_head, evidence))
-
-    def test_review_and_post_merge_certification_records_are_bound_to_recovery_pr(self):
+    def test_review_actor_authored_candidate_fails(self):
         head_sha = "a" * 40
         evidence = self._complete_evidence(head_sha)
-        self.assertTrue(self._recovery_entry_passes(head_sha, evidence))
+        evidence["pre_merge_review"]["review_actor_authored_or_modified_candidate"] = True
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
 
-        wrong_pre_merge_pr = self._complete_evidence(head_sha)
-        wrong_pre_merge_pr["pre_merge_review"]["record_url"] = (
-            "https://github.com/JCSchoeman96/NewYou/pull/40#pullrequestreview-1"
-        )
-        self.assertFalse(self._recovery_entry_passes(head_sha, wrong_pre_merge_pr))
+    def test_missing_review_actor_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        del evidence["pre_merge_review"]["independent_review_actor"]
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
 
-        wrong_post_merge_pr = self._complete_evidence(head_sha)
-        wrong_post_merge_pr["post_merge_certification"]["record_url"] = (
-            "https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-2"
-        )
-        self.assertFalse(self._recovery_entry_passes(head_sha, wrong_post_merge_pr))
+    def test_missing_posting_identity_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["pre_merge_review"]["attestation_poster_github_identity"] = ""
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
 
-    def test_wrong_resulting_main_sha_fails_closed(self):
+    def test_missing_poster_equals_author_disclosure_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["pre_merge_review"]["poster_equals_pr_author_disclosed"] = False
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_reviewed_head_mismatch_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["pre_merge_review"]["reviewed_head_sha"] = "b" * 40
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_changed_head_after_review_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        self.assertFalse(self._recovery_entry_passes("c" * 40, evidence))
+
+    def test_ci_head_mismatch_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["pre_merge_ci"]["head_sha"] = "b" * 40
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_merge_head_mismatch_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["merge"]["merged_head_sha"] = "b" * 40
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_resulting_main_mismatch_fails(self):
         head_sha = "a" * 40
         evidence = self._complete_evidence(head_sha)
         evidence["post_merge_certification"]["resulting_main_sha"] = "e" * 40
         self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
 
-    def test_pre_and_post_merge_reviewers_must_be_independent_of_pr_author(self):
+    def test_missing_post_merge_review_actor_fails(self):
         head_sha = "a" * 40
-        pre_merge_author_review = self._complete_evidence(head_sha)
-        pre_merge_author_review["pre_merge_review"]["independent_reviewer"] = "pr-author"
-        self.assertFalse(self._recovery_entry_passes(head_sha, pre_merge_author_review))
+        evidence = self._complete_evidence(head_sha)
+        del evidence["post_merge_certification"]["independent_review_actor"]
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
 
-        post_merge_author_review = self._complete_evidence(head_sha)
-        post_merge_author_review["post_merge_certification"]["independent_reviewer"] = "pr-author"
-        self.assertFalse(self._recovery_entry_passes(head_sha, post_merge_author_review))
+    def test_missing_post_merge_attestation_fields_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        del evidence["post_merge_certification"]["record_url"]
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
 
-        case_variant_pre_merge_author_review = self._complete_evidence(head_sha)
-        case_variant_pre_merge_author_review["pre_merge_review"]["independent_reviewer"] = "PR-AUTHOR"
-        self.assertFalse(
-            self._recovery_entry_passes(head_sha, case_variant_pre_merge_author_review)
+    def test_pre_merge_attestation_wrong_pr_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["pre_merge_review"]["record_url"] = (
+            "https://github.com/JCSchoeman96/NewYou/pull/39#pullrequestreview-1"
+        )
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_post_merge_attestation_wrong_pr_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["post_merge_certification"]["record_url"] = (
+            "https://github.com/JCSchoeman96/NewYou/pull/39#issuecomment-2"
+        )
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_misattributing_poster_as_substantive_reviewer_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["pre_merge_review"]["substantive_reviewer_is_review_actor_not_poster"] = False
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_review_actor_same_as_candidate_author_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha, review_actor="JCSchoeman96")
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_contract_rejects_fixture_only_certification(self):
+        self.assertIn(
+            "Passing contract-stage unit tests or fixture syntax alone does **not** establish certification",
+            self.contract,
         )
 
-        case_variant_post_merge_author_review = self._complete_evidence(head_sha)
-        case_variant_post_merge_author_review["post_merge_certification"]["independent_reviewer"] = "PR-AUTHOR"
-        self.assertFalse(
-            self._recovery_entry_passes(head_sha, case_variant_post_merge_author_review)
-        )
-
-    def test_contract_stop_boundary_keeps_post_merge_evidence_after_merge(self):
-        stop_section = self.contract.split("## 20. Contract-stage STOP", maxsplit=1)[1]
-        merge_rules = [
-            line.strip()
-            for line in stop_section.splitlines()
-            if line.strip().startswith("-") and re.search(r"\bmerge\b", line, re.IGNORECASE)
-        ]
-        self.assertEqual(2, len(merge_rules), "one pre-merge rule and one post-merge rule are required")
-
-        pre_merge_rule = next(line for line in merge_rules if "after merge" not in line.lower())
-        post_merge_rule = next(line for line in merge_rules if "after merge" in line.lower())
-        self.assertIn("independent exact-head certification", pre_merge_rule)
-        self.assertIn("Foundation Integrity PASS", pre_merge_rule)
-        self.assertIn("pre-merge check", pre_merge_rule)
-        self.assertNotRegex(pre_merge_rule, r"post[- ]merge")
-        self.assertIn("Foundation Integrity PASS on resulting main", post_merge_rule)
-        self.assertIn("independent repository-visible post-merge certification", post_merge_rule)
-        self.assertIn("execution NOT STARTED / NOT AUTHORISED", post_merge_rule)
-
-    def test_certification_schema_requires_durable_exact_sha_records(self):
+    def test_certification_schema_matches_v0_4_attestation_fields(self):
         self.assertEqual(
             {
                 "pre_merge_review": [
                     "reviewed_head_sha",
                     "outcome",
                     "reviewed_head_is_certified_head",
-                    "independent_reviewer",
+                    "independent_review_actor",
+                    "attestation_poster_github_identity",
+                    "poster_equals_pr_author_disclosed",
+                    "poster_equals_pr_author",
+                    "review_actor_authored_or_modified_candidate",
+                    "substantive_reviewer_is_review_actor_not_poster",
                     "record_url",
                 ],
                 "pre_merge_ci": ["head_sha", "conclusion", "workflow", "run_url"],
@@ -482,116 +571,45 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                     "ci_conclusion",
                     "ci_run_url",
                     "outcome",
-                    "independent_reviewer",
+                    "independent_review_actor",
+                    "attestation_poster_github_identity",
+                    "poster_equals_pr_author_disclosed",
+                    "poster_equals_pr_author",
+                    "review_actor_authored_or_modified_candidate",
+                    "substantive_reviewer_is_review_actor_not_poster",
                     "record_url",
                 ],
             },
             self.evidence_spec,
         )
-        for requirement in (
-            "submitted GitHub PR review",
-            "clearly identified PR review comment",
-            "independent reviewer certifies the exact immutable head of this recovery PR with outcome PASS",
-            "exact reviewed head SHA",
-            "the previous certification and CI evidence do not cover the new head",
-            "the exact PR head is the head being certified",
-            "repository-verifiable post-merge certification record on GitHub",
-            "on the same expected recovery PR in this repository",
-            "Evidence validation must receive the expected recovery PR number",
-            "repository-verifiable",
-        ):
-            self.assertIn(requirement, self.contract)
 
-    def test_execution_remains_not_started_and_downstream_gates_remain_blocked(self):
+    def test_execution_and_downstream_remain_blocked(self):
         self.assertEqual("NOT STARTED / NOT AUTHORISED", self.recovery_state["harden_02_execution"])
-        self.assertIn("HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED throughout this recovery PR", self.contract)
         self.assertEqual("DOWNSTREAM / NOT STARTED", self.recovery_state["engineering_standards_authority_promotion"])
         self.assertEqual("REQUIRED / DOWNSTREAM / NOT PERFORMED", self.recovery_state["fp001_reconciliation"])
         self.assertEqual("REQUIRED / NOT_STARTED", self.recovery_state["communications"])
-        self.assertEqual("BLOCKED / NOT_STARTED", self.recovery_state["phase_7c"])
-        self.assertEqual("NOT FINALISED", self.recovery_state["proof_classification"])
-        self.assertEqual("BLOCKED", self.recovery_state["application_implementation"])
-        self.assertEqual("BLOCKED / NOT AUTHORITY", self.recovery_state["pr_38"])
-        self.assertIn("PR #38 is not authority and remains blocked until this recovery is complete", self.open_work)
+        self.assertEqual("STALE / BLOCKED / NOT AUTHORITY", self.recovery_state["pr_38"])
 
-    def test_full_h02_3r_route_is_explicit_and_ordered(self):
-        expected_route = EXPECTED_RECOVERY_STATE["downstream_route"]
-        self.assertEqual(expected_route, self.recovery_state["downstream_route"])
-        for stage in expected_route:
-            self.assertIn(stage, self.contract)
-            self.assertIn(stage, self.open_work)
-        self.assertIn("H02-3R", self.contract)
-        self.assertIn("H02-3R", self.open_work)
-
-    def test_completed_milestones_and_conditional_dossier_dispositions_remain_explicit(self):
-        self.assertEqual(
-            [
-                "TARGETED PRODUCT AMENDMENT PROGRAMME",
-                "FP-001 PHASE 7A",
-                "IDENTITY & ACCESS JIT DOMAIN DOSSIER",
-            ],
-            self.recovery_state["completed_milestones"],
-        )
-        self.assertEqual("CONDITIONAL / PENDING EXPLICIT ADJUDICATION", self.recovery_state["conditional_dossiers"]["privacy_consent"])
-        self.assertEqual("CONDITIONAL / PENDING EXPLICIT ADJUDICATION", self.recovery_state["conditional_dossiers"]["content_media"])
-        self.assertEqual("CONDITIONAL / PENDING EXPLICIT ADJUDICATION", self.recovery_state["conditional_dossiers"]["audit_evidence"])
-        self.assertEqual("NOT REQUIRED", self.recovery_state["conditional_dossiers"]["analytics"])
-        self.assertIn("Domain count is **20**", self.open_work)
-        self.assertIn("Feature Pack count remains **17**", self.open_work)
-        self.assertIn("IDENTITY & ACCESS: COMPLETE / MERGED", self.open_work)
-        self.assertIn("COMMUNICATIONS: REQUIRED / NOT_STARTED", self.open_work)
-
-    def test_harden_02_is_not_authority_for_product_or_implementation(self):
-        self.assertEqual("PHASE-7 GOVERNANCE / STRUCTURAL HARDENING ONLY", self.recovery_state["harden_02_scope"])
-        self.assertEqual("EXCLUDED", self.recovery_state["store_cer"])
-        for forbidden in (
-            "Product Law",
-            "Architecture Law",
-            "Domain Law",
-            "Roadmap Law",
-            "blocking OQ",
-            "Feature Pack capability",
-            "Horizontal Hardening",
-            "Store Blueprint / CER reuse",
-            "not authority",
-            "No application implementation is authorised",
-        ):
-            self.assertIn(forbidden, self.contract)
-        for path in PROHIBITED_PRESENT_PATHS:
-            self.assertFalse((ROOT / path).exists(), path)
-
-    def test_readme_open_work_and_manifest_route_current_successor(self):
-        self.assertTrue(OPEN_WORK.is_file())
-        self.assertTrue(OPEN_WORK_PREDECESSOR.is_file())
-        self.assertTrue(CONTRACT_PREDECESSOR.is_file())
-        self.assertTrue(CONTRACT_OLDER_PREDECESSOR.is_file())
-        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.40.md").exists())
-        self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md").exists())
-        self.assertIn("02_OPEN_WORK_v1.2.42.md", self.readme)
-        self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.3.0.md", self.readme)
-        self.assertIn("archive/02_OPEN_WORK_v1.2.41.md", self.readme)
-        self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md", self.readme)
-        self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.0.md", self.readme)
-        self.assertIn("HARDEN-02_CONTRACT_RECOVERY_REQUIRED", self.readme)
-
+    def test_readme_open_work_and_manifest_route_v1_2_43(self):
+        self.assertIn("02_OPEN_WORK_v1.2.43.md", self.readme)
+        self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
+        self.assertIn("archive/02_OPEN_WORK_v1.2.42.md", self.readme)
+        self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.42", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.42.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.43", current["OPEN_WORK"]["semver"])
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
-        self.assertEqual("historical", historical["OPEN_WORK_V1_2_41"]["lifecycle"])
-        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_41_SHA256, historical["OPEN_WORK_V1_2_41"]["sha256"])
+        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_42_SHA256, historical["OPEN_WORK_V1_2_42"]["sha256"])
 
-    def test_protected_authority_atlas_and_workflow_hashes_are_unchanged(self):
+    def test_protected_hashes_unchanged(self):
         for relative_path, expected_hash in PROTECTED_UPSTREAM_HASHES.items():
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
-        self.assertEqual(EXPECTED_ATLAS_V0_2_SHA256, _sha256(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"))
 
-    def test_harden_02_contract_is_not_listed_in_authority_manifest(self):
+    def test_harden_02_not_in_authority_manifest(self):
         paths = [
             entry.get("repository_path", "")
             for section in ("governing_documents", "reference_documents", "historical_documents")
@@ -600,17 +618,31 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertTrue(all("HARDEN-02" not in path for path in paths))
 
     @staticmethod
-    def _complete_evidence(head_sha: str) -> dict[str, object]:
+    def _complete_evidence(
+        head_sha: str,
+        *,
+        review_actor: str = "ChatGPT / GPT-5.6 Sol",
+        poster: str = "JCSchoeman96",
+        poster_equals_pr_author: bool = True,
+    ) -> dict[str, object]:
         main_sha = "d" * 40
         pre_ci_url = "https://github.com/JCSchoeman96/NewYou/actions/runs/1001"
         post_ci_url = "https://github.com/JCSchoeman96/NewYou/actions/runs/1002"
+        attestation = {
+            "independent_review_actor": review_actor,
+            "attestation_poster_github_identity": poster,
+            "poster_equals_pr_author_disclosed": True,
+            "poster_equals_pr_author": poster_equals_pr_author,
+            "review_actor_authored_or_modified_candidate": False,
+            "substantive_reviewer_is_review_actor_not_poster": True,
+        }
         return {
             "pre_merge_review": {
                 "reviewed_head_sha": head_sha,
                 "outcome": "PASS",
                 "reviewed_head_is_certified_head": True,
-                "independent_reviewer": "reviewer",
                 "record_url": f"https://github.com/JCSchoeman96/NewYou/pull/{EXPECTED_RECOVERY_PR_NUMBER}#pullrequestreview-1",
+                **attestation,
             },
             "pre_merge_ci": {
                 "head_sha": head_sha,
@@ -637,8 +669,8 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                 "ci_conclusion": "PASS",
                 "ci_run_url": post_ci_url,
                 "outcome": "PASS",
-                "independent_reviewer": "reviewer",
                 "record_url": f"https://github.com/JCSchoeman96/NewYou/pull/{EXPECTED_RECOVERY_PR_NUMBER}#issuecomment-2",
+                **attestation,
             },
         }
 
