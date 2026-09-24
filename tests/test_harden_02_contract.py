@@ -213,6 +213,8 @@ def _post_merge_attestation_valid(
         return False
     if poster_equals and poster.casefold() != pr_author.casefold():
         return False
+    if not poster_equals and poster.casefold() == pr_author.casefold():
+        return False
     if post_cert.get("review_actor_authored_or_modified_candidate") is not False:
         return False
     if post_cert.get("substantive_reviewer_is_review_actor_not_poster") is not True:
@@ -421,17 +423,44 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             else:
                 self.assertEqual(predecessor_section, successor_section)
 
-    def test_recovery_stays_current_stage(self):
-        expected_label = "HARDEN-02 CONTRACT RECOVERY / RE-CERTIFICATION REQUIRED"
+    def test_recovery_stays_current_stage_and_rejects_appended_routes(self):
+        expected_label = "HARDEN-02 CONTRACT RECOVERY / SOLO-MAINTAINER CERTIFICATION AMENDMENT"
         expected_next = "HARDEN-02_CONTRACT_RECOVERY_REQUIRED"
-        self.assertEqual(
-            expected_label,
-            _route_declaration(self.open_work, "CURRENT AUTHORITY-STAGE PROGRAMME"),
-        )
-        self.assertEqual(expected_next, _route_declaration(self.open_work, "NEXT STAGE"))
+        open_work_current = _route_declaration(self.open_work, "CURRENT AUTHORITY-STAGE PROGRAMME")
+        readme_current = _route_declaration(self.readme, "CURRENT AUTHORITY-STAGE PROGRAMME")
+        open_work_next = _route_declaration(self.open_work, "NEXT STAGE")
+        readme_next = _route_declaration(self.readme, "NEXT STAGE")
+        self.assertEqual(expected_label, open_work_current)
+        self.assertEqual(expected_label, readme_current)
+        self.assertEqual(expected_next, open_work_next)
+        self.assertEqual(expected_next, readme_next)
         self.assertEqual(EXPECTED_RECOVERY_STATE, self.recovery_state)
         _assert_no_current_execution_authority(self.open_work)
         _assert_no_current_execution_authority(self.readme)
+
+        conflicting_text = (
+            self.open_work
+            + "\nCURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION\n"
+            + "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED\n"
+        )
+        with self.assertRaises(AssertionError):
+            _route_declaration(conflicting_text, "CURRENT AUTHORITY-STAGE PROGRAMME")
+        with self.assertRaises(AssertionError):
+            _route_declaration(conflicting_text, "NEXT STAGE")
+        with self.assertRaises(AssertionError):
+            _assert_no_current_execution_authority(
+                self.open_work + "\nHARDEN-02 EXECUTION: NEXT / AUTHORISED\n"
+            )
+
+    def test_programme_state_table_does_not_claim_v0_3_is_current(self):
+        section = self.open_work.split("## 12.1 Programme state", maxsplit=1)[1].split("## 12.2", maxsplit=1)[0]
+        later_rows = [line for line in section.splitlines() if line.startswith("| Later |")]
+        self.assertEqual(1, len(later_rows))
+        later_row = later_rows[0].casefold()
+        self.assertIn("v0.4.0", later_row)
+        self.assertNotIn("v0.3.0 is current", later_row)
+        self.assertNotIn("under v0.3.0 is current", later_row)
+        self.assertIn("not started / not authorised", later_row)
 
     def test_solo_maintainer_same_poster_may_pass_when_review_actor_independent(self):
         head_sha = "a" * 40
@@ -465,6 +494,61 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         head_sha = "a" * 40
         evidence = self._complete_evidence(head_sha)
         evidence["pre_merge_review"]["poster_equals_pr_author_disclosed"] = False
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_pre_merge_truthful_poster_not_equals_pr_author_passes(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(
+            head_sha,
+            poster="independent-github-reviewer",
+            poster_equals_pr_author=False,
+        )
+        self.assertTrue(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_pre_merge_false_disclosure_poster_equals_but_different_identity_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(
+            head_sha,
+            poster="independent-github-reviewer",
+            poster_equals_pr_author=True,
+        )
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_pre_merge_false_disclosure_poster_not_equals_but_same_identity_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(
+            head_sha,
+            poster="JCSchoeman96",
+            poster_equals_pr_author=False,
+        )
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_post_merge_truthful_poster_not_equals_pr_author_passes(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(
+            head_sha,
+            poster="independent-github-reviewer",
+            poster_equals_pr_author=False,
+        )
+        self.assertTrue(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_post_merge_false_disclosure_poster_equals_but_different_identity_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(
+            head_sha,
+            poster="independent-github-reviewer",
+            poster_equals_pr_author=True,
+        )
+        evidence["post_merge_certification"]["attestation_poster_github_identity"] = (
+            "independent-github-reviewer"
+        )
+        evidence["post_merge_certification"]["poster_equals_pr_author"] = True
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_post_merge_false_disclosure_poster_not_equals_but_same_identity_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["post_merge_certification"]["poster_equals_pr_author"] = False
         self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
 
     def test_reviewed_head_mismatch_fails(self):

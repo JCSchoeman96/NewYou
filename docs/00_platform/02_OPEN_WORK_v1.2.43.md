@@ -884,7 +884,7 @@ Implementation remains stopped unless every Development Entry Hard Stop conditio
 The Targeted Product Amendment Programme through warranted Delivery Atlas reconciliation remains COMPLETE. Domain count remains 20. Feature Pack count remains 17. The current Delivery Atlas remains derived, non-authoritative working/DELIVERY_ATLAS_WORKING_v0.2.0.md; this recovery does not update it.
 
 ```text
-CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 CONTRACT RECOVERY / RE-CERTIFICATION REQUIRED
+CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 CONTRACT RECOVERY / SOLO-MAINTAINER CERTIFICATION AMENDMENT
 NEXT STAGE: HARDEN-02_CONTRACT_RECOVERY_REQUIRED
 STAGE 1 — TARGETED PRODUCT AMENDMENT GRILL: COMPLETE
 STAGE 2 — GOVERNED PRODUCT LAW AMENDMENT: COMPLETE
@@ -1062,7 +1062,7 @@ This section tracks the governed Targeted Amendment → FP-001 Development Entry
 | Domain amendment | Additive Domain Law successor implementing accepted human Domain decisions | **COMPLETE** — current successor is `04_DOMAIN_MAP_v1.1.0.md`; predecessor is `archive/04_DOMAIN_MAP_v1.0.0.md`; 20 Domains |
 | Roadmap Sequencing Grill | Sequencing decisions for PMR / Research / Voting / Interactive Tools | **COMPLETE** — non-authoritative evidence in `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` |
 | Roadmap amendment | Additive Roadmap successor implementing accepted human Roadmap decisions | **COMPLETE** — current successor is `05_ROADMAP_v1.1.0.md`; predecessor is `archive/05_ROADMAP_v1.0.0.md`; Feature Packs remain 17 |
-| Later | HARDEN-02 execution / Engineering Standards Authority Promotion / FP-001 reconciliation | **DOWNSTREAM** — the v0.2.0 contract attempt is historical and was not repository-verifiably certified. Contract recovery / re-certification under v0.3.0 is current. HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED until the full v0.3.0 exact-head lifecycle completes. After certified execution, the H02-3R route remains Standards Promotion, certified Standards Promotion, FP-001 reconciliation, Communications, remaining required / conditional Phase-7B, Phase 7C, proof classification and Phase 8 after its entry gates. This update executes none of those stages and does not amend FP-001 |
+| Later | HARDEN-02 execution / Engineering Standards Authority Promotion / FP-001 reconciliation | **DOWNSTREAM** — v0.4.0 solo-maintainer certification-mechanism amendment under `working/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` is current. HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED until the full v0.4.0 independent review-actor / truthful GitHub attestation / exact-head Foundation Integrity CI / unchanged-head merge / post-merge Foundation Integrity CI / post-merge attestation lifecycle completes. After certified execution, the H02-3R route remains Engineering Standards Authority Promotion, certified Standards Promotion, FP-001 reconciliation, Communications, remaining required / conditional Phase-7B, Phase 7C, proof classification and Phase 8 after its entry gates. This update executes none of those stages and does not amend FP-001 |
 
 **Baseline reviewed for Stage 1:** `main` at `ad71191b17b297ac9dc683c18141e1c546fa9850`.
 **Stage 3A.1 analysis baseline:** `main` at `0aa6b5990e333988c3617a43db495d6fc6c85cd4`.
