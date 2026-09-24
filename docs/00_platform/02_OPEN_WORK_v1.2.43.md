@@ -1153,7 +1153,7 @@ This historical contract attempt did **not** execute HARDEN-02, execute or freez
 
 **Status:** CURRENT / OPEN — `working/HARDEN-02_CONTRACT_WORKING_v0.4.0.md`, re-baselined from `main` SHA `6f9ce049616881805b1086d19ce747358de3c067`, pending independent review-actor exact-head pre-merge certification with truthful GitHub attestation. PR #39 merged v0.3.0; post-merge CI passed; v0.3.0 lifecycle not retroactively certified. HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED.
 
-The v0.4.0 lifecycle requires an independent review actor (not the candidate author) to inspect the exact head, PASS outcome, durable GitHub attestation naming review actor and poster identity (poster may equal PR author when disclosed), exact-head Foundation Integrity CI PASS, unchanged-head merge, post-merge CI PASS, then independent post-merge review and attestation on resulting `main`. Missing evidence, misattributed reviewership, or head drift fails closed. PR #38 remains stale / blocked / not authority.
+The v0.4.0 lifecycle requires independent exact-head review PASS and exact-head Foundation Integrity CI PASS on the same immutable head (either may complete first), then durable pre-merge GitHub attestation binding review actor, review PASS, poster identity/disclosure, exact head SHA and CI run/result PASS; unchanged-head merge; post-merge CI PASS; fresh independent post-merge review; and durable post-merge attestation on resulting `main`. Missing evidence, misattributed reviewership, or head drift fails closed. PR #38 remains stale / blocked / not authority.
 
 
 The canonical machine-readable current-stage state appears once in §9.

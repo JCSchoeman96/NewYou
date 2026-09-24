@@ -625,6 +625,41 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             self.contract,
         )
 
+    def test_pre_merge_lifecycle_allows_review_and_ci_in_either_order(self):
+        lifecycle = _section(
+            self.contract,
+            "### 11.4 v0.4.0 certification lifecycle",
+            "The smallest required attestation field groups are:",
+        )
+        self.assertIn("either may happen first", lifecycle)
+        self.assertIn("may complete in either order", lifecycle)
+        self.assertIn("only after both", lifecycle.casefold())
+        self.assertIn(
+            "does **not** require `review → attestation → CI` as a strict chronological sequence",
+            lifecycle,
+        )
+        self.assertNotIn(
+            "→ durable GitHub attestation records the review and exact SHA\n→ Foundation Integrity PASS on same exact head",
+            lifecycle,
+        )
+
+    def test_pre_merge_attestation_evidence_binds_review_pass_and_ci_pass_on_same_head(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        self.assertTrue(self._recovery_entry_passes(head_sha, evidence))
+
+        missing_review_pass = self._complete_evidence(head_sha)
+        missing_review_pass["pre_merge_review"]["outcome"] = "FAIL"
+        self.assertFalse(self._recovery_entry_passes(head_sha, missing_review_pass))
+
+        missing_ci_pass = self._complete_evidence(head_sha)
+        missing_ci_pass["pre_merge_ci"]["conclusion"] = "FAIL"
+        self.assertFalse(self._recovery_entry_passes(head_sha, missing_ci_pass))
+
+        ci_head_mismatch = self._complete_evidence(head_sha)
+        ci_head_mismatch["pre_merge_ci"]["head_sha"] = "b" * 40
+        self.assertFalse(self._recovery_entry_passes(head_sha, ci_head_mismatch))
+
     def test_certification_schema_matches_v0_4_attestation_fields(self):
         self.assertEqual(
             {

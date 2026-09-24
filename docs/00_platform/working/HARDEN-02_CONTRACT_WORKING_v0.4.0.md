@@ -19,7 +19,7 @@
 - `v0.1.0` — initial HARDEN-02 governance contract after independent analysis review and accepted human scope decisions H02-1 / H02-2 / H02-3; pre-merge correction removes unreproducible local HARDEN-01 plan SHAs, clarifies merge + post-merge execution entry, and clarifies that package/reuse taxonomy is not applicable.
 - `v0.2.0` — routing-only successor. Preserves H02-1/H02-2 and historical H02-3, records accepted H02-3R, and inserts Engineering Standards Authority Promotion as the sole post-HARDEN-02 NEXT stage before FP-001 reconciliation. Does not execute HARDEN-02, promote standards, amend upstream law or authorise implementation.
 - `v0.3.0` — recovery and re-baseline after repository-verifiable independent pre-merge certification for v0.2.0 could not be established. Preserves v0.2.0 as historical evidence, adds exact-SHA GitHub-visible pre-merge and post-merge certification requirements, and keeps HARDEN-02 execution NOT STARTED / NOT AUTHORISED until the full new lifecycle passes.
-- `v0.4.0` — solo-maintainer certification-mechanism amendment. Preserves v0.3.0 byte-identically as historical evidence. Replaces GitHub-account independence with independent **review actor** versus **attestation poster** attribution. Records PR #39 merge facts without retroactively certifying the v0.3.0 lifecycle. Establishes the usable certification mechanism prospectively from this amendment PR. Does not execute HARDEN-02, promote Engineering Standards, or authorise implementation.
+- `v0.4.0` — solo-maintainer certification-mechanism amendment. Preserves v0.3.0 byte-identically as historical evidence. Replaces GitHub-account independence with independent **review actor** versus **attestation poster** attribution. Records PR #39 merge facts without retroactively certifying the v0.3.0 lifecycle. Establishes the usable certification mechanism prospectively from this amendment PR. Pre-merge independent exact-head review PASS and exact-head Foundation Integrity PASS are both required and may complete in either order; durable GitHub attestation binds both only after both exist. Does not execute HARDEN-02, promote Engineering Standards, or authorise implementation.
 
 ---
 
@@ -333,33 +333,53 @@ A solo maintainer posting an independent AI review to GitHub is acceptable when 
 
 ### 11.4 v0.4.0 certification lifecycle
 
-The v0.4.0 lifecycle is ordered and fail-closed:
+The v0.4.0 lifecycle is fail-closed. Pre-merge and post-merge stages have required evidence, but pre-merge review and pre-merge CI are **not** required to occur in a fixed chronological order.
 
 ```text
 candidate exact head
-→ independent review actor inspects exact head
-→ review outcome PASS
-→ durable GitHub attestation records the review and exact SHA
+→ independent exact-head review PASS
+  AND
 → Foundation Integrity PASS on same exact head
+  (either may happen first)
+→ durable GitHub attestation binds review + CI + exact head
 → immediate pre-merge head verification
-→ merge certified head unchanged
+→ merge unchanged certified head
 → Foundation Integrity PASS on resulting main
-→ independent review actor performs post-merge certification
-→ durable GitHub attestation records resulting main SHA, certified head relationship, CI and PASS
-→ only then next governed stage may begin
+→ fresh independent post-merge review
+→ durable post-merge attestation
+→ only then HARDEN-02 execution may become NEXT / AUTHORISED
 ```
 
-1. v0.4.0 is OPEN / PENDING INDEPENDENT PRE-MERGE CERTIFICATION.
-2. An independent review actor certifies the exact immutable head of this amendment PR with outcome PASS, without having authored or modified that head.
-3. The attestation poster leaves a repository-verifiable record on that same PR (submitted PR review or clearly identified PR review comment) truthfully naming the review actor, poster identity, poster-equals-author disclosure, exact reviewed head SHA, outcome, applicable pre-merge CI, and whether the review actor authored the candidate.
-4. Foundation Integrity CI must PASS on that same exact PR head SHA.
-5. Immediately before merge, verify the live PR head still equals the certified head and CI head. Head drift invalidates prior review/CI evidence; repeat for the new SHA.
-6. Merge only the verified certified head unchanged.
-7. Foundation Integrity CI must PASS on the resulting `main` SHA.
-8. An independent review actor (which may be the same class of external review system, but must perform a fresh post-merge inspection) leaves post-merge attestation with PASS, naming resulting `main` SHA, certified head relationship, and post-merge CI.
+**Pre-merge required inputs (either order):**
+
+1. An independent review actor inspects the exact immutable PR head, without having authored or modified that head, and reports outcome PASS for that exact SHA.
+2. Foundation Integrity CI must PASS on that same exact PR head SHA.
+
+**Pre-merge attestation (only after both inputs exist):**
+
+3. The attestation poster leaves a repository-verifiable record on that same PR (submitted PR review or clearly identified PR review comment) that binds, for the same exact head SHA:
+   - independent review actor;
+   - review outcome PASS;
+   - attestation poster identity and truthful poster-equals-author disclosure;
+   - whether the review actor authored or modified the candidate;
+   - the applicable exact-head Foundation Integrity run;
+   - CI conclusion PASS.
+
+**Merge gate:**
+
+4. Immediately before merge, verify the live PR head still equals the reviewed head and the CI-covered head. Head drift invalidates prior review and CI evidence; repeat review and CI for the new SHA.
+5. Merge only that verified unchanged head.
+
+**Post-merge:**
+
+6. Foundation Integrity CI must PASS on the resulting `main` SHA.
+7. An independent review actor performs a fresh post-merge inspection (not a handoff replay) and reports PASS.
+8. The attestation poster leaves durable post-merge attestation binding resulting `main` SHA, certified PR head relationship, post-merge CI run/result and PASS.
 9. Only then may HARDEN-02 execution become NEXT / AUTHORISED.
 
-Before merge, post-merge evidence cannot exist and is not a merge prerequisite. After merge, execution remains NOT STARTED / NOT AUTHORISED until resulting-main CI PASS and post-merge attestation are present.
+Before merge, post-merge evidence cannot exist and is not a merge prerequisite. After merge, execution remains NOT STARTED / NOT AUTHORISED until resulting-main CI PASS, fresh post-merge review and post-merge attestation are present.
+
+Independent exact-head review and exact-head CI may complete in either order. The contract does **not** require `review → attestation → CI` as a strict chronological sequence. It requires that the durable pre-merge attestation be created only after both the independent review PASS and the exact-head Foundation Integrity PASS exist, and that the attestation truthfully binds both to the same immutable head SHA.
 
 Passing contract-stage unit tests or fixture syntax alone does **not** establish certification. Certification requires repository-verifiable GitHub attestation and CI on the governing SHAs.
 
@@ -409,7 +429,7 @@ The `record_url` values must link to a GitHub-visible PR review or identified PR
 | `v0.2.0: HISTORICAL / NOT REPOSITORY-VERIFIABLY CERTIFIED` | Prior contract attempt; merge/CI facts remain evidence; missing pre-merge certification blocks COMPLETE / CERTIFIED |
 | `v0.3.0: MERGED / NOT RETROACTIVELY CERTIFIED` | Merged via PR #39; substantive ChatGPT PASS on candidate head; v0.3.0 GitHub-identity rule not met; lifecycle not satisfied retroactively |
 | `HARDEN-02_CONTRACT_RECOVERY_REQUIRED` | Current stage while v0.4.0 is OPEN / PENDING INDEPENDENT PRE-MERGE CERTIFICATION |
-| `HARDEN-02 CONTRACT v0.4.0: COMPLETE / CERTIFIED` | Independent review-actor exact-head PASS + truthful GitHub attestation + exact-head CI PASS + unchanged-head merge + post-merge CI PASS + independent post-merge attestation |
+| `HARDEN-02 CONTRACT v0.4.0: COMPLETE / CERTIFIED` | Independent review-actor exact-head PASS and exact-head CI PASS (either order) + pre-merge attestation binding both + unchanged-head merge + post-merge CI PASS + fresh post-merge review + post-merge attestation |
 | `HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED` | Throughout this amendment PR and until the full v0.4.0 lifecycle is repository-verifiably complete |
 | `HARDEN-02 EXECUTION: NEXT / AUTHORISED` | Only after v0.4.0 certified head merged unchanged and resulting `main` post-merge certified |
 | `HARDEN-02 EXECUTION: COMPLETE / CERTIFIED` | All I-01…I-13 proofs pass; NEXT = `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED` |
@@ -417,7 +437,7 @@ The `record_url` values must link to a GitHub-visible PR review or identified PR
 
 The later external state `ENGINEERING STANDARDS PROMOTION: COMPLETE / CERTIFIED → NEXT = FP001_RECONCILIATION_REQUIRED` is owned by current Open Work and the later promotion stage, not by HARDEN-02.
 
-**Execution entry rule:** pre-merge attestation of this amendment PR is not sufficient to start HARDEN-02 execution. Execution becomes NEXT / AUTHORISED only after the v0.4.0 PR head passes independent review-actor certification with truthful GitHub attestation and CI, is merged unchanged, and resulting `main` passes CI and receives post-merge attestation.
+**Execution entry rule:** pre-merge attestation alone is not sufficient to start HARDEN-02 execution. Execution becomes NEXT / AUTHORISED only after independent exact-head review PASS and exact-head Foundation Integrity PASS both exist, a pre-merge attestation truthfully binds both to the same head, that head is merged unchanged, resulting `main` passes CI, and fresh post-merge review plus post-merge attestation are repository-verifiably present.
 
 HARDEN-02 remains governance sequencing. It is not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ.
 
