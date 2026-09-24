@@ -280,12 +280,14 @@ HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED throughout this recover
 The v0.3.0 lifecycle is ordered and fail-closed:
 
 1. v0.3.0 is OPEN / PENDING INDEPENDENT PRE-MERGE CERTIFICATION.
-2. An independent reviewer certifies the exact immutable PR head with outcome PASS. The reviewer must leave a repository-verifiable record on GitHub, either a submitted GitHub PR review or a clearly identified PR review comment. The record must state the exact reviewed head SHA, the review outcome, and confirm that the exact PR head is the head being certified.
+2. An independent reviewer certifies the exact immutable head of this recovery PR with outcome PASS. The reviewer must leave a repository-verifiable record on that same PR, either a submitted GitHub PR review or a clearly identified PR review comment. The record must state the exact reviewed head SHA, the review outcome, and confirm that the exact PR head is the head being certified.
 3. Foundation Integrity CI must PASS on that same exact PR head SHA.
-4. The certified PR head must be merged unchanged. The GitHub merge record must show that the merged PR head SHA equals the certified head SHA.
-5. Foundation Integrity CI must PASS on the resulting `main` SHA.
-6. An independent reviewer must leave a repository-verifiable post-merge certification record on GitHub with outcome PASS. The record must identify the resulting `main` SHA, its relationship to the certified PR head SHA, the applicable post-merge CI run and result, and the independent certification outcome.
+4. Immediately before merge, verify that the live recovery PR head still equals the independently certified head and the head covered by the passing CI run. If it has changed, repeat exact-head review and CI. Merge only the verified certified head; the GitHub merge record must show that the merged PR head SHA equals it.
+5. After merge, Foundation Integrity CI must PASS on the resulting `main` SHA.
+6. After that CI pass, an independent reviewer must leave a repository-verifiable post-merge certification record on GitHub, on the same recovery PR, with outcome PASS. The record must identify the resulting `main` SHA, its relationship to the certified PR head SHA, and the applicable post-merge CI run and result.
 7. Only after every preceding record and result is present may HARDEN-02 execution become NEXT / AUTHORISED.
+
+Before merge, only the independent exact-head certification, exact-head Foundation Integrity PASS, and immediate pre-merge head verification are required. Post-merge evidence cannot exist before merge and is not a merge prerequisite. After merge, execution remains NOT STARTED / NOT AUTHORISED until both the resulting-main CI PASS and independent post-merge certification are repository-verifiably present.
 
 If the PR head changes after review or CI, the previous certification and CI evidence do not cover the new head. Repeat the exact-head review and CI sequence for the changed SHA. If any required record, exact-SHA relationship or PASS result is missing, execution remains NOT STARTED / NOT AUTHORISED. Missing certification evidence cannot be interpreted as PASS.
 
@@ -302,7 +304,7 @@ The smallest required repository-visible record fields are:
     "record_url"
   ],
   "pre_merge_ci": ["head_sha", "conclusion", "workflow", "run_url"],
-  "merge": ["certified_head_sha", "merged_head_sha", "resulting_main_sha"],
+  "merge": ["certified_head_sha", "head_sha_verified_before_merge", "merged_head_sha", "resulting_main_sha"],
   "post_merge_ci": ["head_sha", "conclusion", "workflow", "run_url"],
   "post_merge_certification": [
     "resulting_main_sha",
@@ -318,7 +320,7 @@ The smallest required repository-visible record fields are:
 ```
 <!-- HARDEN_02_CERTIFICATION_EVIDENCE_SPEC_END -->
 
-The pre-merge and post-merge `record_url` values must link to a GitHub-visible PR review or identified PR review comment in this repository. The reviewer's GitHub identity must be independent of the PR author. These fields describe the minimum evidence to check; this contract creates no certification ledger or authority artifact.
+The pre-merge and post-merge `record_url` values must link to a GitHub-visible PR review or identified PR review comment on the same expected recovery PR in this repository. Evidence validation must receive the expected recovery PR number and reject either record if its PR number differs. The merge evidence must record `head_sha_verified_before_merge` as the exact certified head SHA. The reviewer's GitHub identity must be independent of the PR author. These fields describe the minimum evidence to check; this contract creates no certification ledger or authority artifact.
 
 | State | Meaning |
 |---|---|
@@ -508,7 +510,8 @@ This artifact recovers and re-baselines the HARDEN-02 contract only. HARDEN-02 i
 
 Do not:
 
-- merge without independent exact-head certification, exact-head CI, unchanged-head verification and post-merge certification;
+- merge unless independent exact-head certification and Foundation Integrity PASS on the same head both exist, and an immediate pre-merge check confirms that the live PR head still equals the certified head;
+- after merge, keep execution NOT STARTED / NOT AUTHORISED until Foundation Integrity PASS on resulting main and independent repository-visible post-merge certification of that SHA both exist;
 - execute HARDEN-02;
 - start FP-001 reconciliation;
 - start Communications;

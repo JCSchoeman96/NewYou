@@ -19,6 +19,7 @@ README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 EXPECTED_BASE_SHA = "2599638334b761ddef8e5568d0a38c3207eef722"
+EXPECTED_RECOVERY_PR_NUMBER = 39
 EXPECTED_CONTRACT_V0_2_SHA256 = "9fab2f79b1e5720378a6852bcda9c81aafe8564cd0866a0ea38c1242e7b34f5f"
 EXPECTED_OPEN_WORK_V1_2_41_SHA256 = "85dd9946cf5684b0907f49e973ef75b59541c0f265ac46d44465d1527535da62"
 EXPECTED_ATLAS_V0_2_SHA256 = "c122c0f4a903c9679529e0e65a794999dcdaf957a66fcff00df990a0644bbb7f"
@@ -155,11 +156,14 @@ def _valid_sha(value: object) -> bool:
     return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{40}", value) is not None
 
 
-def _valid_pr_record_url(value: object) -> bool:
-    return isinstance(value, str) and re.fullmatch(
-        r"https://github\.com/JCSchoeman96/NewYou/pull/\d+#(?:pullrequestreview|issuecomment)-\d+",
+def _valid_pr_record_url(value: object, expected_pr_number: int) -> bool:
+    if not isinstance(value, str):
+        return False
+    match = re.fullmatch(
+        r"https://github\.com/JCSchoeman96/NewYou/pull/(\d+)#(?:pullrequestreview|issuecomment)-\d+",
         value,
-    ) is not None
+    )
+    return match is not None and int(match.group(1)) == expected_pr_number
 
 
 def _valid_actions_url(value: object) -> bool:
@@ -178,12 +182,21 @@ def _record_has_fields(record: object, required_fields: object) -> bool:
 
 
 def _execution_entry_passes(
+    expected_pr_number: int,
     expected_head_sha: str,
     pr_author: str,
     evidence: object,
     evidence_spec: dict[str, object],
 ) -> bool:
-    if not _valid_sha(expected_head_sha) or not isinstance(evidence, dict):
+    if (
+        not isinstance(expected_pr_number, int)
+        or isinstance(expected_pr_number, bool)
+        or expected_pr_number <= 0
+        or not _valid_sha(expected_head_sha)
+        or not isinstance(pr_author, str)
+        or not pr_author
+        or not isinstance(evidence, dict)
+    ):
         return False
 
     keys = (
@@ -212,13 +225,14 @@ def _execution_entry_passes(
             review["reviewed_head_sha"] == expected_head_sha,
             review["reviewed_head_is_certified_head"] is True,
             review["outcome"] == "PASS",
-            isinstance(reviewer, str) and reviewer and reviewer != pr_author,
-            _valid_pr_record_url(review["record_url"]),
+            isinstance(reviewer, str) and reviewer and reviewer.casefold() != pr_author.casefold(),
+            _valid_pr_record_url(review["record_url"], expected_pr_number),
             pre_ci["head_sha"] == expected_head_sha,
             pre_ci["conclusion"] == "PASS",
             pre_ci["workflow"] == "Foundation Integrity",
             _valid_actions_url(pre_ci["run_url"]),
             merge["certified_head_sha"] == expected_head_sha,
+            merge["head_sha_verified_before_merge"] == expected_head_sha,
             merge["merged_head_sha"] == expected_head_sha,
             _valid_sha(main_sha),
             post_ci["head_sha"] == main_sha,
@@ -231,8 +245,10 @@ def _execution_entry_passes(
             post_cert["ci_conclusion"] == "PASS",
             post_cert["ci_run_url"] == post_ci["run_url"],
             post_cert["outcome"] == "PASS",
-            isinstance(post_reviewer, str) and post_reviewer and post_reviewer != pr_author,
-            _valid_pr_record_url(post_cert["record_url"]),
+            isinstance(post_reviewer, str)
+            and post_reviewer
+            and post_reviewer.casefold() != pr_author.casefold(),
+            _valid_pr_record_url(post_cert["record_url"], expected_pr_number),
         )
     )
 
@@ -254,6 +270,20 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             cls.contract,
             "<!-- HARDEN_02_CERTIFICATION_EVIDENCE_SPEC_START -->",
             "<!-- HARDEN_02_CERTIFICATION_EVIDENCE_SPEC_END -->",
+        )
+
+    def _recovery_entry_passes(
+        self,
+        expected_head_sha: str,
+        evidence: object,
+        pr_author: str = "pr-author",
+    ) -> bool:
+        return _execution_entry_passes(
+            EXPECTED_RECOVERY_PR_NUMBER,
+            expected_head_sha,
+            pr_author,
+            evidence,
+            self.evidence_spec,
         )
 
     def test_v0_3_is_the_active_working_successor_and_rebased_on_expected_main(self):
@@ -343,34 +373,89 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
 
     def test_missing_certification_and_head_drift_fail_closed(self):
         head_sha = "a" * 40
-        self.assertFalse(
-            _execution_entry_passes(
-                head_sha,
-                "pr-author",
-                {},
-                self.evidence_spec,
-            )
-        )
+        self.assertFalse(self._recovery_entry_passes(head_sha, {}))
 
         evidence = self._complete_evidence(head_sha)
-        self.assertTrue(_execution_entry_passes(head_sha, "pr-author", evidence, self.evidence_spec))
+        self.assertTrue(self._recovery_entry_passes(head_sha, evidence))
 
         drifted_review = self._complete_evidence(head_sha)
         drifted_review["pre_merge_review"]["reviewed_head_sha"] = "b" * 40
-        self.assertFalse(
-            _execution_entry_passes(head_sha, "pr-author", drifted_review, self.evidence_spec)
-        )
+        self.assertFalse(self._recovery_entry_passes(head_sha, drifted_review))
+
+        drifted_merge = self._complete_evidence(head_sha)
+        drifted_merge["merge"]["head_sha_verified_before_merge"] = "b" * 40
+        self.assertFalse(self._recovery_entry_passes(head_sha, drifted_merge))
 
         drifted_merge = self._complete_evidence(head_sha)
         drifted_merge["merge"]["merged_head_sha"] = "b" * 40
-        self.assertFalse(
-            _execution_entry_passes(head_sha, "pr-author", drifted_merge, self.evidence_spec)
-        )
+        self.assertFalse(self._recovery_entry_passes(head_sha, drifted_merge))
 
         changed_head = "c" * 40
-        self.assertFalse(
-            _execution_entry_passes(changed_head, "pr-author", evidence, self.evidence_spec)
+        self.assertFalse(self._recovery_entry_passes(changed_head, evidence))
+
+    def test_review_and_post_merge_certification_records_are_bound_to_recovery_pr(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        self.assertTrue(self._recovery_entry_passes(head_sha, evidence))
+
+        wrong_pre_merge_pr = self._complete_evidence(head_sha)
+        wrong_pre_merge_pr["pre_merge_review"]["record_url"] = (
+            "https://github.com/JCSchoeman96/NewYou/pull/40#pullrequestreview-1"
         )
+        self.assertFalse(self._recovery_entry_passes(head_sha, wrong_pre_merge_pr))
+
+        wrong_post_merge_pr = self._complete_evidence(head_sha)
+        wrong_post_merge_pr["post_merge_certification"]["record_url"] = (
+            "https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-2"
+        )
+        self.assertFalse(self._recovery_entry_passes(head_sha, wrong_post_merge_pr))
+
+    def test_wrong_resulting_main_sha_fails_closed(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["post_merge_certification"]["resulting_main_sha"] = "e" * 40
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_pre_and_post_merge_reviewers_must_be_independent_of_pr_author(self):
+        head_sha = "a" * 40
+        pre_merge_author_review = self._complete_evidence(head_sha)
+        pre_merge_author_review["pre_merge_review"]["independent_reviewer"] = "pr-author"
+        self.assertFalse(self._recovery_entry_passes(head_sha, pre_merge_author_review))
+
+        post_merge_author_review = self._complete_evidence(head_sha)
+        post_merge_author_review["post_merge_certification"]["independent_reviewer"] = "pr-author"
+        self.assertFalse(self._recovery_entry_passes(head_sha, post_merge_author_review))
+
+        case_variant_pre_merge_author_review = self._complete_evidence(head_sha)
+        case_variant_pre_merge_author_review["pre_merge_review"]["independent_reviewer"] = "PR-AUTHOR"
+        self.assertFalse(
+            self._recovery_entry_passes(head_sha, case_variant_pre_merge_author_review)
+        )
+
+        case_variant_post_merge_author_review = self._complete_evidence(head_sha)
+        case_variant_post_merge_author_review["post_merge_certification"]["independent_reviewer"] = "PR-AUTHOR"
+        self.assertFalse(
+            self._recovery_entry_passes(head_sha, case_variant_post_merge_author_review)
+        )
+
+    def test_contract_stop_boundary_keeps_post_merge_evidence_after_merge(self):
+        stop_section = self.contract.split("## 20. Contract-stage STOP", maxsplit=1)[1]
+        merge_rules = [
+            line.strip()
+            for line in stop_section.splitlines()
+            if line.strip().startswith("-") and re.search(r"\bmerge\b", line, re.IGNORECASE)
+        ]
+        self.assertEqual(2, len(merge_rules), "one pre-merge rule and one post-merge rule are required")
+
+        pre_merge_rule = next(line for line in merge_rules if "after merge" not in line.lower())
+        post_merge_rule = next(line for line in merge_rules if "after merge" in line.lower())
+        self.assertIn("independent exact-head certification", pre_merge_rule)
+        self.assertIn("Foundation Integrity PASS", pre_merge_rule)
+        self.assertIn("pre-merge check", pre_merge_rule)
+        self.assertNotRegex(pre_merge_rule, r"post[- ]merge")
+        self.assertIn("Foundation Integrity PASS on resulting main", post_merge_rule)
+        self.assertIn("independent repository-visible post-merge certification", post_merge_rule)
+        self.assertIn("execution NOT STARTED / NOT AUTHORISED", post_merge_rule)
 
     def test_certification_schema_requires_durable_exact_sha_records(self):
         self.assertEqual(
@@ -383,7 +468,12 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                     "record_url",
                 ],
                 "pre_merge_ci": ["head_sha", "conclusion", "workflow", "run_url"],
-                "merge": ["certified_head_sha", "merged_head_sha", "resulting_main_sha"],
+                "merge": [
+                    "certified_head_sha",
+                    "head_sha_verified_before_merge",
+                    "merged_head_sha",
+                    "resulting_main_sha",
+                ],
                 "post_merge_ci": ["head_sha", "conclusion", "workflow", "run_url"],
                 "post_merge_certification": [
                     "resulting_main_sha",
@@ -401,11 +491,13 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         for requirement in (
             "submitted GitHub PR review",
             "clearly identified PR review comment",
-            "independent reviewer certifies the exact immutable PR head with outcome PASS",
+            "independent reviewer certifies the exact immutable head of this recovery PR with outcome PASS",
             "exact reviewed head SHA",
             "the previous certification and CI evidence do not cover the new head",
             "the exact PR head is the head being certified",
-            "independent reviewer must leave a repository-verifiable post-merge certification record on GitHub with outcome PASS",
+            "repository-verifiable post-merge certification record on GitHub",
+            "on the same expected recovery PR in this repository",
+            "Evidence validation must receive the expected recovery PR number",
             "repository-verifiable",
         ):
             self.assertIn(requirement, self.contract)
@@ -518,7 +610,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                 "outcome": "PASS",
                 "reviewed_head_is_certified_head": True,
                 "independent_reviewer": "reviewer",
-                "record_url": "https://github.com/JCSchoeman96/NewYou/pull/999#pullrequestreview-1",
+                "record_url": f"https://github.com/JCSchoeman96/NewYou/pull/{EXPECTED_RECOVERY_PR_NUMBER}#pullrequestreview-1",
             },
             "pre_merge_ci": {
                 "head_sha": head_sha,
@@ -528,6 +620,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             },
             "merge": {
                 "certified_head_sha": head_sha,
+                "head_sha_verified_before_merge": head_sha,
                 "merged_head_sha": head_sha,
                 "resulting_main_sha": main_sha,
             },
@@ -545,7 +638,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                 "ci_run_url": post_ci_url,
                 "outcome": "PASS",
                 "independent_reviewer": "reviewer",
-                "record_url": "https://github.com/JCSchoeman96/NewYou/pull/999#issuecomment-2",
+                "record_url": f"https://github.com/JCSchoeman96/NewYou/pull/{EXPECTED_RECOVERY_PR_NUMBER}#issuecomment-2",
             },
         }
 
