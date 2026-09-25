@@ -9,9 +9,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-DOMAIN_MAP = DOCS / "04_DOMAIN_MAP_v1.1.1.md"
+DOMAIN_MAP = DOCS / "04_DOMAIN_MAP_v1.1.2.md"
 DOMAIN_MAP_PREDECESSOR = DOCS / "archive" / "04_DOMAIN_MAP_v1.0.0.md"
 DOMAIN_MAP_V1_1_0_PREDECESSOR = DOCS / "archive" / "04_DOMAIN_MAP_v1.1.0.md"
+DOMAIN_MAP_V1_1_1_PREDECESSOR = DOCS / "archive" / "04_DOMAIN_MAP_v1.1.1.md"
 EVIDENCE = DOCS / "working" / "TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.37.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.36.md"
@@ -68,7 +69,7 @@ PROTECTED_HASHES = {
 
 REQUIRED_SUCCESSOR_PATHS = (
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.37.md",
-    "docs/00_platform/04_DOMAIN_MAP_v1.1.1.md",
+    "docs/00_platform/04_DOMAIN_MAP_v1.1.2.md",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.36.md",
     "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md",
     "docs/00_platform/working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md",
@@ -84,6 +85,7 @@ PROHIBITED_PRESENT_PATHS = (
 )
 
 OWNERSHIP_EXPECTATIONS = {
+    "Purpose-specific consent/current consent, including marketing consent and purpose-level withdrawal": "Privacy & Consent",
     "Research/feedback campaign, instrument and published version": "Research & Feedback",
     "Participant Research/feedback response": "Research & Feedback",
     "Research correction, withdrawal and de-link lifecycle": "Research & Feedback",
@@ -149,10 +151,15 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
             _sha256(DOMAIN_MAP_V1_1_0_PREDECESSOR),
         )
         self.assertEqual(
+            "ae1b6e44e0e5da2060bcbfda46b8c280a6c7aa0e596b8feb8198cea22aa4bb42",
+            _sha256(DOMAIN_MAP_V1_1_1_PREDECESSOR),
+        )
+        self.assertEqual(
             "69b7c00a6b134cdfe80ecb8e2cb5b10350159c95bdbb79067bcb3225dbb3d34c",
             _sha256(OPEN_WORK_PREDECESSOR),
         )
-        self.assertIn("**SemVer transition:** `v1.1.0 → v1.1.1`", self.domain_map)
+        self.assertIn("**SemVer transition:** `v1.1.1 → v1.1.2`", self.domain_map)
+        self.assertIn("# 15. DOL-01 marketing unsubscribe ownership amendment (v1.1.2)", self.domain_map)
         self.assertIn("## 14. Targeted Domain amendment record (v1.1.0)", self.domain_map)
         self.assertIn("v1.0.0 → v1.1.0", self.domain_map)
         self.assertIn("Successor from the v1.0.0 baseline: `archive/04_DOMAIN_MAP_v1.1.0.md`", self.domain_map)
@@ -189,6 +196,11 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
         domains = {row["Domain"].strip("*") for row in self.domain_rows if row["#"].isdigit()}
         by_truth = {row["Business truth"]: row for row in self.ownership_rows}
         self.assertEqual(61, len(self.ownership_rows))
+        consent = by_truth[
+            "Purpose-specific consent/current consent, including marketing consent and purpose-level withdrawal"
+        ]
+        self.assertIn("Communications", consent["Principal dependents"])
+        self.assertIn("routes withdrawal through the Privacy interface", consent["Interaction rule"])
         for truth, owner in OWNERSHIP_EXPECTATIONS.items():
             self.assertIn(truth, by_truth, truth)
             owners = re.findall(r"\*\*(.+?)\*\*", by_truth[truth]["Authoritative domain"])
@@ -280,7 +292,7 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         self.assertIn("ENGINEERING STANDARDS: DOWNSTREAM", self.open_work)
-        self.assertIn("04_DOMAIN_MAP_v1.1.1.md", self.readme)
+        self.assertIn("04_DOMAIN_MAP_v1.1.2.md", self.readme)
         self.assertIn("archive/02_OPEN_WORK_v1.2.37.md", self.readme)
         self.assertIn("DOMAIN AMENDMENT: COMPLETE", self.readme)
         current = {
@@ -289,13 +301,13 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
             for entry in self.manifest[section]
         }
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
-        self.assertEqual("1.2.44", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.44.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.45", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.45.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(ROOT / current["OPEN_WORK"]["repository_path"]), current["OPEN_WORK"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_37"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK), historical["OPEN_WORK_V1_2_37"]["sha256"])
-        self.assertEqual("1.1.1", current["DOMAIN_MAP"]["semver"])
-        self.assertEqual("docs/00_platform/04_DOMAIN_MAP_v1.1.1.md", current["DOMAIN_MAP"]["repository_path"])
+        self.assertEqual("1.1.2", current["DOMAIN_MAP"]["semver"])
+        self.assertEqual("docs/00_platform/04_DOMAIN_MAP_v1.1.2.md", current["DOMAIN_MAP"]["repository_path"])
         self.assertEqual(_sha256(DOMAIN_MAP), current["DOMAIN_MAP"]["sha256"])
         self.assertEqual(20, self.manifest["integrity_rules"]["expected_counts"]["domains"])
         self.assertEqual(61, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
@@ -303,6 +315,7 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_36"]["lifecycle"])
         self.assertEqual("historical", historical["DOMAIN_MAP_V1_0_0"]["lifecycle"])
         self.assertEqual("historical", historical["DOMAIN_MAP_V1_1_0"]["lifecycle"])
+        self.assertEqual("historical", historical["DOMAIN_MAP_V1_1_1"]["lifecycle"])
         self.assertEqual(
             "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
             historical["DOMAIN_MAP_V1_0_0"]["sha256"],
