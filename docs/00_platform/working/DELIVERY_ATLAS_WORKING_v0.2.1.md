@@ -51,7 +51,7 @@ The current sources that establish this chain are:
 | Architecture Law | `docs/00_platform/03_ARCHITECTURE_v1.1.1.md` and the accepted Architecture Law represented by it (`reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`) | Defines architectural authority, state authority, interaction rules, failure behaviour, performance doctrine and deferred mechanisms. |
 | Domain Law | `docs/00_platform/04_DOMAIN_MAP_v1.1.1.md` | Defines who owns durable business truth and the domain-level dependency direction (20 Domains). |
 | Roadmap | `docs/00_platform/05_ROADMAP_v1.1.1.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
-| Planning tracker | `docs/00_platform/02_OPEN_WORK_v1.2.44.md` | Tracks unresolved gates, planning sequence and development stop conditions. It does not outrank Product, Architecture, Domain or Roadmap authority. |
+| Planning tracker | `docs/00_platform/02_OPEN_WORK_v1.2.45.md` | Tracks unresolved gates, planning sequence and development stop conditions. It does not outrank Product, Architecture, Domain or Roadmap authority. |
 | Supporting cross-cutting contract | `docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md` | Supplies stable operating workflow guidance beneath the four upstream law levels. |
 | Supporting cross-cutting contract | `docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` | Supplies frontend, interaction, accessibility, public-experience and measurement guidance beneath the four upstream law levels. |
 | Routing and integrity evidence | `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` | Routes current and reference documents and records integrity expectations. It does not create a new authority layer. |
@@ -600,7 +600,7 @@ This provides the trusted entry capability that every protected core journey and
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.1.1.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.1.1.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.4.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.44.md`.
+`05_ROADMAP_v1.1.1.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.1.1.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.4.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.45.md`.
 
 ## FP-002 — Purchase to verified payment and entitlement
 

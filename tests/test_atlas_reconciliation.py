@@ -149,7 +149,12 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("03_ARCHITECTURE_v1.1.1.md", sources)
         self.assertIn("04_DOMAIN_MAP_v1.1.1.md", sources)
         self.assertIn("05_ROADMAP_v1.1.1.md", sources)
-        self.assertIn("02_OPEN_WORK_v1.2.44.md", sources)
+        current = {
+            entry["document_id"]: entry
+            for section in ("governing_documents", "reference_documents")
+            for entry in self.manifest[section]
+        }
+        self.assertIn(Path(current["OPEN_WORK"]["repository_path"]).name, sources)
         self.assertNotIn("00_PLATFORM_v1.3.0.md", sources)
         self.assertNotIn("01_DECISIONS_v1.3.0.md", sources)
         self.assertNotIn("03_ARCHITECTURE_v1.0.0.md", sources)
@@ -279,16 +284,16 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.1.md", self.readme)
         self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.2.0.md", self.readme)
-        self.assertIn("HARDEN-02_POST_MERGE_CERTIFICATION_REQUIRED", self.readme)
-        self.assertIn("02_OPEN_WORK_v1.2.44.md", self.readme)
+        self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.44", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.44.md", current["OPEN_WORK"]["repository_path"])
-        self.assertEqual(_sha256(DOCS / "02_OPEN_WORK_v1.2.44.md"), current["OPEN_WORK"]["sha256"])
+        self.assertIn(Path(current["OPEN_WORK"]["repository_path"]).name, self.readme)
+        current_open_work_path = DOCS.parent.parent / current["OPEN_WORK"]["repository_path"]
+        self.assertTrue(current_open_work_path.is_file())
+        self.assertEqual(_sha256(current_open_work_path), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_42"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_42"]["sha256"])
@@ -307,7 +312,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
             self.assertFalse((ROOT / relative_path).exists(), relative_path)
         # Atlas must not invent HARDEN-02 law; later governed successors may advance independently.
         self.assertIn("HARDEN-02 artifacts are not amended by this successor", self.atlas)
-        self.assertTrue((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.1.md").is_file())
+        self.assertTrue((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.2.md").is_file())
         self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md").is_file())
         self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md").is_file())
         self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md").is_file())

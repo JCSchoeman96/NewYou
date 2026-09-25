@@ -39,14 +39,14 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.44.md",
-      "semver": "1.2.44",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.44.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.45.md",
+      "semver": "1.2.45",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.45.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "a296edf5f9c4bccd48b3b3057dba96b0a70ca822c1f8a162f9b44a985d328c1e",
-      "superseded_version": "1.2.43",
+      "sha256": "0e2eb62112ebf89083904e1c88b691464596f0d370a457f64488754266f17d08",
+      "superseded_version": "1.2.44",
       "lifecycle": "current",
-      "provenance_sha256": "a296edf5f9c4bccd48b3b3057dba96b0a70ca822c1f8a162f9b44a985d328c1e"
+      "provenance_sha256": "0e2eb62112ebf89083904e1c88b691464596f0d370a457f64488754266f17d08"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -512,6 +512,17 @@
       "lifecycle": "historical"
     },
     {
+      "document_id": "OPEN_WORK_V1_2_44",
+      "canonical_filename": "02_OPEN_WORK_v1.2.44.md",
+      "semver": "1.2.44",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.44.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "a296edf5f9c4bccd48b3b3057dba96b0a70ca822c1f8a162f9b44a985d328c1e",
+      "superseded_version": "1.2.45",
+      "lifecycle": "historical",
+      "provenance_sha256": "a296edf5f9c4bccd48b3b3057dba96b0a70ca822c1f8a162f9b44a985d328c1e"
+    },
+    {
       "document_id": "OPEN_WORK_V1_2_43",
       "canonical_filename": "02_OPEN_WORK_v1.2.43.md",
       "semver": "1.2.43",
@@ -689,7 +700,7 @@
       "navigation_document_paths": [
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md"
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md"
       ]
     },
     "product_hardening_bundle_allocation_requirements": {

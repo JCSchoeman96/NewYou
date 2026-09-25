@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -42,6 +43,63 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
             self.assertEqual("PASS", report["status"])
             self.assertEqual([], report["findings"])
+
+    def test_pending_post_merge_lifecycle_state_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            open_work_entry = next(
+                entry for entry in manifest["governing_documents"]
+                if entry["document_id"] == "OPEN_WORK"
+            )
+            open_work_path = root / open_work_entry["repository_path"]
+            open_work = open_work_path.read_text(encoding="utf-8")
+            replacements = (
+                (
+                    "| `POST_MERGE_INDEPENDENT_REVIEW` | `PASS`",
+                    "| `POST_MERGE_INDEPENDENT_INSPECTION` | `PENDING`",
+                ),
+                (
+                    "| `POST_MERGE_ATTESTATION` | `COMPLETE`",
+                    "| `POST_MERGE_ATTESTATION` | `PENDING`",
+                ),
+                (
+                    "| `EXECUTION` | `NEXT_AUTHORISED_NOT_STARTED`",
+                    "| `EXECUTION` | `NOT_STARTED_NOT_AUTHORISED`",
+                ),
+            )
+            for current, stale in replacements:
+                self.assertEqual(1, open_work.count(current), current)
+                open_work = open_work.replace(current, stale)
+            open_work_path.write_text(open_work, encoding="utf-8")
+
+            readme_path = fixture_docs / "README.md"
+            readme = readme_path.read_text(encoding="utf-8")
+            for current, stale in (
+                ("HARDEN-02 EXECUTION / STRUCTURAL HARDENING", "HARDEN-02 POST-MERGE CERTIFICATION / CONTRACT LIFECYCLE"),
+                ("HARDEN-02_EXECUTION_REQUIRED", "HARDEN-02_POST_MERGE_CERTIFICATION_REQUIRED"),
+                ("POST-MERGE CERTIFICATION: COMPLETE", "POST-MERGE CERTIFICATION: PENDING"),
+                (
+                    "HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED",
+                    "HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED",
+                ),
+            ):
+                self.assertEqual(1, readme.count(current), current)
+                readme = readme.replace(current, stale)
+            readme_path.write_text(readme, encoding="utf-8")
+
+            refresh_manifest(root, manifest_path)
+            report = run_audit(root, manifest_path)
+            lifecycle_check = next(
+                check for check in report["checks"]
+                if check["name"] == "harden_02_lifecycle_state"
+            )
+
+            self.assertEqual("FAIL", lifecycle_check["status"])
 
     def test_production_audit_uses_manifest_expectations(self):
         with tempfile.TemporaryDirectory() as directory:

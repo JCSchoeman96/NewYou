@@ -285,7 +285,6 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         current = {entry["document_id"]: entry for section in ("governing_documents", "reference_documents") for entry in self.manifest[section]}
         expected = {
-            "OPEN_WORK": ("1.2.44", "docs/00_platform/02_OPEN_WORK_v1.2.44.md"),
             "ARCHITECTURE_SYNTHESIS": ("1.1.1", "docs/00_platform/03_ARCHITECTURE_v1.1.1.md"),
             "DOMAIN_MAP": ("1.1.1", "docs/00_platform/04_DOMAIN_MAP_v1.1.1.md"),
             "FRONTEND_EXPERIENCE_SYSTEM": ("1.0.1", "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md"),
@@ -297,6 +296,9 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
             self.assertEqual(path, current[document_id]["repository_path"], document_id)
 
             self.assertEqual(_sha256(ROOT / path), current[document_id]["sha256"], document_id)
+        open_work_path = ROOT / current["OPEN_WORK"]["repository_path"]
+        self.assertTrue(open_work_path.is_file())
+        self.assertEqual(_sha256(open_work_path), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         for document_id in ("OPEN_WORK_V1_2_35", "OPEN_WORK_V1_2_36", "ARCHITECTURE_SYNTHESIS_V1_0_0", "ARCHITECTURE_SYNTHESIS_V1_1_0", "ARCHITECTURE_LAW_V0_35_0", "REFERENCE_FLOW_PRESSURE_TESTS_V0_2_0", "DOMAIN_MAP_V1_0_0", "FRONTEND_EXPERIENCE_SYSTEM_V1_0_0"):
             self.assertEqual("historical", historical[document_id]["lifecycle"])
