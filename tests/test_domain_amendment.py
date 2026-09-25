@@ -278,8 +278,8 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
             for entry in self.manifest[section]
         }
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
-        self.assertEqual("1.2.42", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.42.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.43", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.43.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(ROOT / current["OPEN_WORK"]["repository_path"]), current["OPEN_WORK"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_37"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK), historical["OPEN_WORK_V1_2_37"]["sha256"])
