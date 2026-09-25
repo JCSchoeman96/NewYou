@@ -896,6 +896,8 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual("352f304139b9d4f8ee3ba205cde9e34d0ad8437f", state["pr_40_merged_sha"])
         self.assertEqual("9411b34b646d7752d2942afca1363830d3b25f10", state["status_successor_base_sha"])
         self.assertNotIn("current_main_sha", state)
+        self.assertIn("STATUS-SUCCESSOR BASE MAIN SHA: 9411b34b646d7752d2942afca1363830d3b25f10", self.current_open_work)
+        self.assertNotIn("CURRENT MAIN BASELINE", self.current_open_work)
         self.assertEqual(state["pr_40_certified_head"], state["exact_head_ci_head_sha"])
         self.assertEqual("Foundation Integrity", state["exact_head_ci_workflow"])
         self.assertEqual("PASS", state["exact_head_ci_conclusion"])
