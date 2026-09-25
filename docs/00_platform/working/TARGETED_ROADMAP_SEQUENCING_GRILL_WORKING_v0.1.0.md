@@ -6,7 +6,7 @@ NON-AUTHORITATIVE / ROADMAP SEQUENCING GRILL EVIDENCE
 
 This working artifact records the Roadmap Sequencing Grill that followed the governed Domain amendment. It is **not** Roadmap Law.
 
-**Roadmap Law is created only by the versioned Roadmap successor** `docs/00_platform/05_ROADMAP_v1.1.0.md`.
+**Roadmap Law is created only by the versioned Roadmap successor** `docs/00_platform/archive/05_ROADMAP_v1.1.0.md`.
 
 - **Document status:** WORKING / NON-AUTHORITATIVE EVIDENCE
 - **Document version:** v0.1.0
@@ -25,7 +25,7 @@ The independently certified post-Domain-amendment state was confirmed:
 - Architecture Grill / Engineering-Policy Grill — COMPLETE
 - Architecture amendment — COMPLETE
 - Domain pressure test — COMPLETE
-- Domain amendment — COMPLETE — current Domain Law `04_DOMAIN_MAP_v1.1.0.md`; 20 Domains
+- Domain amendment — COMPLETE — current Domain Law `04_DOMAIN_MAP_v1.1.1.md`; 20 Domains
 - Roadmap Sequencing Grill — authorised current stage
 - Engineering Standards — separate downstream track
 - Atlas / HARDEN-02 / FP-001 reconciliation — downstream
@@ -40,11 +40,11 @@ The independently certified post-Domain-amendment state was confirmed:
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
-4. `03_ARCHITECTURE_v1.1.0.md`
-5. `04_DOMAIN_MAP_v1.1.0.md`
+4. `03_ARCHITECTURE_v1.1.1.md`
+5. `04_DOMAIN_MAP_v1.1.1.md`
 6. `05_ROADMAP_v1.0.0.md` (then-current predecessor)
-7. `PLATFORM_OPERATING_MODEL_v1.0.0.md`
-8. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md` (only where frontend sequencing was material; no frontend sequencing change required)
+7. `PLATFORM_OPERATING_MODEL_v1.0.1.md`
+8. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` (only where frontend sequencing was material; no frontend sequencing change required)
 9. `02_OPEN_WORK_v1.2.37.md`
 
 Deep evidence consulted as needed: `ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`; `ARCHITECTURE_LAW_WORKING_v0.36.0.md`; `REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`; `working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md`; `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md`.
@@ -130,7 +130,7 @@ Human decisions superseded speculative Feature Pack host assignments for Researc
 - Tools/calculators/decision aids are sequenced only inside a Feature Pack when necessary to that pack's approved outcome.
 - Authority remains purpose-specific (`calculation != authority`).
 
-These are human sequencing decisions. They do **not** create DEC/ARC/ARQ identifiers. They are evidenced here and enacted by `05_ROADMAP_v1.1.0.md`.
+These are human sequencing decisions. They do **not** create DEC/ARC/ARQ identifiers. They are evidenced here and enacted by `archive/05_ROADMAP_v1.1.0.md`.
 
 ---
 

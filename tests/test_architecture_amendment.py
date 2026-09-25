@@ -11,8 +11,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 LAW = DOCS / "reference" / "ARCHITECTURE_LAW_WORKING_v0.36.0.md"
 LAW_PREDECESSOR = DOCS / "archive" / "ARCHITECTURE_LAW_WORKING_v0.35.0.md"
-SYNTHESIS = DOCS / "03_ARCHITECTURE_v1.1.0.md"
+SYNTHESIS = DOCS / "03_ARCHITECTURE_v1.1.1.md"
 SYNTHESIS_PREDECESSOR = DOCS / "archive" / "03_ARCHITECTURE_v1.0.0.md"
+SYNTHESIS_V1_1_0_PREDECESSOR = DOCS / "archive" / "03_ARCHITECTURE_v1.1.0.md"
 FLOW = DOCS / "reference" / "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md"
 FLOW_PREDECESSOR = DOCS / "archive" / "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.36.md"
@@ -65,25 +66,27 @@ TARGETED_FLOWS = {
 }
 
 PROTECTED_HASHES = {
-    "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
-    "docs/00_platform/00_PLATFORM_v1.3.0.md": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
-    "docs/00_platform/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
+    "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
+    "docs/00_platform/archive/00_PLATFORM_v1.3.0.md": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
+    "docs/00_platform/archive/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
     "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
+    "docs/00_platform/archive/03_ARCHITECTURE_v1.1.0.md": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
     "docs/00_platform/archive/05_ROADMAP_v1.0.0.md": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
-    "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
+    "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
     "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91",
-    "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
+    "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
-    "docs/00_platform/working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md": "c986c11811100b72ba083f9a6ad057b33abffbd4800159f6de502b3097cc94f4",
-    "docs/00_platform/working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md": "d25b6b7232f05859f3b19d8cf48f4a2648095830b27dcbca3676209a2a1af5c8",
+    "docs/00_platform/working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md": "64deb759ae8eda7391208c2a23db755651e2fc722fdd3142dd4a2f6a7c531511",
+    "docs/00_platform/working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md": "2ad2d2f5e3410ef01e28f8fc6f5cf7a709f58e5dbec8d2d034e73cef659b2e7e",
     "docs/00_platform/working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md": "27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017",
     ".github/workflows/foundation-integrity.yml": "2c718457456c71ad8d7fc416a6e0a646792271b9341e4a14fedda6ddb02bcdb8",
 }
 
 REQUIRED_SUCCESSOR_PATHS = (
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.36.md",
-    "docs/00_platform/03_ARCHITECTURE_v1.1.0.md",
+    "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
+    "docs/00_platform/archive/03_ARCHITECTURE_v1.1.0.md",
     "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
     "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.35.md",
@@ -161,12 +164,15 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
     def test_predecessors_are_immutable_and_successors_use_explicit_semver(self):
         self.assertEqual("a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639", _sha256(LAW_PREDECESSOR))
         self.assertEqual("87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b", _sha256(SYNTHESIS_PREDECESSOR))
+        self.assertEqual("d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852", _sha256(SYNTHESIS_V1_1_0_PREDECESSOR))
         self.assertEqual("f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20", _sha256(FLOW_PREDECESSOR))
         self.assertEqual("772ec84d590e73b0963e798ac5ea30fa77bbf98d5ec3685bde69474367c70ff1", _sha256(OPEN_WORK_PREDECESSOR))
         self.assertIn("v0.35.0 → v0.36.0", self.law)
         self.assertIn("v0.2.0 → v0.3.0", self.flow)
         self.assertIn("v1.2.35 → v1.2.36", self.open_work)
         self.assertIn("Predecessor frozen version", self.synthesis)
+        self.assertNotIn("04_DOMAIN_MAP.md", self.synthesis)
+        self.assertIn("04_DOMAIN_MAP_v1.1.1.md", self.synthesis)
 
     def test_arc_history_is_unchanged_and_new_range_is_contiguous(self):
         predecessor = _arc_sections(self.law_predecessor)
@@ -279,18 +285,20 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         current = {entry["document_id"]: entry for section in ("governing_documents", "reference_documents") for entry in self.manifest[section]}
         expected = {
-            "OPEN_WORK": ("1.2.43", "docs/00_platform/02_OPEN_WORK_v1.2.43.md"),
-            "ARCHITECTURE_SYNTHESIS": ("1.1.0", "docs/00_platform/03_ARCHITECTURE_v1.1.0.md"),
-            "DOMAIN_MAP": ("1.1.0", "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md"),
+            "OPEN_WORK": ("1.2.44", "docs/00_platform/02_OPEN_WORK_v1.2.44.md"),
+            "ARCHITECTURE_SYNTHESIS": ("1.1.1", "docs/00_platform/03_ARCHITECTURE_v1.1.1.md"),
+            "DOMAIN_MAP": ("1.1.1", "docs/00_platform/04_DOMAIN_MAP_v1.1.1.md"),
+            "FRONTEND_EXPERIENCE_SYSTEM": ("1.0.1", "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md"),
             "ARCHITECTURE_LAW": ("0.36.0", "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md"),
             "REFERENCE_FLOW_PRESSURE_TESTS": ("0.3.0", "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md"),
         }
         for document_id, (version, path) in expected.items():
             self.assertEqual(version, current[document_id]["semver"], document_id)
             self.assertEqual(path, current[document_id]["repository_path"], document_id)
+
             self.assertEqual(_sha256(ROOT / path), current[document_id]["sha256"], document_id)
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
-        for document_id in ("OPEN_WORK_V1_2_35", "OPEN_WORK_V1_2_36", "ARCHITECTURE_SYNTHESIS_V1_0_0", "ARCHITECTURE_LAW_V0_35_0", "REFERENCE_FLOW_PRESSURE_TESTS_V0_2_0", "DOMAIN_MAP_V1_0_0"):
+        for document_id in ("OPEN_WORK_V1_2_35", "OPEN_WORK_V1_2_36", "ARCHITECTURE_SYNTHESIS_V1_0_0", "ARCHITECTURE_SYNTHESIS_V1_1_0", "ARCHITECTURE_LAW_V0_35_0", "REFERENCE_FLOW_PRESSURE_TESTS_V0_2_0", "DOMAIN_MAP_V1_0_0", "FRONTEND_EXPERIENCE_SYSTEM_V1_0_0"):
             self.assertEqual("historical", historical[document_id]["lifecycle"])
 
     def test_protected_upstream_and_downstream_artifacts_keep_exact_hashes(self):

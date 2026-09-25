@@ -9,11 +9,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md"
+CONTRACT = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md"
 CONTRACT_V0_3_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.3.0.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md"
 CONTRACT_OLDER_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.43.md"
+OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
+CURRENT_OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.44.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 README = DOCS / "README.md"
@@ -28,20 +29,20 @@ EXPECTED_OPEN_WORK_V1_2_41_SHA256 = "85dd9946cf5684b0907f49e973ef75b59541c0f265a
 EXPECTED_ATLAS_V0_2_SHA256 = "c122c0f4a903c9679529e0e65a794999dcdaf957a66fcff00df990a0644bbb7f"
 
 PROTECTED_UPSTREAM_HASHES = {
-    "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
-    "docs/00_platform/00_PLATFORM_v1.3.0.md": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
-    "docs/00_platform/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
-    "docs/00_platform/03_ARCHITECTURE_v1.1.0.md": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
-    "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
-    "docs/00_platform/05_ROADMAP_v1.1.0.md": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613",
-    "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
-    "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3",
-    "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
+    "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
+    "docs/00_platform/archive/00_PLATFORM_v1.3.0.md": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
+    "docs/00_platform/archive/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
+    "docs/00_platform/archive/03_ARCHITECTURE_v1.1.0.md": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
+    "docs/00_platform/archive/04_DOMAIN_MAP_v1.1.0.md": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
+    "docs/00_platform/archive/05_ROADMAP_v1.1.0.md": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613",
+    "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
+    "docs/00_platform/archive/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3",
+    "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e",
     "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md": "71615d3363a91a7e6002d907c6edd474fbd87f77bdfc6a38f5b11afd240a5626",
-    "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.0.md": EXPECTED_ATLAS_V0_2_SHA256,
+    "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md": EXPECTED_ATLAS_V0_2_SHA256,
     ".github/workflows/foundation-integrity.yml": "2c718457456c71ad8d7fc416a6e0a646792271b9341e4a14fedda6ddb02bcdb8",
 }
 
@@ -385,6 +386,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         cls.contract_v0_3 = CONTRACT_V0_3_ARCHIVE.read_text(encoding="utf-8")
         cls.contract_predecessor = CONTRACT_PREDECESSOR.read_text(encoding="utf-8")
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
+        cls.current_open_work = CURRENT_OPEN_WORK.read_text(encoding="utf-8")
         cls.readme = README.read_text(encoding="utf-8")
         cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         cls.recovery_state = _marked_json(
@@ -460,18 +462,25 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                 self.assertEqual(predecessor_section, successor_section)
 
     def test_recovery_stays_current_stage_and_rejects_appended_routes(self):
-        expected_label = "HARDEN-02 CONTRACT RECOVERY / SOLO-MAINTAINER CERTIFICATION AMENDMENT"
-        expected_next = "HARDEN-02_CONTRACT_RECOVERY_REQUIRED"
-        open_work_current = _route_declaration(self.open_work, "CURRENT AUTHORITY-STAGE PROGRAMME")
+        historical_label = "HARDEN-02 CONTRACT RECOVERY / SOLO-MAINTAINER CERTIFICATION AMENDMENT"
+        historical_next = "HARDEN-02_CONTRACT_RECOVERY_REQUIRED"
+        current_label = "HARDEN-02 POST-MERGE CERTIFICATION / CONTRACT LIFECYCLE"
+        current_next = "HARDEN-02_POST_MERGE_CERTIFICATION_REQUIRED"
+        historical_open_work_current = _route_declaration(self.open_work, "CURRENT AUTHORITY-STAGE PROGRAMME")
+        current_open_work_current = _route_declaration(self.current_open_work, "CURRENT AUTHORITY-STAGE PROGRAMME")
         readme_current = _route_declaration(self.readme, "CURRENT AUTHORITY-STAGE PROGRAMME")
-        open_work_next = _route_declaration(self.open_work, "NEXT STAGE")
+        historical_open_work_next = _route_declaration(self.open_work, "NEXT STAGE")
+        current_open_work_next = _route_declaration(self.current_open_work, "NEXT STAGE")
         readme_next = _route_declaration(self.readme, "NEXT STAGE")
-        self.assertEqual(expected_label, open_work_current)
-        self.assertEqual(expected_label, readme_current)
-        self.assertEqual(expected_next, open_work_next)
-        self.assertEqual(expected_next, readme_next)
+        self.assertEqual(historical_label, historical_open_work_current)
+        self.assertEqual(historical_next, historical_open_work_next)
+        self.assertEqual(current_label, current_open_work_current)
+        self.assertEqual(current_label, readme_current)
+        self.assertEqual(current_next, current_open_work_next)
+        self.assertEqual(current_next, readme_next)
         self.assertEqual(EXPECTED_RECOVERY_STATE, self.recovery_state)
         _assert_no_current_execution_authority(self.open_work)
+        _assert_no_current_execution_authority(self.current_open_work)
         _assert_no_current_execution_authority(self.readme)
 
         conflicting_text = (
@@ -789,9 +798,13 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual("REQUIRED / NOT_STARTED", self.recovery_state["communications"])
         self.assertEqual("STALE / BLOCKED / NOT AUTHORITY", self.recovery_state["pr_38"])
 
-    def test_readme_open_work_and_manifest_route_v1_2_43(self):
-        self.assertIn("02_OPEN_WORK_v1.2.43.md", self.readme)
-        self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
+    def test_readme_open_work_and_manifest_route_v1_2_44(self):
+        self.assertIn("02_OPEN_WORK_v1.2.44.md", self.readme)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md", self.readme)
+        self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
+        self.assertIn("POST-MERGE CERTIFICATION: PENDING", self.readme)
+        self.assertIn("NOT STARTED / NOT AUTHORISED", self.readme)
+        self.assertNotIn("PENDING INDEPENDENT PRE-MERGE CERTIFICATION", self.readme)
         self.assertIn("archive/02_OPEN_WORK_v1.2.42.md", self.readme)
         self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md", self.readme)
         current = {
@@ -799,9 +812,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.43", current["OPEN_WORK"]["semver"])
-        self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
+        self.assertEqual("1.2.44", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.44.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual(_sha256(DOCS / "02_OPEN_WORK_v1.2.44.md"), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
+        self.assertEqual(_sha256(OPEN_WORK), historical["OPEN_WORK_V1_2_43"]["sha256"])
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_42_SHA256, historical["OPEN_WORK_V1_2_42"]["sha256"])
 
     def test_protected_hashes_unchanged(self):

@@ -270,6 +270,470 @@ def _table_rows(text: str, start_marker: str, end_marker: str) -> list[list[str]
     return rows
 
 
+def _marked_matrix_rows(text: str, matrix_name: str) -> list[dict[str, str]]:
+    start_marker = f"<!-- NEWYOU:PRODUCT-MATRIX:{matrix_name}:START -->"
+    end_marker = f"<!-- NEWYOU:PRODUCT-MATRIX:{matrix_name}:END -->"
+    if text.count(start_marker) != 1 or text.count(end_marker) != 1:
+        return []
+    section = text.split(start_marker, 1)[1].split(end_marker, 1)[0]
+    lines = [line for line in section.splitlines() if line.strip().startswith("|")]
+    if len(lines) < 3:
+        return []
+
+    def cells(line: str) -> list[str]:
+        return [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+
+    headers = cells(lines[0])
+    rows: list[dict[str, str]] = []
+    for line in lines[2:]:
+        values = cells(line)
+        if len(values) != len(headers):
+            return []
+        rows.append(dict(zip(headers, values)))
+    return rows
+
+
+def _section_body(text: str, heading_pattern: str) -> str:
+    match = re.search(heading_pattern, text, re.MULTILINE)
+    if match is None:
+        return ""
+    next_heading = re.search(r"^## ", text[match.end() :], re.MULTILINE)
+    end = match.end() + next_heading.start() if next_heading is not None else len(text)
+    return text[match.end() : end]
+
+
+def _bundle_component_allocation_issues(
+    product: str,
+    decisions: str,
+    requirements: dict[str, Any],
+) -> list[str]:
+    issues: list[str] = []
+    matrix_name = requirements.get("matrix")
+    expected_rules = requirements.get("rules")
+    if not isinstance(matrix_name, str) or not isinstance(expected_rules, dict):
+        return ["bundle component allocation audit requirements are incomplete"]
+
+    section = _section_body(product, r"^## 21R\.1\b[^\n]*\n")
+    rows = _marked_matrix_rows(section, matrix_name)
+    allocation_rules = {
+        row.get("invariant", ""): row.get("governed rule", "")
+        for row in rows
+    }
+    if set(allocation_rules) != set(expected_rules):
+        issues.append("bundle allocation matrix has missing, duplicate or unexpected invariants")
+    for invariant, required_terms in expected_rules.items():
+        rule_text = allocation_rules.get(invariant, "")
+        if not isinstance(required_terms, list) or any(
+            not isinstance(term, str) or term not in rule_text for term in required_terms
+        ):
+            issues.append(f"bundle allocation invariant {invariant} is missing a required rule")
+
+    decision_section = _section_body(decisions, r"^## DEC-299\b[^\n]*\n")
+    decision_terms = requirements.get("decision_terms", [])
+    if not isinstance(decision_terms, list) or any(
+        not isinstance(term, str) or term.casefold() not in decision_section.casefold()
+        for term in decision_terms
+    ):
+        issues.append("DEC-299 does not carry the complete versioned bundle allocation rule")
+
+    example = requirements.get("launch_example")
+    price_section = _section_body(product, r"^## 21L\.15\b[^\n]*\n")
+    decision_price_section = _section_body(decisions, r"^## DEC-282\b[^\n]*\n")
+    if not isinstance(example, dict) or any(
+        not isinstance(example.get(key), int)
+        for key in ("assessment", "plan", "discount", "bundle")
+    ):
+        issues.append("bundle launch-price reconciliation requirements are incomplete")
+    else:
+        assessment = example["assessment"]
+        plan = example["plan"]
+        discount = example["discount"]
+        bundle = example["bundle"]
+        launch_rule = allocation_rules.get("launch_bundle", "")
+        expected_equation = (
+            f"R{assessment}_assessment + R{plan}_plan - R{discount}_bundle_discount "
+            f"= R{bundle}_accepted_bundle_amount"
+        )
+        if assessment + plan - discount != bundle or expected_equation not in launch_rule:
+            issues.append("launch_bundle allocation example does not reconcile arithmetically")
+        for amount in (assessment, plan, bundle):
+            marker = f"R{amount}"
+            if marker not in price_section or marker not in decision_price_section:
+                issues.append(f"launch bundle amount {marker} differs from locked list-price authority")
+                break
+        discount_marker = f"R{discount}"
+        if discount_marker not in price_section:
+            issues.append(f"launch bundle discount {discount_marker} is absent from Product Law")
+
+    return issues
+
+
+def _feature_pack_propagation_issues(
+    roadmap: str,
+    requirements: dict[str, Any],
+) -> list[str]:
+    issues: list[str] = []
+    if not requirements:
+        return ["feature-pack hardening requirements are missing"]
+
+    matches = list(re.finditer(r"^## (FP-\d{3})\s+—", roadmap, re.MULTILINE))
+    sections: dict[str, str] = {}
+    counts: dict[str, int] = {}
+    for index, match in enumerate(matches):
+        pack_id = match.group(1)
+        counts[pack_id] = counts.get(pack_id, 0) + 1
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(roadmap)
+        sections[pack_id] = roadmap[match.start() : end]
+
+    for pack_id, rule in requirements.items():
+        section = sections.get(pack_id, "")
+        if counts.get(pack_id) != 1:
+            issues.append(f"{pack_id} must have one Roadmap contract section")
+            continue
+        authority_match = re.search(
+            r"^\*\*Product Authority:\*\*\s*(.*)$", section, re.MULTILINE
+        )
+        contract_match = re.search(
+            r"^\*\*Product Hardening Contract:\*\*\s*(.*)$", section, re.MULTILINE
+        )
+        if authority_match is None:
+            issues.append(f"{pack_id} is missing its Product Authority declaration")
+            continue
+        if contract_match is None:
+            issues.append(f"{pack_id} is missing its Product Hardening Contract")
+            continue
+
+        authority = authority_match.group(1)
+        for section_ref in rule.get("sections", []):
+            required_section = re.fullmatch(r"(\d+[A-Z])\.(\d+)", section_ref)
+            section_is_cited = section_ref in authority
+            if required_section is not None and not section_is_cited:
+                required_family, required_number = required_section.group(1), int(required_section.group(2))
+                for span in re.finditer(
+                    r"(?P<start_family>\d+[A-Z])\.(?P<start>\d+)\s*[–—-]\s*"
+                    r"(?:(?P<end_family>\d+[A-Z])\.)?(?P<end>\d+)",
+                    authority,
+                ):
+                    end_family = span.group("end_family") or span.group("start_family")
+                    if (
+                        span.group("start_family") == required_family == end_family
+                        and int(span.group("start")) <= required_number <= int(span.group("end"))
+                    ):
+                        section_is_cited = True
+                        break
+            if not section_is_cited:
+                issues.append(f"{pack_id} does not cite §{section_ref}")
+        for decision in rule.get("decisions", []):
+            if re.search(rf"(?<![A-Za-z0-9-]){re.escape(decision)}(?!\d)", authority) is None:
+                issues.append(f"{pack_id} does not cite {decision}")
+
+        contract_tokens = set(re.findall(r"`([^`]+)`", contract_match.group(1)))
+        for outcome in rule.get("outcomes", []):
+            if outcome not in contract_tokens:
+                issues.append(f"{pack_id} is missing product outcome {outcome}")
+
+    return issues
+
+
+def _has_oq034_fp_blocker(documents: list[str]) -> bool:
+    return any(
+        "OQ-034" in line and "BLOCKS_THIS_FP" in line
+        for document in documents
+        for line in document.splitlines()
+    )
+
+
+def _check_product_semantics(
+    root: Path,
+    entries: list[dict[str, Any]],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    by_id = {
+        str(entry.get("document_id")): entry
+        for entry in entries
+        if entry.get("lifecycle", "current") != "historical"
+    }
+    product = _read_entry_text(root, by_id.get("PLATFORM_BASELINE"))
+    decisions = _read_entry_text(root, by_id.get("DECISION_REGISTER"))
+    open_work = _read_entry_text(root, by_id.get("OPEN_WORK"))
+    roadmap = _read_entry_text(root, by_id.get("ROADMAP"))
+    roots = integrity_rules["document_roots"]
+    readme_path = root / roots["context_index"]
+    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    fp001_path = root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
+    fp001 = fp001_path.read_text(encoding="utf-8") if fp001_path.is_file() else ""
+    atlas_relative_path = next(
+        (
+            str(path)
+            for path in integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
+            if Path(str(path)).name.startswith("DELIVERY_ATLAS_WORKING_")
+        ),
+        "",
+    )
+    atlas_path = root / atlas_relative_path if atlas_relative_path else None
+    atlas = atlas_path.read_text(encoding="utf-8") if atlas_path is not None and atlas_path.is_file() else ""
+
+    eligibility_rows = _marked_matrix_rows(product, "ELIGIBILITY-PAID-PLAN")
+    eligibility = {row.get("case", ""): row for row in eligibility_rows}
+    eligibility_cases = {
+        "eligible_automated",
+        "insufficient_information",
+        "professional_review_required",
+        "general_wellness_only",
+        "terminal_unfulfillable_outcome",
+    }
+    eligibility_ok = eligibility_cases <= eligibility.keys() and all(
+        token in eligibility.get(case, {}).get(field, "")
+        for case, field, token in (
+            ("eligible_automated", "entitlement consequence", "consume_on_successful_delivery"),
+            ("eligible_automated", "entitlement consequence", "technical_failure=preserve_unconsumed"),
+            ("insufficient_information", "entitlement consequence", "held_unconsumed"),
+            ("insufficient_information", "entitlement consequence", "no_expiry_for_incomplete_information"),
+            ("professional_review_required", "entitlement consequence", "held_unconsumed_pending_review"),
+            ("general_wellness_only", "commercial consequence", "not_personalised_plan_fulfilment"),
+            ("terminal_unfulfillable_outcome", "commercial consequence", "refund_allocated_plan_component"),
+        )
+    )
+    _record_check(
+        report,
+        "eligibility_commercial_consequences",
+        eligibility_ok,
+        "paid-plan rights are held or consumed by governed eligibility and delivery outcome"
+        if eligibility_ok
+        else "paid-plan eligibility matrix is missing required outcomes or entitlement/refund consequences",
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    reversal_rows = _marked_matrix_rows(product, "COMMERCIAL-REVERSAL")
+    reversals = {row.get("case", ""): row for row in reversal_rows}
+    reversal_cases = {
+        "refund_before_entitlement_use",
+        "plan_refund_before_generation",
+        "verified_technical_failure_refund",
+        "duplicate_payment_refund",
+        "membership_duplicate_billing_refund",
+        "unverified_provider_signal",
+        "confirmed_disputed_chargeback",
+        "chargeback_payment_restored",
+        "final_lost_chargeback",
+        "post_delivery_full_reversal",
+    }
+    reversal_ok = reversal_cases <= reversals.keys() and all(
+        "preserve_historical_record" in row.get("historical record consequence", "")
+        for row in reversals.values()
+    ) and all(
+        token in reversals.get(case, {}).get("entitlement/access consequence", "")
+        for case, token in (
+            ("refund_before_entitlement_use", "end_refunded_component"),
+            ("duplicate_payment_refund", "preserve_one_valid_right"),
+            ("unverified_provider_signal", "no_entitlement_mutation"),
+            ("confirmed_disputed_chargeback", "suspend_after_commerce_confirmation"),
+            ("chargeback_payment_restored", "restore_idempotently"),
+            ("final_lost_chargeback", "end_paid_access"),
+            ("post_delivery_full_reversal", "exceptional_full_refund_ends_current_access"),
+        )
+    )
+    _record_check(
+        report,
+        "commercial_reversal_consequences",
+        reversal_ok,
+        "verified commercial reversals control access while preserving historical records"
+        if reversal_ok
+        else "commercial reversal matrix is missing required cases or current-access/history consequences",
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    consent_rows = _marked_matrix_rows(product, "CONSENT-WITHDRAWAL")
+    consent = {row.get("event", ""): row for row in consent_rows}
+    consent_cases = {
+        "personalisation_withdrawal",
+        "automated_recommendation_withdrawal",
+        "practitioner_sharing_withdrawal",
+        "optional_ai_withdrawal",
+        "health_storage_withdrawal",
+        "full_account_deletion",
+    }
+    consent_ok = consent_cases <= consent.keys() and all(
+        bool(row.get("future processing"))
+        and bool(row.get("delivered plan access"))
+        and bool(row.get("commercial entitlement"))
+        for row in consent.values()
+    ) and all(
+        token in consent.get(case, {}).get(field, "")
+        for case, field, token in (
+            ("personalisation_withdrawal", "future processing", "stop_affected_future_processing"),
+            ("practitioner_sharing_withdrawal", "delivered plan access", "practitioner_access_ends"),
+            ("health_storage_withdrawal", "future processing", "independent_lawful_basis"),
+            ("health_storage_withdrawal", "delivered plan access", "restrict_access"),
+            ("full_account_deletion", "delivered plan access", "end_ordinary_access"),
+        )
+    )
+    _record_check(
+        report,
+        "consent_withdrawal_consequences",
+        consent_ok,
+        "purpose withdrawal, delivered access and commercial rights have separate consequences"
+        if consent_ok
+        else "consent matrix is missing an event or fails to distinguish future processing, delivered access and entitlement",
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    provenance_rows = _marked_matrix_rows(product, "TEMPERAMENT-PROVENANCE")
+    provenance = {row.get("provenance", ""): row for row in provenance_rows}
+    provenance_cases = {"self_reported", "book_derived", "digitally_assessed", "later_digital_completion"}
+    provenance_ok = provenance_cases <= provenance.keys() and all(
+        provenance.get(case, {}).get(field) == "no"
+        for case in ("self_reported", "book_derived")
+        for field in ("exact digital scores", "paid digital report")
+    ) and all(
+        provenance.get(case, {}).get(field) == "unused"
+        for case in ("self_reported", "book_derived")
+        for field in ("included assessment credit",)
+    ) and provenance.get("digitally_assessed", {}).get("exact digital scores") == "yes" and provenance.get(
+        "digitally_assessed", {}
+    ).get("paid digital report") == "yes" and "preserve_prior_provenance" in provenance.get(
+        "later_digital_completion", {}
+    ).get("result history", "")
+    _record_check(
+        report,
+        "temperament_provenance_outputs",
+        provenance_ok,
+        "assessment outputs and reports follow declared versus digital result provenance"
+        if provenance_ok
+        else "temperament provenance matrix permits a report/score mismatch or overwrites prior provenance",
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    purchase_rows = _marked_matrix_rows(product, "ASSESSMENT-PURCHASE-USE")
+    purchases = {row.get("case", ""): row for row in purchase_rows}
+    purchase_cases = {
+        "standalone_purchase_without_unused_credit",
+        "standalone_purchase_with_unused_paid_credit",
+        "purchase_when_annual_use_interval_blocks_attempt",
+        "bundle_purchase_with_unused_paid_credit",
+        "premium_annual_reassessment_credit",
+        "plan_only_purchase_with_assessment_credit",
+    }
+    purchase_ok = purchase_cases <= purchases.keys() and all(
+        row.get("maximum active unused ordinary paid credits") == "one"
+        for case, row in purchases.items()
+        if case != "premium_annual_reassessment_credit"
+    ) and all(
+        token in purchases.get(case, {}).get("purchase eligibility", "")
+        for case, token in (
+            ("standalone_purchase_with_unused_paid_credit", "reject"),
+            ("purchase_when_annual_use_interval_blocks_attempt", "reject"),
+            ("bundle_purchase_with_unused_paid_credit", "route_to_approved_plan_only_offer"),
+            ("plan_only_purchase_with_assessment_credit", "independent_of_assessment_credit"),
+        )
+    ) and "non_accumulating" in purchases.get("premium_annual_reassessment_credit", {}).get(
+        "Premium credit rule", ""
+    )
+    _record_check(
+        report,
+        "assessment_purchase_governance",
+        purchase_ok,
+        "assessment sale credits, attempts, annual interval and Premium credit are distinct"
+        if purchase_ok
+        else "assessment purchase matrix does not enforce the active-credit limit and separate Premium rule",
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    decision_match = re.search(
+        r"^## OQ-034[^\n]*\n\*\*Status:\*\* ([^\n]+)", decisions, re.MULTILINE
+    )
+    no_blocking_reference = (
+        atlas_path is not None
+        and atlas_path.is_file()
+        and not _has_oq034_fp_blocker([roadmap, fp001, atlas])
+    )
+    proof_is_downstream = all(
+        "phase 8" in document.lower()
+        and "proof" in document.lower()
+        and re.search(r"proof[^\n]{0,100}(not complete|not finalised|not finalized|incomplete)", document.lower())
+        for document in (roadmap, fp001)
+    )
+    identity_pmr_gate = next(
+        (line for line in roadmap.splitlines() if "Verified account + required PMR" in line),
+        "",
+    )
+    major_gate_lines = [
+        line for line in roadmap.splitlines() if line.lower().startswith("**major gates")
+    ]
+    oq_ok = bool(
+        decision_match
+        and "RESOLVED / ARCHITECTURE SELECTION" in decision_match.group(1)
+        and no_blocking_reference
+        and proof_is_downstream
+        and identity_pmr_gate
+        and "OQ-034" not in identity_pmr_gate
+        and major_gate_lines
+        and not any("OQ-034" in line for line in major_gate_lines)
+    )
+    _record_check(
+        report,
+        "resolved_oq_not_blocking",
+        oq_ok,
+        "OQ-034 selection is resolved without claiming Phase 8 proof complete or finalised"
+        if oq_ok
+        else "OQ-034 is absent/resolved incorrectly, still blocks a pack, or its Phase 8 proof state is overstated",
+        path=str(by_id.get("ROADMAP", {}).get("repository_path", "")),
+    )
+
+    h02_rows = _marked_matrix_rows(open_work, "HARDEN-02-LIFECYCLE")
+    h02 = {row.get("gate", ""): row.get("status", "") for row in h02_rows}
+    required_h02 = {
+        "PRE_MERGE_CERTIFICATION": "COMPLETE",
+        "CERTIFIED_HEAD_MERGED_UNCHANGED": "COMPLETE",
+        "RESULTING_MAIN_CI": "PASS",
+        "POST_MERGE_INDEPENDENT_INSPECTION": "PENDING",
+        "POST_MERGE_ATTESTATION": "PENDING",
+        "EXECUTION": "NOT_STARTED_NOT_AUTHORISED",
+    }
+    h02_ok = h02 == required_h02 and "POST-MERGE CERTIFICATION: PENDING" in readme and (
+        "NOT STARTED / NOT AUTHORISED" in readme
+    ) and "PENDING INDEPENDENT PRE-MERGE CERTIFICATION" not in readme
+    _record_check(
+        report,
+        "harden_02_lifecycle_state",
+        h02_ok,
+        "HARDEN-02 records completed pre-merge/merge/CI steps and pending post-merge certification without authorising execution"
+        if h02_ok
+        else "HARDEN-02 lifecycle facts, post-merge pending state or execution stop are inconsistent",
+        path=str(by_id.get("OPEN_WORK", {}).get("repository_path", "")),
+    )
+
+    allocation_issues = _bundle_component_allocation_issues(
+        product,
+        decisions,
+        integrity_rules.get("product_hardening_bundle_allocation_requirements", {}),
+    )
+    _record_check(
+        report,
+        "bundle_component_allocation_governance",
+        not allocation_issues,
+        "bundle allocations are versioned before sale, disclosed, reconciled and snapshotted for component refunds"
+        if not allocation_issues
+        else "; ".join(allocation_issues),
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    pack_issues = _feature_pack_propagation_issues(
+        roadmap,
+        integrity_rules.get("product_hardening_feature_pack_requirements", {}),
+    )
+    _record_check(
+        report,
+        "product_hardening_feature_pack_propagation",
+        not pack_issues,
+        "affected Feature Packs cite and carry their DEC-299…303 product outcomes"
+        if not pack_issues
+        else "; ".join(pack_issues),
+        path=str(by_id.get("ROADMAP", {}).get("repository_path", "")),
+    )
+
+
 def _expected_contiguous(range_rule: dict[str, Any]) -> set[str]:
     prefix = str(range_rule["prefix"])
     start = int(range_rule["start"])
@@ -664,12 +1128,23 @@ def _check_production_graph(
     context_index = roots["context_index"]
     readme = root / context_index
     readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""
-    readme_order = [
-        str(entry.get("canonical_filename"))
-        for entry in governing_entries
-        if f"`{entry.get('canonical_filename')}`" in readme_text
-    ]
     expected_order = [str(entry.get("canonical_filename")) for entry in governing_entries]
+    default_context = readme_text
+    default_context_start = readme_text.find("## Default Agent Context")
+    if default_context_start >= 0:
+        default_context = readme_text[default_context_start:]
+        next_section = re.search(r"^## ", default_context[len("## Default Agent Context"):], re.MULTILINE)
+        if next_section:
+            section_end = len("## Default Agent Context") + next_section.start()
+            default_context = default_context[:section_end]
+    expected_names = set(expected_order)
+    readme_order = []
+    for line in default_context.splitlines():
+        if not re.match(r"^\s*\d+\.\s+", line):
+            continue
+        match = re.search(r"`([^`]+)`", line)
+        if match and match.group(1) in expected_names:
+            readme_order.append(match.group(1))
     _record_check(
         report,
         "readme_current_authority_order",
@@ -683,6 +1158,7 @@ def _check_production_graph(
     graph_rules = integrity_rules["graph_rules"]
     stale_patterns = tuple(re.compile(pattern) for pattern in graph_rules["stale_reference_patterns"])
     navigation_document_ids = set(graph_rules["navigation_document_ids"])
+    navigation_paths = [str(path) for path in graph_rules.get("navigation_document_paths", [])]
     navigation_entries = [
         entry
         for entry in entries
@@ -693,10 +1169,15 @@ def _check_production_graph(
     scan_targets = [(context_index, False)] + [
         (_relative_path(entry), _path_is_under(_relative_path(entry), roots["reference"]))
         for entry in navigation_entries
+    ] + [
+        (relative, _path_is_under(relative, roots["reference"]))
+        for relative in navigation_paths
     ]
     for relative, is_reference in scan_targets:
         path = root / relative
         if not path.is_file():
+            if relative in navigation_paths:
+                stale_hits.append(f"{relative}: missing active navigation document")
             continue
         text = path.read_text(encoding="utf-8")
         if is_reference:
@@ -798,6 +1279,7 @@ def run_audit(
     _check_domain_ownership(root, entries, report, counts_expectation, integrity_rules)
     if _production_mode(expected_counts):
         _check_production_graph(root, manifest, integrity_rules, report)
+        _check_product_semantics(root, entries, integrity_rules, report)
     else:
         _record_check(report, "fixture_graph_scope", True, "fixture graph checks use explicit reduced expectations")
 

@@ -21,7 +21,7 @@ SMALL_COUNTS = {
 }
 
 FAD72C1_FROZEN_HASHES = {
-    "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
+    "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
     "docs/00_platform/archive/00_PLATFORM_v1.2.1.md": "56a2b9a5db42a81e287f0c61deae37d6bbce5b19f48f67732584160b455f935a",
     "docs/00_platform/archive/03_ARCHITECTURE_v1.0.0.md": "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b",
     "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
@@ -146,6 +146,47 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             self.assertTrue(
                 any(finding["check"] == "active_document_graph" for finding in report["findings"])
             )
+
+    def test_declared_working_navigation_path_is_scanned_for_stale_references(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_clean_fixture(root)
+            relative = "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
+            path = root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("See STALE_MOVED_SOURCE.md for the source.\n", encoding="utf-8")
+            manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"] = [
+                r"(?<!archive/)STALE_MOVED_SOURCE\.md"
+            ]
+            manifest["integrity_rules"]["graph_rules"]["navigation_document_ids"] = []
+            manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"] = [relative]
+            (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = run_audit(root, root / "manifest.json")
+
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("FAIL", graph_check["status"])
+            self.assertIn(relative, graph_check["message"])
+
+    def test_readme_current_authority_order_uses_positions_from_the_readme(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_clean_fixture(root)
+            readme = root / "docs" / "00_platform" / "README.md"
+            readme.write_text(
+                "\n".join(
+                    f"{index}. `{entry['canonical_filename']}`"
+                    for index, entry in enumerate(reversed(manifest["governing_documents"]), start=1)
+                ),
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, root / "manifest.json")
+
+            order_check = next(
+                check for check in report["checks"] if check["name"] == "readme_current_authority_order"
+            )
+            self.assertEqual("FAIL", order_check["status"])
 
     def test_frozen_provenance_hash_mismatch_is_reported(self):
         with tempfile.TemporaryDirectory() as directory:

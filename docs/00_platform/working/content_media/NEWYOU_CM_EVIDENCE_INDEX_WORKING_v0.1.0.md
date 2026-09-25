@@ -17,11 +17,11 @@ Current NewYou baseline checked for compression:
 Primary C&M anchors:
 
 - `00_PLATFORM_v1.3.0.md` §21E content/translation/media law;
-- `03_ARCHITECTURE_v1.1.0.md` §10 content/search/media/provider boundaries and §11 deletion/recovery;
-- `04_DOMAIN_MAP_v1.1.0.md` §6.7 Content & Media;
+- `03_ARCHITECTURE_v1.1.1.md` §10 content/search/media/provider boundaries and §11 deletion/recovery;
+- `04_DOMAIN_MAP_v1.1.1.md` §6.7 Content & Media;
 - `05_ROADMAP_v1.1.0.md` affected Feature Packs/gates;
-- `PLATFORM_OPERATING_MODEL_v1.0.0.md` Content Library / Work Queue / Editorial Calendar operating model;
-- `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md` public publishing, editor and SEO/search contracts where relevant;
+- `PLATFORM_OPERATING_MODEL_v1.0.1.md` Content Library / Work Queue / Editorial Calendar operating model;
+- `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` public publishing, editor and SEO/search contracts where relevant;
 - `02_OPEN_WORK_v1.2.40.md` current OQ/development sequencing.
 
 ## 2. GRILL-to-contract traceability

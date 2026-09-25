@@ -5,108 +5,108 @@
   "governing_documents": [
     {
       "document_id": "PROJECT_NORTH_STAR_AND_MVP",
-      "canonical_filename": "PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
-      "semver": "1.2.1",
-      "repository_path": "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
+      "canonical_filename": "PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md",
+      "semver": "1.2.2",
+      "repository_path": "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md",
       "authority_class": "PRODUCT_NORTH_STAR",
-      "sha256": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
-      "superseded_version": null,
-      "lifecycle": "current",
-      "graph_policy": "frozen_provenance",
-      "provenance_sha256": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20"
-    },
-    {
-      "document_id": "PLATFORM_BASELINE",
-      "canonical_filename": "00_PLATFORM_v1.3.0.md",
-      "semver": "1.3.0",
-      "repository_path": "docs/00_platform/00_PLATFORM_v1.3.0.md",
-      "authority_class": "PLATFORM_PRODUCT_LAW",
-      "sha256": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
+      "sha256": "296b01a3da81e079bd33aab7a59dd23390946baf0b6daa3deae9d71f3971531d",
       "superseded_version": "1.2.1",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445"
+      "provenance_sha256": "296b01a3da81e079bd33aab7a59dd23390946baf0b6daa3deae9d71f3971531d"
+    },
+    {
+      "document_id": "PLATFORM_BASELINE",
+      "canonical_filename": "00_PLATFORM_v1.4.0.md",
+      "semver": "1.4.0",
+      "repository_path": "docs/00_platform/00_PLATFORM_v1.4.0.md",
+      "authority_class": "PLATFORM_PRODUCT_LAW",
+      "sha256": "34d1fa2dc3c12248b9fc0f850e25a0964083dc6d4ebe7b9f6f30dc4347cc0b29",
+      "superseded_version": "1.3.0",
+      "lifecycle": "current",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "34d1fa2dc3c12248b9fc0f850e25a0964083dc6d4ebe7b9f6f30dc4347cc0b29"
     },
     {
       "document_id": "DECISION_REGISTER",
-      "canonical_filename": "01_DECISIONS_v1.3.0.md",
-      "semver": "1.3.0",
-      "repository_path": "docs/00_platform/01_DECISIONS_v1.3.0.md",
+      "canonical_filename": "01_DECISIONS_v1.4.0.md",
+      "semver": "1.4.0",
+      "repository_path": "docs/00_platform/01_DECISIONS_v1.4.0.md",
       "authority_class": "DECISION_REGISTER",
-      "sha256": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
-      "superseded_version": "1.2.3",
+      "sha256": "6058a81e5c3f7864c4587d5fb2e714efc1067abc694d9a0279ebccdd2b28ed14",
+      "superseded_version": "1.3.0",
       "lifecycle": "current"
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.43.md",
-      "semver": "1.2.43",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.43.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.44.md",
+      "semver": "1.2.44",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.44.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "b5db43e374bf199e721dffeda146a7f4a05bbe7832a5cd3da3049313bb98e167",
-      "superseded_version": "1.2.42",
+      "sha256": "a296edf5f9c4bccd48b3b3057dba96b0a70ca822c1f8a162f9b44a985d328c1e",
+      "superseded_version": "1.2.43",
       "lifecycle": "current",
-      "provenance_sha256": "b5db43e374bf199e721dffeda146a7f4a05bbe7832a5cd3da3049313bb98e167"
+      "provenance_sha256": "a296edf5f9c4bccd48b3b3057dba96b0a70ca822c1f8a162f9b44a985d328c1e"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
-      "canonical_filename": "03_ARCHITECTURE_v1.1.0.md",
-      "semver": "1.1.0",
-      "repository_path": "docs/00_platform/03_ARCHITECTURE_v1.1.0.md",
+      "canonical_filename": "03_ARCHITECTURE_v1.1.1.md",
+      "semver": "1.1.1",
+      "repository_path": "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
       "authority_class": "ARCHITECTURE_SYNTHESIS",
-      "sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
-      "superseded_version": "1.0.0",
+      "sha256": "342d02a7946f99aca9e6683647fc3a2505901b3d0cc2d13c21d807442025f0b3",
+      "superseded_version": "1.1.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852"
+      "provenance_sha256": "342d02a7946f99aca9e6683647fc3a2505901b3d0cc2d13c21d807442025f0b3"
     },
     {
       "document_id": "DOMAIN_MAP",
-      "canonical_filename": "04_DOMAIN_MAP_v1.1.0.md",
-      "semver": "1.1.0",
-      "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md",
+      "canonical_filename": "04_DOMAIN_MAP_v1.1.1.md",
+      "semver": "1.1.1",
+      "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.1.1.md",
       "authority_class": "DOMAIN_LAW",
-      "sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
-      "superseded_version": "1.0.0",
+      "sha256": "ae1b6e44e0e5da2060bcbfda46b8c280a6c7aa0e596b8feb8198cea22aa4bb42",
+      "superseded_version": "1.1.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2"
+      "provenance_sha256": "ae1b6e44e0e5da2060bcbfda46b8c280a6c7aa0e596b8feb8198cea22aa4bb42"
     },
     {
       "document_id": "ROADMAP",
-      "canonical_filename": "05_ROADMAP_v1.1.0.md",
-      "semver": "1.1.0",
-      "repository_path": "docs/00_platform/05_ROADMAP_v1.1.0.md",
+      "canonical_filename": "05_ROADMAP_v1.1.1.md",
+      "semver": "1.1.1",
+      "repository_path": "docs/00_platform/05_ROADMAP_v1.1.1.md",
       "authority_class": "ROADMAP",
-      "sha256": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613",
-      "superseded_version": "1.0.0",
+      "sha256": "db2f17ba41d1a5aea63f46c94e8c0f5950030872a5ef6b07d53c5e1ea3ca3e4c",
+      "superseded_version": "1.1.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613"
+      "provenance_sha256": "db2f17ba41d1a5aea63f46c94e8c0f5950030872a5ef6b07d53c5e1ea3ca3e4c"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",
-      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.0.0.md",
-      "semver": "1.0.0",
-      "repository_path": "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md",
+      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.0.1.md",
+      "semver": "1.0.1",
+      "repository_path": "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
       "authority_class": "PLATFORM_OPERATING_MODEL",
-      "sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
-      "superseded_version": null,
+      "sha256": "7cb725adcdb796ba112d39c4be6fd09c90026b49e772b61f0867db62828b9d12",
+      "superseded_version": "1.0.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811"
+      "provenance_sha256": "7cb725adcdb796ba112d39c4be6fd09c90026b49e772b61f0867db62828b9d12"
     },
     {
       "document_id": "FRONTEND_EXPERIENCE_SYSTEM",
-      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
-      "semver": "1.0.0",
-      "repository_path": "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
+      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
+      "semver": "1.0.1",
+      "repository_path": "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
       "authority_class": "FRONTEND_EXPERIENCE_SYSTEM",
-      "sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3",
-      "superseded_version": null,
+      "sha256": "58c733e8e0cc73c72b102b623cb756b60cbadb084f8cc710051be42d0877fdb4",
+      "superseded_version": "1.0.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3"
+      "provenance_sha256": "58c733e8e0cc73c72b102b623cb756b60cbadb084f8cc710051be42d0877fdb4"
     }
   ],
   "reference_documents": [
@@ -476,6 +476,111 @@
       "superseded_version": "1.2.43",
       "lifecycle": "historical",
       "provenance_sha256": "2f9baad6ef314b23b53f9c0daa79976347bfbc5b937d68f7937b3149415e55a3"
+    },
+    {
+      "document_id": "PROJECT_NORTH_STAR_AND_MVP_V1_2_1",
+      "canonical_filename": "PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
+      "semver": "1.2.1",
+      "repository_path": "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
+      "authority_class": "PRODUCT_NORTH_STAR_HISTORICAL",
+      "sha256": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
+      "superseded_version": "1.2.2",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20"
+    },
+    {
+      "document_id": "PLATFORM_BASELINE_V1_3_0",
+      "canonical_filename": "00_PLATFORM_v1.3.0.md",
+      "semver": "1.3.0",
+      "repository_path": "docs/00_platform/archive/00_PLATFORM_v1.3.0.md",
+      "authority_class": "PLATFORM_PRODUCT_LAW_HISTORICAL",
+      "sha256": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
+      "superseded_version": "1.4.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445"
+    },
+    {
+      "document_id": "DECISION_REGISTER_V1_3_0",
+      "canonical_filename": "01_DECISIONS_v1.3.0.md",
+      "semver": "1.3.0",
+      "repository_path": "docs/00_platform/archive/01_DECISIONS_v1.3.0.md",
+      "authority_class": "DECISION_REGISTER_HISTORICAL",
+      "sha256": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
+      "superseded_version": "1.4.0",
+      "lifecycle": "historical"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_43",
+      "canonical_filename": "02_OPEN_WORK_v1.2.43.md",
+      "semver": "1.2.43",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.43.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "b5db43e374bf199e721dffeda146a7f4a05bbe7832a5cd3da3049313bb98e167",
+      "superseded_version": "1.2.44",
+      "lifecycle": "historical",
+      "provenance_sha256": "b5db43e374bf199e721dffeda146a7f4a05bbe7832a5cd3da3049313bb98e167"
+    },
+    {
+      "document_id": "ROADMAP_V1_1_0",
+      "canonical_filename": "05_ROADMAP_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/archive/05_ROADMAP_v1.1.0.md",
+      "authority_class": "ROADMAP_HISTORICAL",
+      "sha256": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613",
+      "superseded_version": "1.1.1",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613"
+    },
+    {
+      "document_id": "ARCHITECTURE_SYNTHESIS_V1_1_0",
+      "canonical_filename": "03_ARCHITECTURE_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/archive/03_ARCHITECTURE_v1.1.0.md",
+      "authority_class": "ARCHITECTURE_SYNTHESIS_HISTORICAL",
+      "sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
+      "superseded_version": "1.0.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852"
+    },
+    {
+      "document_id": "DOMAIN_MAP_V1_1_0",
+      "canonical_filename": "04_DOMAIN_MAP_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/archive/04_DOMAIN_MAP_v1.1.0.md",
+      "authority_class": "DOMAIN_LAW_HISTORICAL",
+      "sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
+      "superseded_version": "1.0.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2"
+    },
+    {
+      "document_id": "PLATFORM_OPERATING_MODEL_V1_0_0",
+      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.0.md",
+      "authority_class": "PLATFORM_OPERATING_MODEL_HISTORICAL",
+      "sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
+      "superseded_version": null,
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811"
+    },
+    {
+      "document_id": "FRONTEND_EXPERIENCE_SYSTEM_V1_0_0",
+      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/archive/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
+      "authority_class": "FRONTEND_EXPERIENCE_SYSTEM_HISTORICAL",
+      "sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3",
+      "superseded_version": null,
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3"
     }
   ],
   "integrity_rules": {
@@ -486,7 +591,7 @@
       "context_index": "docs/00_platform/README.md"
     },
     "expected_counts": {
-      "decisions": 298,
+      "decisions": 303,
       "open_questions": 40,
       "architecture_law": 332,
       "architecture_requirements": 433,
@@ -499,7 +604,7 @@
       "DEC": {
         "prefix": "DEC",
         "start": 1,
-        "end": 298,
+        "end": 303,
         "width": 3
       },
       "OQ": {
@@ -549,13 +654,171 @@
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.36\\.md",
         "(?<!archive/)04_DOMAIN_MAP_v1\\.0\\.0\\.md",
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.37\\.md",
-        "(?<!archive/)05_ROADMAP_v1\\.0\\.0\\.md"
+        "(?<!archive/)05_ROADMAP_v1\\.0\\.0\\.md",
+        "(?<!archive/)00_PLATFORM_v1\\.3\\.0\\.md",
+        "(?<!archive/)01_DECISIONS_v1\\.3\\.0\\.md",
+        "(?<!archive/)05_ROADMAP_v1\\.1\\.0\\.md",
+        "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.1\\.0\\.md",
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.28\\.md",
+        "(?<!archive/)PROJECT_NORTH_STAR_AND_MVP_v1\\.2\\.1\\.md",
+        "(?<!archive/)00_PLATFORM_v1\\.2\\.1\\.md",
+        "(?<!archive/)01_DECISIONS_v1\\.2\\.2\\.md",
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.(?:39|40|41|42|43)\\.md",
+        "(?<!archive/)03_ARCHITECTURE_v1\\.0\\.0\\.md",
+        "(?<!archive/)03_ARCHITECTURE_v1\\.1\\.0\\.md",
+        "(?<!archive/)04_DOMAIN_MAP_v1\\.1\\.0\\.md",
+        "(?<!archive/)PLATFORM_OPERATING_MODEL_v1\\.0\\.0\\.md",
+        "(?<!archive/)FRONTEND_EXPERIENCE_SYSTEM_v1\\.0\\.0\\.md",
+        "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.(?:3|4)\\.0\\.md",
+        "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.2\\.0\\.md",
+        "(?<!reference/)(?<!archive/)ARCHITECTURE_REQUIREMENTS_WORKING_v1\\.1\\.0\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",
       "navigation_document_ids": [
-        "OPEN_WORK"
+        "PROJECT_NORTH_STAR_AND_MVP",
+        "PLATFORM_BASELINE",
+        "DECISION_REGISTER",
+        "OPEN_WORK",
+        "ARCHITECTURE_SYNTHESIS",
+        "DOMAIN_MAP",
+        "ROADMAP",
+        "PLATFORM_OPERATING_MODEL",
+        "FRONTEND_EXPERIENCE_SYSTEM"
+      ],
+      "navigation_document_paths": [
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md"
       ]
+    },
+    "product_hardening_bundle_allocation_requirements": {
+      "matrix": "BUNDLE-COMPONENT-ALLOCATION",
+      "rules": {
+        "pre_sale_configuration": [
+          "versioned_deterministic_rule",
+          "component_amounts_selected_before_sale"
+        ],
+        "discount_reconciliation": [
+          "sum_exactly_to_accepted_bundle_amount",
+          "after_governed_discounts_and_promotions",
+          "currency_minor_units"
+        ],
+        "order_snapshot": [
+          "snapshot_currency_accepted_amount_rule_version_component_amounts_discount_allocation"
+        ],
+        "disclosure_and_activation": [
+          "disclose_each_component_allocation_before_checkout",
+          "no_sale_without_complete_order_snapshot"
+        ],
+        "component_refund": [
+          "refund_from_original_order_snapshot",
+          "never_current_price"
+        ],
+        "split_selection": [
+          "versioned_offer_configuration",
+          "not_selected_by_product_law"
+        ],
+        "launch_bundle": [
+          "R249_assessment + R399_plan - R99_bundle_discount = R549_accepted_bundle_amount"
+        ]
+      },
+      "launch_example": {
+        "assessment": 249,
+        "plan": 399,
+        "discount": 99,
+        "bundle": 549
+      },
+      "decision_terms": [
+        "§21R.1",
+        "versioned deterministic allocation rule",
+        "selected before sale",
+        "component allocations sum exactly to the accepted bundle amount",
+        "governed discounts and promotions",
+        "currency minor units",
+        "disclosed before checkout",
+        "snapshotted immutably on the order",
+        "use that snapshot and never recompute from current prices",
+        "does not choose the component split"
+      ]
+    },
+    "product_hardening_feature_pack_requirements": {
+      "FP-002": {
+        "sections": [
+          "21R.1",
+          "21R.2",
+          "21R.5"
+        ],
+        "decisions": [
+          "DEC-299",
+          "DEC-300",
+          "DEC-303"
+        ],
+        "outcomes": [
+          "paid_right_held_until_delivery_or_terminal_closeout",
+          "bundle_refund_uses_accepted_order_allocation_snapshot",
+          "duplicate_payment_preserves_one_valid_right",
+          "unused_credit_blocks_second_standalone_or_bundle_sale"
+        ]
+      },
+      "FP-003": {
+        "sections": [
+          "21R.4",
+          "21R.5"
+        ],
+        "decisions": [
+          "DEC-302",
+          "DEC-303"
+        ],
+        "outcomes": [
+          "declared_temperament_has_no_exact_digital_score_or_report",
+          "declared_profile_keeps_assessment_credit_unused",
+          "later_digital_result_appends_without_replacing_prior_provenance",
+          "ordinary_assessment_credit_cap_and_attempt_interval_apply"
+        ]
+      },
+      "FP-004": {
+        "sections": [
+          "21R.1"
+        ],
+        "decisions": [
+          "DEC-299"
+        ],
+        "outcomes": [
+          "safety_selects_pathway_without_consuming_or_refunding_commercial_right",
+          "incomplete_information_or_review_keeps_paid_plan_right_held"
+        ]
+      },
+      "FP-005": {
+        "sections": [
+          "21R.1",
+          "21R.2",
+          "21R.3"
+        ],
+        "decisions": [
+          "DEC-299",
+          "DEC-300",
+          "DEC-301"
+        ],
+        "outcomes": [
+          "general_wellness_is_not_personalised_plan_fulfilment",
+          "paid_plan_right_waits_for_delivery_or_component_refund_closeout",
+          "purpose_withdrawal_stops_future_processing_without_itself_ending_commercial_right",
+          "component_refund_uses_accepted_order_snapshot"
+        ]
+      },
+      "FP-010": {
+        "sections": [
+          "21R.3"
+        ],
+        "decisions": [
+          "DEC-301"
+        ],
+        "outcomes": [
+          "personalisation_or_recommendation_withdrawal_stops_future_adjustments",
+          "withdrawal_does_not_rewrite_delivered_plan_history"
+        ]
+      }
     }
   }
 }

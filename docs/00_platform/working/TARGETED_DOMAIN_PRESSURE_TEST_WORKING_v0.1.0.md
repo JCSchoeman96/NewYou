@@ -6,7 +6,7 @@ NON-AUTHORITATIVE / DOMAIN PRESSURE-TEST EVIDENCE
 
 This working artifact records the targeted Domain pressure test that followed the Product-derived Architecture amendment. It is **not** Domain Law.
 
-**Domain Law is created only by the versioned Domain Map successor** `docs/00_platform/04_DOMAIN_MAP_v1.1.0.md`.
+**Domain Law is created only by the versioned Domain Map successor** `docs/00_platform/04_DOMAIN_MAP_v1.1.1.md`.
 
 - **Document status:** WORKING / NON-AUTHORITATIVE EVIDENCE
 - **Document version:** v0.1.0
@@ -42,10 +42,10 @@ Predecessor Domain Law `04_DOMAIN_MAP_v1.0.0.md` contained **zero** Research, Vo
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.3.0.md` (§§21M–21Q; DEC-294–298)
 3. `01_DECISIONS_v1.3.0.md`
-4. `03_ARCHITECTURE_v1.1.0.md`
+4. `03_ARCHITECTURE_v1.1.1.md`
 5. `04_DOMAIN_MAP_v1.0.0.md` (then-current predecessor)
 6. `05_ROADMAP_v1.0.0.md`
-7. `PLATFORM_OPERATING_MODEL_v1.0.0.md`
+7. `PLATFORM_OPERATING_MODEL_v1.0.1.md`
 8. `02_OPEN_WORK_v1.2.36.md`
 
 Deep evidence: `ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`; `ARCHITECTURE_LAW_WORKING_v0.36.0.md`; `REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`; `working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md`.
