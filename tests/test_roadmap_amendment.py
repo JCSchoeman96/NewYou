@@ -239,8 +239,8 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.44", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.44.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.45", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.45.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(ROOT / current["OPEN_WORK"]["repository_path"]), current["OPEN_WORK"]["sha256"])
         self.assertEqual("historical", {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK), {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["sha256"])
@@ -249,7 +249,7 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual(_sha256(DOCS / "05_ROADMAP_v1.1.1.md"), current["ROADMAP"]["sha256"])
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
         self.assertEqual(20, self.manifest["integrity_rules"]["expected_counts"]["domains"])
-        self.assertEqual(61, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
+        self.assertEqual(62, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_37"]["lifecycle"])
         self.assertEqual("historical", historical["ROADMAP_V1_0_0"]["lifecycle"])

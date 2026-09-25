@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ATLAS_PATH = ROOT / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.1.md"
+ATLAS_PATH = ROOT / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.2.md"
 
 CAP_IDS = [f"CAP-{number:03d}" for number in range(1, 34)]
 FP_IDS = [f"FP-{number:03d}" for number in range(1, 18)]

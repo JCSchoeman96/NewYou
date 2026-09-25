@@ -14,7 +14,7 @@ CONTRACT_V0_3_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.3.0.md
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md"
 CONTRACT_OLDER_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
-CURRENT_OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.44.md"
+CURRENT_OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.45.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 README = DOCS / "README.md"
@@ -798,8 +798,8 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual("REQUIRED / NOT_STARTED", self.recovery_state["communications"])
         self.assertEqual("STALE / BLOCKED / NOT AUTHORITY", self.recovery_state["pr_38"])
 
-    def test_readme_open_work_and_manifest_route_v1_2_44(self):
-        self.assertIn("02_OPEN_WORK_v1.2.44.md", self.readme)
+    def test_readme_open_work_and_manifest_route_v1_2_45(self):
+        self.assertIn("02_OPEN_WORK_v1.2.45.md", self.readme)
         self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md", self.readme)
         self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
         self.assertIn("POST-MERGE CERTIFICATION: PENDING", self.readme)
@@ -812,9 +812,9 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.44", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.44.md", current["OPEN_WORK"]["repository_path"])
-        self.assertEqual(_sha256(DOCS / "02_OPEN_WORK_v1.2.44.md"), current["OPEN_WORK"]["sha256"])
+        self.assertEqual("1.2.45", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.45.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual(_sha256(DOCS / "02_OPEN_WORK_v1.2.45.md"), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual(_sha256(OPEN_WORK), historical["OPEN_WORK_V1_2_43"]["sha256"])
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_42_SHA256, historical["OPEN_WORK_V1_2_42"]["sha256"])
