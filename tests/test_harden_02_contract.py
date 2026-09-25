@@ -473,11 +473,51 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                 _section(self.current_contract, start, end),
                 start,
             )
+
+    def test_contract_stage_stop_tracks_completed_lifecycle_without_weakening_gates(self):
         stop_heading = "## 20. Contract-stage STOP"
-        self.assertEqual(
-            self.contract_v0_4_1[self.contract_v0_4_1.index(stop_heading):],
-            self.current_contract[self.current_contract.index(stop_heading):],
+        predecessor_stop = self.contract_v0_4_1[self.contract_v0_4_1.index(stop_heading):]
+        current_stop = self.current_contract[self.current_contract.index(stop_heading):]
+        stable_boundary = predecessor_stop.split("\n\nDo not:", 1)[0]
+        current_stop_folded = current_stop.casefold()
+
+        self.assertTrue(current_stop.startswith(stable_boundary))
+        self.assertNotIn("missing post-merge", current_stop_folded)
+        self.assertNotIn("missing lifecycle records", current_stop_folded)
+        self.assertNotIn("not started / not authorised", current_stop_folded)
+        self.assertNotIn("do not execute harden-02", current_stop_folded)
+        self.assertNotIn("- execute harden-02;", current_stop_folded)
+        self.assertIn("the original v0.4.0 contract lifecycle remains complete / certified", current_stop_folded)
+        self.assertIn("do not reopen it", current_stop_folded)
+        self.assertIn("this status-sync artifact itself does not execute harden-02", current_stop_folded)
+        self.assertIn("harden-02 execution is next / authorised / not started", current_stop_folded)
+        self.assertIn("execution remains not started until that separate task explicitly begins", current_stop_folded)
+        self.assertIn("all required i-01…i-13 execution proofs pass", current_stop_folded)
+        self.assertIn("applicable execution certification lifecycle is complete", current_stop_folded)
+        self.assertIn("engineering standards authority promotion", current_stop_folded)
+        self.assertIn("fp-001 reconciliation", current_stop_folded)
+        self.assertIn("communications", current_stop_folded)
+        self.assertIn("phase 7c", current_stop_folded)
+        self.assertIn("proof classification", current_stop_folded)
+        self.assertIn("phase 8", current_stop_folded)
+        self.assertIn("no application implementation is authorised", current_stop_folded)
+        self.assertIn("this lifecycle-status synchronization does not authorise application implementation", current_stop_folded)
+        downstream_route = current_stop_folded.split("preserve the fail-closed downstream gates:", 1)[1]
+        ordered_gates = (
+            "engineering standards authority promotion",
+            "fp-001 reconciliation",
+            "communications",
+            "phase 7c",
+            "proof classification",
+            "phase 8",
         )
+        route_positions = [downstream_route.index(gate) for gate in ordered_gates]
+        self.assertEqual(sorted(route_positions), route_positions)
+        self.assertNotIn(
+            "harden-02 execution remains not started / not authorised throughout this recovery pr",
+            self.current_contract.casefold(),
+        )
+        self.assertIn("under that historical v0.3.0 recovery pr", self.current_contract.casefold())
 
     def test_v0_3_archived_byte_identically(self):
         self.assertTrue(CONTRACT_V0_3_ARCHIVE.is_file())

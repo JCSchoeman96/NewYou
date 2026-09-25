@@ -278,9 +278,9 @@ Contract v0.2.0 is historical evidence of the previous contract attempt. [PR #37
 
 The GitHub record for PR #37 contains no submitted review or review comment that certifies its exact head. The missing independent pre-merge certification means v0.2.0's COMPLETE / CERTIFIED lifecycle was never repository-verifiably established. v0.3.0 does not retroactively repair or certify v0.2.0. Its lifecycle was re-baselined from then-current `main` commit `2599638334b761ddef8e5568d0a38c3207eef722`.
 
-This recovery follows v0.2.0 §13: re-baseline and amend the contract rather than silently expanding scope.
+The historical v0.3.0 recovery followed v0.2.0 §13: re-baseline and amend the contract rather than silently expanding scope.
 
-HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED throughout this recovery PR. No merge or CI fact from v0.2.0 authorises execution under this successor.
+Under that historical v0.3.0 recovery PR, HARDEN-02 execution remained NOT STARTED / NOT AUTHORISED. No merge or CI fact from v0.2.0 authorised execution under the v0.3.0 successor. That historical gate is superseded by the completed v0.4.0 lifecycle recorded in §11.5; current HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED.
 
 ### 11.1.1 PR #39 / v0.3.0 historical record (not retroactive certification)
 
@@ -634,12 +634,16 @@ Historical H02-3 evidence remains historically true for the earlier programme st
 
 This artifact records the HARDEN-02 contract lifecycle status only. HARDEN-02 is not authority for Product, Architecture, Domain or Roadmap law, Engineering Standards promotion, FP-001 reconciliation, Communications or implementation. No application implementation is authorised.
 
-Do not:
+This status-sync artifact itself does not execute HARDEN-02. The original v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED on its recorded evidence. Do not reopen it or describe its evidence as missing without new contradictory repository evidence that challenges a recorded lifecycle requirement. If such evidence appears, STOP and resolve it through the applicable governed review. This status successor does not alter the certified v0.4.0 semantics.
 
-- treat the missing post-merge inspection or attestation as complete;
-- mark HARDEN-02 execution NEXT / AUTHORISED before both missing lifecycle records exist on the resulting `main` SHA;
-- execute HARDEN-02;
-- start FP-001 reconciliation;
-- start Communications;
-- execute Engineering Standards Authority Promotion or freeze Engineering Standards;
-- implement application behaviour.
+Current HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED. This authorises a separately governed HARDEN-02 execution task to begin; it does not mean execution has begun. Execution remains NOT STARTED until that separate task explicitly begins. Do not mark HARDEN-02 execution COMPLETE / CERTIFIED until all required I-01…I-13 execution proofs PASS and the applicable execution certification lifecycle is complete.
+
+Preserve the fail-closed downstream gates:
+
+- do not begin Engineering Standards Authority Promotion before HARDEN-02 execution is COMPLETE / CERTIFIED;
+- do not begin FP-001 reconciliation before Engineering Standards Authority Promotion is COMPLETE / CERTIFIED;
+- begin Communications only after FP-001 reconciliation is complete;
+- keep Phase 7C blocked until required and conditional Phase-7B work passes its applicable gates;
+- do not finalise proof classification before Phase 7C is complete;
+- keep Phase 8 blocked until the Development Entry Hard Stop passes;
+- this lifecycle-status synchronization does not authorise application implementation.
