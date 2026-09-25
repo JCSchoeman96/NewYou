@@ -2,19 +2,9 @@ name: Foundation Integrity
 
 on:
   pull_request:
-    paths:
-      - ".github/workflows/foundation-integrity.yml"
-      - "docs/00_platform/**"
-      - "tools/**"
-      - "tests/**"
   push:
     branches:
       - main
-    paths:
-      - ".github/workflows/foundation-integrity.yml"
-      - "docs/00_platform/**"
-      - "tools/**"
-      - "tests/**"
 
 jobs:
   foundation-integrity:

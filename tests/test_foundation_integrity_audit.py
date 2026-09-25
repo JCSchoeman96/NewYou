@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -33,6 +34,129 @@ FAD72C1_FROZEN_HASHES = {
 
 
 class FoundationIntegrityAuditTests(unittest.TestCase):
+    def test_blocked_state_rejects_each_explicit_application_root(self):
+        for relative in ("mix.exs", "lib/example.ex", "config/", "priv/repo/migrations/001_create_example.exs", "assets/"):
+            with self.subTest(path=relative), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                self._write_clean_fixture(root)
+                path = root / relative.rstrip("/")
+                if relative.endswith("/"):
+                    path.mkdir(parents=True)
+                else:
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text("# application root\n", encoding="utf-8")
+
+                report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+                self.assertEqual("FAIL", report["status"])
+                self.assertTrue(
+                    any(
+                        finding["check"] == "development_entry_repository_boundary"
+                        and finding["path"] == relative.rstrip("/").split("/", 1)[0]
+                        for finding in report["findings"]
+                    )
+                )
+
+    def test_blocked_state_allows_docs_tools_and_tests(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_clean_fixture(root)
+            for relative in ("docs/notes.md", "tools/check.py", "tests/test_example.py"):
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("# allowed while blocked\n", encoding="utf-8")
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertEqual("PASS", report["status"])
+            self.assertFalse(
+                any(
+                    finding["check"] == "development_entry_repository_boundary"
+                    for finding in report["findings"]
+                )
+            )
+
+    def test_authorised_state_allows_application_roots(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_clean_fixture(root, application_implementation="AUTHORISED")
+            path = root / "lib" / "example.ex"
+            path.parent.mkdir(parents=True)
+            path.write_text("defmodule Example do\nend\n", encoding="utf-8")
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertEqual("PASS", report["status"])
+            self.assertFalse(
+                any(
+                    finding["check"] == "development_entry_repository_boundary"
+                    for finding in report["findings"]
+                )
+            )
+
+    def test_unknown_application_state_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_clean_fixture(root, application_implementation="UNKNOWN")
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    finding["check"] == "development_entry_repository_boundary"
+                    for finding in report["findings"]
+                )
+            )
+
+    def test_missing_application_state_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_clean_fixture(root, include_application_implementation=False)
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    finding["check"] == "development_entry_repository_boundary"
+                    for finding in report["findings"]
+                )
+            )
+
+    def test_duplicate_application_state_key_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_clean_fixture(root)
+            open_work = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.0.0.md"
+            open_work.write_text(
+                "<!-- HARDEN_02_RECOVERY_STATE_START -->\n"
+                "```json\n"
+                '{"application_implementation":"BLOCKED","application_implementation":"AUTHORISED"}\n'
+                "```\n"
+                "<!-- HARDEN_02_RECOVERY_STATE_END -->\n",
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    finding["check"] == "development_entry_repository_boundary"
+                    for finding in report["findings"]
+                )
+            )
+
+    def test_workflow_runs_foundation_audit_for_all_pull_requests_and_main_pushes(self):
+        workflow = Path(__file__).resolve().parents[1] / ".github" / "workflows" / "foundation-integrity.yml"
+        text = workflow.read_text(encoding="utf-8")
+
+        self.assertRegex(text, r"(?m)^  pull_request:\s*$")
+        self.assertRegex(text, r"(?ms)^  push:\n    branches:\n      - main\s*$")
+        self.assertNotIn("paths:", text)
+        self.assertIn("python tools/foundation_integrity_audit.py", text)
+
     def test_clean_fixture_returns_pass_report(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -335,7 +459,13 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
             self.assertEqual(expected_hash, manifest["governing_documents"][0]["sha256"])
 
-    def _write_clean_fixture(self, root: Path) -> dict:
+    def _write_clean_fixture(
+        self,
+        root: Path,
+        *,
+        application_implementation: str = "BLOCKED",
+        include_application_implementation: bool = True,
+    ) -> dict:
         files = {
             "docs/00_platform/01_DECISIONS_v1.2.1.md": (
                 "- **Document version:** v1.2.1\n"
@@ -368,6 +498,23 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 "| Business truth | Authoritative domain | Dependents | Rule |\n"
                 "| Truth | **Example Domain** | None | READ |\n"
                 "### 4.1 Ownership interpretation\n"
+            ),
+            "docs/00_platform/02_OPEN_WORK_v1.0.0.md": (
+                "- **Document version:** v1.0.0\n"
+                "<!-- HARDEN_02_RECOVERY_STATE_START -->\n"
+                "```json\n"
+                + json.dumps(
+                    {
+                        "current_stage": "EXAMPLE",
+                        **(
+                            {"application_implementation": application_implementation}
+                            if include_application_implementation
+                            else {}
+                        ),
+                    }
+                )
+                + "\n```\n"
+                "<!-- HARDEN_02_RECOVERY_STATE_END -->\n"
             ),
         }
 
@@ -417,6 +564,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             "ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md": "ARCHITECTURE_REQUIREMENTS_EVIDENCE",
             "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md": "REFERENCE_FLOW_EVIDENCE",
             "04_DOMAIN_MAP_v1.0.0.md": "DOMAIN_LAW",
+            "02_OPEN_WORK_v1.0.0.md": "PLANNING_TRACKER",
         }
         document_ids = {
             "01_DECISIONS_v1.2.1.md": "DECISION_REGISTER",
@@ -425,6 +573,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             "ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md": "ARCHITECTURE_REQUIREMENTS_EVIDENCE",
             "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md": "REFERENCE_FLOW_EVIDENCE",
             "04_DOMAIN_MAP_v1.0.0.md": "DOMAIN_LAW",
+            "02_OPEN_WORK_v1.0.0.md": "OPEN_WORK",
         }
         for relative in files:
             path = root / relative

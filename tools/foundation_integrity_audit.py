@@ -15,6 +15,11 @@ from typing import Any, Iterable
 
 DEFAULT_MANIFEST = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
 
+OPEN_WORK_STATE_START = "<!-- HARDEN_02_RECOVERY_STATE_START -->"
+OPEN_WORK_STATE_END = "<!-- HARDEN_02_RECOVERY_STATE_END -->"
+PHOENIX_APPLICATION_ROOTS = ("mix.exs", "lib", "config", "priv", "assets")
+MARKED_JSON_FENCE_PATTERN = re.compile(r"```json\s*(.*?)\s*```", re.DOTALL)
+
 ID_PATTERNS = {
     "DEC": re.compile(r"\bDEC-\d{3}\b"),
     "OQ": re.compile(r"\bOQ-\d{3}\b"),
@@ -65,6 +70,46 @@ def load_manifest(path: Path) -> dict[str, Any]:
         value = json.load(handle)
     if not isinstance(value, dict):
         raise ValueError("manifest root must be a JSON object")
+    return value
+
+
+def _reject_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError(f"duplicate JSON key: {key}")
+        value[key] = item
+    return value
+
+
+def _parse_marked_open_work_state(text: str) -> dict[str, Any]:
+    if text.count(OPEN_WORK_STATE_START) != 1 or text.count(OPEN_WORK_STATE_END) != 1:
+        raise ValueError("Open Work must contain exactly one marked JSON state")
+
+    start = text.index(OPEN_WORK_STATE_START) + len(OPEN_WORK_STATE_START)
+    end = text.index(OPEN_WORK_STATE_END, start)
+    if end < start:
+        raise ValueError("Open Work JSON state markers are out of order")
+    region = text[start:end]
+    matches = list(MARKED_JSON_FENCE_PATTERN.finditer(region))
+    if len(matches) != 1:
+        raise ValueError("Open Work marked state must contain exactly one JSON fence")
+    match = matches[0]
+    if region[: match.start()].strip() or region[match.end() :].strip():
+        raise ValueError("Open Work marked state contains content outside its JSON fence")
+
+    try:
+        value = json.loads(
+            match.group(1),
+            object_pairs_hook=_reject_duplicate_json_keys,
+            parse_constant=lambda constant: (_ for _ in ()).throw(
+                ValueError(f"invalid JSON constant: {constant}")
+            ),
+        )
+    except (TypeError, ValueError, json.JSONDecodeError) as error:
+        raise ValueError(f"cannot parse Open Work marked JSON state: {error}") from error
+    if not isinstance(value, dict):
+        raise ValueError("Open Work marked JSON state must be an object")
     return value
 
 
@@ -750,6 +795,62 @@ def _check_production_graph(
     )
 
 
+def _check_development_entry_boundary(
+    root: Path,
+    entries: list[dict[str, Any]],
+    report: dict[str, Any],
+) -> None:
+    open_work_entries = [
+        entry
+        for entry in entries
+        if entry.get("document_id") == "OPEN_WORK"
+        and entry.get("lifecycle", "current") != "historical"
+    ]
+    state_path = "OPEN_WORK"
+    try:
+        if len(open_work_entries) != 1:
+            raise ValueError("manifest must identify exactly one current OPEN_WORK document")
+        state_entry = open_work_entries[0]
+        state_path = _relative_path(state_entry)
+        open_work_path = _entry_path(root, state_entry)
+        if not open_work_path.is_file():
+            raise ValueError("current OPEN_WORK document is missing")
+        state = _parse_marked_open_work_state(open_work_path.read_text(encoding="utf-8"))
+        application_implementation = state.get("application_implementation")
+        if application_implementation not in {"BLOCKED", "AUTHORISED"}:
+            raise ValueError(
+                "application_implementation must be BLOCKED or AUTHORISED"
+            )
+    except (OSError, UnicodeError, ValueError) as error:
+        _record_check(
+            report,
+            "development_entry_repository_boundary",
+            False,
+            f"cannot establish application implementation state: {error}",
+            path=state_path,
+        )
+        return
+
+    blocked = application_implementation == "BLOCKED"
+    for relative in PHOENIX_APPLICATION_ROOTS:
+        application_root = root / relative
+        exists = application_root.exists() or application_root.is_symlink()
+        permitted = not blocked or not exists
+        if blocked and exists:
+            message = "application root exists while application implementation is BLOCKED"
+        elif blocked:
+            message = "application root is absent while application implementation is BLOCKED"
+        else:
+            message = "application root is permitted while application implementation is AUTHORISED"
+        _record_check(
+            report,
+            "development_entry_repository_boundary",
+            permitted,
+            message,
+            path=relative,
+        )
+
+
 def run_audit(
     root: Path,
     manifest_path: Path,
@@ -790,6 +891,7 @@ def run_audit(
         integrity_rules["expected_counts"] if expected_counts is None else expected_counts
     )
     _check_manifest_entries(root, entries, report)
+    _check_development_entry_boundary(root, entries, report)
     definitions = _build_definitions(root, entries, integrity_rules, report)
     _check_definitions_and_references(
         root, entries, definitions, counts_expectation, integrity_rules, report
