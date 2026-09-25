@@ -6226,7 +6226,7 @@ This section makes the paid-plan and assessment consequences explicit without ch
 
 ## 21R.1 Paid plan entitlement by eligibility outcome
 
-`held_unconsumed` means the paid plan right remains reserved for the purchase, has not been used to fulfil a plan, cannot be reused or silently converted, and does not expire solely because required information is incomplete or review is pending. A final unfulfillable outcome closes that right through the disclosed plan-component refund below. For a bundle, the checkout record must contain a participant-disclosed allocation for each component before the bundle may be sold.
+`held_unconsumed` means the paid plan right remains reserved for the purchase, has not been used to fulfil a plan, cannot be reused or silently converted, and does not expire solely because required information is incomplete or review is pending. A final unfulfillable outcome closes that right through the disclosed plan-component refund below. A bundle's deterministic, versioned allocation rule and each component amount must be selected before sale; component amounts must reconcile exactly to the accepted bundle amount after governed discounts and promotions, in the order currency's minor units.
 
 <!-- NEWYOU:PRODUCT-MATRIX:ELIGIBILITY-PAID-PLAN:START -->
 | case | entitlement consequence | commercial consequence |
@@ -6238,7 +6238,19 @@ This section makes the paid-plan and assessment consequences explicit without ch
 | `terminal_unfulfillable_outcome` | `close_plan_entitlement_after_component_refund; preserve_separately_delivered_assessment` | `refund_allocated_plan_component; end_plan_right; never_substitute_general_wellness` |
 <!-- NEWYOU:PRODUCT-MATRIX:ELIGIBILITY-PAID-PLAN:END -->
 
-For a final `declined_no_plan`, `restricted_pathway` or `referred_externally` outcome that cannot fulfil the purchased plan, Commerce refunds the checkout-recorded, disclosed allocation for the plan component and Entitlements ends that component right. A bundle may not be offered unless its component allocation is recorded and disclosed before checkout. Any separately delivered assessment and its historical report remain governed by their own entitlement and deletion rules. A temporary review hold is not a final unfulfillable outcome.
+<!-- NEWYOU:PRODUCT-MATRIX:BUNDLE-COMPONENT-ALLOCATION:START -->
+| invariant | governed rule |
+|---|---|
+| `pre_sale_configuration` | `versioned_deterministic_rule; component_amounts_selected_before_sale` |
+| `discount_reconciliation` | `sum_exactly_to_accepted_bundle_amount; after_governed_discounts_and_promotions; currency_minor_units` |
+| `order_snapshot` | `snapshot_currency_accepted_amount_rule_version_component_amounts_discount_allocation` |
+| `disclosure_and_activation` | `disclose_each_component_allocation_before_checkout; no_sale_without_complete_order_snapshot` |
+| `component_refund` | `refund_from_original_order_snapshot; never_current_price` |
+| `split_selection` | `versioned_offer_configuration; not_selected_by_product_law` |
+| `launch_bundle` | `R249_assessment + R399_plan - R99_bundle_discount = R549_accepted_bundle_amount` |
+<!-- NEWYOU:PRODUCT-MATRIX:BUNDLE-COMPONENT-ALLOCATION:END -->
+
+For a final `declined_no_plan`, `restricted_pathway` or `referred_externally` outcome that cannot fulfil the purchased plan, Commerce refunds the checkout-recorded, disclosed allocation for the plan component and Entitlements ends that component right. Each order snapshots the allocation rule version, currency, accepted amount, component amounts and discount/promotion allocation; a component refund uses that accepted snapshot and is never recomputed from current prices. The launch bundle has R249 assessment and R399 plan list values, a R99 saving and a R549 accepted amount. Product Law does not choose how the saving is divided between components; that split belongs to the versioned offer configuration and must be disclosed before checkout. A bundle may not be offered unless its complete allocation and order snapshot are valid. Any separately delivered assessment and its historical report remain governed by their own entitlement and deletion rules. A temporary review hold is not a final unfulfillable outcome.
 
 ## 21R.2 Refund, dispute and reversal consequences
 

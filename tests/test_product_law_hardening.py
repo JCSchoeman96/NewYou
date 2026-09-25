@@ -5,7 +5,7 @@ import re
 import unittest
 from pathlib import Path
 
-from tools.foundation_integrity_audit import run_audit
+from tools import foundation_integrity_audit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,6 +53,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md").read_text(
             encoding="utf-8"
         )
+        cls.integrity_rules = json.loads(MANIFEST.read_text(encoding="utf-8"))["integrity_rules"]
 
     def test_paid_plan_matrix_covers_each_safety_outcome_and_terminal_closeout(self):
         rows = matrix_rows(self.product, "ELIGIBILITY-PAID-PLAN")
@@ -193,7 +194,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertNotIn("PENDING INDEPENDENT PRE-MERGE CERTIFICATION", self.readme)
 
     def test_foundation_integrity_audit_runs_the_product_semantic_checks(self):
-        report = run_audit(ROOT, MANIFEST)
+        report = foundation_integrity_audit.run_audit(ROOT, MANIFEST)
         checks = {item["name"]: item for item in report["checks"]}
         expected = {
             "eligibility_commercial_consequences",
@@ -203,10 +204,81 @@ class ProductLawHardeningTests(unittest.TestCase):
             "assessment_purchase_governance",
             "resolved_oq_not_blocking",
             "harden_02_lifecycle_state",
+            "bundle_component_allocation_governance",
+            "product_hardening_feature_pack_propagation",
         }
         self.assertTrue(expected <= checks.keys())
         for check in expected:
             self.assertEqual("PASS", checks[check]["status"], checks[check]["message"])
+
+    def test_feature_pack_propagation_checker_catches_missing_pack_contract(self):
+        requirements = self.integrity_rules["product_hardening_feature_pack_requirements"]
+        self.assertEqual(
+            {"FP-002", "FP-003", "FP-004", "FP-005", "FP-010"},
+            set(requirements),
+        )
+        self.assertEqual(
+            [], foundation_integrity_audit._feature_pack_propagation_issues(self.roadmap, requirements)
+        )
+
+        missing_provenance = self.roadmap.replace(
+            "declared_temperament_has_no_exact_digital_score_or_report",
+            "declared_temperament_may_have_exact_digital_score_or_report",
+            1,
+        )
+        issues = foundation_integrity_audit._feature_pack_propagation_issues(
+            missing_provenance, requirements
+        )
+        self.assertTrue(any("FP-003" in issue for issue in issues), issues)
+
+        missing_authority = self.roadmap.replace(
+            "`DEC-302`, `DEC-303`", "`DEC-303`", 1
+        )
+        issues = foundation_integrity_audit._feature_pack_propagation_issues(
+            missing_authority, requirements
+        )
+        self.assertTrue(any("FP-003 does not cite DEC-302" in issue for issue in issues), issues)
+
+    def test_bundle_allocation_checker_requires_snapshot_governance_and_reconciled_prices(self):
+        requirements = self.integrity_rules["product_hardening_bundle_allocation_requirements"]
+        self.assertEqual(
+            [],
+            foundation_integrity_audit._bundle_component_allocation_issues(
+                self.product, self.decisions, requirements
+            ),
+        )
+
+        missing_refund_basis = self.product.replace(
+            "| `component_refund` | `refund_from_original_order_snapshot; never_current_price` |",
+            "| `component_refund` | `refund_from_current_price` |",
+            1,
+        )
+        issues = foundation_integrity_audit._bundle_component_allocation_issues(
+            missing_refund_basis, self.decisions, requirements
+        )
+        self.assertTrue(any("component_refund" in issue for issue in issues), issues)
+
+        invalid_example = self.product.replace(
+            "R249_assessment + R399_plan - R99_bundle_discount = R549_accepted_bundle_amount",
+            "R249_assessment + R399_plan - R99_bundle_discount = R550_accepted_bundle_amount",
+            1,
+        )
+        issues = foundation_integrity_audit._bundle_component_allocation_issues(
+            invalid_example, self.decisions, requirements
+        )
+        self.assertTrue(any("launch_bundle" in issue for issue in issues), issues)
+
+        missing_decision_rule = self.decisions.replace(
+            "versioned deterministic allocation rule",
+            "unversioned allocation rule",
+            1,
+        )
+        issues = foundation_integrity_audit._bundle_component_allocation_issues(
+            self.product, missing_decision_rule, requirements
+        )
+        self.assertTrue(
+            any("DEC-299 does not carry" in issue for issue in issues), issues
+        )
 
 
 if __name__ == "__main__":

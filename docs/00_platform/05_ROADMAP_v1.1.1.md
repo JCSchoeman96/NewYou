@@ -363,7 +363,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Outcome:** A participant can purchase one of the three approved South African/ZAR launch products through the launch payment gateway and receive exactly one valid component entitlement only after verified, reconciled payment truth.
 
-**Validation Objective:** Prove commercial willingness and the payment-to-access invariant: browser/provider returns are evidence, Commerce owns payment truth, Entitlements owns access truth, and duplicate/reordered/retried provider delivery cannot multiply payment or access.
+**Validation Objective:** Prove commercial willingness and the payment-to-access invariant: browser/provider returns are evidence, Commerce owns payment truth, Entitlements owns access truth, duplicate/reordered/retried provider delivery cannot multiply payment or access, and any component refund follows the versioned allocation accepted and snapshotted at checkout.
 
 **Validation Objective Type:** `COMMERCIAL`, `ARCHITECTURAL`, `SECURITY`, `RELIABILITY`, `OPERATIONAL`, `PERFORMANCE`.
 
@@ -373,7 +373,9 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Affected Domains:** `Commerce`; `Entitlements`; `Identity & Access`; `Privacy & Consent`; `Audit & Evidence`; `Analytics`.
 
-**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§11–13`; `00_PLATFORM_v1.4.0.md §§21L.4–21L.6, 21L.13–21L.18`; `DEC-029...DEC-050`, `DEC-258`, `DEC-268...DEC-285`, `DEC-292`.
+**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§11–13`; `00_PLATFORM_v1.4.0.md §§21L.4–21L.6, 21L.13–21L.18, 21R.1–21R.2, 21R.5`; `DEC-029...DEC-050`, `DEC-258`, `DEC-268...DEC-285`, `DEC-292`, `DEC-299`, `DEC-300`, `DEC-303`.
+
+**Product Hardening Contract:** `paid_right_held_until_delivery_or_terminal_closeout`; `bundle_refund_uses_accepted_order_allocation_snapshot`; `duplicate_payment_preserves_one_valid_right`; `unused_credit_blocks_second_standalone_or_bundle_sale`.
 
 **Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5, 7, 8, 10.4, 12–15`; `FLOW-02`; provider evidence, durable reconciliation, idempotency, authority-before-access and bounded failure themes.
 
@@ -391,11 +393,11 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Performance / Scaling Concern:** Provider-bound latency, callback bursts, checkout contention, retry storms and finite PostgreSQL/worker capacity matter. Use bounded synchronous authority and durable reconciliation; do not introduce event-style Redis/holds, replicas or speculative payment services.
 
-**Security / Privacy / Safety Concern:** Provider credentials stay behind the adapter; browser return cannot grant access; purchaser/recipient separation, refund consequences, scoped support access and audit evidence remain active. No health data is needed to take payment.
+**Security / Privacy / Safety Concern:** Provider credentials stay behind the adapter; browser return cannot grant access; purchaser/recipient separation, refund consequences, scoped support access and audit evidence remain active. Bundle amounts and component allocations are versioned and disclosed before checkout, and component refunds use the immutable order snapshot. One valid right survives duplicate-payment correction; an unused assessment credit blocks a second standalone or bundled assessment sale. No health data is needed to take payment.
 
 **Release Effect:** Internal paid-offer capability and the commercial prerequisite for assessment, plan and library entitlements; not by itself a participant-ready MVP.
 
-**Exit Condition:** Each active price resolves to one authoritative version; verified and pending provider outcomes are distinguishable; retries/reordering are idempotent; refunds/reconciliation are visible; exactly one valid entitlement is granted for the governed purchase.
+**Exit Condition:** Each active price resolves to one authoritative version; verified and pending provider outcomes are distinguishable; retries/reordering are idempotent; refunds/reconciliation are visible; exactly one valid entitlement is granted for the governed purchase; a bundle cannot be sold without a disclosed allocation snapshot that reconciles to its accepted amount; component refunds use that snapshot; and unused-credit repeat purchases are blocked as Product Law requires.
 
 **Deferred From This FP:** Recurring memberships, international/multi-currency billing, event tickets/holds, large promotion systems, future gateways, open sponsorship programmes and provider-specific package/module choices.
 
@@ -405,9 +407,9 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Name:** Temperament provenance, assessment and immutable report
 
-**Outcome:** A purchaser can use a self-reported, book-derived or digitally assessed temperament path, complete the approved assessment when entitled, receive a bilingual report with primary/secondary result and provenance, and retain immutable assessment/report history under deletion law.
+**Outcome:** A purchaser can use a self-reported, book-derived or digitally assessed temperament path and retain immutable assessment/report history under deletion law. Declared self-reported and book-derived results do not receive exact digital scores or the paid digital report; those outputs follow a successfully delivered digital assessment with its own provenance.
 
-**Validation Objective:** Prove that the paid assessment has perceived value and that attempt, entitlement consumption, scoring, result immutability, report versioning and approved bilingual delivery remain reproducible under retry and later correction.
+**Validation Objective:** Prove that the paid assessment has perceived value and that attempt eligibility, credit consumption, provenance-specific outputs, scoring, result immutability, report versioning and approved bilingual delivery remain reproducible under retry and later digital completion.
 
 **Validation Objective Type:** `PRODUCT`, `BEHAVIORAL`, `ARCHITECTURAL`, `PRIVACY`, `SECURITY`, `RELIABILITY`.
 
@@ -417,7 +419,9 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Affected Domains:** `Temperament`; `Entitlements`; `Identity & Access`; `Content & Media`; `Privacy & Consent`; `Analytics`; `Audit & Evidence`.
 
-**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§8, 11–13`; `00_PLATFORM_v1.4.0.md §§21B, 21L.5–21L.6`; `DEC-031...DEC-036`, `DEC-051...DEC-072`, `DEC-272...DEC-273`.
+**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§8, 11–13`; `00_PLATFORM_v1.4.0.md §§21B, 21L.5–21L.6, 21R.4–21R.5`; `DEC-031...DEC-036`, `DEC-051...DEC-072`, `DEC-272...DEC-273`, `DEC-302`, `DEC-303`.
+
+**Product Hardening Contract:** `declared_temperament_has_no_exact_digital_score_or_report`; `declared_profile_keeps_assessment_credit_unused`; `later_digital_result_appends_without_replacing_prior_provenance`; `ordinary_assessment_credit_cap_and_attempt_interval_apply`.
 
 **Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§4–8, 10–15`; `FLOW-03`; immutable/versioned state, deterministic bounded computation, current entitlement and privacy lifecycle themes.
 
@@ -434,11 +438,11 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Performance / Scaling Concern:** Completion bursts, bounded scoring input, report reads and result-history depth matter. PostgreSQL is the authority; immutable methodology/config may be accelerated only if evidence warrants it; history is paginated rather than eagerly loaded; no GenServer or replica is assumed.
 
-**Security / Privacy / Safety Concern:** Answers and raw results are private, immutable while retained, provenance-labelled and participant-accessible under policy; staff access is minimum-loaded and audited. Temperament never becomes medical authority.
+**Security / Privacy / Safety Concern:** Answers and raw results are private, immutable while retained, provenance-labelled and participant-accessible under policy; declared profiles never receive exact digital scores or the paid digital assessment report; staff access is minimum-loaded and audited. Temperament never becomes medical authority.
 
 **Release Effect:** Assessment product capability and a required input to the personalised-plan path.
 
-**Exit Condition:** One active attempt and one immutable result are enforced; duplicate/retried submission cannot create a second result; all three approved provenance paths are visibly labelled; report output is reproducible and bilingual where required.
+**Exit Condition:** One active attempt and one immutable result are enforced; duplicate/retried submission cannot create a second result; self-reported/book-derived outputs remain distinct from digital scores and reports; included credit remains unused until successful digital assessment delivery; later digital completion appends provenance without replacing prior results; the active unused-credit cap and annual attempt interval prevent stranded repeat purchases; report output is reproducible and bilingual where required.
 
 **Deferred From This FP:** Future assessment families, social quizzes, optional score-distance labels unless gated, advanced psychometric claims, implementation schemas/indexes and non-approved methodology changes.
 
@@ -450,7 +454,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Outcome:** A participant completes progressive, purpose-specific health/lifestyle onboarding and receives exactly one current eligibility outcome: `eligible_automated`, `general_wellness_only`, `professional_review_required` or `insufficient_information`.
 
-**Validation Objective:** Prove that safety facts and provenance are collected only for the approved purpose, high-risk/incomplete cases fail closed, General Wellness is available where allowed, urgent guidance is displayed correctly and no automated personalised plan can bypass current safety authority.
+**Validation Objective:** Prove that safety facts and provenance are collected only for the approved purpose, high-risk/incomplete cases fail closed, General Wellness is available where allowed, urgent guidance is displayed correctly and no automated personalised plan can bypass current safety authority. Safety selects the eligibility pathway; it does not consume a paid right or decide its refund.
 
 **Validation Objective Type:** `PRODUCT`, `BEHAVIORAL`, `SAFETY`, `PRIVACY`, `SECURITY`, `ARCHITECTURAL`, `RELIABILITY`.
 
@@ -460,7 +464,9 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Affected Domains:** `Health Records`; `Safety & Eligibility`; `Privacy & Consent`; `Identity & Access`; `Content & Media`; `Audit & Evidence`; `Analytics`.
 
-**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§8, 12–15`; `00_PLATFORM_v1.4.0.md §§12, 21C, 21L.4, 21L.21`; `DEC-073...DEC-095`, `DEC-271`.
+**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§8, 12–15`; `00_PLATFORM_v1.4.0.md §§12, 21C, 21L.4, 21L.21, 21R.1`; `DEC-073...DEC-095`, `DEC-271`, `DEC-299`.
+
+**Product Hardening Contract:** `safety_selects_pathway_without_consuming_or_refunding_commercial_right`; `incomplete_information_or_review_keeps_paid_plan_right_held`.
 
 **Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5–8, 11, 14–15`; `FLOW-04`, `FLOW-06`; current-authority reads, minimum-data access, fail-closed safety, durable consequences and invalidation themes.
 
@@ -482,7 +488,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Release Effect:** Unlocks safe plan generation for eligible participants and a lawful General Wellness fallback; does not activate practitioner review.
 
-**Exit Condition:** All four outcomes are reproducible from versioned inputs; current high-risk facts block automated plans; `safety_paused` behaviour is possible; urgent messaging and audit evidence are present; no stale session/cache can override current safety authority.
+**Exit Condition:** All four outcomes are reproducible from versioned inputs; current high-risk facts block automated plans; `safety_paused` behaviour is possible; urgent messaging and audit evidence are present; pathway selection alone does not consume or refund a commercial right; incomplete information and pending review keep the purchased plan right held; no stale session/cache can override current safety authority.
 
 **Deferred From This FP:** Laboratory integration, automated complex clinical cases, pregnancy-specific plans, eating-disorder treatment, document interpretation, wearables and practitioner-review workflow.
 
@@ -492,11 +498,11 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Name:** Safe seven-day plan, purchased library and basic feedback
 
-**Outcome:** An eligible participant receives an immutable, explainable, bilingual seven-day plan or approved General Wellness Starter Pathway, can access purchased report/plan content, switch approved language and energy-unit presentation, and record lightweight daily/weekly progress and feedback.
+**Outcome:** An eligible participant receives an immutable, explainable, bilingual seven-day plan or approved General Wellness Starter Pathway, can access purchased report/plan content, switch approved language and energy-unit presentation, and record lightweight daily/weekly progress and feedback. General Wellness does not fulfil a purchased personalised-plan entitlement.
 
 **Feedback classification guardrail:** FP-005 “basic feedback” and daily/weekly progress entries are participant progress / self-tracking / usefulness evidence under `Habits, Journals & Progress` for the core plan loop. They do **not** activate Domain 19 Research & Feedback. Research & Feedback remains `FUTURE-GATED / FEATURE-PACK-UNASSIGNED` until a later governed Roadmap decision. Plan/protocol calculations required by this outcome remain Plans & Nutrition authority (`calculation != authority` for Interactive Tools elsewhere).
 
-**Validation Objective:** Prove the central paid proposition: safe temperament-guided guidance is useful in real life, deterministic plan generation is reproducible, no partial/duplicate plan is delivered, content versions are traceable and basic usage evidence can be collected without turning feedback into clinical authority.
+**Validation Objective:** Prove the central paid proposition: safe temperament-guided guidance is useful in real life, deterministic plan generation is reproducible, no partial/duplicate plan is delivered, paid-plan rights are consumed only after successful delivery or closed through the governed component-refund path, consent withdrawal controls future processing, content versions are traceable and basic usage evidence can be collected without turning feedback into clinical authority.
 
 **Validation Objective Type:** `PRODUCT`, `BEHAVIORAL`, `SAFETY`, `ARCHITECTURAL`, `PRIVACY`, `RELIABILITY`, `PERFORMANCE`.
 
@@ -506,7 +512,9 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Affected Domains:** `Plans & Nutrition`; `Content & Media`; `Entitlements`; `Habits, Journals & Progress`; `Safety & Eligibility`; `Temperament`; `Privacy & Consent`; `Identity & Access`; `Audit & Evidence`; `Analytics`.
 
-**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§8, 9, 12–16`; `00_PLATFORM_v1.4.0.md §§10–14, 21D–21E, 21L.4–21L.6, 21L.21–21L.23`; `DEC-096...DEC-122`, `DEC-271...DEC-273`.
+**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§8, 9, 12–16`; `00_PLATFORM_v1.4.0.md §§10–14, 21D–21E, 21L.4–21L.6, 21L.21–21L.23, 21R.1–21R.3`; `DEC-096...DEC-122`, `DEC-271...DEC-273`, `DEC-299`, `DEC-300`, `DEC-301`.
+
+**Product Hardening Contract:** `general_wellness_is_not_personalised_plan_fulfilment`; `paid_plan_right_waits_for_delivery_or_component_refund_closeout`; `purpose_withdrawal_stops_future_processing_without_itself_ending_commercial_right`; `component_refund_uses_accepted_order_snapshot`.
 
 **Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§4–10, 11, 13–15`; `FLOW-05`, `FLOW-06`; deterministic bounded work, immutable snapshots, content provenance, current safety checks, durable async and degradation themes.
 
@@ -524,11 +532,11 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Performance / Scaling Concern:** Generation cost, content/query fan-in, duplicate requests, queue backlog and participant history reads matter. Use bounded generation and durable execution where required; stream/paginate history; do not add Redis, replicas, GenServers or realtime merely to make a seven-day plan feel like a platform-scale workload.
 
-**Security / Privacy / Safety Concern:** Eligibility is re-read at the authoritative boundary; plan snapshots retain input/version provenance; protected content checks current entitlement; safety correction/withdrawal can pause or replace a plan; no raw health details are copied into feeds/analytics unnecessarily.
+**Security / Privacy / Safety Concern:** Eligibility is re-read at the authoritative boundary; plan snapshots retain input/version provenance; protected content checks current entitlement; safety correction/withdrawal can pause or replace a plan; purpose withdrawal stops affected future processing without itself cancelling the paid entitlement or rewriting delivered plan history; component refunds follow the order's accepted allocation snapshot; no raw health details are copied into feeds/analytics unnecessarily.
 
 **Release Effect:** Completes the participant-facing paid core journey; still requires FP-006 before real paid pilot release.
 
-**Exit Condition:** Eligible and General Wellness outcomes produce the correct governed output; non-eligible outcomes produce no unsafe personalised plan; plans are deterministic/reproducible, immutable and bilingual; purchased access is correct; progress/feedback is private, bounded and auditable.
+**Exit Condition:** Eligible and General Wellness outcomes produce the correct governed output, with General Wellness never counted as fulfilment of the purchased personalised-plan right; incomplete/review outcomes preserve the unconsumed paid right; eligible delivery consumes it only after successful delivery and final unfulfillable outcomes close it through the accepted component-refund snapshot; consent withdrawal stops future purpose processing without itself ending commercial rights or rewriting delivered plan truth; plans are deterministic/reproducible, immutable and bilingual; purchased access is correct; progress/feedback is private, bounded and auditable.
 
 **Deferred From This FP:** Monthly automatic adjustment, Premium, full foundation programme, first-party community, direct messaging, advanced feed ranking/search, calorie diary, wearables, AI-generated plans/recipes/translations, native apps, Domain 19 Research campaigns/instruments, and any generic Interactive Tools catalogue not required by this pack's stated outcome.
 
@@ -719,9 +727,9 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Name:** Recurring plan review and governed adjustment
 
-**Outcome:** An entitled participant with sufficient approved check-ins can receive a monthly trend-based review and, where allowed, an immutable governed plan adjustment with explicit grace/incomplete-check-in behaviour and renewed safety evaluation.
+**Outcome:** An entitled participant with sufficient approved check-ins can receive a monthly trend-based review and, where allowed, an immutable governed plan adjustment with explicit grace/incomplete-check-in behaviour and renewed safety evaluation. Withdrawing personalisation or automated-recommendation consent stops future adjustment processing without rewriting delivered plan history.
 
-**Validation Objective:** Prove that recurring adjustment is useful, clinically bounded, versioned and operationally safe before it is packaged as Premium; prove that progress inputs inform Plans without becoming Safety authority.
+**Validation Objective:** Prove that recurring adjustment is useful, clinically bounded, versioned and operationally safe before it is packaged as Premium; prove that progress inputs inform Plans without becoming Safety authority, and purpose withdrawal blocks future personalisation/automated adjustments while preserving historical plan truth.
 
 **Validation Objective Type:** `PRODUCT`, `BEHAVIORAL`, `SAFETY`, `ARCHITECTURAL`, `PRIVACY`, `RELIABILITY`, `PERFORMANCE`.
 
@@ -731,7 +739,9 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Affected Domains:** `Plans & Nutrition`; `Habits, Journals & Progress`; `Health Records`; `Safety & Eligibility`; `Entitlements`; `Temperament`; `Content & Media`; `Privacy & Consent`; `Audit & Evidence`; `Analytics`; `Commerce` where an add-on is sold.
 
-**Product Authority:** `00_PLATFORM_v1.4.0.md §§14, 21D.8–21D.14, 21L.9`; `DEC-087`, `DEC-096...DEC-122`, `DEC-276`; `OQ-003`/`OQ-011`/`OQ-012` definitions.
+**Product Authority:** `00_PLATFORM_v1.4.0.md §§14, 21D.8–21D.14, 21L.9, 21R.3`; `DEC-087`, `DEC-096...DEC-122`, `DEC-276`, `DEC-301`; `OQ-003`/`OQ-011`/`OQ-012` definitions.
+
+**Product Hardening Contract:** `personalisation_or_recommendation_withdrawal_stops_future_adjustments`; `withdrawal_does_not_rewrite_delivered_plan_history`.
 
 **Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5, 7–9, 11–15`; `FLOW-06`; current safety authority, immutable plan versions, durable scheduled work and failure/recovery themes.
 
@@ -749,11 +759,11 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Performance / Scaling Concern:** Monthly review batches, check-in history and plan-generation bursts must be bounded and durable. Use pagination/streaming and batchable async consequences; do not build a continuous recalculation service, hot counter system or replica before evidence.
 
-**Security / Privacy / Safety Concern:** Health/progress inputs remain purpose-scoped; safety can pause/restrict adjustment; historical plan versions remain visible under policy; no isolated adjustment engine may bypass Plans or Safety ownership.
+**Security / Privacy / Safety Concern:** Health/progress inputs remain purpose-scoped; personalisation or automated-recommendation withdrawal blocks future adjustment processing; safety can pause/restrict adjustment; historical plan versions remain visible under policy and are not rewritten by withdrawal; no isolated adjustment engine may bypass Plans or Safety ownership.
 
 **Release Effect:** Unlocks the plan-adjustment add-on and the capability prerequisite for Premium.
 
-**Exit Condition:** Approved check-in/trend cases produce one reproducible reviewed outcome or explicit no-change/insufficient-data outcome; adjusted plans are immutable, safe, explainable and auditable; incomplete data cannot silently trigger a change.
+**Exit Condition:** Approved check-in/trend cases produce one reproducible reviewed outcome or explicit no-change/insufficient-data outcome; adjusted plans are immutable, safe, explainable and auditable; withdrawal stops future adjustment processing without rewriting delivered plan history; incomplete data cannot silently trigger a change.
 
 **Deferred From This FP:** Once-off MVP adjustment, clinical weight restoration, AI recommendations, continuous wearable/CGM input, unrestricted recalculation and Premium packaging.
 

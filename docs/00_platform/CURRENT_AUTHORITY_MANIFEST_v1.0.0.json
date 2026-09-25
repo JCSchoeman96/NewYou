@@ -21,11 +21,11 @@
       "semver": "1.4.0",
       "repository_path": "docs/00_platform/00_PLATFORM_v1.4.0.md",
       "authority_class": "PLATFORM_PRODUCT_LAW",
-      "sha256": "b9ce61f30bad3824d6ce648bd0e12e430ce9020e587849efac60d94295c0e851",
+      "sha256": "34d1fa2dc3c12248b9fc0f850e25a0964083dc6d4ebe7b9f6f30dc4347cc0b29",
       "superseded_version": "1.3.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "b9ce61f30bad3824d6ce648bd0e12e430ce9020e587849efac60d94295c0e851"
+      "provenance_sha256": "34d1fa2dc3c12248b9fc0f850e25a0964083dc6d4ebe7b9f6f30dc4347cc0b29"
     },
     {
       "document_id": "DECISION_REGISTER",
@@ -33,7 +33,7 @@
       "semver": "1.4.0",
       "repository_path": "docs/00_platform/01_DECISIONS_v1.4.0.md",
       "authority_class": "DECISION_REGISTER",
-      "sha256": "0ff9ad12ce27cee2accc3ed344ae2340265981df447ef1bb6b2ac2a1c1f01c08",
+      "sha256": "8a38251c83f7a7a48cfa25660c24082805e25d3f118a40a40d76d43bda739513",
       "superseded_version": "1.3.0",
       "lifecycle": "current"
     },
@@ -78,11 +78,11 @@
       "semver": "1.1.1",
       "repository_path": "docs/00_platform/05_ROADMAP_v1.1.1.md",
       "authority_class": "ROADMAP",
-      "sha256": "a465ccffbff14c923f5a17e55e4fed20a3d1af7c2439784fc6f289e86f9f0d8b",
+      "sha256": "8a01d60c79f00c8b1fd07e6547218933c99b3ea4d92171d07674ec387b35dbac",
       "superseded_version": "1.1.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "a465ccffbff14c923f5a17e55e4fed20a3d1af7c2439784fc6f289e86f9f0d8b"
+      "provenance_sha256": "8a01d60c79f00c8b1fd07e6547218933c99b3ea4d92171d07674ec387b35dbac"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",
@@ -613,6 +613,134 @@
       "navigation_document_ids": [
         "OPEN_WORK"
       ]
+    },
+    "product_hardening_bundle_allocation_requirements": {
+      "matrix": "BUNDLE-COMPONENT-ALLOCATION",
+      "rules": {
+        "pre_sale_configuration": [
+          "versioned_deterministic_rule",
+          "component_amounts_selected_before_sale"
+        ],
+        "discount_reconciliation": [
+          "sum_exactly_to_accepted_bundle_amount",
+          "after_governed_discounts_and_promotions",
+          "currency_minor_units"
+        ],
+        "order_snapshot": [
+          "snapshot_currency_accepted_amount_rule_version_component_amounts_discount_allocation"
+        ],
+        "disclosure_and_activation": [
+          "disclose_each_component_allocation_before_checkout",
+          "no_sale_without_complete_order_snapshot"
+        ],
+        "component_refund": [
+          "refund_from_original_order_snapshot",
+          "never_current_price"
+        ],
+        "split_selection": [
+          "versioned_offer_configuration",
+          "not_selected_by_product_law"
+        ],
+        "launch_bundle": [
+          "R249_assessment + R399_plan - R99_bundle_discount = R549_accepted_bundle_amount"
+        ]
+      },
+      "launch_example": {
+        "assessment": 249,
+        "plan": 399,
+        "discount": 99,
+        "bundle": 549
+      },
+      "decision_terms": [
+        "\u00a721R.1",
+        "versioned deterministic allocation rule",
+        "selected before sale",
+        "component allocations sum exactly to the accepted bundle amount",
+        "governed discounts and promotions",
+        "currency minor units",
+        "disclosed before checkout",
+        "snapshotted immutably on the order",
+        "use that snapshot and never recompute from current prices",
+        "does not choose the component split"
+      ]
+    },
+    "product_hardening_feature_pack_requirements": {
+      "FP-002": {
+        "sections": [
+          "21R.1",
+          "21R.2",
+          "21R.5"
+        ],
+        "decisions": [
+          "DEC-299",
+          "DEC-300",
+          "DEC-303"
+        ],
+        "outcomes": [
+          "paid_right_held_until_delivery_or_terminal_closeout",
+          "bundle_refund_uses_accepted_order_allocation_snapshot",
+          "duplicate_payment_preserves_one_valid_right",
+          "unused_credit_blocks_second_standalone_or_bundle_sale"
+        ]
+      },
+      "FP-003": {
+        "sections": [
+          "21R.4",
+          "21R.5"
+        ],
+        "decisions": [
+          "DEC-302",
+          "DEC-303"
+        ],
+        "outcomes": [
+          "declared_temperament_has_no_exact_digital_score_or_report",
+          "declared_profile_keeps_assessment_credit_unused",
+          "later_digital_result_appends_without_replacing_prior_provenance",
+          "ordinary_assessment_credit_cap_and_attempt_interval_apply"
+        ]
+      },
+      "FP-004": {
+        "sections": [
+          "21R.1"
+        ],
+        "decisions": [
+          "DEC-299"
+        ],
+        "outcomes": [
+          "safety_selects_pathway_without_consuming_or_refunding_commercial_right",
+          "incomplete_information_or_review_keeps_paid_plan_right_held"
+        ]
+      },
+      "FP-005": {
+        "sections": [
+          "21R.1",
+          "21R.2",
+          "21R.3"
+        ],
+        "decisions": [
+          "DEC-299",
+          "DEC-300",
+          "DEC-301"
+        ],
+        "outcomes": [
+          "general_wellness_is_not_personalised_plan_fulfilment",
+          "paid_plan_right_waits_for_delivery_or_component_refund_closeout",
+          "purpose_withdrawal_stops_future_processing_without_itself_ending_commercial_right",
+          "component_refund_uses_accepted_order_snapshot"
+        ]
+      },
+      "FP-010": {
+        "sections": [
+          "21R.3"
+        ],
+        "decisions": [
+          "DEC-301"
+        ],
+        "outcomes": [
+          "personalisation_or_recommendation_withdrawal_stops_future_adjustments",
+          "withdrawal_does_not_rewrite_delivered_plan_history"
+        ]
+      }
     }
   }
 }

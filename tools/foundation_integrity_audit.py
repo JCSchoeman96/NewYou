@@ -293,6 +293,148 @@ def _marked_matrix_rows(text: str, matrix_name: str) -> list[dict[str, str]]:
     return rows
 
 
+def _section_body(text: str, heading_pattern: str) -> str:
+    match = re.search(heading_pattern, text, re.MULTILINE)
+    if match is None:
+        return ""
+    next_heading = re.search(r"^## ", text[match.end() :], re.MULTILINE)
+    end = match.end() + next_heading.start() if next_heading is not None else len(text)
+    return text[match.end() : end]
+
+
+def _bundle_component_allocation_issues(
+    product: str,
+    decisions: str,
+    requirements: dict[str, Any],
+) -> list[str]:
+    issues: list[str] = []
+    matrix_name = requirements.get("matrix")
+    expected_rules = requirements.get("rules")
+    if not isinstance(matrix_name, str) or not isinstance(expected_rules, dict):
+        return ["bundle component allocation audit requirements are incomplete"]
+
+    section = _section_body(product, r"^## 21R\.1\b[^\n]*\n")
+    rows = _marked_matrix_rows(section, matrix_name)
+    allocation_rules = {
+        row.get("invariant", ""): row.get("governed rule", "")
+        for row in rows
+    }
+    if set(allocation_rules) != set(expected_rules):
+        issues.append("bundle allocation matrix has missing, duplicate or unexpected invariants")
+    for invariant, required_terms in expected_rules.items():
+        rule_text = allocation_rules.get(invariant, "")
+        if not isinstance(required_terms, list) or any(
+            not isinstance(term, str) or term not in rule_text for term in required_terms
+        ):
+            issues.append(f"bundle allocation invariant {invariant} is missing a required rule")
+
+    decision_section = _section_body(decisions, r"^## DEC-299\b[^\n]*\n")
+    decision_terms = requirements.get("decision_terms", [])
+    if not isinstance(decision_terms, list) or any(
+        not isinstance(term, str) or term.casefold() not in decision_section.casefold()
+        for term in decision_terms
+    ):
+        issues.append("DEC-299 does not carry the complete versioned bundle allocation rule")
+
+    example = requirements.get("launch_example")
+    price_section = _section_body(product, r"^## 21L\.15\b[^\n]*\n")
+    decision_price_section = _section_body(decisions, r"^## DEC-282\b[^\n]*\n")
+    if not isinstance(example, dict) or any(
+        not isinstance(example.get(key), int)
+        for key in ("assessment", "plan", "discount", "bundle")
+    ):
+        issues.append("bundle launch-price reconciliation requirements are incomplete")
+    else:
+        assessment = example["assessment"]
+        plan = example["plan"]
+        discount = example["discount"]
+        bundle = example["bundle"]
+        launch_rule = allocation_rules.get("launch_bundle", "")
+        expected_equation = (
+            f"R{assessment}_assessment + R{plan}_plan - R{discount}_bundle_discount "
+            f"= R{bundle}_accepted_bundle_amount"
+        )
+        if assessment + plan - discount != bundle or expected_equation not in launch_rule:
+            issues.append("launch_bundle allocation example does not reconcile arithmetically")
+        for amount in (assessment, plan, bundle):
+            marker = f"R{amount}"
+            if marker not in price_section or marker not in decision_price_section:
+                issues.append(f"launch bundle amount {marker} differs from locked list-price authority")
+                break
+        discount_marker = f"R{discount}"
+        if discount_marker not in price_section:
+            issues.append(f"launch bundle discount {discount_marker} is absent from Product Law")
+
+    return issues
+
+
+def _feature_pack_propagation_issues(
+    roadmap: str,
+    requirements: dict[str, Any],
+) -> list[str]:
+    issues: list[str] = []
+    if not requirements:
+        return ["feature-pack hardening requirements are missing"]
+
+    matches = list(re.finditer(r"^## (FP-\d{3})\s+—", roadmap, re.MULTILINE))
+    sections: dict[str, str] = {}
+    counts: dict[str, int] = {}
+    for index, match in enumerate(matches):
+        pack_id = match.group(1)
+        counts[pack_id] = counts.get(pack_id, 0) + 1
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(roadmap)
+        sections[pack_id] = roadmap[match.start() : end]
+
+    for pack_id, rule in requirements.items():
+        section = sections.get(pack_id, "")
+        if counts.get(pack_id) != 1:
+            issues.append(f"{pack_id} must have one Roadmap contract section")
+            continue
+        authority_match = re.search(
+            r"^\*\*Product Authority:\*\*\s*(.*)$", section, re.MULTILINE
+        )
+        contract_match = re.search(
+            r"^\*\*Product Hardening Contract:\*\*\s*(.*)$", section, re.MULTILINE
+        )
+        if authority_match is None:
+            issues.append(f"{pack_id} is missing its Product Authority declaration")
+            continue
+        if contract_match is None:
+            issues.append(f"{pack_id} is missing its Product Hardening Contract")
+            continue
+
+        authority = authority_match.group(1)
+        for section_ref in rule.get("sections", []):
+            required_section = re.fullmatch(r"(\d+[A-Z])\.(\d+)", section_ref)
+            section_is_cited = section_ref in authority
+            if required_section is not None and not section_is_cited:
+                required_family, required_number = required_section.group(1), int(required_section.group(2))
+                for span in re.finditer(
+                    r"(?P<start_family>\d+[A-Z])\.(?P<start>\d+)\s*[–—-]\s*"
+                    r"(?:(?P<end_family>\d+[A-Z])\.)?(?P<end>\d+)",
+                    authority,
+                ):
+                    end_family = span.group("end_family") or span.group("start_family")
+                    if (
+                        span.group("start_family") == required_family == end_family
+                        and int(span.group("start")) <= required_number <= int(span.group("end"))
+                    ):
+                        section_is_cited = True
+                        break
+            if not section_is_cited:
+                issues.append(f"{pack_id} does not cite §{section_ref}")
+        for decision in rule.get("decisions", []):
+            if re.search(rf"(?<![A-Za-z0-9-]){re.escape(decision)}(?!\d)", authority) is None:
+                issues.append(f"{pack_id} does not cite {decision}")
+
+        contract_tokens = set(re.findall(r"`([^`]+)`", contract_match.group(1)))
+        for outcome in rule.get("outcomes", []):
+            if outcome not in contract_tokens:
+                issues.append(f"{pack_id} is missing product outcome {outcome}")
+
+    return issues
+
+
 def _check_product_semantics(
     root: Path,
     entries: list[dict[str, Any]],
@@ -530,6 +672,35 @@ def _check_product_semantics(
         if h02_ok
         else "HARDEN-02 lifecycle facts, post-merge pending state or execution stop are inconsistent",
         path=str(by_id.get("OPEN_WORK", {}).get("repository_path", "")),
+    )
+
+    allocation_issues = _bundle_component_allocation_issues(
+        product,
+        decisions,
+        integrity_rules.get("product_hardening_bundle_allocation_requirements", {}),
+    )
+    _record_check(
+        report,
+        "bundle_component_allocation_governance",
+        not allocation_issues,
+        "bundle allocations are versioned before sale, disclosed, reconciled and snapshotted for component refunds"
+        if not allocation_issues
+        else "; ".join(allocation_issues),
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    pack_issues = _feature_pack_propagation_issues(
+        roadmap,
+        integrity_rules.get("product_hardening_feature_pack_requirements", {}),
+    )
+    _record_check(
+        report,
+        "product_hardening_feature_pack_propagation",
+        not pack_issues,
+        "affected Feature Packs cite and carry their DEC-299…303 product outcomes"
+        if not pack_issues
+        else "; ".join(pack_issues),
+        path=str(by_id.get("ROADMAP", {}).get("repository_path", "")),
     )
 
 
