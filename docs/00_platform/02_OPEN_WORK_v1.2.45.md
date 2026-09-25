@@ -1125,7 +1125,7 @@ After the exact Architecture-amendment PR head is reported, work must **STOP** p
 
 The targeted Domain pressure test is complete as non-authoritative evidence in `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md`. It does not itself create Domain Law.
 
-The original Domain amendment is preserved in `archive/04_DOMAIN_MAP_v1.1.0.md`; its predecessor `archive/04_DOMAIN_MAP_v1.0.0.md` remains byte-identical. DOL-01 was clarified in Domain Map v1.1.1 and is carried forward by current Domain Law `04_DOMAIN_MAP_v1.1.2.md`, which applies DEC-304 without changing the 20-Domain model. Earlier human decisions implemented in v1.1.0:
+The original Domain amendment is preserved in `archive/04_DOMAIN_MAP_v1.1.0.md`; its predecessor `archive/04_DOMAIN_MAP_v1.0.0.md` remains byte-identical. DOL-01 is defined in Product Law §21S / DEC-304, with its ownership clarification in current Domain Law `04_DOMAIN_MAP_v1.1.2.md`; it leaves the 20-Domain model unchanged. Earlier human decisions implemented in v1.1.0:
 
 - `DQ-1` ACCEPT — Domain 19 **Research & Feedback** owns the Research/feedback campaign, instrument/version, participant response, correction/withdrawal/de-link and staff-annotation lifecycle.
 - `DQ-2` ACCEPT WITH NAMING REFINEMENT — Domain 20 **Voting & Balloting** owns governed vote rules, submission/integrity evidence, accepted tally, finalisation, official result and adjudication. Competitions are not a Domain.

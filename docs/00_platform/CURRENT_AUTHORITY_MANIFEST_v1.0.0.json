@@ -43,10 +43,10 @@
       "semver": "1.2.45",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.45.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "1d3d7a78e9535b983bb17380f744128ab0c13e44611fbd48e6c89878eb4f6ce5",
+      "sha256": "3d9e5ab6517bb81a49b0051463bce40aaacde1e31afc7a8953cd865a4c9f3b72",
       "superseded_version": "1.2.44",
       "lifecycle": "current",
-      "provenance_sha256": "1d3d7a78e9535b983bb17380f744128ab0c13e44611fbd48e6c89878eb4f6ce5"
+      "provenance_sha256": "3d9e5ab6517bb81a49b0051463bce40aaacde1e31afc7a8953cd865a4c9f3b72"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -66,11 +66,11 @@
       "semver": "1.1.2",
       "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.1.2.md",
       "authority_class": "DOMAIN_LAW",
-      "sha256": "db23af2fb024fd4cf6cafccfc7f992ab58f4828e48ac7b138debee7e94580d88",
+      "sha256": "5389538855eef979f9a197080d7e8b6f90488db422463e910745f4d18b394a92",
       "superseded_version": "1.1.1",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "db23af2fb024fd4cf6cafccfc7f992ab58f4828e48ac7b138debee7e94580d88"
+      "provenance_sha256": "5389538855eef979f9a197080d7e8b6f90488db422463e910745f4d18b394a92"
     },
     {
       "document_id": "ROADMAP",
@@ -643,7 +643,7 @@
       "architecture_requirements": 433,
       "reference_flows": 12,
       "domains": 20,
-      "ownership_rows": 62,
+      "ownership_rows": 61,
       "feature_packs": 17
     },
     "contiguous_ranges": {
@@ -726,6 +726,7 @@
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",
+      "navigation_scan_scope": "README plus the active Product, Decision, Open Work and Domain routes and current Delivery Atlas; source-at-freeze references in the frozen North Star and Roadmap and working HARDEN-02 and FP-001 artifacts are outside this moved-path scan",
       "navigation_document_ids": [
         "PLATFORM_BASELINE",
         "DECISION_REGISTER",

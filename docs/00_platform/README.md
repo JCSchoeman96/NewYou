@@ -29,6 +29,8 @@ The nine documents listed above describe the current platform state. Their expli
 
 The README and manifest are the current routing pointers. Frozen artifacts may retain source-at-freeze filenames as historical provenance; those references do not override the current routing above.
 
+The Foundation Integrity audit's moved-path scan covers this README, the current Product Law, Decision Register, Open Work, Domain Map and Delivery Atlas. It does not check every source citation in the frozen North Star and Roadmap or the working HARDEN-02 and FP-001 artifacts. Those references record the source set available when each artifact was prepared; use the README and manifest paths above for current routing. FP-001 remains outside the authority manifest, and its DOL-02 / PMR reconciliation remains gated and unperformed.
+
 The frozen Frontend Experience System is current authority for affected frontend-experience planning, but it is conditionally loaded rather than default context for unrelated routine work.
 
 ## Active Working Artifacts

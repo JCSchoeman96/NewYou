@@ -85,7 +85,7 @@ PROHIBITED_PRESENT_PATHS = (
 )
 
 OWNERSHIP_EXPECTATIONS = {
-    "Marketing consent and purpose-level withdrawal": "Privacy & Consent",
+    "Purpose-specific consent/current consent, including marketing consent and purpose-level withdrawal": "Privacy & Consent",
     "Research/feedback campaign, instrument and published version": "Research & Feedback",
     "Participant Research/feedback response": "Research & Feedback",
     "Research correction, withdrawal and de-link lifecycle": "Research & Feedback",
@@ -195,7 +195,12 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
     def test_new_ownership_rows_have_exactly_one_approved_owner(self):
         domains = {row["Domain"].strip("*") for row in self.domain_rows if row["#"].isdigit()}
         by_truth = {row["Business truth"]: row for row in self.ownership_rows}
-        self.assertEqual(62, len(self.ownership_rows))
+        self.assertEqual(61, len(self.ownership_rows))
+        consent = by_truth[
+            "Purpose-specific consent/current consent, including marketing consent and purpose-level withdrawal"
+        ]
+        self.assertIn("Communications", consent["Principal dependents"])
+        self.assertIn("routes withdrawal through the Privacy interface", consent["Interaction rule"])
         for truth, owner in OWNERSHIP_EXPECTATIONS.items():
             self.assertIn(truth, by_truth, truth)
             owners = re.findall(r"\*\*(.+?)\*\*", by_truth[truth]["Authoritative domain"])
@@ -305,7 +310,7 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual("docs/00_platform/04_DOMAIN_MAP_v1.1.2.md", current["DOMAIN_MAP"]["repository_path"])
         self.assertEqual(_sha256(DOMAIN_MAP), current["DOMAIN_MAP"]["sha256"])
         self.assertEqual(20, self.manifest["integrity_rules"]["expected_counts"]["domains"])
-        self.assertEqual(62, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
+        self.assertEqual(61, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_36"]["lifecycle"])
         self.assertEqual("historical", historical["DOMAIN_MAP_V1_0_0"]["lifecycle"])

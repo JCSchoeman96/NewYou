@@ -249,7 +249,7 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual(_sha256(DOCS / "05_ROADMAP_v1.1.1.md"), current["ROADMAP"]["sha256"])
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
         self.assertEqual(20, self.manifest["integrity_rules"]["expected_counts"]["domains"])
-        self.assertEqual(62, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
+        self.assertEqual(61, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_37"]["lifecycle"])
         self.assertEqual("historical", historical["ROADMAP_V1_0_0"]["lifecycle"])

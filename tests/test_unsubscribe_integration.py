@@ -119,6 +119,15 @@ class UnsubscribeIntegrationTests(unittest.TestCase):
                 self.assertTrue(path in self.atlas, f"Atlas routing is missing {path}")
 
         graph_rules = self.manifest["integrity_rules"]["graph_rules"]
+        self.assertIn(
+            "source-at-freeze references in the frozen North Star and Roadmap and working HARDEN-02 and FP-001 artifacts are outside this moved-path scan",
+            graph_rules["navigation_scan_scope"],
+        )
+        self.assertIn(
+            "FP-001 remains outside the authority manifest",
+            self.readme,
+        )
+        self.assertIn("DOL-02 / PMR reconciliation remains gated and unperformed", self.readme)
         self.assertEqual(
             ["PLATFORM_BASELINE", "DECISION_REGISTER", "OPEN_WORK", "DOMAIN_MAP"],
             graph_rules["navigation_document_ids"],

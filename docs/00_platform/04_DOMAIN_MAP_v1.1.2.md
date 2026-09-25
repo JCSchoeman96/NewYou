@@ -96,8 +96,7 @@ The names above are Domain Law names, not final Elixir module/file names. Later 
 | Canonical platform identity/account | **Identity & Access** | All domains | READ actor/context; COMMAND owner for identity lifecycle |
 | Credentials, sessions, devices and privilege grants | **Identity & Access** | All protected domains | READ current authority; COMMAND owner |
 | Account closure/recovery | **Identity & Access** | Privacy & Consent, Entitlements | COMMAND owner; full deletion remains Privacy |
-| Purpose-specific consent/current consent | **Privacy & Consent** | IAM/business domains | READ/check; COMMAND owner for grant/withdraw |
-| Marketing consent and purpose-level withdrawal | **Privacy & Consent** | Communications | COMMAND owner; Communications routes withdrawal through the Privacy interface |
+| Purpose-specific consent/current consent, including marketing consent and purpose-level withdrawal | **Privacy & Consent** | IAM/business domains, Communications | READ/check; COMMAND owner for grant/withdraw; Communications routes withdrawal through the Privacy interface |
 | Full deletion orchestration/suppression truth | **Privacy & Consent** | Every data-owning domain | ORCHESTRATE deletion contracts; no shared writes |
 | Retention policy/legal hold/export lifecycle | **Privacy & Consent** | All retained data domains | GOVERNANCE/ORCHESTRATION |
 | Assessment methodology/version | **Temperament** | Content, Plans, Programmes | READ immutable config |
@@ -2262,7 +2261,7 @@ The working map must pass one consolidated review before freeze:
 
 | Review lens | Result | Finding |
 |---|---|---|
-| Ownership completeness | **PASS** | 62 major durable-truth rows have exactly one listed owner; all owners are in the approved 20-domain set. |
+| Ownership completeness | **PASS** | 61 major durable-truth rows have exactly one listed owner; all owners are in the approved 20-domain set. |
 | Boundary coherence | **PASS** | Boundaries follow distinct durable truth/lifecycle/policy vocabulary; feature/page/module names were not promoted automatically. Research polls follow Research purpose; governed votes follow Voting purpose. |
 | Shared-write / circular control | **PASS** | 0 accepted shared-write ambiguities and 0 circular authoritative control dependencies. Cross-cutting deletion/audit/analytics edges are orchestration/evidence/derived edges. Research/Voting consequences are owner-mediated. |
 | Product Law coverage | **PASS** | 14 mature-platform capability families, including the MVP, approved future Nuwe Jy/membership/practitioner/community/event/experiment paths, Research & Feedback, Voting & Balloting and purpose-distributed Interactive Tools, have domain homes. |
@@ -2346,7 +2345,7 @@ without changing source-domain authority
 
 ```text
 Approved domains:                         20
-Ownership-matrix durable truths:          62
+Ownership-matrix durable truths:          61
 Duplicate truth labels:                    0
 Matrix owners outside approved domains:    0
 Lightweight Domain Architecture Profiles: 20 / 20
