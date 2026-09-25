@@ -23,6 +23,7 @@ _current_documents = {
 OPEN_WORK = ROOT / _current_documents["OPEN_WORK"]["repository_path"]
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_V1_2_43_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
+OPEN_WORK_V1_2_44_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.44.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 README = DOCS / "README.md"
 
@@ -33,6 +34,7 @@ EXPECTED_CONTRACT_V0_2_SHA256 = "9fab2f79b1e5720378a6852bcda9c81aafe8564cd0866a0
 EXPECTED_OPEN_WORK_V1_2_42_SHA256 = "2f9baad6ef314b23b53f9c0daa79976347bfbc5b937d68f7937b3149415e55a3"
 EXPECTED_OPEN_WORK_V1_2_41_SHA256 = "85dd9946cf5684b0907f49e973ef75b59541c0f265ac46d44465d1527535da62"
 EXPECTED_OPEN_WORK_V1_2_43_SHA256 = "b5db43e374bf199e721dffeda146a7f4a05bbe7832a5cd3da3049313bb98e167"
+EXPECTED_OPEN_WORK_V1_2_44_SHA256 = "b245841b577933fe706a62e36f1387158283930644fa8efcb292791522b65c24"
 EXPECTED_CERTIFIED_CONTRACT_SHA256 = "59d2da53b36e146d7f1e9928c5572e9c9a5035b5f186b748ea6aea4cdbc7be65"
 EXPECTED_ATLAS_V0_2_SHA256 = "c122c0f4a903c9679529e0e65a794999dcdaf957a66fcff00df990a0644bbb7f"
 
@@ -98,7 +100,7 @@ EXPECTED_RECOVERY_STATE = {
     "merge_second_parent_sha": "cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4",
     "pr_39_merged": True,
     "v0_3_0_retroactive_certification": "NOT SATISFIED",
-    "harden_02_execution": "NEXT / AUTHORISED / NOT STARTED",
+    "harden_02_execution": "IN PROGRESS / NOT COMPLETE / AWAITING INDEPENDENT REVIEW",
     "harden_02_scope": "PHASE-7 GOVERNANCE / STRUCTURAL HARDENING ONLY",
     "store_cer": "EXCLUDED",
     "completed_milestones": [
@@ -109,6 +111,8 @@ EXPECTED_RECOVERY_STATE = {
     "engineering_standards_authority_promotion": "DOWNSTREAM / NOT STARTED",
     "fp001_reconciliation": "REQUIRED / DOWNSTREAM / NOT PERFORMED",
     "communications": "REQUIRED / NOT_STARTED",
+    "oq_035": "UNRESOLVED / RELEASE-ONLY",
+    "oq_036": "UNRESOLVED / RELEASE-ONLY",
     "conditional_dossiers": {
         "privacy_consent": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
         "content_media": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
@@ -117,8 +121,25 @@ EXPECTED_RECOVERY_STATE = {
     },
     "phase_7c": "BLOCKED / NOT_STARTED",
     "proof_classification": "NOT FINALISED",
+    "final_feature_pack_contract": "NOT STARTED",
+    "phase_8": "BLOCKED",
     "application_implementation": "BLOCKED",
-    "pr_38": "STALE / BLOCKED / NOT AUTHORITY",
+    "pr_38": "CLOSED / SUPERSEDED / HISTORICAL BRANCH NOT MERGED",
+    "fp001_reconciliation_completion_preconditions": {
+        "current_skeleton_gate_manifest": "MUST_RESOLVE_TO_CURRENT_AUTHORITY",
+        "current_skeleton_pmr_requirement": "MUST_INCLUDE_REQUIRED_PMR_OUTCOME",
+        "current_identity_jit": "MUST_BE_CURRENT_COMPLETE_AND_MERGED",
+        "arq_iam_011": "MUST_PRESERVE_PMR_ACCOUNT_LIFECYCLE_AND_NON_AUTHORITY",
+        "arq_iam_012": "MUST_PRESERVE_MINIMUM_DISCLOSURE_AND_LOOKUP_BOUNDARIES",
+        "arq_iam_013": "MUST_REMAIN_DEFERRED_WITH_NO_ENCODING_SELECTED",
+        "oq_034": "MUST_BE_RESOLVED_IN_CURRENT_DECISION_AUTHORITY",
+        "communications": "MUST_REMAIN_REQUIRED_UNTIL_ITS_OWN_JIT_IS_COMPLETE",
+        "conditional_dossiers": "MUST_REMAIN_CONDITIONAL_PENDING_EXPLICIT_ADJUDICATION",
+        "phase_7c": "MUST_REMAIN_BLOCKED_UNTIL_REQUIRED_WORK_AND_DISPOSITIONS_COMPLETE",
+        "proof_classification": "MUST_FOLLOW_APPROVED_FINAL_FEATURE_PACK_CONTRACT",
+        "phase_8": "MUST_REMAIN_BLOCKED_UNTIL_DEVELOPMENT_ENTRY_HARD_STOP_PASSES",
+        "implementation": "MUST_NOT_BE_AUTHORISED_BY_RECONCILIATION",
+    },
     "downstream_route": [
         "HARDEN-02_EXECUTION_REQUIRED",
         "CERTIFIED HARDEN-02 EXECUTION",
@@ -190,8 +211,8 @@ def _assert_current_execution_route(text: str) -> None:
         text,
         re.MULTILINE,
     )
-    if execution_states != ["NEXT / AUTHORISED / NOT STARTED"]:
-        raise AssertionError("execution must be authorised exactly once and remain not started")
+    if execution_states != ["IN PROGRESS / NOT COMPLETE / AWAITING INDEPENDENT REVIEW"]:
+        raise AssertionError("execution must remain in progress and incomplete pending review")
 
 
 def _valid_sha(value: object) -> bool:
@@ -475,7 +496,10 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertTrue(OPEN_WORK_V1_2_43_ARCHIVE.is_file())
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_43_SHA256, _sha256(OPEN_WORK_V1_2_43_ARCHIVE))
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.43.md").exists())
-        self.assertIn("v1.2.43 → v1.2.44", self.open_work)
+        self.assertTrue(OPEN_WORK_V1_2_44_ARCHIVE.is_file())
+        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_44_SHA256, _sha256(OPEN_WORK_V1_2_44_ARCHIVE))
+        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.44.md").exists())
+        self.assertIn("v1.2.44 → v1.2.45", self.open_work)
 
     def test_harden_02_scope_invariants_preserved_from_v0_3(self):
         for start, end in (
@@ -498,7 +522,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             else:
                 self.assertEqual(predecessor_section, successor_section)
 
-    def test_certified_lifecycle_advances_once_to_authorised_execution(self):
+    def test_certified_lifecycle_remains_complete_as_execution_proceeds(self):
         expected_label = "HARDEN-02 EXECUTION / STRUCTURAL HARDENING"
         expected_next = "HARDEN-02_EXECUTION_REQUIRED"
         open_work_current = _route_declaration(self.open_work, "CURRENT AUTHORITY-STAGE PROGRAMME")
@@ -537,7 +561,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         later_row = later_rows[0].casefold()
         self.assertIn("v0.4.0", current_row)
         self.assertIn("complete / certified", current_row)
-        self.assertIn("next / authorised / not started", current_row)
+        self.assertIn("in progress / not complete", current_row)
         self.assertIn("after certified harden-02 execution", later_row)
         self.assertIn("engineering standards authority promotion", later_row)
 
@@ -825,27 +849,29 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             self.evidence_spec,
         )
 
-    def test_execution_and_downstream_remain_blocked(self):
-        self.assertEqual("NEXT / AUTHORISED / NOT STARTED", self.recovery_state["harden_02_execution"])
+    def test_execution_remains_incomplete_and_downstream_remains_blocked(self):
+        self.assertEqual("IN PROGRESS / NOT COMPLETE / AWAITING INDEPENDENT REVIEW", self.recovery_state["harden_02_execution"])
         self.assertEqual("DOWNSTREAM / NOT STARTED", self.recovery_state["engineering_standards_authority_promotion"])
         self.assertEqual("REQUIRED / DOWNSTREAM / NOT PERFORMED", self.recovery_state["fp001_reconciliation"])
         self.assertEqual("REQUIRED / NOT_STARTED", self.recovery_state["communications"])
-        self.assertEqual("STALE / BLOCKED / NOT AUTHORITY", self.recovery_state["pr_38"])
+        self.assertEqual("CLOSED / SUPERSEDED / HISTORICAL BRANCH NOT MERGED", self.recovery_state["pr_38"])
 
-    def test_readme_open_work_and_manifest_route_v1_2_44(self):
+    def test_readme_open_work_and_manifest_route_v1_2_45(self):
         self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
-        self.assertIn("02_OPEN_WORK_v1.2.44.md", self.readme)
-        self.assertIn("archive/02_OPEN_WORK_v1.2.43.md", self.readme)
+        self.assertIn("02_OPEN_WORK_v1.2.45.md", self.readme)
+        self.assertIn("archive/02_OPEN_WORK_v1.2.44.md", self.readme)
         self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.44", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.44.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.45", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.45.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
+        self.assertEqual("historical", historical["OPEN_WORK_V1_2_44"]["lifecycle"])
+        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_44_SHA256, historical["OPEN_WORK_V1_2_44"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_43"]["lifecycle"])
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_43_SHA256, historical["OPEN_WORK_V1_2_43"]["sha256"])
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_42_SHA256, historical["OPEN_WORK_V1_2_42"]["sha256"])

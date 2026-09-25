@@ -9,7 +9,7 @@ For foundation/default planning and delivery-preparation work, read **only** the
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
-4. `02_OPEN_WORK_v1.2.44.md`
+4. `02_OPEN_WORK_v1.2.45.md`
 5. `03_ARCHITECTURE_v1.1.0.md`
 6. `04_DOMAIN_MAP_v1.1.0.md`
 7. `05_ROADMAP_v1.1.0.md`
@@ -106,7 +106,8 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/02_OPEN_WORK_v1.2.39.md` — preserved pre-HARDEN-02-contract Open Work successor.
 - `archive/02_OPEN_WORK_v1.2.40.md` — preserved pre-H02-3R routing-refinement Open Work successor.
 - `archive/02_OPEN_WORK_v1.2.42.md` — preserved predecessor to Open Work v1.2.43.
-- `archive/02_OPEN_WORK_v1.2.43.md` — preserved byte-identical predecessor to current Open Work v1.2.44.
+- `archive/02_OPEN_WORK_v1.2.43.md` — preserved byte-identical predecessor to Open Work v1.2.44.
+- `archive/02_OPEN_WORK_v1.2.44.md` — preserved byte-identical predecessor to current Open Work v1.2.45.
 - `archive/02_OPEN_WORK_v1.2.41.md` — preserved earlier Open Work predecessor.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — preserved contract merged via PR #39; v0.3.0 lifecycle not retroactively certified.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — preserved previous contract attempt; historical evidence, not repository-verifiably certified.
@@ -154,8 +155,8 @@ Engineering Standards are **not yet current authority**. Current routing require
 - HARDEN-02 PRE-MERGE CERTIFICATION: COMPLETE; EXACT-HEAD FOUNDATION INTEGRITY: PASS — [attestation](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5827553565), [run 36091130615](https://github.com/JCSchoeman96/NewYou/actions/runs/36091130615)
 - HARDEN-02 CERTIFIED-HEAD MERGE: COMPLETE; RESULTING-MAIN FOUNDATION INTEGRITY: PASS — [run 36101210535](https://github.com/JCSchoeman96/NewYou/actions/runs/36101210535)
 - HARDEN-02 FRESH POST-MERGE REVIEW: PASS; DURABLE ATTESTATION: COMPLETE — [PR #40 comment 5830618876](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5830618876)
-- HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED
-- PR #38: STALE / BLOCKED / NOT AUTHORITY
+- HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / AWAITING INDEPENDENT REVIEW
+- PR #38: CLOSED / SUPERSEDED / HISTORICAL BRANCH NOT MERGED
 - `FP001_RECONCILIATION_REQUIRED` — DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION
 - COMMUNICATIONS JIT DOMAIN DOSSIER — DOWNSTREAM AFTER NARROW FP-001 RECONCILIATION
 - FP-001 PHASE 7A: COMPLETE
@@ -170,10 +171,12 @@ Engineering Standards are **not yet current authority**. Current routing require
 - ANALYTICS DOSSIER: NOT REQUIRED
 - PHASE 7C: BLOCKED / NOT_STARTED pending the required Communications dossier and explicit conditional-dossier dispositions.
 - PROOF CLASSIFICATION: NOT FINALISED
+- FINAL FEATURE PACK CONTRACT: NOT STARTED
+- PHASE 8: BLOCKED
 - EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS
 - DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS RECONCILIATION COMPLETE; ATLAS-12 NOT_STARTED (not this reconciliation); DERIVED / NON-AUTHORITATIVE
 
-PR #40 completed the v0.4.0 certification lifecycle. Its certified head merged unchanged to `main`; exact-head and resulting-main Foundation Integrity passed; independent pre-merge and post-merge reviews and durable attestations are recorded on PR #40. HARDEN-02 execution is authorised as the next stage and has not started in this lifecycle synchronization. After certified HARDEN-02 execution, the route remains Engineering Standards Authority Promotion, certified Standards Promotion, FP-001 reconciliation, Communications, remaining required / conditional Phase-7B work, Phase 7C, proof classification, then Phase 8 only after the Development Entry Hard Stop passes. Store/CER remains excluded from HARDEN-02.
+PR #40 completed the v0.4.0 certification lifecycle. Its certified head merged unchanged to `main`; exact-head and resulting-main Foundation Integrity passed; independent pre-merge and post-merge reviews and durable attestations are recorded on PR #40. HARDEN-02 structural execution is in progress and remains incomplete pending independent review. The current Open Work defines the future FP-001 PMR reconciliation exit invariant; FP-001 reconciliation remains downstream and not performed. After certified HARDEN-02 execution, the route remains Engineering Standards Authority Promotion, certified Standards Promotion, FP-001 reconciliation, Communications, remaining required / conditional Phase-7B work, Phase 7C, proof classification, then Phase 8 only after the Development Entry Hard Stop passes. Store/CER remains excluded from HARDEN-02.
 
 Foundation readiness does not authorise implementation. Do not begin FP-001 execution, JIT Domain Dossiers, TOON generation, Architectural Proof, Vertical Slices or implementation unless a later approved task explicitly authorises the applicable preparation and execution gates.
 
