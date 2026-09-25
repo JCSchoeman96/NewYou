@@ -264,6 +264,37 @@ def _review_attestation_valid(
     return True
 
 
+def _pre_merge_attestation_ci_binding_valid(
+    review: dict[str, object],
+    pre_ci: dict[str, object],
+    *,
+    expected_head_sha: str,
+) -> bool:
+    ci_head = review.get("ci_head_sha")
+    ci_workflow = review.get("ci_workflow")
+    ci_conclusion = review.get("ci_conclusion")
+    ci_run_url = review.get("ci_run_url")
+    if not _valid_sha(expected_head_sha):
+        return False
+    if ci_head != expected_head_sha:
+        return False
+    if pre_ci.get("head_sha") != expected_head_sha:
+        return False
+    if ci_head != pre_ci.get("head_sha"):
+        return False
+    if ci_workflow != "Foundation Integrity":
+        return False
+    if ci_workflow != pre_ci.get("workflow"):
+        return False
+    if ci_conclusion != "PASS":
+        return False
+    if ci_conclusion != pre_ci.get("conclusion"):
+        return False
+    if ci_run_url != pre_ci.get("run_url"):
+        return False
+    return _valid_actions_url(ci_run_url)
+
+
 def _execution_entry_passes(
     expected_pr_number: int,
     expected_head_sha: str,
@@ -312,6 +343,11 @@ def _execution_entry_passes(
                 pr_author=pr_author,
                 candidate_author=candidate_author,
                 expected_pr_number=expected_pr_number,
+            ),
+            _pre_merge_attestation_ci_binding_valid(
+                review,
+                pre_ci,
+                expected_head_sha=expected_head_sha,
             ),
             pre_ci["head_sha"] == expected_head_sha,
             pre_ci["conclusion"] == "PASS",
@@ -660,6 +696,46 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         ci_head_mismatch["pre_merge_ci"]["head_sha"] = "b" * 40
         self.assertFalse(self._recovery_entry_passes(head_sha, ci_head_mismatch))
 
+    def test_pre_merge_attestation_ci_binding_exact_match_passes(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        review = evidence["pre_merge_review"]
+        pre_ci = evidence["pre_merge_ci"]
+        self.assertTrue(
+            _pre_merge_attestation_ci_binding_valid(
+                review,
+                pre_ci,
+                expected_head_sha=head_sha,
+            )
+        )
+        self.assertTrue(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_pre_merge_attestation_ci_binding_fail_closed(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+
+        missing_ci_head = self._complete_evidence(head_sha)
+        del missing_ci_head["pre_merge_review"]["ci_head_sha"]
+        self.assertFalse(self._recovery_entry_passes(head_sha, missing_ci_head))
+
+        wrong_ci_head = self._complete_evidence(head_sha)
+        wrong_ci_head["pre_merge_review"]["ci_head_sha"] = "b" * 40
+        self.assertFalse(self._recovery_entry_passes(head_sha, wrong_ci_head))
+
+        wrong_workflow = self._complete_evidence(head_sha)
+        wrong_workflow["pre_merge_review"]["ci_workflow"] = "Other Workflow"
+        self.assertFalse(self._recovery_entry_passes(head_sha, wrong_workflow))
+
+        non_pass_conclusion = self._complete_evidence(head_sha)
+        non_pass_conclusion["pre_merge_review"]["ci_conclusion"] = "FAIL"
+        self.assertFalse(self._recovery_entry_passes(head_sha, non_pass_conclusion))
+
+        different_run_url = self._complete_evidence(head_sha)
+        different_run_url["pre_merge_review"]["ci_run_url"] = (
+            "https://github.com/JCSchoeman96/NewYou/actions/runs/9999"
+        )
+        self.assertFalse(self._recovery_entry_passes(head_sha, different_run_url))
+
     def test_certification_schema_matches_v0_4_attestation_fields(self):
         self.assertEqual(
             {
@@ -673,6 +749,10 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                     "poster_equals_pr_author",
                     "review_actor_authored_or_modified_candidate",
                     "substantive_reviewer_is_review_actor_not_poster",
+                    "ci_head_sha",
+                    "ci_workflow",
+                    "ci_conclusion",
+                    "ci_run_url",
                     "record_url",
                 ],
                 "pre_merge_ci": ["head_sha", "conclusion", "workflow", "run_url"],
@@ -747,6 +827,12 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         main_sha = "d" * 40
         pre_ci_url = "https://github.com/JCSchoeman96/NewYou/actions/runs/1001"
         post_ci_url = "https://github.com/JCSchoeman96/NewYou/actions/runs/1002"
+        pre_ci = {
+            "head_sha": head_sha,
+            "conclusion": "PASS",
+            "workflow": "Foundation Integrity",
+            "run_url": pre_ci_url,
+        }
         attestation = {
             "independent_review_actor": review_actor,
             "attestation_poster_github_identity": poster,
@@ -760,15 +846,14 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                 "reviewed_head_sha": head_sha,
                 "outcome": "PASS",
                 "reviewed_head_is_certified_head": True,
+                "ci_head_sha": pre_ci["head_sha"],
+                "ci_workflow": pre_ci["workflow"],
+                "ci_conclusion": pre_ci["conclusion"],
+                "ci_run_url": pre_ci["run_url"],
                 "record_url": f"https://github.com/JCSchoeman96/NewYou/pull/{EXPECTED_RECOVERY_PR_NUMBER}#pullrequestreview-1",
                 **attestation,
             },
-            "pre_merge_ci": {
-                "head_sha": head_sha,
-                "conclusion": "PASS",
-                "workflow": "Foundation Integrity",
-                "run_url": pre_ci_url,
-            },
+            "pre_merge_ci": pre_ci,
             "merge": {
                 "certified_head_sha": head_sha,
                 "head_sha_verified_before_merge": head_sha,

@@ -398,6 +398,10 @@ The smallest required attestation field groups are:
     "poster_equals_pr_author",
     "review_actor_authored_or_modified_candidate",
     "substantive_reviewer_is_review_actor_not_poster",
+    "ci_head_sha",
+    "ci_workflow",
+    "ci_conclusion",
+    "ci_run_url",
     "record_url"
   ],
   "pre_merge_ci": ["head_sha", "conclusion", "workflow", "run_url"],
@@ -423,6 +427,8 @@ The smallest required attestation field groups are:
 <!-- HARDEN_02_CERTIFICATION_EVIDENCE_SPEC_END -->
 
 The `record_url` values must link to a GitHub-visible PR review or identified PR review comment on the same expected recovery PR. Evidence validation receives the expected recovery PR number and rejects records bound to a different PR. Merge evidence must record `head_sha_verified_before_merge` as the exact certified head SHA.
+
+The `pre_merge_review` CI binding fields must exactly match the independently verifiable `pre_merge_ci` record for the same exact head: `ci_head_sha` equals the reviewed/certified head and `pre_merge_ci.head_sha`; `ci_workflow` is `Foundation Integrity` and equals `pre_merge_ci.workflow`; `ci_conclusion` is `PASS` and equals `pre_merge_ci.conclusion`; `ci_run_url` equals `pre_merge_ci.run_url` and is a valid repository Actions run URL. The durable attestation referenced by `pre_merge_review.record_url` is not valid if these bindings disagree with `pre_merge_ci`.
 
 | State | Meaning |
 |---|---|
