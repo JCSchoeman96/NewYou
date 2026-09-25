@@ -9,7 +9,7 @@ For foundation/default planning and delivery-preparation work, read **only** the
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
-4. `02_OPEN_WORK_v1.2.43.md`
+4. `02_OPEN_WORK_v1.2.44.md`
 5. `03_ARCHITECTURE_v1.1.0.md`
 6. `04_DOMAIN_MAP_v1.1.0.md`
 7. `05_ROADMAP_v1.1.0.md`
@@ -31,12 +31,48 @@ The README and manifest are the current routing pointers. Frozen artifacts may r
 
 The frozen Frontend Experience System is current authority for affected frontend-experience planning, but it is conditionally loaded rather than default context for unrelated routine work.
 
+The table records the exact current governing routes. `default` documents load for foundation planning, while `conditional` documents load only when their scope applies.
+
+<!-- CURRENT_AUTHORITY_TABLE_START -->
+| Document ID | Authority class | Context mode | Canonical filename | Repository path | SemVer |
+| --- | --- | --- | --- | --- | --- |
+| PROJECT_NORTH_STAR_AND_MVP | PRODUCT_NORTH_STAR | default | PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md | docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md | 1.2.1 |
+| PLATFORM_BASELINE | PLATFORM_PRODUCT_LAW | default | 00_PLATFORM_v1.3.0.md | docs/00_platform/00_PLATFORM_v1.3.0.md | 1.3.0 |
+| DECISION_REGISTER | DECISION_REGISTER | default | 01_DECISIONS_v1.3.0.md | docs/00_platform/01_DECISIONS_v1.3.0.md | 1.3.0 |
+| OPEN_WORK | PLANNING_TRACKER | default | 02_OPEN_WORK_v1.2.44.md | docs/00_platform/02_OPEN_WORK_v1.2.44.md | 1.2.44 |
+| ARCHITECTURE_SYNTHESIS | ARCHITECTURE_SYNTHESIS | default | 03_ARCHITECTURE_v1.1.0.md | docs/00_platform/03_ARCHITECTURE_v1.1.0.md | 1.1.0 |
+| DOMAIN_MAP | DOMAIN_LAW | default | 04_DOMAIN_MAP_v1.1.0.md | docs/00_platform/04_DOMAIN_MAP_v1.1.0.md | 1.1.0 |
+| ROADMAP | ROADMAP | default | 05_ROADMAP_v1.1.0.md | docs/00_platform/05_ROADMAP_v1.1.0.md | 1.1.0 |
+| PLATFORM_OPERATING_MODEL | PLATFORM_OPERATING_MODEL | default | PLATFORM_OPERATING_MODEL_v1.0.0.md | docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md | 1.0.0 |
+| FRONTEND_EXPERIENCE_SYSTEM | FRONTEND_EXPERIENCE_SYSTEM | conditional | FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md | docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md | 1.0.0 |
+<!-- CURRENT_AUTHORITY_TABLE_END -->
+
+## Active lifecycle state
+
+Open Work is the canonical source for active lifecycle values. This block mirrors the fields needed for quick routing and is checked against the current Open Work JSON by Foundation Integrity.
+
+<!-- ACTIVE_STATE_MIRROR_START -->
+```json
+{
+  "current_stage": "HARDEN-02_CONTRACT_RECOVERY_REQUIRED",
+  "next_stage": "HARDEN-02_CONTRACT_RECOVERY_REQUIRED",
+  "phase_7c": "BLOCKED / NOT_STARTED",
+  "proof_classification": "NOT FINALISED",
+  "application_implementation": "BLOCKED"
+}
+```
+<!-- ACTIVE_STATE_MIRROR_END -->
+
+## Integrity verification
+
+Foundation Integrity CI validates repository routing, the README mirror, development boundaries and Phase 7 gate implications. It does not call GitHub. The separate `tools/harden_02_github_verifier.py` command checks live GitHub metadata only when run with an evidence JSON, PR number and read-only API token. Its output does not certify HARDEN-02 or update Open Work; substantive review claims remain outside its machine-verifiable scope.
+
 ## Active Working Artifacts
 
 `working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Read them only when a task explicitly concerns experience or operating-model planning; they must not override the nine current-authority documents. They remain working until an explicit freeze review and governance decision.
 
 - `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register; remains working/non-authoritative provenance.
-- `working/DELIVERY_ATLAS_WORKING_v0.2.0.md` — derived Delivery Atlas navigation for approved Feature Pack planning after post-Roadmap reconciliation; remains working/non-authoritative and is intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Predecessor preserved at `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`.
+- `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` — derived Delivery Atlas navigation with corrected current-source routing; remains working/non-authoritative and is intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Predecessor v0.2.0 is preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`.
 - `working/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — HARDEN-02 Phase-7 governance / structural-hardening contract; solo-maintainer certification-mechanism amendment (review actor vs attestation poster); WORKING GOVERNANCE CONTRACT only; OPEN / PENDING INDEPENDENT PRE-MERGE CERTIFICATION; re-baselined from main SHA `6f9ce049616881805b1086d19ce747358de3c067`; PR #39 merged v0.3.0 without retroactive certification; requires independent review-actor exact-SHA attestation and CI lifecycle; execution remains NOT STARTED / NOT AUTHORISED; intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md` — non-authoritative Stage 3B classification; it does not amend Product Law, AR-000, Architecture Law or Engineering Standards and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md` — non-authoritative Stage 4A Architecture Grill evidence; it does not amend Product Law, AR-000 or Architecture Law, creates no ARC identifiers, and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
@@ -46,7 +82,7 @@ The frozen Frontend Experience System is current authority for affected frontend
 
 ## Delivery Atlas routing
 
-Use the [Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.2.0.md) only after selecting or investigating an approved Roadmap Feature Pack or an Atlas planning question. It does not override the nine current-authority documents above, change Product/Architecture/Domain/Roadmap law, authorise Phase 7 or authorise implementation.
+Use the [Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.2.1.md) only after selecting or investigating an approved Roadmap Feature Pack or an Atlas planning question. It does not override the nine current-authority documents above, change Product/Architecture/Domain/Roadmap law, authorise Phase 7 or authorise implementation.
 
 Do not load the whole Atlas by default. Load only the relevant sections: the Feature Pack and capability views in §§4–5, active-FP derivation contracts in §§6–12, and the routing/governance rules in §§23–25 as needed. Every material Atlas conclusion must resolve to an exact current upstream authority reference. Atlas navigation feeds the canonical Phase 7A Feature Pack Skeleton + preliminary Gate Manifest → Phase 7B required JIT Domain Dossiers → Phase 7C Final Feature Pack Contract sequence; the Atlas creates none of those artifacts.
 
@@ -105,8 +141,10 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/02_OPEN_WORK_v1.2.38.md` — preserved pre-Atlas-reconciliation Open Work successor.
 - `archive/02_OPEN_WORK_v1.2.39.md` — preserved pre-HARDEN-02-contract Open Work successor.
 - `archive/02_OPEN_WORK_v1.2.40.md` — preserved pre-H02-3R routing-refinement Open Work successor.
-- `archive/02_OPEN_WORK_v1.2.42.md` — preserved predecessor to current Open Work v1.2.43.
+- `archive/02_OPEN_WORK_v1.2.43.md` — preserved byte-identical predecessor to current Open Work v1.2.44.
+- `archive/02_OPEN_WORK_v1.2.42.md` — preserved predecessor to Open Work v1.2.43.
 - `archive/02_OPEN_WORK_v1.2.41.md` — preserved earlier Open Work predecessor.
+- `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md` — preserved predecessor to the current Atlas routing correction v0.2.1.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — preserved contract merged via PR #39; v0.3.0 lifecycle not retroactively certified.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — preserved previous contract attempt; historical evidence, not repository-verifiably certified.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md` — preserved pre-H02-3R HARDEN-02 working governance contract.
@@ -148,7 +186,7 @@ Engineering Standards are **not yet current authority**. Current routing require
 - ROADMAP SEQUENCING GRILL: COMPLETE
 - ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.0`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
 - ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED
-- ATLAS RECONCILIATION: COMPLETE — `working/DELIVERY_ATLAS_WORKING_v0.2.0.md` (derived / non-authoritative)
+- ATLAS RECONCILIATION: COMPLETE — `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` (derived / non-authoritative)
 - HARDEN-02 CONTRACT RECOVERY: OPEN / PENDING INDEPENDENT REVIEW-ACTOR PRE-MERGE CERTIFICATION — `working/HARDEN-02_CONTRACT_WORKING_v0.4.0.md`; baseline main SHA `6f9ce049616881805b1086d19ce747358de3c067`; PR #39 merged v0.3.0 (not retroactively certified)
 - HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED
 - PR #38: STALE / BLOCKED / NOT AUTHORITY

@@ -345,7 +345,7 @@ class Stage3A2AmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("the ARQ arithmetic is `417 + 16 = 433`", self.successor_text)
         self.assertIn("| Stage 3A.1 `NO_ARQ_REQUIRED` rows | 2, explicitly listed in §10.6 |", self.successor_text)
 
-    def test_manifest_routes_current_and_historical_artifacts(self):
+    def test_manifest_preserves_current_architecture_requirement_and_open_work_predecessor(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         current = {
             entry["document_id"]: entry
@@ -360,11 +360,15 @@ class Stage3A2AmendmentIntegrityTests(unittest.TestCase):
         )
         self.assertEqual("1.1.0", current["ARCHITECTURE_REQUIREMENTS"]["semver"])
         self.assertEqual("1.0.0", current["ARCHITECTURE_REQUIREMENTS"]["superseded_version"])
-        self.assertEqual("1.2.43", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.43.md", current["OPEN_WORK"]["repository_path"])
+        open_work_predecessor = historical["OPEN_WORK_V1_2_43"]
+        self.assertEqual("historical", open_work_predecessor["lifecycle"])
         self.assertEqual(
-            hashlib.sha256((ROOT / current["OPEN_WORK"]["repository_path"]).read_bytes()).hexdigest(),
-            current["OPEN_WORK"]["sha256"],
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.43.md",
+            open_work_predecessor["repository_path"],
+        )
+        self.assertEqual(
+            hashlib.sha256((ROOT / open_work_predecessor["repository_path"]).read_bytes()).hexdigest(),
+            open_work_predecessor["sha256"],
         )
         self.assertIn("ARCHITECTURE_REQUIREMENTS_V1_0_0", historical)
         self.assertIn("TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS", historical)

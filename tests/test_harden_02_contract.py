@@ -13,7 +13,8 @@ CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md"
 CONTRACT_V0_3_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.3.0.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md"
 CONTRACT_OLDER_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.43.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.44.md"
+OPEN_WORK_V1_2_43_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 README = DOCS / "README.md"
@@ -41,7 +42,7 @@ PROTECTED_UPSTREAM_HASHES = {
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e",
     "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md": "71615d3363a91a7e6002d907c6edd474fbd87f77bdfc6a38f5b11afd240a5626",
-    "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.0.md": EXPECTED_ATLAS_V0_2_SHA256,
+    "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md": EXPECTED_ATLAS_V0_2_SHA256,
 }
 
 PROHIBITED_PRESENT_PATHS = (
@@ -49,6 +50,7 @@ PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/02_OPEN_WORK_v1.2.40.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.41.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.42.md",
+    "docs/00_platform/02_OPEN_WORK_v1.2.43.md",
     "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.1.0.md",
     "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.2.0.md",
     "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.3.0.md",
@@ -87,6 +89,36 @@ EXPECTED_RECOVERY_STATE = {
         "audit_evidence": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
         "analytics": "NOT REQUIRED",
     },
+    "formal_artifacts": [
+        {
+            "registry_id": "FP001_SKELETON_GATE_MANIFEST",
+            "formal_type": "FEATURE_PACK_SKELETON_GATE_MANIFEST",
+            "path": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md",
+            "status": "COMPLETE",
+            "requirement": "REQUIRED",
+        },
+        {
+            "registry_id": "FP001_IDENTITY_ACCESS_JIT",
+            "formal_type": "JIT_DOMAIN_DOSSIER",
+            "path": "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+            "status": "COMPLETE",
+            "requirement": "REQUIRED",
+        },
+        {
+            "registry_id": "FP001_COMMUNICATIONS_JIT",
+            "formal_type": "JIT_DOMAIN_DOSSIER",
+            "path": None,
+            "status": "NOT_STARTED",
+            "requirement": "REQUIRED",
+        },
+        {
+            "registry_id": "FP001_FINAL_CONTRACT",
+            "formal_type": "FINAL_FEATURE_PACK_CONTRACT",
+            "path": None,
+            "status": "NOT_STARTED",
+            "requirement": "REQUIRED",
+        },
+    ],
     "phase_7c": "BLOCKED / NOT_STARTED",
     "proof_classification": "NOT FINALISED",
     "application_implementation": "BLOCKED",
@@ -435,7 +467,15 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertTrue(OPEN_WORK_PREDECESSOR.is_file())
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_42_SHA256, _sha256(OPEN_WORK_PREDECESSOR))
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.42.md").exists())
-        self.assertIn("v1.2.42 → v1.2.43", self.open_work)
+        self.assertIn("v1.2.41 → v1.2.42", OPEN_WORK_PREDECESSOR.read_text(encoding="utf-8"))
+        self.assertIn("v1.2.43 → v1.2.44", self.open_work)
+
+    def test_open_work_v1_2_43_archived_byte_identically(self):
+        self.assertTrue(OPEN_WORK_V1_2_43_ARCHIVE.is_file())
+        self.assertEqual(
+            "b5db43e374bf199e721dffeda146a7f4a05bbe7832a5cd3da3049313bb98e167",
+            _sha256(OPEN_WORK_V1_2_43_ARCHIVE),
+        )
 
     def test_harden_02_scope_invariants_preserved_from_v0_3(self):
         for start, end in (
@@ -788,20 +828,24 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual("REQUIRED / NOT_STARTED", self.recovery_state["communications"])
         self.assertEqual("STALE / BLOCKED / NOT AUTHORITY", self.recovery_state["pr_38"])
 
-    def test_readme_open_work_and_manifest_route_v1_2_43(self):
-        self.assertIn("02_OPEN_WORK_v1.2.43.md", self.readme)
+    def test_readme_open_work_and_manifest_route_v1_2_44(self):
+        self.assertIn("02_OPEN_WORK_v1.2.44.md", self.readme)
         self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
-        self.assertIn("archive/02_OPEN_WORK_v1.2.42.md", self.readme)
+        self.assertIn("archive/02_OPEN_WORK_v1.2.43.md", self.readme)
         self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.43", current["OPEN_WORK"]["semver"])
+        self.assertEqual("1.2.44", current["OPEN_WORK"]["semver"])
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_42_SHA256, historical["OPEN_WORK_V1_2_42"]["sha256"])
+        self.assertEqual(
+            "b5db43e374bf199e721dffeda146a7f4a05bbe7832a5cd3da3049313bb98e167",
+            historical["OPEN_WORK_V1_2_43"]["sha256"],
+        )
 
     def test_protected_hashes_unchanged(self):
         for relative_path, expected_hash in PROTECTED_UPSTREAM_HASHES.items():
