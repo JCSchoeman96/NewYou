@@ -2,11 +2,16 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 SMALL_COUNTS = {
@@ -33,6 +38,129 @@ FAD72C1_FROZEN_HASHES = {
 
 
 class FoundationIntegrityAuditTests(unittest.TestCase):
+    def _copy_platform_documents(self, directory: str) -> tuple[Path, Path]:
+        root = Path(directory)
+        shutil.copytree(ROOT / "docs" / "00_platform", root / "docs" / "00_platform")
+        return root, root / "docs" / "00_platform" / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+
+    @staticmethod
+    def _check(report: dict[str, object], name: str) -> dict[str, object]:
+        return next(check for check in report["checks"] if check["name"] == name)
+
+    def test_current_authority_order_uses_default_context_section_only(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_platform_documents(directory)
+            readme_path = root / "docs" / "00_platform" / "README.md"
+            readme = readme_path.read_text(encoding="utf-8")
+            section_start = readme.index("## Default Agent Context")
+            section_end = readme.index("## Current Authority", section_start)
+            section = readme[section_start:section_end]
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            open_work = next(
+                entry for entry in manifest["governing_documents"]
+                if entry["document_id"] == "OPEN_WORK"
+            )
+            active_reference = f"`{open_work['canonical_filename']}`"
+            self.assertIn(active_reference, section)
+            section = section.replace(active_reference, "`archive/02_OPEN_WORK_v1.2.43.md`", 1)
+            outside_section = readme[section_end:] + (
+                f"\nHistorical filename mention: `{open_work['canonical_filename']}`\n"
+            )
+            readme_path.write_text(readme[:section_start] + section + outside_section, encoding="utf-8")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", self._check(report, "readme_current_authority_order")["status"])
+
+    def test_unmodified_production_copy_passes_routing_checks(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_platform_documents(directory)
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("PASS", report["status"])
+            self.assertEqual("PASS", self._check(report, "readme_open_work_state_parity")["status"])
+
+    def test_readme_and_open_work_current_route_must_match(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_platform_documents(directory)
+            readme_path = root / "docs" / "00_platform" / "README.md"
+            readme = readme_path.read_text(encoding="utf-8")
+            current_start = readme.index("## Current State")
+            current_end = readme.find("\n## ", current_start + 1)
+            section = readme[current_start:current_end]
+            section = re.sub(
+                r"(?m)^(\s*(?:-\s*)?NEXT STAGE:)\s*.+$",
+                r"\1 HARDEN-02 EXECUTION",
+                section,
+                count=1,
+            )
+            readme_path.write_text(readme[:current_start] + section + readme[current_end:], encoding="utf-8")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", self._check(report, "readme_open_work_state_parity")["status"])
+
+    def test_readme_and_open_work_must_keep_the_current_contract_route(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_platform_documents(directory)
+            readme_path = root / "docs" / "00_platform" / "README.md"
+            open_work_path = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.44.md"
+            readme = readme_path.read_text(encoding="utf-8")
+            open_work = open_work_path.read_text(encoding="utf-8")
+
+            readme = re.sub(
+                r"(?m)^\s*(?:-\s*)?CURRENT GOVERNANCE CONTRACT:.*\n?",
+                "",
+                readme,
+            )
+            open_work = re.sub(
+                r"(?m)^\s*(?:-\s*)?CURRENT GOVERNANCE CONTRACT:.*\n?",
+                "",
+                open_work,
+            )
+            readme_path.write_text(readme, encoding="utf-8")
+            open_work_path.write_text(open_work, encoding="utf-8")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", self._check(report, "readme_open_work_state_parity")["status"])
+
+    def test_current_contract_route_must_identify_the_active_programme_contract(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_platform_documents(directory)
+            readme_path = root / "docs" / "00_platform" / "README.md"
+            open_work_path = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.44.md"
+            readme = readme_path.read_text(encoding="utf-8")
+            open_work = open_work_path.read_text(encoding="utf-8")
+            old_route = "v0.5.0 / working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md"
+            unrelated_route = "v1.3.0 / 00_PLATFORM_v1.3.0.md"
+            self.assertIn(old_route, readme)
+            self.assertIn(old_route, open_work)
+            readme_path.write_text(readme.replace(old_route, unrelated_route, 1), encoding="utf-8")
+            open_work_path.write_text(open_work.replace(old_route, unrelated_route, 1), encoding="utf-8")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", self._check(report, "readme_open_work_state_parity")["status"])
+
+    def test_manifest_open_work_must_match_readme_current_route(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_platform_documents(directory)
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            open_work = next(
+                entry for entry in manifest["governing_documents"]
+                if entry["document_id"] == "OPEN_WORK"
+            )
+            open_work["canonical_filename"] = "02_OPEN_WORK_v1.2.43.md"
+            open_work["repository_path"] = "docs/00_platform/archive/02_OPEN_WORK_v1.2.43.md"
+            open_work["semver"] = "1.2.43"
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", self._check(report, "readme_open_work_manifest_parity")["status"])
+
     def test_clean_fixture_returns_pass_report(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

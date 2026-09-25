@@ -624,6 +624,212 @@ def _path_is_under(path: str, directory: str) -> bool:
     return path.startswith(f"{normalized_directory}/")
 
 
+def _markdown_section(text: str, heading: str) -> str | None:
+    depth = len(heading) - len(heading.lstrip("#"))
+    start = re.search(rf"(?m)^{re.escape(heading)}[ \t]*$", text)
+    if start is None:
+        return None
+    remainder = text[start.end():]
+    end = re.search(rf"(?m)^#{{1,{depth}}}[ \t]+", remainder)
+    return remainder[:end.start()] if end is not None else remainder
+
+
+def _default_authority_filenames(section: str | None) -> list[str]:
+    if section is None:
+        return []
+    return re.findall(r"(?m)^\s*\d+\.\s+`([^`]+)`\s*$", section)
+
+
+CURRENT_ROUTE_LABELS = (
+    "CURRENT AUTHORITY-STAGE PROGRAMME",
+    "NEXT STAGE",
+    "CURRENT GOVERNANCE CONTRACT",
+)
+
+
+def _current_route_fields(section: str | None) -> tuple[dict[str, str], set[str]]:
+    fields: dict[str, str] = {}
+    invalid: set[str] = set()
+    if section is None:
+        return fields, invalid
+    for label in CURRENT_ROUTE_LABELS:
+        matches = re.findall(
+            rf"(?m)^\s*(?:-\s*)?{re.escape(label)}:\s*(.*?)\s*$",
+            section,
+        )
+        if len(matches) != 1 or not matches[0]:
+            if matches:
+                invalid.add(label)
+        else:
+            fields[label] = matches[0]
+    return fields, invalid
+
+
+def _check_current_authority_routing(
+    root: Path,
+    manifest: dict[str, Any],
+    roots: dict[str, str],
+    readme_text: str,
+    report: dict[str, Any],
+) -> None:
+    governing_entries = [
+        entry for entry in manifest.get("governing_documents", []) if isinstance(entry, dict)
+    ]
+    current_authority_section = _markdown_section(readme_text, "## Default Agent Context")
+    expected_order = [str(entry.get("canonical_filename", "")) for entry in governing_entries]
+    readme_order = _default_authority_filenames(current_authority_section)
+    authority_order_ok = bool(current_authority_section is not None) and readme_order == expected_order
+    _record_check(
+        report,
+        "readme_current_authority_order",
+        authority_order_ok,
+        "README default context lists governing documents in manifest order"
+        if authority_order_ok
+        else f"README default-context authority order mismatch: {readme_order}",
+        path=roots["context_index"],
+    )
+
+    open_work_entries = [
+        entry for entry in governing_entries if entry.get("document_id") == "OPEN_WORK"
+    ]
+    current_open_work = [
+        entry for entry in open_work_entries if entry.get("lifecycle", "current") == "current"
+    ]
+    unique_current_open_work = len(open_work_entries) == 1 and len(current_open_work) == 1
+    open_work_entry = current_open_work[0] if unique_current_open_work else None
+    open_work_path = _relative_path(open_work_entry) if open_work_entry is not None else ""
+    current_historical_paths = {
+        _relative_path(entry)
+        for entry in manifest.get("historical_documents", [])
+        if isinstance(entry, dict)
+    }
+    canonical_filename = (
+        str(open_work_entry.get("canonical_filename", "")) if open_work_entry is not None else ""
+    )
+    open_work_path_ok = (
+        open_work_entry is not None
+        and _path_is_under(open_work_path, roots["governing"])
+        and not _path_is_under(open_work_path, roots["historical"])
+        and Path(open_work_path).name == canonical_filename
+        and open_work_path not in current_historical_paths
+        and (root / open_work_path).is_file()
+    )
+    _record_check(
+        report,
+        "single_current_open_work",
+        unique_current_open_work and open_work_path_ok,
+        "manifest has exactly one current Open Work under the governing root"
+        if unique_current_open_work and open_work_path_ok
+        else f"expected one current governing OPEN_WORK entry with a current path; found {len(open_work_entries)}",
+        path=open_work_path,
+    )
+
+    routed_open_work_count = readme_order.count(canonical_filename) if canonical_filename else 0
+    readme_open_work_ok = (
+        unique_current_open_work
+        and open_work_path_ok
+        and routed_open_work_count == 1
+        and readme_order == expected_order
+    )
+    _record_check(
+        report,
+        "readme_open_work_manifest_parity",
+        readme_open_work_ok,
+        f"README routes the single manifest OPEN_WORK entry at {open_work_path}"
+        if readme_open_work_ok
+        else f"README current Open Work route does not match the manifest entry: {open_work_path or 'missing'}",
+        path=open_work_path,
+    )
+
+    readme_state = _current_route_fields(_markdown_section(readme_text, "## Current State"))
+    open_work_text = (
+        (root / open_work_path).read_text(encoding="utf-8")
+        if open_work_path_ok
+        else ""
+    )
+    open_work_state = _current_route_fields(
+        _markdown_section(open_work_text, "# 9. Immediate Next Action")
+    )
+    readme_fields, readme_invalid = readme_state
+    open_work_fields, open_work_invalid = open_work_state
+    required_route_labels = CURRENT_ROUTE_LABELS
+    route_parity_ok = (
+        not readme_invalid
+        and not open_work_invalid
+        and all(label in readme_fields and label in open_work_fields for label in required_route_labels)
+        and all(readme_fields[label] == open_work_fields[label] for label in required_route_labels)
+    )
+
+    contract_label = CURRENT_ROUTE_LABELS[2]
+    readme_contract = readme_fields.get(contract_label)
+    open_work_contract = open_work_fields.get(contract_label)
+    contract_route_match = re.fullmatch(
+        r"v(?P<version>\d+\.\d+\.\d+)\s*/\s*(?P<path>[A-Za-z0-9_./-]+\.md)",
+        readme_contract or "",
+    )
+    contract_route_path = (
+        f"{roots['governing']}/{contract_route_match.group('path')}"
+        if contract_route_match is not None
+        else ""
+    )
+    contract_version_match = (
+        VERSION_PATTERN.search(Path(contract_route_match.group("path")).name)
+        if contract_route_match is not None
+        else None
+    )
+    contract_file = root / contract_route_path if contract_route_path else None
+    contract_path_is_current = (
+        bool(contract_route_path)
+        and ".." not in Path(contract_route_path).parts
+        and _path_is_under(contract_route_path, roots["governing"])
+        and not _path_is_under(contract_route_path, roots["historical"])
+    )
+    contract_metadata = (
+        contract_file.read_text(encoding="utf-8")
+        if contract_file is not None and contract_file.is_file()
+        else ""
+    )
+    contract_id_match = re.search(
+        r"(?m)^-\s+\*\*Contract ID:\*\*\s+`?([A-Za-z0-9_-]+)`?\s*$",
+        contract_metadata,
+    )
+    contract_document_version_match = re.search(
+        r"(?m)^-\s+\*\*Plan / contract version:\*\*\s+`?v?(\d+\.\d+\.\d+)`?\s*$",
+        contract_metadata,
+    )
+    programme_name = readme_fields.get(CURRENT_ROUTE_LABELS[0], "")
+    contract_identity_ok = (
+        contract_id_match is not None
+        and contract_document_version_match is not None
+        and contract_id_match.group(1).casefold() in programme_name.casefold()
+        and Path(contract_route_match.group("path")).name.startswith(
+            f"{contract_id_match.group(1)}_"
+        )
+        and contract_document_version_match.group(1) == contract_route_match.group("version")
+    )
+    route_parity_ok = route_parity_ok and (
+        readme_contract is not None
+        and readme_contract == open_work_contract
+        and contract_route_match is not None
+        and contract_version_match is not None
+        and contract_version_match.group(1) == contract_route_match.group("version")
+        and contract_path_is_current
+        and contract_identity_ok
+        and contract_file is not None
+        and contract_file.is_file()
+    )
+
+    _record_check(
+        report,
+        "readme_open_work_state_parity",
+        route_parity_ok,
+        "README and current Open Work agree on programme, next stage and routed contract"
+        if route_parity_ok
+        else "README and current Open Work current-state route fields are missing or disagree",
+        path=open_work_path,
+    )
+
+
 def _check_production_graph(
     root: Path,
     manifest: dict[str, Any],
@@ -664,21 +870,7 @@ def _check_production_graph(
     context_index = roots["context_index"]
     readme = root / context_index
     readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""
-    readme_order = [
-        str(entry.get("canonical_filename"))
-        for entry in governing_entries
-        if f"`{entry.get('canonical_filename')}`" in readme_text
-    ]
-    expected_order = [str(entry.get("canonical_filename")) for entry in governing_entries]
-    _record_check(
-        report,
-        "readme_current_authority_order",
-        readme.is_file() and readme_order == expected_order,
-        "README lists every governing document in manifest order"
-        if readme.is_file() and readme_order == expected_order
-        else f"README authority order mismatch: {readme_order}",
-        path=context_index,
-    )
+    _check_current_authority_routing(root, manifest, roots, readme_text, report)
 
     graph_rules = integrity_rules["graph_rules"]
     stale_patterns = tuple(re.compile(pattern) for pattern in graph_rules["stale_reference_patterns"])

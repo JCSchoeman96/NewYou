@@ -9,20 +9,24 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.0.md"
+CONTRACT_V0_4_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md"
 CONTRACT_V0_3_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.3.0.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md"
 CONTRACT_OLDER_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.43.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.44.md"
+OPEN_WORK_V1_2_43_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
-EXPECTED_BASE_SHA = "6f9ce049616881805b1086d19ce747358de3c067"
-EXPECTED_RECOVERY_PR_NUMBER = 40
+EXPECTED_BASE_SHA = "352f304139b9d4f8ee3ba205cde9e34d0ad8437f"
+FIXTURE_RECOVERY_PR_NUMBER = 12345
+EXPECTED_CONTRACT_V0_4_SHA256 = "59d2da53b36e146d7f1e9928c5572e9c9a5035b5f186b748ea6aea4cdbc7be65"
 EXPECTED_CONTRACT_V0_3_SHA256 = "d24a1b460c9e10ae7fa3a50fdf260613e8b5ea72edf8d01eb2577de1b3d9eda2"
 EXPECTED_CONTRACT_V0_2_SHA256 = "9fab2f79b1e5720378a6852bcda9c81aafe8564cd0866a0ea38c1242e7b34f5f"
+EXPECTED_OPEN_WORK_V1_2_43_SHA256 = "b5db43e374bf199e721dffeda146a7f4a05bbe7832a5cd3da3049313bb98e167"
 EXPECTED_OPEN_WORK_V1_2_42_SHA256 = "2f9baad6ef314b23b53f9c0daa79976347bfbc5b937d68f7937b3149415e55a3"
 EXPECTED_OPEN_WORK_V1_2_41_SHA256 = "85dd9946cf5684b0907f49e973ef75b59541c0f265ac46d44465d1527535da62"
 EXPECTED_ATLAS_V0_2_SHA256 = "c122c0f4a903c9679529e0e65a794999dcdaf957a66fcff00df990a0644bbb7f"
@@ -61,16 +65,36 @@ PROHIBITED_PRESENT_PATHS = (
 
 EXPECTED_RECOVERY_STATE = {
     "baseline_main_sha": EXPECTED_BASE_SHA,
-    "current_stage": "HARDEN-02_CONTRACT_RECOVERY_REQUIRED",
-    "next_stage": "HARDEN-02_CONTRACT_RECOVERY_REQUIRED",
-    "contract_version": "0.4.0",
-    "contract_status": "OPEN / PENDING INDEPENDENT PRE-MERGE CERTIFICATION",
-    "pr_39_merged": True,
-    "v0_3_0_retroactive_certification": "NOT SATISFIED",
-    "pre_merge_certification": "PENDING",
-    "exact_head_ci": "PENDING",
-    "certified_head_merge": "PENDING",
-    "post_merge_certification": "PENDING",
+    "current_programme": "HARDEN-02 CERTIFICATION RECOVERY",
+    "current_stage": "HARDEN-02_CERTIFICATION_RECOVERY_REQUIRED",
+    "next_stage": "HARDEN-02_CERTIFICATION_RECOVERY_REQUIRED",
+    "current_contract_version": "0.5.0",
+    "current_contract_path": "working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md",
+    "lifecycle": "IN_PROGRESS_FAIL_CLOSED",
+    "effective_substate": "DERIVED_FROM_REPOSITORY_VERIFIABLE_EVIDENCE",
+    "execution_authority_rule": "FULL_CERTIFICATION_PREDICATE_REQUIRED",
+    "historical_v0_4_0": {
+        "candidate_head": "cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4",
+        "pre_merge_review": "PASS",
+        "pre_merge_attestation_comment": "5827553565",
+        "exact_head_ci": {
+            "run_id": "36091130615",
+            "head_sha": "cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4",
+            "conclusion": "PASS",
+        },
+        "certified_head_merged": True,
+        "resulting_main_sha": EXPECTED_BASE_SHA,
+        "resulting_main_ci": {
+            "run_id": "36101210535",
+            "head_sha": EXPECTED_BASE_SHA,
+            "conclusion": "PASS",
+        },
+        "post_merge_review_outcomes": ["CHANGES REQUIRED", "CHANGES REQUIRED"],
+        "post_merge_pass_certification": "NOT SATISFIED",
+        "post_merge_attestation": "NOT OBTAINED",
+        "disposition": "MERGED / NOT POST-MERGE CERTIFIED",
+        "execution_authority": "NOT AUTHORISED",
+    },
     "harden_02_execution": "NOT STARTED / NOT AUTHORISED",
     "harden_02_scope": "PHASE-7 GOVERNANCE / STRUCTURAL HARDENING ONLY",
     "store_cer": "EXCLUDED",
@@ -334,6 +358,10 @@ def _execution_entry_passes(
     if not all(isinstance(record, dict) for record in (review, pre_ci, merge, post_ci, post_cert)):
         return False
 
+    lifecycle_rules = evidence_spec.get("lifecycle_rules")
+    if not isinstance(lifecycle_rules, dict):
+        return False
+
     main_sha = merge["resulting_main_sha"]
     return all(
         (
@@ -350,7 +378,7 @@ def _execution_entry_passes(
                 expected_head_sha=expected_head_sha,
             ),
             pre_ci["head_sha"] == expected_head_sha,
-            pre_ci["conclusion"] == "PASS",
+            pre_ci["conclusion"] == lifecycle_rules.get("required_pre_merge_ci_conclusion") == "PASS",
             pre_ci["workflow"] == "Foundation Integrity",
             _valid_actions_url(pre_ci["run_url"]),
             merge["certified_head_sha"] == expected_head_sha,
@@ -358,7 +386,7 @@ def _execution_entry_passes(
             merge["merged_head_sha"] == expected_head_sha,
             _valid_sha(main_sha),
             post_ci["head_sha"] == main_sha,
-            post_ci["conclusion"] == "PASS",
+            post_ci["conclusion"] == lifecycle_rules.get("required_post_merge_ci_conclusion") == "PASS",
             post_ci["workflow"] == "Foundation Integrity",
             _valid_actions_url(post_ci["run_url"]),
             post_cert["resulting_main_sha"] == main_sha,
@@ -366,7 +394,7 @@ def _execution_entry_passes(
             post_cert["ci_head_sha"] == main_sha,
             post_cert["ci_conclusion"] == "PASS",
             post_cert["ci_run_url"] == post_ci["run_url"],
-            post_cert["outcome"] == "PASS",
+            post_cert["outcome"] == lifecycle_rules.get("required_post_merge_review_outcome") == "PASS",
             _post_merge_attestation_valid(
                 post_cert,
                 main_sha=main_sha,
@@ -382,6 +410,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.contract = CONTRACT.read_text(encoding="utf-8")
+        cls.contract_v0_4 = CONTRACT_V0_4_ARCHIVE.read_text(encoding="utf-8")
         cls.contract_v0_3 = CONTRACT_V0_3_ARCHIVE.read_text(encoding="utf-8")
         cls.contract_predecessor = CONTRACT_PREDECESSOR.read_text(encoding="utf-8")
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
@@ -406,7 +435,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         candidate_author: str = "JCSchoeman96",
     ) -> bool:
         return _execution_entry_passes(
-            EXPECTED_RECOVERY_PR_NUMBER,
+            FIXTURE_RECOVERY_PR_NUMBER,
             expected_head_sha,
             pr_author,
             candidate_author,
@@ -414,14 +443,39 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             self.evidence_spec,
         )
 
-    def test_v0_4_is_active_successor_rebased_on_post_pr39_main(self):
+    def test_v0_5_is_recovery_successor_based_on_pr40_merge(self):
         self.assertTrue(CONTRACT.is_file())
-        self.assertIn("Plan / contract version:** `v0.4.0`", self.contract)
-        self.assertIn("OPEN / PENDING INDEPENDENT PRE-MERGE CERTIFICATION", self.contract)
+        self.assertIn("Plan / contract version:** `v0.5.0`", self.contract)
+        self.assertIn("CERTIFICATION RECOVERY SUCCESSOR", self.contract)
         self.assertIn("execution **NOT STARTED / NOT AUTHORISED**", self.contract)
         self.assertIn(f"Re-baseline main SHA:** `{EXPECTED_BASE_SHA}`", self.contract)
         self.assertEqual(EXPECTED_BASE_SHA, self.recovery_state["baseline_main_sha"])
         self.assertIn("Review actor versus attestation poster", self.contract)
+
+    def test_v0_4_historical_predecessor_is_byte_identical(self):
+        self.assertTrue(CONTRACT_V0_4_ARCHIVE.is_file())
+        self.assertEqual(EXPECTED_CONTRACT_V0_4_SHA256, _sha256(CONTRACT_V0_4_ARCHIVE))
+        self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md").exists())
+        self.assertIn("OPEN / PENDING INDEPENDENT PRE-MERGE CERTIFICATION", self.contract_v0_4)
+
+    def test_v0_4_lifecycle_is_recorded_as_merged_without_post_merge_certification(self):
+        historical = self.recovery_state["historical_v0_4_0"]
+        self.assertEqual("cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4", historical["candidate_head"])
+        self.assertEqual("PASS", historical["pre_merge_review"])
+        self.assertEqual("36091130615", historical["exact_head_ci"]["run_id"])
+        self.assertTrue(historical["certified_head_merged"])
+        self.assertEqual(EXPECTED_BASE_SHA, historical["resulting_main_sha"])
+        self.assertEqual("36101210535", historical["resulting_main_ci"]["run_id"])
+        self.assertEqual(
+            ["CHANGES REQUIRED", "CHANGES REQUIRED"],
+            historical["post_merge_review_outcomes"],
+        )
+        self.assertEqual("NOT SATISFIED", historical["post_merge_pass_certification"])
+        self.assertEqual("MERGED / NOT POST-MERGE CERTIFIED", historical["disposition"])
+        self.assertEqual("NOT AUTHORISED", historical["execution_authority"])
+        for state_key in ("pre_merge_certification", "exact_head_ci", "certified_head_merge"):
+            self.assertNotIn(state_key, self.recovery_state)
+        self.assertNotIn("OPEN / PENDING INDEPENDENT PRE-MERGE CERTIFICATION", self.contract)
 
     def test_v0_3_archived_byte_identically(self):
         self.assertTrue(CONTRACT_V0_3_ARCHIVE.is_file())
@@ -436,7 +490,12 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertTrue(OPEN_WORK_PREDECESSOR.is_file())
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_42_SHA256, _sha256(OPEN_WORK_PREDECESSOR))
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.42.md").exists())
-        self.assertIn("v1.2.42 → v1.2.43", self.open_work)
+        self.assertIn("v1.2.43 → v1.2.44", self.open_work)
+
+    def test_open_work_v1_2_43_archived_byte_identically(self):
+        self.assertTrue(OPEN_WORK_V1_2_43_ARCHIVE.is_file())
+        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_43_SHA256, _sha256(OPEN_WORK_V1_2_43_ARCHIVE))
+        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.43.md").exists())
 
     def test_harden_02_scope_invariants_preserved_from_v0_3(self):
         for start, end in (
@@ -460,8 +519,8 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                 self.assertEqual(predecessor_section, successor_section)
 
     def test_recovery_stays_current_stage_and_rejects_appended_routes(self):
-        expected_label = "HARDEN-02 CONTRACT RECOVERY / SOLO-MAINTAINER CERTIFICATION AMENDMENT"
-        expected_next = "HARDEN-02_CONTRACT_RECOVERY_REQUIRED"
+        expected_label = "HARDEN-02 CERTIFICATION RECOVERY"
+        expected_next = "HARDEN-02_CERTIFICATION_RECOVERY_REQUIRED"
         open_work_current = _route_declaration(self.open_work, "CURRENT AUTHORITY-STAGE PROGRAMME")
         readme_current = _route_declaration(self.readme, "CURRENT AUTHORITY-STAGE PROGRAMME")
         open_work_next = _route_declaration(self.open_work, "NEXT STAGE")
@@ -470,7 +529,21 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual(expected_label, readme_current)
         self.assertEqual(expected_next, open_work_next)
         self.assertEqual(expected_next, readme_next)
+        expected_contract = "v0.5.0 / working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md"
+        self.assertEqual(
+            expected_contract,
+            _route_declaration(self.open_work, "CURRENT GOVERNANCE CONTRACT"),
+        )
+        self.assertEqual(
+            expected_contract,
+            _route_declaration(self.readme, "CURRENT GOVERNANCE CONTRACT"),
+        )
         self.assertEqual(EXPECTED_RECOVERY_STATE, self.recovery_state)
+        self.assertEqual("0.5.0", self.recovery_state["current_contract_version"])
+        self.assertEqual(
+            "working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md",
+            self.recovery_state["current_contract_path"],
+        )
         _assert_no_current_execution_authority(self.open_work)
         _assert_no_current_execution_authority(self.readme)
 
@@ -493,7 +566,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         later_rows = [line for line in section.splitlines() if line.startswith("| Later |")]
         self.assertEqual(1, len(later_rows))
         later_row = later_rows[0].casefold()
-        self.assertIn("v0.4.0", later_row)
+        self.assertIn("v0.5.0", later_row)
         self.assertNotIn("v0.3.0 is current", later_row)
         self.assertNotIn("under v0.3.0 is current", later_row)
         self.assertIn("not started / not authorised", later_row)
@@ -616,6 +689,38 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         evidence["post_merge_certification"]["resulting_main_sha"] = "e" * 40
         self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
 
+    def test_changed_post_merge_review_outcome_cannot_certify(self):
+        head_sha = "a" * 40
+        for outcome in ("CHANGES REQUIRED", "FAIL", "BLOCKER"):
+            with self.subTest(outcome=outcome):
+                evidence = self._complete_evidence(head_sha)
+                evidence["post_merge_certification"]["outcome"] = outcome
+                self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_missing_post_merge_evidence_fails_closed(self):
+        head_sha = "a" * 40
+
+        missing_main_ci = self._complete_evidence(head_sha)
+        del missing_main_ci["post_merge_ci"]
+        self.assertFalse(self._recovery_entry_passes(head_sha, missing_main_ci))
+
+        missing_attestation = self._complete_evidence(head_sha)
+        del missing_attestation["post_merge_certification"]
+        self.assertFalse(self._recovery_entry_passes(head_sha, missing_attestation))
+
+    def test_resulting_main_ci_pass_alone_cannot_authorise_execution(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["post_merge_ci"]["conclusion"] = "PASS"
+        evidence["post_merge_certification"]["outcome"] = "CHANGES REQUIRED"
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
+    def test_post_merge_ci_bound_to_another_main_sha_fails(self):
+        head_sha = "a" * 40
+        evidence = self._complete_evidence(head_sha)
+        evidence["post_merge_ci"]["head_sha"] = "f" * 40
+        self.assertFalse(self._recovery_entry_passes(head_sha, evidence))
+
     def test_missing_post_merge_review_actor_fails(self):
         head_sha = "a" * 40
         evidence = self._complete_evidence(head_sha)
@@ -664,7 +769,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
     def test_pre_merge_lifecycle_allows_review_and_ci_in_either_order(self):
         lifecycle = _section(
             self.contract,
-            "### 11.4 v0.4.0 certification lifecycle",
+            "### 11.4 v0.5.0 certification recovery lifecycle",
             "The smallest required attestation field groups are:",
         )
         self.assertIn("either may happen first", lifecycle)
@@ -736,7 +841,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         )
         self.assertFalse(self._recovery_entry_passes(head_sha, different_run_url))
 
-    def test_certification_schema_matches_v0_4_attestation_fields(self):
+    def test_certification_schema_matches_v0_5_attestation_fields(self):
         self.assertEqual(
             {
                 "pre_merge_review": [
@@ -779,8 +884,43 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                     "record_url",
                 ],
             },
-            self.evidence_spec,
+            {key: value for key, value in self.evidence_spec.items() if key != "lifecycle_rules"},
         )
+
+        self.assertEqual(
+            {
+                "required_pre_merge_review_outcome": "PASS",
+                "required_pre_merge_ci_conclusion": "PASS",
+                "required_post_merge_review_outcome": "PASS",
+                "required_post_merge_ci_conclusion": "PASS",
+                "post_merge_failure_outcomes": ["CHANGES REQUIRED", "FAIL", "BLOCKER"],
+                "missing_or_ambiguous_evidence": "NOT_AUTHORISED",
+                "candidate_head_drift": "INVALIDATES_CERTIFICATION",
+            },
+            self.evidence_spec["lifecycle_rules"],
+        )
+
+    def test_recovery_lifecycle_defines_durable_transitions_and_failure_state(self):
+        lifecycle = _section(
+            self.contract,
+            "### 11.4 v0.5.0 certification recovery lifecycle",
+            "## 12.",
+        )
+        for state in (
+            "State A — candidate",
+            "State B — pre-merge evidence incomplete",
+            "State C — pre-merge certified",
+            "State D — merged / post-main-CI required",
+            "State E — post-merge review required",
+            "State F — post-merge certification failed / changes required",
+            "State G — post-merge certified",
+            "State H — execution authorised",
+        ):
+            self.assertIn(state, lifecycle)
+        self.assertIn("missing, ambiguous, contradictory or inconsistent", lifecycle)
+        self.assertIn("NOT AUTHORISED", lifecycle)
+        self.assertIn("Head drift invalidates", lifecycle)
+        self.assertIn("Pre-merge review PASS and exact-head CI PASS may complete in either order", lifecycle)
 
     def test_execution_and_downstream_remain_blocked(self):
         self.assertEqual("NOT STARTED / NOT AUTHORISED", self.recovery_state["harden_02_execution"])
@@ -789,20 +929,31 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual("REQUIRED / NOT_STARTED", self.recovery_state["communications"])
         self.assertEqual("STALE / BLOCKED / NOT AUTHORITY", self.recovery_state["pr_38"])
 
-    def test_readme_open_work_and_manifest_route_v1_2_43(self):
-        self.assertIn("02_OPEN_WORK_v1.2.43.md", self.readme)
-        self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
+    def test_readme_open_work_and_manifest_route_v1_2_44(self):
+        current_authority = _section(self.readme, "## Default Agent Context", "## Current Authority")
+        self.assertIn("02_OPEN_WORK_v1.2.44.md", current_authority)
+        self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.5.0.md", self.readme)
         self.assertIn("archive/02_OPEN_WORK_v1.2.42.md", self.readme)
+        self.assertIn("archive/02_OPEN_WORK_v1.2.43.md", self.readme)
+        self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
         self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.43", current["OPEN_WORK"]["semver"])
+        self.assertEqual("1.2.44", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.44.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_42_SHA256, historical["OPEN_WORK_V1_2_42"]["sha256"])
+        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_43_SHA256, historical["OPEN_WORK_V1_2_43"]["sha256"])
+        current_open_work = [
+            entry
+            for entry in self.manifest["governing_documents"]
+            if entry["document_id"] == "OPEN_WORK" and entry.get("lifecycle", "current") == "current"
+        ]
+        self.assertEqual(1, len(current_open_work))
 
     def test_protected_hashes_unchanged(self):
         for relative_path, expected_hash in PROTECTED_UPSTREAM_HASHES.items():
@@ -850,7 +1001,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                 "ci_workflow": pre_ci["workflow"],
                 "ci_conclusion": pre_ci["conclusion"],
                 "ci_run_url": pre_ci["run_url"],
-                "record_url": f"https://github.com/JCSchoeman96/NewYou/pull/{EXPECTED_RECOVERY_PR_NUMBER}#pullrequestreview-1",
+                "record_url": f"https://github.com/JCSchoeman96/NewYou/pull/{FIXTURE_RECOVERY_PR_NUMBER}#pullrequestreview-1",
                 **attestation,
             },
             "pre_merge_ci": pre_ci,
@@ -873,7 +1024,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                 "ci_conclusion": "PASS",
                 "ci_run_url": post_ci_url,
                 "outcome": "PASS",
-                "record_url": f"https://github.com/JCSchoeman96/NewYou/pull/{EXPECTED_RECOVERY_PR_NUMBER}#issuecomment-2",
+                "record_url": f"https://github.com/JCSchoeman96/NewYou/pull/{FIXTURE_RECOVERY_PR_NUMBER}#issuecomment-2",
                 **attestation,
             },
         }
