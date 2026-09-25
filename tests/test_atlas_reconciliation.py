@@ -9,15 +9,20 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
-ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.43.md"
-OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
-OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
+ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
+MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+MANIFEST_DATA = json.loads(MANIFEST.read_text(encoding="utf-8"))
+CURRENT_OPEN_WORK_ENTRY = next(
+    entry for entry in MANIFEST_DATA["governing_documents"] if entry["document_id"] == "OPEN_WORK"
+)
+OPEN_WORK = ROOT / CURRENT_OPEN_WORK_ENTRY["repository_path"]
+OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
+OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
+OPEN_WORK_OLDER_PREDECESSOR_2 = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 OPEN_WORK_V1_2_40 = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
 ATLAS_STAGE_OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.39.md"
 README = DOCS / "README.md"
-MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 PROTECTED_HASHES = {
     "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
@@ -27,6 +32,8 @@ PROTECTED_HASHES = {
     "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
     "docs/00_platform/05_ROADMAP_v1.1.0.md": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
+    "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md": "c122c0f4a903c9679529e0e65a794999dcdaf957a66fcff00df990a0644bbb7f",
+    "docs/00_platform/archive/02_OPEN_WORK_v1.2.43.md": "b5db43e374bf199e721dffeda146a7f4a05bbe7832a5cd3da3049313bb98e167",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.38.md": "b5710e3cd3348668ae9d9a7b586343e4b18ba4c1bb7e59ae5c4a69927de188f6",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e",
@@ -49,6 +56,8 @@ PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/02_OPEN_WORK_v1.2.40.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.41.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.42.md",
+    "docs/00_platform/02_OPEN_WORK_v1.2.43.md",
+    "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.0.md",
     "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
     "docs/00_platform/reference/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
     "docs/00_platform/working/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
@@ -66,6 +75,41 @@ def _section(text: str, start: str, end: str) -> str:
     return text[start_i:end_i]
 
 
+def _current_planning_source(atlas_text: str) -> str:
+    sources = _section(atlas_text, "## 1.1 Authority hierarchy", "## 1.2 Purpose")
+    for line in sources.splitlines():
+        if not line.lstrip().startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) == 3 and cells[0] == "Planning tracker":
+            match = re.search(r"`([^`]+)`", cells[1])
+            return match.group(1) if match else ""
+    return ""
+
+
+def _fp001_planning_source(atlas_text: str) -> str:
+    fp001 = _section(atlas_text, "## FP-001 — Trusted bilingual entry", "## FP-002 —")
+    match = re.search(r"current gate and planning routing in `([^`]+)`", fp001)
+    return match.group(1) if match else ""
+
+
+def _atlas_routing_findings(atlas_text: str, manifest: dict) -> list[str]:
+    open_work = next(
+        entry for entry in manifest["governing_documents"] if entry["document_id"] == "OPEN_WORK"
+    )
+    findings = []
+    if _current_planning_source(atlas_text) != open_work["repository_path"]:
+        findings.append("Current source table does not match manifest Open Work route")
+    if _fp001_planning_source(atlas_text) != open_work["canonical_filename"]:
+        findings.append("FP-001 planning anchor does not match manifest Open Work filename")
+    if any(
+        "archive/02_OPEN_WORK_v1.2.28.md" in line and "source-at-freeze" not in line
+        for line in atlas_text.splitlines()
+    ):
+        findings.append("archived Open Work source lacks source-at-freeze label")
+    return findings
+
+
 class AtlasReconciliationIntegrityTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -76,20 +120,24 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
 
     def test_predecessor_preserved_and_successor_versioned(self):
         self.assertEqual(
-            PROTECTED_HASHES["docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md"],
+            PROTECTED_HASHES["docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md"],
             _sha256(ATLAS_PREDECESSOR),
+        )
+        self.assertEqual(
+            PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.43.md"],
+            _sha256(OPEN_WORK_PREDECESSOR),
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md"],
             _sha256(OPEN_WORK_V1_2_40),
         )
         self.assertEqual(
-            PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.41.md"],
+            PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.42.md"],
             _sha256(OPEN_WORK_OLDER_PREDECESSOR),
         )
         self.assertEqual(
-            PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.42.md"],
-            _sha256(OPEN_WORK_PREDECESSOR),
+            PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.41.md"],
+            _sha256(OPEN_WORK_OLDER_PREDECESSOR_2),
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md"],
@@ -100,10 +148,11 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
             _sha256(DOCS / "archive" / "02_OPEN_WORK_v1.2.38.md"),
         )
         self.assertTrue(ATLAS.is_file())
-        self.assertIn("v0.1.0 → v0.2.0", self.atlas)
-        self.assertIn("v1.2.42 → v1.2.43", self.open_work)
-        self.assertIn("v1.2.41 → v1.2.42", OPEN_WORK_PREDECESSOR.read_text(encoding="utf-8"))
-        self.assertIn("v1.2.40 → v1.2.41", OPEN_WORK_OLDER_PREDECESSOR.read_text(encoding="utf-8"))
+        self.assertIn("v0.2.0 → v0.2.1", self.atlas)
+        self.assertIn("v1.2.43 → v1.2.44", self.open_work)
+        self.assertIn("v1.2.42 → v1.2.43", OPEN_WORK_PREDECESSOR.read_text(encoding="utf-8"))
+        self.assertIn("v1.2.41 → v1.2.42", OPEN_WORK_OLDER_PREDECESSOR.read_text(encoding="utf-8"))
+        self.assertIn("v1.2.40 → v1.2.41", OPEN_WORK_OLDER_PREDECESSOR_2.read_text(encoding="utf-8"))
         self.assertIn("v1.2.39 → v1.2.40", OPEN_WORK_V1_2_40.read_text(encoding="utf-8"))
         self.assertIn("v1.2.38 → v1.2.39", ATLAS_STAGE_OPEN_WORK.read_text(encoding="utf-8"))
         self.assertFalse((DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.1.0.md").exists())
@@ -112,6 +161,8 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.40.md").exists())
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.41.md").exists())
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.42.md").exists())
+        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.43.md").exists())
+        self.assertFalse((DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.0.md").exists())
 
     def test_atlas_remains_non_authoritative_and_outside_manifest(self):
         self.assertIn("WORKING / NON-AUTHORITATIVE", self.atlas)
@@ -141,13 +192,52 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("03_ARCHITECTURE_v1.1.0.md", sources)
         self.assertIn("04_DOMAIN_MAP_v1.1.0.md", sources)
         self.assertIn("05_ROADMAP_v1.1.0.md", sources)
-        self.assertIn("02_OPEN_WORK_v1.2.39.md", sources)
+        self.assertIn("02_OPEN_WORK_v1.2.44.md", sources)
         self.assertNotIn("00_PLATFORM_v1.2.1.md", sources)
         self.assertNotIn("01_DECISIONS_v1.2.2.md", sources)
         self.assertNotIn("03_ARCHITECTURE_v1.0.0.md", sources)
         self.assertNotIn("04_DOMAIN_MAP_v1.0.0.md", sources)
         self.assertNotIn("05_ROADMAP_v1.0.0.md", sources)
         self.assertNotIn("02_OPEN_WORK_v1.2.28.md", sources)
+        self.assertEqual([], _atlas_routing_findings(self.atlas, self.manifest))
+
+    def test_current_routing_rejects_archived_current_source(self):
+        mutated = re.sub(
+            r"(\| Planning tracker \| `)docs/00_platform/02_OPEN_WORK_v1\.2\.44\.md",
+            r"\1docs/00_platform/archive/02_OPEN_WORK_v1.2.43.md",
+            self.atlas,
+            count=1,
+        )
+        self.assertEqual(
+            ["Current source table does not match manifest Open Work route"],
+            _atlas_routing_findings(mutated, self.manifest),
+        )
+
+    def test_archived_source_requires_source_at_freeze_label(self):
+        mutated = self.atlas.replace(
+            "source-at-freeze unresolved-work context in `archive/02_OPEN_WORK_v1.2.28.md",
+            "unresolved-work context in `archive/02_OPEN_WORK_v1.2.28.md",
+            1,
+        )
+        self.assertIn(
+            "archived Open Work source lacks source-at-freeze label",
+            _atlas_routing_findings(mutated, self.manifest),
+        )
+
+    def test_atlas_routing_check_uses_manifest_current_route(self):
+        manifest = json.loads(json.dumps(self.manifest))
+        open_work = next(
+            entry for entry in manifest["governing_documents"] if entry["document_id"] == "OPEN_WORK"
+        )
+        open_work["repository_path"] = "docs/00_platform/02_OPEN_WORK_v1.2.45.md"
+        open_work["canonical_filename"] = "02_OPEN_WORK_v1.2.45.md"
+        self.assertEqual(
+            [
+                "Current source table does not match manifest Open Work route",
+                "FP-001 planning anchor does not match manifest Open Work filename",
+            ],
+            _atlas_routing_findings(self.atlas, manifest),
+        )
 
     def test_section_54_capability_count_matches_inventory_and_matrix(self):
         inventory = _section(
@@ -269,22 +359,24 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("HARDEN-02_CONTRACT_RECOVERY_REQUIRED", self.open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
-        self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.0.md", self.readme)
+        self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.1.md", self.readme)
         self.assertIn("HARDEN-02_CONTRACT_RECOVERY_REQUIRED", self.readme)
-        self.assertIn("02_OPEN_WORK_v1.2.43.md", self.readme)
+        self.assertIn("02_OPEN_WORK_v1.2.44.md", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.43", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.43.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.44", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.44.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
+        self.assertEqual("historical", {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_43"]["lifecycle"])
+        self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_43"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_42"]["lifecycle"])
-        self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_42"]["sha256"])
+        self.assertEqual(_sha256(OPEN_WORK_OLDER_PREDECESSOR), historical["OPEN_WORK_V1_2_42"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_41"]["lifecycle"])
-        self.assertEqual(_sha256(OPEN_WORK_OLDER_PREDECESSOR), historical["OPEN_WORK_V1_2_41"]["sha256"])
+        self.assertEqual(_sha256(OPEN_WORK_OLDER_PREDECESSOR_2), historical["OPEN_WORK_V1_2_41"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_40"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK_V1_2_40), historical["OPEN_WORK_V1_2_40"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_39"]["lifecycle"])

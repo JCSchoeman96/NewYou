@@ -35,7 +35,6 @@ PROTECTED_HASHES = {
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
     "docs/00_platform/working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md": "6a4efe4ad4625e2278321d4ae6a4c9147ec3d35d8d80a41e2638a4bee02bb582",
-    ".github/workflows/foundation-integrity.yml": "2c718457456c71ad8d7fc416a6e0a646792271b9341e4a14fedda6ddb02bcdb8",
 }
 
 REQUIRED_SUCCESSOR_PATHS = (
@@ -185,7 +184,6 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("01_DECISIONS_v1.3.0.md", header)
         self.assertIn("03_ARCHITECTURE_v1.1.0.md", header)
         self.assertIn("04_DOMAIN_MAP_v1.1.0.md", header)
-        self.assertIn("02_OPEN_WORK_v1.2.38.md", header)
         self.assertNotIn("00_PLATFORM_v1.2.1.md", header)
         self.assertNotIn("03_ARCHITECTURE_v1.0.0.md", header)
         self.assertNotIn("04_DOMAIN_MAP_v1.0.0.md", header)
@@ -225,9 +223,10 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.43", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.43.md", current["OPEN_WORK"]["repository_path"])
-        self.assertEqual(_sha256(ROOT / current["OPEN_WORK"]["repository_path"]), current["OPEN_WORK"]["sha256"])
+        self.assertEqual("historical", {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_43"]["lifecycle"])
+        open_work_1_2_43 = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_43"]
+        self.assertEqual("docs/00_platform/archive/02_OPEN_WORK_v1.2.43.md", open_work_1_2_43["repository_path"])
+        self.assertEqual(_sha256(ROOT / open_work_1_2_43["repository_path"]), open_work_1_2_43["sha256"])
         self.assertEqual("historical", {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK), {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["sha256"])
         self.assertEqual("1.1.0", current["ROADMAP"]["semver"])

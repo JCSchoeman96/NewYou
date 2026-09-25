@@ -10,10 +10,56 @@ import re
 import sys
 from collections import Counter
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Any, Iterable
+
+if __package__:
+    from .phase_7_delivery_gates import validate_phase_7_state
+else:
+    from phase_7_delivery_gates import validate_phase_7_state
 
 
 DEFAULT_MANIFEST = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
+
+OPEN_WORK_STATE_START = "<!-- HARDEN_02_RECOVERY_STATE_START -->"
+OPEN_WORK_STATE_END = "<!-- HARDEN_02_RECOVERY_STATE_END -->"
+PHOENIX_APPLICATION_ROOTS = ("mix.exs", "lib", "config", "priv", "assets")
+MARKED_JSON_FENCE_PATTERN = re.compile(r"```json\s*(.*?)\s*```", re.DOTALL)
+CURRENT_AUTHORITY_TABLE_START = "<!-- CURRENT_AUTHORITY_TABLE_START -->"
+CURRENT_AUTHORITY_TABLE_END = "<!-- CURRENT_AUTHORITY_TABLE_END -->"
+ACTIVE_STATE_MIRROR_START = "<!-- ACTIVE_STATE_MIRROR_START -->"
+ACTIVE_STATE_MIRROR_END = "<!-- ACTIVE_STATE_MIRROR_END -->"
+ACTIVE_STATE_MIRROR_FIELDS = (
+    "current_stage",
+    "next_stage",
+    "phase_7c",
+    "proof_classification",
+    "application_implementation",
+)
+ALLOWED_LIFECYCLE_VALUES = frozenset({"current", "historical"})
+ALLOWED_CONTEXT_MODES = frozenset({"default", "conditional"})
+SINGULAR_CURRENT_AUTHORITY_CLASSES = frozenset(
+    {
+        "PRODUCT_NORTH_STAR",
+        "PLATFORM_PRODUCT_LAW",
+        "DECISION_REGISTER",
+        "PLANNING_TRACKER",
+        "ARCHITECTURE_SYNTHESIS",
+        "DOMAIN_LAW",
+        "ROADMAP",
+        "PLATFORM_OPERATING_MODEL",
+        "FRONTEND_EXPERIENCE_SYSTEM",
+    }
+)
+CONDITIONAL_CURRENT_AUTHORITY_CLASSES = frozenset({"FRONTEND_EXPERIENCE_SYSTEM"})
+CURRENT_AUTHORITY_TABLE_COLUMNS = (
+    "Document ID",
+    "Authority class",
+    "Context mode",
+    "Canonical filename",
+    "Repository path",
+    "SemVer",
+)
 
 ID_PATTERNS = {
     "DEC": re.compile(r"\bDEC-\d{3}\b"),
@@ -50,7 +96,9 @@ REQUIRED_ENTRY_FIELDS = {
     "authority_class",
     "sha256",
     "superseded_version",
+    "lifecycle",
 }
+REQUIRED_ENTRY_TEXT_FIELDS = REQUIRED_ENTRY_FIELDS - {"superseded_version"}
 
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
@@ -68,13 +116,95 @@ def load_manifest(path: Path) -> dict[str, Any]:
     return value
 
 
+def _reject_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError(f"duplicate JSON key: {key}")
+        value[key] = item
+    return value
+
+
+def _parse_marked_open_work_state(text: str) -> dict[str, Any]:
+    if text.count(OPEN_WORK_STATE_START) != 1 or text.count(OPEN_WORK_STATE_END) != 1:
+        raise ValueError("Open Work must contain exactly one marked JSON state")
+
+    start = text.index(OPEN_WORK_STATE_START) + len(OPEN_WORK_STATE_START)
+    end = text.index(OPEN_WORK_STATE_END, start)
+    if end < start:
+        raise ValueError("Open Work JSON state markers are out of order")
+    region = text[start:end]
+    matches = list(MARKED_JSON_FENCE_PATTERN.finditer(region))
+    if len(matches) != 1:
+        raise ValueError("Open Work marked state must contain exactly one JSON fence")
+    match = matches[0]
+    if region[: match.start()].strip() or region[match.end() :].strip():
+        raise ValueError("Open Work marked state contains content outside its JSON fence")
+
+    try:
+        value = json.loads(
+            match.group(1),
+            object_pairs_hook=_reject_duplicate_json_keys,
+            parse_constant=lambda constant: (_ for _ in ()).throw(
+                ValueError(f"invalid JSON constant: {constant}")
+            ),
+        )
+    except (TypeError, ValueError, json.JSONDecodeError) as error:
+        raise ValueError(f"cannot parse Open Work marked JSON state: {error}") from error
+    if not isinstance(value, dict):
+        raise ValueError("Open Work marked JSON state must be an object")
+    return value
+
+
+def _parse_marked_active_state_mirror(text: str) -> dict[str, Any]:
+    if text.count(ACTIVE_STATE_MIRROR_START) != 1 or text.count(ACTIVE_STATE_MIRROR_END) != 1:
+        raise ValueError("README must contain exactly one marked active-state mirror")
+
+    start = text.index(ACTIVE_STATE_MIRROR_START) + len(ACTIVE_STATE_MIRROR_START)
+    end = text.index(ACTIVE_STATE_MIRROR_END, start)
+    if end < start:
+        raise ValueError("README active-state mirror markers are out of order")
+    region = text[start:end]
+    matches = list(MARKED_JSON_FENCE_PATTERN.finditer(region))
+    if len(matches) != 1:
+        raise ValueError("README active-state mirror must contain exactly one JSON fence")
+    match = matches[0]
+    if region[: match.start()].strip() or region[match.end() :].strip():
+        raise ValueError("README active-state mirror contains content outside its JSON fence")
+
+    try:
+        value = json.loads(
+            match.group(1),
+            object_pairs_hook=_reject_duplicate_json_keys,
+            parse_constant=lambda constant: (_ for _ in ()).throw(
+                ValueError(f"invalid JSON constant: {constant}")
+            ),
+        )
+    except (TypeError, ValueError, json.JSONDecodeError) as error:
+        raise ValueError(f"cannot parse README active-state mirror: {error}") from error
+    if not isinstance(value, dict):
+        raise ValueError("README active-state mirror must be a JSON object")
+    if set(value) != set(ACTIVE_STATE_MIRROR_FIELDS):
+        missing = sorted(set(ACTIVE_STATE_MIRROR_FIELDS) - set(value))
+        extra = sorted(set(value) - set(ACTIVE_STATE_MIRROR_FIELDS))
+        raise ValueError(f"README active-state mirror fields differ; missing={missing}, extra={extra}")
+    if any(not isinstance(value[field], str) for field in ACTIVE_STATE_MIRROR_FIELDS):
+        raise ValueError("README active-state mirror values must all be strings")
+    return value
+
+
 def _all_entries(manifest: dict[str, Any]) -> list[dict[str, Any]]:
     entries: list[dict[str, Any]] = []
     for key in ("governing_documents", "reference_documents", "historical_documents"):
-        value = manifest.get(key, [])
-        if isinstance(value, list):
-            entries.extend(entry for entry in value if isinstance(entry, dict))
+        entries.extend(_entries_for_array(manifest, key))
     return entries
+
+
+def _entries_for_array(manifest: dict[str, Any], key: str) -> list[dict[str, Any]]:
+    value = manifest.get(key, [])
+    if not isinstance(value, list):
+        return []
+    return [entry for entry in value if isinstance(entry, dict)]
 
 
 def _load_integrity_rules(manifest: dict[str, Any]) -> dict[str, Any]:
@@ -167,16 +297,33 @@ def _load_integrity_rules(manifest: dict[str, Any]) -> dict[str, Any]:
 
 
 def _relative_path(entry: dict[str, Any]) -> str:
-    return str(entry.get("repository_path", ""))
+    value = entry.get("repository_path", "")
+    return value if isinstance(value, str) else ""
+
+
+def _safe_repository_path(root: Path, relative: str) -> Path | None:
+    if not isinstance(relative, str) or not relative or "\\" in relative:
+        return None
+    try:
+        path = PurePosixPath(relative)
+        if path.is_absolute() or path.as_posix() != relative or any(part in {".", ".."} for part in path.parts):
+            return None
+        resolved_root = root.resolve()
+        resolved_path = root.joinpath(*path.parts).resolve(strict=False)
+        resolved_path.relative_to(resolved_root)
+    except (OSError, RuntimeError, ValueError):
+        return None
+    return resolved_path
 
 
 def _entry_path(root: Path, entry: dict[str, Any]) -> Path:
-    return root / _relative_path(entry)
+    safe_path = _safe_repository_path(root, _relative_path(entry))
+    return safe_path if safe_path is not None else root / "__invalid_manifest_path__"
 
 
 def _find_entry(entries: Iterable[dict[str, Any]], authority_class: str) -> dict[str, Any] | None:
     for entry in entries:
-        if entry.get("authority_class") == authority_class and entry.get("lifecycle", "current") != "historical":
+        if entry.get("authority_class") == authority_class and entry.get("lifecycle") == "current":
             return entry
     return None
 
@@ -288,29 +435,47 @@ def _check_manifest_shape(root: Path, manifest: dict[str, Any], report: dict[str
         isinstance(manifest.get(key), list)
         for key in ("governing_documents", "reference_documents", "historical_documents")
     )
-    _record_check(
-        report,
-        "manifest_schema",
-        arrays_ok and bool(entries),
-        "manifest contains governing, reference, and historical document arrays",
-    )
+    schema_issues: list[str] = []
+    if not arrays_ok:
+        schema_issues.append("manifest must contain governing, reference, and historical document arrays")
+    if not entries:
+        schema_issues.append("manifest document arrays must contain entries")
+    for array_name in ("governing_documents", "reference_documents", "historical_documents"):
+        array = manifest.get(array_name, [])
+        if isinstance(array, list):
+            for index, entry in enumerate(array):
+                if not isinstance(entry, dict):
+                    schema_issues.append(f"{array_name}[{index}] must be an object")
 
     seen_ids: dict[str, int] = {}
     seen_paths: dict[str, int] = {}
     for entry in entries:
-        for field in REQUIRED_ENTRY_FIELDS:
+        for field in sorted(REQUIRED_ENTRY_FIELDS):
             if field not in entry:
-                report["findings"].append(
-                    {
-                        "check": "manifest_schema",
-                        "path": _relative_path(entry),
-                        "message": f"missing manifest field {field}",
-                    }
-                )
+                schema_issues.append(f"{_relative_path(entry)}: missing manifest field {field}")
+            elif field in REQUIRED_ENTRY_TEXT_FIELDS and (
+                not isinstance(entry[field], str) or not entry[field]
+            ):
+                schema_issues.append(f"{_relative_path(entry)}: manifest field {field} must be a non-empty string")
+            elif field == "superseded_version" and entry[field] is not None and not isinstance(entry[field], str):
+                schema_issues.append(f"{_relative_path(entry)}: manifest field superseded_version must be a string or null")
+        if "provenance_sha256" in entry and entry["provenance_sha256"] is not None and not isinstance(
+            entry["provenance_sha256"], str
+        ):
+            schema_issues.append(f"{_relative_path(entry)}: manifest field provenance_sha256 must be a string or null")
         document_id = str(entry.get("document_id", ""))
         repository_path = _relative_path(entry)
         seen_ids[document_id] = seen_ids.get(document_id, 0) + 1
         seen_paths[repository_path] = seen_paths.get(repository_path, 0) + 1
+
+    _record_check(
+        report,
+        "manifest_schema",
+        not schema_issues,
+        "manifest contains valid document arrays and all required entry fields"
+        if not schema_issues
+        else "; ".join(schema_issues),
+    )
 
     duplicate_ids = sorted(identifier for identifier, count in seen_ids.items() if count > 1)
     duplicate_paths = sorted(path for path, count in seen_paths.items() if count > 1)
@@ -327,6 +492,376 @@ def _check_manifest_shape(root: Path, manifest: dict[str, Any], report: dict[str
         "repository paths are unique" if not duplicate_paths else f"duplicate repository paths: {duplicate_paths}",
     )
     return entries
+
+
+def _parse_current_authority_table(readme_text: str) -> list[dict[str, str]]:
+    heading_pattern = re.compile(r"^## Current Authority\s*$", re.MULTILINE)
+    headings = list(heading_pattern.finditer(readme_text))
+    if len(headings) != 1:
+        raise ValueError("README must contain exactly one ## Current Authority section")
+    section_start = headings[0].end()
+    next_heading = re.search(r"^##\s+", readme_text[section_start:], re.MULTILINE)
+    section_end = section_start + next_heading.start() if next_heading else len(readme_text)
+    section = readme_text[section_start:section_end]
+    if section.count(CURRENT_AUTHORITY_TABLE_START) != 1 or section.count(CURRENT_AUTHORITY_TABLE_END) != 1:
+        raise ValueError("Current Authority must contain exactly one marked route table")
+    start = section.index(CURRENT_AUTHORITY_TABLE_START) + len(CURRENT_AUTHORITY_TABLE_START)
+    end = section.index(CURRENT_AUTHORITY_TABLE_END, start)
+    if end < start:
+        raise ValueError("Current Authority route table markers are out of order")
+
+    content = section[start:end]
+    lines = [line.strip() for line in content.splitlines() if line.strip()]
+    if len(lines) < 2 or any(not line.startswith("|") for line in lines):
+        raise ValueError("Current Authority route table must contain only Markdown table rows")
+
+    def cells(line: str) -> list[str]:
+        return [cell.strip() for cell in line.strip("|").split("|")]
+
+    if tuple(cells(lines[0])) != CURRENT_AUTHORITY_TABLE_COLUMNS:
+        raise ValueError("Current Authority route table has an unexpected header")
+    if len(cells(lines[1])) != len(CURRENT_AUTHORITY_TABLE_COLUMNS) or any(
+        not re.fullmatch(r":?-{3,}:?", cell) for cell in cells(lines[1])
+    ):
+        raise ValueError("Current Authority route table has an invalid separator row")
+
+    routes: list[dict[str, str]] = []
+    for line in lines[2:]:
+        values = cells(line)
+        if len(values) != len(CURRENT_AUTHORITY_TABLE_COLUMNS) or any(not value for value in values):
+            raise ValueError("Current Authority route rows must contain six non-empty columns")
+        routes.append(dict(zip(CURRENT_AUTHORITY_TABLE_COLUMNS, values, strict=True)))
+    return routes
+
+
+def _check_manifest_lifecycle_and_paths(
+    root: Path,
+    manifest: dict[str, Any],
+    entries: list[dict[str, Any]],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    lifecycle_issues: list[str] = []
+    path_issues: list[str] = []
+    class_issues: list[str] = []
+    roots = integrity_rules["document_roots"]
+    expected_by_array = {
+        "governing_documents": "current",
+        "reference_documents": "current",
+        "historical_documents": "historical",
+    }
+
+    for array_name, expected_lifecycle in expected_by_array.items():
+        array = manifest.get(array_name, [])
+        if not isinstance(array, list):
+            lifecycle_issues.append(f"{array_name} is not an array")
+            continue
+        for entry in array:
+            if not isinstance(entry, dict):
+                lifecycle_issues.append(f"{array_name} contains a non-object entry")
+                continue
+            relative = _relative_path(entry)
+            lifecycle = entry.get("lifecycle")
+            if not isinstance(lifecycle, str) or lifecycle not in ALLOWED_LIFECYCLE_VALUES:
+                lifecycle_issues.append(f"{relative}: invalid lifecycle {lifecycle!r}")
+            elif lifecycle != expected_lifecycle:
+                lifecycle_issues.append(
+                    f"{relative}: {array_name} requires lifecycle {expected_lifecycle!r}, got {lifecycle!r}"
+                )
+
+    category_by_identity: dict[int, str] = {}
+    for category, array_name in (
+        ("governing", "governing_documents"),
+        ("reference", "reference_documents"),
+        ("historical", "historical_documents"),
+    ):
+        category_by_identity.update(
+            {id(entry): category for entry in _entries_for_array(manifest, array_name)}
+        )
+    for entry in entries:
+        relative = _relative_path(entry)
+        safe_path = _safe_repository_path(root, relative)
+        if safe_path is None:
+            path_issues.append(f"{relative!r} is not a normalized in-repository relative path")
+            continue
+
+        category = category_by_identity.get(id(entry), "governing")
+        declared_root = roots[category]
+        normalized_root = PurePosixPath(declared_root)
+        normalized_path = PurePosixPath(relative)
+        if normalized_root.is_absolute() or normalized_root.as_posix() != declared_root or any(
+            part in {".", ".."} for part in normalized_root.parts
+        ):
+            class_issues.append(f"declared {category} root {declared_root!r} is not normalized")
+            continue
+        if normalized_path != normalized_root and normalized_root not in normalized_path.parents:
+            class_issues.append(f"{relative}: path is outside declared {category} root {declared_root}")
+            continue
+
+        if category == "governing":
+            forbidden_segments = {"archive", "working", "reference"}
+            if forbidden_segments.intersection(normalized_path.parts[len(normalized_root.parts) :]):
+                class_issues.append(f"{relative}: current governing authority is under a non-current directory")
+        if category == "reference" and normalized_path == normalized_root:
+            class_issues.append(f"{relative}: reference entry must identify a file beneath the reference root")
+        if category == "historical" and normalized_path == normalized_root:
+            class_issues.append(f"{relative}: historical entry must identify a file beneath the archive root")
+
+        declared = _safe_repository_path(root, declared_root)
+        if declared is None:
+            class_issues.append(f"declared {category} root {declared_root!r} is invalid")
+        else:
+            try:
+                safe_path.relative_to(declared)
+            except ValueError:
+                class_issues.append(f"{relative}: resolved path escapes declared {category} root {declared_root}")
+
+    _record_check(
+        report,
+        "manifest_lifecycle",
+        not lifecycle_issues,
+        "manifest lifecycle values agree with array placement"
+        if not lifecycle_issues
+        else "; ".join(lifecycle_issues),
+    )
+    _record_check(
+        report,
+        "manifest_path_normalization",
+        not path_issues,
+        "manifest paths are normalized repository-relative paths"
+        if not path_issues
+        else "; ".join(path_issues),
+    )
+    _record_check(
+        report,
+        "manifest_path_classification",
+        not class_issues,
+        "manifest paths match their declared document classes"
+        if not class_issues
+        else "; ".join(class_issues),
+    )
+
+
+def _check_current_authority_roles(
+    governing_entries: list[dict[str, Any]],
+    reference_entries: list[dict[str, Any]],
+    report: dict[str, Any],
+) -> None:
+    counts = Counter(
+        str(entry.get("authority_class", ""))
+        for entry in governing_entries
+        if entry.get("lifecycle") == "current"
+    )
+    missing_or_duplicate = {
+        authority_class: counts.get(authority_class, 0)
+        for authority_class in SINGULAR_CURRENT_AUTHORITY_CLASSES
+        if counts.get(authority_class, 0) != 1
+    }
+    unexpected = sorted(set(counts) - SINGULAR_CURRENT_AUTHORITY_CLASSES)
+    conflicting_references = sorted(
+        f"{entry.get('document_id')}: {entry.get('authority_class')}"
+        for entry in reference_entries
+        if entry.get("lifecycle") == "current"
+        and isinstance(entry.get("authority_class"), str)
+        and entry.get("authority_class") in SINGULAR_CURRENT_AUTHORITY_CLASSES
+    )
+    passed = not missing_or_duplicate and not unexpected and not conflicting_references
+    _record_check(
+        report,
+        "current_authority_role_uniqueness",
+        passed,
+        "each singular current authority role has exactly one governing artifact and no reference claims it"
+        if passed
+        else (
+            f"missing or duplicate current roles={missing_or_duplicate}, "
+            f"unexpected roles={unexpected}, current references claiming singular roles={conflicting_references}"
+        ),
+    )
+
+
+def _check_readme_manifest_current_authority_parity(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    context_index = integrity_rules["document_roots"]["context_index"]
+    readme_path = _safe_repository_path(root, context_index)
+    try:
+        if readme_path is None or not readme_path.is_file():
+            raise ValueError(f"README route document is missing at {context_index!r}")
+        routes = _parse_current_authority_table(readme_path.read_text(encoding="utf-8"))
+        governing = _entries_for_array(manifest, "governing_documents")
+        expected_routes: list[dict[str, str]] = []
+        context_issues: list[str] = []
+        for entry in governing:
+            context_mode = entry.get("context_mode")
+            authority_class = entry.get("authority_class")
+            expected_mode = (
+                "conditional"
+                if isinstance(authority_class, str)
+                and authority_class in CONDITIONAL_CURRENT_AUTHORITY_CLASSES
+                else "default"
+            )
+            if not isinstance(context_mode, str) or context_mode not in ALLOWED_CONTEXT_MODES or context_mode != expected_mode:
+                context_issues.append(
+                    f"{entry.get('document_id')}: expected context_mode {expected_mode!r}, got {context_mode!r}"
+                )
+            expected_routes.append(
+                {
+                    "Document ID": str(entry.get("document_id", "")),
+                    "Authority class": str(authority_class or ""),
+                    "Context mode": str(context_mode or ""),
+                    "Canonical filename": str(entry.get("canonical_filename", "")),
+                    "Repository path": _relative_path(entry),
+                    "SemVer": str(entry.get("semver", "")),
+                }
+            )
+
+        route_ids = [route["Document ID"] for route in routes]
+        duplicate_ids = sorted(identifier for identifier, count in Counter(route_ids).items() if count > 1)
+        if duplicate_ids:
+            raise ValueError(f"Current Authority table repeats document IDs {duplicate_ids}")
+        parity = routes == expected_routes
+        passed = parity and not context_issues
+        message = (
+            "README Current Authority table exactly matches current governing manifest entries"
+            if passed
+            else f"README Current Authority table differs from manifest; expected={expected_routes}, actual={routes}, context issues={context_issues}"
+        )
+    except (OSError, UnicodeError, ValueError) as error:
+        passed = False
+        message = f"cannot verify README Current Authority table: {error}"
+    _record_check(
+        report,
+        "readme_manifest_current_authority_parity",
+        passed,
+        message,
+        path=context_index,
+    )
+
+
+def _check_readme_active_state_mirror(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    context_index = integrity_rules["document_roots"]["context_index"]
+    readme_path = _safe_repository_path(root, context_index)
+    try:
+        if readme_path is None or not readme_path.is_file():
+            raise ValueError(f"README route document is missing at {context_index!r}")
+        readme_text = readme_path.read_text(encoding="utf-8")
+        mirror = _parse_marked_active_state_mirror(readme_text)
+
+        open_work_entries = [
+            entry
+            for entry in _entries_for_array(manifest, "governing_documents")
+            if entry.get("document_id") == "OPEN_WORK" and entry.get("lifecycle") == "current"
+        ]
+        if len(open_work_entries) != 1:
+            raise ValueError(f"manifest must contain one current Open Work route, found {len(open_work_entries)}")
+        open_work_path = _entry_path(root, open_work_entries[0])
+        if not open_work_path.is_file():
+            raise ValueError(f"current Open Work document is missing at {_relative_path(open_work_entries[0])!r}")
+        canonical_state = _parse_marked_open_work_state(open_work_path.read_text(encoding="utf-8"))
+        missing = [field for field in ACTIVE_STATE_MIRROR_FIELDS if field not in canonical_state]
+        invalid = [
+            field
+            for field in ACTIVE_STATE_MIRROR_FIELDS
+            if field in canonical_state and not isinstance(canonical_state[field], str)
+        ]
+        if missing or invalid:
+            raise ValueError(f"Open Work active-state fields are incomplete; missing={missing}, non-string={invalid}")
+        expected = {field: canonical_state[field] for field in ACTIVE_STATE_MIRROR_FIELDS}
+        passed = mirror == expected
+        message = (
+            "README active-state mirror matches the current Open Work JSON"
+            if passed
+            else f"README active-state mirror differs from current Open Work JSON; expected={expected}, actual={mirror}"
+        )
+    except (OSError, UnicodeError, ValueError) as error:
+        passed = False
+        message = f"cannot verify README active-state mirror: {error}"
+    _record_check(
+        report,
+        "readme_active_state_mirror",
+        passed,
+        message,
+        path=context_index,
+    )
+
+
+def _check_manifest_predecessors(
+    manifest: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    historical = _entries_for_array(manifest, "historical_documents")
+    historical_by_name: dict[str, list[dict[str, Any]]] = {}
+    for entry in historical:
+        historical_by_name.setdefault(str(entry.get("canonical_filename", "")), []).append(entry)
+
+    issues: list[str] = []
+    current_entries = [
+        entry
+        for key in ("governing_documents", "reference_documents")
+        for entry in _entries_for_array(manifest, key)
+        if entry.get("lifecycle") == "current"
+    ]
+    historical_names = {
+        str(entry.get("canonical_filename", ""))
+        for entry in historical
+        if entry.get("canonical_filename")
+    }
+    for entry in current_entries:
+        filename = entry.get("canonical_filename")
+        if isinstance(filename, str) and filename in historical_names:
+            issues.append(f"{entry.get('document_id')}: current filename {filename} is also registered as historical")
+    for entry in current_entries:
+        predecessor_version = entry.get("superseded_version")
+        if predecessor_version is None:
+            continue
+        current_version = str(entry.get("semver", ""))
+        if not isinstance(predecessor_version, str) or not re.fullmatch(r"\d+\.\d+\.\d+", predecessor_version):
+            issues.append(f"{entry.get('document_id')}: invalid superseded_version {predecessor_version!r}")
+            continue
+        if predecessor_version == current_version:
+            issues.append(f"{entry.get('document_id')}: artifact cannot supersede itself")
+            continue
+        current_parts = tuple(int(part) for part in current_version.split(".")) if re.fullmatch(
+            r"\d+\.\d+\.\d+", current_version
+        ) else ()
+        predecessor_parts = tuple(int(part) for part in predecessor_version.split("."))
+        if not current_parts or predecessor_parts >= current_parts:
+            issues.append(f"{entry.get('document_id')}: predecessor version is not older than current version")
+            continue
+        filename = str(entry.get("canonical_filename", ""))
+        match = VERSION_PATTERN.search(filename)
+        if match is None:
+            issues.append(f"{entry.get('document_id')}: predecessor cannot be derived from unversioned filename")
+            continue
+        expected_name = f"{filename[:match.start()]}_v{predecessor_version}.md"
+        predecessors = historical_by_name.get(expected_name, [])
+        if len(predecessors) != 1 or predecessors[0].get("lifecycle") != "historical":
+            issues.append(
+                f"{entry.get('document_id')}: predecessor {expected_name} must exist exactly once as historical"
+            )
+        if any(
+            current.get("canonical_filename") == expected_name
+            for key in ("governing_documents", "reference_documents")
+            for current in _entries_for_array(manifest, key)
+        ):
+            issues.append(f"{entry.get('document_id')}: predecessor {expected_name} is also current")
+
+    _record_check(
+        report,
+        "manifest_predecessor_consistency",
+        not issues,
+        "declared current predecessors are registered as historical artifacts"
+        if not issues
+        else "; ".join(issues),
+    )
 
 
 def _check_manifest_entries(root: Path, entries: list[dict[str, Any]], report: dict[str, Any]) -> None:
@@ -387,7 +922,7 @@ def _check_manifest_entries(root: Path, entries: list[dict[str, Any]], report: d
             else f"SemVer {entry.get('semver')!r} does not match versioned filename {canonical_filename!r}",
             path=repository_path,
         )
-        is_historical = entry.get("lifecycle", "current") == "historical"
+        is_historical = entry.get("lifecycle") == "historical"
         declared_version = _declared_document_version(path.read_text(encoding="utf-8")) if exists else None
         document_version_matches = (
             exists
@@ -631,26 +1166,23 @@ def _check_production_graph(
     report: dict[str, Any],
 ) -> None:
     entries = _all_entries(manifest)
-    governing_entries = [
-        entry for entry in manifest.get("governing_documents", []) if isinstance(entry, dict)
-    ]
-    reference_entries = [
-        entry for entry in manifest.get("reference_documents", []) if isinstance(entry, dict)
-    ]
-    historical_entries = [
-        entry for entry in manifest.get("historical_documents", []) if isinstance(entry, dict)
-    ]
+    governing_entries = _entries_for_array(manifest, "governing_documents")
+    reference_entries = _entries_for_array(manifest, "reference_documents")
+    historical_entries = _entries_for_array(manifest, "historical_documents")
     governing_paths = {_relative_path(entry) for entry in governing_entries}
     reference_paths = {_relative_path(entry) for entry in reference_entries}
     historical_paths = {_relative_path(entry) for entry in historical_entries}
     roots = integrity_rules["document_roots"]
+    context_index = roots["context_index"]
+    context_path = _safe_repository_path(root, context_index)
     roots_ok = (
         bool(governing_entries)
         and bool(reference_entries)
         and all(_path_is_under(path, roots["governing"]) for path in governing_paths)
         and all(_path_is_under(path, roots["reference"]) for path in reference_paths)
         and all(_path_is_under(path, roots["historical"]) for path in historical_paths)
-        and (root / roots["context_index"]).is_file()
+        and context_path is not None
+        and context_path.is_file()
     )
     _record_check(
         report,
@@ -661,32 +1193,16 @@ def _check_production_graph(
         else f"document graph root mismatch; governing={sorted(governing_paths)}, reference={sorted(reference_paths)}, historical={sorted(historical_paths)}",
     )
 
-    context_index = roots["context_index"]
-    readme = root / context_index
-    readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""
-    readme_order = [
-        str(entry.get("canonical_filename"))
-        for entry in governing_entries
-        if f"`{entry.get('canonical_filename')}`" in readme_text
-    ]
-    expected_order = [str(entry.get("canonical_filename")) for entry in governing_entries]
-    _record_check(
-        report,
-        "readme_current_authority_order",
-        readme.is_file() and readme_order == expected_order,
-        "README lists every governing document in manifest order"
-        if readme.is_file() and readme_order == expected_order
-        else f"README authority order mismatch: {readme_order}",
-        path=context_index,
-    )
-
+    readme = context_path
+    readme_text = readme.read_text(encoding="utf-8") if readme is not None and readme.is_file() else ""
     graph_rules = integrity_rules["graph_rules"]
     stale_patterns = tuple(re.compile(pattern) for pattern in graph_rules["stale_reference_patterns"])
     navigation_document_ids = set(graph_rules["navigation_document_ids"])
     navigation_entries = [
         entry
         for entry in entries
-        if entry.get("lifecycle", "current") != "historical"
+        if entry.get("lifecycle") == "current"
+        and isinstance(entry.get("document_id"), str)
         and entry.get("document_id") in navigation_document_ids
     ]
     stale_hits: list[str] = []
@@ -695,8 +1211,8 @@ def _check_production_graph(
         for entry in navigation_entries
     ]
     for relative, is_reference in scan_targets:
-        path = root / relative
-        if not path.is_file():
+        path = _safe_repository_path(root, relative)
+        if path is None or not path.is_file():
             continue
         text = path.read_text(encoding="utf-8")
         if is_reference:
@@ -716,38 +1232,64 @@ def _check_production_graph(
         else f"stale active graph references: {stale_hits}",
     )
 
-    open_work_entry = next(
-        (entry for entry in governing_entries if entry.get("document_id") == "OPEN_WORK"),
-        None,
-    )
-    readiness_paths = [roots["context_index"]]
-    if open_work_entry is not None:
-        readiness_paths.append(_relative_path(open_work_entry))
-    readiness_text = "\n".join(
-        (root / relative).read_text(encoding="utf-8")
-        for relative in readiness_paths
-        if (root / relative).is_file()
-    )
-    legacy_next = "NEXT: PHASE 7 / FP-001 PREPARATION" in readiness_text
-    stage_3a1_started = "STAGE 3A.1" in readiness_text and "NOT_STARTED" in readiness_text
-    stage_3a1_complete = (
-        "STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS: COMPLETE" in readiness_text
-        and "STAGE 3A.2 — GOVERNED AR-000 AMENDMENT" in readiness_text
-        and "NOT_STARTED / NEXT" in readiness_text
-    )
-    readiness_ok = (
-        "PLANNING FOUNDATION: READY" in readiness_text
-        and "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS" in readiness_text
-        and (legacy_next or stage_3a1_started or stage_3a1_complete)
-    )
-    _record_check(
-        report,
-        "readiness_wording",
-        readiness_ok,
-        "current readiness wording distinguishes planning from executable development"
-        if readiness_ok
-        else "current readiness wording is incomplete",
-    )
+def _check_development_entry_boundary(
+    root: Path,
+    entries: list[dict[str, Any]],
+    report: dict[str, Any],
+) -> dict[str, Any] | None:
+    open_work_entries = [
+        entry
+        for entry in entries
+        if entry.get("document_id") == "OPEN_WORK"
+        and entry.get("lifecycle") == "current"
+    ]
+    state_path = "OPEN_WORK"
+    try:
+        if len(open_work_entries) != 1:
+            raise ValueError("manifest must identify exactly one current OPEN_WORK document")
+        state_entry = open_work_entries[0]
+        state_path = _relative_path(state_entry)
+        open_work_path = _entry_path(root, state_entry)
+        if not open_work_path.is_file():
+            raise ValueError("current OPEN_WORK document is missing")
+        state = _parse_marked_open_work_state(open_work_path.read_text(encoding="utf-8"))
+        application_implementation = state.get("application_implementation")
+        if not isinstance(application_implementation, str) or application_implementation not in {
+            "BLOCKED",
+            "AUTHORISED",
+        }:
+            raise ValueError(
+                "application_implementation must be BLOCKED or AUTHORISED"
+            )
+    except (OSError, UnicodeError, ValueError) as error:
+        _record_check(
+            report,
+            "development_entry_repository_boundary",
+            False,
+            f"cannot establish application implementation state: {error}",
+            path=state_path,
+        )
+        return None
+
+    blocked = application_implementation == "BLOCKED"
+    for relative in PHOENIX_APPLICATION_ROOTS:
+        application_root = root / relative
+        exists = application_root.exists() or application_root.is_symlink()
+        permitted = not blocked or not exists
+        if blocked and exists:
+            message = "application root exists while application implementation is BLOCKED"
+        elif blocked:
+            message = "application root is absent while application implementation is BLOCKED"
+        else:
+            message = "application root is permitted while application implementation is AUTHORISED"
+        _record_check(
+            report,
+            "development_entry_repository_boundary",
+            permitted,
+            message,
+            path=relative,
+        )
+    return state
 
 
 def run_audit(
@@ -786,10 +1328,28 @@ def run_audit(
         return report
     _record_check(report, "manifest_integrity_rules", True, "manifest integrity rules are valid")
 
+    _check_manifest_lifecycle_and_paths(root, manifest, entries, integrity_rules, report)
+    governing_entries = _entries_for_array(manifest, "governing_documents")
+    reference_entries = _entries_for_array(manifest, "reference_documents")
+    _check_current_authority_roles(governing_entries, reference_entries, report)
+    _check_readme_manifest_current_authority_parity(root, manifest, integrity_rules, report)
+    _check_readme_active_state_mirror(root, manifest, integrity_rules, report)
+    _check_manifest_predecessors(manifest, report)
+
     counts_expectation = dict(
         integrity_rules["expected_counts"] if expected_counts is None else expected_counts
     )
     _check_manifest_entries(root, entries, report)
+    open_work_state = _check_development_entry_boundary(root, entries, report)
+    phase_7_report = validate_phase_7_state(open_work_state or {}, root)
+    for check in phase_7_report["checks"]:
+        _record_check(
+            report,
+            check["name"],
+            check["status"] == "PASS",
+            check["message"],
+            path=check.get("path", ""),
+        )
     definitions = _build_definitions(root, entries, integrity_rules, report)
     _check_definitions_and_references(
         root, entries, definitions, counts_expectation, integrity_rules, report
