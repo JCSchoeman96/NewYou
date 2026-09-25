@@ -231,7 +231,7 @@ No Store repository SHA, CER proof obligation, CER exit condition or Store/CER i
 | Completed predecessor still referenced as current | Fail if archived Open Work/Atlas predecessors are treated as active |
 | Upstream amendment makes FP artifact stale | Recognise `FP001_RECONCILIATION_REQUIRED`; forbid skipping it to Communications |
 | Restart from old agent handoff | Contract + current Open Work win; historical “HARDEN-02 → Communications” alone is insufficient after PMR amendment |
-| Branch/head drift | Exact-head certification required before advancing to FP-001 reconciliation |
+| Base/head drift | Exact base-and-head certification required before advancing to FP-001 reconciliation |
 | Repeated task execution | Idempotent governance checks; no duplicate law amendments |
 | Partial documentation update | README / Open Work / manifest disagreement fails integrity checks |
 | Agent skips to Communications | Fail; Communications is after FP-001 reconciliation |
@@ -308,14 +308,14 @@ This successor records that historical disposition. It does not rewrite PR #40, 
 
 ### 11.2 Review actor versus attestation poster
 
-**Review actor** — the entity that performs substantive independent review of the exact candidate head. In a solo-maintainer AI-assisted workflow, an acceptable independent review actor may be an external reasoning/review system such as `ChatGPT / GPT-5.6 Sol`, provided that actor:
+**Review actor** — the entity that performs substantive independent review of the exact candidate base/head pair. In a solo-maintainer AI-assisted workflow, an acceptable independent review actor may be an external reasoning/review system such as `ChatGPT / GPT-5.6 Sol`, provided that actor:
 
 - did not author or modify the exact candidate head being certified;
-- independently inspects the live repository state and actual exact-head diff;
+- independently inspects the live repository state and actual diff for that exact base/head pair;
 - checks relevant authority, tests, CI and scope rather than accepting a handoff summary;
 - reports a governed review outcome;
-- identifies the exact SHA reviewed;
-- repeats review if that SHA changes.
+- identifies the exact base SHA and candidate head SHA reviewed;
+- repeats review if either SHA changes.
 
 **Attestation poster** — the GitHub identity that durably records the review result on the recovery PR. In a solo-maintainer repository the attestation poster may be the PR author / repository owner. Poster identity equality with the PR author does **not** by itself invalidate otherwise independent review.
 
@@ -324,7 +324,7 @@ The durable attestation must truthfully disclose:
 - independent review actor;
 - GitHub posting identity (attestation poster);
 - whether posting identity equals PR author;
-- exact reviewed SHA;
+- exact reviewed base/head pair;
 - review outcome;
 - applicable CI run;
 - whether the review actor authored or modified the reviewed candidate;
@@ -338,11 +338,13 @@ Review independence **fails** when:
 
 - the claimed review actor authored or modified the candidate being reviewed;
 - the review merely repeats an agent handoff without independently inspecting GitHub;
-- reviewed SHA is missing or does not equal the candidate head;
+- reviewed base SHA is missing or differs from the live PR base SHA;
+- reviewed candidate head SHA is missing or differs from the live PR head SHA;
+- the live PR base SHA changes after review;
 - the candidate head changes after review;
 - the review outcome is missing or not PASS;
 - the durable attestation misrepresents who performed the review;
-- CI evidence is missing or refers to a different SHA;
+- CI evidence is missing or refers to a different base/head pair;
 - attestation poster equals PR author but that fact is not truthfully disclosed;
 - posting identity is missing from the attestation.
 
@@ -354,23 +356,23 @@ The lifecycle is fail-closed. These states define permitted transitions and evid
 
 **State A — candidate.** The recovery contract exists. HARDEN-02 execution has no authority.
 
-**State B — pre-merge evidence incomplete.** The exact candidate head still needs both an independent review PASS and Foundation Integrity PASS on that same SHA. Pre-merge review PASS and exact-head CI PASS may complete in either order, so either may happen first. No merge certification exists until both are satisfied.
+**State B — pre-merge evidence incomplete.** The exact candidate base SHA and head SHA still need both an independent review PASS and Foundation Integrity PASS on that same pair. Pre-merge review PASS and exact-pair CI PASS may complete in either order, so either may happen first. No merge certification exists until both are satisfied.
 
-**State C — pre-merge certified.** The independent review PASS and exact-head CI PASS bind to the same candidate SHA. A durable attestation on the PR binds the review, CI run/result, SHA, independent review actor, attestation poster and truthful poster-equals-author disclosure. The reviewer did not author or modify the candidate, and the attestation does not misidentify the substantive reviewer. Only this unchanged certified head may be merged.
+**State C — pre-merge certified.** The independent review PASS and exact-pair CI PASS bind to the same candidate base SHA and head SHA. A durable attestation on the PR binds the review, CI run/result, base/head pair, independent review actor, attestation poster and truthful poster-equals-author disclosure. The reviewer did not author or modify the candidate, and the attestation does not misidentify the substantive reviewer. Only this unchanged certified base/head pair may be merged.
 
-**State D — merged / post-main-CI required.** The merged head equals the certified head and the resulting `main` SHA is identified. Execution remains blocked.
+**State D — merged / post-main-CI required.** The merge evidence confirms the certified base SHA and candidate head SHA were still the live PR base and head immediately before merge. The merged head equals the certified head, and the resulting `main` SHA is identified. Execution remains blocked.
 
 **State E — post-merge review required.** Foundation Integrity has passed on the resulting `main` SHA. Execution remains blocked until a fresh independent review of that resulting main reports PASS.
 
 **State F — post-merge certification failed / changes required.** A fresh post-merge review reports `CHANGES REQUIRED`, `FAIL`, `BLOCKER`, or any outcome other than PASS. Stop, re-baseline and create or amend a recovery successor. Do not authorise execution.
 
-**State G — post-merge certified.** Resulting-main CI PASS, fresh independent post-merge review PASS and durable post-merge PASS attestation all bind the same resulting-main SHA and its certified candidate relationship. The attestation identifies the exact CI run, independent review actor and attestation poster.
+**State G — post-merge certified.** Resulting-main CI PASS binds to the resulting-main SHA. The fresh independent post-merge review PASS and durable PASS attestation bind to that resulting-main SHA and identify the certified base/head pair. The attestation identifies the exact CI run, independent review actor and attestation poster.
 
 **State H — execution authorised.** This state may exist only after the full certification predicate in State G is satisfied. HARDEN-02 execution may then become eligible to advance according to current Open Work.
 
 **Terminal / failure state.** Any missing, ambiguous, contradictory or inconsistent evidence fails closed. Execution remains NOT AUTHORISED.
 
-The pre-merge exact-head review and CI can complete in either order. The attestation is valid only after both PASS results exist and bind the same immutable SHA. Head drift invalidates the review, CI and attestation for the old SHA. Merge does not authorise execution. Resulting-main CI PASS alone does not authorise execution. `CHANGES REQUIRED` cannot satisfy the PASS predicate. Only the complete post-merge predicate can unlock the next lifecycle transition.
+The pre-merge exact-base/exact-head review and CI can complete in either order. The attestation is valid only after both PASS results exist and bind the same immutable base/head pair. Base drift or candidate head drift invalidates the review, CI and attestation. If either SHA changes, refresh or rebase as appropriate, rerun CI, obtain a fresh independent review and create a new attestation. Immediately before merge, the live PR base SHA must equal the certified base SHA and the live PR head SHA must equal the certified head SHA. A branch name such as `main` does not replace the exact base SHA. Merge does not authorise execution. Resulting-main CI PASS alone does not authorise execution. `CHANGES REQUIRED` cannot satisfy the PASS predicate. Only the complete post-merge predicate can unlock the next lifecycle transition.
 
 The contract does **not** require `review → attestation → CI` as a strict chronological sequence. Passing contract-stage unit tests or fixture syntax alone does **not** establish certification. External PR, CI, attestation and reviewer-independence facts remain subject to fresh review; the local validator checks repository structure and does not invent external evidence.
 
@@ -380,6 +382,7 @@ The smallest required attestation field groups are: the same JSON record defines
 ```json
 {
   "pre_merge_review": [
+    "reviewed_base_sha",
     "reviewed_head_sha",
     "outcome",
     "reviewed_head_is_certified_head",
@@ -389,17 +392,19 @@ The smallest required attestation field groups are: the same JSON record defines
     "poster_equals_pr_author",
     "review_actor_authored_or_modified_candidate",
     "substantive_reviewer_is_review_actor_not_poster",
+    "ci_base_sha",
     "ci_head_sha",
     "ci_workflow",
     "ci_conclusion",
     "ci_run_url",
     "record_url"
   ],
-  "pre_merge_ci": ["head_sha", "conclusion", "workflow", "run_url"],
-  "merge": ["certified_head_sha", "head_sha_verified_before_merge", "merged_head_sha", "resulting_main_sha"],
+  "pre_merge_ci": ["base_sha", "head_sha", "conclusion", "workflow", "run_url"],
+  "merge": ["certified_base_sha", "base_sha_verified_before_merge", "certified_head_sha", "head_sha_verified_before_merge", "merged_head_sha", "resulting_main_sha"],
   "post_merge_ci": ["head_sha", "conclusion", "workflow", "run_url"],
   "post_merge_certification": [
     "resulting_main_sha",
+    "certified_base_sha",
     "certified_head_sha",
     "ci_head_sha",
     "ci_conclusion",
@@ -420,15 +425,16 @@ The smallest required attestation field groups are: the same JSON record defines
     "required_post_merge_ci_conclusion": "PASS",
     "post_merge_failure_outcomes": ["CHANGES REQUIRED", "FAIL", "BLOCKER"],
     "missing_or_ambiguous_evidence": "NOT_AUTHORISED",
+    "base_drift": "INVALIDATES_CERTIFICATION",
     "candidate_head_drift": "INVALIDATES_CERTIFICATION"
   }
 }
 ```
 <!-- HARDEN_02_CERTIFICATION_EVIDENCE_SPEC_END -->
 
-The `record_url` values must link to a GitHub-visible PR review or identified PR review comment on the same expected recovery PR. Evidence validation receives the expected recovery PR number and rejects records bound to a different PR. Merge evidence must record `head_sha_verified_before_merge` as the exact certified head SHA.
+The `record_url` values must link to a GitHub-visible PR review or identified PR review comment on the same expected recovery PR. Evidence validation receives the expected recovery PR number and rejects records bound to a different PR. `reviewed_base_sha` and `reviewed_head_sha` record the exact base/head pair inspected by the reviewer. `pre_merge_ci.base_sha` and `pre_merge_ci.head_sha` record the base and candidate head reported by the pull-request CI run. Merge evidence must record `certified_base_sha` and `certified_head_sha`, then record the live PR values immediately before merge as `base_sha_verified_before_merge` and `head_sha_verified_before_merge`. Both verified values must exactly equal the certified values.
 
-The `pre_merge_review` CI binding fields must exactly match the independently verifiable `pre_merge_ci` record for the same exact head: `ci_head_sha` equals the reviewed/certified head and `pre_merge_ci.head_sha`; `ci_workflow` is `Foundation Integrity` and equals `pre_merge_ci.workflow`; `ci_conclusion` is `PASS` and equals `pre_merge_ci.conclusion`; `ci_run_url` equals `pre_merge_ci.run_url` and is a valid repository Actions run URL. The durable attestation referenced by `pre_merge_review.record_url` is not valid if these bindings disagree with `pre_merge_ci`. The same exact-SHA binding applies to resulting-main CI and post-merge certification.
+The `pre_merge_review` CI binding fields must exactly match the independently verifiable `pre_merge_ci` record for the same base/head pair: `ci_base_sha` equals the reviewed/certified base and `pre_merge_ci.base_sha`; `ci_head_sha` equals the reviewed/certified head and `pre_merge_ci.head_sha`; `ci_workflow` is `Foundation Integrity` and equals `pre_merge_ci.workflow`; `ci_conclusion` is `PASS` and equals `pre_merge_ci.conclusion`; `ci_run_url` equals `pre_merge_ci.run_url` and is a valid repository Actions run URL. The durable attestation referenced by `pre_merge_review.record_url` is not valid if these bindings disagree with `pre_merge_ci`. The same exact-SHA binding applies to resulting-main CI and post-merge certification.
 
 | State | Meaning |
 |---|---|
@@ -436,7 +442,7 @@ The `pre_merge_review` CI binding fields must exactly match the independently ve
 | `v0.3.0: MERGED / NOT RETROACTIVELY CERTIFIED` | Merged via PR #39; substantive ChatGPT PASS on candidate head; v0.3.0 GitHub-identity rule not met; lifecycle not satisfied retroactively |
 | `v0.4.0: MERGED / NOT POST-MERGE CERTIFIED` | PR #40 pre-merge review and CI passed; certified candidate merged; resulting-main CI passed; two post-merge reviews returned CHANGES REQUIRED; no post-merge PASS attestation exists |
 | `HARDEN-02_CERTIFICATION_RECOVERY_REQUIRED` | Current recovery route; effective lifecycle substate derives from repository-verifiable evidence |
-| `HARDEN-02 CONTRACT v0.5.0: POST-MERGE CERTIFIED` | Full State G predicate: resulting-main CI PASS + fresh independent review PASS + durable attestation bound to resulting main SHA and certified candidate relationship |
+| `HARDEN-02 CONTRACT v0.5.0: POST-MERGE CERTIFIED` | Full State G predicate: resulting-main CI PASS, fresh independent review PASS of resulting main, and durable attestation bound to resulting-main SHA and certified base/head pair |
 | `HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED` | Until the full post-merge certification predicate is satisfied and current Open Work permits the transition |
 | `HARDEN-02 EXECUTION: NEXT / AUTHORISED` | Only when the full certification predicate is satisfied; no route phrase or CI result can override missing evidence |
 | `HARDEN-02 EXECUTION: COMPLETE / CERTIFIED` | All I-01…I-13 proofs pass; NEXT = `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED` |
@@ -444,7 +450,7 @@ The `pre_merge_review` CI binding fields must exactly match the independently ve
 
 The later external state `ENGINEERING STANDARDS PROMOTION: COMPLETE / CERTIFIED → NEXT = FP001_RECONCILIATION_REQUIRED` is owned by current Open Work and the later promotion stage, not by HARDEN-02.
 
-**Execution entry rule:** pre-merge attestation alone is not sufficient to start HARDEN-02 execution. Execution becomes NEXT / AUTHORISED only after independent exact-head review PASS and exact-head Foundation Integrity PASS both exist, a pre-merge attestation truthfully binds both to the same head, that head is merged unchanged, resulting `main` passes CI, and a fresh independent post-merge review PASS plus durable post-merge PASS attestation are repository-verifiably present.
+**Execution entry rule:** pre-merge attestation alone is not sufficient to start HARDEN-02 execution. Execution becomes NEXT / AUTHORISED only after independent exact-base/exact-head review PASS and Foundation Integrity PASS both exist, a pre-merge attestation truthfully binds both to the same base/head pair, the live PR base and head still equal that certified pair immediately before merge, the certified head is merged unchanged, resulting `main` passes CI, and a fresh independent post-merge review PASS plus durable post-merge PASS attestation are repository-verifiably present.
 
 HARDEN-02 remains governance sequencing. It is not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ.
 
@@ -452,10 +458,10 @@ HARDEN-02 remains governance sequencing. It is not an FP-001 dependency, Roadmap
 
 ## 12. Concurrency / idempotency / retry obligations
 
-- Governance checks must be deterministic and repeatable on the same head.
+- Governance checks must be deterministic and repeatable on the same base/head pair.
 - Re-running HARDEN-02 checks must not create duplicate Open Work successors or contradictory markers.
 - Partial updates that leave README, Open Work and manifest disagreeing are failures, not soft warnings.
-- Exact-head certification is required; stale local branches are not completion evidence.
+- Exact base-and-head certification is required; stale local branches are not completion evidence.
 
 ---
 
@@ -468,7 +474,7 @@ STOP and escalate upstream when HARDEN-02 execution or contract review discovers
 3. attempt to execute or freeze Engineering Standards Authority Promotion, perform FP-001 reconciliation, or perform Communications dossier work inside HARDEN-02;
 4. attempt to authorise Phase 8 / TB / VS / HH / application implementation from HARDEN-02 alone;
 5. inability to express I-01…I-13 as machine-checkable evidence without inventing new Product/Architecture law;
-6. branch/head drift that invalidates the certified baseline without re-certification.
+6. base/head drift that invalidates the certified baseline without re-certification.
 
 Recovery is re-baseline + amend this contract or the correct upstream authority — never silent scope expansion.
 
@@ -532,7 +538,7 @@ No category is permitted merely because it is convenient.
 - Foundation Integrity audit PASS;
 - upstream protected authority hashes unchanged;
 - no application code changed;
-- candidate PR must receive fresh independent exact-head review and exact-head Foundation Integrity PASS before merge; current PR status and evidence must be verified live.
+- candidate PR must receive fresh independent exact-base/exact-head review and exact-pair Foundation Integrity PASS before merge; current PR status, base and head SHAs, and evidence must be verified live.
 
 ### Execution stage (later, separately authorised)
 
@@ -546,7 +552,7 @@ No category is permitted merely because it is convenient.
 - Open Work NEXT after certified HARDEN-02 execution = `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED`;
 - FP-001 reconciliation remains downstream until the standards promotion is complete / certified;
 - Communications remains after reconciliation;
-- independent exact-head review/CI before merge;
+- independent exact-base/exact-head review/CI before merge;
 - post-merge certification before beginning Engineering Standards Authority Promotion.
 
 ---
@@ -620,8 +626,8 @@ This artifact recovers and re-baselines the HARDEN-02 contract only. HARDEN-02 i
 
 Do not:
 
-- merge unless independent exact-head certification and Foundation Integrity PASS on the same head both exist, and an immediate pre-merge check confirms that the live PR head still equals the certified head;
-- after merge, keep execution NOT STARTED / NOT AUTHORISED until resulting-main Foundation Integrity PASS, fresh independent post-merge review PASS and durable repository-visible PASS attestation for that SHA all exist;
+- merge unless independent exact-base/exact-head certification and Foundation Integrity PASS on the same pair both exist, and an immediate pre-merge check confirms that the live PR base SHA equals the certified base SHA and the live PR head SHA equals the certified head SHA;
+- after merge, keep execution NOT STARTED / NOT AUTHORISED until resulting-main Foundation Integrity PASS, fresh independent post-merge review PASS and durable repository-visible PASS attestation for the resulting-main SHA exist; the attestation must identify the certified base/head pair;
 - execute HARDEN-02;
 - start FP-001 reconciliation;
 - start Communications;
