@@ -9,8 +9,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ROADMAP = DOCS / "05_ROADMAP_v1.1.0.md"
+ROADMAP = DOCS / "05_ROADMAP_v1.1.1.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.0.0.md"
+ROADMAP_V1_1_0_ARCHIVE = DOCS / "archive" / "05_ROADMAP_v1.1.0.md"
 EVIDENCE = DOCS / "working" / "TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.38.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.37.md"
@@ -40,7 +41,8 @@ PROTECTED_HASHES = {
 
 REQUIRED_SUCCESSOR_PATHS = (
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.38.md",
-    "docs/00_platform/05_ROADMAP_v1.1.0.md",
+    "docs/00_platform/archive/05_ROADMAP_v1.1.0.md",
+    "docs/00_platform/05_ROADMAP_v1.1.1.md",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.37.md",
     "docs/00_platform/archive/05_ROADMAP_v1.0.0.md",
     "docs/00_platform/working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md",
@@ -48,6 +50,7 @@ REQUIRED_SUCCESSOR_PATHS = (
 
 PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/05_ROADMAP_v1.0.0.md",
+    "docs/00_platform/05_ROADMAP_v1.1.0.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.37.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.38.md",
     "mix.exs",
@@ -88,6 +91,7 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.roadmap = ROADMAP.read_text(encoding="utf-8")
         cls.predecessor = ROADMAP_PREDECESSOR.read_text(encoding="utf-8")
+        cls.roadmap_v1_1_0_archive = ROADMAP_V1_1_0_ARCHIVE.read_text(encoding="utf-8")
         cls.evidence = EVIDENCE.read_text(encoding="utf-8")
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
         cls.readme = README.read_text(encoding="utf-8")
@@ -104,9 +108,15 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
             "09d59d615a9aab0d85b590747c932098a1b1164a45ece3a69659d5d49d49ee42",
             _sha256(OPEN_WORK_PREDECESSOR),
         )
-        self.assertIn("v1.0.0 → v1.1.0", self.roadmap)
+        self.assertEqual(
+            "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613",
+            _sha256(ROADMAP_V1_1_0_ARCHIVE),
+        )
+        self.assertIn("v1.1.0 → v1.1.1", self.roadmap)
         self.assertIn("v1.2.37 → v1.2.38", self.open_work)
         self.assertIn("archive/05_ROADMAP_v1.0.0.md", self.roadmap)
+        self.assertIn("archive/05_ROADMAP_v1.1.0.md", self.roadmap)
+        self.assertFalse((DOCS / "05_ROADMAP_v1.1.0.md").exists())
         self.assertFalse((DOCS / "05_ROADMAP_v1.0.0.md").exists())
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.37.md").exists())
 
@@ -121,6 +131,11 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("no Voting or Competitions Feature Pack", self.roadmap)
         self.assertIn("No Tools Feature Pack", self.roadmap)
         self.assertIn("Feature Pack count remains **17**", self.roadmap)
+
+    def test_all_feature_pack_sections_are_unchanged_from_v1_1_0(self):
+        previous_sections = _fp_sections(self.roadmap_v1_1_0_archive)
+        self.assertEqual(17, len(previous_sections))
+        self.assertEqual(previous_sections, self.fp_sections)
 
     def test_fp001_requires_pmr_without_freezing_representation(self):
         fp001 = self.fp_sections["FP-001"]
@@ -185,7 +200,7 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("01_DECISIONS_v1.3.0.md", header)
         self.assertIn("03_ARCHITECTURE_v1.1.0.md", header)
         self.assertIn("04_DOMAIN_MAP_v1.1.0.md", header)
-        self.assertIn("02_OPEN_WORK_v1.2.38.md", header)
+        self.assertIn("current Open Work routed by the README and current authority manifest", header)
         self.assertNotIn("00_PLATFORM_v1.2.1.md", header)
         self.assertNotIn("03_ARCHITECTURE_v1.0.0.md", header)
         self.assertNotIn("04_DOMAIN_MAP_v1.0.0.md", header)
@@ -217,7 +232,7 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("## 12.6 ", self.open_work)
         self.assertLess(self.open_work.index("## 12.4 "), self.open_work.index("## 12.5 "))
         self.assertLess(self.open_work.index("## 12.5 "), self.open_work.index("## 12.6 "))
-        self.assertIn("05_ROADMAP_v1.1.0.md", self.readme)
+        self.assertIn("05_ROADMAP_v1.1.1.md", self.readme)
         self.assertIn("archive/02_OPEN_WORK_v1.2.38.md", self.readme)
         self.assertIn("ROADMAP AMENDMENT: COMPLETE", self.readme)
         current = {
@@ -229,8 +244,8 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual(_sha256(ROOT / current["OPEN_WORK"]["repository_path"]), current["OPEN_WORK"]["sha256"])
         self.assertEqual("historical", {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK), {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["sha256"])
-        self.assertEqual("1.1.0", current["ROADMAP"]["semver"])
-        self.assertEqual("docs/00_platform/05_ROADMAP_v1.1.0.md", current["ROADMAP"]["repository_path"])
+        self.assertEqual("1.1.1", current["ROADMAP"]["semver"])
+        self.assertEqual("docs/00_platform/05_ROADMAP_v1.1.1.md", current["ROADMAP"]["repository_path"])
         self.assertEqual(_sha256(ROADMAP), current["ROADMAP"]["sha256"])
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
         self.assertEqual(20, self.manifest["integrity_rules"]["expected_counts"]["domains"])
@@ -238,10 +253,19 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_37"]["lifecycle"])
         self.assertEqual("historical", historical["ROADMAP_V1_0_0"]["lifecycle"])
+        self.assertEqual("historical", historical["ROADMAP_V1_1_0"]["lifecycle"])
+        self.assertEqual(_sha256(ROADMAP_V1_1_0_ARCHIVE), historical["ROADMAP_V1_1_0"]["sha256"])
         self.assertEqual(
             "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
             historical["ROADMAP_V1_0_0"]["sha256"],
         )
+
+    def test_phase_6_foundation_audit_handoff_is_historical(self):
+        handoff = self.roadmap.split("# 21.", maxsplit=1)[1]
+        self.assertIn("Historical Phase 7 handoff at Roadmap freeze", handoff)
+        self.assertIn("Foundation Readiness Audit is complete", handoff)
+        self.assertNotIn("NEXT:\nFOUNDATION READINESS AUDIT", handoff)
+        self.assertNotIn("STOP. Do not begin Phase 7 in this task.", handoff)
 
     def test_domain_and_upstream_law_unchanged(self):
         self.assertEqual(

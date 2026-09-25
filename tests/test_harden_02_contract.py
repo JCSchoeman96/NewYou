@@ -24,6 +24,7 @@ OPEN_WORK = ROOT / _current_documents["OPEN_WORK"]["repository_path"]
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_V1_2_43_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
 OPEN_WORK_V1_2_44_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.44.md"
+OPEN_WORK_V1_2_45_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.45.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 README = DOCS / "README.md"
 
@@ -35,6 +36,7 @@ EXPECTED_OPEN_WORK_V1_2_42_SHA256 = "2f9baad6ef314b23b53f9c0daa79976347bfbc5b937
 EXPECTED_OPEN_WORK_V1_2_41_SHA256 = "85dd9946cf5684b0907f49e973ef75b59541c0f265ac46d44465d1527535da62"
 EXPECTED_OPEN_WORK_V1_2_43_SHA256 = "b5db43e374bf199e721dffeda146a7f4a05bbe7832a5cd3da3049313bb98e167"
 EXPECTED_OPEN_WORK_V1_2_44_SHA256 = "b245841b577933fe706a62e36f1387158283930644fa8efcb292791522b65c24"
+EXPECTED_OPEN_WORK_V1_2_45_SHA256 = "e502e0daf81276fc324dfb9f573837ae864f9d507ea9e0ac8b05ed85c05fbd5f"
 EXPECTED_CERTIFIED_CONTRACT_SHA256 = "59d2da53b36e146d7f1e9928c5572e9c9a5035b5f186b748ea6aea4cdbc7be65"
 EXPECTED_ATLAS_V0_2_SHA256 = "c122c0f4a903c9679529e0e65a794999dcdaf957a66fcff00df990a0644bbb7f"
 
@@ -44,7 +46,7 @@ PROTECTED_UPSTREAM_HASHES = {
     "docs/00_platform/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
     "docs/00_platform/03_ARCHITECTURE_v1.1.0.md": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
     "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
-    "docs/00_platform/05_ROADMAP_v1.1.0.md": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613",
+    "docs/00_platform/archive/05_ROADMAP_v1.1.0.md": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613",
     "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
     "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3",
     "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
@@ -499,7 +501,10 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertTrue(OPEN_WORK_V1_2_44_ARCHIVE.is_file())
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_44_SHA256, _sha256(OPEN_WORK_V1_2_44_ARCHIVE))
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.44.md").exists())
-        self.assertIn("v1.2.44 → v1.2.45", self.open_work)
+        self.assertTrue(OPEN_WORK_V1_2_45_ARCHIVE.is_file())
+        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_45_SHA256, _sha256(OPEN_WORK_V1_2_45_ARCHIVE))
+        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.45.md").exists())
+        self.assertIn("v1.2.45 → v1.2.46", self.open_work)
 
     def test_harden_02_scope_invariants_preserved_from_v0_3(self):
         for start, end in (
@@ -856,20 +861,24 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual("REQUIRED / NOT_STARTED", self.recovery_state["communications"])
         self.assertEqual("CLOSED / SUPERSEDED / HISTORICAL BRANCH NOT MERGED", self.recovery_state["pr_38"])
 
-    def test_readme_open_work_and_manifest_route_v1_2_45(self):
+    def test_readme_open_work_and_manifest_route_v1_2_46(self):
         self.assertIn("HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
-        self.assertIn("02_OPEN_WORK_v1.2.45.md", self.readme)
-        self.assertIn("archive/02_OPEN_WORK_v1.2.44.md", self.readme)
+        self.assertIn("02_OPEN_WORK_v1.2.46.md", self.readme)
+        self.assertIn("archive/02_OPEN_WORK_v1.2.45.md", self.readme)
+        self.assertIn("05_ROADMAP_v1.1.1.md", self.readme)
+        self.assertIn("archive/05_ROADMAP_v1.1.0.md", self.readme)
         self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.45", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.45.md", current["OPEN_WORK"]["repository_path"])
+        self.assertEqual("1.2.46", current["OPEN_WORK"]["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.46.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
+        self.assertEqual("historical", historical["OPEN_WORK_V1_2_45"]["lifecycle"])
+        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_45_SHA256, historical["OPEN_WORK_V1_2_45"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_44"]["lifecycle"])
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_44_SHA256, historical["OPEN_WORK_V1_2_44"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_43"]["lifecycle"])

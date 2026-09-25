@@ -9,10 +9,10 @@ For foundation/default planning and delivery-preparation work, read **only** the
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
-4. `02_OPEN_WORK_v1.2.45.md`
+4. `02_OPEN_WORK_v1.2.46.md`
 5. `03_ARCHITECTURE_v1.1.0.md`
 6. `04_DOMAIN_MAP_v1.1.0.md`
-7. `05_ROADMAP_v1.1.0.md`
+7. `05_ROADMAP_v1.1.1.md`
 8. `PLATFORM_OPERATING_MODEL_v1.0.0.md`
 
 For frontend, UI, public-experience, design-system, accessibility, SEO, analytics-UI or Feature Pack planning, additionally load:
@@ -101,13 +101,15 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/02_OPEN_WORK_v1.2.36.md` — preserved pre-Domain-amendment Open Work successor.
 - `archive/04_DOMAIN_MAP_v1.0.0.md` — preserved frozen Domain Map predecessor.
 - `archive/02_OPEN_WORK_v1.2.37.md` — preserved pre-Roadmap-amendment Open Work successor.
-- `archive/05_ROADMAP_v1.0.0.md` — preserved frozen Roadmap predecessor.
+- `archive/05_ROADMAP_v1.0.0.md` — preserved earlier frozen Roadmap predecessor.
+- `archive/05_ROADMAP_v1.1.0.md` — preserved byte-identical predecessor to current Roadmap v1.1.1.
 - `archive/02_OPEN_WORK_v1.2.38.md` — preserved pre-Atlas-reconciliation Open Work successor.
 - `archive/02_OPEN_WORK_v1.2.39.md` — preserved pre-HARDEN-02-contract Open Work successor.
 - `archive/02_OPEN_WORK_v1.2.40.md` — preserved pre-H02-3R routing-refinement Open Work successor.
 - `archive/02_OPEN_WORK_v1.2.42.md` — preserved predecessor to Open Work v1.2.43.
 - `archive/02_OPEN_WORK_v1.2.43.md` — preserved byte-identical predecessor to Open Work v1.2.44.
-- `archive/02_OPEN_WORK_v1.2.44.md` — preserved byte-identical predecessor to current Open Work v1.2.45.
+- `archive/02_OPEN_WORK_v1.2.44.md` — preserved byte-identical predecessor to Open Work v1.2.45.
+- `archive/02_OPEN_WORK_v1.2.45.md` — preserved byte-identical predecessor to current Open Work v1.2.46.
 - `archive/02_OPEN_WORK_v1.2.41.md` — preserved earlier Open Work predecessor.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — preserved contract merged via PR #39; v0.3.0 lifecycle not retroactively certified.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — preserved previous contract attempt; historical evidence, not repository-verifiably certified.
@@ -148,7 +150,7 @@ Engineering Standards are **not yet current authority**. Current routing require
 - DOMAIN PRESSURE TEST: COMPLETE
 - DOMAIN AMENDMENT: COMPLETE — current Domain Law `v1.1.0`; 20 Domains; Domain 19 Research & Feedback; Domain 20 Voting & Balloting
 - ROADMAP SEQUENCING GRILL: COMPLETE
-- ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.0`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
+- ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.1`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
 - ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED
 - ATLAS RECONCILIATION: COMPLETE — `working/DELIVERY_ATLAS_WORKING_v0.2.0.md` (derived / non-authoritative)
 - HARDEN-02 CONTRACT v0.4.0: COMPLETE / CERTIFIED — PR #40 head `cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4` merged unchanged as main `352f304139b9d4f8ee3ba205cde9e34d0ad8437f`
