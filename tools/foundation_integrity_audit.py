@@ -270,6 +270,269 @@ def _table_rows(text: str, start_marker: str, end_marker: str) -> list[list[str]
     return rows
 
 
+def _marked_matrix_rows(text: str, matrix_name: str) -> list[dict[str, str]]:
+    start_marker = f"<!-- NEWYOU:PRODUCT-MATRIX:{matrix_name}:START -->"
+    end_marker = f"<!-- NEWYOU:PRODUCT-MATRIX:{matrix_name}:END -->"
+    if text.count(start_marker) != 1 or text.count(end_marker) != 1:
+        return []
+    section = text.split(start_marker, 1)[1].split(end_marker, 1)[0]
+    lines = [line for line in section.splitlines() if line.strip().startswith("|")]
+    if len(lines) < 3:
+        return []
+
+    def cells(line: str) -> list[str]:
+        return [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+
+    headers = cells(lines[0])
+    rows: list[dict[str, str]] = []
+    for line in lines[2:]:
+        values = cells(line)
+        if len(values) != len(headers):
+            return []
+        rows.append(dict(zip(headers, values)))
+    return rows
+
+
+def _check_product_semantics(
+    root: Path,
+    entries: list[dict[str, Any]],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    by_id = {
+        str(entry.get("document_id")): entry
+        for entry in entries
+        if entry.get("lifecycle", "current") != "historical"
+    }
+    product = _read_entry_text(root, by_id.get("PLATFORM_BASELINE"))
+    decisions = _read_entry_text(root, by_id.get("DECISION_REGISTER"))
+    open_work = _read_entry_text(root, by_id.get("OPEN_WORK"))
+    roadmap = _read_entry_text(root, by_id.get("ROADMAP"))
+    roots = integrity_rules["document_roots"]
+    readme_path = root / roots["context_index"]
+    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    fp001_path = root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
+    fp001 = fp001_path.read_text(encoding="utf-8") if fp001_path.is_file() else ""
+
+    eligibility_rows = _marked_matrix_rows(product, "ELIGIBILITY-PAID-PLAN")
+    eligibility = {row.get("case", ""): row for row in eligibility_rows}
+    eligibility_cases = {
+        "eligible_automated",
+        "insufficient_information",
+        "professional_review_required",
+        "general_wellness_only",
+        "terminal_unfulfillable_outcome",
+    }
+    eligibility_ok = eligibility_cases <= eligibility.keys() and all(
+        token in eligibility.get(case, {}).get(field, "")
+        for case, field, token in (
+            ("eligible_automated", "entitlement consequence", "consume_on_successful_delivery"),
+            ("eligible_automated", "entitlement consequence", "technical_failure=preserve_unconsumed"),
+            ("insufficient_information", "entitlement consequence", "held_unconsumed"),
+            ("insufficient_information", "entitlement consequence", "no_expiry_for_incomplete_information"),
+            ("professional_review_required", "entitlement consequence", "held_unconsumed_pending_review"),
+            ("general_wellness_only", "commercial consequence", "not_personalised_plan_fulfilment"),
+            ("terminal_unfulfillable_outcome", "commercial consequence", "refund_allocated_plan_component"),
+        )
+    )
+    _record_check(
+        report,
+        "eligibility_commercial_consequences",
+        eligibility_ok,
+        "paid-plan rights are held or consumed by governed eligibility and delivery outcome"
+        if eligibility_ok
+        else "paid-plan eligibility matrix is missing required outcomes or entitlement/refund consequences",
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    reversal_rows = _marked_matrix_rows(product, "COMMERCIAL-REVERSAL")
+    reversals = {row.get("case", ""): row for row in reversal_rows}
+    reversal_cases = {
+        "refund_before_entitlement_use",
+        "plan_refund_before_generation",
+        "verified_technical_failure_refund",
+        "duplicate_payment_refund",
+        "membership_duplicate_billing_refund",
+        "unverified_provider_signal",
+        "confirmed_disputed_chargeback",
+        "chargeback_payment_restored",
+        "final_lost_chargeback",
+        "post_delivery_full_reversal",
+    }
+    reversal_ok = reversal_cases <= reversals.keys() and all(
+        "preserve_historical_record" in row.get("historical record consequence", "")
+        for row in reversals.values()
+    ) and all(
+        token in reversals.get(case, {}).get("entitlement/access consequence", "")
+        for case, token in (
+            ("refund_before_entitlement_use", "end_refunded_component"),
+            ("duplicate_payment_refund", "preserve_one_valid_right"),
+            ("unverified_provider_signal", "no_entitlement_mutation"),
+            ("confirmed_disputed_chargeback", "suspend_after_commerce_confirmation"),
+            ("chargeback_payment_restored", "restore_idempotently"),
+            ("final_lost_chargeback", "end_paid_access"),
+            ("post_delivery_full_reversal", "exceptional_full_refund_ends_current_access"),
+        )
+    )
+    _record_check(
+        report,
+        "commercial_reversal_consequences",
+        reversal_ok,
+        "verified commercial reversals control access while preserving historical records"
+        if reversal_ok
+        else "commercial reversal matrix is missing required cases or current-access/history consequences",
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    consent_rows = _marked_matrix_rows(product, "CONSENT-WITHDRAWAL")
+    consent = {row.get("event", ""): row for row in consent_rows}
+    consent_cases = {
+        "personalisation_withdrawal",
+        "automated_recommendation_withdrawal",
+        "practitioner_sharing_withdrawal",
+        "optional_ai_withdrawal",
+        "health_storage_withdrawal",
+        "full_account_deletion",
+    }
+    consent_ok = consent_cases <= consent.keys() and all(
+        bool(row.get("future processing"))
+        and bool(row.get("delivered plan access"))
+        and bool(row.get("commercial entitlement"))
+        for row in consent.values()
+    ) and all(
+        token in consent.get(case, {}).get(field, "")
+        for case, field, token in (
+            ("personalisation_withdrawal", "future processing", "stop_affected_future_processing"),
+            ("practitioner_sharing_withdrawal", "delivered plan access", "practitioner_access_ends"),
+            ("health_storage_withdrawal", "future processing", "independent_lawful_basis"),
+            ("health_storage_withdrawal", "delivered plan access", "restrict_access"),
+            ("full_account_deletion", "delivered plan access", "end_ordinary_access"),
+        )
+    )
+    _record_check(
+        report,
+        "consent_withdrawal_consequences",
+        consent_ok,
+        "purpose withdrawal, delivered access and commercial rights have separate consequences"
+        if consent_ok
+        else "consent matrix is missing an event or fails to distinguish future processing, delivered access and entitlement",
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    provenance_rows = _marked_matrix_rows(product, "TEMPERAMENT-PROVENANCE")
+    provenance = {row.get("provenance", ""): row for row in provenance_rows}
+    provenance_cases = {"self_reported", "book_derived", "digitally_assessed", "later_digital_completion"}
+    provenance_ok = provenance_cases <= provenance.keys() and all(
+        provenance.get(case, {}).get(field) == "no"
+        for case in ("self_reported", "book_derived")
+        for field in ("exact digital scores", "paid digital report")
+    ) and all(
+        provenance.get(case, {}).get(field) == "unused"
+        for case in ("self_reported", "book_derived")
+        for field in ("included assessment credit",)
+    ) and provenance.get("digitally_assessed", {}).get("exact digital scores") == "yes" and provenance.get(
+        "digitally_assessed", {}
+    ).get("paid digital report") == "yes" and "preserve_prior_provenance" in provenance.get(
+        "later_digital_completion", {}
+    ).get("result history", "")
+    _record_check(
+        report,
+        "temperament_provenance_outputs",
+        provenance_ok,
+        "assessment outputs and reports follow declared versus digital result provenance"
+        if provenance_ok
+        else "temperament provenance matrix permits a report/score mismatch or overwrites prior provenance",
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    purchase_rows = _marked_matrix_rows(product, "ASSESSMENT-PURCHASE-USE")
+    purchases = {row.get("case", ""): row for row in purchase_rows}
+    purchase_cases = {
+        "standalone_purchase_without_unused_credit",
+        "standalone_purchase_with_unused_paid_credit",
+        "purchase_when_annual_use_interval_blocks_attempt",
+        "bundle_purchase_with_unused_paid_credit",
+        "premium_annual_reassessment_credit",
+        "plan_only_purchase_with_assessment_credit",
+    }
+    purchase_ok = purchase_cases <= purchases.keys() and all(
+        row.get("maximum active unused ordinary paid credits") == "one"
+        for case, row in purchases.items()
+        if case != "premium_annual_reassessment_credit"
+    ) and all(
+        token in purchases.get(case, {}).get("purchase eligibility", "")
+        for case, token in (
+            ("standalone_purchase_with_unused_paid_credit", "reject"),
+            ("purchase_when_annual_use_interval_blocks_attempt", "reject"),
+            ("bundle_purchase_with_unused_paid_credit", "route_to_approved_plan_only_offer"),
+            ("plan_only_purchase_with_assessment_credit", "independent_of_assessment_credit"),
+        )
+    ) and "non_accumulating" in purchases.get("premium_annual_reassessment_credit", {}).get(
+        "Premium credit rule", ""
+    )
+    _record_check(
+        report,
+        "assessment_purchase_governance",
+        purchase_ok,
+        "assessment sale credits, attempts, annual interval and Premium credit are distinct"
+        if purchase_ok
+        else "assessment purchase matrix does not enforce the active-credit limit and separate Premium rule",
+        path=str(by_id.get("PLATFORM_BASELINE", {}).get("repository_path", "")),
+    )
+
+    decision_match = re.search(
+        r"^## OQ-034[^\n]*\n\*\*Status:\*\* ([^\n]+)", decisions, re.MULTILINE
+    )
+    no_blocking_reference = all(
+        not any("OQ-034" in line and "BLOCKS_THIS_FP" in line for line in document.splitlines())
+        for document in (roadmap, fp001)
+    )
+    proof_is_downstream = all(
+        "phase 8" in document.lower()
+        and "proof" in document.lower()
+        and re.search(r"proof[^\n]{0,100}(not complete|not finalised|not finalized|incomplete)", document.lower())
+        for document in (roadmap, fp001)
+    )
+    oq_ok = bool(
+        decision_match
+        and "RESOLVED / ARCHITECTURE SELECTION" in decision_match.group(1)
+        and no_blocking_reference
+        and proof_is_downstream
+    )
+    _record_check(
+        report,
+        "resolved_oq_not_blocking",
+        oq_ok,
+        "OQ-034 selection is resolved without claiming Phase 8 proof complete or finalised"
+        if oq_ok
+        else "OQ-034 is absent/resolved incorrectly, still blocks a pack, or its Phase 8 proof state is overstated",
+        path=str(by_id.get("ROADMAP", {}).get("repository_path", "")),
+    )
+
+    h02_rows = _marked_matrix_rows(open_work, "HARDEN-02-LIFECYCLE")
+    h02 = {row.get("gate", ""): row.get("status", "") for row in h02_rows}
+    required_h02 = {
+        "PRE_MERGE_CERTIFICATION": "COMPLETE",
+        "CERTIFIED_HEAD_MERGED_UNCHANGED": "COMPLETE",
+        "RESULTING_MAIN_CI": "PASS",
+        "POST_MERGE_INDEPENDENT_INSPECTION": "PENDING",
+        "POST_MERGE_ATTESTATION": "PENDING",
+        "EXECUTION": "NOT_STARTED_NOT_AUTHORISED",
+    }
+    h02_ok = h02 == required_h02 and "POST-MERGE CERTIFICATION: PENDING" in readme and (
+        "NOT STARTED / NOT AUTHORISED" in readme
+    ) and "PENDING INDEPENDENT PRE-MERGE CERTIFICATION" not in readme
+    _record_check(
+        report,
+        "harden_02_lifecycle_state",
+        h02_ok,
+        "HARDEN-02 records completed pre-merge/merge/CI steps and pending post-merge certification without authorising execution"
+        if h02_ok
+        else "HARDEN-02 lifecycle facts, post-merge pending state or execution stop are inconsistent",
+        path=str(by_id.get("OPEN_WORK", {}).get("repository_path", "")),
+    )
+
+
 def _expected_contiguous(range_rule: dict[str, Any]) -> set[str]:
     prefix = str(range_rule["prefix"])
     start = int(range_rule["start"])
@@ -798,6 +1061,7 @@ def run_audit(
     _check_domain_ownership(root, entries, report, counts_expectation, integrity_rules)
     if _production_mode(expected_counts):
         _check_production_graph(root, manifest, integrity_rules, report)
+        _check_product_semantics(root, entries, integrity_rules, report)
     else:
         _record_check(report, "fixture_graph_scope", True, "fixture graph checks use explicit reduced expectations")
 

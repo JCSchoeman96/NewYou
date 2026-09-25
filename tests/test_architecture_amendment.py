@@ -65,14 +65,14 @@ TARGETED_FLOWS = {
 }
 
 PROTECTED_HASHES = {
-    "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
-    "docs/00_platform/00_PLATFORM_v1.3.0.md": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
-    "docs/00_platform/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
+    "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
+    "docs/00_platform/archive/00_PLATFORM_v1.3.0.md": "4694f841cfa92c2a802b50a1db7dcf3a5043e8a62a2a5250d6dfe819e5388445",
+    "docs/00_platform/archive/01_DECISIONS_v1.3.0.md": "43ecce4423cd90afbf97fa3c447a54a591e0d34acb7e6a5250a8b91c7b650a96",
     "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md": "f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a",
     "docs/00_platform/archive/05_ROADMAP_v1.0.0.md": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
     "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
     "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91",
-    "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
+    "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
     "docs/00_platform/working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md": "c986c11811100b72ba083f9a6ad057b33abffbd4800159f6de502b3097cc94f4",
@@ -279,7 +279,7 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         current = {entry["document_id"]: entry for section in ("governing_documents", "reference_documents") for entry in self.manifest[section]}
         expected = {
-            "OPEN_WORK": ("1.2.43", "docs/00_platform/02_OPEN_WORK_v1.2.43.md"),
+            "OPEN_WORK": ("1.2.44", "docs/00_platform/02_OPEN_WORK_v1.2.44.md"),
             "ARCHITECTURE_SYNTHESIS": ("1.1.0", "docs/00_platform/03_ARCHITECTURE_v1.1.0.md"),
             "DOMAIN_MAP": ("1.1.0", "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md"),
             "ARCHITECTURE_LAW": ("0.36.0", "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md"),
@@ -288,6 +288,7 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
         for document_id, (version, path) in expected.items():
             self.assertEqual(version, current[document_id]["semver"], document_id)
             self.assertEqual(path, current[document_id]["repository_path"], document_id)
+
             self.assertEqual(_sha256(ROOT / path), current[document_id]["sha256"], document_id)
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         for document_id in ("OPEN_WORK_V1_2_35", "OPEN_WORK_V1_2_36", "ARCHITECTURE_SYNTHESIS_V1_0_0", "ARCHITECTURE_LAW_V0_35_0", "REFERENCE_FLOW_PRESSURE_TESTS_V0_2_0", "DOMAIN_MAP_V1_0_0"):
