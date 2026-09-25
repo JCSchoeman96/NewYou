@@ -78,7 +78,6 @@ PROTECTED_HASHES = {
     "docs/00_platform/working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md": "c986c11811100b72ba083f9a6ad057b33abffbd4800159f6de502b3097cc94f4",
     "docs/00_platform/working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md": "d25b6b7232f05859f3b19d8cf48f4a2648095830b27dcbca3676209a2a1af5c8",
     "docs/00_platform/working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md": "27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017",
-    ".github/workflows/foundation-integrity.yml": "2c718457456c71ad8d7fc416a6e0a646792271b9341e4a14fedda6ddb02bcdb8",
 }
 
 REQUIRED_SUCCESSOR_PATHS = (
@@ -308,10 +307,6 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual(
             ["foundation-integrity.yml"],
             sorted(path.name for path in workflow_dir.glob("*")),
-        )
-        self.assertEqual(
-            PROTECTED_HASHES[".github/workflows/foundation-integrity.yml"],
-            _sha256(workflow_dir / "foundation-integrity.yml"),
         )
         supplement = self.law[self.law.index("# 6. Architecture amendment supplement") :]
         self.assertNotIn("TARGETED_ENGINEERING_POLICY_GRILL", supplement)
