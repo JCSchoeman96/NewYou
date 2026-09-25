@@ -170,7 +170,7 @@ Engineering Standards are **not yet current authority**. Current routing require
 - CERTIFIED-HEAD MERGE: COMPLETE / UNCHANGED — certified head `cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4` merged as `352f304139b9d4f8ee3ba205cde9e34d0ad8437f`
 - RESULTING-MAIN FOUNDATION INTEGRITY: PASS — [run 36101210535](https://github.com/JCSchoeman96/NewYou/actions/runs/36101210535)
 - POST-MERGE CERTIFICATION: COMPLETE — fresh independent review PASS and durable attestation COMPLETE at [PR #40 record](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5830618876)
-- HARDEN-02 CURRENT STATUS: `working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` records the completed v0.4.0 lifecycle against current main `9411b34b646d7752d2942afca1363830d3b25f10`; v0.4.0 semantics are unchanged
+- HARDEN-02 CURRENT STATUS: `working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` records the completed v0.4.0 lifecycle; status-successor base main SHA is `9411b34b646d7752d2942afca1363830d3b25f10`; v0.4.0 semantics are unchanged
 - HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED
 - PR #38: STALE / BLOCKED / NOT AUTHORITY
 - `FP001_RECONCILIATION_REQUIRED` — DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION

@@ -451,6 +451,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
     def test_v0_4_2_changes_lifecycle_status_without_changing_contract_semantics(self):
         self.assertIn("Plan / contract version:** `v0.4.2`", self.current_contract)
         self.assertIn("original v0.4.0 semantics are certified", self.current_contract)
+        self.assertIn("Status-successor base main SHA", self.current_contract)
         self.assertIn("NEXT / AUTHORISED / NOT STARTED", self.current_contract)
         current_status = self.current_contract.split("### 11.5 PR #40 lifecycle evidence and current state", 1)[1]
         self.assertIn("The v0.4.0 contract lifecycle is COMPLETE / CERTIFIED", current_status)
@@ -514,7 +515,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             else:
                 self.assertEqual(predecessor_section, successor_section)
 
-    def test_recovery_stays_current_stage_and_rejects_appended_routes(self):
+    def test_execution_is_current_stage_and_rejects_appended_routes(self):
         historical_label = "HARDEN-02 CONTRACT RECOVERY / SOLO-MAINTAINER CERTIFICATION AMENDMENT"
         historical_next = "HARDEN-02_CONTRACT_RECOVERY_REQUIRED"
         current_label = "HARDEN-02 EXECUTION / STRUCTURAL HARDENING"
@@ -893,7 +894,8 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual("NEXT / AUTHORISED / NOT STARTED", state["harden_02_execution"])
         self.assertEqual("cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4", state["pr_40_certified_head"])
         self.assertEqual("352f304139b9d4f8ee3ba205cde9e34d0ad8437f", state["pr_40_merged_sha"])
-        self.assertEqual("9411b34b646d7752d2942afca1363830d3b25f10", state["current_main_sha"])
+        self.assertEqual("9411b34b646d7752d2942afca1363830d3b25f10", state["status_successor_base_sha"])
+        self.assertNotIn("current_main_sha", state)
         self.assertEqual(state["pr_40_certified_head"], state["exact_head_ci_head_sha"])
         self.assertEqual("Foundation Integrity", state["exact_head_ci_workflow"])
         self.assertEqual("PASS", state["exact_head_ci_conclusion"])
@@ -940,6 +942,36 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual("NOT FINALISED", state["proof_classification"])
         self.assertEqual("BLOCKED", state["application_implementation"])
         self.assertEqual("STALE / BLOCKED / NOT AUTHORITY", state["pr_38"])
+
+    def test_active_open_work_sections_do_not_route_to_historical_contract_recovery(self):
+        active_sections = (
+            _section(
+                self.current_open_work,
+                "## Phase 6 — COMPLETE: Roadmap-amendment successor v1.1.1",
+                "## Phase 7 — Feature Pack Preparation + JIT Domain Dossiers",
+            ),
+            _section(
+                self.current_open_work,
+                "## 12.6 Roadmap Sequencing Grill and Roadmap amendment completion",
+                "## 12.7 — Delivery Atlas reconciliation",
+            ),
+            _section(
+                self.current_open_work,
+                "## 12.7 — Delivery Atlas reconciliation",
+                "## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt",
+            ),
+        )
+        stale_current_claims = (
+            "the current stage is contract recovery / re-certification",
+            "the current stage is v0.3.0 contract recovery / re-certification",
+            "the current fail-closed recovery lifecycle",
+            "superseded for the current stage by contract recovery / re-certification in v1.2.42",
+            "after certified harden-02 execution under the v0.3.0 lifecycle",
+        )
+        for section in active_sections:
+            section = section.casefold()
+            for claim in stale_current_claims:
+                self.assertNotIn(claim, section)
 
     def test_protected_hashes_unchanged(self):
         for relative_path, expected_hash in PROTECTED_UPSTREAM_HASHES.items():
