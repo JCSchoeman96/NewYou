@@ -191,7 +191,7 @@ The material Architecture Law surfaces are:
 - `03_ARCHITECTURE_v1.1.0.md §§12.1-12.4`: failure isolation, restart/recovery, observability, incident evidence and operational proof;
 - `03_ARCHITECTURE_v1.1.0.md §§13.1-13.5`: workload-specific scaling and adversarial proof obligations without premature infrastructure selection;
 - `03_ARCHITECTURE_v1.1.0.md §§14-15`: server-authoritative security, least privilege, revocable secrets/sessions, audit separation and enforceable boundaries; and
-- `FLOW-01` in `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md §§2-3`: existing conceptual registration-to-verification-to-login evidence.
+- `FLOW-01` in `archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md §§2-3`: point-in-time conceptual registration-to-verification-to-login evidence used by the predecessor skeleton.
 
 This Skeleton selects no authentication package, Resource, schema, queue, cache, worker, topology or other implementation mechanism.
 
@@ -342,7 +342,8 @@ If later Phase 7B and Phase 7C work is separately authorised through current Ope
 |---|---|
 | `docs/00_platform/README.md` | Authority order, current-authority routing, Atlas non-authority status and selective Atlas sections |
 | `docs/00_platform/05_ROADMAP_v1.1.1.md §§1.1, 6 FP-001, 14` | Exact identity, outcome, objective, type, position, dependencies, affected Domains, gates and anticipated proof |
-| `docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.1.0.md` portfolio/FP-001 view, §§5.2-5.4, 6-12, 23-25 | Derived FP-001 route, seven-CAP matrix/reverse row, capability authority anchors and active-FP lifecycle, dependency, participant, operator, frontend and data contracts |
+| `docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.0.md` portfolio/FP-001 view, §§5.2-5.4, 6-12, 23-25 | Current derived FP-001 route, seven-CAP matrix/reverse row, capability authority anchors and active-FP lifecycle, dependency, participant, operator, frontend and data contracts |
+| `docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md` portfolio/FP-001 view | Historical point-in-time Atlas source used by the predecessor skeleton; retained as provenance only |
 | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§5.1, 8, 10-12` | Public entry, adult individual account, minimum fields, bilingual launch and protected product boundary |
 | `docs/00_platform/00_PLATFORM_v1.4.0.md §§7.2-7.3, 21J.1-21J.12, 21L.1-21L.4` | Public content, registration/language, authentication, verification, session, recovery, role, notification and controlled-product-space rules |
 | `docs/00_platform/01_DECISIONS_v1.4.0.md DEC-017-DEC-028, DEC-244-DEC-267, DEC-268-DEC-270` | Locked account, language, role, identity, recovery, abuse, communication, resilience and launch-space decisions |
@@ -350,10 +351,10 @@ If later Phase 7B and Phase 7C work is separately authorised through current Ope
 | `docs/00_platform/04_DOMAIN_MAP_v1.1.0.md §§3-5, 6.1, 6.2, 6.7, 6.15, 6.17, 6.18` | Domain ownership, cross-domain doctrine, lifecycle and evidence boundaries |
 | `docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md §§4-6, 9-13, 24-26` | Named staff roles, scoped support, content operations, communication/evidence separation, performance boundary and Phase 7 handoff |
 | `docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md §§3.1, 4, 5.1-5.2, 5.7, 6, 7.2, 9-10` | Public, registration, recovery, operator, bilingual, accessibility and presentation-state rules |
-| `docs/00_platform/02_OPEN_WORK_v1.2.28.md §§5.6-5.7, 7, 8` | OQ ownership/context, Phase 7A required fields, dossier boundary and development hard stop |
-| `docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md §§1.1, 2, 3` | Existing FLOW-01 evidence and deferred executable proof pressure |
+| `docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md §§5.6-5.7, 7, 8` | Historical OQ ownership/context, Phase 7A required fields, dossier boundary and development hard stop |
+| `docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md §§1.1, 2, 3` | Current FLOW-01 evidence and deferred executable proof pressure |
 
-No archive document was needed. No global matrix, global journey, permanent FP-specific state machine or Atlas expansion was used.
+Historical source artifacts are cited through their preserved archive paths. Current Roadmap, Product Law and Open Work remain controlling; the derived Atlas does not become authority. No global matrix, global journey, permanent FP-specific state machine or Atlas expansion was used.
 
 ## 17. Scope audit and STOP review
 

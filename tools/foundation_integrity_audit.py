@@ -635,11 +635,22 @@ def _check_product_semantics(
         and re.search(r"proof[^\n]{0,100}(not complete|not finalised|not finalized|incomplete)", document.lower())
         for document in (roadmap, fp001)
     )
+    identity_pmr_gate = next(
+        (line for line in roadmap.splitlines() if "Verified account + required PMR" in line),
+        "",
+    )
+    major_gate_lines = [
+        line for line in roadmap.splitlines() if line.lower().startswith("**major gates")
+    ]
     oq_ok = bool(
         decision_match
         and "RESOLVED / ARCHITECTURE SELECTION" in decision_match.group(1)
         and no_blocking_reference
         and proof_is_downstream
+        and identity_pmr_gate
+        and "OQ-034" not in identity_pmr_gate
+        and major_gate_lines
+        and not any("OQ-034" in line for line in major_gate_lines)
     )
     _record_check(
         report,
@@ -1098,12 +1109,23 @@ def _check_production_graph(
     context_index = roots["context_index"]
     readme = root / context_index
     readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""
-    readme_order = [
-        str(entry.get("canonical_filename"))
-        for entry in governing_entries
-        if f"`{entry.get('canonical_filename')}`" in readme_text
-    ]
     expected_order = [str(entry.get("canonical_filename")) for entry in governing_entries]
+    default_context = readme_text
+    default_context_start = readme_text.find("## Default Agent Context")
+    if default_context_start >= 0:
+        default_context = readme_text[default_context_start:]
+        next_section = re.search(r"^## ", default_context[len("## Default Agent Context"):], re.MULTILINE)
+        if next_section:
+            section_end = len("## Default Agent Context") + next_section.start()
+            default_context = default_context[:section_end]
+    expected_names = set(expected_order)
+    readme_order = []
+    for line in default_context.splitlines():
+        if not re.match(r"^\s*\d+\.\s+", line):
+            continue
+        match = re.search(r"`([^`]+)`", line)
+        if match and match.group(1) in expected_names:
+            readme_order.append(match.group(1))
     _record_check(
         report,
         "readme_current_authority_order",
@@ -1117,6 +1139,7 @@ def _check_production_graph(
     graph_rules = integrity_rules["graph_rules"]
     stale_patterns = tuple(re.compile(pattern) for pattern in graph_rules["stale_reference_patterns"])
     navigation_document_ids = set(graph_rules["navigation_document_ids"])
+    navigation_paths = [str(path) for path in graph_rules.get("navigation_document_paths", [])]
     navigation_entries = [
         entry
         for entry in entries
@@ -1127,10 +1150,15 @@ def _check_production_graph(
     scan_targets = [(context_index, False)] + [
         (_relative_path(entry), _path_is_under(_relative_path(entry), roots["reference"]))
         for entry in navigation_entries
+    ] + [
+        (relative, _path_is_under(relative, roots["reference"]))
+        for relative in navigation_paths
     ]
     for relative, is_reference in scan_targets:
         path = root / relative
         if not path.is_file():
+            if relative in navigation_paths:
+                stale_hits.append(f"{relative}: missing active navigation document")
             continue
         text = path.read_text(encoding="utf-8")
         if is_reference:

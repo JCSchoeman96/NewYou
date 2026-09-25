@@ -232,7 +232,9 @@ The phases describe outcomes and readiness, not code layers. Packs within a phas
 
 **Major dependencies:** frozen Product/Architecture/Domain Law; no future product capability.
 
-**Major gates:** `OQ-004`, `OQ-035`; production-release implications of `OQ-001`, `OQ-036` and the paid-pilot readiness set. `OQ-034` architecture selection is resolved; its executable proof remains a Phase 8 obligation.
+**Major gates:** `OQ-004`, `OQ-035`; production-release implications of `OQ-001`, `OQ-036` and the paid-pilot readiness set.
+
+**Authentication proof:** `OQ-034` architecture selection is resolved; its executable proof remains a Phase 8 obligation.
 
 **Completion/readiness condition:** identity/session and payment/entitlement paths are independently reconcilable, idempotent, scoped and supportable; no paid health journey is released yet.
 
@@ -334,7 +336,9 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§4, 6, 6.6, 8, 9, 12, 14–15`; `ARC-330`; `FLOW-01`; identity, session, PMR lifecycle/non-authority, policy, durable-consequence, observability and degradation themes.
 
-**Major Gates:** `OQ-035` abuse-control thresholds; `OQ-036` email/in-app provider and channel policy; `OQ-038` incident ownership for later production operation. `OQ-034` authentication architecture selection is resolved; executable authentication proof remains a Phase 8 obligation and is not complete or finalised. Exact PMR encoding remains downstream (`ARQ-IAM-013`) and is not a Roadmap decision.
+**Major Gates:** `OQ-035` abuse-control thresholds; `OQ-036` email/in-app provider and channel policy; `OQ-038` incident ownership for later production operation. Exact PMR encoding remains downstream (`ARQ-IAM-013`) and is not a Roadmap decision.
+
+**Resolved architecture and proof status:** `OQ-034` authentication architecture selection is resolved; executable authentication proof remains a Phase 8 obligation and is not complete or finalised.
 
 **Gate Classification:**
 
@@ -1117,7 +1121,7 @@ discover / public bilingual experience
 
 | Critical-path point | Required packs | Material gates before the next protected behaviour |
 |---|---|---|
-| Verified account + required PMR | `FP-001` | `OQ-034`; `OQ-035` and `OQ-036` before protected public/pilot release; PMR encoding remains downstream (`ARQ-IAM-013`). |
+| Verified account + required PMR | `FP-001` | `OQ-035` and `OQ-036` before protected public/pilot release; PMR encoding remains downstream (`ARQ-IAM-013`). |
 | Paid access | `FP-002` | `OQ-004`; `OQ-035`; `OQ-001` before production payment/sensitive processing. |
 | Assessment/report | `FP-003` | Approved methodology/content/rights; `OQ-013` for governed bilingual delivery; `OQ-006` only if optional labels are enabled. |
 | Safety outcome | `FP-004` | `OQ-005`, `OQ-008`; applicable retention approval; `OQ-007` only if lab inputs are included. |

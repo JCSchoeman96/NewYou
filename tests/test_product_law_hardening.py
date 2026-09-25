@@ -176,6 +176,18 @@ class ProductLawHardeningTests(unittest.TestCase):
             self.assertRegex(document.lower(), r"phase 8.{0,180}proof|proof.{0,180}phase 8")
             self.assertRegex(document.lower(), r"proof[^\n]{0,100}(not complete|not finalised|not finalized|incomplete)")
 
+        identity_pmr_gate = next(
+            line for line in self.roadmap.splitlines() if "Verified account + required PMR" in line
+        )
+        self.assertNotIn("OQ-034", identity_pmr_gate)
+        self.assertIn("OQ-035", identity_pmr_gate)
+        self.assertIn("OQ-036", identity_pmr_gate)
+        major_gate_lines = [
+            line for line in self.roadmap.splitlines() if line.lower().startswith("**major gates")
+        ]
+        self.assertTrue(major_gate_lines)
+        self.assertFalse(any("OQ-034" in line for line in major_gate_lines))
+
         state = matrix_rows(self.open_work, "HARDEN-02-LIFECYCLE")
         statuses = {row["gate"]: row["status"] for row in state}
         self.assertEqual(
@@ -279,6 +291,55 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertTrue(
             any("DEC-299 does not carry" in issue for issue in issues), issues
         )
+
+    def test_current_governance_source_trails_resolve_to_current_or_archived_files(self):
+        self.assertIn("05_ROADMAP_v1.1.1.md", self.open_work)
+        self.assertIn("archive/05_ROADMAP_v1.1.0.md", self.open_work)
+        self.assertIn("archive/00_PLATFORM_v1.3.0.md", self.decisions)
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.0.md", self.fp001)
+        self.assertIn("reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md", self.fp001)
+        self.assertIn("docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md", self.fp001)
+        self.assertIn("docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.fp001)
+
+        source_trails = {
+            "Open Work": self.open_work,
+            "Decision Register": self.decisions,
+            "FP-001": self.fp001,
+        }
+        moved_predecessors = (
+            "00_PLATFORM_v1.3.0.md",
+            "05_ROADMAP_v1.1.0.md",
+            "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
+            "DELIVERY_ATLAS_WORKING_v0.1.0.md",
+            "02_OPEN_WORK_v1.2.28.md",
+        )
+        for document_name, document in source_trails.items():
+            for filename in moved_predecessors:
+                with self.subTest(document=document_name, filename=filename):
+                    self.assertIsNone(
+                        re.search(r"(?<!archive/)" + re.escape(filename), document),
+                        f"{document_name} uses an unarchived predecessor path: {filename}",
+                    )
+
+        archived_source_paths = (
+            "docs/00_platform/archive/05_ROADMAP_v1.1.0.md",
+            "docs/00_platform/archive/00_PLATFORM_v1.3.0.md",
+            "docs/00_platform/archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md",
+        )
+        for relative_path in archived_source_paths:
+            with self.subTest(path=relative_path):
+                self.assertTrue((ROOT / relative_path).is_file())
+
+        current_source_paths = (
+            "docs/00_platform/05_ROADMAP_v1.1.1.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.0.md",
+            "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+        )
+        for relative_path in current_source_paths:
+            with self.subTest(path=relative_path):
+                self.assertTrue((ROOT / relative_path).is_file())
 
 
 if __name__ == "__main__":

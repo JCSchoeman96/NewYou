@@ -635,21 +635,22 @@ Phase 5 exit condition:
 
 **Current Domain Law closure:** PASS — 20 approved domains; Domain 19 Research & Feedback; Domain 20 Voting & Balloting; PMR owned by Identity & Access; Interactive Tools are not a Domain; 0 shared-write ambiguities; 0 circular authoritative control dependencies; no new Architecture mechanism required.
 
-## Phase 6 — COMPLETE: `05_ROADMAP_v1.1.0.md` Roadmap-amendment successor
+## Phase 6 — COMPLETE: Roadmap-amendment successor v1.1.1
 
 Historical Phase-6 freeze:
 
 ```text
 archive/05_ROADMAP_WORKING_v0.1.0.md  — preserved historical planning evidence
 archive/05_ROADMAP_v1.0.0.md          — preserved frozen Roadmap predecessor
-05_ROADMAP_v1.1.0.md                  — FROZEN / AMENDED ROADMAP (current)
+archive/05_ROADMAP_v1.1.0.md          — preserved amended predecessor
+05_ROADMAP_v1.1.1.md                  — FROZEN / CURRENT ROADMAP
 ```
 
 The Roadmap works backward from the approved mature platform, defines the smallest safe commercial path, sequences outcome-oriented Feature Packs, preserves all approved expansion paths, schedules gates at the first point required, exposes anticipated proof needs and defers implementation-grade detail to Phase 7.
 
 **Historical Phase 6 completion:** PASS on the v1.0.0 freeze.
 
-**Current Roadmap amendment:** PASS — additive v1.1.0 successor after accepted Roadmap Sequencing Grill decisions; Feature Pack count remains 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED; Interactive Tools purpose-distributed; no upstream contradiction.
+**Current Roadmap amendment:** PASS — additive v1.1.1 successor after accepted Roadmap Sequencing Grill decisions and the OQ-034 proof-status clarification; predecessor v1.1.0 is preserved under `archive/`; Feature Pack count remains 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED; Interactive Tools purpose-distributed; no upstream contradiction.
 
 **Historical downstream route after HARDEN-02 execution:** once a HARDEN-02 execution is separately authorised and certified, H02-3R routes to Engineering Standards Authority Promotion, then to FP-001 reconciliation only after certified Standards Promotion, then Communications. The current stage is contract recovery / re-certification; no execution or downstream stage is authorised by this historical routing note.
 
@@ -1082,7 +1083,7 @@ This section tracks the governed Targeted Amendment → FP-001 Development Entry
 | Domain pressure test | Targeted Domain ownership pressure test after Architecture amendment | **COMPLETE** — non-authoritative evidence in `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md` |
 | Domain amendment | Additive Domain Law successor implementing accepted human Domain decisions | **COMPLETE** — current successor is `04_DOMAIN_MAP_v1.1.0.md`; predecessor is `archive/04_DOMAIN_MAP_v1.0.0.md`; 20 Domains |
 | Roadmap Sequencing Grill | Sequencing decisions for PMR / Research / Voting / Interactive Tools | **COMPLETE** — non-authoritative evidence in `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` |
-| Roadmap amendment | Additive Roadmap successor implementing accepted human Roadmap decisions | **COMPLETE** — current successor is `05_ROADMAP_v1.1.0.md`; predecessor is `archive/05_ROADMAP_v1.0.0.md`; Feature Packs remain 17 |
+| Roadmap amendment | Additive Roadmap successor implementing accepted human Roadmap decisions | **COMPLETE** — current successor is `05_ROADMAP_v1.1.1.md`; predecessor v1.1.0 is preserved at `archive/05_ROADMAP_v1.1.0.md`; Feature Packs remain 17 |
 | Later | HARDEN-02 execution / Engineering Standards Authority Promotion / FP-001 reconciliation | **DOWNSTREAM** — PR #40's v0.4.0 certified head is merged unchanged and resulting-main CI passed; current working status successor `working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md` records post-merge independent inspection and attestation as pending. HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED until both lifecycle records exist. After certified execution, the H02-3R route remains Engineering Standards Authority Promotion, certified Standards Promotion, FP-001 reconciliation, Communications, remaining required / conditional Phase-7B, Phase 7C, proof classification and Phase 8 after its entry gates. This update executes none of those stages and does not reconcile FP-001 |
 
 **Baseline reviewed for Stage 1:** `main` at `ad71191b17b297ac9dc683c18141e1c546fa9850`.
@@ -1099,7 +1100,7 @@ This section tracks the governed Targeted Amendment → FP-001 Development Entry
 
 The Stage 2 Product amendment encodes exactly four Product-level areas plus cross-capability rules:
 
-1. Research & Feedback (`DEC-294`, `00_PLATFORM_v1.3.0.md` §21M);
+1. Research & Feedback (`DEC-294`, `archive/00_PLATFORM_v1.3.0.md` §21M);
 2. Voting / Balloting / Competitions (`DEC-295`, §21N);
 3. Interactive Tools / Calculators / Decision Aids (`DEC-296`, §21O);
 4. Platform Member Reference (`DEC-297`, §21P);
@@ -1138,7 +1139,7 @@ Domain amendment remains complete. Roadmap Sequencing Grill and Roadmap amendmen
 
 The Roadmap Sequencing Grill is complete as non-authoritative evidence in `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md`. It does not itself create Roadmap Law.
 
-The governed Roadmap amendment is complete in `05_ROADMAP_v1.1.0.md`. Predecessor `archive/05_ROADMAP_v1.0.0.md` is preserved byte-identically. Human decisions implemented:
+The governed Roadmap amendment is complete in `05_ROADMAP_v1.1.1.md`. Predecessor `archive/05_ROADMAP_v1.1.0.md` is preserved byte-identically. Human decisions implemented:
 
 - `RQ-1` ACCEPT — Platform Member Reference is **REQUIRED within FP-001**; no PMR Feature Pack; encoding remains unfrozen; `FP001_RECONCILIATION_REQUIRED` remains for later narrow artifact reconciliation.
 - `RQ-2` ACCEPT WITH REFINEMENT — Research & Feedback is mature **FUTURE-GATED / FEATURE-PACK-UNASSIGNED**; not MVP; not FP-005; not automatically FP-006/008/009; no Research Feature Pack now.
