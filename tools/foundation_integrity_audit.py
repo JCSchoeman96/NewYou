@@ -435,6 +435,14 @@ def _feature_pack_propagation_issues(
     return issues
 
 
+def _has_oq034_fp_blocker(documents: list[str]) -> bool:
+    return any(
+        "OQ-034" in line and "BLOCKS_THIS_FP" in line
+        for document in documents
+        for line in document.splitlines()
+    )
+
+
 def _check_product_semantics(
     root: Path,
     entries: list[dict[str, Any]],
@@ -455,6 +463,16 @@ def _check_product_semantics(
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     fp001_path = root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
     fp001 = fp001_path.read_text(encoding="utf-8") if fp001_path.is_file() else ""
+    atlas_relative_path = next(
+        (
+            str(path)
+            for path in integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
+            if Path(str(path)).name.startswith("DELIVERY_ATLAS_WORKING_")
+        ),
+        "",
+    )
+    atlas_path = root / atlas_relative_path if atlas_relative_path else None
+    atlas = atlas_path.read_text(encoding="utf-8") if atlas_path is not None and atlas_path.is_file() else ""
 
     eligibility_rows = _marked_matrix_rows(product, "ELIGIBILITY-PAID-PLAN")
     eligibility = {row.get("case", ""): row for row in eligibility_rows}
@@ -625,9 +643,10 @@ def _check_product_semantics(
     decision_match = re.search(
         r"^## OQ-034[^\n]*\n\*\*Status:\*\* ([^\n]+)", decisions, re.MULTILINE
     )
-    no_blocking_reference = all(
-        not any("OQ-034" in line and "BLOCKS_THIS_FP" in line for line in document.splitlines())
-        for document in (roadmap, fp001)
+    no_blocking_reference = (
+        atlas_path is not None
+        and atlas_path.is_file()
+        and not _has_oq034_fp_blocker([roadmap, fp001, atlas])
     )
     proof_is_downstream = all(
         "phase 8" in document.lower()

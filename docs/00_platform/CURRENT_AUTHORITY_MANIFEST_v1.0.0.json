@@ -43,34 +43,34 @@
       "semver": "1.2.44",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.44.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "d0c039638f86027a991933d589216759ba088aaace8342b6d4be508cf01e34dc",
+      "sha256": "a296edf5f9c4bccd48b3b3057dba96b0a70ca822c1f8a162f9b44a985d328c1e",
       "superseded_version": "1.2.43",
       "lifecycle": "current",
-      "provenance_sha256": "d0c039638f86027a991933d589216759ba088aaace8342b6d4be508cf01e34dc"
+      "provenance_sha256": "a296edf5f9c4bccd48b3b3057dba96b0a70ca822c1f8a162f9b44a985d328c1e"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
-      "canonical_filename": "03_ARCHITECTURE_v1.1.0.md",
-      "semver": "1.1.0",
-      "repository_path": "docs/00_platform/03_ARCHITECTURE_v1.1.0.md",
+      "canonical_filename": "03_ARCHITECTURE_v1.1.1.md",
+      "semver": "1.1.1",
+      "repository_path": "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
       "authority_class": "ARCHITECTURE_SYNTHESIS",
-      "sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
-      "superseded_version": "1.0.0",
+      "sha256": "ae87a9b6bd2cb04db906eee337acd04cedf80a97ab5c2c49d046e8a83bf88d28",
+      "superseded_version": "1.1.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852"
+      "provenance_sha256": "ae87a9b6bd2cb04db906eee337acd04cedf80a97ab5c2c49d046e8a83bf88d28"
     },
     {
       "document_id": "DOMAIN_MAP",
-      "canonical_filename": "04_DOMAIN_MAP_v1.1.0.md",
-      "semver": "1.1.0",
-      "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md",
+      "canonical_filename": "04_DOMAIN_MAP_v1.1.1.md",
+      "semver": "1.1.1",
+      "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.1.1.md",
       "authority_class": "DOMAIN_LAW",
-      "sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
-      "superseded_version": "1.0.0",
+      "sha256": "57685af6750071e939d6c06885718b984a0c2aab29ab87c1da1691977b182eca",
+      "superseded_version": "1.1.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2"
+      "provenance_sha256": "57685af6750071e939d6c06885718b984a0c2aab29ab87c1da1691977b182eca"
     },
     {
       "document_id": "ROADMAP",
@@ -78,35 +78,35 @@
       "semver": "1.1.1",
       "repository_path": "docs/00_platform/05_ROADMAP_v1.1.1.md",
       "authority_class": "ROADMAP",
-      "sha256": "fc731a38b1920d8b0a521982802ebe874c2e274b7b06d34df635561d03943207",
+      "sha256": "10aed04300cb03b990e186a3ff3dbd60d4123c5e63c0944bb8475e59ab53315d",
       "superseded_version": "1.1.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "fc731a38b1920d8b0a521982802ebe874c2e274b7b06d34df635561d03943207"
+      "provenance_sha256": "10aed04300cb03b990e186a3ff3dbd60d4123c5e63c0944bb8475e59ab53315d"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",
-      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.0.0.md",
-      "semver": "1.0.0",
-      "repository_path": "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md",
+      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.0.1.md",
+      "semver": "1.0.1",
+      "repository_path": "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
       "authority_class": "PLATFORM_OPERATING_MODEL",
-      "sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
-      "superseded_version": null,
+      "sha256": "7cb725adcdb796ba112d39c4be6fd09c90026b49e772b61f0867db62828b9d12",
+      "superseded_version": "1.0.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811"
+      "provenance_sha256": "7cb725adcdb796ba112d39c4be6fd09c90026b49e772b61f0867db62828b9d12"
     },
     {
       "document_id": "FRONTEND_EXPERIENCE_SYSTEM",
-      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
-      "semver": "1.0.0",
-      "repository_path": "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
+      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
+      "semver": "1.0.1",
+      "repository_path": "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
       "authority_class": "FRONTEND_EXPERIENCE_SYSTEM",
-      "sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3",
-      "superseded_version": null,
+      "sha256": "58c733e8e0cc73c72b102b623cb756b60cbadb084f8cc710051be42d0877fdb4",
+      "superseded_version": "1.0.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3"
+      "provenance_sha256": "58c733e8e0cc73c72b102b623cb756b60cbadb084f8cc710051be42d0877fdb4"
     }
   ],
   "reference_documents": [
@@ -533,6 +533,54 @@
       "lifecycle": "historical",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613"
+    },
+    {
+      "document_id": "ARCHITECTURE_SYNTHESIS_V1_1_0",
+      "canonical_filename": "03_ARCHITECTURE_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/archive/03_ARCHITECTURE_v1.1.0.md",
+      "authority_class": "ARCHITECTURE_SYNTHESIS_HISTORICAL",
+      "sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
+      "superseded_version": "1.0.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852"
+    },
+    {
+      "document_id": "DOMAIN_MAP_V1_1_0",
+      "canonical_filename": "04_DOMAIN_MAP_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/archive/04_DOMAIN_MAP_v1.1.0.md",
+      "authority_class": "DOMAIN_LAW_HISTORICAL",
+      "sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
+      "superseded_version": "1.0.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2"
+    },
+    {
+      "document_id": "PLATFORM_OPERATING_MODEL_V1_0_0",
+      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.0.md",
+      "authority_class": "PLATFORM_OPERATING_MODEL_HISTORICAL",
+      "sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
+      "superseded_version": null,
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811"
+    },
+    {
+      "document_id": "FRONTEND_EXPERIENCE_SYSTEM_V1_0_0",
+      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/archive/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
+      "authority_class": "FRONTEND_EXPERIENCE_SYSTEM_HISTORICAL",
+      "sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3",
+      "superseded_version": null,
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3"
     }
   ],
   "integrity_rules": {
@@ -611,18 +659,37 @@
         "(?<!archive/)01_DECISIONS_v1\\.3\\.0\\.md",
         "(?<!archive/)05_ROADMAP_v1\\.1\\.0\\.md",
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.1\\.0\\.md",
-        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.28\\.md"
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.28\\.md",
+        "(?<!archive/)PROJECT_NORTH_STAR_AND_MVP_v1\\.2\\.1\\.md",
+        "(?<!archive/)00_PLATFORM_v1\\.2\\.1\\.md",
+        "(?<!archive/)01_DECISIONS_v1\\.2\\.2\\.md",
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.(?:39|40|41|42|43)\\.md",
+        "(?<!archive/)03_ARCHITECTURE_v1\\.0\\.0\\.md",
+        "(?<!archive/)03_ARCHITECTURE_v1\\.1\\.0\\.md",
+        "(?<!archive/)04_DOMAIN_MAP_v1\\.1\\.0\\.md",
+        "(?<!archive/)PLATFORM_OPERATING_MODEL_v1\\.0\\.0\\.md",
+        "(?<!archive/)FRONTEND_EXPERIENCE_SYSTEM_v1\\.0\\.0\\.md",
+        "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.(?:3|4)\\.0\\.md",
+        "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.2\\.0\\.md",
+        "(?<!reference/)(?<!archive/)ARCHITECTURE_REQUIREMENTS_WORKING_v1\\.1\\.0\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",
       "navigation_document_ids": [
-        "OPEN_WORK",
+        "PROJECT_NORTH_STAR_AND_MVP",
         "PLATFORM_BASELINE",
         "DECISION_REGISTER",
-        "ROADMAP"
+        "OPEN_WORK",
+        "ARCHITECTURE_SYNTHESIS",
+        "DOMAIN_MAP",
+        "ROADMAP",
+        "PLATFORM_OPERATING_MODEL",
+        "FRONTEND_EXPERIENCE_SYSTEM"
       ],
       "navigation_document_paths": [
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md"
       ]
     },
     "product_hardening_bundle_allocation_requirements": {

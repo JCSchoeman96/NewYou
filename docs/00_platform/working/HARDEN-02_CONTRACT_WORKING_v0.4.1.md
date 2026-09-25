@@ -42,17 +42,17 @@ HARDEN-02 exists to prove and harden Phase-7 delivery-pipeline governance integr
 | `00_PLATFORM_v1.4.0.md` | Product Law; not amended by HARDEN-02 |
 | `01_DECISIONS_v1.4.0.md` | Decision / OQ register; HARDEN-02 is not an OQ |
 | `02_OPEN_WORK_v1.2.44.md` | Programme routing and Development Entry Hard Stop |
-| `03_ARCHITECTURE_v1.1.0.md` | Architecture synthesis; unchanged |
-| `04_DOMAIN_MAP_v1.1.0.md` | Domain Law including PMR ownership and `FP001_RECONCILIATION_REQUIRED` consequence |
+| `03_ARCHITECTURE_v1.1.1.md` | Architecture synthesis; unchanged |
+| `04_DOMAIN_MAP_v1.1.1.md` | Domain Law including PMR ownership and `FP001_RECONCILIATION_REQUIRED` consequence |
 | `05_ROADMAP_v1.1.1.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |
-| `PLATFORM_OPERATING_MODEL_v1.0.0.md` | Phase 7 handoff: Skeleton + Gate Manifest → required JIT Domain Dossiers → Final Feature Pack Contract |
-| `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md` | Out of HARDEN-02 scope unless a later governance task requires frontend routing hygiene |
+| `PLATFORM_OPERATING_MODEL_v1.0.1.md` | Phase 7 handoff: Skeleton + Gate Manifest → required JIT Domain Dossiers → Final Feature Pack Contract |
+| `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` | Out of HARDEN-02 scope unless a later governance task requires frontend routing hygiene |
 
 ### CURRENT DERIVED EVIDENCE
 
 | Source | Use |
 |---|---|
-| `working/DELIVERY_ATLAS_WORKING_v0.2.0.md` | Derived Phase-7 / proof / HH lifecycle navigation only; does not create HARDEN-02 law |
+| `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` | Derived Phase-7 / proof / HH lifecycle navigation only; does not create HARDEN-02 law |
 | `working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md` | Current FP-001 Phase 7A factual state (not reconciled for PMR; not amended by HARDEN-02) |
 | `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` | Identity dossier complete/merged factual state (not amended here) |
 
@@ -140,7 +140,7 @@ Canonical, independently retrievable evidence used for HARDEN-02 structural inte
 
 - `archive/02_OPEN_WORK_v1.2.29.md` — HARDEN-02 as Phase 7B pipeline-governance sequencing, not Product/Roadmap/OQ/FP dependency; Communications as the then-next FP-001 domain task after HARDEN-02;
 - PR #24 completion state on canonical GitHub — HARDEN-01 / OQ-034 routing sync completed without starting Communications, Phase 7C, proof or implementation;
-- `PLATFORM_OPERATING_MODEL_v1.0.0.md` — Phase 7 handoff shape: Skeleton + Gate Manifest → required JIT Domain Dossiers → Final Feature Pack Contract;
+- `PLATFORM_OPERATING_MODEL_v1.0.1.md` — Phase 7 handoff shape: Skeleton + Gate Manifest → required JIT Domain Dossiers → Final Feature Pack Contract;
 - current Open Work successor — Development Entry Hard Stop and post-amendment programme routing;
 - accepted human decisions H02-1 / H02-2 / historical H02-3 / routing refinement H02-3R.
 

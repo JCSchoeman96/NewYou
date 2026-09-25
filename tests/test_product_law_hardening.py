@@ -50,6 +50,14 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.open_work = current_document("OPEN_WORK")
         cls.roadmap = current_document("ROADMAP")
         cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        cls.architecture = (DOCS / "03_ARCHITECTURE_v1.1.1.md").read_text(encoding="utf-8")
+        cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.1.1.md").read_text(encoding="utf-8")
+        cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
+        cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
+        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md").read_text(encoding="utf-8")
+        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.1.md").read_text(
+            encoding="utf-8"
+        )
         cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md").read_text(
             encoding="utf-8"
         )
@@ -295,22 +303,61 @@ class ProductLawHardeningTests(unittest.TestCase):
     def test_current_governance_source_trails_resolve_to_current_or_archived_files(self):
         self.assertIn("05_ROADMAP_v1.1.1.md", self.open_work)
         self.assertIn("archive/05_ROADMAP_v1.1.0.md", self.open_work)
+        self.assertIn("archive/03_ARCHITECTURE_v1.1.0.md", self.open_work)
+        self.assertIn("archive/04_DOMAIN_MAP_v1.1.0.md", self.open_work)
         self.assertIn("archive/00_PLATFORM_v1.3.0.md", self.decisions)
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.0.md", self.fp001)
+        self.assertIn("synthesis `v1.1.1` (path-only successor to archived v1.1.0)", self.readme)
+        self.assertIn("current Domain Law `v1.1.1` (path-only successor to archived v1.1.0)", self.readme)
+        self.assertTrue(
+            "working/DELIVERY_ATLAS_WORKING_v0.2.1.md" in self.fp001,
+            "FP-001 must route to the current derived Atlas",
+        )
         self.assertIn("reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md", self.fp001)
         self.assertIn("docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md", self.fp001)
         self.assertIn("docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.fp001)
+        atlas_reconciliation = self.atlas.split("## 26.18 ATLAS reconciliation (`v0.2.0`) completion standard", 1)[1]
+        current_source_routing = next(
+            line for line in atlas_reconciliation.splitlines() if "| Current-source routing |" in line
+        )
+        self.assertIn("Product `v1.4.0`, Decisions `v1.4.0`", current_source_routing)
+        self.assertIn("Architecture `v1.1.1`, Domain Map `v1.1.1`, Roadmap `v1.1.1`", current_source_routing)
+        self.assertNotIn("Product `v1.3.0`", current_source_routing)
+        self.assertNotIn("Architecture `v1.1.0`", current_source_routing)
 
         source_trails = {
             "Open Work": self.open_work,
             "Decision Register": self.decisions,
             "FP-001": self.fp001,
+            "Architecture": self.architecture,
+            "Domain Map": self.domain_map,
+            "Operating Model": self.operating_model,
+            "Delivery Atlas": self.atlas,
+            "HARDEN-02": self.harden02,
+            "Frontend Experience System": self.fes,
         }
         moved_predecessors = (
+            "PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
+            "00_PLATFORM_v1.2.1.md",
             "00_PLATFORM_v1.3.0.md",
+            "01_DECISIONS_v1.2.2.md",
+            "01_DECISIONS_v1.3.0.md",
             "05_ROADMAP_v1.1.0.md",
+            "05_ROADMAP_v1.0.0.md",
+            "03_ARCHITECTURE_v1.0.0.md",
+            "03_ARCHITECTURE_v1.1.0.md",
+            "04_DOMAIN_MAP_v1.0.0.md",
+            "04_DOMAIN_MAP_v1.1.0.md",
+            "PLATFORM_OPERATING_MODEL_v1.0.0.md",
+            "02_OPEN_WORK_v1.2.36.md",
+            "02_OPEN_WORK_v1.2.37.md",
+            "02_OPEN_WORK_v1.2.39.md",
+            "02_OPEN_WORK_v1.2.43.md",
             "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
+            "HARDEN-02_CONTRACT_WORKING_v0.3.0.md",
+            "HARDEN-02_CONTRACT_WORKING_v0.4.0.md",
             "DELIVERY_ATLAS_WORKING_v0.1.0.md",
+            "DELIVERY_ATLAS_WORKING_v0.2.0.md",
+            "FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
             "02_OPEN_WORK_v1.2.28.md",
         )
         for document_name, document in source_trails.items():
@@ -321,11 +368,52 @@ class ProductLawHardeningTests(unittest.TestCase):
                         f"{document_name} uses an unarchived predecessor path: {filename}",
                     )
 
+        current_reference_sources = {
+            "Open Work": (
+                "ARCHITECTURE_LAW_WORKING_v0.36.0.md",
+                "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+            ),
+            "Architecture": (
+                "ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
+                "ARCHITECTURE_LAW_WORKING_v0.36.0.md",
+                "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+            ),
+            "Domain Map": ("ARCHITECTURE_LAW_WORKING_v0.36.0.md",),
+            "FP-001": ("REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",),
+            "Delivery Atlas": ("ARCHITECTURE_LAW_WORKING_v0.36.0.md",),
+        }
+        for document_name, filenames in current_reference_sources.items():
+            for filename in filenames:
+                with self.subTest(document=document_name, current_reference=filename):
+                    self.assertIn("reference/" + filename, source_trails[document_name])
+                    self.assertIsNone(
+                        re.search(r"(?<!reference/)" + re.escape(filename), source_trails[document_name]),
+                        f"{document_name} contains an unresolved reference path: {filename}",
+                    )
+
         archived_source_paths = (
             "docs/00_platform/archive/05_ROADMAP_v1.1.0.md",
+            "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
+            "docs/00_platform/archive/00_PLATFORM_v1.2.1.md",
             "docs/00_platform/archive/00_PLATFORM_v1.3.0.md",
+            "docs/00_platform/archive/01_DECISIONS_v1.2.2.md",
+            "docs/00_platform/archive/01_DECISIONS_v1.3.0.md",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.36.md",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.37.md",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.43.md",
+            "docs/00_platform/archive/03_ARCHITECTURE_v1.0.0.md",
+            "docs/00_platform/archive/03_ARCHITECTURE_v1.1.0.md",
+            "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md",
+            "docs/00_platform/archive/04_DOMAIN_MAP_v1.1.0.md",
+            "docs/00_platform/archive/05_ROADMAP_v1.0.0.md",
+            "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.0.md",
             "docs/00_platform/archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
+            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md",
+            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md",
             "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md",
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md",
+            "docs/00_platform/archive/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
             "docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md",
         )
         for relative_path in archived_source_paths:
@@ -334,12 +422,92 @@ class ProductLawHardeningTests(unittest.TestCase):
 
         current_source_paths = (
             "docs/00_platform/05_ROADMAP_v1.1.1.md",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.0.md",
+            "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
+            "docs/00_platform/04_DOMAIN_MAP_v1.1.1.md",
+            "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
+            "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md",
             "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+            "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
+            "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
         )
         for relative_path in current_source_paths:
             with self.subTest(path=relative_path):
                 self.assertTrue((ROOT / relative_path).is_file())
+
+    def test_active_authority_headers_resolve_historical_inputs_through_archive(self):
+        expected_archived_sources = {
+            "Architecture": (
+                "archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
+                "archive/00_PLATFORM_v1.3.0.md",
+                "archive/01_DECISIONS_v1.3.0.md",
+                "archive/02_OPEN_WORK_v1.2.36.md",
+                "archive/03_ARCHITECTURE_v1.1.0.md",
+            ),
+            "Domain Map": (
+                "archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
+                "archive/00_PLATFORM_v1.3.0.md",
+                "archive/01_DECISIONS_v1.3.0.md",
+                "archive/02_OPEN_WORK_v1.2.37.md",
+                "archive/04_DOMAIN_MAP_v1.1.0.md",
+            ),
+            "Operating Model": (
+                "archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
+                "archive/00_PLATFORM_v1.2.1.md",
+                "archive/01_DECISIONS_v1.2.2.md",
+                "archive/02_OPEN_WORK_v1.2.28.md",
+                "archive/03_ARCHITECTURE_v1.0.0.md",
+                "archive/04_DOMAIN_MAP_v1.0.0.md",
+                "archive/05_ROADMAP_v1.0.0.md",
+                "archive/PLATFORM_OPERATING_MODEL_v1.0.0.md",
+            ),
+            "Frontend Experience System": ("archive/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",),
+        }
+        documents = {
+            "Architecture": self.architecture,
+            "Domain Map": self.domain_map,
+            "Operating Model": self.operating_model,
+            "Frontend Experience System": self.fes,
+        }
+        for name, paths in expected_archived_sources.items():
+            for path in paths:
+                with self.subTest(document=name, path=path):
+                    self.assertTrue(path in documents[name], f"{name} is missing {path}")
+                    filename = path.removeprefix("archive/")
+                    self.assertIsNone(
+                        re.search(r"(?<!archive/)" + re.escape(filename), documents[name]),
+                        f"{name} contains an unresolved unarchived source path: {filename}",
+                    )
+
+    def test_atlas_routes_to_current_authorities_and_does_not_block_on_resolved_oq034(self):
+        current_sources = (
+            "PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md",
+            "00_PLATFORM_v1.4.0.md",
+            "01_DECISIONS_v1.4.0.md",
+            "03_ARCHITECTURE_v1.1.1.md",
+            "04_DOMAIN_MAP_v1.1.1.md",
+            "05_ROADMAP_v1.1.1.md",
+            "02_OPEN_WORK_v1.2.44.md",
+            "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
+        )
+        source_table = self.atlas.split("## 1.2 Purpose", 1)[0]
+        for filename in current_sources:
+            with self.subTest(filename=filename):
+                self.assertTrue(filename in source_table, f"Atlas current-source table is missing {filename}")
+        fp001_section = self.atlas.split("## FP-001", 1)[1].split("## FP-002", 1)[0]
+        self.assertNotRegex(fp001_section, r"OQ-034[^\n]*BLOCKS_THIS_FP")
+        self.assertIn("OQ-034", fp001_section)
+        self.assertIn("RESOLVED / ARCHITECTURE SELECTION", fp001_section)
+
+    def test_resolved_oq034_semantics_detect_an_atlas_blocker(self):
+        blocker = "OQ-034 — BLOCKS_THIS_FP: stale Atlas status"
+        self.assertTrue(foundation_integrity_audit._has_oq034_fp_blocker([blocker]))
+        self.assertFalse(
+            foundation_integrity_audit._has_oq034_fp_blocker(
+                [self.roadmap, self.fp001, self.atlas]
+            )
+        )
 
 
 if __name__ == "__main__":

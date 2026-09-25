@@ -16,19 +16,19 @@
   - `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`
   - `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md`
   - `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md`
-  - `working/DELIVERY_ATLAS_WORKING_v0.2.0.md`
+  - `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`
   - `working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md`
   - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` (merged unchanged via PR #40; awaiting post-merge independent inspection and attestation)
   - `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` (merged via PR #39; v0.3.0 lifecycle not retroactively certified)
   - `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` (historical, not repository-verifiably certified)
-  - `03_ARCHITECTURE_v1.1.0.md`
-  - `04_DOMAIN_MAP_v1.1.0.md`
+  - `03_ARCHITECTURE_v1.1.1.md`
+  - `04_DOMAIN_MAP_v1.1.1.md`
   - `05_ROADMAP_v1.1.1.md`
   - `archive/05_ROADMAP_WORKING_v0.1.0.md`
   - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`
   - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`
 - **Last updated:** 2026-09-25
-- **Current planning position:** The general Product Grill and targeted Product amendment programme remain **COMPLETE** for the approved product direction; Product Law is now `00_PLATFORM_v1.4.0.md` with decisions DEC-299 through DEC-303. Domain count remains **20** and Feature Pack count remains **17**. Current Roadmap is `05_ROADMAP_v1.1.1.md`; current Delivery Atlas remains derived and non-authoritative at `working/DELIVERY_ATLAS_WORKING_v0.2.0.md`. HARDEN-02 contract v0.4.0 was certified on exact PR #40 head `cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4`, merged unchanged as `352f304139b9d4f8ee3ba205cde9e34d0ad8437f`, and resulting-main Foundation Integrity CI passed. The current working successor v0.4.1 records that post-merge independent inspection and attestation are still pending. HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED. Engineering Standards Authority Promotion follows certified execution; FP-001 reconciliation follows certified Standards Promotion; Communications follows FP-001 reconciliation. PR #38 remains stale / blocked / not authority. This update executes none of those stages. H02-1 limits HARDEN-02 to Phase-7 governance / structural hardening, H02-2 excludes Store/CER, and H02-3R remains the accepted downstream route. **PLANNING FOUNDATION: READY**. **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** FP-001 artifacts are not reconciled here.
+- **Current planning position:** The general Product Grill and targeted Product amendment programme remain **COMPLETE** for the approved product direction; Product Law is now `00_PLATFORM_v1.4.0.md` with decisions DEC-299 through DEC-303. Domain count remains **20** and Feature Pack count remains **17**. Current Roadmap is `05_ROADMAP_v1.1.1.md`; current Delivery Atlas remains derived and non-authoritative at `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`. HARDEN-02 contract v0.4.0 was certified on exact PR #40 head `cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4`, merged unchanged as `352f304139b9d4f8ee3ba205cde9e34d0ad8437f`, and resulting-main Foundation Integrity CI passed. The current working successor v0.4.1 records that post-merge independent inspection and attestation are still pending. HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED. Engineering Standards Authority Promotion follows certified execution; FP-001 reconciliation follows certified Standards Promotion; Communications follows FP-001 reconciliation. PR #38 remains stale / blocked / not authority. This update executes none of those stages. H02-1 limits HARDEN-02 to Phase-7 governance / structural hardening, H02-2 excludes Store/CER, and H02-3R remains the accepted downstream route. **PLANNING FOUNDATION: READY**. **EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.** FP-001 artifacts are not reconciled here.
 
 ---
 
@@ -37,11 +37,11 @@
 
 - Planning-state SemVer transition: `v1.2.42 → v1.2.43`.
 - Records PR #39 / v0.3.0 merge and post-merge CI PASS; states v0.3.0 GitHub-identity certification was not satisfied for solo-maintainer workflow and is not retroactively certified.
-- Makes HARDEN-02 contract v0.4.0 solo-maintainer certification-mechanism amendment the current stage through `working/HARDEN-02_CONTRACT_WORKING_v0.4.0.md`.
+- Makes HARDEN-02 contract v0.4.0 solo-maintainer certification-mechanism amendment the current stage through `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md`.
 - Preserves v0.3.0 at `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` and predecessor Open Work at `archive/02_OPEN_WORK_v1.2.42.md`.
 - Keeps HARDEN-02 execution NOT STARTED / NOT AUTHORISED; Engineering Standards, FP-001 reconciliation, Communications and implementation remain downstream / blocked.
 - Planning-state SemVer transition (predecessor): `v1.2.41 → v1.2.42`.
-- Makes HARDEN-02 contract recovery / re-certification the current blocker and stage through `working/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` (historical in v1.2.42).
+- Makes HARDEN-02 contract recovery / re-certification the current blocker and stage through `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` (historical in v1.2.42).
 - Preserves v0.2.0 at `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` as historical evidence. PR #37's merge and CI facts remain valid, but its missing repository-verifiable independent pre-merge certification means its COMPLETE / CERTIFIED lifecycle was never established.
 - Re-baselines the v0.3.0 contract lifecycle from current `main` SHA `2599638334b761ddef8e5568d0a38c3207eef722`; v0.3.0 does not retroactively certify v0.2.0.
 - Keeps HARDEN-02 execution NOT STARTED / NOT AUTHORISED throughout this recovery PR. PR #38 is not authority and remains blocked until recovery completes.
@@ -480,7 +480,7 @@ Exit condition — **MET**:
 - no flow creates contradictory architecture rules;
 - downstream expert/provider/JIT/proof gates are explicit and remain in their correct authority layer.
 
-## Phase 4 — COMPLETE: `03_ARCHITECTURE_v1.1.0.md` Architecture-amendment successor
+## Phase 4 — COMPLETE: `03_ARCHITECTURE_v1.1.1.md` Architecture-amendment successor
 
 Synthesize the approved architecture work into:
 
@@ -522,13 +522,13 @@ Before freeze, perform:
 
 Freeze only when Domain Map can proceed without inventing architecture.
 
-**Phase 4 completion evidence:** predecessor `archive/03_ARCHITECTURE_v1.0.0.md`; current frozen successor `03_ARCHITECTURE_v1.1.0.md`, supported by `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`.
+**Phase 4 completion evidence:** original freeze `archive/03_ARCHITECTURE_v1.0.0.md`; amended v1.1.0 synthesis preserved at `archive/03_ARCHITECTURE_v1.1.0.md`; current frozen path-only successor `03_ARCHITECTURE_v1.1.1.md`, supported by `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`.
 
 **Closure result:** PASS — 332/332 ARC thematic coverage; 433/433 ARQ coverage; 16/16 Stage 4A Product-derived ARQs closed; five new ARC decisions; mandatory targeted FLOW-01/02/03/06/08/10/11 review complete; FLOW-09 conditional and not triggered; 0 real ARC conflicts; no Domain ownership assigned; implementation remains blocked.
 
 ## Phase 5 — COMPLETE: Domain Map + Domain Architecture Profiles
 
-Historical Phase-5 freeze: `archive/04_DOMAIN_MAP_v1.0.0.md` (18 Domains). Current Domain Law successor: `04_DOMAIN_MAP_v1.1.0.md` (20 Domains).
+Historical Phase-5 freeze: `archive/04_DOMAIN_MAP_v1.0.0.md` (18 Domains). Current Domain Law successor: `04_DOMAIN_MAP_v1.1.1.md` (20 Domains).
 
 ### 5A — Complete Domain Map
 
@@ -629,7 +629,7 @@ Phase 5 exit condition:
 - the MVP can be sequenced without creating a dead-end for approved future capabilities;
 - Roadmap can proceed without requiring speculative implementation-grade dossiers.
 
-**Phase 5 completion evidence:** historical freeze `archive/04_DOMAIN_MAP_v1.0.0.md`; current successor `04_DOMAIN_MAP_v1.1.0.md`.
+**Phase 5 completion evidence:** original freeze `archive/04_DOMAIN_MAP_v1.0.0.md`; amended v1.1.0 map preserved at `archive/04_DOMAIN_MAP_v1.1.0.md`; current path-only successor `04_DOMAIN_MAP_v1.1.1.md`.
 
 **Historical Phase-5 closure:** PASS — 18 approved domains; 48/48 ownership-matrix truths; 18/18 lightweight profiles.
 
@@ -884,7 +884,7 @@ Implementation remains stopped unless every Development Entry Hard Stop conditio
 
 # 9. Immediate Next Action
 
-The Targeted Product Amendment Programme through warranted Delivery Atlas reconciliation remains COMPLETE. Domain count remains 20. Feature Pack count remains 17. The current Delivery Atlas remains derived, non-authoritative working/DELIVERY_ATLAS_WORKING_v0.2.0.md; this recovery does not update it.
+The Targeted Product Amendment Programme through warranted Delivery Atlas reconciliation remains COMPLETE. Domain count remains 20. Feature Pack count remains 17. The current Delivery Atlas is derived and non-authoritative at `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`; this source-path and resolved-gate correction changes no Product, Architecture, Domain or Roadmap authority and does not authorise implementation.
 
 ```text
 CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 POST-MERGE CERTIFICATION / CONTRACT LIFECYCLE
@@ -896,12 +896,12 @@ STAGE 3A.2 — GOVERNED AR-000 AMENDMENT: COMPLETE
 STAGE 3B — INDEPENDENT ARCHITECTURE/ENGINEERING CLASSIFICATION: COMPLETE
 ARCHITECTURE GRILL: COMPLETE
 ENGINEERING-POLICY GRILL: COMPLETE
-ARCHITECTURE AMENDMENT: COMPLETE — Architecture Law v0.36.0 / synthesis v1.1.0 / targeted flows v0.3.0
+ARCHITECTURE AMENDMENT: COMPLETE — Architecture Law v0.36.0 / current synthesis v1.1.1 (path-only successor to archived v1.1.0) / targeted flows v0.3.0
 DOMAIN PRESSURE TEST: COMPLETE
-DOMAIN AMENDMENT: COMPLETE — Domain Map v1.1.0 / 20 Domains / Domain 19 Research & Feedback / Domain 20 Voting & Balloting
+DOMAIN AMENDMENT: COMPLETE — current Domain Map v1.1.1 (path-only successor to archived v1.1.0) / 20 Domains / Domain 19 Research & Feedback / Domain 20 Voting & Balloting
 ROADMAP SEQUENCING GRILL: COMPLETE
 ROADMAP AMENDMENT: COMPLETE — current Roadmap 05_ROADMAP_v1.1.1.md; Feature Packs 17
-ATLAS RECONCILIATION: COMPLETE — current Atlas working/DELIVERY_ATLAS_WORKING_v0.2.0.md; DERIVED / NON-AUTHORITATIVE; ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12
+ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`; predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; DERIVED / NON-AUTHORITATIVE; ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12
 HARDEN-02 CONTRACT LIFECYCLE: CURRENT / OPEN — v0.4.0 certified on exact PR #40 head cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4, merged unchanged as main 352f304139b9d4f8ee3ba205cde9e34d0ad8437f; resulting-main CI PASS; post-merge independent inspection and attestation PENDING; current working status successor v0.4.1
 HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED THROUGHOUT THIS RECOVERY PR
 ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED
@@ -1079,9 +1079,9 @@ This section tracks the governed Targeted Amendment → FP-001 Development Entry
 | Stage 3B | Independent Architecture/Engineering classification | **COMPLETE** — non-authoritative classification artifact recorded |
 | Architecture Grill | Product-derived Architecture Grill for AR-000 v1.1.0 | **COMPLETE** — non-authoritative Grill evidence recorded |
 | Engineering-Policy Grill | Independent downstream Engineering-policy classification | **COMPLETE** — non-authoritative Grill evidence recorded; exact PR head requires independent review |
-| Architecture amendment | Product-derived Stage 4A Architecture Law/synthesis/targeted-flow amendment | **COMPLETE** — current successors are `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`, `03_ARCHITECTURE_v1.1.0.md` and `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`; predecessors are preserved in `archive/` |
+| Architecture amendment | Product-derived Stage 4A Architecture Law/synthesis/targeted-flow amendment | **COMPLETE** — current successors are `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`, `03_ARCHITECTURE_v1.1.1.md` and `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`; predecessors are preserved in `archive/` |
 | Domain pressure test | Targeted Domain ownership pressure test after Architecture amendment | **COMPLETE** — non-authoritative evidence in `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md` |
-| Domain amendment | Additive Domain Law successor implementing accepted human Domain decisions | **COMPLETE** — current successor is `04_DOMAIN_MAP_v1.1.0.md`; predecessor is `archive/04_DOMAIN_MAP_v1.0.0.md`; 20 Domains |
+| Domain amendment | Additive Domain Law successor implementing accepted human Domain decisions | **COMPLETE** — current successor is `04_DOMAIN_MAP_v1.1.1.md`; predecessor is `archive/04_DOMAIN_MAP_v1.0.0.md`; 20 Domains |
 | Roadmap Sequencing Grill | Sequencing decisions for PMR / Research / Voting / Interactive Tools | **COMPLETE** — non-authoritative evidence in `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` |
 | Roadmap amendment | Additive Roadmap successor implementing accepted human Roadmap decisions | **COMPLETE** — current successor is `05_ROADMAP_v1.1.1.md`; predecessor v1.1.0 is preserved at `archive/05_ROADMAP_v1.1.0.md`; Feature Packs remain 17 |
 | Later | HARDEN-02 execution / Engineering Standards Authority Promotion / FP-001 reconciliation | **DOWNSTREAM** — PR #40's v0.4.0 certified head is merged unchanged and resulting-main CI passed; current working status successor `working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md` records post-merge independent inspection and attestation as pending. HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED until both lifecycle records exist. After certified execution, the H02-3R route remains Engineering Standards Authority Promotion, certified Standards Promotion, FP-001 reconciliation, Communications, remaining required / conditional Phase-7B, Phase 7C, proof classification and Phase 8 after its entry gates. This update executes none of those stages and does not reconcile FP-001 |
@@ -1112,7 +1112,7 @@ Explicitly **not** in Stage 2 scope: ARQ/ARC creation, Architecture amendment, D
 
 Stage 3A.2 remains complete in `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`. Stage 3B remains complete as classification only in `working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md`; its independent Architecture queue remains zero. Stage 4A remains complete as non-authoritative Architecture Grill evidence in `working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md`.
 
-Stage 4B is complete as non-authoritative Engineering-Policy Grill evidence in `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`. It records explicit human decisions for the seven Stage 3B Engineering-Policy propositions, creates no Product Law, ARQ, ARC, Engineering Standard, Domain, Roadmap, Feature Pack, dependency, CI or implementation artifact, and remains active working input for later Engineering Standards. The governed Architecture amendment is complete in the cumulative law successor `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`, frozen synthesis successor `03_ARCHITECTURE_v1.1.0.md`, targeted flow successor `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md` and this Open Work successor. It closes exactly the 16 Product-derived ARQs, adds `ARC-328` through `ARC-332`, assigns no Domain owner and does not amend Product Law, the Decision Register or AR-000.
+Stage 4B is complete as non-authoritative Engineering-Policy Grill evidence in `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`. It records explicit human decisions for the seven Stage 3B Engineering-Policy propositions, creates no Product Law, ARQ, ARC, Engineering Standard, Domain, Roadmap, Feature Pack, dependency, CI or implementation artifact, and remains active working input for later Engineering Standards. The governed Architecture amendment is complete in the cumulative law successor `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`, frozen synthesis successor `03_ARCHITECTURE_v1.1.1.md`, targeted flow successor `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md` and this Open Work successor. It closes exactly the 16 Product-derived ARQs, adds `ARC-328` through `ARC-332`, assigns no Domain owner and does not amend Product Law, the Decision Register or AR-000.
 
 After the exact Architecture-amendment PR head is reported, work must **STOP** pending independent review of that head. Do not merge it, write Engineering Standards, begin Domain pressure testing/amendment, amend the Domain Map or Roadmap, create Domains or Feature Packs, reconcile the Delivery Atlas, execute HARDEN-02, modify FP-001 artifacts, or implement any capability before the next separately authorised stage.
 ## 12.4 North Star / MVP note
@@ -1123,7 +1123,7 @@ After the exact Architecture-amendment PR head is reported, work must **STOP** p
 
 The targeted Domain pressure test is complete as non-authoritative evidence in `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md`. It does not itself create Domain Law.
 
-The governed Domain amendment is complete in `04_DOMAIN_MAP_v1.1.0.md`. Predecessor `archive/04_DOMAIN_MAP_v1.0.0.md` is preserved byte-identically. Human decisions implemented:
+The governed Domain amendment is complete in `04_DOMAIN_MAP_v1.1.1.md`. Predecessor `archive/04_DOMAIN_MAP_v1.0.0.md` is preserved byte-identically. Human decisions implemented:
 
 - `DQ-1` ACCEPT — Domain 19 **Research & Feedback** owns the Research/feedback campaign, instrument/version, participant response, correction/withdrawal/de-link and staff-annotation lifecycle.
 - `DQ-2` ACCEPT WITH NAMING REFINEMENT — Domain 20 **Voting & Balloting** owns governed vote rules, submission/integrity evidence, accepted tally, finalisation, official result and adjudication. Competitions are not a Domain.
@@ -1152,7 +1152,7 @@ The v1.2.41 stop instruction is historical. The current fail-closed recovery lif
 
 ## 12.7 — Delivery Atlas reconciliation
 
-**Status:** COMPLETE as derived / non-authoritative navigation successor `working/DELIVERY_ATLAS_WORKING_v0.2.0.md` (predecessor `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`).
+**Status:** COMPLETE as derived / non-authoritative navigation successor `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` (predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; earlier predecessor `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`).
 
 Atlas reconciliation remains complete as derived navigation. The predecessor `archive/02_OPEN_WORK_v1.2.40.md` recorded HARDEN-02 contract drafting; this successor preserves that completed state and records only the H02-3R post-HARDEN-02 routing refinement. It does not create Product, Architecture, Domain or Roadmap law, does not amend FP-001 artifacts, does not execute HARDEN-02 or Engineering Standards Authority Promotion, and does not authorise implementation.
 

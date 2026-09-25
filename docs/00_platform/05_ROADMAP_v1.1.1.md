@@ -7,8 +7,8 @@
 - **Last updated:** 2026-09-25
 - **Authority:** sequences approved Product Law under frozen Architecture and Domain Law, including the Targeted Product Amendment sequencing decisions
 - **Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md`, `00_PLATFORM_v1.4.0.md`, `01_DECISIONS_v1.4.0.md`
-- **Architecture authority:** `03_ARCHITECTURE_v1.1.0.md` and accepted Architecture Law (`reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md` where exact legislative evidence is required)
-- **Domain authority:** `04_DOMAIN_MAP_v1.1.0.md`
+- **Architecture authority:** `03_ARCHITECTURE_v1.1.1.md` and accepted Architecture Law (`reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md` where exact legislative evidence is required)
+- **Domain authority:** `04_DOMAIN_MAP_v1.1.1.md`
 - **Planning tracker:** `02_OPEN_WORK_v1.2.44.md`
 - **Roadmap Sequencing Grill evidence:** `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` (non-authoritative)
 - **Historical working draft:** `archive/05_ROADMAP_WORKING_v0.1.0.md`
@@ -334,7 +334,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§10–13`; `00_PLATFORM_v1.4.0.md §§15–17, 21L.1–21L.4, 21P, 21Q`; `DEC-017...DEC-028`, `DEC-244...DEC-267`, `DEC-297`, `DEC-298`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§4, 6, 6.6, 8, 9, 12, 14–15`; `ARC-330`; `FLOW-01`; identity, session, PMR lifecycle/non-authority, policy, durable-consequence, observability and degradation themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§4, 6, 6.6, 8, 9, 12, 14–15`; `ARC-330`; `FLOW-01`; identity, session, PMR lifecycle/non-authority, policy, durable-consequence, observability and degradation themes.
 
 **Major Gates:** `OQ-035` abuse-control thresholds; `OQ-036` email/in-app provider and channel policy; `OQ-038` incident ownership for later production operation. Exact PMR encoding remains downstream (`ARQ-IAM-013`) and is not a Roadmap decision.
 
@@ -381,7 +381,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Hardening Contract:** `paid_right_held_until_delivery_or_terminal_closeout`; `bundle_refund_uses_accepted_order_allocation_snapshot`; `duplicate_payment_preserves_one_valid_right`; `unused_credit_blocks_second_standalone_or_bundle_sale`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5, 7, 8, 10.4, 12–15`; `FLOW-02`; provider evidence, durable reconciliation, idempotency, authority-before-access and bounded failure themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§5, 7, 8, 10.4, 12–15`; `FLOW-02`; provider evidence, durable reconciliation, idempotency, authority-before-access and bounded failure themes.
 
 **Major Gates:** `OQ-004` Paystack behaviour validation; `OQ-035` payment/checkout abuse thresholds; `OQ-001` operating entity before production subscriptions/sensitive scale; `OQ-002` is resolved for MVP prices and remains provisional only for future membership pricing.
 
@@ -427,7 +427,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Hardening Contract:** `declared_temperament_has_no_exact_digital_score_or_report`; `declared_profile_keeps_assessment_credit_unused`; `later_digital_result_appends_without_replacing_prior_provenance`; `ordinary_assessment_credit_cap_and_attempt_interval_apply`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§4–8, 10–15`; `FLOW-03`; immutable/versioned state, deterministic bounded computation, current entitlement and privacy lifecycle themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§4–8, 10–15`; `FLOW-03`; immutable/versioned state, deterministic bounded computation, current entitlement and privacy lifecycle themes.
 
 **Major Gates:** `OQ-006` score-distance thresholds if optional labels are activated; `OQ-013` translation-resource design; `OQ-009`/`OQ-029` retention categories for release; methodology/content and rights approval.
 
@@ -472,7 +472,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Hardening Contract:** `safety_selects_pathway_without_consuming_or_refunding_commercial_right`; `incomplete_information_or_review_keeps_paid_plan_right_held`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5–8, 11, 14–15`; `FLOW-04`, `FLOW-06`; current-authority reads, minimum-data access, fail-closed safety, durable consequences and invalidation themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§5–8, 11, 14–15`; `FLOW-04`, `FLOW-06`; current-authority reads, minimum-data access, fail-closed safety, durable consequences and invalidation themes.
 
 **Major Gates:** `OQ-005` clinical eligibility matrix; `OQ-008` urgent-support wording; `OQ-007` laboratory validity only if laboratory inputs enter this scope; `OQ-009`/`OQ-029` health retention categories.
 
@@ -520,7 +520,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Hardening Contract:** `general_wellness_is_not_personalised_plan_fulfilment`; `paid_plan_right_waits_for_delivery_or_component_refund_closeout`; `purpose_withdrawal_stops_future_processing_without_itself_ending_commercial_right`; `component_refund_uses_accepted_order_snapshot`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§4–10, 11, 13–15`; `FLOW-05`, `FLOW-06`; deterministic bounded work, immutable snapshots, content provenance, current safety checks, durable async and degradation themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§4–10, 11, 13–15`; `FLOW-05`, `FLOW-06`; deterministic bounded work, immutable snapshots, content provenance, current safety checks, durable async and degradation themes.
 
 **Major Gates:** `OQ-010` calculation values; `OQ-013` translation-resource design; `OQ-016` content publication operations; `OQ-014` edge/cache design only for any shared public/personalised cache; `OQ-011`/`OQ-012` for later adjustment, not the once-off MVP.
 
@@ -564,7 +564,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§15–17A, 19A–24`; `00_PLATFORM_v1.4.0.md §§21L.13–21L.24`; `DEC-280...DEC-291`; `02_OPEN_WORK_v1.2.44.md §§8, 11`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§7–15`; `FLOW-01...FLOW-06`, `FLOW-08`, `FLOW-11`; release/degradation, deletion/recovery, observability, audit and staged performance-proof themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§7–15`; `FLOW-01...FLOW-06`, `FLOW-08`, `FLOW-11`; release/degradation, deletion/recovery, observability, audit and staged performance-proof themes.
 
 **Major Gates:** `OQ-001`, `OQ-009`, `OQ-029`, `OQ-030`, `OQ-031`, `OQ-032`, `OQ-035`, `OQ-036`, `OQ-037`, `OQ-038`, plus the Product Law cross-functional paid-pilot readiness gate.
 
@@ -608,7 +608,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `00_PLATFORM_v1.4.0.md §§21G.14–21G.16, 21L.7–21L.12, 21L.19`; `DEC-186...DEC-190`, `DEC-206`, `DEC-274`, `DEC-279`, `DEC-286`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§7–10, 12–15`; `FLOW-07`; provider boundary, protected playback, PubSub-as-observation, durable scheduled consequence and recovery themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§7–10, 12–15`; `FLOW-07`; provider boundary, protected playback, PubSub-as-observation, durable scheduled consequence and recovery themes.
 
 **Major Gates:** `OQ-020` Restream/Cloudflare validation; `OQ-021` video consent and retention; `OQ-036` notification/channel policy; `OQ-017` only for optional reminders; `OQ-022` for later ticket/hold commerce.
 
@@ -652,7 +652,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `00_PLATFORM_v1.4.0.md §§21F, 21G, 21H, 21L.7, 21L.19`; `DEC-196...DEC-219`, `DEC-274`, `DEC-286`; `GQ-NY-001` acceptance rules.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5, 8–13, 15`; `FLOW-07`, `FLOW-06`, `FLOW-08`; durable scheduling, bounded fan-out, programme composition, notification, realtime observation and recovery themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§5, 8–13, 15`; `FLOW-07`, `FLOW-06`, `FLOW-08`; durable scheduling, bounded fan-out, programme composition, notification, realtime observation and recovery themes.
 
 **Major Gates:** `OQ-017`, `OQ-019`, `OQ-020`, `OQ-021`, `OQ-023`, `OQ-024`, `OQ-025`, `OQ-026`, `OQ-027`, `OQ-028`, `OQ-036`; inherited clinical/translation/retention gates.
 
@@ -700,7 +700,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `00_PLATFORM_v1.4.0.md §§8, 21G, 21L.8, 21L.11–21L.18`; `DEC-039...DEC-043`, `DEC-170...DEC-190`, `DEC-275`, `DEC-278`, `DEC-283...DEC-285`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5, 7–10, 12–15`; recurring Commerce/Entitlements, communications, live/replay, privacy and provider-boundary themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§5, 7–10, 12–15`; recurring Commerce/Entitlements, communications, live/replay, privacy and provider-boundary themes.
 
 **Major Gates:** `OQ-001`, `OQ-002`, `OQ-004`, `OQ-016`, `OQ-017`, `OQ-020`, `OQ-021`, `OQ-023`, `OQ-036`; operating/moderation and content approvals.
 
@@ -747,7 +747,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Hardening Contract:** `personalisation_or_recommendation_withdrawal_stops_future_adjustments`; `withdrawal_does_not_rewrite_delivered_plan_history`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5, 7–9, 11–15`; `FLOW-06`; current safety authority, immutable plan versions, durable scheduled work and failure/recovery themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§5, 7–9, 11–15`; `FLOW-06`; current safety authority, immutable plan versions, durable scheduled work and failure/recovery themes.
 
 **Major Gates:** `OQ-003` monthly review contract; `OQ-011` adjustment thresholds; `OQ-012` review timing; `OQ-010` where calculation values are changed; inherited `OQ-005` and retention gates.
 
@@ -791,7 +791,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `00_PLATFORM_v1.4.0.md §§8, 21A.5–21A.8, 21L.9, 21L.16–21L.18`; `DEC-035`, `DEC-038...DEC-046`, `DEC-276`, `DEC-283...DEC-284`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5, 7–8, 11, 14–15`; Commerce/Entitlements separation, current access, provider reconciliation, privacy and durable adjustment themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§5, 7–8, 11, 14–15`; Commerce/Entitlements separation, current access, provider reconciliation, privacy and durable adjustment themes.
 
 **Major Gates:** `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-011`, `OQ-012`, `OQ-036`; inherited safety, retention, content and operational gates.
 
@@ -835,7 +835,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `00_PLATFORM_v1.4.0.md §§15–18, 21C, 21D, 21L.10, 21L.20`; `DEC-011`, `DEC-012`, `DEC-024...DEC-026`, `DEC-091...DEC-093`, `DEC-277`, `DEC-287`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5–8, 11, 14–15`; `FLOW-10`; scoped authority, professional record, consent, current policy, audit and capacity themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§5–8, 11, 14–15`; `FLOW-10`; scoped authority, professional record, consent, current policy, audit and capacity themes.
 
 **Major Gates:** `OQ-001` operating entity; `OQ-009`/`OQ-029` retention; `OQ-033` professional record authority; practitioner agreements; relevant clinical gates; staff/practitioner MFA and incident ownership.
 
@@ -879,7 +879,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `00_PLATFORM_v1.4.0.md §§21F–21G, 21L.8, 21L.11`; `DEC-170...DEC-185`, `DEC-205`, `DEC-278`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5, 7–10, 11, 13–15`; community moderation, access-first feeds, privacy/deletion, pagination and realtime-observation themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§5, 7–10, 11, 13–15`; community moderation, access-first feeds, privacy/deletion, pagination and realtime-observation themes.
 
 **Major Gates:** `OQ-023` community operating policy; `OQ-017` reminder design if reminders are included; `OQ-018` journal encryption/retention if journals enter the community experience; `OQ-019` challenge/programme completion metrics; `OQ-036` notification policy; abuse/moderation staffing and safety escalation.
 
@@ -925,7 +925,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `00_PLATFORM_v1.4.0.md §§21F, 21H, 21L.7, 21L.11`; `DEC-010`, `DEC-158...DEC-169`, `DEC-196...DEC-219`.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5, 7–13, 15`; scheduled durable work, private data, content versions, deletion, pagination and analytics-minimisation themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§5, 7–13, 15`; scheduled durable work, private data, content versions, deletion, pagination and analytics-minimisation themes.
 
 **Major Gates:** `OQ-017` reminders; `OQ-018` journal encryption/retention; `OQ-019` programme metrics; `OQ-013` translations; `OQ-016` publication operations; `OQ-009`/`OQ-029` retention.
 
@@ -969,7 +969,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `00_PLATFORM_v1.4.0.md §§21G.17–21G.22, 21L.12`; `DEC-186...DEC-195`, `DEC-279`; event capacity/ticket rules.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§5, 7–10, 12–15`; `FLOW-09`; contention, transactional capacity, durable reconciliation, current access, edge/rate and performance-proof themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§5, 7–10, 12–15`; `FLOW-09`; contention, transactional capacity, durable reconciliation, current access, edge/rate and performance-proof themes.
 
 **Major Gates:** `OQ-022` event reservation architecture; `OQ-004` provider/payment behaviour; `OQ-035` abuse/rate thresholds; `OQ-020`/`OQ-021` where the event includes live/recorded delivery; `OQ-036` event communication policy.
 
@@ -1013,7 +1013,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `00_PLATFORM_v1.4.0.md §§21K.6A, 21L.13, 21L.23`; `DEC-293`; product learning and protected-invariant rules.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§7–10, 11, 13–15`; `FLOW-12`; assignment/exposure separation, canonical URLs, variant-safe delivery, OLTP isolation and immutable learning themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§7–10, 11, 13–15`; `FLOW-12`; assignment/exposure separation, canonical URLs, variant-safe delivery, OLTP isolation and immutable learning themes.
 
 **Major Gates:** `OQ-040` experimentation proof; `OQ-014` if experiment-sensitive shared edge caching is proposed; `OQ-013`, `OQ-015`, `OQ-016`, `OQ-036` as affected surfaces; `OQ-030`/`OQ-032` for external measurement deletion/export.
 
@@ -1058,7 +1058,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md §§6–7, 19`; `00_PLATFORM_v1.4.0.md §§21L.1–21L.3`; `DEC-005`, `DEC-268...DEC-270`; future product-space and market activation boundaries.
 
-**Architecture Authority:** `03_ARCHITECTURE_v1.1.0.md §§3, 5–15`; controlled product spaces, replaceable application topology, current authority, privacy, provider and evidence-gated scaling themes.
+**Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§3, 5–15`; controlled product spaces, replaceable application topology, current authority, privacy, provider and evidence-gated scaling themes.
 
 **Major Gates:** New approved Product Law direction; operating/IP/legal/consumer authority; relevant clinical, translation, payment, retention, provider, security and performance gates; `OQ-001`, `OQ-009`, `OQ-029`, `OQ-030`, `OQ-033`, `OQ-037`, `OQ-039` as applicable.
 

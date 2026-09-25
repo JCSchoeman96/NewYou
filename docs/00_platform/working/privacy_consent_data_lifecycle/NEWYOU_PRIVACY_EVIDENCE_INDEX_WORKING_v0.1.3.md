@@ -28,11 +28,11 @@ The compact artifacts are navigation/planning evidence only.
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
 4. `02_OPEN_WORK_v1.2.39.md`
-5. `03_ARCHITECTURE_v1.1.0.md`
-6. `04_DOMAIN_MAP_v1.1.0.md`
+5. `03_ARCHITECTURE_v1.1.1.md`
+6. `04_DOMAIN_MAP_v1.1.1.md`
 7. `05_ROADMAP_v1.1.0.md`
-8. `PLATFORM_OPERATING_MODEL_v1.0.0.md`
-9. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md` when frontend/experience is in scope.
+8. `PLATFORM_OPERATING_MODEL_v1.0.1.md`
+9. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` when frontend/experience is in scope.
 
 Deep references only when exact source tracing is needed:
 

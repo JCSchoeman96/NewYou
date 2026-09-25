@@ -41,11 +41,11 @@ Current routed authority:
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
 4. `02_OPEN_WORK_v1.2.40.md`
-5. `03_ARCHITECTURE_v1.1.0.md`
-6. `04_DOMAIN_MAP_v1.1.0.md`
+5. `03_ARCHITECTURE_v1.1.1.md`
+6. `04_DOMAIN_MAP_v1.1.1.md`
 7. `05_ROADMAP_v1.1.0.md`
-8. `PLATFORM_OPERATING_MODEL_v1.0.0.md`
-9. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md` where frontend/public publishing is in scope.
+8. `PLATFORM_OPERATING_MODEL_v1.0.1.md`
+9. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` where frontend/public publishing is in scope.
 
 The live README continues to classify `working/` as non-authoritative derived planning and `archive/` as historical/deep evidence. Current Open Work still leaves the relevant Content & Media gates open, including `OQ-013`, `OQ-014`, `OQ-015`, `OQ-016`, `OQ-020`, `OQ-021`, `OQ-024`, and the privacy/deletion gates applicable to media.
 

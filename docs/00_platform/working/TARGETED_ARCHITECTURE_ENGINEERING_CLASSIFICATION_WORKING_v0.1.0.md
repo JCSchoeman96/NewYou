@@ -59,7 +59,7 @@ The README and current manifest resolve the authority set as follows:
 | Architecture synthesis | `docs/00_platform/03_ARCHITECTURE_v1.0.0.md` | Current architecture law as consumed by engineering |
 | Domain Map | `docs/00_platform/04_DOMAIN_MAP_v1.0.0.md` | Durable business-truth ownership and domain boundary |
 | Roadmap | `docs/00_platform/05_ROADMAP_v1.0.0.md` | Sequencing and anti-speculation constraints |
-| Operating model | `docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.0.md` | Operational evidence, dashboards and traceability boundaries |
+| Operating model | `docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md` | Operational evidence, dashboards and traceability boundaries |
 | ARQ evidence | `docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md` | Product-derived architecture requirement tracing |
 | Architecture-law evidence | `docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md` | Exact ARC reasoning for the frozen synthesis |
 | Flow evidence | `docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md` | Cross-boundary failure and recovery pressure |
@@ -75,7 +75,7 @@ The current manifest records the following baseline SHA-256 values for the prote
 | `03_ARCHITECTURE_v1.0.0.md` | `87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b` |
 | `04_DOMAIN_MAP_v1.0.0.md` | `f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a` |
 | `05_ROADMAP_v1.0.0.md` | `b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20` |
-| `PLATFORM_OPERATING_MODEL_v1.0.0.md` | `884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811` |
+| `PLATFORM_OPERATING_MODEL_v1.0.1.md` | `884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811` |
 | `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md` | `971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91` |
 | `reference/ARCHITECTURE_LAW_WORKING_v0.35.0.md` | `a853f3fc117f2fc4d6d0071658c4fd97edc487c5e6cdffb068f355c190264639` |
 | `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md` | `f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20` |

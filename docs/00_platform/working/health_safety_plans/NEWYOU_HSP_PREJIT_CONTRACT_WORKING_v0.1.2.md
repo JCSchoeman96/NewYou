@@ -20,11 +20,11 @@ Current routed authority:
 2. `00_PLATFORM_v1.3.0.md`
 3. `01_DECISIONS_v1.3.0.md`
 4. `02_OPEN_WORK_v1.2.39.md`
-5. `03_ARCHITECTURE_v1.1.0.md`
-6. `04_DOMAIN_MAP_v1.1.0.md`
+5. `03_ARCHITECTURE_v1.1.1.md`
+6. `04_DOMAIN_MAP_v1.1.1.md`
 7. `05_ROADMAP_v1.1.0.md`
-8. `PLATFORM_OPERATING_MODEL_v1.0.0.md`
-9. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md` only when frontend/experience planning is in scope.
+8. `PLATFORM_OPERATING_MODEL_v1.0.1.md`
+9. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` only when frontend/experience planning is in scope.
 
 The current `v1.3.0` Product amendment and `v1.1.0` Architecture/Domain/Roadmap amendments are additive for Research & Feedback, Voting & Balloting, Interactive Tools and Platform Member Reference. They do not alter the Health → Safety → Plans authority model or FP-004/FP-005 sequencing used here.
 
