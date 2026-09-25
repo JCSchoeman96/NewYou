@@ -817,7 +817,10 @@ def _check_development_entry_boundary(
             raise ValueError("current OPEN_WORK document is missing")
         state = _parse_marked_open_work_state(open_work_path.read_text(encoding="utf-8"))
         application_implementation = state.get("application_implementation")
-        if application_implementation not in {"BLOCKED", "AUTHORISED"}:
+        if not isinstance(application_implementation, str) or application_implementation not in {
+            "BLOCKED",
+            "AUTHORISED",
+        }:
             raise ValueError(
                 "application_implementation must be BLOCKED or AUTHORISED"
             )

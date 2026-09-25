@@ -124,6 +124,21 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 )
             )
 
+    def test_wrong_type_application_state_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_clean_fixture(root, application_implementation=[])
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    finding["check"] == "development_entry_repository_boundary"
+                    for finding in report["findings"]
+                )
+            )
+
     def test_duplicate_application_state_key_fails_closed(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
