@@ -9,8 +9,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
-ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
+ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
+ATLAS_OLDER_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md"
 _manifest_for_current_open_work = json.loads((DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8"))
 _current_open_work_entry = next(
     entry
@@ -19,7 +20,8 @@ _current_open_work_entry = next(
     if entry["document_id"] == "OPEN_WORK"
 )
 OPEN_WORK = ROOT / _current_open_work_entry["repository_path"]
-OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
+OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.46.md"
+OPEN_WORK_V1_2_42 = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 OPEN_WORK_V1_2_40 = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
 ATLAS_STAGE_OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.39.md"
@@ -33,6 +35,8 @@ PROTECTED_HASHES = {
     "docs/00_platform/03_ARCHITECTURE_v1.1.0.md": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
     "docs/00_platform/04_DOMAIN_MAP_v1.1.0.md": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
     "docs/00_platform/archive/05_ROADMAP_v1.1.0.md": "eaeaf6031e47653777caf5885ad9eb0ceba58783c99d7d6d255acfbca53fa613",
+    "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md": "c122c0f4a903c9679529e0e65a794999dcdaf957a66fcff00df990a0644bbb7f",
+    "docs/00_platform/archive/02_OPEN_WORK_v1.2.46.md": "8fdac05cbc264ab1602b622ed9dde1c9a9389e8bfc1112387f640f9d9dadf3e8",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.38.md": "b5710e3cd3348668ae9d9a7b586343e4b18ba4c1bb7e59ae5c4a69927de188f6",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md": "5af9c6965d214bb0dd46cd3215a2e23ed1a17d546ef53ccd4de31be346d11e21",
@@ -51,11 +55,13 @@ PROTECTED_HASHES = {
 
 PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.1.0.md",
+    "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.0.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.38.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.39.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.40.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.41.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.42.md",
+    "docs/00_platform/02_OPEN_WORK_v1.2.46.md",
     "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
     "docs/00_platform/reference/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
     "docs/00_platform/working/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
@@ -83,8 +89,16 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
 
     def test_predecessor_preserved_and_successor_versioned(self):
         self.assertEqual(
-            PROTECTED_HASHES["docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md"],
+            PROTECTED_HASHES["docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md"],
             _sha256(ATLAS_PREDECESSOR),
+        )
+        self.assertEqual(
+            PROTECTED_HASHES["docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md"],
+            _sha256(ATLAS_OLDER_PREDECESSOR),
+        )
+        self.assertEqual(
+            PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.46.md"],
+            _sha256(OPEN_WORK_PREDECESSOR),
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md"],
@@ -96,7 +110,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.42.md"],
-            _sha256(OPEN_WORK_PREDECESSOR),
+            _sha256(OPEN_WORK_V1_2_42),
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md"],
@@ -107,9 +121,9 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
             _sha256(DOCS / "archive" / "02_OPEN_WORK_v1.2.38.md"),
         )
         self.assertTrue(ATLAS.is_file())
-        self.assertIn("v0.1.0 → v0.2.0", self.atlas)
-        self.assertIn("v1.2.42 → v1.2.43", self.open_work)
-        self.assertIn("v1.2.41 → v1.2.42", OPEN_WORK_PREDECESSOR.read_text(encoding="utf-8"))
+        self.assertIn("v0.2.0 → v0.2.1", self.atlas)
+        self.assertIn("v1.2.46 → v1.2.47", self.open_work)
+        self.assertIn("v1.2.41 → v1.2.42", OPEN_WORK_V1_2_42.read_text(encoding="utf-8"))
         self.assertIn("v1.2.40 → v1.2.41", OPEN_WORK_OLDER_PREDECESSOR.read_text(encoding="utf-8"))
         self.assertIn("v1.2.39 → v1.2.40", OPEN_WORK_V1_2_40.read_text(encoding="utf-8"))
         self.assertIn("v1.2.38 → v1.2.39", ATLAS_STAGE_OPEN_WORK.read_text(encoding="utf-8"))
@@ -143,18 +157,34 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
 
     def test_current_source_routing_refreshed(self):
         sources = _section(self.atlas, "## 1.1 Authority hierarchy", "## 1.2 Purpose")
-        self.assertIn("00_PLATFORM_v1.3.0.md", sources)
-        self.assertIn("01_DECISIONS_v1.3.0.md", sources)
-        self.assertIn("03_ARCHITECTURE_v1.1.0.md", sources)
-        self.assertIn("04_DOMAIN_MAP_v1.1.0.md", sources)
-        self.assertIn("05_ROADMAP_v1.1.0.md", sources)
-        self.assertIn("02_OPEN_WORK_v1.2.39.md", sources)
-        self.assertNotIn("00_PLATFORM_v1.2.1.md", sources)
-        self.assertNotIn("01_DECISIONS_v1.2.2.md", sources)
-        self.assertNotIn("03_ARCHITECTURE_v1.0.0.md", sources)
-        self.assertNotIn("04_DOMAIN_MAP_v1.0.0.md", sources)
-        self.assertNotIn("05_ROADMAP_v1.0.0.md", sources)
-        self.assertNotIn("02_OPEN_WORK_v1.2.28.md", sources)
+        current = {
+            entry["document_id"]: entry
+            for section in ("governing_documents", "reference_documents")
+            for entry in self.manifest[section]
+            if entry.get("lifecycle") == "current"
+        }
+        roadmap_path = current["ROADMAP"]["repository_path"]
+        open_work_path = current["OPEN_WORK"]["repository_path"]
+        roadmap_row = next(line for line in sources.splitlines() if line.startswith("| Roadmap |"))
+        open_work_row = next(line for line in sources.splitlines() if line.startswith("| Planning tracker |"))
+        for row in (line for line in sources.splitlines() if line.startswith("| ") and not line.startswith("| Authority level")):
+            self.assertNotIn("archive/", row, row)
+        self.assertIn(roadmap_path, roadmap_row)
+        self.assertIn(open_work_path, open_work_row)
+        self.assertNotIn("archive/", roadmap_row)
+        self.assertNotIn("archive/", open_work_row)
+        open_work_name = Path(open_work_path).name
+        for line in self.atlas.splitlines():
+            if "02_OPEN_WORK_v" in line and re.search(r"(?i)\bcurrent\b", line):
+                self.assertIn(open_work_name, line, line)
+
+        portfolio_rule = _section(self.atlas, "## 4.1 Portfolio rule", "## Feature Pack Portfolio Register")
+        self.assertIn(roadmap_path, portfolio_rule)
+        self.assertIn("current roadmap remains the authority", portfolio_rule.lower())
+
+        # Older versioned citations in populated views are source-at-freeze provenance,
+        # not current navigation. The route above is the only current-source table.
+        self.assertIn("HISTORICAL SOURCE-AT-FREEZE / PROVENANCE", self.atlas)
 
     def test_section_54_capability_count_matches_inventory_and_matrix(self):
         inventory = _section(
@@ -276,8 +306,39 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
-        self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.0.md", self.readme)
+        self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.1.md", self.readme)
         self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.readme)
+
+    def test_atlas_only_delivery_practices_are_advisory(self):
+        def assert_unattributed_mandates_are_absent(block):
+            mandate_lines = re.findall(
+                r"(?im)^.*\b(?:must|shall|mandatory|prerequisite|require(?:d|s)?)\b.*$",
+                block,
+            )
+            for line in mandate_lines:
+                if re.search(r"(?i)(?:does not create .{0,30}|creates no .{0,30})\b(?:gate|prerequisite)\b", line):
+                    continue
+                self.assertRegex(line, r"(?i)upstream|current authority|approved contract|owning source")
+
+        practices = {
+            "Feature Pack Grill-Me": _section(self.atlas, "### Feature Pack Grill-Me", "### TB/VS/HH Grill-Me"),
+            "TB/VS/HH Grill-Me": _section(self.atlas, "### TB/VS/HH Grill-Me", "## Implementation handoff"),
+            "Implementation Handoff": _section(self.atlas, "## Implementation handoff", "## Continuation review"),
+            "Continuation Review": _section(self.atlas, "## Continuation review", "## Evidence and closure guidance"),
+        }
+        for name, section in practices.items():
+            with self.subTest(practice=name):
+                self.assertRegex(section, r"(?i)advisory|recommended|optional")
+                self.assertRegex(
+                    section,
+                    r"(?i)does not create (?:a )?(?:delivery )?gate|does not create a prerequisite|creates no gate or prerequisite",
+                )
+                assert_unattributed_mandates_are_absent(section)
+
+        closure = _section(self.atlas, "## Evidence and closure guidance", "## Decision Escalation Matrix")
+        self.assertRegex(closure, r"(?i)only (?:an )?explicit upstream|upstream.{0,80}gate")
+        self.assertNotRegex(closure, r"(?i)Closure requires all of the following")
+        assert_unattributed_mandates_are_absent(closure)
         self.assertIn("02_OPEN_WORK_v1.2.43.md", self.readme)
         current = {
             entry["document_id"]: entry
@@ -288,7 +349,8 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_42"]["lifecycle"])
-        self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_42"]["sha256"])
+        self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), historical["OPEN_WORK_V1_2_46"]["sha256"])
+        self.assertEqual(_sha256(OPEN_WORK_V1_2_42), historical["OPEN_WORK_V1_2_42"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_41"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK_OLDER_PREDECESSOR), historical["OPEN_WORK_V1_2_41"]["sha256"])
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_40"]["lifecycle"])
