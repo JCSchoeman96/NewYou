@@ -5227,7 +5227,7 @@ The ATLAS-11 implementation review uses the following protocol:
 
 1. inspect the full diff;
 2. confirm the starting `main` SHA, dedicated branch and synchronized `origin/main` baseline;
-3. confirm that only `docs/00_platform/working/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md` changed;
+3. confirm that only `docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md` changed;
 4. run `git diff --check`;
 5. run the existing documentation/unit tests and Foundation Integrity Audit;
 6. run a focused Section 12 audit for zero permanent source→consumer rows, removed placeholder, removed seven-class taxonomy, zero replacement taxonomy, no ownership or Feature Pack matrix, no schemas/indexes/cache mechanisms, no universal data-flow lifecycle, referenced ATLAS-07 vocabulary, explicit temporary projection, freshness/rebuildability/withdrawal questions, JIT/proof rules and deterministic selective context;

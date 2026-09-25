@@ -152,7 +152,12 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
             "69b7c00a6b134cdfe80ecb8e2cb5b10350159c95bdbb79067bcb3225dbb3d34c",
             _sha256(OPEN_WORK_PREDECESSOR),
         )
+        self.assertIn("**SemVer transition:** `v1.1.0 → v1.1.1`", self.domain_map)
+        self.assertIn("## 14. Targeted Domain amendment record (v1.1.0)", self.domain_map)
         self.assertIn("v1.0.0 → v1.1.0", self.domain_map)
+        self.assertIn("Successor from the v1.0.0 baseline: `archive/04_DOMAIN_MAP_v1.1.0.md`", self.domain_map)
+        self.assertNotIn("05_ROADMAP.md", self.domain_map)
+        self.assertIn("05_ROADMAP_v1.1.1.md", self.domain_map)
         self.assertIn("v1.2.36 → v1.2.37", self.open_work)
         self.assertIn("archive/04_DOMAIN_MAP_v1.0.0.md", self.domain_map)
         self.assertFalse((DOCS / "04_DOMAIN_MAP_v1.0.0.md").exists())

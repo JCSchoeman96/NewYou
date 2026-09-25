@@ -171,6 +171,8 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("v0.2.0 → v0.3.0", self.flow)
         self.assertIn("v1.2.35 → v1.2.36", self.open_work)
         self.assertIn("Predecessor frozen version", self.synthesis)
+        self.assertNotIn("04_DOMAIN_MAP.md", self.synthesis)
+        self.assertIn("04_DOMAIN_MAP_v1.1.1.md", self.synthesis)
 
     def test_arc_history_is_unchanged_and_new_range_is_contiguous(self):
         predecessor = _arc_sections(self.law_predecessor)

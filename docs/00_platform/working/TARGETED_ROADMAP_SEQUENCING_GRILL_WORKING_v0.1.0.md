@@ -6,7 +6,7 @@ NON-AUTHORITATIVE / ROADMAP SEQUENCING GRILL EVIDENCE
 
 This working artifact records the Roadmap Sequencing Grill that followed the governed Domain amendment. It is **not** Roadmap Law.
 
-**Roadmap Law is created only by the versioned Roadmap successor** `docs/00_platform/05_ROADMAP_v1.1.0.md`.
+**Roadmap Law is created only by the versioned Roadmap successor** `docs/00_platform/archive/05_ROADMAP_v1.1.0.md`.
 
 - **Document status:** WORKING / NON-AUTHORITATIVE EVIDENCE
 - **Document version:** v0.1.0
@@ -130,7 +130,7 @@ Human decisions superseded speculative Feature Pack host assignments for Researc
 - Tools/calculators/decision aids are sequenced only inside a Feature Pack when necessary to that pack's approved outcome.
 - Authority remains purpose-specific (`calculation != authority`).
 
-These are human sequencing decisions. They do **not** create DEC/ARC/ARQ identifiers. They are evidenced here and enacted by `05_ROADMAP_v1.1.0.md`.
+These are human sequencing decisions. They do **not** create DEC/ARC/ARQ identifiers. They are evidenced here and enacted by `archive/05_ROADMAP_v1.1.0.md`.
 
 ---
 

@@ -2293,7 +2293,7 @@ Freeze only when all are true:
 - no new platform mechanism was invented;
 - MVP sequencing is possible without dead-ending Nuwe Jy, membership/Premium, practitioner services, community/live/events or experimentation;
 - remaining unknowns are correctly routed to OQ/JIT/Feature Pack/Architectural Proof rather than guessed;
-- `05_ROADMAP.md` can sequence outcomes without implementation-grade dossiers for every future domain.
+- `05_ROADMAP_v1.1.1.md` can sequence outcomes without implementation-grade dossiers for every future domain.
 
 ## 11.1 MVP and future-path sequencing check
 
@@ -2355,7 +2355,7 @@ The Phase-5 v1.0.0 mechanical closure (18 domains / 48 ownership rows) remains h
 
 ### 12.3 Roadmap readiness
 
-**PASS.** `05_ROADMAP.md` may now sequence outcome-oriented Feature Packs using these ownership boundaries and lightweight profiles. It must not redesign Domain Law, invent implementation-grade dossiers for every future domain, or begin executable development.
+**PASS.** `05_ROADMAP_v1.1.1.md` may now sequence outcome-oriented Feature Packs using these ownership boundaries and lightweight profiles. It must not redesign Domain Law, invent implementation-grade dossiers for every future domain, or begin executable development.
 
 ## 13. STOP conditions
 
@@ -2375,8 +2375,8 @@ Do **not** stop over naming preferences, fields, Ash Resource names, schemas, in
 - Predecessor: `archive/04_DOMAIN_MAP_v1.0.0.md`
 - Archived predecessor path: `archive/04_DOMAIN_MAP_v1.0.0.md`
 - Predecessor SHA-256: `f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a`
-- Successor: `04_DOMAIN_MAP_v1.1.1.md`
-- SemVer transition: `v1.0.0 → v1.1.0` because this amendment adds approved durable-truth ownership without invalidating the original 18 Domain histories.
+- Successor from the v1.0.0 baseline: `archive/04_DOMAIN_MAP_v1.1.0.md`
+- Historical SemVer transition: `v1.0.0 → v1.1.0` because this amendment adds approved durable-truth ownership without invalidating the original 18 Domain histories.
 
 ### 14.2 Amendment scope
 

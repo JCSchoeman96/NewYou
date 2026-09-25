@@ -112,8 +112,15 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         )
         self.assertIn("v1.0.0 → v1.1.0", ROADMAP_V1_1_0_PREDECESSOR.read_text(encoding="utf-8"))
         self.assertIn("v1.1.0 → v1.1.1", self.roadmap)
+        self.assertIn(
+            "**Predecessor frozen version:** `archive/05_ROADMAP_v1.1.0.md`",
+            self.roadmap,
+        )
         self.assertIn("v1.2.37 → v1.2.38", self.open_work)
         self.assertIn("archive/05_ROADMAP_v1.0.0.md", self.roadmap)
+        roadmap_grill = (DOCS / "working" / "TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md").read_text(encoding="utf-8")
+        self.assertIn("`docs/00_platform/archive/05_ROADMAP_v1.1.0.md`", roadmap_grill)
+        self.assertNotIn("`05_ROADMAP_v1.1.0.md`", roadmap_grill)
         self.assertFalse((DOCS / "05_ROADMAP_v1.0.0.md").exists())
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.37.md").exists())
 

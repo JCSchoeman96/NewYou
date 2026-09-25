@@ -107,6 +107,8 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         )
         self.assertTrue(ATLAS.is_file())
         self.assertIn("v0.2.0 → v0.2.1", self.atlas)
+        self.assertNotIn("working/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.atlas)
+        self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.atlas)
         self.assertIn("v1.2.42 → v1.2.43", self.open_work)
         self.assertIn("v1.2.41 → v1.2.42", OPEN_WORK_PREDECESSOR.read_text(encoding="utf-8"))
         self.assertIn("v1.2.40 → v1.2.41", OPEN_WORK_OLDER_PREDECESSOR.read_text(encoding="utf-8"))

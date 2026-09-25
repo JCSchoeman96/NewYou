@@ -716,7 +716,7 @@ The following omissions are intentional. A future agent must not treat them as A
 
 | Deferred decision | Owning downstream stage / gate |
 |---|---|
-| Final business Domains and ownership | `04_DOMAIN_MAP.md` |
+| Final business Domains and ownership | `04_DOMAIN_MAP_v1.1.1.md` |
 | Broad hot/warm/cold and concurrency profile per Domain | Domain Architecture Profiles / `OQ-039` |
 | Ash Domains/Resources/actions/module names | JIT Domain Dossier / Feature Pack |
 | Tables, columns, constraints, exact indexes | JIT Domain Dossier / Feature Pack / migration proof |
@@ -749,7 +749,7 @@ The governing principle is: **capability law first; replaceable mechanism/packag
 
 # 17. Domain Map Handoff
 
-Architecture is ready to hand concrete ownership to `04_DOMAIN_MAP.md`.
+Architecture is ready to hand concrete ownership to `04_DOMAIN_MAP_v1.1.1.md`.
 
 `04_DOMAIN_MAP` may now answer questions such as which Domain owns a particular durable fact, relationship or state machine. It inherits these non-negotiable rules:
 
@@ -890,7 +890,7 @@ The seven required flow reviews pressure-tested the new participation identity, 
 
 ## 19.4 Domain Map readiness
 
-**PASS.** `04_DOMAIN_MAP.md` can now decide concrete business ownership using existing platform mechanisms without inventing a transaction, persistence, cache-authority, async, realtime, provider, privacy, security or scaling model. No concrete Domain ownership was assigned during Architecture synthesis.
+**PASS.** `04_DOMAIN_MAP_v1.1.1.md` can now decide concrete business ownership using existing platform mechanisms without inventing a transaction, persistence, cache-authority, async, realtime, provider, privacy, security or scaling model. No concrete Domain ownership was assigned during Architecture synthesis.
 
 ## 19.5 Freeze verdict
 

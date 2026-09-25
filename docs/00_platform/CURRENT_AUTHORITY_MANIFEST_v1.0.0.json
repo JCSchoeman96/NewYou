@@ -54,11 +54,11 @@
       "semver": "1.1.1",
       "repository_path": "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
       "authority_class": "ARCHITECTURE_SYNTHESIS",
-      "sha256": "ae87a9b6bd2cb04db906eee337acd04cedf80a97ab5c2c49d046e8a83bf88d28",
+      "sha256": "342d02a7946f99aca9e6683647fc3a2505901b3d0cc2d13c21d807442025f0b3",
       "superseded_version": "1.1.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "ae87a9b6bd2cb04db906eee337acd04cedf80a97ab5c2c49d046e8a83bf88d28"
+      "provenance_sha256": "342d02a7946f99aca9e6683647fc3a2505901b3d0cc2d13c21d807442025f0b3"
     },
     {
       "document_id": "DOMAIN_MAP",
@@ -66,11 +66,11 @@
       "semver": "1.1.1",
       "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.1.1.md",
       "authority_class": "DOMAIN_LAW",
-      "sha256": "57685af6750071e939d6c06885718b984a0c2aab29ab87c1da1691977b182eca",
+      "sha256": "ae1b6e44e0e5da2060bcbfda46b8c280a6c7aa0e596b8feb8198cea22aa4bb42",
       "superseded_version": "1.1.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "57685af6750071e939d6c06885718b984a0c2aab29ab87c1da1691977b182eca"
+      "provenance_sha256": "ae1b6e44e0e5da2060bcbfda46b8c280a6c7aa0e596b8feb8198cea22aa4bb42"
     },
     {
       "document_id": "ROADMAP",
@@ -78,11 +78,11 @@
       "semver": "1.1.1",
       "repository_path": "docs/00_platform/05_ROADMAP_v1.1.1.md",
       "authority_class": "ROADMAP",
-      "sha256": "10aed04300cb03b990e186a3ff3dbd60d4123c5e63c0944bb8475e59ab53315d",
+      "sha256": "db2f17ba41d1a5aea63f46c94e8c0f5950030872a5ef6b07d53c5e1ea3ca3e4c",
       "superseded_version": "1.1.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "10aed04300cb03b990e186a3ff3dbd60d4123c5e63c0944bb8475e59ab53315d"
+      "provenance_sha256": "db2f17ba41d1a5aea63f46c94e8c0f5950030872a5ef6b07d53c5e1ea3ca3e4c"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",

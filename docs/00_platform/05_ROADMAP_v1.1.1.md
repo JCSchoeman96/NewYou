@@ -2,7 +2,7 @@
 
 - **Document status:** FROZEN / AMENDED ROADMAP
 - **Document version:** v1.1.1
-- **Predecessor frozen version:** `archive/05_ROADMAP_v1.0.0.md`
+- **Predecessor frozen version:** `archive/05_ROADMAP_v1.1.0.md`
 - **SemVer transition:** `v1.1.0 → v1.1.1`
 - **Last updated:** 2026-09-25
 - **Authority:** sequences approved Product Law under frozen Architecture and Domain Law, including the Targeted Product Amendment sequencing decisions
