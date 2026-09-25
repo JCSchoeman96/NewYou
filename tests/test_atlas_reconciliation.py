@@ -11,7 +11,14 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.43.md"
+_manifest_for_current_open_work = json.loads((DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8"))
+_current_open_work_entry = next(
+    entry
+    for section in ("governing_documents", "reference_documents")
+    for entry in _manifest_for_current_open_work[section]
+    if entry["document_id"] == "OPEN_WORK"
+)
+OPEN_WORK = ROOT / _current_open_work_entry["repository_path"]
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 OPEN_WORK_V1_2_40 = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
@@ -266,19 +273,18 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
 
     def test_open_work_readme_routing(self):
         self.assertIn("ATLAS RECONCILIATION: COMPLETE", self.open_work)
-        self.assertIn("HARDEN-02_CONTRACT_RECOVERY_REQUIRED", self.open_work)
+        self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
         self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.0.md", self.readme)
-        self.assertIn("HARDEN-02_CONTRACT_RECOVERY_REQUIRED", self.readme)
+        self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.readme)
         self.assertIn("02_OPEN_WORK_v1.2.43.md", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.43", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.43.md", current["OPEN_WORK"]["repository_path"])
+        self.assertRegex(current["OPEN_WORK"]["repository_path"], rf"docs/00_platform/02_OPEN_WORK_v{re.escape(current['OPEN_WORK']['semver'])}\.md")
         self.assertEqual(_sha256(OPEN_WORK), current["OPEN_WORK"]["sha256"])
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_42"]["lifecycle"])
