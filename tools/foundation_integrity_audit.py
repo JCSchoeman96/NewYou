@@ -684,23 +684,31 @@ def _check_product_semantics(
     h02_rows = _marked_matrix_rows(open_work, "HARDEN-02-LIFECYCLE")
     h02 = {row.get("gate", ""): row.get("status", "") for row in h02_rows}
     required_h02 = {
+        "CONTRACT_LIFECYCLE": "COMPLETE / CERTIFIED",
         "PRE_MERGE_CERTIFICATION": "COMPLETE",
-        "CERTIFIED_HEAD_MERGED_UNCHANGED": "COMPLETE",
+        "EXACT_HEAD_CI": "PASS",
+        "CERTIFIED_HEAD_MERGE": "COMPLETE_UNCHANGED",
         "RESULTING_MAIN_CI": "PASS",
-        "POST_MERGE_INDEPENDENT_INSPECTION": "PENDING",
-        "POST_MERGE_ATTESTATION": "PENDING",
-        "EXECUTION": "NOT_STARTED_NOT_AUTHORISED",
+        "POST_MERGE_INDEPENDENT_REVIEW": "PASS",
+        "POST_MERGE_ATTESTATION": "COMPLETE",
+        "EXECUTION": "NEXT_AUTHORISED_NOT_STARTED",
     }
-    h02_ok = h02 == required_h02 and "POST-MERGE CERTIFICATION: PENDING" in readme and (
-        "NOT STARTED / NOT AUTHORISED" in readme
-    ) and "PENDING INDEPENDENT PRE-MERGE CERTIFICATION" not in readme
+    h02_ok = (
+        h02 == required_h02
+        and "POST-MERGE CERTIFICATION: COMPLETE" in readme
+        and "HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED" in readme
+        and "HARDEN-02_EXECUTION_REQUIRED" in readme
+        and "HARDEN-02_POST_MERGE_CERTIFICATION_REQUIRED" not in readme
+        and "POST-MERGE CERTIFICATION: PENDING" not in readme
+        and "PENDING INDEPENDENT PRE-MERGE CERTIFICATION" not in readme
+    )
     _record_check(
         report,
         "harden_02_lifecycle_state",
         h02_ok,
-        "HARDEN-02 records completed pre-merge/merge/CI steps and pending post-merge certification without authorising execution"
+        "HARDEN-02 records the completed v0.4.0 lifecycle and routes execution as next, authorised, and not started"
         if h02_ok
-        else "HARDEN-02 lifecycle facts, post-merge pending state or execution stop are inconsistent",
+        else "HARDEN-02 lifecycle facts, execution route, or completion status are inconsistent",
         path=str(by_id.get("OPEN_WORK", {}).get("repository_path", "")),
     )
 

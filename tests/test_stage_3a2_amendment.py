@@ -360,8 +360,6 @@ class Stage3A2AmendmentIntegrityTests(unittest.TestCase):
         )
         self.assertEqual("1.1.0", current["ARCHITECTURE_REQUIREMENTS"]["semver"])
         self.assertEqual("1.0.0", current["ARCHITECTURE_REQUIREMENTS"]["superseded_version"])
-        self.assertEqual("1.2.44", current["OPEN_WORK"]["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.44.md", current["OPEN_WORK"]["repository_path"])
         self.assertEqual(
             hashlib.sha256((ROOT / current["OPEN_WORK"]["repository_path"]).read_bytes()).hexdigest(),
             current["OPEN_WORK"]["sha256"],

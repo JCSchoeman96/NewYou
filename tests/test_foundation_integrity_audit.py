@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -42,6 +43,63 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
             self.assertEqual("PASS", report["status"])
             self.assertEqual([], report["findings"])
+
+    def test_pending_post_merge_lifecycle_state_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            open_work_entry = next(
+                entry for entry in manifest["governing_documents"]
+                if entry["document_id"] == "OPEN_WORK"
+            )
+            open_work_path = root / open_work_entry["repository_path"]
+            open_work = open_work_path.read_text(encoding="utf-8")
+            replacements = (
+                (
+                    "| `POST_MERGE_INDEPENDENT_REVIEW` | `PASS`",
+                    "| `POST_MERGE_INDEPENDENT_INSPECTION` | `PENDING`",
+                ),
+                (
+                    "| `POST_MERGE_ATTESTATION` | `COMPLETE`",
+                    "| `POST_MERGE_ATTESTATION` | `PENDING`",
+                ),
+                (
+                    "| `EXECUTION` | `NEXT_AUTHORISED_NOT_STARTED`",
+                    "| `EXECUTION` | `NOT_STARTED_NOT_AUTHORISED`",
+                ),
+            )
+            for current, stale in replacements:
+                self.assertEqual(1, open_work.count(current), current)
+                open_work = open_work.replace(current, stale)
+            open_work_path.write_text(open_work, encoding="utf-8")
+
+            readme_path = fixture_docs / "README.md"
+            readme = readme_path.read_text(encoding="utf-8")
+            for current, stale in (
+                ("HARDEN-02 EXECUTION / STRUCTURAL HARDENING", "HARDEN-02 POST-MERGE CERTIFICATION / CONTRACT LIFECYCLE"),
+                ("HARDEN-02_EXECUTION_REQUIRED", "HARDEN-02_POST_MERGE_CERTIFICATION_REQUIRED"),
+                ("POST-MERGE CERTIFICATION: COMPLETE", "POST-MERGE CERTIFICATION: PENDING"),
+                (
+                    "HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED",
+                    "HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED",
+                ),
+            ):
+                self.assertEqual(1, readme.count(current), current)
+                readme = readme.replace(current, stale)
+            readme_path.write_text(readme, encoding="utf-8")
+
+            refresh_manifest(root, manifest_path)
+            report = run_audit(root, manifest_path)
+            lifecycle_check = next(
+                check for check in report["checks"]
+                if check["name"] == "harden_02_lifecycle_state"
+            )
+
+            self.assertEqual("FAIL", lifecycle_check["status"])
 
     def test_production_audit_uses_manifest_expectations(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -146,6 +204,74 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             self.assertTrue(
                 any(finding["check"] == "active_document_graph" for finding in report["findings"])
             )
+
+    def test_current_authorities_reject_unarchived_historical_open_work(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            pattern = r"(?<!archive/)02_OPEN_WORK_v1\.2\.44\.md"
+            self.assertIn(pattern, manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"])
+            self.assertIn(
+                "routing guard only",
+                manifest["integrity_rules"]["graph_rules"]["stale_open_work_v1_2_44_guard_note"],
+            )
+
+            authority_ids = (
+                "PROJECT_NORTH_STAR_AND_MVP",
+                "PLATFORM_BASELINE",
+                "DECISION_REGISTER",
+                "ROADMAP",
+            )
+            for document_id in authority_ids:
+                entry = next(
+                    item for item in manifest["governing_documents"]
+                    if item["document_id"] == document_id
+                )
+                path = root / entry["repository_path"]
+                path.write_text(
+                    path.read_text(encoding="utf-8") + "\nStale route: 02_OPEN_WORK_v1.2.44.md\n",
+                    encoding="utf-8",
+                )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("FAIL", graph_check["status"])
+            for document_id in authority_ids:
+                entry = next(
+                    item for item in manifest["governing_documents"]
+                    if item["document_id"] == document_id
+                )
+                self.assertIn(entry["repository_path"], graph_check["message"])
+
+    def test_archived_open_work_reference_is_allowed_in_current_authority(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            product_entry = next(
+                item for item in manifest["governing_documents"]
+                if item["document_id"] == "PLATFORM_BASELINE"
+            )
+            path = root / product_entry["repository_path"]
+            path.write_text(
+                path.read_text(encoding="utf-8") + "\nHistorical source: archive/02_OPEN_WORK_v1.2.44.md\n",
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("PASS", graph_check["status"], graph_check["message"])
 
     def test_declared_working_navigation_path_is_scanned_for_stale_references(self):
         with tempfile.TemporaryDirectory() as directory:
