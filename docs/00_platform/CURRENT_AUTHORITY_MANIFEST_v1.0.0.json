@@ -66,11 +66,11 @@
       "semver": "1.2.0",
       "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
       "authority_class": "DOMAIN_LAW",
-      "sha256": "596d6f446a619179130e22d1c3ace283cdf6f5fb344d12b6ddd99a4c92083570",
+      "sha256": "92f00bb3e083f895d03efea83bfa2ad1e68a1fe24bd063b455e40c11939d45c0",
       "superseded_version": "1.1.1",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "596d6f446a619179130e22d1c3ace283cdf6f5fb344d12b6ddd99a4c92083570"
+      "provenance_sha256": "92f00bb3e083f895d03efea83bfa2ad1e68a1fe24bd063b455e40c11939d45c0"
     },
     {
       "document_id": "ROADMAP",

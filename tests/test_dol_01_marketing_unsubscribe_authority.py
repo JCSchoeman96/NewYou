@@ -200,6 +200,31 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertIn("provider evidence", communications.lower())
         self.assertIn("marketing consent/lawful basis", communications)
 
+    def test_domain_dol01_provenance_routes_to_current_product_and_decision_authority(self):
+        current_inputs = next(
+            line.split(":", 1)[1]
+            for line in self.domain.splitlines()
+            if line.startswith("- **Current semantic inputs for the v1.2.0 DOL-01 amendment:**")
+        )
+        self.assertEqual("1.2.0", self.domain_entry["semver"])
+        self.assertIn(self.product_entry["canonical_filename"], current_inputs)
+        self.assertIn("§21S", current_inputs)
+        self.assertIn(self.decision_entry["canonical_filename"], current_inputs)
+        self.assertIn("DEC-304", current_inputs)
+        self.assertIn("# 21S. Marketing Permission and Communication Preferences", self.product)
+        self.assertIn("## DEC-304 — Marketing unsubscribe scope and consent ownership", self.decisions)
+
+        privacy = self.domain.split("### 6.2 — Privacy & Consent", 1)[1].split("### 6.3 —", 1)[0]
+        privacy_basis = next(line for line in privacy.splitlines() if line.startswith("**Product Law basis:**"))
+        self.assertIn("DEC-301", privacy_basis)
+        self.assertIn("DEC-304", privacy_basis)
+
+        communications = self.domain.split("### 6.15 — Communications", 1)[1].split("### 6.16 —", 1)[0]
+        communications_basis = next(
+            line for line in communications.splitlines() if line.startswith("**Product Law basis:**")
+        )
+        self.assertIn("DEC-304", communications_basis)
+
     def test_manifest_routes_successors_and_archives_each_predecessor_byte_identically(self):
         governing = {entry["document_id"]: entry for entry in self.manifest["governing_documents"]}
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}

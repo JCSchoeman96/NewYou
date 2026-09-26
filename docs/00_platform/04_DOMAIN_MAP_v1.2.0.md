@@ -8,7 +8,9 @@
 - **Started:** 2026-08-17
 - **Last updated:** 2026-09-26
 - **Authority:** Implements current Product Law §21S and DEC-304 while preserving `03_ARCHITECTURE_v1.1.1.md`; it defines owner boundaries and request direction without implementation mechanics.
-- **Primary inputs:** `archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `archive/00_PLATFORM_v1.3.0.md`, `archive/01_DECISIONS_v1.3.0.md`, `03_ARCHITECTURE_v1.1.1.md`, `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`, `archive/02_OPEN_WORK_v1.2.37.md`, `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md`
+- **Current semantic inputs for the v1.2.0 DOL-01 amendment:** current Product Law `00_PLATFORM_v1.5.0.md` §21S and current Decision Register `01_DECISIONS_v1.5.0.md` DEC-304.
+- **Historical/base inputs inherited from earlier Domain Map construction:** `archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `archive/00_PLATFORM_v1.3.0.md`, `archive/01_DECISIONS_v1.3.0.md`, `archive/02_OPEN_WORK_v1.2.37.md`, `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md`.
+- **Current Architecture inputs:** `03_ARCHITECTURE_v1.1.1.md`, `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`.
 - **Architecture deep reference:** `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md` only where the frozen synthesis needs deeper legislative detail
 - **Governance boundary:** This document decides **WHO owns durable business truth**. It does not invent new platform mechanisms, implementation schemas or source code.
 - **Current result:** TARGETED DOMAIN AMENDMENT COMPLETE / PASS — 20 approved ownership domains, additive PMR/Research/Voting/Tool-boundary ownership, 20/20 lightweight Domain Architecture Profiles, 0 shared-write ambiguities, 0 circular authoritative control dependencies, 0 Product/Architecture contradictions.
@@ -314,7 +316,7 @@ The interaction table is intentionally architectural/domain-level. It does not d
 
 ### 6.2 — Privacy & Consent
 
-**Product Law basis:** `DEC-025...DEC-026; DEC-094; DEC-220...DEC-243`
+**Product Law basis:** `DEC-025...DEC-026; DEC-094; DEC-220...DEC-243; DEC-301; DEC-304`
 
 **Purpose:** Own purpose-specific consent and participant data-rights/lifecycle authority, including full deletion, retention governance, legal holds and participant export orchestration.
 
@@ -1580,7 +1582,7 @@ The interaction table is intentionally architectural/domain-level. It does not d
 
 ### 6.15 — Communications
 
-**Product Law basis:** `DEC-017 mailing-list allowance; DEC-162; DEC-218; DEC-261...DEC-263`
+**Product Law basis:** `DEC-017 mailing-list allowance; DEC-162; DEC-218; DEC-261...DEC-263; DEC-304`
 
 **Purpose:** Own outbound/in-app communication intent, subscriber contacts, channel/category preferences and durable delivery lifecycle while purpose permission and originating business events remain with their respective owners.
 
