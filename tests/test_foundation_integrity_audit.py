@@ -205,6 +205,74 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 any(finding["check"] == "active_document_graph" for finding in report["findings"])
             )
 
+    def test_current_authorities_reject_unarchived_historical_open_work(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            pattern = r"(?<!archive/)02_OPEN_WORK_v1\.2\.44\.md"
+            self.assertIn(pattern, manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"])
+            self.assertIn(
+                "routing guard only",
+                manifest["integrity_rules"]["graph_rules"]["stale_open_work_v1_2_44_guard_note"],
+            )
+
+            authority_ids = (
+                "PROJECT_NORTH_STAR_AND_MVP",
+                "PLATFORM_BASELINE",
+                "DECISION_REGISTER",
+                "ROADMAP",
+            )
+            for document_id in authority_ids:
+                entry = next(
+                    item for item in manifest["governing_documents"]
+                    if item["document_id"] == document_id
+                )
+                path = root / entry["repository_path"]
+                path.write_text(
+                    path.read_text(encoding="utf-8") + "\nStale route: 02_OPEN_WORK_v1.2.44.md\n",
+                    encoding="utf-8",
+                )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("FAIL", graph_check["status"])
+            for document_id in authority_ids:
+                entry = next(
+                    item for item in manifest["governing_documents"]
+                    if item["document_id"] == document_id
+                )
+                self.assertIn(entry["repository_path"], graph_check["message"])
+
+    def test_archived_open_work_reference_is_allowed_in_current_authority(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            product_entry = next(
+                item for item in manifest["governing_documents"]
+                if item["document_id"] == "PLATFORM_BASELINE"
+            )
+            path = root / product_entry["repository_path"]
+            path.write_text(
+                path.read_text(encoding="utf-8") + "\nHistorical source: archive/02_OPEN_WORK_v1.2.44.md\n",
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("PASS", graph_check["status"], graph_check["message"])
+
     def test_declared_working_navigation_path_is_scanned_for_stale_references(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

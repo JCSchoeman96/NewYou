@@ -305,7 +305,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         )
 
     def test_current_governance_source_trails_resolve_to_current_or_archived_files(self):
-        self.assertIn("05_ROADMAP_v1.1.1.md", self.open_work)
+        self.assertIn("05_ROADMAP_v1.1.2.md", self.open_work)
         self.assertIn("archive/05_ROADMAP_v1.1.0.md", self.open_work)
         self.assertIn("archive/03_ARCHITECTURE_v1.1.0.md", self.open_work)
         self.assertIn("archive/04_DOMAIN_MAP_v1.1.0.md", self.open_work)
@@ -323,8 +323,8 @@ class ProductLawHardeningTests(unittest.TestCase):
         current_source_routing = next(
             line for line in atlas_reconciliation.splitlines() if "| Current-source routing |" in line
         )
-        self.assertIn("Product `v1.4.0`, Decisions `v1.4.0`", current_source_routing)
-        self.assertIn("Architecture `v1.1.1`, Domain Map `v1.1.1`, Roadmap `v1.1.1`", current_source_routing)
+        self.assertIn("Product `v1.4.1`, Decisions `v1.4.1`", current_source_routing)
+        self.assertIn("Architecture `v1.1.1`, Domain Map `v1.1.1`, Roadmap `v1.1.2`", current_source_routing)
         self.assertNotIn("Product `v1.3.0`", current_source_routing)
         self.assertNotIn("Architecture `v1.1.0`", current_source_routing)
 
@@ -425,7 +425,7 @@ class ProductLawHardeningTests(unittest.TestCase):
                 self.assertTrue((ROOT / relative_path).is_file())
 
         current_source_paths = (
-            "docs/00_platform/05_ROADMAP_v1.1.1.md",
+            "docs/00_platform/05_ROADMAP_v1.1.2.md",
             "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
             "docs/00_platform/04_DOMAIN_MAP_v1.1.1.md",
             "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
@@ -486,12 +486,12 @@ class ProductLawHardeningTests(unittest.TestCase):
 
     def test_atlas_routes_to_current_authorities_and_does_not_block_on_resolved_oq034(self):
         current_sources = (
-            "PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md",
-            "00_PLATFORM_v1.4.0.md",
-            "01_DECISIONS_v1.4.0.md",
+            "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
+            "00_PLATFORM_v1.4.1.md",
+            "01_DECISIONS_v1.4.1.md",
             "03_ARCHITECTURE_v1.1.1.md",
             "04_DOMAIN_MAP_v1.1.1.md",
-            "05_ROADMAP_v1.1.1.md",
+            "05_ROADMAP_v1.1.2.md",
             "02_OPEN_WORK_v1.2.45.md",
             "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
         )

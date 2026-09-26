@@ -6,13 +6,13 @@ This directory separates current platform authority from deep evidence and histo
 
 For foundation/default planning and delivery-preparation work, read **only** these current-authority documents first:
 
-1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md`
-2. `00_PLATFORM_v1.4.0.md`
-3. `01_DECISIONS_v1.4.0.md`
+1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md`
+2. `00_PLATFORM_v1.4.1.md`
+3. `01_DECISIONS_v1.4.1.md`
 4. `02_OPEN_WORK_v1.2.45.md`
 5. `03_ARCHITECTURE_v1.1.1.md`
 6. `04_DOMAIN_MAP_v1.1.1.md`
-7. `05_ROADMAP_v1.1.1.md`
+7. `05_ROADMAP_v1.1.2.md`
 8. `PLATFORM_OPERATING_MODEL_v1.0.1.md`
 
 For frontend, UI, public-experience, design-system, accessibility, SEO, analytics-UI or Feature Pack planning, additionally load:
@@ -109,11 +109,15 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/02_OPEN_WORK_v1.2.42.md` — preserved earlier Open Work predecessor.
 - `archive/02_OPEN_WORK_v1.2.41.md` — preserved earlier Open Work predecessor.
 - `archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md` — preserved predecessor to North Star v1.2.2.
-- `archive/00_PLATFORM_v1.3.0.md` — preserved Product Law predecessor to v1.4.0.
-- `archive/01_DECISIONS_v1.3.0.md` — preserved Decision Register predecessor to v1.4.0.
+- `archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md` — preserved predecessor to current North Star v1.2.3.
+- `archive/00_PLATFORM_v1.3.0.md` — preserved earlier Product Law predecessor in the v1.3.0 → v1.4.0 → v1.4.1 history.
+- `archive/00_PLATFORM_v1.4.0.md` — preserved predecessor to current Product Law v1.4.1.
+- `archive/01_DECISIONS_v1.3.0.md` — preserved earlier Decision Register predecessor in the v1.3.0 → v1.4.0 → v1.4.1 history.
+- `archive/01_DECISIONS_v1.4.0.md` — preserved predecessor to current Decision Register v1.4.1.
 - `archive/02_OPEN_WORK_v1.2.44.md` — preserved predecessor to current Open Work v1.2.45.
 - `archive/02_OPEN_WORK_v1.2.43.md` — earlier preserved Open Work predecessor.
-- `archive/05_ROADMAP_v1.1.0.md` — preserved predecessor to current Roadmap v1.1.1.
+- `archive/05_ROADMAP_v1.1.0.md` — preserved earlier Roadmap predecessor in the v1.1.0 → v1.1.1 → v1.1.2 history.
+- `archive/05_ROADMAP_v1.1.1.md` — preserved predecessor to current Roadmap v1.1.2.
 - `archive/03_ARCHITECTURE_v1.1.0.md` — preserved amended synthesis predecessor to current path-only v1.1.1.
 - `archive/04_DOMAIN_MAP_v1.1.0.md` — preserved amended Domain Map predecessor to current path-only v1.1.1.
 - `archive/PLATFORM_OPERATING_MODEL_v1.0.0.md` — preserved frozen predecessor to current path-only v1.0.1.
@@ -147,7 +151,7 @@ Engineering Standards are **not yet current authority**. Current routing require
 - PLANNING FOUNDATION: READY
 - CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING
 - NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED
-- CURRENT PRODUCT LAW: `00_PLATFORM_v1.4.0.md`; DEC-299 through DEC-303 record paid-plan, reversal, consent, provenance and repeat-purchase rules
+- CURRENT PRODUCT LAW: `00_PLATFORM_v1.4.1.md`; DEC-299 through DEC-303 record paid-plan, reversal, consent, provenance and repeat-purchase rules
 - TARGETED PRODUCT AMENDMENT STAGE 1 (GRILL): COMPLETE
 - TARGETED PRODUCT AMENDMENT STAGE 2 (PRODUCT LAW AMENDMENT): COMPLETE
 - STAGE 3A.1 — PRODUCT-LAW AR-000 DELTA ANALYSIS: COMPLETE / ARCHIVED AS HISTORICAL EVIDENCE
@@ -161,7 +165,7 @@ Engineering Standards are **not yet current authority**. Current routing require
 - DOMAIN PRESSURE TEST: COMPLETE
 - DOMAIN AMENDMENT: COMPLETE — current Domain Law `v1.1.1` (path-only successor to archived v1.1.0); 20 Domains; Domain 19 Research & Feedback; Domain 20 Voting & Balloting
 - ROADMAP SEQUENCING GRILL: COMPLETE
-- ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.1`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
+- ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.2`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
 - ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED
 - ATLAS RECONCILIATION: COMPLETE — `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` (derived / non-authoritative)
 - HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED

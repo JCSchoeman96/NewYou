@@ -47,10 +47,10 @@ The current sources that establish this chain are:
 
 | Authority level | Current source | Atlas relationship |
 |---|---|---|
-| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md`; `docs/00_platform/00_PLATFORM_v1.4.0.md`; `docs/00_platform/01_DECISIONS_v1.4.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md`; `docs/00_platform/00_PLATFORM_v1.4.1.md`; `docs/00_platform/01_DECISIONS_v1.4.1.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
 | Architecture Law | `docs/00_platform/03_ARCHITECTURE_v1.1.1.md` and the accepted Architecture Law represented by it (`reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`) | Defines architectural authority, state authority, interaction rules, failure behaviour, performance doctrine and deferred mechanisms. |
 | Domain Law | `docs/00_platform/04_DOMAIN_MAP_v1.1.1.md` | Defines who owns durable business truth and the domain-level dependency direction (20 Domains). |
-| Roadmap | `docs/00_platform/05_ROADMAP_v1.1.1.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Roadmap | `docs/00_platform/05_ROADMAP_v1.1.2.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
 | Planning tracker | `docs/00_platform/02_OPEN_WORK_v1.2.45.md` | Tracks unresolved gates, planning sequence and development stop conditions. It does not outrank Product, Architecture, Domain or Roadmap authority. |
 | Supporting cross-cutting contract | `docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md` | Supplies stable operating workflow guidance beneath the four upstream law levels. |
 | Supporting cross-cutting contract | `docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` | Supplies frontend, interaction, accessibility, public-experience and measurement guidance beneath the four upstream law levels. |
@@ -600,7 +600,7 @@ This provides the trusted entry capability that every protected core journey and
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.1.1.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.1.1.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.4.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.45.md`.
+`05_ROADMAP_v1.1.2.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.1.1.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.4.1.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.45.md`.
 
 ## FP-002 — Purchase to verified payment and entitlement
 
@@ -3519,8 +3519,8 @@ No performance implementation belongs in Section 9. It must not prescribe cachin
 
 | Source | Participant-journey use |
 |---|---|
-| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md`; `docs/00_platform/00_PLATFORM_v1.4.0.md`; `docs/00_platform/01_DECISIONS_v1.4.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
-| Roadmap | `docs/00_platform/05_ROADMAP_v1.1.1.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md`; `docs/00_platform/00_PLATFORM_v1.4.1.md`; `docs/00_platform/01_DECISIONS_v1.4.1.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Roadmap | `docs/00_platform/05_ROADMAP_v1.1.2.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
 | ATLAS-03 / ATLAS-04 | Relevant capability identity and active-Feature-Pack materiality. |
 | ATLAS-05 | Participating Domains and ownership-sensitive exceptions. |
 | ATLAS-06 | Lifecycle obligations and JIT lifecycle requirements. |
@@ -3689,10 +3689,10 @@ Section 10 creates no operator authority. It routes active-Feature-Pack planning
 
 | Source | Operator-planning use |
 |---|---|
-| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md`; `docs/00_platform/00_PLATFORM_v1.4.0.md`; `docs/00_platform/01_DECISIONS_v1.4.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md`; `docs/00_platform/00_PLATFORM_v1.4.1.md`; `docs/00_platform/01_DECISIONS_v1.4.1.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
 | Architecture Law | State authority, durable execution, provider/evidence and projection boundaries. |
 | Domain Law | Durable-truth ownership and cross-domain mutation rules. |
-| Roadmap | `docs/00_platform/05_ROADMAP_v1.1.1.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Roadmap | `docs/00_platform/05_ROADMAP_v1.1.2.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
 | Platform Operating Model | Stable human and workflow doctrine. |
 | Frontend Experience System | Operator interaction and experience doctrine. |
 | ATLAS-04 | Material capabilities for the active Feature Pack. |
@@ -3940,10 +3940,10 @@ Section 11 creates no new frontend authority. It derives only the minimum tempor
 
 | Source | Frontend-planning use |
 |---|---|
-| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md`; `docs/00_platform/00_PLATFORM_v1.4.0.md`; `docs/00_platform/01_DECISIONS_v1.4.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md`; `docs/00_platform/00_PLATFORM_v1.4.1.md`; `docs/00_platform/01_DECISIONS_v1.4.1.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
 | Architecture Law | Authoritative interaction, projection, failure/degradation and runtime boundaries. |
 | Domain Law | Durable-truth ownership and policy-sensitive relationships. |
-| Roadmap | `docs/00_platform/05_ROADMAP_v1.1.1.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Roadmap | `docs/00_platform/05_ROADMAP_v1.1.2.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
 | Platform Operating Model | Stable operator and human workflow doctrine. |
 | Frontend Experience System | Stable frontend, interaction, accessibility, responsive, design-system, SEO and measurement doctrine. |
 | ATLAS-04 | Material capabilities for the active Feature Pack. |
@@ -4276,10 +4276,10 @@ Section 12 consumes existing authority only:
 
 | Source | Section-12 use |
 |---|---|
-| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md`; `docs/00_platform/00_PLATFORM_v1.4.0.md`; `docs/00_platform/01_DECISIONS_v1.4.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md`; `docs/00_platform/00_PLATFORM_v1.4.1.md`; `docs/00_platform/01_DECISIONS_v1.4.1.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
 | Architecture Law | Authority, durability, projection, provider evidence, async, failure and scaling doctrine. |
 | Domain Law | Exact durable-truth owner and approved cross-domain relationships. |
-| Roadmap | `docs/00_platform/05_ROADMAP_v1.1.1.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Roadmap | `docs/00_platform/05_ROADMAP_v1.1.2.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
 | ATLAS-04 | Material capabilities for the active Feature Pack. |
 | ATLAS-05 | Participating Domains and ownership-sensitive exceptions. |
 | ATLAS-06 | Lifecycle obligations and lifecycle ownership references. |
@@ -5247,7 +5247,7 @@ Reconciliation is ready for review only when the evidence shows all of the follo
 |---|---|
 | Versioned successor | Working path is `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`; predecessor v0.2.0 is preserved at `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`. |
 | Non-authority preserved | Artifact remains DERIVED / WORKING / NON-AUTHORITATIVE and outside the authority manifest. |
-| Current-source routing | §1.1 points to Product `v1.4.0`, Decisions `v1.4.0`, Architecture `v1.1.1`, Domain Map `v1.1.1`, Roadmap `v1.1.1` and current Open Work. |
+| Current-source routing | §1.1 points to Product `v1.4.1`, Decisions `v1.4.1`, Architecture `v1.1.1`, Domain Map `v1.1.1`, Roadmap `v1.1.2` and current Open Work. |
 | Feature Pack set | Exactly 17 Feature Packs `FP-001`–`FP-017`; no Research/Voting/Tools/PMR/Competitions Feature Pack. |
 | Domain set | Exactly 20 Domains, including Domain 19 Research & Feedback and Domain 20 Voting & Balloting. |
 | PMR navigation | FP-001 and CAP-001 reflect required IAM-owned PMR; encoding unfrozen; `FP001_RECONCILIATION_REQUIRED` preserved; FP-001 artifacts unchanged. |

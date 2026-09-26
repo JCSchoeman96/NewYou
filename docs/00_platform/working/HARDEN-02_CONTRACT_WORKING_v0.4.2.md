@@ -23,7 +23,7 @@
 - `v0.2.0` — routing-only successor. Preserves H02-1/H02-2 and historical H02-3, records accepted H02-3R, and inserts Engineering Standards Authority Promotion as the sole post-HARDEN-02 NEXT stage before FP-001 reconciliation. Does not execute HARDEN-02, promote standards, amend upstream law or authorise implementation.
 - `v0.3.0` — recovery and re-baseline after repository-verifiable independent pre-merge certification for v0.2.0 could not be established. Preserves v0.2.0 as historical evidence, adds exact-SHA GitHub-visible pre-merge and post-merge certification requirements, and keeps HARDEN-02 execution NOT STARTED / NOT AUTHORISED until the full new lifecycle passes.
 - `v0.4.0` — solo-maintainer certification-mechanism amendment. Preserves v0.3.0 byte-identically as historical evidence. Replaces GitHub-account independence with independent **review actor** versus **attestation poster** attribution. Records PR #39 merge facts without retroactively certifying the v0.3.0 lifecycle. Establishes the usable certification mechanism prospectively from this amendment PR. Pre-merge independent exact-head review PASS and exact-head Foundation Integrity PASS are both required and may complete in either order; durable GitHub attestation binds both only after both exist. Does not execute HARDEN-02, promote Engineering Standards, or authorise implementation.
-- `v0.4.1` — status-only lifecycle successor. Records PR #40 exact-head certification, unchanged merge and resulting-main CI PASS. The fresh post-merge independent inspection and durable post-merge attestation are still pending; HARDEN-02 execution remains NOT STARTED / NOT AUTHORISED. No contract scope, invariant, proof boundary or downstream route is changed.
+- `v0.4.1` — historical status-only lifecycle snapshot. At that point, the fresh post-merge independent inspection and durable post-merge attestation were pending, and HARDEN-02 execution remained NOT STARTED / NOT AUTHORISED. The original v0.4.0 lifecycle is now COMPLETE / CERTIFIED, as recorded by this v0.4.2 status successor. No contract scope, invariant, proof boundary or downstream route is changed.
 - `v0.4.2` — status-only successor. Records completion of the original v0.4.0 lifecycle using status-successor base main SHA `9411b34b646d7752d2942afca1363830d3b25f10`: exact-head certification and CI PASS, unchanged certified-head merge, resulting-main CI PASS, fresh independent post-merge review PASS and durable post-merge attestation COMPLETE. HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED. No v0.4.0 scope, invariant, proof boundary or downstream route is changed.
 
 ---
@@ -40,13 +40,13 @@ HARDEN-02 exists to prove and harden Phase-7 delivery-pipeline governance integr
 
 | Source | Use |
 |---|---|
-| `PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md` | MVP / Phase 7–8 boundary context |
-| `00_PLATFORM_v1.4.0.md` | Product Law; not amended by HARDEN-02 |
-| `01_DECISIONS_v1.4.0.md` | Decision / OQ register; HARDEN-02 is not an OQ |
+| `PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md` | MVP / Phase 7–8 boundary context |
+| `00_PLATFORM_v1.4.1.md` | Product Law; not amended by HARDEN-02 |
+| `01_DECISIONS_v1.4.1.md` | Decision / OQ register; HARDEN-02 is not an OQ |
 | `02_OPEN_WORK_v1.2.45.md` | Programme routing and Development Entry Hard Stop |
 | `03_ARCHITECTURE_v1.1.1.md` | Architecture synthesis; unchanged |
 | `04_DOMAIN_MAP_v1.1.1.md` | Domain Law including PMR ownership and `FP001_RECONCILIATION_REQUIRED` consequence |
-| `05_ROADMAP_v1.1.1.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |
+| `05_ROADMAP_v1.1.2.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |
 | `PLATFORM_OPERATING_MODEL_v1.0.1.md` | Phase 7 handoff: Skeleton + Gate Manifest → required JIT Domain Dossiers → Final Feature Pack Contract |
 | `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` | Out of HARDEN-02 scope unless a later governance task requires frontend routing hygiene |
 
