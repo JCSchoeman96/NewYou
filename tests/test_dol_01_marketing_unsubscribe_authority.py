@@ -15,16 +15,18 @@ PREDECESSOR_SHA256 = {
     "00_PLATFORM_v1.4.1.md": "868b6a6ca81df7d4322dd534cb4387c051748cd49cdc3834e53626b49040c8ec",
     "01_DECISIONS_v1.4.1.md": "e92564c16c9ad15e8b7558ff76a509efad4310aa786c697b09b0ce2723ec4701",
     "02_OPEN_WORK_v1.2.45.md": "9bc1b0f882125153a9db9668db8f0fee1ed9b1f20f6ba8422882707a4d203087",
+    "02_OPEN_WORK_v1.2.46.md": "d19ba98b486478ff8fea36b74a72b4102e8fe192a797af919318a1fc31c8c870",
     "04_DOMAIN_MAP_v1.1.1.md": "ae1b6e44e0e5da2060bcbfda46b8c280a6c7aa0e596b8feb8198cea22aa4bb42",
     "DELIVERY_ATLAS_WORKING_v0.2.1.md": "b4c27c8a314d2a9e227acd53bd69dfce0e01a2cc743535e49a45a848f135cc59",
+    "DELIVERY_ATLAS_WORKING_v0.2.2.md": "2a9553cd9076333665d340c6d787a8de8bfa0f78509e6cc8b2cfb874730ab02e",
 }
 
 EXPECTED_CURRENT = {
     "PLATFORM_BASELINE": ("00_PLATFORM_v1.5.0.md", "1.5.0"),
     "DECISION_REGISTER": ("01_DECISIONS_v1.5.0.md", "1.5.0"),
-    "OPEN_WORK": ("02_OPEN_WORK_v1.2.46.md", "1.2.46"),
+    "OPEN_WORK": ("02_OPEN_WORK_v1.2.47.md", "1.2.47"),
     "DOMAIN_MAP": ("04_DOMAIN_MAP_v1.2.0.md", "1.2.0"),
-    "ROADMAP": ("05_ROADMAP_v1.1.2.md", "1.1.2"),
+    "ROADMAP": ("05_ROADMAP_v1.1.3.md", "1.1.3"),
 }
 
 
@@ -251,6 +253,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             ("PLATFORM_BASELINE_V1_4_1", "00_PLATFORM_v1.4.1.md"),
             ("DECISION_REGISTER_V1_4_1", "01_DECISIONS_v1.4.1.md"),
             ("OPEN_WORK_V1_2_45", "02_OPEN_WORK_v1.2.45.md"),
+            ("OPEN_WORK_V1_2_46", "02_OPEN_WORK_v1.2.46.md"),
             ("DOMAIN_MAP_V1_1_1", "04_DOMAIN_MAP_v1.1.1.md"),
         ):
             entry = historical[document_id]
@@ -264,7 +267,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
 
     def test_current_routes_are_current_and_old_paths_remain_archived(self):
-        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.2.md"
+        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.3.md"
         self.assertEqual(
             atlas_path,
             self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"][0],
@@ -274,6 +277,10 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         pinned_atlas = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
         self.assertEqual(PREDECESSOR_SHA256["DELIVERY_ATLAS_WORKING_v0.2.1.md"], _sha256(archived_atlas))
         self.assertEqual(_sha256(archived_atlas), _sha256(pinned_atlas))
+        self.assertEqual(
+            PREDECESSOR_SHA256["DELIVERY_ATLAS_WORKING_v0.2.2.md"],
+            _sha256(DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.2.md"),
+        )
         current_section = self.readme.split("## Default Agent Context", 1)[1].split("## Active Working Artifacts", 1)[0]
         for filename, _version in EXPECTED_CURRENT.values():
             self.assertIn(filename, current_section)
@@ -290,7 +297,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             "00_PLATFORM_v1.5.0.md",
             "01_DECISIONS_v1.5.0.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "DELIVERY_ATLAS_WORKING_v0.2.2.md",
+            "DELIVERY_ATLAS_WORKING_v0.2.3.md",
         ):
             self.assertIn(current_name, immediate_next_action)
         for stale_name in (
@@ -321,7 +328,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             self.assertNotIn(stale_version, atlas_completion)
 
     def test_downstream_gate_lines_match_the_preserved_open_work_predecessor(self):
-        predecessor_path = DOCS / "archive" / "02_OPEN_WORK_v1.2.45.md"
+        predecessor_path = DOCS / "archive" / "02_OPEN_WORK_v1.2.46.md"
         if not predecessor_path.is_file():
             self.fail(f"missing archived Open Work predecessor: {predecessor_path}")
         predecessor = _read(predecessor_path)
