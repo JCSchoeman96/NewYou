@@ -321,7 +321,9 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         ):
             self.assertIn(filename, north_star)
         self.assertIn("02_OPEN_WORK_v1.2.46.md", decisions)
-        roadmap_header = roadmap.split("## Amendment summary", 1)[0]
+        roadmap_header_marker = "## Amendment summary"
+        self.assertEqual(1, roadmap.count(roadmap_header_marker))
+        roadmap_header = roadmap.split(roadmap_header_marker, 1)[0]
         for authority_id in (
             "PROJECT_NORTH_STAR_AND_MVP",
             "PLATFORM_BASELINE",
