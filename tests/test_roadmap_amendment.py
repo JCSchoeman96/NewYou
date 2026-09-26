@@ -10,7 +10,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 ROADMAP = DOCS / "05_ROADMAP_v1.1.3.md"
-ROADMAP_BASELINE = DOCS / "05_ROADMAP_v1.1.2.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.2.md"
 ROADMAP_V1_0_0_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.0.0.md"
 ROADMAP_V1_1_0_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.0.md"
@@ -62,6 +61,7 @@ PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/05_ROADMAP_v1.0.0.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.37.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.38.md",
+    "docs/00_platform/02_OPEN_WORK_v1.2.46.md",
     "docs/00_platform/05_ROADMAP_v1.1.2.md",
     "mix.exs",
     "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
@@ -154,12 +154,8 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        # Keep the red test run useful while the successor file is not present yet.
-        # The path and archive checks below still fail until the document move is made.
-        roadmap_fixture = ROADMAP if ROADMAP.is_file() else ROADMAP_BASELINE
-        predecessor_fixture = ROADMAP_PREDECESSOR if ROADMAP_PREDECESSOR.is_file() else ROADMAP_BASELINE
-        cls.roadmap = roadmap_fixture.read_text(encoding="utf-8")
-        cls.predecessor = predecessor_fixture.read_text(encoding="utf-8")
+        cls.roadmap = ROADMAP.read_text(encoding="utf-8")
+        cls.predecessor = ROADMAP_PREDECESSOR.read_text(encoding="utf-8")
         cls.evidence = EVIDENCE.read_text(encoding="utf-8")
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
         cls.readme = README.read_text(encoding="utf-8")
@@ -170,8 +166,7 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
     def test_predecessor_is_byte_identical_and_successor_uses_explicit_semver(self):
         self.assertTrue(ROADMAP.is_file(), ROADMAP)
         self.assertTrue(ROADMAP_PREDECESSOR.is_file(), ROADMAP_PREDECESSOR)
-        if ROADMAP_PREDECESSOR.is_file():
-            self.assertEqual(ROADMAP_V1_1_2_SHA256, _sha256(ROADMAP_PREDECESSOR))
+        self.assertEqual(ROADMAP_V1_1_2_SHA256, _sha256(ROADMAP_PREDECESSOR))
         self.assertEqual(
             "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
             _sha256(ROADMAP_V1_0_0_PREDECESSOR),
@@ -372,8 +367,7 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual(_sha256(OPEN_WORK), {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["sha256"])
         self.assertEqual("1.1.3", current["ROADMAP"]["semver"])
         self.assertEqual("docs/00_platform/05_ROADMAP_v1.1.3.md", current["ROADMAP"]["repository_path"])
-        if ROADMAP.is_file():
-            self.assertEqual(_sha256(ROADMAP), current["ROADMAP"]["sha256"])
+        self.assertEqual(_sha256(ROADMAP), current["ROADMAP"]["sha256"])
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
         self.assertEqual(20, self.manifest["integrity_rules"]["expected_counts"]["domains"])
         self.assertEqual(61, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
@@ -384,11 +378,9 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual("1.1.2", historical["ROADMAP_V1_1_1"]["superseded_version"])
         self.assertEqual(_sha256(ROADMAP_V1_1_1_PREDECESSOR), historical["ROADMAP_V1_1_1"]["sha256"])
         self.assertIn("ROADMAP_V1_1_2", historical)
-        if "ROADMAP_V1_1_2" in historical:
-            self.assertEqual("historical", historical["ROADMAP_V1_1_2"]["lifecycle"])
-            self.assertEqual("1.1.3", historical["ROADMAP_V1_1_2"]["superseded_version"])
-            if ROADMAP_PREDECESSOR.is_file():
-                self.assertEqual(_sha256(ROADMAP_PREDECESSOR), historical["ROADMAP_V1_1_2"]["sha256"])
+        self.assertEqual("historical", historical["ROADMAP_V1_1_2"]["lifecycle"])
+        self.assertEqual("1.1.3", historical["ROADMAP_V1_1_2"]["superseded_version"])
+        self.assertEqual(_sha256(ROADMAP_PREDECESSOR), historical["ROADMAP_V1_1_2"]["sha256"])
         self.assertEqual(
             "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
             historical["ROADMAP_V1_0_0"]["sha256"],

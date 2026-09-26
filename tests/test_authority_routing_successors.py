@@ -127,15 +127,18 @@ def _feature_pack_sections(text: str) -> dict[str, str]:
 
 def _normalise_open_work_successor(text: str) -> str:
     replacements = (
-        ("# 02_OPEN_WORK_v1.2.47.md", "# 02_OPEN_WORK_v1.2.46.md"),
-        ("OPEN-WORK SUCCESSOR v1.2.47", "OPEN-WORK SUCCESSOR v1.2.46"),
-        ("Document version:** v1.2.47", "Document version:** v1.2.46"),
-        ("archive/02_OPEN_WORK_v1.2.46.md", "archive/02_OPEN_WORK_v1.2.45.md"),
-        ("v1.2.46 → v1.2.47", "v1.2.45 → v1.2.46"),
-        ("05_ROADMAP_v1.1.3.md", "05_ROADMAP_v1.1.2.md"),
-        ("DELIVERY_ATLAS_WORKING_v0.2.3.md", "DELIVERY_ATLAS_WORKING_v0.2.2.md"),
+        ("# 02_OPEN_WORK_v1.2.47.md", "# 02_OPEN_WORK_v1.2.46.md", 1),
+        ("OPEN-WORK SUCCESSOR v1.2.47", "OPEN-WORK SUCCESSOR v1.2.46", 1),
+        ("Document version:** v1.2.47", "Document version:** v1.2.46", 1),
+        ("archive/02_OPEN_WORK_v1.2.46.md", "archive/02_OPEN_WORK_v1.2.45.md", 1),
+        ("v1.2.46 → v1.2.47", "v1.2.45 → v1.2.46", 1),
+        ("05_ROADMAP_v1.1.3.md", "05_ROADMAP_v1.1.2.md", 6),
+        ("DELIVERY_ATLAS_WORKING_v0.2.3.md", "DELIVERY_ATLAS_WORKING_v0.2.2.md", 5),
     )
-    for current, predecessor in replacements:
+    for current, predecessor, expected_count in replacements:
+        actual_count = text.count(current)
+        if actual_count != expected_count:
+            raise AssertionError(f"expected {expected_count} Open Work routing replacements for {current!r}, found {actual_count}")
         text = text.replace(current, predecessor)
     return text
 
@@ -305,9 +308,19 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
 
     def test_current_route_and_lifecycle_are_consistent(self):
         readme = self.readme
+        north_star = _read(DOCS / CURRENT_AUTHORITY["PROJECT_NORTH_STAR_AND_MVP"])
         product = _read(DOCS / CURRENT_AUTHORITY["PLATFORM_BASELINE"])
+        decisions = _read(DOCS / CURRENT_AUTHORITY["DECISION_REGISTER"])
         roadmap = _read(DOCS / CURRENT_AUTHORITY["ROADMAP"])
         open_work = _read(DOCS / CURRENT_AUTHORITY["OPEN_WORK"])
+        for filename in (
+            "00_PLATFORM_v1.4.1.md",
+            "01_DECISIONS_v1.4.1.md",
+            "02_OPEN_WORK_v1.2.45.md",
+            "05_ROADMAP_v1.1.2.md",
+        ):
+            self.assertIn(filename, north_star)
+        self.assertIn("02_OPEN_WORK_v1.2.46.md", decisions)
         roadmap_header = roadmap.split("## Amendment summary", 1)[0]
         for authority_id in (
             "PROJECT_NORTH_STAR_AND_MVP",

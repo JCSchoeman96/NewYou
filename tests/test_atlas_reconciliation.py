@@ -147,21 +147,23 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         predecessor = ATLAS_PREDECESSOR.read_text(encoding="utf-8")
         successor = self.atlas
         replacements = (
-            ("# Delivery Atlas working v0.2.3", "# Delivery Atlas working v0.2.2"),
-            ("v0.2.2 → v0.2.3", "v0.2.1 → v0.2.2"),
+            ("# Delivery Atlas working v0.2.3", "# Delivery Atlas working v0.2.2", 1),
+            ("v0.2.2 → v0.2.3", "v0.2.1 → v0.2.2", 1),
             (
                 "This `v0.2.3` successor updates only current Roadmap and Open Work source paths in the routing tables.",
                 "This `v0.2.2` successor updates current-source paths in the predecessor's routing tables only.",
+                1,
             ),
-            ("archive/DELIVERY_ATLAS_WORKING_v0.2.2.md", "archive/DELIVERY_ATLAS_WORKING_v0.2.1.md"),
-            ("working/DELIVERY_ATLAS_WORKING_v0.2.3.md", "working/DELIVERY_ATLAS_WORKING_v0.2.2.md"),
-            ("predecessor v0.2.2 is preserved at", "predecessor v0.2.1 is preserved at"),
-            ("05_ROADMAP_v1.1.3.md", "05_ROADMAP_v1.1.2.md"),
-            ("02_OPEN_WORK_v1.2.47.md", "02_OPEN_WORK_v1.2.46.md"),
-            ("Roadmap `v1.1.3`", "Roadmap `v1.1.2`"),
-            ("Open Work `v1.2.47`", "Open Work `v1.2.46`"),
+            ("archive/DELIVERY_ATLAS_WORKING_v0.2.2.md", "archive/DELIVERY_ATLAS_WORKING_v0.2.1.md", 2),
+            ("working/DELIVERY_ATLAS_WORKING_v0.2.3.md", "working/DELIVERY_ATLAS_WORKING_v0.2.2.md", 1),
+            ("predecessor v0.2.2 is preserved at", "predecessor v0.2.1 is preserved at", 1),
+            ("05_ROADMAP_v1.1.3.md", "05_ROADMAP_v1.1.2.md", 6),
+            ("02_OPEN_WORK_v1.2.47.md", "02_OPEN_WORK_v1.2.46.md", 2),
+            ("Roadmap `v1.1.3`", "Roadmap `v1.1.2`", 1),
+            ("Open Work `v1.2.47`", "Open Work `v1.2.46`", 1),
         )
-        for current, old in replacements:
+        for current, old, expected_count in replacements:
+            self.assertEqual(expected_count, successor.count(current), current)
             successor = successor.replace(current, old)
         self.assertEqual(predecessor, successor)
 
