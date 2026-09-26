@@ -68,14 +68,21 @@ def _section(text: str, start: str, end: str) -> str:
     return text.split(start, 1)[1].split(end, 1)[0]
 
 
+def _line_marker_positions(text: str, marker: str) -> list[int]:
+    pattern = rf"(?m)^{re.escape(marker)}\r?$"
+    return [match.start() for match in re.finditer(pattern, text)]
+
+
 def _product_body(text: str) -> str:
-    if text.count(PRODUCT_BODY_START) != 1:
+    start_positions = _line_marker_positions(text, PRODUCT_BODY_START)
+    if len(start_positions) != 1:
         raise ValueError(f"expected exactly one Product body start marker: {PRODUCT_BODY_START}")
-    if text.count(PRODUCT_BODY_END) != 1:
+    end_positions = _line_marker_positions(text, PRODUCT_BODY_END)
+    if len(end_positions) != 1:
         raise ValueError(f"expected exactly one Product body end marker: {PRODUCT_BODY_END}")
 
-    start = text.index(PRODUCT_BODY_START)
-    end = text.index(PRODUCT_BODY_END)
+    start = start_positions[0]
+    end = end_positions[0]
     if start >= end:
         raise ValueError("Product body start marker must precede its end marker")
     return text[start:end]
@@ -83,16 +90,24 @@ def _product_body(text: str) -> str:
 
 def _successor_product_body_without_authorized_insertion(text: str) -> str:
     body = _product_body(text)
-    if body.count(PRODUCT_INSERTION_START) != 1:
+    insertion_start_positions = _line_marker_positions(text, PRODUCT_INSERTION_START)
+    if len(insertion_start_positions) != 1:
         raise ValueError(f"expected exactly one authorized Product insertion start marker: {PRODUCT_INSERTION_START}")
-    if body.count(PRODUCT_INSERTION_END) != 1:
+    insertion_end_positions = _line_marker_positions(text, PRODUCT_INSERTION_END)
+    if len(insertion_end_positions) != 1:
         raise ValueError(f"expected exactly one authorized Product insertion end marker: {PRODUCT_INSERTION_END}")
 
-    insertion_start = body.index(PRODUCT_INSERTION_START)
-    insertion_end = body.index(PRODUCT_INSERTION_END)
+    body_start = _line_marker_positions(text, PRODUCT_BODY_START)[0]
+    body_end = _line_marker_positions(text, PRODUCT_BODY_END)[0]
+    insertion_start = insertion_start_positions[0]
+    insertion_end = insertion_end_positions[0]
+    if not (body_start < insertion_start < body_end):
+        raise ValueError("Product insertion start marker must be inside the Product body")
+    if not (body_start < insertion_end < body_end):
+        raise ValueError("Product insertion end marker must be inside the Product body")
     if insertion_end <= insertion_start:
         raise ValueError("Product insertion end marker must follow its start marker")
-    return body[:insertion_start] + body[insertion_end:]
+    return body[: insertion_start - body_start] + body[insertion_end - body_start :]
 
 
 def _feature_pack_sections(text: str) -> dict[str, str]:
@@ -248,6 +263,18 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             ),
             successor.replace("# 1. Platform Purpose\n", "", 1),
             successor.replace("# 24. Current Planning Stop Condition\n", "", 1),
+            successor.replace(
+                "# 21S. Marketing Permission and Communication Preferences\n",
+                "Prose mentions # 21S. Marketing Permission and Communication Preferences\n",
+                1,
+            ),
+            successor + "# 21S. Marketing Permission and Communication Preferences\n",
+            successor.replace(
+                "# 22. Explicitly Not Yet Decided\n",
+                "Prose mentions # 22. Explicitly Not Yet Decided\n",
+                1,
+            ),
+            successor + "# 22. Explicitly Not Yet Decided\n",
         )
         for invalid_successor in invalid_successors:
             with self.subTest(invalid_successor=invalid_successor):
