@@ -204,7 +204,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         current_inputs = next(
             line.split(":", 1)[1]
             for line in self.domain.splitlines()
-            if line.startswith("- **Current semantic inputs for the v1.2.0 DOL-01 amendment:**")
+            if line.startswith("- **Primary inputs — current semantic authority for the v1.2.0 DOL-01 amendment:**")
         )
         self.assertEqual("1.2.0", self.domain_entry["semver"])
         self.assertIn(self.product_entry["canonical_filename"], current_inputs)

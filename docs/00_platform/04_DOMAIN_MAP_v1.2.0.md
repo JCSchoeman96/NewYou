@@ -8,7 +8,7 @@
 - **Started:** 2026-08-17
 - **Last updated:** 2026-09-26
 - **Authority:** Implements current Product Law §21S and DEC-304 while preserving `03_ARCHITECTURE_v1.1.1.md`; it defines owner boundaries and request direction without implementation mechanics.
-- **Current semantic inputs for the v1.2.0 DOL-01 amendment:** current Product Law `00_PLATFORM_v1.5.0.md` §21S and current Decision Register `01_DECISIONS_v1.5.0.md` DEC-304.
+- **Primary inputs — current semantic authority for the v1.2.0 DOL-01 amendment:** Product Law `00_PLATFORM_v1.5.0.md` §21S and Decision Register `01_DECISIONS_v1.5.0.md` DEC-304.
 - **Historical/base inputs inherited from earlier Domain Map construction:** `archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `archive/00_PLATFORM_v1.3.0.md`, `archive/01_DECISIONS_v1.3.0.md`, `archive/02_OPEN_WORK_v1.2.37.md`, `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md`.
 - **Current Architecture inputs:** `03_ARCHITECTURE_v1.1.1.md`, `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`.
 - **Architecture deep reference:** `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md` only where the frozen synthesis needs deeper legislative detail
