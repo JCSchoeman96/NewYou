@@ -50,6 +50,11 @@ CURRENT_AUTHORITY = {
     "FRONTEND_EXPERIENCE_SYSTEM": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
 }
 
+PRODUCT_BODY_START = "# 1. Platform Purpose"
+PRODUCT_BODY_END = "# 24. Current Planning Stop Condition"
+PRODUCT_INSERTION_START = "# 21S. Marketing Permission and Communication Preferences"
+PRODUCT_INSERTION_END = "# 22. Explicitly Not Yet Decided"
+
 
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
@@ -61,6 +66,48 @@ def _sha256(path: Path) -> str:
 
 def _section(text: str, start: str, end: str) -> str:
     return text.split(start, 1)[1].split(end, 1)[0]
+
+
+def _line_marker_positions(text: str, marker: str) -> list[int]:
+    pattern = rf"(?m)^{re.escape(marker)}\r?$"
+    return [match.start() for match in re.finditer(pattern, text)]
+
+
+def _product_body(text: str) -> str:
+    start_positions = _line_marker_positions(text, PRODUCT_BODY_START)
+    if len(start_positions) != 1:
+        raise ValueError(f"expected exactly one Product body start marker: {PRODUCT_BODY_START}")
+    end_positions = _line_marker_positions(text, PRODUCT_BODY_END)
+    if len(end_positions) != 1:
+        raise ValueError(f"expected exactly one Product body end marker: {PRODUCT_BODY_END}")
+
+    start = start_positions[0]
+    end = end_positions[0]
+    if start >= end:
+        raise ValueError("Product body start marker must precede its end marker")
+    return text[start:end]
+
+
+def _successor_product_body_without_authorized_insertion(text: str) -> str:
+    body = _product_body(text)
+    insertion_start_positions = _line_marker_positions(text, PRODUCT_INSERTION_START)
+    if len(insertion_start_positions) != 1:
+        raise ValueError(f"expected exactly one authorized Product insertion start marker: {PRODUCT_INSERTION_START}")
+    insertion_end_positions = _line_marker_positions(text, PRODUCT_INSERTION_END)
+    if len(insertion_end_positions) != 1:
+        raise ValueError(f"expected exactly one authorized Product insertion end marker: {PRODUCT_INSERTION_END}")
+
+    body_start = _line_marker_positions(text, PRODUCT_BODY_START)[0]
+    body_end = _line_marker_positions(text, PRODUCT_BODY_END)[0]
+    insertion_start = insertion_start_positions[0]
+    insertion_end = insertion_end_positions[0]
+    if not (body_start < insertion_start < body_end):
+        raise ValueError("Product insertion start marker must be inside the Product body")
+    if not (body_start < insertion_end < body_end):
+        raise ValueError("Product insertion end marker must be inside the Product body")
+    if insertion_end <= insertion_start:
+        raise ValueError("Product insertion end marker must follow its start marker")
+    return body[: insertion_start - body_start] + body[insertion_end - body_start :]
 
 
 def _feature_pack_sections(text: str) -> dict[str, str]:
@@ -128,9 +175,9 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
 
         old_product = _read(DOCS / "archive" / PREDECESSORS["PLATFORM_BASELINE"][0])
         new_product = _read(DOCS / CURRENT_AUTHORITY["PLATFORM_BASELINE"])
-        old_product_body = _section(old_product, "# 1. Platform Purpose", "# 22. Explicitly Not Yet Decided")
-        new_product_body = _section(new_product, "# 1. Platform Purpose", "# 22. Explicitly Not Yet Decided")
-        self.assertEqual(old_product_body, new_product_body.split("# 21S. Marketing Permission", 1)[0])
+        old_product_body = _product_body(old_product)
+        new_product_body = _successor_product_body_without_authorized_insertion(new_product)
+        self.assertEqual(old_product_body, new_product_body)
 
         old_decisions = _read(DOCS / "archive" / PREDECESSORS["DECISION_REGISTER"][0])
         new_decisions = _read(DOCS / CURRENT_AUTHORITY["DECISION_REGISTER"])
@@ -162,6 +209,77 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
                     "`02_OPEN_WORK_v1.2.44.md §§8, 11`",
                 )
             self.assertEqual(prior, current, pack_id)
+
+    def test_product_successor_exclusion_is_exact_and_fails_closed(self):
+        successor = (
+            "# 1. Platform Purpose\n\n"
+            "Product purpose text.\n\n"
+            "# 21S. Marketing Permission and Communication Preferences\n\n"
+            "Authorized insertion text.\n\n"
+            "# 22. Explicitly Not Yet Decided\n\n"
+            "Section 22 text.\n\n"
+            "# 23. Current Constraints\n\n"
+            "Section 23 text.\n\n"
+            "# 24. Current Planning Stop Condition\n\n"
+        )
+        expected = (
+            "# 1. Platform Purpose\n\n"
+            "Product purpose text.\n\n"
+            "# 22. Explicitly Not Yet Decided\n\n"
+            "Section 22 text.\n\n"
+            "# 23. Current Constraints\n\n"
+            "Section 23 text.\n\n"
+        )
+        self.assertEqual(expected, _successor_product_body_without_authorized_insertion(successor))
+
+        changed_section_22 = successor.replace("Section 22 text.", "Changed section 22 text.", 1)
+        changed_section_23 = successor.replace("Section 23 text.", "Changed section 23 text.", 1)
+        self.assertNotEqual(expected, _successor_product_body_without_authorized_insertion(changed_section_22))
+        self.assertNotEqual(expected, _successor_product_body_without_authorized_insertion(changed_section_23))
+
+        out_of_order = successor.replace(
+            "# 21S. Marketing Permission and Communication Preferences\n\n"
+            "Authorized insertion text.\n\n"
+            "# 22. Explicitly Not Yet Decided",
+            "# 22. Explicitly Not Yet Decided\n\n"
+            "# 21S. Marketing Permission and Communication Preferences\n\n"
+            "Authorized insertion text.",
+            1,
+        )
+        invalid_successors = (
+            successor.replace("# 21S. Marketing Permission and Communication Preferences\n", "", 1),
+            successor.replace(
+                "# 21S. Marketing Permission and Communication Preferences",
+                "# 21S. Marketing Permission and Communication Preferences\n\n"
+                "# 21S. Marketing Permission and Communication Preferences",
+                1,
+            ),
+            successor.replace("# 22. Explicitly Not Yet Decided\n", "", 1),
+            out_of_order,
+            successor.replace(
+                "# 22. Explicitly Not Yet Decided",
+                "# 22. Explicitly Not Yet Decided\n\n# 22. Explicitly Not Yet Decided",
+                1,
+            ),
+            successor.replace("# 1. Platform Purpose\n", "", 1),
+            successor.replace("# 24. Current Planning Stop Condition\n", "", 1),
+            successor.replace(
+                "# 21S. Marketing Permission and Communication Preferences\n",
+                "Prose mentions # 21S. Marketing Permission and Communication Preferences\n",
+                1,
+            ),
+            successor + "# 21S. Marketing Permission and Communication Preferences\n",
+            successor.replace(
+                "# 22. Explicitly Not Yet Decided\n",
+                "Prose mentions # 22. Explicitly Not Yet Decided\n",
+                1,
+            ),
+            successor + "# 22. Explicitly Not Yet Decided\n",
+        )
+        for invalid_successor in invalid_successors:
+            with self.subTest(invalid_successor=invalid_successor):
+                with self.assertRaises(ValueError):
+                    _successor_product_body_without_authorized_insertion(invalid_successor)
 
     def test_current_route_and_lifecycle_are_consistent(self):
         readme = self.readme
