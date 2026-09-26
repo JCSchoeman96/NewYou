@@ -9,8 +9,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
-ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.2.md"
+ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
+ATLAS_V0_2_0 = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
 ATLAS_OLDER_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
@@ -79,7 +80,15 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
     def test_predecessor_preserved_and_successor_versioned(self):
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md"],
+            _sha256(ATLAS_V0_2_0),
+        )
+        self.assertEqual(
+            "b4c27c8a314d2a9e227acd53bd69dfce0e01a2cc743535e49a45a848f135cc59",
             _sha256(ATLAS_PREDECESSOR),
+        )
+        self.assertEqual(
+            _sha256(ATLAS_PREDECESSOR),
+            _sha256(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"),
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md"],
@@ -106,7 +115,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
             _sha256(DOCS / "archive" / "02_OPEN_WORK_v1.2.38.md"),
         )
         self.assertTrue(ATLAS.is_file())
-        self.assertIn("v0.2.0 → v0.2.1", self.atlas)
+        self.assertIn("v0.2.1 → v0.2.2", self.atlas)
         self.assertNotIn("working/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.atlas)
         self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.atlas)
         self.assertIn("v1.2.42 → v1.2.43", self.open_work)
@@ -125,7 +134,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("WORKING / NON-AUTHORITATIVE", self.atlas)
         self.assertIn("DERIVED DELIVERY PLANNING ARTIFACT", self.atlas)
         self.assertIn("DOES NOT AUTHORISE IMPLEMENTATION", self.atlas)
-        self.assertIn("outside `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`", self.atlas)
+        self.assertIn("outside the authority-document records", self.atlas)
         ids = {
             entry["document_id"]
             for section in ("governing_documents", "reference_documents")
@@ -144,10 +153,10 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
 
     def test_current_source_routing_refreshed(self):
         sources = _section(self.atlas, "## 1.1 Authority hierarchy", "## 1.2 Purpose")
-        self.assertIn("00_PLATFORM_v1.4.1.md", sources)
-        self.assertIn("01_DECISIONS_v1.4.1.md", sources)
+        self.assertIn("00_PLATFORM_v1.5.0.md", sources)
+        self.assertIn("01_DECISIONS_v1.5.0.md", sources)
         self.assertIn("03_ARCHITECTURE_v1.1.1.md", sources)
-        self.assertIn("04_DOMAIN_MAP_v1.1.1.md", sources)
+        self.assertIn("04_DOMAIN_MAP_v1.2.0.md", sources)
         self.assertIn("05_ROADMAP_v1.1.2.md", sources)
         current = {
             entry["document_id"]: entry
@@ -282,7 +291,8 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("HARDEN-02_CONTRACT_RECOVERY_REQUIRED", self.open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.open_work)
-        self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.1.md", self.readme)
+        self.assertIn("DELIVERY_ATLAS_WORKING_v0.2.2.md", self.readme)
+        self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.2.1.md", self.readme)
         self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.2.0.md", self.readme)
         self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.readme)
         current = {

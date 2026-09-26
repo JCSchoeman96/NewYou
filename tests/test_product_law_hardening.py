@@ -51,10 +51,10 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.roadmap = current_document("ROADMAP")
         cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
         cls.architecture = (DOCS / "03_ARCHITECTURE_v1.1.1.md").read_text(encoding="utf-8")
-        cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.1.1.md").read_text(encoding="utf-8")
+        cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
-        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md").read_text(encoding="utf-8")
+        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.2.md").read_text(encoding="utf-8")
         cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.2.md").read_text(
             encoding="utf-8"
         )
@@ -311,10 +311,10 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertIn("archive/04_DOMAIN_MAP_v1.1.0.md", self.open_work)
         self.assertIn("archive/00_PLATFORM_v1.3.0.md", self.decisions)
         self.assertIn("synthesis `v1.1.1` (path-only successor to archived v1.1.0)", self.readme)
-        self.assertIn("current Domain Law `v1.1.1` (path-only successor to archived v1.1.0)", self.readme)
+        self.assertIn("current Domain Law `v1.2.0` (semantic successor to archived v1.1.1)", self.readme)
         self.assertTrue(
             "working/DELIVERY_ATLAS_WORKING_v0.2.1.md" in self.fp001,
-            "FP-001 must route to the current derived Atlas",
+            "FP-001 retains its pinned v0.2.1 Atlas source-at-freeze path unchanged",
         )
         self.assertIn("reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md", self.fp001)
         self.assertIn("docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md", self.fp001)
@@ -323,8 +323,12 @@ class ProductLawHardeningTests(unittest.TestCase):
         current_source_routing = next(
             line for line in atlas_reconciliation.splitlines() if "| Current-source routing |" in line
         )
-        self.assertIn("Product `v1.4.1`, Decisions `v1.4.1`", current_source_routing)
-        self.assertIn("Architecture `v1.1.1`, Domain Map `v1.1.1`, Roadmap `v1.1.2`", current_source_routing)
+        self.assertIn("Product `v1.5.0`, Decisions `v1.5.0`", current_source_routing)
+        self.assertIn("Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.1.2`", current_source_routing)
+        self.assertIn("Open Work `v1.2.46`", current_source_routing)
+        current_source_table = self.atlas.split("## 1.1 Authority hierarchy", 1)[1].split("## 1.2 Purpose", 1)[0]
+        for current_name in ("00_PLATFORM_v1.5.0.md", "01_DECISIONS_v1.5.0.md", "02_OPEN_WORK_v1.2.46.md", "04_DOMAIN_MAP_v1.2.0.md"):
+            self.assertIn(current_name, current_source_table)
         self.assertNotIn("Product `v1.3.0`", current_source_routing)
         self.assertNotIn("Architecture `v1.1.0`", current_source_routing)
 
@@ -400,8 +404,11 @@ class ProductLawHardeningTests(unittest.TestCase):
             "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
             "docs/00_platform/archive/00_PLATFORM_v1.2.1.md",
             "docs/00_platform/archive/00_PLATFORM_v1.3.0.md",
+            "docs/00_platform/archive/00_PLATFORM_v1.4.1.md",
             "docs/00_platform/archive/01_DECISIONS_v1.2.2.md",
             "docs/00_platform/archive/01_DECISIONS_v1.3.0.md",
+            "docs/00_platform/archive/01_DECISIONS_v1.4.1.md",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.45.md",
             "docs/00_platform/archive/02_OPEN_WORK_v1.2.36.md",
             "docs/00_platform/archive/02_OPEN_WORK_v1.2.37.md",
             "docs/00_platform/archive/02_OPEN_WORK_v1.2.39.md",
@@ -410,6 +417,7 @@ class ProductLawHardeningTests(unittest.TestCase):
             "docs/00_platform/archive/03_ARCHITECTURE_v1.1.0.md",
             "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md",
             "docs/00_platform/archive/04_DOMAIN_MAP_v1.1.0.md",
+            "docs/00_platform/archive/04_DOMAIN_MAP_v1.1.1.md",
             "docs/00_platform/archive/05_ROADMAP_v1.0.0.md",
             "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.0.md",
             "docs/00_platform/archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md",
@@ -417,6 +425,7 @@ class ProductLawHardeningTests(unittest.TestCase):
             "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md",
             "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md",
             "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md",
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.1.md",
             "docs/00_platform/archive/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
             "docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md",
         )
@@ -427,10 +436,10 @@ class ProductLawHardeningTests(unittest.TestCase):
         current_source_paths = (
             "docs/00_platform/05_ROADMAP_v1.1.2.md",
             "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
-            "docs/00_platform/04_DOMAIN_MAP_v1.1.1.md",
+            "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
             "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
             "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.2.md",
             "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md",
             "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
             "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
@@ -487,12 +496,12 @@ class ProductLawHardeningTests(unittest.TestCase):
     def test_atlas_routes_to_current_authorities_and_does_not_block_on_resolved_oq034(self):
         current_sources = (
             "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
-            "00_PLATFORM_v1.4.1.md",
-            "01_DECISIONS_v1.4.1.md",
+            "00_PLATFORM_v1.5.0.md",
+            "01_DECISIONS_v1.5.0.md",
             "03_ARCHITECTURE_v1.1.1.md",
-            "04_DOMAIN_MAP_v1.1.1.md",
+            "04_DOMAIN_MAP_v1.2.0.md",
             "05_ROADMAP_v1.1.2.md",
-            "02_OPEN_WORK_v1.2.45.md",
+            "02_OPEN_WORK_v1.2.46.md",
             "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
         )
         source_table = self.atlas.split("## 1.2 Purpose", 1)[0]

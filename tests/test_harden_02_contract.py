@@ -909,7 +909,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.45", current["OPEN_WORK"]["semver"])
+        self.assertEqual("1.2.46", current["OPEN_WORK"]["semver"])
         self.assertEqual(self.current_open_work_path, ROOT / current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(self.current_open_work_path), current["OPEN_WORK"]["sha256"])
         navigation_paths = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
