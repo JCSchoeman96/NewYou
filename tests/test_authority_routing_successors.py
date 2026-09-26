@@ -19,16 +19,16 @@ PREDECESSORS = {
         "296b01a3da81e079bd33aab7a59dd23390946baf0b6daa3deae9d71f3971531d",
     ),
     "PLATFORM_BASELINE": (
-        "00_PLATFORM_v1.4.0.md",
-        "1.4.0",
+        "00_PLATFORM_v1.4.1.md",
         "1.4.1",
-        "34d1fa2dc3c12248b9fc0f850e25a0964083dc6d4ebe7b9f6f30dc4347cc0b29",
+        "1.5.0",
+        "868b6a6ca81df7d4322dd534cb4387c051748cd49cdc3834e53626b49040c8ec",
     ),
     "DECISION_REGISTER": (
-        "01_DECISIONS_v1.4.0.md",
-        "1.4.0",
+        "01_DECISIONS_v1.4.1.md",
         "1.4.1",
-        "6058a81e5c3f7864c4587d5fb2e714efc1067abc694d9a0279ebccdd2b28ed14",
+        "1.5.0",
+        "e92564c16c9ad15e8b7558ff76a509efad4310aa786c697b09b0ce2723ec4701",
     ),
     "ROADMAP": (
         "05_ROADMAP_v1.1.1.md",
@@ -40,11 +40,11 @@ PREDECESSORS = {
 
 CURRENT_AUTHORITY = {
     "PROJECT_NORTH_STAR_AND_MVP": "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
-    "PLATFORM_BASELINE": "00_PLATFORM_v1.4.1.md",
-    "DECISION_REGISTER": "01_DECISIONS_v1.4.1.md",
-    "OPEN_WORK": "02_OPEN_WORK_v1.2.45.md",
+    "PLATFORM_BASELINE": "00_PLATFORM_v1.5.0.md",
+    "DECISION_REGISTER": "01_DECISIONS_v1.5.0.md",
+    "OPEN_WORK": "02_OPEN_WORK_v1.2.46.md",
     "ARCHITECTURE_SYNTHESIS": "03_ARCHITECTURE_v1.1.1.md",
-    "DOMAIN_MAP": "04_DOMAIN_MAP_v1.1.1.md",
+    "DOMAIN_MAP": "04_DOMAIN_MAP_v1.2.0.md",
     "ROADMAP": "05_ROADMAP_v1.1.2.md",
     "PLATFORM_OPERATING_MODEL": "PLATFORM_OPERATING_MODEL_v1.0.1.md",
     "FRONTEND_EXPERIENCE_SYSTEM": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
@@ -98,8 +98,8 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
     def test_four_predecessors_are_archived_byte_identically_and_manifested(self):
         historical_ids = {
             "PROJECT_NORTH_STAR_AND_MVP": "PROJECT_NORTH_STAR_AND_MVP_V1_2_2",
-            "PLATFORM_BASELINE": "PLATFORM_BASELINE_V1_4_0",
-            "DECISION_REGISTER": "DECISION_REGISTER_V1_4_0",
+            "PLATFORM_BASELINE": "PLATFORM_BASELINE_V1_4_1",
+            "DECISION_REGISTER": "DECISION_REGISTER_V1_4_1",
             "ROADMAP": "ROADMAP_V1_1_1",
         }
         for document_id, (filename, old_version, new_version, expected_hash) in PREDECESSORS.items():
@@ -128,18 +128,22 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
 
         old_product = _read(DOCS / "archive" / PREDECESSORS["PLATFORM_BASELINE"][0])
         new_product = _read(DOCS / CURRENT_AUTHORITY["PLATFORM_BASELINE"])
-        self.assertEqual(
-            _section(old_product, "# 1. Platform Purpose", "# 24. Current Planning Stop Condition"),
-            _section(new_product, "# 1. Platform Purpose", "# 24. Current Planning Stop Condition"),
-        )
+        old_product_body = _section(old_product, "# 1. Platform Purpose", "# 22. Explicitly Not Yet Decided")
+        new_product_body = _section(new_product, "# 1. Platform Purpose", "# 22. Explicitly Not Yet Decided")
+        self.assertEqual(old_product_body, new_product_body.split("# 21S. Marketing Permission", 1)[0])
 
         old_decisions = _read(DOCS / "archive" / PREDECESSORS["DECISION_REGISTER"][0])
         new_decisions = _read(DOCS / CURRENT_AUTHORITY["DECISION_REGISTER"])
-        self.assertEqual(old_decisions[old_decisions.index("# GQ-001"):], new_decisions[new_decisions.index("# GQ-001"):])
-        self.assertEqual(
-            re.findall(r"^## (?:DEC|OQ)-\d{3}", old_decisions, re.MULTILINE),
-            re.findall(r"^## (?:DEC|OQ)-\d{3}", new_decisions, re.MULTILINE),
-        )
+        old_decision_body = old_decisions[old_decisions.index("# GQ-001"):]
+        new_decision_body = new_decisions[new_decisions.index("# GQ-001"):]
+        old_before_gates, old_gates = old_decision_body.split("# Open Gates", 1)
+        new_before_decision, new_tail = new_decision_body.split("## DEC-304 —", 1)
+        new_decision, new_gates = new_tail.split("# Open Gates", 1)
+        self.assertEqual(old_before_gates, new_before_decision)
+        self.assertEqual(old_gates, new_gates)
+        old_identifiers = re.findall(r"^## (?:DEC|OQ)-\d{3}", old_decisions, re.MULTILINE)
+        new_identifiers = re.findall(r"^## (?:DEC|OQ)-\d{3}", new_decisions, re.MULTILINE)
+        self.assertEqual(old_identifiers, [identifier for identifier in new_identifiers if identifier != "## DEC-304"])
 
         old_roadmap = _read(DOCS / "archive" / PREDECESSORS["ROADMAP"][0])
         new_roadmap = _read(DOCS / CURRENT_AUTHORITY["ROADMAP"])
@@ -176,7 +180,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             self.assertIn(filename, north_star)
         self.assertIn("HARDEN-02 execution as NEXT / AUTHORISED / NOT STARTED", product)
         self.assertIn("FP001_RECONCILIATION_REQUIRED` remains downstream and not performed", product)
-        self.assertIn("02_OPEN_WORK_v1.2.45.md", decisions)
+        self.assertIn("02_OPEN_WORK_v1.2.46.md", decisions)
         self.assertIn("02_OPEN_WORK_v1.2.45.md", roadmap)
         self.assertIn("HARDEN-02 execution as NEXT / AUTHORISED / NOT STARTED", roadmap)
         fp006 = _feature_pack_sections(roadmap)["FP-006"]
@@ -190,13 +194,17 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertIn("Phase 8 only after the Development Entry Hard Stop passes", roadmap)
         self.assertIn("HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED", open_work)
         self.assertIn("HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED", open_work)
-        self.assertIn("00_PLATFORM_v1.4.1.md", readme)
+        current_context = _section(readme, "## Default Agent Context", "## Active Working Artifacts")
+        for filename in ("00_PLATFORM_v1.5.0.md", "01_DECISIONS_v1.5.0.md", "02_OPEN_WORK_v1.2.46.md", "04_DOMAIN_MAP_v1.2.0.md"):
+            self.assertIn(filename, current_context)
+        for stale_name in ("00_PLATFORM_v1.4.1.md", "01_DECISIONS_v1.4.1.md", "02_OPEN_WORK_v1.2.45.md", "04_DOMAIN_MAP_v1.1.1.md"):
+            self.assertNotIn(stale_name, current_context)
         self.assertIn("ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.2`", readme)
 
         active_paths = [
             self.readme,
             *(_read(ROOT / entry["repository_path"]) for entry in self.governing.values()),
-            _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"),
+            _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.2.md"),
             _read(DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.2.md"),
         ]
         stale = re.compile(r"(?<!archive/)02_OPEN_WORK_v1\.2\.44\.md")
