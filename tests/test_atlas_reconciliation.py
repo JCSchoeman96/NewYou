@@ -18,6 +18,7 @@ ATLAS_V0_2_1 = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
 ATLAS_V0_2_0 = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
 ATLAS_OLDER_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
+CURRENT_OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.48.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 OPEN_WORK_V1_2_40 = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
@@ -81,14 +82,9 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.atlas = ATLAS.read_text(encoding="utf-8")
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
+        cls.current_open_work = CURRENT_OPEN_WORK.read_text(encoding="utf-8")
         cls.readme = README.read_text(encoding="utf-8")
         cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-        current_open_work_path = DOCS.parent.parent / next(
-            entry["repository_path"]
-            for entry in cls.manifest["governing_documents"]
-            if entry["document_id"] == "OPEN_WORK"
-        )
-        cls.current_open_work = current_open_work_path.read_text(encoding="utf-8")
 
     def test_predecessor_preserved_and_successor_versioned(self):
         self.assertEqual(
@@ -177,8 +173,14 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
     def test_not_formally_atlas_12(self):
         self.assertIn("not** `ATLAS-12`", self.atlas.replace("**not** `ATLAS-12`", "not** `ATLAS-12`"))
         self.assertIn("ATLAS_RECONCILIATION", self.atlas)
-        self.assertIn("ATLAS-12 NOT_STARTED", self.open_work)
-        self.assertIn("reconciliation is not ATLAS-12", self.open_work)
+        self.assertIn("ATLAS-12 NOT_STARTED", self.current_open_work)
+        self.assertIn("reconciliation is not ATLAS-12", self.current_open_work)
+        self.assertIn("current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`", self.current_open_work)
+        self.assertIn("HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED", self.current_open_work)
+        self.assertIn("FP001_RECONCILIATION_REQUIRED: REQUIRED", self.current_open_work)
+        self.assertIn("COMMUNICATIONS: REQUIRED / NOT_STARTED", self.current_open_work)
+        self.assertIn("PHASE 7C: BLOCKED / NOT_STARTED", self.current_open_work)
+        self.assertIn("PROOF CLASSIFICATION: NOT FINALISED", self.current_open_work)
 
     def test_current_source_routing_refreshed(self):
         sources = _section(self.atlas, "## 1.1 Authority hierarchy", "## 1.2 Purpose")

@@ -43,10 +43,10 @@
       "semver": "1.2.48",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.48.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "55f1719bc75d369b2eada97e5cca5a988a2bb7f94df8171da3244fe6377cd3c7",
+      "sha256": "a8360a46408ac74727ee53da14918aa9b6468e7bc032fb8f182113965b7c613d",
       "superseded_version": "1.2.47",
       "lifecycle": "current",
-      "provenance_sha256": "55f1719bc75d369b2eada97e5cca5a988a2bb7f94df8171da3244fe6377cd3c7"
+      "provenance_sha256": "a8360a46408ac74727ee53da14918aa9b6468e7bc032fb8f182113965b7c613d"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -817,6 +817,7 @@
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.2\\.2\\.md",
         "(?<!reference/)(?<!archive/)ARCHITECTURE_REQUIREMENTS_WORKING_v1\\.1\\.0\\.md",
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.44\\.md",
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.47\\.md",
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.2\\.3\\.md",
         "(?<!archive/)05_ROADMAP_v1\\.1\\.3\\.md"
       ],

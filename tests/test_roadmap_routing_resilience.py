@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 ROADMAP = DOCS / "05_ROADMAP_v1.1.4.md"
+ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.1.3.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.3.md"
 OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.48.md"
 ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.0.md"
@@ -84,6 +85,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
 
     def test_roadmap_successor_preserves_everything_outside_declared_routing_patch(self):
         self.assertTrue(ROADMAP.is_file(), ROADMAP)
+        self.assertFalse(ROOT_ROADMAP_PREDECESSOR.exists(), ROOT_ROADMAP_PREDECESSOR)
         self.assertTrue(ROADMAP_PREDECESSOR.is_file(), ROADMAP_PREDECESSOR)
         if not ROADMAP.is_file() or not ROADMAP_PREDECESSOR.is_file():
             return

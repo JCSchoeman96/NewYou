@@ -109,7 +109,24 @@ def _normalise_atlas_successor(successor: str, predecessor: str) -> str:
     return successor
 
 
+OPEN_WORK_HISTORICAL_ATLAS_BLOCK = (
+    "## 12.7 — Historical Delivery Atlas reconciliation\n\n"
+    "**Status:** HISTORICAL COMPLETION RECORD — the then-current derived / non-authoritative navigation successor was "
+    "`working/DELIVERY_ATLAS_WORKING_v0.2.1.md` (predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; "
+    "earlier predecessor `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`). This subsection records that historical "
+    "reconciliation and is not the current Atlas route.\n\n"
+)
+OPEN_WORK_HISTORICAL_ATLAS_BLOCK_PREDECESSOR = (
+    "## 12.7 — Delivery Atlas reconciliation\n\n"
+    "**Status:** COMPLETE as derived / non-authoritative navigation successor `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` "
+    "(predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; earlier predecessor "
+    "`archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`).\n\n"
+)
+
+
 def _normalise_open_work_successor(successor: str, predecessor: str) -> str:
+    if successor.count(OPEN_WORK_HISTORICAL_ATLAS_BLOCK) != 1:
+        raise ValueError("expected exactly one historical Atlas clarification block in Open Work successor")
     replacements = (
         ("# 02_OPEN_WORK_v1.2.48.md", "# 02_OPEN_WORK_v1.2.47.md", 1),
         ("OPEN-WORK SUCCESSOR v1.2.48", "OPEN-WORK SUCCESSOR v1.2.47", 1),
@@ -126,8 +143,15 @@ def _normalise_open_work_successor(successor: str, predecessor: str) -> str:
                 f"expected {expected_count} routing/version marker(s) for {current}, found {actual_count}"
             )
         successor = successor.replace(current, old)
+    if successor.count(OPEN_WORK_HISTORICAL_ATLAS_BLOCK) != 1:
+        raise ValueError("historical Atlas clarification block is missing, duplicate, or relocated")
+    successor = successor.replace(
+        OPEN_WORK_HISTORICAL_ATLAS_BLOCK,
+        OPEN_WORK_HISTORICAL_ATLAS_BLOCK_PREDECESSOR,
+        1,
+    )
     if successor != predecessor:
-        raise ValueError("Open Work successor differs outside declared routing/version markers")
+        raise ValueError("Open Work successor differs outside declared routing/version and historical clarification markers")
     return successor
 
 
@@ -324,6 +348,69 @@ class AtlasAuthorityBoundaryTests(unittest.TestCase):
             "the fact that no Atlas-level guess was made",
         ):
             self.assertIn(stop_field, stop_rules)
+
+    def test_full_spec_completion_and_review_preserve_source_owned_gate_boundary(self):
+        coverage = _section(self.atlas, "## 7.7 Lifecycle coverage vocabulary", "## 7.8 Coverage status versus risk flags")
+        dossier_boundary = _section(
+            self.atlas,
+            "## 7.10 JIT Domain Dossier gate and proof boundary",
+            "## 7.11 Feature Pack Grill-Me role",
+        )
+        completion = _section(self.atlas, "## 26.6 ATLAS-06 completion standard", "## 26.7 ATLAS-06 review protocol")
+        review = _section(self.atlas, "## 26.7 ATLAS-06 review protocol", "## 26.8 ATLAS-07 completion standard")
+
+        for source_owner in (
+            "current authority",
+            "preliminary Gate Manifest",
+            "approved Feature Pack contract",
+        ):
+            with self.subTest(source_owner=source_owner):
+                self.assertIn(source_owner, coverage)
+
+        self.assertRegex(
+            coverage,
+            r"(?is)`FULL_SPEC_REQUIRED`.*source-owned requirement.*does not create one",
+        )
+        self.assertRegex(
+            coverage,
+            r"(?is)Use this status only when current authority, the preliminary Gate Manifest or an approved Feature Pack contract requires full lifecycle specification",
+        )
+        self.assertRegex(
+            dossier_boundary,
+            r"(?i)(?:makes complete lifecycle specification a prerequisite|cannot independently impose this prerequisite)",
+        )
+
+        completion_row = re.search(
+            r"(?im)^\|\s*[^|]*(?:gate|requirement)[^|]*\|.*`FULL_SPEC_REQUIRED`.*$",
+            completion,
+        )
+        self.assertIsNotNone(completion_row)
+        if completion_row is None:
+            return
+        self.assertRegex(
+            completion_row.group(0),
+            r"(?i)`FULL_SPEC_REQUIRED` records a source-owned requirement for complete implementation-grade lifecycle semantics in the affected JIT Domain Dossier before governed implementation proceeds; the Atlas does not create that gate\."
+        )
+        self.assertNotRegex(completion_row.group(0), r"(?i)`FULL_SPEC_REQUIRED` explicitly gates")
+        self.assertRegex(
+            review,
+            r"(?i)source-owned `FULL_SPEC_REQUIRED` requirement.{0,100}JIT Domain Dossier obligation",
+        )
+        self.assertNotRegex(review, r"(?i)`FULL_SPEC_REQUIRED` Dossier gate")
+        for section_name, section in (("completion", completion), ("review", review)):
+            mandatory_references = [
+                line
+                for line in section.splitlines()
+                if "`FULL_SPEC_REQUIRED`" in line
+                and re.search(
+                    r"(?i)must|mandatory|requirement|obligation|gate|prerequisite|before governed implementation",
+                    line,
+                )
+            ]
+            self.assertTrue(mandatory_references, section_name)
+            for line in mandatory_references:
+                with self.subTest(section=section_name, line=line):
+                    self.assertRegex(line, r"(?i)source-owned")
 
     def test_manifest_keeps_atlas_out_of_authority_records_but_in_navigation(self):
         authority_records = self.manifest["governing_documents"] + self.manifest["reference_documents"]

@@ -1007,11 +1007,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             _section(
                 self.current_open_work,
                 "## 12.6 Roadmap Sequencing Grill and Roadmap amendment completion",
-                "## 12.7 — Delivery Atlas reconciliation",
+                "## 12.7 — Historical Delivery Atlas reconciliation",
             ),
             _section(
                 self.current_open_work,
-                "## 12.7 — Delivery Atlas reconciliation",
+                "## 12.7 — Historical Delivery Atlas reconciliation",
                 "## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt",
             ),
         )

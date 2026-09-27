@@ -125,7 +125,27 @@ def _feature_pack_sections(text: str) -> dict[str, str]:
     return sections
 
 
-def _normalise_open_work_successor(text: str) -> str:
+OPEN_WORK_HISTORICAL_ATLAS_BLOCK = (
+    "## 12.7 — Historical Delivery Atlas reconciliation\n\n"
+    "**Status:** HISTORICAL COMPLETION RECORD — the then-current derived / non-authoritative navigation successor was "
+    "`working/DELIVERY_ATLAS_WORKING_v0.2.1.md` (predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; "
+    "earlier predecessor `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`). This subsection records that historical "
+    "reconciliation and is not the current Atlas route.\n\n"
+)
+OPEN_WORK_HISTORICAL_ATLAS_BLOCK_PREDECESSOR = (
+    "## 12.7 — Delivery Atlas reconciliation\n\n"
+    "**Status:** COMPLETE as derived / non-authoritative navigation successor `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` "
+    "(predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; earlier predecessor "
+    "`archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`).\n\n"
+)
+
+
+def _normalise_open_work_successor(text: str, canonical_predecessor: str) -> str:
+    if text.count(OPEN_WORK_HISTORICAL_ATLAS_BLOCK) != 1:
+        raise ValueError("expected exactly one historical Atlas clarification block in Open Work successor")
+    if text.count("## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt") != 1:
+        raise ValueError("expected exactly one historical Atlas clarification end marker")
+
     replacements = (
         ("# 02_OPEN_WORK_v1.2.48.md", "# 02_OPEN_WORK_v1.2.47.md", 1),
         ("OPEN-WORK SUCCESSOR v1.2.48", "OPEN-WORK SUCCESSOR v1.2.47", 1),
@@ -135,11 +155,20 @@ def _normalise_open_work_successor(text: str) -> str:
         ("DELIVERY_ATLAS_WORKING_v0.3.0.md", "DELIVERY_ATLAS_WORKING_v0.2.3.md", 5),
         ("05_ROADMAP_v1.1.4.md", "05_ROADMAP_v1.1.3.md", 6),
     )
-    for current, predecessor, expected_count in replacements:
+    for current, previous, expected_count in replacements:
         actual_count = text.count(current)
         if actual_count != expected_count:
             raise AssertionError(f"expected {expected_count} Open Work routing replacements for {current!r}, found {actual_count}")
-        text = text.replace(current, predecessor)
+        text = text.replace(current, previous)
+    if text.count(OPEN_WORK_HISTORICAL_ATLAS_BLOCK) != 1:
+        raise ValueError("historical Atlas clarification block is missing, duplicate, or relocated")
+    text = text.replace(
+        OPEN_WORK_HISTORICAL_ATLAS_BLOCK,
+        OPEN_WORK_HISTORICAL_ATLAS_BLOCK_PREDECESSOR,
+        1,
+    )
+    if text != canonical_predecessor:
+        raise ValueError("Open Work successor differs outside the declared routing and historical clarification blocks")
     return text
 
 
@@ -165,6 +194,10 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             self.assertEqual(filename, entry["canonical_filename"])
             self.assertEqual(f"docs/00_platform/{filename}", entry["repository_path"])
             self.assertEqual(_sha256(ROOT / entry["repository_path"]), entry["sha256"])
+        self.assertEqual(
+            _sha256(ROOT / self.governing["OPEN_WORK"]["repository_path"]),
+            self.governing["OPEN_WORK"]["provenance_sha256"],
+        )
 
     def test_current_authority_predecessors_are_archived_byte_identically_and_manifested(self):
         historical_ids = {
@@ -365,11 +398,53 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         ]
         stale_patterns = (
             re.compile(r"(?<!archive/)02_OPEN_WORK_v1\.2\.44\.md"),
+            re.compile(r"(?<!archive/)02_OPEN_WORK_v1\.2\.47\.md"),
             re.compile(r"(?<!archive/)DELIVERY_ATLAS_WORKING_v0\.2\.3\.md"),
         )
         for stale in stale_patterns:
             self.assertFalse(any(stale.search(text) for text in active_paths), stale.pattern)
+        open_work_predecessor_guard = r"(?<!archive/)02_OPEN_WORK_v1\.2\.47\.md"
+        self.assertIn(open_work_predecessor_guard, self.manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"])
+        guard = re.compile(open_work_predecessor_guard)
+        self.assertIsNotNone(guard.search("02_OPEN_WORK_v1.2.47.md"))
+        self.assertIsNone(guard.search("archive/02_OPEN_WORK_v1.2.47.md"))
         self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", _read(DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"))
+
+    def test_current_open_work_marks_the_v0_2_1_reconciliation_as_historical(self):
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.48.md")
+        historical_heading = "## 12.7 — Historical Delivery Atlas reconciliation"
+        self.assertEqual(1, current.count(historical_heading))
+        if current.count(historical_heading) != 1:
+            return
+
+        history = _section(
+            current,
+            historical_heading,
+            "## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt",
+        )
+        self.assertIn("HISTORICAL COMPLETION RECORD", history)
+        self.assertIn(
+            "then-current derived / non-authoritative navigation successor was `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`",
+            history,
+        )
+        self.assertIn("not the current Atlas route", history)
+        self.assertIn("current Delivery Atlas remains derived and non-authoritative at `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`", current)
+
+    def test_open_work_normalizer_rejects_missing_duplicate_or_relocated_historical_clarification(self):
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.48.md")
+        predecessor = _read(DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md")
+        block = OPEN_WORK_HISTORICAL_ATLAS_BLOCK
+        missing = current.replace(block, "", 1)
+        duplicate = current.replace(block, block + block, 1)
+        relocated = current.replace(block, "", 1).replace(
+            "## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt",
+            block + "## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt",
+            1,
+        )
+        for malformed in (missing, duplicate, relocated):
+            with self.subTest(sample=malformed[:160]):
+                with self.assertRaises(ValueError):
+                    _normalise_open_work_successor(malformed, predecessor)
 
     def test_open_work_successor_changes_only_routing_metadata_and_preserves_all_gate_state(self):
         predecessor = DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md"
@@ -385,7 +460,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118",
             _sha256(predecessor),
         )
-        self.assertEqual(predecessor_text, _normalise_open_work_successor(successor_text))
+        self.assertEqual(predecessor_text, _normalise_open_work_successor(successor_text, predecessor_text))
         for preserved_state in (
             "HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED",
             "Engineering Standards Authority Promotion remains downstream after certified execution",

@@ -4957,7 +4957,7 @@ ATLAS-06 is ready for review only when the evidence shows all of the following:
 | Temporary projection boundary | Section 7 defines the minimum projection fields and explicitly keeps the projection temporary and non-authoritative. |
 | Exact coverage vocabulary | Section 7 uses exactly `NONE`, `EXISTENCE_ONLY`, `UPSTREAM_SEMANTICS`, `FULL_SPEC_REQUIRED`, `PROOF_REQUIRED` and `STOPPED`. |
 | Separate risk vocabulary | Section 7 keeps coverage status separate from the controlled broad risk flags and does not require a risk flag for every lifecycle. |
-| Complete lifecycle gate | `FULL_SPEC_REQUIRED` explicitly gates complete implementation-grade lifecycle semantics in the affected JIT Domain Dossier before implementation proceeds. |
+| Source-owned complete lifecycle requirement | `FULL_SPEC_REQUIRED` records a source-owned requirement for complete implementation-grade lifecycle semantics in the affected JIT Domain Dossier before governed implementation proceeds; the Atlas does not create that gate. |
 | Proof boundary | `PROOF_REQUIRED` surfaces a materially unproven correctness claim but does not automatically create a Tracer Bullet; the later Feature Pack contract decides proof reuse or new proof. |
 | Cross-domain ownership | Section 7 preserves separate durable-truth owners and prevents a coordinator or platform-control lifecycle from acquiring another Domain's business authority. |
 | No premature mechanism selection | Section 7 records broad risk visibility without prescribing databases, locks, queues, caches, processes, provider mechanisms or schemas. |
@@ -4978,7 +4978,7 @@ The ATLAS-06 delivery review uses the following protocol:
 3. confirm the starting `main` SHA contains the approved ATLAS-05 baseline;
 4. run the Foundation Integrity Audit and existing documentation tests;
 5. run `git diff --check`;
-6. run a focused Section 7 audit for zero permanent lifecycle rows, the exact coverage vocabulary, the exact risk-flag vocabulary, status/risk separation, the `FULL_SPEC_REQUIRED` Dossier gate, the `PROOF_REQUIRED` proof/TB boundary, cross-domain ownership, platform-control boundaries, non-authoritative projection and selective retrieval;
+6. run a focused Section 7 audit for zero permanent lifecycle rows, the exact coverage vocabulary, the exact risk-flag vocabulary, status/risk separation, the source-owned `FULL_SPEC_REQUIRED` requirement and affected JIT Domain Dossier obligation, the `PROOF_REQUIRED` proof/TB boundary, cross-domain ownership, platform-control boundaries, non-authoritative projection and selective retrieval;
 7. confirm that no lifecycle concept or implementation-grade state-machine semantics were invented;
 8. confirm that ATLAS-07, Feature Pack preparation, JIT Domain Dossiers, TBs, VSs, HHs and TOONs were not started;
 9. confirm that pre-existing untracked `AGENTS.md` and `.agents/` material remains untouched;

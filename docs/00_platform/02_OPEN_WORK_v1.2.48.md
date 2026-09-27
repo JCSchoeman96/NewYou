@@ -1199,9 +1199,9 @@ This records the historical v1.2.41 state. Contract v0.2.0 was then open for pre
 
 The v1.2.41 stop instruction is historical. The v1.2.42 predecessor defined a fail-closed recovery lifecycle in its §12.9, requiring repository-verifiable pre-merge and post-merge certification records tied to exact SHAs. That lifecycle is complete under the certified v0.4.0 contract semantics; execution is now NEXT / AUTHORISED / NOT STARTED.
 
-## 12.7 — Delivery Atlas reconciliation
+## 12.7 — Historical Delivery Atlas reconciliation
 
-**Status:** COMPLETE as derived / non-authoritative navigation successor `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` (predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; earlier predecessor `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`).
+**Status:** HISTORICAL COMPLETION RECORD — the then-current derived / non-authoritative navigation successor was `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` (predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; earlier predecessor `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`). This subsection records that historical reconciliation and is not the current Atlas route.
 
 Atlas reconciliation remains complete as derived navigation. The predecessor `archive/02_OPEN_WORK_v1.2.40.md` recorded HARDEN-02 contract drafting; this successor preserves that completed state and records only the H02-3R post-HARDEN-02 routing refinement. It does not create Product, Architecture, Domain or Roadmap law, does not amend FP-001 artifacts, does not execute HARDEN-02 or Engineering Standards Authority Promotion, and does not authorise implementation.
 
