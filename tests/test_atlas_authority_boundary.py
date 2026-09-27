@@ -124,7 +124,44 @@ OPEN_WORK_HISTORICAL_ATLAS_BLOCK_PREDECESSOR = (
 )
 
 
+OPEN_WORK_ATLAS_CURRENT_STATUS_LINE = (
+    "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`; "
+    "immediate predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`; pinned v0.2.1 source-at-freeze artifacts remain preserved; "
+    "DERIVED / NON-AUTHORITATIVE; ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12"
+)
+OPEN_WORK_ATLAS_ROUTE_NORMALISED_STATUS_LINE = OPEN_WORK_ATLAS_CURRENT_STATUS_LINE.replace(
+    "working/DELIVERY_ATLAS_WORKING_v0.3.0.md",
+    "working/DELIVERY_ATLAS_WORKING_v0.2.3.md",
+)
+OPEN_WORK_ATLAS_PREDECESSOR_STATUS_LINE = (
+    "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.2.3.md`; "
+    "predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md`; DERIVED / NON-AUTHORITATIVE; "
+    "ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12"
+)
+
+
+def _validate_open_work_atlas_status_line(text: str, expected: str) -> None:
+    matches = list(re.finditer(r"(?m)^ATLAS RECONCILIATION: COMPLETE.*$", text))
+    if len(matches) != 1:
+        raise ValueError(f"expected exactly one Open Work Atlas reconciliation status line, found {len(matches)}")
+    start_positions = [
+        match.start() for match in re.finditer(r"(?m)^# 9\. Immediate Next Action\r?$", text)
+    ]
+    end_positions = [
+        match.start() for match in re.finditer(r"(?m)^# 10\. Minimal Tools\r?$", text)
+    ]
+    if (
+        len(start_positions) != 1
+        or len(end_positions) != 1
+        or not start_positions[0] < matches[0].start() < end_positions[0]
+    ):
+        raise ValueError("Open Work Atlas reconciliation status line is missing from or relocated outside §9")
+    if matches[0].group(0) != expected:
+        raise ValueError("Open Work §9 Atlas reconciliation status line differs outside declared lineage clarification")
+
+
 def _normalise_open_work_successor(successor: str, predecessor: str) -> str:
+    _validate_open_work_atlas_status_line(successor, OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
     if successor.count(OPEN_WORK_HISTORICAL_ATLAS_BLOCK) != 1:
         raise ValueError("expected exactly one historical Atlas clarification block in Open Work successor")
     replacements = (
@@ -143,6 +180,13 @@ def _normalise_open_work_successor(successor: str, predecessor: str) -> str:
                 f"expected {expected_count} routing/version marker(s) for {current}, found {actual_count}"
             )
         successor = successor.replace(current, old)
+    _validate_open_work_atlas_status_line(successor, OPEN_WORK_ATLAS_ROUTE_NORMALISED_STATUS_LINE)
+    successor = successor.replace(
+        OPEN_WORK_ATLAS_ROUTE_NORMALISED_STATUS_LINE,
+        OPEN_WORK_ATLAS_PREDECESSOR_STATUS_LINE,
+        1,
+    )
+    _validate_open_work_atlas_status_line(successor, OPEN_WORK_ATLAS_PREDECESSOR_STATUS_LINE)
     if successor.count(OPEN_WORK_HISTORICAL_ATLAS_BLOCK) != 1:
         raise ValueError("historical Atlas clarification block is missing, duplicate, or relocated")
     successor = successor.replace(
@@ -151,7 +195,7 @@ def _normalise_open_work_successor(successor: str, predecessor: str) -> str:
         1,
     )
     if successor != predecessor:
-        raise ValueError("Open Work successor differs outside declared routing/version and historical clarification markers")
+        raise ValueError("Open Work successor differs outside declared routing/version, §9 lineage, and historical clarification markers")
     return successor
 
 
@@ -196,6 +240,22 @@ class AtlasAuthorityBoundaryTests(unittest.TestCase):
         missing_open_route = open_work.replace(atlas_route, "working/DELIVERY_ATLAS_WORKING_v0.2.3.md", 1)
         duplicate_open_route = open_work.replace(atlas_route, atlas_route + " " + atlas_route, 1)
         for malformed in (missing_open_route, duplicate_open_route):
+            with self.subTest(malformed=malformed[:120]):
+                with self.assertRaises(ValueError):
+                    _normalise_open_work_successor(malformed, open_work_predecessor)
+
+        lineage_line = OPEN_WORK_ATLAS_CURRENT_STATUS_LINE
+        missing_lineage = open_work.replace(lineage_line + "\n", "", 1)
+        duplicate_lineage = open_work.replace(lineage_line, lineage_line + "\n" + lineage_line, 1)
+        relocated_lineage = open_work.replace(lineage_line + "\n", "", 1).replace(
+            "# 10. Minimal Tools", "# 10. Minimal Tools\n" + lineage_line, 1
+        )
+        changed_lineage = open_work.replace(
+            "immediate predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`",
+            "predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md`",
+            1,
+        )
+        for malformed in (missing_lineage, duplicate_lineage, relocated_lineage, changed_lineage):
             with self.subTest(malformed=malformed[:120]):
                 with self.assertRaises(ValueError):
                     _normalise_open_work_successor(malformed, open_work_predecessor)

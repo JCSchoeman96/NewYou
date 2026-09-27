@@ -140,7 +140,40 @@ OPEN_WORK_HISTORICAL_ATLAS_BLOCK_PREDECESSOR = (
 )
 
 
+OPEN_WORK_ATLAS_CURRENT_STATUS_LINE = (
+    "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`; "
+    "immediate predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`; pinned v0.2.1 source-at-freeze artifacts remain preserved; "
+    "DERIVED / NON-AUTHORITATIVE; ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12"
+)
+OPEN_WORK_ATLAS_ROUTE_NORMALISED_STATUS_LINE = OPEN_WORK_ATLAS_CURRENT_STATUS_LINE.replace(
+    "working/DELIVERY_ATLAS_WORKING_v0.3.0.md",
+    "working/DELIVERY_ATLAS_WORKING_v0.2.3.md",
+)
+OPEN_WORK_ATLAS_PREDECESSOR_STATUS_LINE = (
+    "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.2.3.md`; "
+    "predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md`; DERIVED / NON-AUTHORITATIVE; "
+    "ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12"
+)
+
+
+def _validate_open_work_atlas_status_line(text: str, expected: str) -> None:
+    matches = list(re.finditer(r"(?m)^ATLAS RECONCILIATION: COMPLETE.*$", text))
+    if len(matches) != 1:
+        raise ValueError(f"expected exactly one Open Work Atlas reconciliation status line, found {len(matches)}")
+    start_positions = _line_marker_positions(text, "# 9. Immediate Next Action")
+    end_positions = _line_marker_positions(text, "# 10. Minimal Tools")
+    if (
+        len(start_positions) != 1
+        or len(end_positions) != 1
+        or not start_positions[0] < matches[0].start() < end_positions[0]
+    ):
+        raise ValueError("Open Work Atlas reconciliation status line is missing from or relocated outside §9")
+    if matches[0].group(0) != expected:
+        raise ValueError("Open Work §9 Atlas reconciliation status line differs outside declared lineage clarification")
+
+
 def _normalise_open_work_successor(text: str, canonical_predecessor: str) -> str:
+    _validate_open_work_atlas_status_line(text, OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
     if text.count(OPEN_WORK_HISTORICAL_ATLAS_BLOCK) != 1:
         raise ValueError("expected exactly one historical Atlas clarification block in Open Work successor")
     if text.count("## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt") != 1:
@@ -160,6 +193,13 @@ def _normalise_open_work_successor(text: str, canonical_predecessor: str) -> str
         if actual_count != expected_count:
             raise AssertionError(f"expected {expected_count} Open Work routing replacements for {current!r}, found {actual_count}")
         text = text.replace(current, previous)
+    _validate_open_work_atlas_status_line(text, OPEN_WORK_ATLAS_ROUTE_NORMALISED_STATUS_LINE)
+    text = text.replace(
+        OPEN_WORK_ATLAS_ROUTE_NORMALISED_STATUS_LINE,
+        OPEN_WORK_ATLAS_PREDECESSOR_STATUS_LINE,
+        1,
+    )
+    _validate_open_work_atlas_status_line(text, OPEN_WORK_ATLAS_PREDECESSOR_STATUS_LINE)
     if text.count(OPEN_WORK_HISTORICAL_ATLAS_BLOCK) != 1:
         raise ValueError("historical Atlas clarification block is missing, duplicate, or relocated")
     text = text.replace(
@@ -168,7 +208,7 @@ def _normalise_open_work_successor(text: str, canonical_predecessor: str) -> str
         1,
     )
     if text != canonical_predecessor:
-        raise ValueError("Open Work successor differs outside the declared routing and historical clarification blocks")
+        raise ValueError("Open Work successor differs outside declared routing/version, §9 lineage, and historical clarification markers")
     return text
 
 
@@ -429,6 +469,43 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         )
         self.assertIn("not the current Atlas route", history)
         self.assertIn("current Delivery Atlas remains derived and non-authoritative at `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`", current)
+
+    def test_current_open_work_atlas_lineage_distinguishes_current_predecessor_and_pinned_source(self):
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.48.md")
+        _validate_open_work_atlas_status_line(current, OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
+        self.assertIn("current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`", OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
+        self.assertIn("immediate predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`", OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
+        self.assertIn("pinned v0.2.1 source-at-freeze artifacts remain preserved", OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
+        self.assertNotRegex(
+            OPEN_WORK_ATLAS_CURRENT_STATUS_LINE,
+            r"current Atlas `working/DELIVERY_ATLAS_WORKING_v0\.3\.0\.md`; predecessor `archive/DELIVERY_ATLAS_WORKING_v0\.2\.1\.md`",
+        )
+        pinned_working = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
+        pinned_archive = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
+        self.assertTrue(pinned_working.is_file())
+        self.assertTrue(pinned_archive.is_file())
+        self.assertEqual(_sha256(pinned_working), _sha256(pinned_archive))
+
+    def test_open_work_normalizer_rejects_invalid_or_relocated_current_atlas_lineage(self):
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.48.md")
+        predecessor = _read(DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md")
+        line = OPEN_WORK_ATLAS_CURRENT_STATUS_LINE
+        malformed = (
+            current.replace(line + "\n", "", 1),
+            current.replace(line, line + "\n" + line, 1),
+            current.replace(line + "\n", "", 1).replace(
+                "# 10. Minimal Tools", "# 10. Minimal Tools\n" + line, 1
+            ),
+            current.replace(
+                "immediate predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`",
+                "predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md`",
+                1,
+            ),
+        )
+        for sample in malformed:
+            with self.subTest(sample=sample[:160]):
+                with self.assertRaises(ValueError):
+                    _normalise_open_work_successor(sample, predecessor)
 
     def test_open_work_normalizer_rejects_missing_duplicate_or_relocated_historical_clarification(self):
         current = _read(DOCS / "02_OPEN_WORK_v1.2.48.md")
