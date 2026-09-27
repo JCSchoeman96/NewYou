@@ -31,10 +31,10 @@ PREDECESSORS = {
         "e92564c16c9ad15e8b7558ff76a509efad4310aa786c697b09b0ce2723ec4701",
     ),
     "OPEN_WORK": (
-        "02_OPEN_WORK_v1.2.46.md",
-        "1.2.46",
+        "02_OPEN_WORK_v1.2.47.md",
         "1.2.47",
-        "d19ba98b486478ff8fea36b74a72b4102e8fe192a797af919318a1fc31c8c870",
+        "1.2.48",
+        "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118",
     ),
     "ROADMAP": (
         "05_ROADMAP_v1.1.2.md",
@@ -48,7 +48,7 @@ CURRENT_AUTHORITY = {
     "PROJECT_NORTH_STAR_AND_MVP": "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
     "PLATFORM_BASELINE": "00_PLATFORM_v1.5.0.md",
     "DECISION_REGISTER": "01_DECISIONS_v1.5.0.md",
-    "OPEN_WORK": "02_OPEN_WORK_v1.2.47.md",
+    "OPEN_WORK": "02_OPEN_WORK_v1.2.48.md",
     "ARCHITECTURE_SYNTHESIS": "03_ARCHITECTURE_v1.1.1.md",
     "DOMAIN_MAP": "04_DOMAIN_MAP_v1.2.0.md",
     "ROADMAP": "05_ROADMAP_v1.1.3.md",
@@ -127,13 +127,12 @@ def _feature_pack_sections(text: str) -> dict[str, str]:
 
 def _normalise_open_work_successor(text: str) -> str:
     replacements = (
-        ("# 02_OPEN_WORK_v1.2.47.md", "# 02_OPEN_WORK_v1.2.46.md", 1),
-        ("OPEN-WORK SUCCESSOR v1.2.47", "OPEN-WORK SUCCESSOR v1.2.46", 1),
-        ("Document version:** v1.2.47", "Document version:** v1.2.46", 1),
-        ("archive/02_OPEN_WORK_v1.2.46.md", "archive/02_OPEN_WORK_v1.2.45.md", 1),
-        ("v1.2.46 → v1.2.47", "v1.2.45 → v1.2.46", 1),
-        ("05_ROADMAP_v1.1.3.md", "05_ROADMAP_v1.1.2.md", 6),
-        ("DELIVERY_ATLAS_WORKING_v0.2.3.md", "DELIVERY_ATLAS_WORKING_v0.2.2.md", 5),
+        ("# 02_OPEN_WORK_v1.2.48.md", "# 02_OPEN_WORK_v1.2.47.md", 1),
+        ("OPEN-WORK SUCCESSOR v1.2.48", "OPEN-WORK SUCCESSOR v1.2.47", 1),
+        ("Document version:** v1.2.48", "Document version:** v1.2.47", 1),
+        ("archive/02_OPEN_WORK_v1.2.47.md", "archive/02_OPEN_WORK_v1.2.46.md", 1),
+        ("v1.2.47 → v1.2.48", "v1.2.46 → v1.2.47", 1),
+        ("DELIVERY_ATLAS_WORKING_v0.3.0.md", "DELIVERY_ATLAS_WORKING_v0.2.3.md", 5),
     )
     for current, predecessor, expected_count in replacements:
         actual_count = text.count(current)
@@ -171,7 +170,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "PROJECT_NORTH_STAR_AND_MVP": "PROJECT_NORTH_STAR_AND_MVP_V1_2_2",
             "PLATFORM_BASELINE": "PLATFORM_BASELINE_V1_4_1",
             "DECISION_REGISTER": "DECISION_REGISTER_V1_4_1",
-            "OPEN_WORK": "OPEN_WORK_V1_2_46",
+            "OPEN_WORK": "OPEN_WORK_V1_2_47",
             "ROADMAP": "ROADMAP_V1_1_2",
         }
         for document_id, (filename, old_version, new_version, expected_hash) in PREDECESSORS.items():
@@ -330,9 +329,10 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "DECISION_REGISTER",
             "ARCHITECTURE_SYNTHESIS",
             "DOMAIN_MAP",
-            "OPEN_WORK",
         ):
             self.assertIn(self.governing[authority_id]["canonical_filename"], roadmap_header)
+        # Roadmap v1.1.3 is frozen and remains byte-identical under this no-upstream-amendment task.
+        self.assertIn("02_OPEN_WORK_v1.2.47.md", roadmap_header)
 
         self.assertIn("HARDEN-02 execution as NEXT / AUTHORISED / NOT STARTED", product)
         self.assertIn("FP001_RECONCILIATION_REQUIRED` remains downstream and not performed", product)
@@ -350,24 +350,30 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertIn("HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED", open_work)
         self.assertIn("HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED", open_work)
         current_context = _section(readme, "## Default Agent Context", "## Active Working Artifacts")
-        for filename in ("00_PLATFORM_v1.5.0.md", "01_DECISIONS_v1.5.0.md", "02_OPEN_WORK_v1.2.47.md", "04_DOMAIN_MAP_v1.2.0.md"):
+        for filename in ("00_PLATFORM_v1.5.0.md", "01_DECISIONS_v1.5.0.md", "02_OPEN_WORK_v1.2.48.md", "04_DOMAIN_MAP_v1.2.0.md"):
             self.assertIn(filename, current_context)
         for stale_name in ("00_PLATFORM_v1.4.1.md", "01_DECISIONS_v1.4.1.md", "02_OPEN_WORK_v1.2.45.md", "04_DOMAIN_MAP_v1.1.1.md"):
             self.assertNotIn(stale_name, current_context)
         self.assertIn("ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.3`", readme)
+        self.assertEqual("1.2.48", self.governing["OPEN_WORK"]["semver"])
 
         active_paths = [
             self.readme,
             *(_read(ROOT / entry["repository_path"]) for entry in self.governing.values()),
-            _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.3.md"),
+            _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.0.md"),
             _read(DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.2.md"),
         ]
-        stale = re.compile(r"(?<!archive/)02_OPEN_WORK_v1\.2\.44\.md")
-        self.assertFalse(any(stale.search(text) for text in active_paths))
+        stale_patterns = (
+            re.compile(r"(?<!archive/)02_OPEN_WORK_v1\.2\.44\.md"),
+            re.compile(r"(?<!archive/)DELIVERY_ATLAS_WORKING_v0\.2\.3\.md"),
+        )
+        for stale in stale_patterns:
+            self.assertFalse(any(stale.search(text) for text in active_paths), stale.pattern)
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", _read(DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"))
 
     def test_open_work_successor_changes_only_routing_metadata_and_preserves_all_gate_state(self):
-        predecessor = DOCS / "archive" / "02_OPEN_WORK_v1.2.46.md"
-        successor = DOCS / "02_OPEN_WORK_v1.2.47.md"
+        predecessor = DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md"
+        successor = DOCS / "02_OPEN_WORK_v1.2.48.md"
         self.assertTrue(predecessor.is_file(), predecessor)
         self.assertTrue(successor.is_file(), successor)
         if not predecessor.is_file() or not successor.is_file():
@@ -376,7 +382,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         predecessor_text = _read(predecessor)
         successor_text = _read(successor)
         self.assertEqual(
-            "d19ba98b486478ff8fea36b74a72b4102e8fe192a797af919318a1fc31c8c870",
+            "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118",
             _sha256(predecessor),
         )
         self.assertEqual(predecessor_text, _normalise_open_work_successor(successor_text))

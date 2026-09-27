@@ -39,14 +39,14 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.47.md",
-      "semver": "1.2.47",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.47.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.48.md",
+      "semver": "1.2.48",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.48.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118",
-      "superseded_version": "1.2.46",
+      "sha256": "8eede34146e865abd6a1f7af295d2dd98f2c6db47f45006d87ed4c3df83b2f5c",
+      "superseded_version": "1.2.47",
       "lifecycle": "current",
-      "provenance_sha256": "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118"
+      "provenance_sha256": "8eede34146e865abd6a1f7af295d2dd98f2c6db47f45006d87ed4c3df83b2f5c"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -670,6 +670,17 @@
       "lifecycle": "historical"
     },
     {
+      "document_id": "OPEN_WORK_V1_2_47",
+      "canonical_filename": "02_OPEN_WORK_v1.2.47.md",
+      "semver": "1.2.47",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.47.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118",
+      "superseded_version": "1.2.48",
+      "lifecycle": "historical",
+      "provenance_sha256": "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118"
+    },
+    {
       "document_id": "OPEN_WORK_V1_2_46",
       "canonical_filename": "02_OPEN_WORK_v1.2.46.md",
       "semver": "1.2.46",
@@ -793,7 +804,8 @@
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.2\\.0\\.md",
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.2\\.2\\.md",
         "(?<!reference/)(?<!archive/)ARCHITECTURE_REQUIREMENTS_WORKING_v1\\.1\\.0\\.md",
-        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.44\\.md"
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.44\\.md",
+        "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.2\\.3\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",
@@ -809,7 +821,7 @@
         "FRONTEND_EXPERIENCE_SYSTEM"
       ],
       "navigation_document_paths": [
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.3.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.0.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
         "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md"
       ],
