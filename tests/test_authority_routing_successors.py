@@ -37,10 +37,10 @@ PREDECESSORS = {
         "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118",
     ),
     "ROADMAP": (
-        "05_ROADMAP_v1.1.2.md",
-        "1.1.2",
+        "05_ROADMAP_v1.1.3.md",
         "1.1.3",
-        "e22b76eb27a3d0c6c9d8e3af9486b34c0187dd3426a12de42895743a2efb4ab2",
+        "1.1.4",
+        "9cba581592ebc43ec3e39debce82a8e86ac0b3132962d7be12d377706e5e0126",
     ),
 }
 
@@ -51,7 +51,7 @@ CURRENT_AUTHORITY = {
     "OPEN_WORK": "02_OPEN_WORK_v1.2.48.md",
     "ARCHITECTURE_SYNTHESIS": "03_ARCHITECTURE_v1.1.1.md",
     "DOMAIN_MAP": "04_DOMAIN_MAP_v1.2.0.md",
-    "ROADMAP": "05_ROADMAP_v1.1.3.md",
+    "ROADMAP": "05_ROADMAP_v1.1.4.md",
     "PLATFORM_OPERATING_MODEL": "PLATFORM_OPERATING_MODEL_v1.0.1.md",
     "FRONTEND_EXPERIENCE_SYSTEM": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
 }
@@ -133,6 +133,7 @@ def _normalise_open_work_successor(text: str) -> str:
         ("archive/02_OPEN_WORK_v1.2.47.md", "archive/02_OPEN_WORK_v1.2.46.md", 1),
         ("v1.2.47 → v1.2.48", "v1.2.46 → v1.2.47", 1),
         ("DELIVERY_ATLAS_WORKING_v0.3.0.md", "DELIVERY_ATLAS_WORKING_v0.2.3.md", 5),
+        ("05_ROADMAP_v1.1.4.md", "05_ROADMAP_v1.1.3.md", 6),
     )
     for current, predecessor, expected_count in replacements:
         actual_count = text.count(current)
@@ -171,7 +172,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "PLATFORM_BASELINE": "PLATFORM_BASELINE_V1_4_1",
             "DECISION_REGISTER": "DECISION_REGISTER_V1_4_1",
             "OPEN_WORK": "OPEN_WORK_V1_2_47",
-            "ROADMAP": "ROADMAP_V1_1_2",
+            "ROADMAP": "ROADMAP_V1_1_3",
         }
         for document_id, (filename, old_version, new_version, expected_hash) in PREDECESSORS.items():
             with self.subTest(document_id=document_id):
@@ -227,11 +228,6 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertEqual(list(old_packs), list(new_packs))
         for pack_id in old_packs:
             prior, current = old_packs[pack_id], new_packs[pack_id]
-            if pack_id == "FP-006":
-                current = current.replace(
-                    "source-at-freeze tracker `archive/02_OPEN_WORK_v1.2.45.md §§8, 11`",
-                    "current tracker `02_OPEN_WORK_v1.2.45.md §§8, 11`",
-                )
             self.assertEqual(prior, current, pack_id)
 
     def test_product_successor_exclusion_is_exact_and_fails_closed(self):
@@ -331,8 +327,12 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "DOMAIN_MAP",
         ):
             self.assertIn(self.governing[authority_id]["canonical_filename"], roadmap_header)
-        # Roadmap v1.1.3 is frozen and remains byte-identical under this no-upstream-amendment task.
-        self.assertIn("02_OPEN_WORK_v1.2.47.md", roadmap_header)
+        route_match = re.search(r"(?m)^- \*\*Current programme routing:\*\* (.+)$", roadmap_header)
+        self.assertIsNotNone(route_match)
+        route = route_match.group(1) if route_match else ""
+        self.assertIn("README.md", route)
+        self.assertIn("current Open Work path it identifies", route)
+        self.assertNotRegex(route, r"02_OPEN_WORK_v\d+\.\d+\.\d+\.md")
 
         self.assertIn("HARDEN-02 execution as NEXT / AUTHORISED / NOT STARTED", product)
         self.assertIn("FP001_RECONCILIATION_REQUIRED` remains downstream and not performed", product)
@@ -354,7 +354,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             self.assertIn(filename, current_context)
         for stale_name in ("00_PLATFORM_v1.4.1.md", "01_DECISIONS_v1.4.1.md", "02_OPEN_WORK_v1.2.45.md", "04_DOMAIN_MAP_v1.1.1.md"):
             self.assertNotIn(stale_name, current_context)
-        self.assertIn("ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.3`", readme)
+        self.assertIn("ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.4`", readme)
         self.assertEqual("1.2.48", self.governing["OPEN_WORK"]["semver"])
 
         active_paths = [

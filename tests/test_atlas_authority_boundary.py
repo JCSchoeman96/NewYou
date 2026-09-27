@@ -81,6 +81,18 @@ def _normalise_atlas_successor(successor: str, predecessor: str) -> str:
     if successor.count(route_marker) != 2:
         raise ValueError(f"expected 2 current Open Work route markers, found {successor.count(route_marker)}")
     successor = successor.replace(route_marker, "02_OPEN_WORK_v1.2.47.md")
+    roadmap_route_marker = "05_ROADMAP_v1.1.4.md"
+    if successor.count(roadmap_route_marker) != 6:
+        raise ValueError(
+            f"expected 6 current Roadmap route markers, found {successor.count(roadmap_route_marker)}"
+        )
+    successor = successor.replace(roadmap_route_marker, "05_ROADMAP_v1.1.3.md")
+    roadmap_version_marker = "Roadmap `v1.1.4`"
+    if successor.count(roadmap_version_marker) != 1:
+        raise ValueError(
+            f"expected 1 current Roadmap version marker, found {successor.count(roadmap_version_marker)}"
+        )
+    successor = successor.replace(roadmap_version_marker, "Roadmap `v1.1.3`", 1)
     for start_heading, end_heading in AUTHORITY_BOUNDARY_BLOCKS:
         if end_heading is None:
             start_matches = list(re.finditer(rf"(?m)^{re.escape(start_heading)}.*$", successor))
@@ -105,6 +117,7 @@ def _normalise_open_work_successor(successor: str, predecessor: str) -> str:
         ("archive/02_OPEN_WORK_v1.2.47.md", "archive/02_OPEN_WORK_v1.2.46.md", 1),
         ("v1.2.47 → v1.2.48", "v1.2.46 → v1.2.47", 1),
         ("working/DELIVERY_ATLAS_WORKING_v0.3.0.md", "working/DELIVERY_ATLAS_WORKING_v0.2.3.md", 5),
+        ("05_ROADMAP_v1.1.4.md", "05_ROADMAP_v1.1.3.md", 6),
     )
     for current, old, expected_count in replacements:
         actual_count = successor.count(current)

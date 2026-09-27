@@ -28,7 +28,7 @@ EXPECTED_CURRENT = {
     "DECISION_REGISTER": ("01_DECISIONS_v1.5.0.md", "1.5.0"),
     "OPEN_WORK": ("02_OPEN_WORK_v1.2.48.md", "1.2.48"),
     "DOMAIN_MAP": ("04_DOMAIN_MAP_v1.2.0.md", "1.2.0"),
-    "ROADMAP": ("05_ROADMAP_v1.1.3.md", "1.1.3"),
+    "ROADMAP": ("05_ROADMAP_v1.1.4.md", "1.1.4"),
 }
 
 

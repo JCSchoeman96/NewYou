@@ -26,12 +26,12 @@
   - `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` (historical, not repository-verifiably certified)
   - `03_ARCHITECTURE_v1.1.1.md`
   - `04_DOMAIN_MAP_v1.2.0.md`
-  - `05_ROADMAP_v1.1.3.md`
+  - `05_ROADMAP_v1.1.4.md`
   - `archive/05_ROADMAP_WORKING_v0.1.0.md`
   - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`
   - `archive/FOUNDATION_READINESS_AUDIT_v1.0.0.md`
 - **Last updated:** 2026-09-26
-- **Current planning position:** The general Product Grill and targeted Product amendment programme remain **COMPLETE** for the approved product direction; Product Law is `00_PLATFORM_v1.5.0.md` with decisions DEC-299 through DEC-304, including the approved marketing unsubscribe scope policy. Domain count remains **20** and Feature Pack count remains **17**. Current Roadmap is `05_ROADMAP_v1.1.3.md`; current Delivery Atlas remains derived and non-authoritative at `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`. The original HARDEN-02 v0.4.0 contract lifecycle is COMPLETE / CERTIFIED: PR #40 exact-head certification and CI passed, that head merged unchanged, resulting-main CI passed, fresh independent post-merge review passed, and the durable post-merge attestation is complete. Status successor v0.4.2 records that lifecycle; its status-successor base main SHA is `9411b34b646d7752d2942afca1363830d3b25f10`; v0.4.0 semantics are unchanged. HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED. Engineering Standards Authority Promotion remains downstream after certified execution; FP-001 reconciliation remains downstream after certified Standards Promotion; Communications follows FP-001 reconciliation. Privacy & Consent, Content & Media, and Audit & Evidence remain conditional / pending explicit adjudication; Analytics remains not required. Phase 7C remains blocked / not started, proof classification remains not finalised, and executable development remains blocked until Phase 8 entry conditions pass. PR #38 remains stale / blocked / not authority. This successor starts no execution or downstream stage and does not reconcile FP-001.
+- **Current planning position:** The general Product Grill and targeted Product amendment programme remain **COMPLETE** for the approved product direction; Product Law is `00_PLATFORM_v1.5.0.md` with decisions DEC-299 through DEC-304, including the approved marketing unsubscribe scope policy. Domain count remains **20** and Feature Pack count remains **17**. Current Roadmap is `05_ROADMAP_v1.1.4.md`; current Delivery Atlas remains derived and non-authoritative at `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`. The original HARDEN-02 v0.4.0 contract lifecycle is COMPLETE / CERTIFIED: PR #40 exact-head certification and CI passed, that head merged unchanged, resulting-main CI passed, fresh independent post-merge review passed, and the durable post-merge attestation is complete. Status successor v0.4.2 records that lifecycle; its status-successor base main SHA is `9411b34b646d7752d2942afca1363830d3b25f10`; v0.4.0 semantics are unchanged. HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED. Engineering Standards Authority Promotion remains downstream after certified execution; FP-001 reconciliation remains downstream after certified Standards Promotion; Communications follows FP-001 reconciliation. Privacy & Consent, Content & Media, and Audit & Evidence remain conditional / pending explicit adjudication; Analytics remains not required. Phase 7C remains blocked / not started, proof classification remains not finalised, and executable development remains blocked until Phase 8 entry conditions pass. PR #38 remains stale / blocked / not authority. This successor starts no execution or downstream stage and does not reconcile FP-001.
 
 ---
 
@@ -657,7 +657,7 @@ Historical Phase-6 freeze:
 archive/05_ROADMAP_WORKING_v0.1.0.md  — preserved historical planning evidence
 archive/05_ROADMAP_v1.0.0.md          — preserved frozen Roadmap predecessor
 archive/05_ROADMAP_v1.1.0.md          — preserved amended predecessor
-05_ROADMAP_v1.1.3.md                  — FROZEN / CURRENT ROADMAP
+05_ROADMAP_v1.1.4.md                  — FROZEN / CURRENT ROADMAP
 ```
 
 The Roadmap works backward from the approved mature platform, defines the smallest safe commercial path, sequences outcome-oriented Feature Packs, preserves all approved expansion paths, schedules gates at the first point required, exposes anticipated proof needs and defers implementation-grade detail to Phase 7.
@@ -914,7 +914,7 @@ ARCHITECTURE AMENDMENT: COMPLETE — Architecture Law v0.36.0 / current synthesi
 DOMAIN PRESSURE TEST: COMPLETE
 DOMAIN AMENDMENT: COMPLETE — current Domain Map v1.2.0 (semantic successor to archived v1.1.1) / 20 Domains / Domain 19 Research & Feedback / Domain 20 Voting & Balloting
 ROADMAP SEQUENCING GRILL: COMPLETE
-ROADMAP AMENDMENT: COMPLETE — current Roadmap 05_ROADMAP_v1.1.3.md; Feature Packs 17
+ROADMAP AMENDMENT: COMPLETE — current Roadmap 05_ROADMAP_v1.1.4.md; Feature Packs 17
 ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`; predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md`; DERIVED / NON-AUTHORITATIVE; ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12
 HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED
 PRE-MERGE CERTIFICATION: COMPLETE — PR #40 exact head cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4; pre-merge attestation https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5827553565
@@ -1132,7 +1132,7 @@ This section tracks the governed Targeted Amendment → FP-001 Development Entry
 | Domain pressure test | Targeted Domain ownership pressure test after Architecture amendment | **COMPLETE** — non-authoritative evidence in `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md` |
 | Domain amendment | Additive Domain Law successor implementing accepted human Domain decisions | **COMPLETE** — then-current successor is `archive/04_DOMAIN_MAP_v1.1.1.md`; predecessor is `archive/04_DOMAIN_MAP_v1.0.0.md`; 20 Domains |
 | Roadmap Sequencing Grill | Sequencing decisions for PMR / Research / Voting / Interactive Tools | **COMPLETE** — non-authoritative evidence in `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` |
-| Roadmap amendment | Additive Roadmap successor implementing accepted human Roadmap decisions | **COMPLETE** — current successor is `05_ROADMAP_v1.1.3.md`; predecessor v1.1.1 is preserved at `archive/05_ROADMAP_v1.1.1.md`; Feature Packs remain 17 |
+| Roadmap amendment | Additive Roadmap successor implementing accepted human Roadmap decisions | **COMPLETE** — current successor is `05_ROADMAP_v1.1.4.md`; predecessor v1.1.1 is preserved at `archive/05_ROADMAP_v1.1.1.md`; Feature Packs remain 17 |
 | Current / later | HARDEN-02 execution / Engineering Standards Authority Promotion / FP-001 reconciliation | **HARDEN-02 EXECUTION NEXT / AUTHORISED / NOT STARTED** — the original v0.4.0 contract lifecycle is COMPLETE / CERTIFIED, and current status successor `working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` records that state. This Open Work successor does not start HARDEN-02 execution. Engineering Standards Authority Promotion follows certified execution; FP-001 reconciliation follows certified Standards Promotion; Communications follows FP-001 reconciliation. Remaining required / conditional Phase-7B work precedes Phase 7C, proof classification and Phase 8 after its entry gates. No downstream stage or FP-001 reconciliation is performed here |
 
 **Baseline reviewed for Stage 1:** `main` at `ad71191b17b297ac9dc683c18141e1c546fa9850`.
@@ -1188,7 +1188,7 @@ Domain amendment remains complete. Roadmap Sequencing Grill and Roadmap amendmen
 
 The Roadmap Sequencing Grill is complete as non-authoritative evidence in `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md`. It does not itself create Roadmap Law.
 
-The governed Roadmap amendment completed in `archive/05_ROADMAP_v1.1.1.md` and is carried forward unchanged by current `05_ROADMAP_v1.1.3.md`. Predecessor `archive/05_ROADMAP_v1.1.0.md` is preserved byte-identically. Human decisions implemented:
+The governed Roadmap amendment completed in `archive/05_ROADMAP_v1.1.1.md` and is carried forward unchanged by current `05_ROADMAP_v1.1.4.md`. Predecessor `archive/05_ROADMAP_v1.1.0.md` is preserved byte-identically. Human decisions implemented:
 
 - `RQ-1` ACCEPT — Platform Member Reference is **REQUIRED within FP-001**; no PMR Feature Pack; encoding remains unfrozen; `FP001_RECONCILIATION_REQUIRED` remains for later narrow artifact reconciliation.
 - `RQ-2` ACCEPT WITH REFINEMENT — Research & Feedback is mature **FUTURE-GATED / FEATURE-PACK-UNASSIGNED**; not MVP; not FP-005; not automatically FP-006/008/009; no Research Feature Pack now.

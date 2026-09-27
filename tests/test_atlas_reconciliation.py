@@ -186,7 +186,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("01_DECISIONS_v1.5.0.md", sources)
         self.assertIn("03_ARCHITECTURE_v1.1.1.md", sources)
         self.assertIn("04_DOMAIN_MAP_v1.2.0.md", sources)
-        self.assertIn("05_ROADMAP_v1.1.3.md", sources)
+        self.assertIn("05_ROADMAP_v1.1.4.md", sources)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")

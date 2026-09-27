@@ -12,7 +12,7 @@ For foundation/default planning and delivery-preparation work, read **only** the
 4. `02_OPEN_WORK_v1.2.48.md`
 5. `03_ARCHITECTURE_v1.1.1.md`
 6. `04_DOMAIN_MAP_v1.2.0.md`
-7. `05_ROADMAP_v1.1.3.md`
+7. `05_ROADMAP_v1.1.4.md`
 8. `PLATFORM_OPERATING_MODEL_v1.0.1.md`
 
 For frontend, UI, public-experience, design-system, accessibility, SEO, analytics-UI or Feature Pack planning, additionally load:
@@ -123,7 +123,8 @@ These documents are valuable evidence, but they are not default context for rout
 - `archive/02_OPEN_WORK_v1.2.43.md` — earlier preserved Open Work predecessor.
 - `archive/05_ROADMAP_v1.1.0.md` — preserved earlier Roadmap predecessor in the v1.1.0 → v1.1.1 → v1.1.2 history.
 - `archive/05_ROADMAP_v1.1.1.md` — preserved predecessor to archived Roadmap v1.1.2.
-- `archive/05_ROADMAP_v1.1.2.md` — byte-identical predecessor to current Roadmap v1.1.3.
+- `archive/05_ROADMAP_v1.1.2.md` — byte-identical predecessor to archived Roadmap v1.1.3.
+- `archive/05_ROADMAP_v1.1.3.md` — byte-identical immediate predecessor to current Roadmap v1.1.4.
 - `archive/03_ARCHITECTURE_v1.1.0.md` — preserved amended synthesis predecessor to current path-only v1.1.1.
 - `archive/04_DOMAIN_MAP_v1.1.0.md` — preserved amended Domain Map predecessor; v1.1.1 is preserved at archive as the predecessor to current v1.2.0.
 - `archive/04_DOMAIN_MAP_v1.1.1.md` — byte-identical predecessor to current semantic Domain Map v1.2.0.
@@ -177,7 +178,7 @@ Engineering Standards are **not yet current authority**. Current routing require
 - DOMAIN PRESSURE TEST: COMPLETE
 - DOMAIN AMENDMENT: COMPLETE — current Domain Law `v1.2.0` (semantic successor to archived v1.1.1); 20 Domains; Domain 19 Research & Feedback; Domain 20 Voting & Balloting
 - ROADMAP SEQUENCING GRILL: COMPLETE
-- ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.3`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
+- ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.4`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
 - ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED
 - ATLAS RECONCILIATION: COMPLETE — current semantic/routing successor `working/DELIVERY_ATLAS_WORKING_v0.3.0.md` (derived / non-authoritative; ATLAS-12 remains NOT_STARTED)
 - HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED
