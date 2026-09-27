@@ -30,11 +30,17 @@ PREDECESSORS = {
         "1.5.0",
         "e92564c16c9ad15e8b7558ff76a509efad4310aa786c697b09b0ce2723ec4701",
     ),
+    "OPEN_WORK": (
+        "02_OPEN_WORK_v1.2.46.md",
+        "1.2.46",
+        "1.2.47",
+        "d19ba98b486478ff8fea36b74a72b4102e8fe192a797af919318a1fc31c8c870",
+    ),
     "ROADMAP": (
-        "05_ROADMAP_v1.1.1.md",
-        "1.1.1",
+        "05_ROADMAP_v1.1.2.md",
         "1.1.2",
-        "db2f17ba41d1a5aea63f46c94e8c0f5950030872a5ef6b07d53c5e1ea3ca3e4c",
+        "1.1.3",
+        "e22b76eb27a3d0c6c9d8e3af9486b34c0187dd3426a12de42895743a2efb4ab2",
     ),
 }
 
@@ -42,10 +48,10 @@ CURRENT_AUTHORITY = {
     "PROJECT_NORTH_STAR_AND_MVP": "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
     "PLATFORM_BASELINE": "00_PLATFORM_v1.5.0.md",
     "DECISION_REGISTER": "01_DECISIONS_v1.5.0.md",
-    "OPEN_WORK": "02_OPEN_WORK_v1.2.46.md",
+    "OPEN_WORK": "02_OPEN_WORK_v1.2.47.md",
     "ARCHITECTURE_SYNTHESIS": "03_ARCHITECTURE_v1.1.1.md",
     "DOMAIN_MAP": "04_DOMAIN_MAP_v1.2.0.md",
-    "ROADMAP": "05_ROADMAP_v1.1.2.md",
+    "ROADMAP": "05_ROADMAP_v1.1.3.md",
     "PLATFORM_OPERATING_MODEL": "PLATFORM_OPERATING_MODEL_v1.0.1.md",
     "FRONTEND_EXPERIENCE_SYSTEM": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
 }
@@ -119,6 +125,24 @@ def _feature_pack_sections(text: str) -> dict[str, str]:
     return sections
 
 
+def _normalise_open_work_successor(text: str) -> str:
+    replacements = (
+        ("# 02_OPEN_WORK_v1.2.47.md", "# 02_OPEN_WORK_v1.2.46.md", 1),
+        ("OPEN-WORK SUCCESSOR v1.2.47", "OPEN-WORK SUCCESSOR v1.2.46", 1),
+        ("Document version:** v1.2.47", "Document version:** v1.2.46", 1),
+        ("archive/02_OPEN_WORK_v1.2.46.md", "archive/02_OPEN_WORK_v1.2.45.md", 1),
+        ("v1.2.46 → v1.2.47", "v1.2.45 → v1.2.46", 1),
+        ("05_ROADMAP_v1.1.3.md", "05_ROADMAP_v1.1.2.md", 6),
+        ("DELIVERY_ATLAS_WORKING_v0.2.3.md", "DELIVERY_ATLAS_WORKING_v0.2.2.md", 5),
+    )
+    for current, predecessor, expected_count in replacements:
+        actual_count = text.count(current)
+        if actual_count != expected_count:
+            raise AssertionError(f"expected {expected_count} Open Work routing replacements for {current!r}, found {actual_count}")
+        text = text.replace(current, predecessor)
+    return text
+
+
 class AuthorityRoutingSuccessorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -142,16 +166,20 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             self.assertEqual(f"docs/00_platform/{filename}", entry["repository_path"])
             self.assertEqual(_sha256(ROOT / entry["repository_path"]), entry["sha256"])
 
-    def test_four_predecessors_are_archived_byte_identically_and_manifested(self):
+    def test_current_authority_predecessors_are_archived_byte_identically_and_manifested(self):
         historical_ids = {
             "PROJECT_NORTH_STAR_AND_MVP": "PROJECT_NORTH_STAR_AND_MVP_V1_2_2",
             "PLATFORM_BASELINE": "PLATFORM_BASELINE_V1_4_1",
             "DECISION_REGISTER": "DECISION_REGISTER_V1_4_1",
-            "ROADMAP": "ROADMAP_V1_1_1",
+            "OPEN_WORK": "OPEN_WORK_V1_2_46",
+            "ROADMAP": "ROADMAP_V1_1_2",
         }
         for document_id, (filename, old_version, new_version, expected_hash) in PREDECESSORS.items():
             with self.subTest(document_id=document_id):
                 path = DOCS / "archive" / filename
+                self.assertTrue(path.is_file(), path)
+                if not path.is_file():
+                    continue
                 self.assertEqual(expected_hash, _sha256(path))
                 entry = self.historical[historical_ids[document_id]]
                 self.assertEqual("historical", entry["lifecycle"])
@@ -200,13 +228,10 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertEqual(list(old_packs), list(new_packs))
         for pack_id in old_packs:
             prior, current = old_packs[pack_id], new_packs[pack_id]
-            current = current.replace(
-                "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md", "PROJECT_NORTH_STAR_AND_MVP_v1.2.2.md"
-            ).replace("00_PLATFORM_v1.4.1.md", "00_PLATFORM_v1.4.0.md")
             if pack_id == "FP-006":
                 current = current.replace(
+                    "source-at-freeze tracker `archive/02_OPEN_WORK_v1.2.45.md §§8, 11`",
                     "current tracker `02_OPEN_WORK_v1.2.45.md §§8, 11`",
-                    "`02_OPEN_WORK_v1.2.44.md §§8, 11`",
                 )
             self.assertEqual(prior, current, pack_id)
 
@@ -288,7 +313,6 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         decisions = _read(DOCS / CURRENT_AUTHORITY["DECISION_REGISTER"])
         roadmap = _read(DOCS / CURRENT_AUTHORITY["ROADMAP"])
         open_work = _read(DOCS / CURRENT_AUTHORITY["OPEN_WORK"])
-
         for filename in (
             "00_PLATFORM_v1.4.1.md",
             "01_DECISIONS_v1.4.1.md",
@@ -296,37 +320,80 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "05_ROADMAP_v1.1.2.md",
         ):
             self.assertIn(filename, north_star)
+        self.assertIn("02_OPEN_WORK_v1.2.46.md", decisions)
+        roadmap_header_marker = "## Amendment summary"
+        self.assertEqual(1, roadmap.count(roadmap_header_marker))
+        roadmap_header = roadmap.split(roadmap_header_marker, 1)[0]
+        for authority_id in (
+            "PROJECT_NORTH_STAR_AND_MVP",
+            "PLATFORM_BASELINE",
+            "DECISION_REGISTER",
+            "ARCHITECTURE_SYNTHESIS",
+            "DOMAIN_MAP",
+            "OPEN_WORK",
+        ):
+            self.assertIn(self.governing[authority_id]["canonical_filename"], roadmap_header)
+
         self.assertIn("HARDEN-02 execution as NEXT / AUTHORISED / NOT STARTED", product)
         self.assertIn("FP001_RECONCILIATION_REQUIRED` remains downstream and not performed", product)
-        self.assertIn("02_OPEN_WORK_v1.2.46.md", decisions)
-        self.assertIn("02_OPEN_WORK_v1.2.45.md", roadmap)
-        self.assertIn("HARDEN-02 execution as NEXT / AUTHORISED / NOT STARTED", roadmap)
+        self.assertIn("archive/02_OPEN_WORK_v1.2.45.md", roadmap)
+        self.assertNotIn("current tracker `02_OPEN_WORK_v1.2.45.md`", roadmap)
+        self.assertNotIn("Current Open Work v1.2.45 records", roadmap)
         fp006 = _feature_pack_sections(roadmap)["FP-006"]
         self.assertIn("PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md", fp006)
         self.assertIn("00_PLATFORM_v1.4.1.md", fp006)
-        self.assertIn("02_OPEN_WORK_v1.2.45.md", fp006)
-        self.assertIn("Engineering Standards Authority Promotion", roadmap)
-        self.assertIn("FP-001 reconciliation", roadmap)
-        self.assertIn("Communications", roadmap)
-        self.assertIn("Phase 7C", roadmap)
-        self.assertIn("Phase 8 only after the Development Entry Hard Stop passes", roadmap)
+        self.assertIn("source-at-freeze tracker `archive/02_OPEN_WORK_v1.2.45.md §§8, 11`", fp006)
+        section_21 = roadmap.split("# 21. Phase 7 handoff", 1)[1]
+        self.assertIn("README and current Open Work own programme routing", section_21)
+        self.assertNotIn("HARDEN-02", section_21)
+        self.assertNotIn("NEXT / AUTHORISED / NOT STARTED", section_21)
         self.assertIn("HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED", open_work)
         self.assertIn("HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED", open_work)
         current_context = _section(readme, "## Default Agent Context", "## Active Working Artifacts")
-        for filename in ("00_PLATFORM_v1.5.0.md", "01_DECISIONS_v1.5.0.md", "02_OPEN_WORK_v1.2.46.md", "04_DOMAIN_MAP_v1.2.0.md"):
+        for filename in ("00_PLATFORM_v1.5.0.md", "01_DECISIONS_v1.5.0.md", "02_OPEN_WORK_v1.2.47.md", "04_DOMAIN_MAP_v1.2.0.md"):
             self.assertIn(filename, current_context)
         for stale_name in ("00_PLATFORM_v1.4.1.md", "01_DECISIONS_v1.4.1.md", "02_OPEN_WORK_v1.2.45.md", "04_DOMAIN_MAP_v1.1.1.md"):
             self.assertNotIn(stale_name, current_context)
-        self.assertIn("ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.2`", readme)
+        self.assertIn("ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.3`", readme)
 
         active_paths = [
             self.readme,
             *(_read(ROOT / entry["repository_path"]) for entry in self.governing.values()),
-            _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.2.md"),
+            _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.3.md"),
             _read(DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.2.md"),
         ]
         stale = re.compile(r"(?<!archive/)02_OPEN_WORK_v1\.2\.44\.md")
         self.assertFalse(any(stale.search(text) for text in active_paths))
+
+    def test_open_work_successor_changes_only_routing_metadata_and_preserves_all_gate_state(self):
+        predecessor = DOCS / "archive" / "02_OPEN_WORK_v1.2.46.md"
+        successor = DOCS / "02_OPEN_WORK_v1.2.47.md"
+        self.assertTrue(predecessor.is_file(), predecessor)
+        self.assertTrue(successor.is_file(), successor)
+        if not predecessor.is_file() or not successor.is_file():
+            return
+
+        predecessor_text = _read(predecessor)
+        successor_text = _read(successor)
+        self.assertEqual(
+            "d19ba98b486478ff8fea36b74a72b4102e8fe192a797af919318a1fc31c8c870",
+            _sha256(predecessor),
+        )
+        self.assertEqual(predecessor_text, _normalise_open_work_successor(successor_text))
+        for preserved_state in (
+            "HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED",
+            "Engineering Standards Authority Promotion remains downstream after certified execution",
+            "FP-001 reconciliation remains downstream after certified Standards Promotion",
+            "Communications follows FP-001 reconciliation",
+            "Privacy & Consent, Content & Media, and Audit & Evidence remain conditional / pending explicit adjudication",
+            "Analytics remains not required",
+            "Phase 7C remains blocked / not started",
+            "proof classification remains not finalised",
+            "executable development remains blocked until Phase 8 entry conditions pass",
+            "Feature Pack count remains **17**",
+            "Domain count remains **20**",
+        ):
+            self.assertIn(preserved_state, successor_text)
 
 
 if __name__ == "__main__":

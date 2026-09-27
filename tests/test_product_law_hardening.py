@@ -54,7 +54,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
-        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.2.md").read_text(encoding="utf-8")
+        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.3.md").read_text(encoding="utf-8")
         cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.2.md").read_text(
             encoding="utf-8"
         )
@@ -305,7 +305,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         )
 
     def test_current_governance_source_trails_resolve_to_current_or_archived_files(self):
-        self.assertIn("05_ROADMAP_v1.1.2.md", self.open_work)
+        self.assertIn("05_ROADMAP_v1.1.3.md", self.open_work)
         self.assertIn("archive/05_ROADMAP_v1.1.0.md", self.open_work)
         self.assertIn("archive/03_ARCHITECTURE_v1.1.0.md", self.open_work)
         self.assertIn("archive/04_DOMAIN_MAP_v1.1.0.md", self.open_work)
@@ -324,10 +324,16 @@ class ProductLawHardeningTests(unittest.TestCase):
             line for line in atlas_reconciliation.splitlines() if "| Current-source routing |" in line
         )
         self.assertIn("Product `v1.5.0`, Decisions `v1.5.0`", current_source_routing)
-        self.assertIn("Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.1.2`", current_source_routing)
-        self.assertIn("Open Work `v1.2.46`", current_source_routing)
+        self.assertIn("Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.1.3`", current_source_routing)
+        self.assertIn("Open Work `v1.2.47`", current_source_routing)
         current_source_table = self.atlas.split("## 1.1 Authority hierarchy", 1)[1].split("## 1.2 Purpose", 1)[0]
-        for current_name in ("00_PLATFORM_v1.5.0.md", "01_DECISIONS_v1.5.0.md", "02_OPEN_WORK_v1.2.46.md", "04_DOMAIN_MAP_v1.2.0.md"):
+        for current_name in (
+            "00_PLATFORM_v1.5.0.md",
+            "01_DECISIONS_v1.5.0.md",
+            "02_OPEN_WORK_v1.2.47.md",
+            "04_DOMAIN_MAP_v1.2.0.md",
+            "05_ROADMAP_v1.1.3.md",
+        ):
             self.assertIn(current_name, current_source_table)
         self.assertNotIn("Product `v1.3.0`", current_source_routing)
         self.assertNotIn("Architecture `v1.1.0`", current_source_routing)
@@ -434,12 +440,12 @@ class ProductLawHardeningTests(unittest.TestCase):
                 self.assertTrue((ROOT / relative_path).is_file())
 
         current_source_paths = (
-            "docs/00_platform/05_ROADMAP_v1.1.2.md",
+            "docs/00_platform/05_ROADMAP_v1.1.3.md",
             "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
             "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
             "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
             "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.2.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.3.md",
             "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md",
             "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
             "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
@@ -500,8 +506,8 @@ class ProductLawHardeningTests(unittest.TestCase):
             "01_DECISIONS_v1.5.0.md",
             "03_ARCHITECTURE_v1.1.1.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "05_ROADMAP_v1.1.2.md",
-            "02_OPEN_WORK_v1.2.46.md",
+            "05_ROADMAP_v1.1.3.md",
+            "02_OPEN_WORK_v1.2.47.md",
             "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
         )
         source_table = self.atlas.split("## 1.2 Purpose", 1)[0]
