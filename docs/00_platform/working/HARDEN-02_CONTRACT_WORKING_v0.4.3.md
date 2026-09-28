@@ -12,7 +12,7 @@
 - **Execution-start baseline main SHA:** `1c8fc94058176795d88cb82e08857e3d30c553e9`
 - **Certified contract PR:** [#40](https://github.com/JCSchoeman96/NewYou/pull/40), exact head `cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4`, merged unchanged as `352f304139b9d4f8ee3ba205cde9e34d0ad8437f`
 - **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` — preserved byte-identically as the prior completed-contract status snapshot
-- **Certified contract semantics:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.4.3 successor preserves the certified contract semantics and records execution status only
+- **Certified contract semantics:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.4.3 successor preserves them and records execution status plus current-source routing/provenance
 - **Historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — merged through PR #39; v0.3.0 GitHub-identity independence mechanism not satisfied for solo-maintainer workflow; not retroactively certified
 - **Earlier historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — previous contract attempt; not certified
 - **Accepted human scope decisions:** `H02-1`, `H02-2`, `H02-3` (2026-09-09), `H02-3R` (2026-09-23; routing refinement)
@@ -26,7 +26,7 @@
 - `v0.4.0` — solo-maintainer certification-mechanism amendment. Preserves v0.3.0 byte-identically as historical evidence. Replaces GitHub-account independence with independent **review actor** versus **attestation poster** attribution. Records PR #39 merge facts without retroactively certifying the v0.3.0 lifecycle. Establishes the usable certification mechanism prospectively from this amendment PR. Pre-merge independent exact-head review PASS and exact-head Foundation Integrity PASS are both required and may complete in either order; durable GitHub attestation binds both only after both exist. Does not execute HARDEN-02, promote Engineering Standards, or authorise implementation.
 - `v0.4.1` — historical status-only lifecycle snapshot. At that point, the fresh post-merge independent inspection and durable post-merge attestation were pending, and HARDEN-02 execution remained NOT STARTED / NOT AUTHORISED. The original v0.4.0 lifecycle is now COMPLETE / CERTIFIED, as recorded by this v0.4.2 status successor. No contract scope, invariant, proof boundary or downstream route is changed.
 - `v0.4.2` — status-only successor. Records completion of the original v0.4.0 lifecycle using status-successor base main SHA `9411b34b646d7752d2942afca1363830d3b25f10`: exact-head certification and CI PASS, unchanged certified-head merge, resulting-main CI PASS, fresh independent post-merge review PASS and durable post-merge attestation COMPLETE. HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED. No v0.4.0 scope, invariant, proof boundary or downstream route is changed.
-- `v0.4.3` — status-only successor from execution-start baseline main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. The original v0.4.0 lifecycle remains COMPLETE / CERTIFIED; HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. I-01…I-13 meanings, permitted/prohibited execution scope, H02-1/H02-2/H02-3R and v0.4.0 certification evidence are unchanged; every downstream stage remains at its prior state.
+- `v0.4.3` — PATCH status + current-source-routing/provenance successor from execution-start baseline main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. The original v0.4.0 lifecycle remains COMPLETE / CERTIFIED; HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. I-01…I-13 meanings, permitted/prohibited execution scope, H02-1/H02-2/H02-3R and v0.4.0 certification evidence are unchanged; every downstream stage remains at its prior state.
 
 ---
 
@@ -43,12 +43,12 @@ HARDEN-02 exists to prove and harden Phase-7 delivery-pipeline governance integr
 | Source | Use |
 |---|---|
 | `PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md` | MVP / Phase 7–8 boundary context |
-| `00_PLATFORM_v1.4.1.md` | Product Law; not amended by HARDEN-02 |
-| `01_DECISIONS_v1.4.1.md` | Decision / OQ register; HARDEN-02 is not an OQ |
-| `02_OPEN_WORK_v1.2.45.md` | Programme routing and Development Entry Hard Stop |
+| `00_PLATFORM_v1.5.0.md` | Product Law; not amended by HARDEN-02 |
+| `01_DECISIONS_v1.5.0.md` | Decision / OQ register; HARDEN-02 is not an OQ |
+| `02_OPEN_WORK_v1.2.49.md` | Programme routing and Development Entry Hard Stop |
 | `03_ARCHITECTURE_v1.1.1.md` | Architecture synthesis; unchanged |
-| `04_DOMAIN_MAP_v1.1.1.md` | Domain Law including PMR ownership and `FP001_RECONCILIATION_REQUIRED` consequence |
-| `05_ROADMAP_v1.1.2.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |
+| `04_DOMAIN_MAP_v1.2.0.md` | Domain Law including PMR ownership and `FP001_RECONCILIATION_REQUIRED` consequence |
+| `05_ROADMAP_v1.1.4.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |
 | `PLATFORM_OPERATING_MODEL_v1.0.1.md` | Phase 7 handoff: Skeleton + Gate Manifest → required JIT Domain Dossiers → Final Feature Pack Contract |
 | `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` | Out of HARDEN-02 scope unless a later governance task requires frontend routing hygiene |
 
@@ -56,9 +56,9 @@ HARDEN-02 exists to prove and harden Phase-7 delivery-pipeline governance integr
 
 | Source | Use |
 |---|---|
-| `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` | Derived Phase-7 / proof / HH lifecycle navigation only; does not create HARDEN-02 law |
+| `working/DELIVERY_ATLAS_WORKING_v0.3.1.md` | Current derived, non-authoritative Phase-7 / proof / HH lifecycle navigation only; pinned `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` remains source-at-freeze evidence, not current navigation; does not create HARDEN-02 law |
 | `working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md` | Current FP-001 Phase 7A factual state (not reconciled for PMR; not amended by HARDEN-02) |
-| `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` | Identity dossier complete/merged factual state (not amended here) |
+| `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` | SOURCE-AT-FREEZE / RECONCILIATION EVIDENCE; not current lifecycle authority. Current COMPLETE / MERGED status comes from current Open Work. Preserve this dossier for later FP-001 reconciliation (not amended here). |
 
 ### HISTORICAL AUTHORITY / WORKING EVIDENCE
 
@@ -459,7 +459,7 @@ The certified PR head merged unchanged as `352f304139b9d4f8ee3ba205cde9e34d0ad84
 
 The pre-merge attestation records review actor `ChatGPT / GPT-5.6 Sol`, poster `JCSchoeman96`, poster equals PR author, review actor authored or modified candidate `false`, and substantive reviewer is the review actor rather than the poster. The post-merge [attestation](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5830618876) records review actor `Codex / GPT-6`, poster `JCSchoeman96`, poster equals PR author, review actor authored or modified candidate `false`, and substantive reviewer is the review actor rather than the poster. That record reports fresh post-merge review outcome PASS and binds resulting main SHA, certified head, resulting-main CI run and PASS.
 
-The v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED. The original status-successor base main SHA is `9411b34b646d7752d2942afca1363830d3b25f10`. This v0.4.3 status successor starts HARDEN-02 execution from exact current main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. Execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING; execution certification remains pending until the governed post-merge lifecycle is complete. This successor does not revise or recertify v0.4.0 semantics, alter any invariant or scope boundary, or advance a downstream stage.
+The v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED. The original status-successor base main SHA is `9411b34b646d7752d2942afca1363830d3b25f10`. This v0.4.3 status + current-source-routing/provenance successor starts HARDEN-02 execution from exact current main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. Execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING; execution certification remains pending until the governed post-merge lifecycle is complete. This successor does not revise or recertify v0.4.0 semantics, alter any invariant or scope boundary, or advance a downstream stage.
 
 HARDEN-02 remains governance sequencing. It is not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ.
 

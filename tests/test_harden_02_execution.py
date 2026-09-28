@@ -11,6 +11,8 @@ from typing import Callable
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
+README = DOCS / "README.md"
+MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.49.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.48.md"
@@ -62,6 +64,18 @@ EXPECTED_MATRIX_GATES = (
     "POST_MERGE_INDEPENDENT_REVIEW",
     "POST_MERGE_ATTESTATION",
     "EXECUTION",
+)
+
+CURRENT_AUTHORITY_DOCUMENT_IDS = (
+    "PROJECT_NORTH_STAR_AND_MVP",
+    "PLATFORM_BASELINE",
+    "DECISION_REGISTER",
+    "OPEN_WORK",
+    "ARCHITECTURE_SYNTHESIS",
+    "DOMAIN_MAP",
+    "ROADMAP",
+    "PLATFORM_OPERATING_MODEL",
+    "FRONTEND_EXPERIENCE_SYSTEM",
 )
 
 
@@ -173,6 +187,110 @@ def _table_cells(line: str) -> list[str]:
     return [cell.strip() for cell in stripped[1:-1].split("|")]
 
 
+def _table_rows_in_section(text: str, start_heading: str, end_heading: str) -> list[list[str]]:
+    section = _section(text, start_heading, end_heading)
+    rows = [_table_cells(line) for line in section.splitlines()]
+    rows = [row for row in rows if row]
+    if rows.count(["Source", "Use"]) != 1:
+        raise ValueError(f"expected one source table under {start_heading}")
+    return [
+        row
+        for row in rows
+        if row != ["Source", "Use"]
+        and not all(re.fullmatch(r":?-+", cell) for cell in row)
+    ]
+
+
+def _manifest_authority_filenames() -> dict[str, str]:
+    try:
+        manifest = json.loads(_read(MANIFEST))
+        governing = {
+            entry["document_id"]: entry
+            for entry in manifest["governing_documents"]
+        }
+        filenames: dict[str, str] = {}
+        for document_id in CURRENT_AUTHORITY_DOCUMENT_IDS:
+            entry = governing[document_id]
+            filename = entry["canonical_filename"]
+            if entry["repository_path"] != f"docs/00_platform/{filename}":
+                raise ValueError(f"manifest path is inconsistent for {document_id}")
+            filenames[document_id] = filename
+        return filenames
+    except (KeyError, TypeError, json.JSONDecodeError) as exc:
+        raise ValueError("current authority manifest cannot resolve all required sources") from exc
+
+
+def _validate_contract_source_routing(text: str) -> None:
+    _assert_unique_headings(text)
+    authority_rows = _table_rows_in_section(
+        text,
+        "### CURRENT AUTHORITY",
+        "### CURRENT DERIVED EVIDENCE",
+    )
+    if len(authority_rows) != len(CURRENT_AUTHORITY_DOCUMENT_IDS):
+        raise ValueError("CURRENT AUTHORITY source table has missing or unexpected rows")
+    if any(len(row) != 2 for row in authority_rows):
+        raise ValueError("CURRENT AUTHORITY source table has a malformed row")
+    actual = [row[0].strip("`") for row in authority_rows]
+    current = _manifest_authority_filenames()
+    expected = [current[document_id] for document_id in CURRENT_AUTHORITY_DOCUMENT_IDS]
+    if actual != expected:
+        raise ValueError("CURRENT AUTHORITY rows do not match the current manifest routes")
+
+    readme_context = _section(_read(README), "## Default Agent Context", "## Active Working Artifacts")
+    readme_paths = re.findall(r"`([^`]+\.md)`", readme_context)
+    if any(filename not in readme_paths for filename in expected):
+        raise ValueError("CURRENT AUTHORITY rows do not match the README current routes")
+
+    derived_rows = _table_rows_in_section(
+        text,
+        "### CURRENT DERIVED EVIDENCE",
+        "### HISTORICAL AUTHORITY / WORKING EVIDENCE",
+    )
+    if len(derived_rows) != 3 or any(len(row) != 2 for row in derived_rows):
+        raise ValueError("current derived/source-at-freeze table has missing or unexpected rows")
+    derived = {row[0].strip("`"): row[1] for row in derived_rows}
+    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.3.1.md"
+    skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
+    identity_path = "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+    if set(derived) != {atlas_path, skeleton_path, identity_path}:
+        raise ValueError("derived/source-at-freeze rows do not identify the current artifacts")
+    atlas_use = derived[atlas_path].casefold()
+    if "derived" not in atlas_use or "non-authoritative" not in atlas_use:
+        raise ValueError("current Atlas must remain derived and non-authoritative")
+    if "working/delivery_atlas_working_v0.2.1.md" not in atlas_use:
+        raise ValueError("pinned Atlas v0.2.1 source-at-freeze evidence is not identified")
+    if "source-at-freeze" not in atlas_use or "not current navigation" not in atlas_use:
+        raise ValueError("pinned Atlas v0.2.1 must be classified as source-at-freeze only")
+    if "phase 7a" not in derived[skeleton_path].casefold():
+        raise ValueError("current FP-001 Skeleton is not identified as the Phase 7A artifact")
+    identity_use = derived[identity_path].casefold()
+    for required in (
+        "source-at-freeze / reconciliation evidence",
+        "not current lifecycle authority",
+        "later fp-001 reconciliation",
+        "current open work",
+    ):
+        if required not in identity_use:
+            raise ValueError("Identity dossier is not classified as source-at-freeze evidence")
+
+    readme = _read(README)
+    if "working/DELIVERY_ATLAS_WORKING_v0.3.1.md" not in readme:
+        raise ValueError("README does not route current Atlas to v0.3.1")
+    if "The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references." not in readme:
+        raise ValueError("README does not preserve Atlas v0.2.1 as source-at-freeze evidence")
+    atlas_routing = _section(readme, "## Delivery Atlas routing", "## Machine-readable inventory")
+    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.1.md)" not in atlas_routing:
+        raise ValueError("README Delivery Atlas navigation does not target v0.3.1")
+    if "working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md" not in readme:
+        raise ValueError("README does not route the current HARDEN status successor")
+    active = _active_window(_read(OPEN_WORK))
+    if "- IDENTITY & ACCESS: COMPLETE / MERGED" not in active:
+        raise ValueError("current Identity lifecycle status is not sourced from Open Work")
+    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md" not in active:
+        raise ValueError("Open Work does not route the current HARDEN status successor")
+
+
 def _lifecycle_matrix(text: str) -> dict[str, dict[str, str]]:
     _assert_lifecycle_markers_in_active_section(text)
     region = _marked_region(text, MATRIX_START, MATRIX_END)
@@ -197,6 +315,15 @@ def _lifecycle_matrix(text: str) -> dict[str, dict[str, str]]:
 
 def _active_window(text: str) -> str:
     return _section(text, "# 9. Immediate Next Action", "# 10. Minimal Tools")
+
+
+def _inject_active_statement(text: str, statement: str) -> str:
+    active = _active_window(text)
+    anchor = "H02-3R POST-EXECUTION ROUTE:"
+    if active.count(anchor) != 1:
+        raise ValueError("active execution section is missing its unique route anchor")
+    contaminated = active.replace(anchor, f"{statement}\n{anchor}", 1)
+    return text.replace(active, contaminated, 1)
 
 
 def _route_declarations(text: str, label: str) -> list[str]:
@@ -548,7 +675,7 @@ CONTRACT_REVERSE_PAIRS = (
         "archive/HARDEN-02_CONTRACT_WORKING_v0.4.1.md` — preserved byte-identically as the pending-post-merge status snapshot",
     ),
     (
-        "this v0.4.3 successor preserves the certified contract semantics and records execution status only",
+        "this v0.4.3 successor preserves them and records execution status plus current-source routing/provenance",
         "this v0.4.2 successor records lifecycle completion against current repository routing and does not amend that contract",
     ),
     ("- **Last updated:** 2026-09-28", "- **Last updated:** 2026-09-25"),
@@ -561,7 +688,35 @@ CONTRACT_REVERSE_PAIRS = (
         "`HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED` | Current state; lifecycle completion permits execution to be NEXT / AUTHORISED, but this status record does not begin execution",
     ),
     (
-        "The v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED. The original status-successor base main SHA is `9411b34b646d7752d2942afca1363830d3b25f10`. This v0.4.3 status successor starts HARDEN-02 execution from exact current main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. Execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING; execution certification remains pending until the governed post-merge lifecycle is complete. This successor does not revise or recertify v0.4.0 semantics, alter any invariant or scope boundary, or advance a downstream stage.",
+        "| `00_PLATFORM_v1.5.0.md` | Product Law; not amended by HARDEN-02 |",
+        "| `00_PLATFORM_v1.4.1.md` | Product Law; not amended by HARDEN-02 |",
+    ),
+    (
+        "| `01_DECISIONS_v1.5.0.md` | Decision / OQ register; HARDEN-02 is not an OQ |",
+        "| `01_DECISIONS_v1.4.1.md` | Decision / OQ register; HARDEN-02 is not an OQ |",
+    ),
+    (
+        "| `02_OPEN_WORK_v1.2.49.md` | Programme routing and Development Entry Hard Stop |",
+        "| `02_OPEN_WORK_v1.2.45.md` | Programme routing and Development Entry Hard Stop |",
+    ),
+    (
+        "| `04_DOMAIN_MAP_v1.2.0.md` | Domain Law including PMR ownership and `FP001_RECONCILIATION_REQUIRED` consequence |",
+        "| `04_DOMAIN_MAP_v1.1.1.md` | Domain Law including PMR ownership and `FP001_RECONCILIATION_REQUIRED` consequence |",
+    ),
+    (
+        "| `05_ROADMAP_v1.1.4.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |",
+        "| `05_ROADMAP_v1.1.2.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |",
+    ),
+    (
+        "| `working/DELIVERY_ATLAS_WORKING_v0.3.1.md` | Current derived, non-authoritative Phase-7 / proof / HH lifecycle navigation only; pinned `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` remains source-at-freeze evidence, not current navigation; does not create HARDEN-02 law |",
+        "| `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` | Derived Phase-7 / proof / HH lifecycle navigation only; does not create HARDEN-02 law |",
+    ),
+    (
+        "| `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` | SOURCE-AT-FREEZE / RECONCILIATION EVIDENCE; not current lifecycle authority. Current COMPLETE / MERGED status comes from current Open Work. Preserve this dossier for later FP-001 reconciliation (not amended here). |",
+        "| `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` | Identity dossier complete/merged factual state (not amended here) |",
+    ),
+    (
+        "The v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED. The original status-successor base main SHA is `9411b34b646d7752d2942afca1363830d3b25f10`. This v0.4.3 status + current-source-routing/provenance successor starts HARDEN-02 execution from exact current main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. Execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING; execution certification remains pending until the governed post-merge lifecycle is complete. This successor does not revise or recertify v0.4.0 semantics, alter any invariant or scope boundary, or advance a downstream stage.",
         "The v0.4.0 contract lifecycle is COMPLETE / CERTIFIED. The verified status-successor base main SHA is `9411b34b646d7752d2942afca1363830d3b25f10`, after PR #42 updated the authority and routing. This v0.4.2 artifact records lifecycle completion against that base; it does not claim that SHA remains the repository tip after this status successor merges. It does not revise or recertify v0.4.0 semantics. HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED.",
     ),
     (
@@ -572,6 +727,7 @@ CONTRACT_REVERSE_PAIRS = (
 
 
 def _normalise_contract_successor(successor: str, predecessor: str) -> str:
+    _validate_contract_source_routing(successor)
     headings = (
         "### 11.5 PR #40 lifecycle evidence and current state",
         "## 17. Required proof (exit shape)",
@@ -590,7 +746,7 @@ def _normalise_contract_successor(successor: str, predecessor: str) -> str:
     if CONTRACT_STATUS not in status_head:
         raise ValueError("contract lifecycle status must remain complete / certified")
     insertions = (
-        "- `v0.4.3` — status-only successor from execution-start baseline main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. The original v0.4.0 lifecycle remains COMPLETE / CERTIFIED; HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. I-01…I-13 meanings, permitted/prohibited execution scope, H02-1/H02-2/H02-3R and v0.4.0 certification evidence are unchanged; every downstream stage remains at its prior state.",
+        "- `v0.4.3` — PATCH status + current-source-routing/provenance successor from execution-start baseline main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. The original v0.4.0 lifecycle remains COMPLETE / CERTIFIED; HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. I-01…I-13 meanings, permitted/prohibited execution scope, H02-1/H02-2/H02-3R and v0.4.0 certification evidence are unchanged; every downstream stage remains at its prior state.",
         "- **Execution-start baseline main SHA:** `1c8fc94058176795d88cb82e08857e3d30c553e9`",
     )
     return _normalise_document_diff(
@@ -743,10 +899,16 @@ def _execution_state_is_valid(text: str, state: dict[str, object]) -> bool:
 def _affirmative_prohibited_scope(text: str) -> list[str]:
     patterns = (
         r"(?im)^\s*(?:HARDEN-02|H02-1).*\b(?:Product Law|Architecture Law|Domain Law|Roadmap Law|Feature Pack|Horizontal Hardening)\b.*\b(?:is|becomes|owns|requires)\b",
+        r"(?im)^\s*HARDEN-02\s+(?:is|becomes|acts as|constitutes)\s+(?:a\s+|an\s+)?(?:Product requirement|Roadmap gate|blocking OQ|Feature Pack|Horizontal Hardening|Store hardening|Commerce/Entitlements hardening)\b",
         r"(?im)^\s*(?:STORE\s*/\s*CER|Store Blueprint|\bCER\b).*\b(?:IN SCOPE|REQUIRED|AUTHORISED|AUTHORIZED|COMPLETE)\b",
         r"(?im)^\s*(?:FP001_RECONCILIATION_REQUIRED|COMMUNICATIONS).*\b(?:COMPLETE|STARTED|AUTHORISED|AUTHORIZED)\b",
         r"(?im)^\s*(?:ENGINEERING STANDARDS AUTHORITY PROMOTION).*\b(?:COMPLETE|EXECUTED|FROZEN|APPROVED)\b",
         r"(?im)^\s*(?:PHASE 7C|PROOF CLASSIFICATION|PHASE 8|EXECUTABLE DEVELOPMENT|APPLICATION IMPLEMENTATION).*\b(?:COMPLETE|APPROVED|PASSED|AUTHORISED|AUTHORIZED|READY)\b",
+        r"(?im)^\s*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT|TB|VS|HH|PACKAGE INSTALLS?|MIGRATIONS?|PROVIDER CHANGES?)\s*:\s*(?:AUTHORISED|AUTHORIZED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE|ALLOWED)\b",
+        r"(?im)\bStore repository SHA\b",
+        r"(?im)\bCER proof obligation\b",
+        r"(?im)\bCER exit condition\b",
+        r"(?im)\bStore/CER implementation path\b",
     )
     return [
         match.group(0).strip()
@@ -957,6 +1119,20 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             1,
         )
         self.assertFalse(_execution_state_is_valid(expanded, _lifecycle_json(expanded)))
+        prohibited_classifications = (
+            "HARDEN-02 is a Product requirement",
+            "HARDEN-02 is a Roadmap gate",
+            "HARDEN-02 is a blocking OQ",
+            "HARDEN-02 is a Feature Pack",
+            "HARDEN-02 is Horizontal Hardening",
+            "HARDEN-02 is Store hardening",
+            "HARDEN-02 is Commerce/Entitlements hardening",
+        )
+        for statement in prohibited_classifications:
+            with self.subTest(statement=statement):
+                contaminated = _inject_active_statement(text, statement)
+                self.assertTrue(_affirmative_prohibited_scope(_active_window(contaminated)))
+                self.assertFalse(_execution_state_is_valid(contaminated, _lifecycle_json(contaminated)))
 
     def test_i10_fp001_reconciliation_is_recognised_without_false_completion(self):
         text, state, _ = self._state_and_matrix()
@@ -990,6 +1166,20 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             1,
         )
         self.assertFalse(_execution_state_is_valid(implementation, _lifecycle_json(implementation)))
+        prohibited_authorities = (
+            "APPLICATION IMPLEMENTATION: AUTHORISED",
+            "TB: AUTHORISED",
+            "VS: AUTHORISED",
+            "HH: AUTHORISED",
+            "PACKAGE INSTALLS: AUTHORISED",
+            "MIGRATIONS: AUTHORISED",
+            "PROVIDER CHANGES: AUTHORISED",
+        )
+        for statement in prohibited_authorities:
+            with self.subTest(statement=statement):
+                contaminated = _inject_active_statement(text, statement)
+                self.assertTrue(_affirmative_prohibited_scope(_active_window(contaminated)))
+                self.assertFalse(_execution_state_is_valid(contaminated, _lifecycle_json(contaminated)))
 
     def test_i12_post_execution_resume_order_has_no_skipped_predecessor(self):
         text, state, _ = self._state_and_matrix()
@@ -1044,6 +1234,38 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
                 self.assertFalse(
                     _execution_state_is_valid(contaminated, _lifecycle_json(contaminated))
                 )
+                in_active_state = _inject_active_statement(text, forbidden)
+                self.assertTrue(_affirmative_prohibited_scope(_active_window(in_active_state)))
+                self.assertFalse(
+                    _execution_state_is_valid(in_active_state, _lifecycle_json(in_active_state))
+                )
+
+    def test_current_authority_and_derived_source_tables_match_live_routing(self):
+        contract = self._required(CONTRACT)
+        _validate_contract_source_routing(contract)
+        current = _manifest_authority_filenames()
+        rows = _table_rows_in_section(
+            contract,
+            "### CURRENT AUTHORITY",
+            "### CURRENT DERIVED EVIDENCE",
+        )
+        self.assertEqual(
+            [current[document_id] for document_id in CURRENT_AUTHORITY_DOCUMENT_IDS],
+            [row[0].strip("`") for row in rows],
+        )
+        stale_mutants = (
+            contract.replace("00_PLATFORM_v1.5.0.md", "00_PLATFORM_v1.4.1.md", 1),
+            contract.replace("02_OPEN_WORK_v1.2.49.md", "02_OPEN_WORK_v1.2.45.md", 1),
+            contract.replace(
+                "working/DELIVERY_ATLAS_WORKING_v0.3.1.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
+                1,
+            ),
+        )
+        for mutant in stale_mutants:
+            with self.subTest(mutant=mutant[:100]):
+                with self.assertRaises(ValueError):
+                    _validate_contract_source_routing(mutant)
 
     def test_lifecycle_markers_json_and_matrix_fail_closed(self):
         text = self._open_work()
@@ -1116,7 +1338,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     _normalise_open_work_successor(sample, predecessor)
 
-    def test_contract_successor_normalizes_only_declared_status_and_provenance_blocks(self):
+    def test_contract_successor_normalizes_only_declared_status_and_source_routing_provenance(self):
         successor = self._required(CONTRACT)
         predecessor = self._required(CONTRACT_PREDECESSOR)
         self.assertEqual(EXPECTED_ARCHIVE_SHA256[CONTRACT_PREDECESSOR], _sha256(CONTRACT_PREDECESSOR))
@@ -1131,8 +1353,23 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             "## 1. Objective\n\nUnexpected execution-law mutation.",
             1,
         )
-        with self.assertRaises(ValueError):
-            _normalise_contract_successor(unexpected, predecessor)
+        product_row = next(
+            line
+            for line in successor.splitlines(keepends=True)
+            if "| `00_PLATFORM_v1.5.0.md` |" in line
+        )
+        missing_row = successor.replace(product_row, "", 1)
+        duplicated_row = successor.replace(product_row, product_row + product_row, 1)
+        relocated_row = successor.replace(product_row, "", 1).replace(
+            "### CURRENT DERIVED EVIDENCE\n",
+            "### CURRENT DERIVED EVIDENCE\n" + product_row,
+            1,
+        )
+        stale_route = successor.replace("00_PLATFORM_v1.5.0.md", "00_PLATFORM_v1.4.1.md", 1)
+        for sample in (unexpected, missing_row, duplicated_row, relocated_row, stale_route):
+            with self.subTest(sample=sample[:120]):
+                with self.assertRaises(ValueError):
+                    _normalise_contract_successor(sample, predecessor)
 
     def test_atlas_successor_normalizes_only_declared_routing_substitutions(self):
         successor = self._required(ATLAS)

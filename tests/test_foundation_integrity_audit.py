@@ -110,7 +110,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
         baseline_open_work = (source_docs / "archive" / "02_OPEN_WORK_v1.2.48.md").read_text(encoding="utf-8")
         baseline_readme = candidate_readme.replace(
-            "working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md` records the completed v0.4.0 lifecycle and execution status; execution-start baseline main SHA is `1c8fc94058176795d88cb82e08857e3d30c553e9`; v0.4.0 semantics are unchanged",
+            "working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md` — status + current-source-routing/provenance successor for the original v0.4.0 certified HARDEN-02 contract semantics; PR #40 exact-head certification, unchanged merge, both exact-SHA Foundation Integrity runs, fresh independent post-merge review and durable post-merge attestation are COMPLETE / PASS. HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. Working contracts remain outside the authority-document records in `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Predecessor status record v0.4.2 is preserved byte-identically at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.2.md`; earlier v0.4.1 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.1.md`; certified contract artifact v0.4.0 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md`",
             "working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` records the completed v0.4.0 lifecycle and execution status; v0.4.0 semantics are unchanged",
             1,
         ).replace(
