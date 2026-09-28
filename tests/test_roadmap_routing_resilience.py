@@ -12,8 +12,8 @@ DOCS = ROOT / "docs" / "00_platform"
 ROADMAP = DOCS / "05_ROADMAP_v1.1.4.md"
 ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.1.3.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.3.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.48.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.0.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.49.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 ROADMAP_V1_1_3_SHA256 = "9cba581592ebc43ec3e39debce82a8e86ac0b3132962d7be12d377706e5e0126"
@@ -129,7 +129,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertEqual("05_ROADMAP_v1.1.4.md", roadmap["canonical_filename"])
         self.assertEqual("docs/00_platform/05_ROADMAP_v1.1.4.md", roadmap["repository_path"])
         self.assertEqual(_sha256(ROADMAP), roadmap["sha256"])
-        self.assertEqual("02_OPEN_WORK_v1.2.48.md", open_work["canonical_filename"])
+        self.assertEqual("02_OPEN_WORK_v1.2.49.md", open_work["canonical_filename"])
 
         header = self.roadmap.split("## Amendment summary", 1)[0]
         route_lines = re.findall(r"(?m)^- \*\*Current programme routing:\*\* (.+)$", header)

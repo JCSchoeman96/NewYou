@@ -54,8 +54,8 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
-        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.0.md").read_text(encoding="utf-8")
-        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.2.md").read_text(
+        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.1.md").read_text(encoding="utf-8")
+        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md").read_text(
             encoding="utf-8"
         )
         cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md").read_text(
@@ -207,12 +207,12 @@ class ProductLawHardeningTests(unittest.TestCase):
                 "RESULTING_MAIN_CI": "PASS",
                 "POST_MERGE_INDEPENDENT_REVIEW": "PASS",
                 "POST_MERGE_ATTESTATION": "COMPLETE",
-                "EXECUTION": "NEXT_AUTHORISED_NOT_STARTED",
+                "EXECUTION": "IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING",
             },
             statuses,
         )
         self.assertIn("POST-MERGE CERTIFICATION: COMPLETE", self.readme)
-        self.assertIn("NEXT / AUTHORISED / NOT STARTED", self.readme)
+        self.assertIn("IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.readme)
         self.assertNotIn("PENDING INDEPENDENT PRE-MERGE CERTIFICATION", self.readme)
         self.assertIn("352f304139b9d4f8ee3ba205cde9e34d0ad8437f", self.harden02)
         self.assertIn("36101210535", self.harden02)
@@ -325,12 +325,12 @@ class ProductLawHardeningTests(unittest.TestCase):
         )
         self.assertIn("Product `v1.5.0`, Decisions `v1.5.0`", current_source_routing)
         self.assertIn("Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.1.4`", current_source_routing)
-        self.assertIn("Open Work `v1.2.48`", current_source_routing)
+        self.assertIn("Open Work `v1.2.49`", current_source_routing)
         current_source_table = self.atlas.split("## 1.1 Authority hierarchy", 1)[1].split("## 1.2 Purpose", 1)[0]
         for current_name in (
             "00_PLATFORM_v1.5.0.md",
             "01_DECISIONS_v1.5.0.md",
-            "02_OPEN_WORK_v1.2.48.md",
+            "02_OPEN_WORK_v1.2.49.md",
             "04_DOMAIN_MAP_v1.2.0.md",
             "05_ROADMAP_v1.1.4.md",
         ):
@@ -445,8 +445,8 @@ class ProductLawHardeningTests(unittest.TestCase):
             "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
             "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
             "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.0.md",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.1.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md",
             "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
             "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
             "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
@@ -507,7 +507,7 @@ class ProductLawHardeningTests(unittest.TestCase):
             "03_ARCHITECTURE_v1.1.1.md",
             "04_DOMAIN_MAP_v1.2.0.md",
             "05_ROADMAP_v1.1.4.md",
-            "02_OPEN_WORK_v1.2.48.md",
+            "02_OPEN_WORK_v1.2.49.md",
             "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
         )
         source_table = self.atlas.split("## 1.2 Purpose", 1)[0]

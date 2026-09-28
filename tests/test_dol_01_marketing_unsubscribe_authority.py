@@ -17,6 +17,7 @@ PREDECESSOR_SHA256 = {
     "02_OPEN_WORK_v1.2.45.md": "9bc1b0f882125153a9db9668db8f0fee1ed9b1f20f6ba8422882707a4d203087",
     "02_OPEN_WORK_v1.2.46.md": "d19ba98b486478ff8fea36b74a72b4102e8fe192a797af919318a1fc31c8c870",
     "02_OPEN_WORK_v1.2.47.md": "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118",
+    "02_OPEN_WORK_v1.2.48.md": "270172784629197f2bb6faa60dbe6d4184bd9d04d878876f6877c98390fd8d17",
     "04_DOMAIN_MAP_v1.1.1.md": "ae1b6e44e0e5da2060bcbfda46b8c280a6c7aa0e596b8feb8198cea22aa4bb42",
     "DELIVERY_ATLAS_WORKING_v0.2.1.md": "b4c27c8a314d2a9e227acd53bd69dfce0e01a2cc743535e49a45a848f135cc59",
     "DELIVERY_ATLAS_WORKING_v0.2.2.md": "2a9553cd9076333665d340c6d787a8de8bfa0f78509e6cc8b2cfb874730ab02e",
@@ -26,7 +27,7 @@ PREDECESSOR_SHA256 = {
 EXPECTED_CURRENT = {
     "PLATFORM_BASELINE": ("00_PLATFORM_v1.5.0.md", "1.5.0"),
     "DECISION_REGISTER": ("01_DECISIONS_v1.5.0.md", "1.5.0"),
-    "OPEN_WORK": ("02_OPEN_WORK_v1.2.48.md", "1.2.48"),
+    "OPEN_WORK": ("02_OPEN_WORK_v1.2.49.md", "1.2.49"),
     "DOMAIN_MAP": ("04_DOMAIN_MAP_v1.2.0.md", "1.2.0"),
     "ROADMAP": ("05_ROADMAP_v1.1.4.md", "1.1.4"),
 }
@@ -269,7 +270,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
 
     def test_current_routes_are_current_and_old_paths_remain_archived(self):
-        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.0.md"
+        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.1.md"
         self.assertEqual(
             atlas_path,
             self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"][0],
@@ -303,7 +304,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             "00_PLATFORM_v1.5.0.md",
             "01_DECISIONS_v1.5.0.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "DELIVERY_ATLAS_WORKING_v0.3.0.md",
+            "DELIVERY_ATLAS_WORKING_v0.3.1.md",
         ):
             self.assertIn(current_name, immediate_next_action)
         for stale_name in (
@@ -338,10 +339,12 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         if not predecessor_path.is_file():
             self.fail(f"missing archived Open Work predecessor: {predecessor_path}")
         predecessor = _read(predecessor_path)
-        self.assertEqual(_gate_lines(predecessor), _gate_lines(self.open_work))
+        predecessor_gates = [line for line in _gate_lines(predecessor) if not line.startswith("HARDEN-02 EXECUTION:")]
+        current_gates = [line for line in _gate_lines(self.open_work) if not line.startswith("HARDEN-02 EXECUTION:")]
+        self.assertEqual(predecessor_gates, current_gates)
         self.assertIn("DOL-01", self.open_work)
         self.assertIn("REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED", self.open_work)
-        self.assertIn("HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED", self.open_work)
+        self.assertIn("HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.open_work)
 
 
 if __name__ == "__main__":
