@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.foundation_integrity_audit import refresh_manifest, run_audit
+from tools.foundation_integrity_audit import _h02_lifecycle_state, refresh_manifest, run_audit
 
 
 SMALL_COUNTS = {
@@ -68,8 +68,8 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                     "| `POST_MERGE_ATTESTATION` | `PENDING`",
                 ),
                 (
-                    "| `EXECUTION` | `NEXT_AUTHORISED_NOT_STARTED`",
-                    "| `EXECUTION` | `NOT_STARTED_NOT_AUTHORISED`",
+                    "| `EXECUTION` | `IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING`",
+                    "| `EXECUTION` | `COMPLETE_CERTIFIED_PREMATURE`",
                 ),
             )
             for current, stale in replacements:
@@ -84,8 +84,8 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 ("HARDEN-02_EXECUTION_REQUIRED", "HARDEN-02_POST_MERGE_CERTIFICATION_REQUIRED"),
                 ("POST-MERGE CERTIFICATION: COMPLETE", "POST-MERGE CERTIFICATION: PENDING"),
                 (
-                    "HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED",
-                    "HARDEN-02 EXECUTION: NOT STARTED / NOT AUTHORISED",
+                    "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+                    "HARDEN-02 EXECUTION: COMPLETE / CERTIFIED",
                 ),
             ):
                 self.assertEqual(1, readme.count(current), current)
@@ -100,6 +100,57 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             )
 
             self.assertEqual("FAIL", lifecycle_check["status"])
+
+    def test_harden_execution_state_machine_fixtures(self):
+        source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.49.md").read_text(encoding="utf-8")
+        candidate_readme = (source_docs / "README.md").read_text(encoding="utf-8")
+        self.assertEqual((True, "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"),
+                         _h02_lifecycle_state(candidate_open_work, candidate_readme))
+
+        baseline_open_work = (source_docs / "archive" / "02_OPEN_WORK_v1.2.48.md").read_text(encoding="utf-8")
+        baseline_readme = candidate_readme.replace(
+            "working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md` records the completed v0.4.0 lifecycle and execution status; execution-start baseline main SHA is `1c8fc94058176795d88cb82e08857e3d30c553e9`; v0.4.0 semantics are unchanged",
+            "working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` records the completed v0.4.0 lifecycle and execution status; v0.4.0 semantics are unchanged",
+            1,
+        ).replace(
+            "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+            "HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED",
+            1,
+        ).replace(
+            "HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING.",
+            "HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED.",
+            1,
+        )
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md", baseline_readme)
+        self.assertEqual((True, "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"),
+                         _h02_lifecycle_state(baseline_open_work, baseline_readme))
+
+        matrix_start = "| `EXECUTION` | `IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING`"
+        mixed_open_work = candidate_open_work.replace(
+            matrix_start,
+            "| `EXECUTION` | `NEXT_AUTHORISED_NOT_STARTED`",
+            1,
+        )
+        self.assertFalse(_h02_lifecycle_state(mixed_open_work, candidate_readme)[0])
+
+        premature_open_work = candidate_open_work.replace(
+            '"harden_02_execution": "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"',
+            '"harden_02_execution": "COMPLETE / CERTIFIED"',
+            1,
+        )
+        self.assertFalse(_h02_lifecycle_state(premature_open_work, candidate_readme)[0])
+
+        advanced_open_work = candidate_open_work.replace(
+            '"next_stage": "HARDEN-02_EXECUTION_REQUIRED"',
+            '"next_stage": "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED"',
+            1,
+        ).replace(
+            "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
+            "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
+            1,
+        )
+        self.assertFalse(_h02_lifecycle_state(advanced_open_work, candidate_readme)[0])
 
     def test_production_audit_uses_manifest_expectations(self):
         with tempfile.TemporaryDirectory() as directory:
