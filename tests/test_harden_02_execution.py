@@ -352,6 +352,182 @@ def _route_state(text: str, state: dict[str, object]) -> bool:
     )
 
 
+def _roadmap_phase7_section(text: str) -> tuple[str, int]:
+    heading = "# 21. Phase 7 handoff"
+    starts = list(re.finditer(rf"(?m)^{re.escape(heading)}\s*$", text))
+    if len(starts) != 1:
+        raise ValueError(f"expected one Roadmap {heading!r}, found {len(starts)}")
+    start = starts[0].start()
+    next_headings = list(re.finditer(r"(?m)^#\s+.+?\s*$", text[start + len(heading):]))
+    if next_headings:
+        end = start + len(heading) + next_headings[0].start()
+    else:
+        end = len(text)
+    if start >= end:
+        raise ValueError("Roadmap Phase 7 handoff section has invalid boundaries")
+    return text[start:end], start
+
+
+def _markdown_bullet_items(text: str, *, offset: int = 0) -> list[tuple[int, str]]:
+    items: list[tuple[int, str]] = []
+    active_start: int | None = None
+    active_parts: list[str] = []
+
+    def finish() -> None:
+        nonlocal active_start, active_parts
+        if active_start is not None:
+            items.append((offset + active_start, " ".join(active_parts)))
+        active_start = None
+        active_parts = []
+
+    line_offset = 0
+    for line in text.splitlines(keepends=True):
+        content = line.rstrip("\r\n")
+        bullet = re.match(r"^[ \t]*-[ \t]+(.*)$", content)
+        if bullet:
+            finish()
+            active_start = line_offset + bullet.start()
+            active_parts = [bullet.group(1).strip()]
+        elif active_start is not None and content.strip() and re.match(r"^[ \t]{2,}\S", content):
+            active_parts.append(content.strip())
+        elif content.strip():
+            finish()
+        line_offset += len(line)
+    finish()
+    return items
+
+
+def _roadmap_phase7_handoff_requirements(text: str) -> list[int]:
+    """Validate Roadmap §21's state boundary and ordered Phase 7 task contract."""
+    handoff, section_offset = _roadmap_phase7_section(text)
+    anchor = "When current Open Work authorises a Phase 7 task, that task must:"
+    anchor_matches = list(re.finditer(rf"(?m)^{re.escape(anchor)}\s*$", handoff))
+    document_anchors = list(re.finditer(rf"(?m)^{re.escape(anchor)}\s*$", text))
+    if len(anchor_matches) != 1 or len(document_anchors) != 1:
+        raise ValueError("Roadmap §21 must contain one Phase 7 task-contract anchor")
+    if document_anchors[0].start() != section_offset + anchor_matches[0].start():
+        raise ValueError("Roadmap Phase 7 task-contract anchor is outside §21")
+
+    summary = re.sub(r"`", "", handoff[: anchor_matches[0].start()])
+    summary = re.sub(r"\s+", " ", summary).casefold()
+    summary_rules = (
+        (
+            "FP-001 Phase 7A and Identity dossier state",
+            r"\bfp-001 has existing phase 7a work and an? identity\s*(?:&|and)\s*access dossier\b",
+        ),
+        (
+            "pending PMR artifact reconciliation state",
+            r"\bpmr(?: artifact)? reconciliation remains required after certified engineering standards authority promotion and has not been performed\b",
+        ),
+        ("gated Phase 7C state", r"\bphase 7c remains gated\b"),
+        ("unfinalised proof classification state", r"\bproof classification is not finali[sz]ed\b"),
+        (
+            "incomplete executable authentication proof state",
+            r"\bexecutable authentication proof (?:is|remains) incomplete\b",
+        ),
+    )
+    for label, pattern in summary_rules:
+        if len(list(re.finditer(pattern, summary))) != 1:
+            raise ValueError(f"Roadmap §21 summary is missing or duplicates {label}")
+
+    contradiction_rules = (
+        r"\bpmr(?: artifact)? reconciliation (?:has been|was) performed\b",
+        r"\bphase 7c (?:is )?(?:ready|complete|approved)\b",
+        r"\bproof classification is (?:finali[sz]ed|complete|final)\b",
+        r"\bexecutable authentication proof (?:is|was) (?:complete|passed)\b",
+    )
+    if any(re.search(pattern, summary) for pattern in contradiction_rules):
+        raise ValueError("Roadmap §21 summary contains a contradictory Phase 7 boundary state")
+
+    anchor_end = anchor_matches[0].end()
+    tail = handoff[anchor_end:]
+    lines = tail.splitlines(keepends=True)
+    first_bullet_line = next((line for line in lines if line.strip()), "")
+    if not re.match(r"^[ \t]*-[ \t]+", first_bullet_line.rstrip("\r\n")):
+        raise ValueError("Roadmap §21 task-contract anchor is not followed by a bullet block")
+    task_bullets = _markdown_bullet_items(tail, offset=anchor_end)
+    if not task_bullets:
+        raise ValueError("Roadmap §21 task-contract bullet block is empty")
+
+    def normalized(item: str) -> str:
+        return re.sub(r"\s+", " ", item.replace("`", "")).casefold()
+
+    requirement_rules = (
+        (
+            "Roadmap FP-001 outcome and dependencies",
+            re.compile(r"\buse this roadmap['’]s fp-001 outcome and dependencies\b"),
+        ),
+        (
+            "upstream Product, Architecture and Domain authority",
+            re.compile(r"\bpreserve upstream product, architecture and domain authority\b"),
+        ),
+        (
+            "required JIT Domain Dossiers",
+            re.compile(r"\bcreate only the jit domain dossiers required by the selected pack\b"),
+        ),
+        (
+            "OQ-034/OQ-035/OQ-036 Phase 7 and Phase 8 boundary",
+            re.compile(
+                r"\buse the resolved oq-034 architecture selection\b"
+                r".*\bpreserve its incomplete phase 8 proof obligation\b"
+                r".*\bresolve oq-035\s*/\s*oq-036 only at the affected depth\b"
+            ),
+        ),
+        (
+            "affected-depth OQ-039 mapping",
+            re.compile(
+                r"\bperform implementation[- ]grade oq-039 mapping only for affected domains/actions\b"
+            ),
+        ),
+        (
+            "final proof vehicle choice",
+            re.compile(
+                r"\bmake the final proof choice reuse_existing_proof or new_tracer_bullet\b"
+            ),
+        ),
+        (
+            "fail-closed invention STOP condition",
+            re.compile(
+                r"(?=.*\bstop if\b)(?=.*\btask\b)(?=.*\binvent\b)"
+                r"(?=.*\bproduct policy\b)(?=.*\bclinical thresholds\b)"
+                r"(?=.*\bownership\b)(?=.*\bprovider semantics\b)"
+                r"(?=.*\bretention\b)(?=.*\bsecurity exceptions\b)"
+                r"(?=.*\bimplementation[- ]grade domain semantics\b)"
+            ),
+        ),
+    )
+
+    block_matches: list[tuple[int, str]] = []
+    for label, pattern in requirement_rules:
+        matches = [
+            (position, item)
+            for position, item in task_bullets
+            if pattern.search(normalized(item))
+        ]
+        if len(matches) != 1:
+            raise ValueError(f"Roadmap §21 task contract is missing or duplicates {label}")
+        block_matches.append(matches[0])
+
+    if any(
+        earlier[0] >= later[0]
+        for earlier, later in zip(block_matches, block_matches[1:])
+    ):
+        raise ValueError("Roadmap §21 Phase 7 task requirements are out of order")
+
+    document_bullets = _markdown_bullet_items(text)
+    expected_positions = [section_offset + position for position, _ in block_matches]
+    for (label, pattern), expected_position in zip(requirement_rules, expected_positions):
+        matches = [
+            position
+            for position, item in document_bullets
+            if pattern.search(normalized(item))
+        ]
+        if matches != [expected_position]:
+            raise ValueError(f"Roadmap §21 {label} must occur once and only inside §21")
+
+    return [position for position, _ in block_matches]
+
+
 def _phase_order(text: str, *, source: str) -> list[int]:
     if source == "pom":
         handoff = _section(text, "# 25. Phase 7 / JIT handoff", "# 26. Development boundary")
@@ -371,14 +547,15 @@ def _phase_order(text: str, *, source: str) -> list[int]:
             "Phase 7C Final Feature Pack Contract",
         )]
     if source == "roadmap":
-        handoff = _section(text, "# 21. Phase 7 handoff", None)
+        handoff, _ = _roadmap_phase7_section(text)
         required = (
             "FP-001 has existing Phase 7A work",
             "Phase 7C remains gated",
             "proof classification",
             "executable authentication proof is incomplete",
         )
-        return [handoff.casefold().index(phrase.casefold()) for phrase in required]
+        summary_positions = [handoff.casefold().index(phrase.casefold()) for phrase in required]
+        return summary_positions + _roadmap_phase7_handoff_requirements(text)
     if source == "open_work":
         handoff = _section(text, "## Phase 7 — Feature Pack Preparation + JIT Domain Dossiers", "# 8. Product Planning Stop Condition")
         required = (
@@ -999,9 +1176,11 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
 
     def test_i04_phase7_order_matches_all_current_sources_and_preserves_oq034_proof(self):
         open_work, _, _ = self._state_and_matrix()
+        roadmap = _read(ROADMAP)
+        self.assertEqual(7, len(_roadmap_phase7_handoff_requirements(roadmap)))
         sources = {
             "pom": _read(POM),
-            "roadmap": _read(ROADMAP),
+            "roadmap": roadmap,
             "open_work": open_work,
             "skeleton": _read(SKELETON),
         }
@@ -1035,6 +1214,98 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             sorted((phase7c_contract, development_hard_stop, proof_classification, phase8_proof)),
             [phase7c_contract, development_hard_stop, proof_classification, phase8_proof],
         )
+
+    def test_i04_roadmap_phase7_task_contract_fails_closed_on_mutations(self):
+        roadmap = _read(ROADMAP)
+
+        def bullet_containing(text: str, phrase: str) -> str:
+            matches = [
+                line
+                for line in text.splitlines(keepends=True)
+                if line.startswith("- ") and phrase.casefold() in line.casefold()
+            ]
+            if len(matches) != 1:
+                raise ValueError(f"expected one Roadmap bullet containing {phrase!r}")
+            return matches[0]
+
+        def remove_bullet(text: str, phrase: str) -> str:
+            line = bullet_containing(text, phrase)
+            return text.replace(line, "", 1)
+
+        required_jit = "create only the JIT Domain Dossiers required by the selected pack"
+        oq034 = "use the resolved `OQ-034` architecture selection"
+        oq039 = "perform implementation-grade `OQ-039` mapping only for affected domains/actions"
+        proof_choice = "make the final proof choice `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`"
+        stop_condition = "stop if a task would need to invent product policy"
+
+        weakened_oq034 = roadmap.replace(
+            bullet_containing(roadmap, oq034),
+            "- resolve OQ-034 and OQ-035/OQ-036.\n",
+            1,
+        )
+        duplicate_jit = roadmap.replace(
+            bullet_containing(roadmap, required_jit),
+            bullet_containing(roadmap, required_jit) * 2,
+            1,
+        )
+        proof_line = bullet_containing(roadmap, proof_choice)
+        jit_line = bullet_containing(roadmap, required_jit)
+        lines = roadmap.splitlines(keepends=True)
+        proof_index = lines.index(proof_line)
+        lines.pop(proof_index)
+        jit_index = lines.index(jit_line)
+        lines.insert(jit_index, proof_line)
+        reordered_proof_before_jit = "".join(lines)
+        oq039_line = bullet_containing(roadmap, oq039)
+        relocated_oq039 = roadmap.replace(oq039_line, "", 1).replace(
+            "# 21. Phase 7 handoff\n",
+            oq039_line + "\n# 21. Phase 7 handoff\n",
+            1,
+        )
+
+        mutants = {
+            "required JIT dossier bullet removed": remove_bullet(roadmap, required_jit),
+            "OQ-034/OQ-035/OQ-036 requirement weakened": weakened_oq034,
+            "OQ-039 mapping bullet removed": remove_bullet(roadmap, oq039),
+            "final proof choice removed": remove_bullet(roadmap, proof_choice),
+            "STOP condition removed": remove_bullet(roadmap, stop_condition),
+            "final proof choice moved before JIT dossiers": reordered_proof_before_jit,
+            "required JIT bullet duplicated": duplicate_jit,
+            "OQ-039 bullet relocated outside section 21": relocated_oq039,
+        }
+        for label, mutant in mutants.items():
+            with self.subTest(mutation=label):
+                with self.assertRaises(ValueError):
+                    _roadmap_phase7_handoff_requirements(mutant)
+
+    def test_i04_roadmap_parser_rejects_malformed_section_and_summary_state(self):
+        roadmap = _read(ROADMAP)
+        heading = "# 21. Phase 7 handoff"
+        anchor = "When current Open Work authorises a Phase 7 task, that task must:"
+        malformed = {
+            "missing section heading": roadmap.replace(heading, "", 1),
+            "duplicated section heading": roadmap + f"\n{heading}\n",
+            "duplicated task-contract anchor": roadmap.replace(anchor, f"{anchor}\n{anchor}", 1),
+            "contradictory Phase 7C summary": roadmap.replace(
+                anchor,
+                f"Phase 7C is READY.\n{anchor}",
+                1,
+            ),
+        }
+        summary_facts = (
+            "FP-001 has existing Phase 7A work and an Identity & Access dossier.",
+            "The narrow PMR artifact reconciliation remains required after certified Engineering Standards Authority Promotion and has not been performed.",
+            "Phase 7C remains gated",
+            "proof classification is not finalised",
+            "executable authentication proof is incomplete",
+        )
+        for fact in summary_facts:
+            malformed[f"summary fact removed: {fact}"] = roadmap.replace(fact, "", 1)
+
+        for label, mutant in malformed.items():
+            with self.subTest(mutation=label):
+                with self.assertRaises(ValueError):
+                    _roadmap_phase7_handoff_requirements(mutant)
 
     def test_i05_required_dossiers_cannot_be_skipped(self):
         text, state, _ = self._state_and_matrix()
