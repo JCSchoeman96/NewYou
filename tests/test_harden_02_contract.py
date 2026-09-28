@@ -18,6 +18,7 @@ CONTRACT_OLDER_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
 OPEN_WORK_V1_2_44_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.44.md"
 OPEN_WORK_V1_2_46_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.46.md"
+OPEN_WORK_V1_2_47_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 README = DOCS / "README.md"
@@ -33,6 +34,7 @@ EXPECTED_OPEN_WORK_V1_2_42_SHA256 = "2f9baad6ef314b23b53f9c0daa79976347bfbc5b937
 EXPECTED_OPEN_WORK_V1_2_41_SHA256 = "85dd9946cf5684b0907f49e973ef75b59541c0f265ac46d44465d1527535da62"
 EXPECTED_OPEN_WORK_V1_2_44_SHA256 = "a296edf5f9c4bccd48b3b3057dba96b0a70ca822c1f8a162f9b44a985d328c1e"
 EXPECTED_OPEN_WORK_V1_2_46_SHA256 = "d19ba98b486478ff8fea36b74a72b4102e8fe192a797af919318a1fc31c8c870"
+EXPECTED_OPEN_WORK_V1_2_47_SHA256 = "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118"
 EXPECTED_ATLAS_V0_2_SHA256 = "c122c0f4a903c9679529e0e65a794999dcdaf957a66fcff00df990a0644bbb7f"
 
 PROTECTED_UPSTREAM_HASHES = {
@@ -911,13 +913,17 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.47", current["OPEN_WORK"]["semver"])
+        self.assertEqual("1.2.48", current["OPEN_WORK"]["semver"])
         self.assertEqual(self.current_open_work_path, ROOT / current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(self.current_open_work_path), current["OPEN_WORK"]["sha256"])
         navigation_paths = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
         self.assertIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md", navigation_paths)
         self.assertNotIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md", navigation_paths)
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
+        self.assertEqual("historical", historical["OPEN_WORK_V1_2_47"]["lifecycle"])
+        self.assertEqual("1.2.48", historical["OPEN_WORK_V1_2_47"]["superseded_version"])
+        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_47_SHA256, historical["OPEN_WORK_V1_2_47"]["sha256"])
+        self.assertEqual(EXPECTED_OPEN_WORK_V1_2_47_SHA256, _sha256(OPEN_WORK_V1_2_47_ARCHIVE))
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_46"]["lifecycle"])
         self.assertEqual("1.2.47", historical["OPEN_WORK_V1_2_46"]["superseded_version"])
         self.assertEqual(EXPECTED_OPEN_WORK_V1_2_46_SHA256, historical["OPEN_WORK_V1_2_46"]["sha256"])
@@ -1001,11 +1007,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             _section(
                 self.current_open_work,
                 "## 12.6 Roadmap Sequencing Grill and Roadmap amendment completion",
-                "## 12.7 — Delivery Atlas reconciliation",
+                "## 12.7 — Historical Delivery Atlas reconciliation",
             ),
             _section(
                 self.current_open_work,
-                "## 12.7 — Delivery Atlas reconciliation",
+                "## 12.7 — Historical Delivery Atlas reconciliation",
                 "## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt",
             ),
         )

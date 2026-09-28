@@ -31,16 +31,16 @@ PREDECESSORS = {
         "e92564c16c9ad15e8b7558ff76a509efad4310aa786c697b09b0ce2723ec4701",
     ),
     "OPEN_WORK": (
-        "02_OPEN_WORK_v1.2.46.md",
-        "1.2.46",
+        "02_OPEN_WORK_v1.2.47.md",
         "1.2.47",
-        "d19ba98b486478ff8fea36b74a72b4102e8fe192a797af919318a1fc31c8c870",
+        "1.2.48",
+        "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118",
     ),
     "ROADMAP": (
-        "05_ROADMAP_v1.1.2.md",
-        "1.1.2",
+        "05_ROADMAP_v1.1.3.md",
         "1.1.3",
-        "e22b76eb27a3d0c6c9d8e3af9486b34c0187dd3426a12de42895743a2efb4ab2",
+        "1.1.4",
+        "9cba581592ebc43ec3e39debce82a8e86ac0b3132962d7be12d377706e5e0126",
     ),
 }
 
@@ -48,10 +48,10 @@ CURRENT_AUTHORITY = {
     "PROJECT_NORTH_STAR_AND_MVP": "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
     "PLATFORM_BASELINE": "00_PLATFORM_v1.5.0.md",
     "DECISION_REGISTER": "01_DECISIONS_v1.5.0.md",
-    "OPEN_WORK": "02_OPEN_WORK_v1.2.47.md",
+    "OPEN_WORK": "02_OPEN_WORK_v1.2.48.md",
     "ARCHITECTURE_SYNTHESIS": "03_ARCHITECTURE_v1.1.1.md",
     "DOMAIN_MAP": "04_DOMAIN_MAP_v1.2.0.md",
-    "ROADMAP": "05_ROADMAP_v1.1.3.md",
+    "ROADMAP": "05_ROADMAP_v1.1.4.md",
     "PLATFORM_OPERATING_MODEL": "PLATFORM_OPERATING_MODEL_v1.0.1.md",
     "FRONTEND_EXPERIENCE_SYSTEM": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
 }
@@ -125,21 +125,90 @@ def _feature_pack_sections(text: str) -> dict[str, str]:
     return sections
 
 
-def _normalise_open_work_successor(text: str) -> str:
+OPEN_WORK_HISTORICAL_ATLAS_BLOCK = (
+    "## 12.7 — Historical Delivery Atlas reconciliation\n\n"
+    "**Status:** HISTORICAL COMPLETION RECORD — the then-current derived / non-authoritative navigation successor was "
+    "`working/DELIVERY_ATLAS_WORKING_v0.2.1.md` (predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; "
+    "earlier predecessor `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`). This subsection records that historical "
+    "reconciliation and is not the current Atlas route.\n\n"
+)
+OPEN_WORK_HISTORICAL_ATLAS_BLOCK_PREDECESSOR = (
+    "## 12.7 — Delivery Atlas reconciliation\n\n"
+    "**Status:** COMPLETE as derived / non-authoritative navigation successor `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` "
+    "(predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`; earlier predecessor "
+    "`archive/DELIVERY_ATLAS_WORKING_v0.1.0.md`).\n\n"
+)
+
+
+OPEN_WORK_ATLAS_CURRENT_STATUS_LINE = (
+    "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`; "
+    "immediate predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`; pinned v0.2.1 source-at-freeze artifacts remain preserved; "
+    "DERIVED / NON-AUTHORITATIVE; ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12"
+)
+OPEN_WORK_ATLAS_ROUTE_NORMALISED_STATUS_LINE = OPEN_WORK_ATLAS_CURRENT_STATUS_LINE.replace(
+    "working/DELIVERY_ATLAS_WORKING_v0.3.0.md",
+    "working/DELIVERY_ATLAS_WORKING_v0.2.3.md",
+)
+OPEN_WORK_ATLAS_PREDECESSOR_STATUS_LINE = (
+    "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.2.3.md`; "
+    "predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md`; DERIVED / NON-AUTHORITATIVE; "
+    "ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12"
+)
+
+
+def _validate_open_work_atlas_status_line(text: str, expected: str) -> None:
+    matches = list(re.finditer(r"(?m)^ATLAS RECONCILIATION: COMPLETE.*$", text))
+    if len(matches) != 1:
+        raise ValueError(f"expected exactly one Open Work Atlas reconciliation status line, found {len(matches)}")
+    start_positions = _line_marker_positions(text, "# 9. Immediate Next Action")
+    end_positions = _line_marker_positions(text, "# 10. Minimal Tools")
+    if (
+        len(start_positions) != 1
+        or len(end_positions) != 1
+        or not start_positions[0] < matches[0].start() < end_positions[0]
+    ):
+        raise ValueError("Open Work Atlas reconciliation status line is missing from or relocated outside §9")
+    if matches[0].group(0) != expected:
+        raise ValueError("Open Work §9 Atlas reconciliation status line differs outside declared lineage clarification")
+
+
+def _normalise_open_work_successor(text: str, canonical_predecessor: str) -> str:
+    _validate_open_work_atlas_status_line(text, OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
+    if text.count(OPEN_WORK_HISTORICAL_ATLAS_BLOCK) != 1:
+        raise ValueError("expected exactly one historical Atlas clarification block in Open Work successor")
+    if text.count("## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt") != 1:
+        raise ValueError("expected exactly one historical Atlas clarification end marker")
+
     replacements = (
-        ("# 02_OPEN_WORK_v1.2.47.md", "# 02_OPEN_WORK_v1.2.46.md", 1),
-        ("OPEN-WORK SUCCESSOR v1.2.47", "OPEN-WORK SUCCESSOR v1.2.46", 1),
-        ("Document version:** v1.2.47", "Document version:** v1.2.46", 1),
-        ("archive/02_OPEN_WORK_v1.2.46.md", "archive/02_OPEN_WORK_v1.2.45.md", 1),
-        ("v1.2.46 → v1.2.47", "v1.2.45 → v1.2.46", 1),
-        ("05_ROADMAP_v1.1.3.md", "05_ROADMAP_v1.1.2.md", 6),
-        ("DELIVERY_ATLAS_WORKING_v0.2.3.md", "DELIVERY_ATLAS_WORKING_v0.2.2.md", 5),
+        ("# 02_OPEN_WORK_v1.2.48.md", "# 02_OPEN_WORK_v1.2.47.md", 1),
+        ("OPEN-WORK SUCCESSOR v1.2.48", "OPEN-WORK SUCCESSOR v1.2.47", 1),
+        ("Document version:** v1.2.48", "Document version:** v1.2.47", 1),
+        ("archive/02_OPEN_WORK_v1.2.47.md", "archive/02_OPEN_WORK_v1.2.46.md", 1),
+        ("v1.2.47 → v1.2.48", "v1.2.46 → v1.2.47", 1),
+        ("DELIVERY_ATLAS_WORKING_v0.3.0.md", "DELIVERY_ATLAS_WORKING_v0.2.3.md", 5),
+        ("05_ROADMAP_v1.1.4.md", "05_ROADMAP_v1.1.3.md", 6),
     )
-    for current, predecessor, expected_count in replacements:
+    for current, previous, expected_count in replacements:
         actual_count = text.count(current)
         if actual_count != expected_count:
             raise AssertionError(f"expected {expected_count} Open Work routing replacements for {current!r}, found {actual_count}")
-        text = text.replace(current, predecessor)
+        text = text.replace(current, previous)
+    _validate_open_work_atlas_status_line(text, OPEN_WORK_ATLAS_ROUTE_NORMALISED_STATUS_LINE)
+    text = text.replace(
+        OPEN_WORK_ATLAS_ROUTE_NORMALISED_STATUS_LINE,
+        OPEN_WORK_ATLAS_PREDECESSOR_STATUS_LINE,
+        1,
+    )
+    _validate_open_work_atlas_status_line(text, OPEN_WORK_ATLAS_PREDECESSOR_STATUS_LINE)
+    if text.count(OPEN_WORK_HISTORICAL_ATLAS_BLOCK) != 1:
+        raise ValueError("historical Atlas clarification block is missing, duplicate, or relocated")
+    text = text.replace(
+        OPEN_WORK_HISTORICAL_ATLAS_BLOCK,
+        OPEN_WORK_HISTORICAL_ATLAS_BLOCK_PREDECESSOR,
+        1,
+    )
+    if text != canonical_predecessor:
+        raise ValueError("Open Work successor differs outside declared routing/version, §9 lineage, and historical clarification markers")
     return text
 
 
@@ -165,14 +234,18 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             self.assertEqual(filename, entry["canonical_filename"])
             self.assertEqual(f"docs/00_platform/{filename}", entry["repository_path"])
             self.assertEqual(_sha256(ROOT / entry["repository_path"]), entry["sha256"])
+        self.assertEqual(
+            _sha256(ROOT / self.governing["OPEN_WORK"]["repository_path"]),
+            self.governing["OPEN_WORK"]["provenance_sha256"],
+        )
 
     def test_current_authority_predecessors_are_archived_byte_identically_and_manifested(self):
         historical_ids = {
             "PROJECT_NORTH_STAR_AND_MVP": "PROJECT_NORTH_STAR_AND_MVP_V1_2_2",
             "PLATFORM_BASELINE": "PLATFORM_BASELINE_V1_4_1",
             "DECISION_REGISTER": "DECISION_REGISTER_V1_4_1",
-            "OPEN_WORK": "OPEN_WORK_V1_2_46",
-            "ROADMAP": "ROADMAP_V1_1_2",
+            "OPEN_WORK": "OPEN_WORK_V1_2_47",
+            "ROADMAP": "ROADMAP_V1_1_3",
         }
         for document_id, (filename, old_version, new_version, expected_hash) in PREDECESSORS.items():
             with self.subTest(document_id=document_id):
@@ -228,11 +301,6 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertEqual(list(old_packs), list(new_packs))
         for pack_id in old_packs:
             prior, current = old_packs[pack_id], new_packs[pack_id]
-            if pack_id == "FP-006":
-                current = current.replace(
-                    "source-at-freeze tracker `archive/02_OPEN_WORK_v1.2.45.md §§8, 11`",
-                    "current tracker `02_OPEN_WORK_v1.2.45.md §§8, 11`",
-                )
             self.assertEqual(prior, current, pack_id)
 
     def test_product_successor_exclusion_is_exact_and_fails_closed(self):
@@ -330,9 +398,14 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "DECISION_REGISTER",
             "ARCHITECTURE_SYNTHESIS",
             "DOMAIN_MAP",
-            "OPEN_WORK",
         ):
             self.assertIn(self.governing[authority_id]["canonical_filename"], roadmap_header)
+        route_match = re.search(r"(?m)^- \*\*Current programme routing:\*\* (.+)$", roadmap_header)
+        self.assertIsNotNone(route_match)
+        route = route_match.group(1) if route_match else ""
+        self.assertIn("README.md", route)
+        self.assertIn("current Open Work path it identifies", route)
+        self.assertNotRegex(route, r"02_OPEN_WORK_v\d+\.\d+\.\d+\.md")
 
         self.assertIn("HARDEN-02 execution as NEXT / AUTHORISED / NOT STARTED", product)
         self.assertIn("FP001_RECONCILIATION_REQUIRED` remains downstream and not performed", product)
@@ -350,24 +423,109 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertIn("HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED", open_work)
         self.assertIn("HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED", open_work)
         current_context = _section(readme, "## Default Agent Context", "## Active Working Artifacts")
-        for filename in ("00_PLATFORM_v1.5.0.md", "01_DECISIONS_v1.5.0.md", "02_OPEN_WORK_v1.2.47.md", "04_DOMAIN_MAP_v1.2.0.md"):
+        for filename in ("00_PLATFORM_v1.5.0.md", "01_DECISIONS_v1.5.0.md", "02_OPEN_WORK_v1.2.48.md", "04_DOMAIN_MAP_v1.2.0.md"):
             self.assertIn(filename, current_context)
         for stale_name in ("00_PLATFORM_v1.4.1.md", "01_DECISIONS_v1.4.1.md", "02_OPEN_WORK_v1.2.45.md", "04_DOMAIN_MAP_v1.1.1.md"):
             self.assertNotIn(stale_name, current_context)
-        self.assertIn("ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.3`", readme)
+        self.assertIn("ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.4`", readme)
+        self.assertEqual("1.2.48", self.governing["OPEN_WORK"]["semver"])
 
         active_paths = [
             self.readme,
             *(_read(ROOT / entry["repository_path"]) for entry in self.governing.values()),
-            _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.3.md"),
+            _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.0.md"),
             _read(DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.2.md"),
         ]
-        stale = re.compile(r"(?<!archive/)02_OPEN_WORK_v1\.2\.44\.md")
-        self.assertFalse(any(stale.search(text) for text in active_paths))
+        stale_patterns = (
+            re.compile(r"(?<!archive/)02_OPEN_WORK_v1\.2\.44\.md"),
+            re.compile(r"(?<!archive/)02_OPEN_WORK_v1\.2\.47\.md"),
+            re.compile(r"(?<!archive/)DELIVERY_ATLAS_WORKING_v0\.2\.3\.md"),
+        )
+        for stale in stale_patterns:
+            self.assertFalse(any(stale.search(text) for text in active_paths), stale.pattern)
+        open_work_predecessor_guard = r"(?<!archive/)02_OPEN_WORK_v1\.2\.47\.md"
+        self.assertIn(open_work_predecessor_guard, self.manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"])
+        guard = re.compile(open_work_predecessor_guard)
+        self.assertIsNotNone(guard.search("02_OPEN_WORK_v1.2.47.md"))
+        self.assertIsNone(guard.search("archive/02_OPEN_WORK_v1.2.47.md"))
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", _read(DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"))
+
+    def test_current_open_work_marks_the_v0_2_1_reconciliation_as_historical(self):
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.48.md")
+        historical_heading = "## 12.7 — Historical Delivery Atlas reconciliation"
+        self.assertEqual(1, current.count(historical_heading))
+        if current.count(historical_heading) != 1:
+            return
+
+        history = _section(
+            current,
+            historical_heading,
+            "## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt",
+        )
+        self.assertIn("HISTORICAL COMPLETION RECORD", history)
+        self.assertIn(
+            "then-current derived / non-authoritative navigation successor was `working/DELIVERY_ATLAS_WORKING_v0.2.1.md`",
+            history,
+        )
+        self.assertIn("not the current Atlas route", history)
+        self.assertIn("current Delivery Atlas remains derived and non-authoritative at `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`", current)
+
+    def test_current_open_work_atlas_lineage_distinguishes_current_predecessor_and_pinned_source(self):
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.48.md")
+        _validate_open_work_atlas_status_line(current, OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
+        self.assertIn("current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.0.md`", OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
+        self.assertIn("immediate predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`", OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
+        self.assertIn("pinned v0.2.1 source-at-freeze artifacts remain preserved", OPEN_WORK_ATLAS_CURRENT_STATUS_LINE)
+        self.assertNotRegex(
+            OPEN_WORK_ATLAS_CURRENT_STATUS_LINE,
+            r"current Atlas `working/DELIVERY_ATLAS_WORKING_v0\.3\.0\.md`; predecessor `archive/DELIVERY_ATLAS_WORKING_v0\.2\.1\.md`",
+        )
+        pinned_working = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
+        pinned_archive = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
+        self.assertTrue(pinned_working.is_file())
+        self.assertTrue(pinned_archive.is_file())
+        self.assertEqual(_sha256(pinned_working), _sha256(pinned_archive))
+
+    def test_open_work_normalizer_rejects_invalid_or_relocated_current_atlas_lineage(self):
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.48.md")
+        predecessor = _read(DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md")
+        line = OPEN_WORK_ATLAS_CURRENT_STATUS_LINE
+        malformed = (
+            current.replace(line + "\n", "", 1),
+            current.replace(line, line + "\n" + line, 1),
+            current.replace(line + "\n", "", 1).replace(
+                "# 10. Minimal Tools", "# 10. Minimal Tools\n" + line, 1
+            ),
+            current.replace(
+                "immediate predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`",
+                "predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md`",
+                1,
+            ),
+        )
+        for sample in malformed:
+            with self.subTest(sample=sample[:160]):
+                with self.assertRaises(ValueError):
+                    _normalise_open_work_successor(sample, predecessor)
+
+    def test_open_work_normalizer_rejects_missing_duplicate_or_relocated_historical_clarification(self):
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.48.md")
+        predecessor = _read(DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md")
+        block = OPEN_WORK_HISTORICAL_ATLAS_BLOCK
+        missing = current.replace(block, "", 1)
+        duplicate = current.replace(block, block + block, 1)
+        relocated = current.replace(block, "", 1).replace(
+            "## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt",
+            block + "## 12.8 — Historical HARDEN-02 contract v0.2.0 attempt",
+            1,
+        )
+        for malformed in (missing, duplicate, relocated):
+            with self.subTest(sample=malformed[:160]):
+                with self.assertRaises(ValueError):
+                    _normalise_open_work_successor(malformed, predecessor)
 
     def test_open_work_successor_changes_only_routing_metadata_and_preserves_all_gate_state(self):
-        predecessor = DOCS / "archive" / "02_OPEN_WORK_v1.2.46.md"
-        successor = DOCS / "02_OPEN_WORK_v1.2.47.md"
+        predecessor = DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md"
+        successor = DOCS / "02_OPEN_WORK_v1.2.48.md"
         self.assertTrue(predecessor.is_file(), predecessor)
         self.assertTrue(successor.is_file(), successor)
         if not predecessor.is_file() or not successor.is_file():
@@ -376,10 +534,10 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         predecessor_text = _read(predecessor)
         successor_text = _read(successor)
         self.assertEqual(
-            "d19ba98b486478ff8fea36b74a72b4102e8fe192a797af919318a1fc31c8c870",
+            "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118",
             _sha256(predecessor),
         )
-        self.assertEqual(predecessor_text, _normalise_open_work_successor(successor_text))
+        self.assertEqual(predecessor_text, _normalise_open_work_successor(successor_text, predecessor_text))
         for preserved_state in (
             "HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED",
             "Engineering Standards Authority Promotion remains downstream after certified execution",

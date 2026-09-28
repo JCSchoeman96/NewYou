@@ -9,7 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ROADMAP = DOCS / "05_ROADMAP_v1.1.3.md"
+ROADMAP = DOCS / "archive" / "05_ROADMAP_v1.1.3.md"
+ROADMAP_CURRENT = DOCS / "05_ROADMAP_v1.1.4.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.2.md"
 ROADMAP_V1_0_0_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.0.0.md"
 ROADMAP_V1_1_0_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.0.md"
@@ -22,6 +23,7 @@ MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 DOMAIN_MAP = DOCS / "archive" / "04_DOMAIN_MAP_v1.1.0.md"
 
 ROADMAP_V1_1_2_SHA256 = "e22b76eb27a3d0c6c9d8e3af9486b34c0187dd3426a12de42895743a2efb4ab2"
+ROADMAP_V1_1_3_SHA256 = "9cba581592ebc43ec3e39debce82a8e86ac0b3132962d7be12d377706e5e0126"
 FP006_OLD_TRACKER_CITATION = "current tracker `02_OPEN_WORK_v1.2.45.md §§8, 11`"
 FP006_SOURCE_AT_FREEZE_CITATION = "source-at-freeze tracker `archive/02_OPEN_WORK_v1.2.45.md §§8, 11`"
 
@@ -53,7 +55,7 @@ REQUIRED_SUCCESSOR_PATHS = (
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.37.md",
     "docs/00_platform/archive/05_ROADMAP_v1.0.0.md",
     "docs/00_platform/archive/05_ROADMAP_v1.1.2.md",
-    "docs/00_platform/05_ROADMAP_v1.1.3.md",
+    "docs/00_platform/archive/05_ROADMAP_v1.1.3.md",
     "docs/00_platform/working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md",
 )
 
@@ -354,7 +356,7 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("## 12.6 ", self.open_work)
         self.assertLess(self.open_work.index("## 12.4 "), self.open_work.index("## 12.5 "))
         self.assertLess(self.open_work.index("## 12.5 "), self.open_work.index("## 12.6 "))
-        self.assertTrue("05_ROADMAP_v1.1.3.md" in self.readme, "README current Roadmap")
+        self.assertTrue("05_ROADMAP_v1.1.4.md" in self.readme, "README current Roadmap")
         self.assertIn("archive/02_OPEN_WORK_v1.2.38.md", self.readme)
         self.assertIn("ROADMAP AMENDMENT: COMPLETE", self.readme)
         current = {
@@ -365,9 +367,9 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual(_sha256(ROOT / current["OPEN_WORK"]["repository_path"]), current["OPEN_WORK"]["sha256"])
         self.assertEqual("historical", {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK), {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["sha256"])
-        self.assertEqual("1.1.3", current["ROADMAP"]["semver"])
-        self.assertEqual("docs/00_platform/05_ROADMAP_v1.1.3.md", current["ROADMAP"]["repository_path"])
-        self.assertEqual(_sha256(ROADMAP), current["ROADMAP"]["sha256"])
+        self.assertEqual("1.1.4", current["ROADMAP"]["semver"])
+        self.assertEqual("docs/00_platform/05_ROADMAP_v1.1.4.md", current["ROADMAP"]["repository_path"])
+        self.assertEqual(_sha256(ROADMAP_CURRENT), current["ROADMAP"]["sha256"])
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
         self.assertEqual(20, self.manifest["integrity_rules"]["expected_counts"]["domains"])
         self.assertEqual(61, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
@@ -381,6 +383,9 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual("historical", historical["ROADMAP_V1_1_2"]["lifecycle"])
         self.assertEqual("1.1.3", historical["ROADMAP_V1_1_2"]["superseded_version"])
         self.assertEqual(_sha256(ROADMAP_PREDECESSOR), historical["ROADMAP_V1_1_2"]["sha256"])
+        self.assertEqual("historical", historical["ROADMAP_V1_1_3"]["lifecycle"])
+        self.assertEqual("1.1.4", historical["ROADMAP_V1_1_3"]["superseded_version"])
+        self.assertEqual(ROADMAP_V1_1_3_SHA256, historical["ROADMAP_V1_1_3"]["sha256"])
         self.assertEqual(
             "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
             historical["ROADMAP_V1_0_0"]["sha256"],
