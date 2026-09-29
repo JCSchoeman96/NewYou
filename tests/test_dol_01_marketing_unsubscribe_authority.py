@@ -364,11 +364,29 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         if not predecessor_path.is_file():
             self.fail(f"missing archived Open Work predecessor: {predecessor_path}")
         predecessor = _read(predecessor_path)
-        predecessor_gates = [line for line in _gate_lines(predecessor) if not line.startswith("HARDEN-02 EXECUTION:")]
-        current_gates = [line for line in _gate_lines(self.open_work) if not line.startswith("HARDEN-02 EXECUTION:")]
+        predecessor_gates = [
+            line for line in _gate_lines(predecessor)
+            if not line.startswith(("HARDEN-02 EXECUTION:", "ENGINEERING STANDARDS AUTHORITY PROMOTION:"))
+        ]
+        current_gates = [
+            line for line in _gate_lines(self.open_work)
+            if not line.startswith(("HARDEN-02 EXECUTION:", "ENGINEERING STANDARDS AUTHORITY PROMOTION:"))
+        ]
         self.assertEqual(predecessor_gates, current_gates)
+
+        self.assertIn(
+            "ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED",
+            predecessor,
+        )
+        self.assertIn(
+            "ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED",
+            self.open_work,
+        )
         self.assertIn("DOL-01", self.open_work)
-        self.assertIn("REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED", self.open_work)
+        self.assertIn(
+            "REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
+            self.open_work,
+        )
         self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.open_work)
 
 
