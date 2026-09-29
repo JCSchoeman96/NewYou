@@ -385,27 +385,28 @@ def _markdown_bullet_items(text: str, *, offset: int = 0) -> list[tuple[int, str
     line_offset = 0
     for line in text.splitlines(keepends=True):
         content = line.rstrip("\r\n")
-        fence = re.match(r"^[ \t]*(`{3,}|~{3,})(.*)$", content)
-        if fence:
-            marker = fence.group(1)
-            suffix = fence.group(2)
-            if fence_char is None:
-                finish()
-                fence_char = marker[0]
-                fence_length = len(marker)
-            elif (
-                marker[0] == fence_char
-                and len(marker) >= fence_length
-                and not suffix.strip()
-            ):
+        if fence_char is not None:
+            closing_fence = re.fullmatch(
+                rf" {{0,3}}{re.escape(fence_char)}{{{fence_length},}}[ \t]*",
+                content,
+            )
+            if closing_fence is not None:
                 finish()
                 fence_char = None
                 fence_length = 0
             line_offset += len(line)
             continue
-        if fence_char is not None:
-            line_offset += len(line)
-            continue
+
+        opening_fence = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", content)
+        if opening_fence is not None:
+            marker = opening_fence.group(1)
+            suffix = opening_fence.group(2)
+            if marker[0] != "`" or "`" not in suffix:
+                finish()
+                fence_char = marker[0]
+                fence_length = len(marker)
+                line_offset += len(line)
+                continue
 
         bullet = re.match(r"^[ \t]*[-*+][ \t]+(.*)$", content)
         if bullet:
@@ -1262,6 +1263,16 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             + "; implementation may begin immediately\n# 21. Phase 7 handoff\n",
             1,
         )
+        invalid_backtick_info_cannot_hide_relocated_requirement = roadmap.replace(
+            "# 21. Phase 7 handoff\n",
+            "```invalid`info\n" + oq039_line + "```\n\n# 21. Phase 7 handoff\n",
+            1,
+        )
+        four_space_pseudo_fence_cannot_hide_relocated_requirement = roadmap.replace(
+            "# 21. Phase 7 handoff\n",
+            "    ```text\n" + oq039_line + "```\n\n# 21. Phase 7 handoff\n",
+            1,
+        )
         extra_task_bullet = roadmap.replace(
             jit_line,
             jit_line + "- implementation may begin once these planning tasks are complete.\n",
@@ -1327,6 +1338,8 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             "required JIT bullet duplicated": duplicate_jit,
             "OQ-039 bullet relocated outside section 21": relocated_oq039,
             "OQ-039 outside §21 has an appended clause": relocated_oq039_with_appended_clause,
+            "invalid backtick-info pseudo-fence cannot hide relocated OQ-039": invalid_backtick_info_cannot_hide_relocated_requirement,
+            "four-space pseudo-fence cannot hide relocated OQ-039": four_space_pseudo_fence_cannot_hide_relocated_requirement,
             "unrecognised eighth task bullet": extra_task_bullet,
             "eighth star task bullet": extra_star_task_bullet,
             "eighth plus task bullet": extra_plus_task_bullet,
