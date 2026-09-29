@@ -30,12 +30,12 @@ PREDECESSOR_SHA256 = {
 }
 
 EXPECTED_CURRENT = {
-    "PROJECT_NORTH_STAR_AND_MVP": ("PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md", "1.2.4"),
-    "PLATFORM_BASELINE": ("00_PLATFORM_v1.5.1.md", "1.5.1"),
+    "PROJECT_NORTH_STAR_AND_MVP": ("PROJECT_NORTH_STAR_AND_MVP_v1.2.5.md", "1.2.5"),
+    "PLATFORM_BASELINE": ("00_PLATFORM_v1.5.2.md", "1.5.2"),
     "DECISION_REGISTER": ("01_DECISIONS_v1.5.0.md", "1.5.0"),
-    "OPEN_WORK": ("02_OPEN_WORK_v1.2.50.md", "1.2.50"),
+    "OPEN_WORK": ("02_OPEN_WORK_v1.2.51.md", "1.2.51"),
     "DOMAIN_MAP": ("04_DOMAIN_MAP_v1.2.0.md", "1.2.0"),
-    "ROADMAP": ("05_ROADMAP_v1.1.5.md", "1.1.5"),
+    "ROADMAP": ("05_ROADMAP_v1.1.6.md", "1.1.6"),
 }
 
 
@@ -281,7 +281,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
 
     def test_current_routes_are_current_and_old_paths_remain_archived(self):
-        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.2.md"
+        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.3.md"
         self.assertEqual(
             atlas_path,
             self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"][0],
@@ -316,10 +316,10 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             self.assertNotIn(stale_name, current_section)
         immediate_next_action = self.open_work.split("# 9. Immediate Next Action", 1)[1].split("```text", 1)[0]
         for current_name in (
-            "00_PLATFORM_v1.5.1.md",
+            "00_PLATFORM_v1.5.2.md",
             "01_DECISIONS_v1.5.0.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "DELIVERY_ATLAS_WORKING_v0.3.2.md",
+            "DELIVERY_ATLAS_WORKING_v0.3.3.md",
         ):
             self.assertIn(current_name, immediate_next_action)
         for stale_name in (
@@ -369,7 +369,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertEqual(predecessor_gates, current_gates)
         self.assertIn("DOL-01", self.open_work)
         self.assertIn("REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED", self.open_work)
-        self.assertIn("HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.open_work)
+        self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.open_work)
 
 
 if __name__ == "__main__":
