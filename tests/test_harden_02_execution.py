@@ -39,8 +39,8 @@ CONTRACT_STATUS = "COMPLETE / CERTIFIED"
 
 EXPECTED_ARCHIVE_SHA256 = {
     OPEN_WORK_PREDECESSOR: "ea99015d5fca34211e9c85e9f6575e8ad69df2cf9a39da3b255f2e9d3a5abcb7",
-    CONTRACT_PREDECESSOR: "0000000000000000000000000000000000000000000000000000000000000000",
-    ATLAS_PREDECESSOR: "0000000000000000000000000000000000000000000000000000000000000000",
+    CONTRACT_PREDECESSOR: "496df83ba06d3e3ad1e871b8415a5352147662ae694005d945359f7b1f7976da",
+    ATLAS_PREDECESSOR: "b24bcaaac4f82617a766f1602418e8301a5076594d9ac8f90afb302174bf706e",
 }
 
 EXPECTED_DOWNSTREAM_ROUTE = [
@@ -923,7 +923,7 @@ def _normalise_contract_successor(successor: str, predecessor: str) -> str:
 
 def _normalise_atlas_successor(successor: str, predecessor: str) -> str:
     restored = successor
-    restored = _replace_exact(restored, "# Delivery Atlas working v0.3.3", "# Delivery Atlas working v0.3.3")
+    restored = _replace_exact(restored, "# Delivery Atlas working v0.3.3", "# Delivery Atlas working v0.3.2")
     restored = _replace_exact(
         restored,
         "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2, v0.2.3, v0.3.0 and v0.3.1 predecessors remain preserved.",
