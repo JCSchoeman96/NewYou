@@ -773,7 +773,10 @@ def _normalise_open_work_successor(successor: str, predecessor: str) -> str:
         raise ValueError("certified execution does not route exclusively to Engineering Standards promotion")
     if successor_state.get("engineering_standards_authority_promotion") != "NEXT / AUTHORISED / NOT STARTED":
         raise ValueError("Engineering Standards promotion is not the sole immediate NEXT stage")
-    _assert_downstream_state(successor_state)
+    try:
+        _assert_downstream_state(successor_state)
+    except AssertionError as exc:
+        raise ValueError(str(exc)) from exc
     matrix = _lifecycle_matrix(successor)
     if matrix["EXECUTION"] != {"status": EXECUTION_MATRIX_STATUS, "evidence": EXECUTION_MATRIX_EVIDENCE}:
         raise ValueError("execution matrix does not bind the certified resulting-main evidence")
