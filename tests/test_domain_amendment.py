@@ -63,7 +63,7 @@ PROTECTED_HASHES = {
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
     "docs/00_platform/working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md": "27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017",
-    ".github/workflows/foundation-integrity.yml": "2c718457456c71ad8d7fc416a6e0a646792271b9341e4a14fedda6ddb02bcdb8",
+    ".github/workflows/foundation-integrity.yml": "1e9161e066465d93ba9b2a74ae103accfd0d732393aff2e797f16fb1d27c6091",
 }
 
 REQUIRED_SUCCESSOR_PATHS = (

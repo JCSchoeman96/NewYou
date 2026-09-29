@@ -311,6 +311,11 @@ SUCCESSOR_NORMALIZATION = {
             ("Status successor v0.4.4", "Status successor v0.4.3", 1),
             ("current status recorded by working v0.4.4", "current status recorded by working v0.4.3", 1),
             ("current North Star v1.2.4:", "current North Star v1.2.3:", 1),
+            (
+                "  - `archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`",
+                "  - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`",
+                1,
+            ),
         ),
     },
     "atlas": {

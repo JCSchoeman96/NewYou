@@ -55,7 +55,7 @@ PROTECTED_UPSTREAM_HASHES = {
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e",
     "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md": "71615d3363a91a7e6002d907c6edd474fbd87f77bdfc6a38f5b11afd240a5626",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md": EXPECTED_ATLAS_V0_2_SHA256,
-    ".github/workflows/foundation-integrity.yml": "2c718457456c71ad8d7fc416a6e0a646792271b9341e4a14fedda6ddb02bcdb8",
+    ".github/workflows/foundation-integrity.yml": "1e9161e066465d93ba9b2a74ae103accfd0d732393aff2e797f16fb1d27c6091",
 }
 
 PROHIBITED_PRESENT_PATHS = (

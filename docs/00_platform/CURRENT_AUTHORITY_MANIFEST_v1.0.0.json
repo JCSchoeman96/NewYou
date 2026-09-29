@@ -43,10 +43,10 @@
       "semver": "1.2.50",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.50.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "ea99015d5fca34211e9c85e9f6575e8ad69df2cf9a39da3b255f2e9d3a5abcb7",
+      "sha256": "8defa430be6fd6c013ec7b28203e73e4fdfc82bdb6a444636fcad0a2389823d4",
       "superseded_version": "1.2.49",
       "lifecycle": "current",
-      "provenance_sha256": "ea99015d5fca34211e9c85e9f6575e8ad69df2cf9a39da3b255f2e9d3a5abcb7"
+      "provenance_sha256": "8defa430be6fd6c013ec7b28203e73e4fdfc82bdb6a444636fcad0a2389823d4"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -145,16 +145,6 @@
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "0d8e25170ae692df39f7f771189f95ab76ab64f2701823fb2cde214946650d3f"
-    },
-    {
-      "document_id": "FOUNDATION_INTEGRITY_AUDIT",
-      "canonical_filename": "FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md",
-      "semver": "1.0.0",
-      "repository_path": "docs/00_platform/reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md",
-      "authority_class": "FOUNDATION_INTEGRITY_EVIDENCE",
-      "sha256": "3f53066c22c1590b965cf4be71683987e6bc746478ec41084387255fff3c642d",
-      "superseded_version": null,
-      "lifecycle": "current"
     }
   ],
   "historical_documents": [
@@ -284,6 +274,18 @@
       "lifecycle": "historical"
     },
     {
+      "document_id": "FOUNDATION_INTEGRITY_AUDIT_V1_0_0",
+      "canonical_filename": "FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md",
+      "authority_class": "FOUNDATION_INTEGRITY_HISTORICAL_EVIDENCE",
+      "sha256": "3f53066c22c1590b965cf4be71683987e6bc746478ec41084387255fff3c642d",
+      "superseded_version": null,
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "3f53066c22c1590b965cf4be71683987e6bc746478ec41084387255fff3c642d"
+    },
+    {
       "document_id": "DECISION_REGISTER_V1_2_1",
       "canonical_filename": "01_DECISIONS_v1.2.1.md",
       "semver": "1.2.1",
@@ -409,6 +411,39 @@
       "superseded_version": "1.2.32",
       "lifecycle": "historical",
       "provenance_sha256": "3a3747e3496f7b39c4db142cf08d566b7b7c0dc3e77453947aa89fd451f8ab30"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_32",
+      "canonical_filename": "02_OPEN_WORK_v1.2.32.md",
+      "semver": "1.2.32",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.32.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "ed68c4c5264f07226de3844801402e97e4acd9ed4bbeda086fad284559ddbf63",
+      "superseded_version": "1.2.33",
+      "lifecycle": "historical",
+      "provenance_sha256": "ed68c4c5264f07226de3844801402e97e4acd9ed4bbeda086fad284559ddbf63"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_33",
+      "canonical_filename": "02_OPEN_WORK_v1.2.33.md",
+      "semver": "1.2.33",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.33.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "deb0a4ea8584dd1a858f2954470957562d95bbce99d35b6ae165feb306a2605f",
+      "superseded_version": "1.2.34",
+      "lifecycle": "historical",
+      "provenance_sha256": "deb0a4ea8584dd1a858f2954470957562d95bbce99d35b6ae165feb306a2605f"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_34",
+      "canonical_filename": "02_OPEN_WORK_v1.2.34.md",
+      "semver": "1.2.34",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.34.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "2a45d350643199000993474c77d61c0ebf68f13921641b40432e6616ad927598",
+      "superseded_version": "1.2.35",
+      "lifecycle": "historical",
+      "provenance_sha256": "2a45d350643199000993474c77d61c0ebf68f13921641b40432e6616ad927598"
     },
     {
       "document_id": "TARGETED_PRODUCT_AMENDMENT_GRILL",
@@ -667,7 +702,7 @@
       "repository_path": "docs/00_platform/archive/03_ARCHITECTURE_v1.1.0.md",
       "authority_class": "ARCHITECTURE_SYNTHESIS_HISTORICAL",
       "sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
-      "superseded_version": "1.0.0",
+      "superseded_version": "1.1.1",
       "lifecycle": "historical",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852"
@@ -679,7 +714,7 @@
       "repository_path": "docs/00_platform/archive/04_DOMAIN_MAP_v1.1.0.md",
       "authority_class": "DOMAIN_LAW_HISTORICAL",
       "sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2",
-      "superseded_version": "1.0.0",
+      "superseded_version": "1.1.1",
       "lifecycle": "historical",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "2c66142e624ccd626727ae36511121fcb64333ca774986ab97ce31eebe5c5ef2"
@@ -691,7 +726,7 @@
       "repository_path": "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.0.md",
       "authority_class": "PLATFORM_OPERATING_MODEL_HISTORICAL",
       "sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
-      "superseded_version": null,
+      "superseded_version": "1.0.1",
       "lifecycle": "historical",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811"
@@ -703,7 +738,7 @@
       "repository_path": "docs/00_platform/archive/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",
       "authority_class": "FRONTEND_EXPERIENCE_SYSTEM_HISTORICAL",
       "sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3",
-      "superseded_version": null,
+      "superseded_version": "1.0.1",
       "lifecycle": "historical",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "caadd2dfc3c7ed872fda5806efdba467d753b9662e1ff47af16b6303d90b9fa3"
@@ -882,7 +917,8 @@
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.48\\.md",
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.3\\.0\\.md",
         "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.4\\.2\\.md",
-        "(?<!archive/)05_ROADMAP_v1\\.1\\.4\\.md"
+        "(?<!archive/)05_ROADMAP_v1\\.1\\.4\\.md",
+        "(?<!archive/)FOUNDATION_INTEGRITY_AUDIT_v1\\.0\\.0\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",

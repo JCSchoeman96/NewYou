@@ -350,6 +350,56 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
             self.assertEqual("PASS", graph_check["status"], graph_check["message"])
 
+    def test_stale_reference_route_rejects_former_integrity_audit_reference_path(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            product_entry = next(
+                item for item in json.loads(manifest_path.read_text(encoding="utf-8"))["governing_documents"]
+                if item["document_id"] == "PLATFORM_BASELINE"
+            )
+            path = root / product_entry["repository_path"]
+            path.write_text(
+                path.read_text(encoding="utf-8")
+                + "\nStale route: reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md\n",
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("FAIL", graph_check["status"], graph_check["message"])
+            self.assertIn(product_entry["repository_path"], graph_check["message"])
+            self.assertIn("FOUNDATION_INTEGRITY_AUDIT", graph_check["message"])
+
+    def test_archived_integrity_audit_reference_is_allowed_in_current_authority(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            product_entry = next(
+                item for item in json.loads(manifest_path.read_text(encoding="utf-8"))["governing_documents"]
+                if item["document_id"] == "PLATFORM_BASELINE"
+            )
+            path = root / product_entry["repository_path"]
+            path.write_text(
+                path.read_text(encoding="utf-8")
+                + "\nHistorical evidence: archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md\n",
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("PASS", graph_check["status"], graph_check["message"])
+
     def test_declared_working_navigation_path_is_scanned_for_stale_references(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -720,6 +770,27 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                     and finding["path"] == north_star["repository_path"]
                     for finding in report["findings"]
                 )
+            )
+
+    def test_unregistered_governing_root_authority_document_fails_audit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            shutil.copytree(source_docs, root / "docs" / "00_platform")
+            manifest_path = root / "docs" / "00_platform" / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            stale_copy = root / "docs" / "00_platform" / "00_PLATFORM_v1.4.1.md"
+            archive_copy = root / "docs" / "00_platform" / "archive" / "00_PLATFORM_v1.4.1.md"
+            shutil.copyfile(archive_copy, stale_copy)
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    finding["check"] == "governing_root_exclusivity"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
             )
 
     def test_explicit_current_routes_in_roadmap_atlas_and_harden_resolve_relationally(self):
