@@ -22,7 +22,7 @@
   - `working/DELIVERY_ATLAS_WORKING_v0.3.3.md`
   - `working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md`
   - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.1.md` (status predecessor; preserved byte-identically)
-  - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` (certified contract semantics; lifecycle completion is recorded in current v0.4.4)
+  - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` (certified contract semantics; lifecycle completion is recorded in current v0.4.5)
   - `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` (merged via PR #39; v0.3.0 lifecycle not retroactively certified)
   - `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` (historical, not repository-verifiably certified)
   - `03_ARCHITECTURE_v1.1.1.md`
@@ -929,7 +929,7 @@ DOMAIN PRESSURE TEST: COMPLETE
 DOMAIN AMENDMENT: COMPLETE — current Domain Map v1.2.0 (semantic successor to archived v1.1.1) / 20 Domains / Domain 19 Research & Feedback / Domain 20 Voting & Balloting
 ROADMAP SEQUENCING GRILL: COMPLETE
 ROADMAP AMENDMENT: COMPLETE — current Roadmap 05_ROADMAP_v1.1.6.md; Feature Packs 17
-ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.3.md`; immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.1.md`; pinned v0.2.1 source-at-freeze artifacts remain preserved; DERIVED / NON-AUTHORITATIVE; ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12
+ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.3.md`; immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md`; pinned v0.2.1 source-at-freeze artifacts remain preserved; DERIVED / NON-AUTHORITATIVE; ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12
 HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED
 PRE-MERGE CERTIFICATION: COMPLETE — PR #40 exact head cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4; pre-merge attestation https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5827553565
 EXACT-HEAD FOUNDATION INTEGRITY: PASS — run https://github.com/JCSchoeman96/NewYou/actions/runs/36091130615
@@ -979,7 +979,7 @@ The retained non-blocking correction is direct helper-level mutation coverage fo
 <!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:START -->
 | gate | status | evidence |
 |---|---|---|
-| `CONTRACT_LIFECYCLE` | `COMPLETE / CERTIFIED` | `original v0.4.0 semantics; current status recorded by working v0.4.4` |
+| `CONTRACT_LIFECYCLE` | `COMPLETE / CERTIFIED` | `original v0.4.0 semantics; current status recorded by working v0.4.5` |
 | `PRE_MERGE_CERTIFICATION` | `COMPLETE` | `PR #40 head cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4; https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5827553565` |
 | `EXACT_HEAD_CI` | `PASS` | `https://github.com/JCSchoeman96/NewYou/actions/runs/36091130615 on cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4` |
 | `CERTIFIED_HEAD_MERGE` | `COMPLETE_UNCHANGED` | `352f304139b9d4f8ee3ba205cde9e34d0ad8437f; second parent cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4; same tree` |
