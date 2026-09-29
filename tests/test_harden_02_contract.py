@@ -10,8 +10,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 CONTRACT = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md"
-CONTRACT_CURRENT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
-CONTRACT_STATUS_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
+CONTRACT_CURRENT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.5.md"
+CONTRACT_STATUS_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
 CONTRACT_V0_4_1_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.1.md"
 CONTRACT_V0_3_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.3.0.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md"
@@ -456,19 +456,21 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.1.md").exists())
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.44.md").exists())
 
-    def test_v0_4_4_updates_current_routing_without_changing_contract_semantics(self):
+    def test_v0_4_5_records_certified_execution_without_changing_contract_semantics(self):
         self.assertEqual(
-            "86682d7e019c30fcb7940af8e4bc1c9112a480bce199419c10f0f9b7670f90dc",
+            "496df83ba06d3e3ad1e871b8415a5352147662ae694005d945359f7b1f7976da",
             _sha256(CONTRACT_STATUS_PREDECESSOR),
         )
-        self.assertIn("Plan / contract version:** `v0.4.4`", self.current_contract)
+        self.assertIn("Plan / contract version:** `v0.4.5`", self.current_contract)
         self.assertIn("original v0.4.0 semantics are certified", self.current_contract)
         self.assertIn("Execution-start baseline main SHA", self.current_contract)
-        self.assertIn("IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.current_contract)
+        self.assertIn("HARDEN-02 execution **COMPLETE / CERTIFIED**", self.current_contract)
         current_status = self.current_contract.split("### 11.5 PR #40 lifecycle evidence and current state", 1)[1]
-        self.assertIn("This v0.4.4 current-source-routing/provenance successor", current_status)
+        self.assertIn("### 11.6 HARDEN-02 execution certification evidence", current_status)
         self.assertNotIn("post-merge attestation remain pending", current_status)
         self.assertNotIn("contract lifecycle remains open", current_status)
+        self.assertIn("5890574449", current_status)
+        self.assertIn("PASS WITH NON-BLOCKING CORRECTIONS", current_status)
         for start, end in (
             ("## 1. Objective", "## 2. Authority basis"),
             ("## 3. Accepted human scope decisions", "## 4. In scope"),
@@ -501,13 +503,10 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertNotIn("- execute harden-02;", current_stop_folded)
         self.assertIn("the original v0.4.0 contract lifecycle remains complete / certified", current_stop_folded)
         self.assertIn("do not reopen it", current_stop_folded)
-        self.assertIn("this status-sync artifact itself does not execute harden-02", current_stop_folded)
-        self.assertIn("current harden-02 execution is in progress / not complete / certification pending", current_stop_folded)
-        self.assertIn("do not mark execution complete / certified until i-01…i-13 execution proofs pass", current_stop_folded)
-        self.assertIn(
-            "applicable unchanged-merge, resulting-main ci, fresh post-merge review and durable post-merge certification lifecycle is complete",
-            current_stop_folded,
-        )
+        self.assertIn("this status-sync artifact records already-certified harden-02 execution", current_stop_folded)
+        self.assertIn("harden-02 execution is complete / certified", current_stop_folded)
+        self.assertIn("engineering standards authority promotion is next / authorised / not started", current_stop_folded)
+        self.assertIn("prospective recovery lifecycle is complete", current_stop_folded)
         self.assertIn("engineering standards authority promotion", current_stop_folded)
         self.assertIn("fp-001 reconciliation", current_stop_folded)
         self.assertIn("communications", current_stop_folded)
@@ -569,11 +568,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             else:
                 self.assertEqual(predecessor_section, successor_section)
 
-    def test_execution_is_current_stage_and_rejects_appended_routes(self):
+    def test_certified_execution_routes_only_to_engineering_standards_promotion(self):
         historical_label = "HARDEN-02 CONTRACT RECOVERY / SOLO-MAINTAINER CERTIFICATION AMENDMENT"
         historical_next = "HARDEN-02_CONTRACT_RECOVERY_REQUIRED"
-        current_label = "HARDEN-02 EXECUTION / STRUCTURAL HARDENING"
-        current_next = "HARDEN-02_EXECUTION_REQUIRED"
+        current_label = "ENGINEERING STANDARDS AUTHORITY PROMOTION"
+        current_next = "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED"
         historical_open_work_current = _route_declaration(self.open_work, "CURRENT AUTHORITY-STAGE PROGRAMME")
         current_open_work_current = _route_declaration(self.current_open_work, "CURRENT AUTHORITY-STAGE PROGRAMME")
         readme_current = _route_declaration(self.readme, "CURRENT AUTHORITY-STAGE PROGRAMME")
@@ -588,9 +587,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual(current_next, readme_next)
         self.assertEqual(EXPECTED_RECOVERY_STATE, self.recovery_state)
         _assert_no_current_execution_authority(self.open_work)
-        self.assertEqual("IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.current_lifecycle_state["harden_02_execution"])
-        self.assertNotIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.current_open_work)
-        self.assertNotIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.readme)
+        self.assertEqual("COMPLETE / CERTIFIED", self.current_lifecycle_state["harden_02_execution"])
+        self.assertEqual("NEXT / AUTHORISED / NOT STARTED", self.current_lifecycle_state["engineering_standards_authority_promotion"])
+        self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.current_open_work)
+        self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.readme)
+        self.assertNotIn("HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.readme)
 
         conflicting_text = (
             self.open_work
@@ -909,11 +910,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
 
     def test_readme_open_work_and_manifest_route_the_lifecycle_successor(self):
         self.assertIn(self.current_open_work_path.name, self.readme)
-        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md", self.readme)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md", self.readme)
         self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
         self.assertNotIn("POST-MERGE CERTIFICATION: PENDING", self.readme)
         self.assertIn("POST-MERGE CERTIFICATION: COMPLETE", self.readme)
-        self.assertIn("IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.readme)
+        self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.readme)
         self.assertNotIn("PENDING INDEPENDENT PRE-MERGE CERTIFICATION", self.readme)
         self.assertIn("archive/02_OPEN_WORK_v1.2.44.md", self.readme)
         self.assertIn("archive/02_OPEN_WORK_v1.2.48.md", self.readme)
@@ -924,11 +925,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.50", current["OPEN_WORK"]["semver"])
+        self.assertEqual("1.2.51", current["OPEN_WORK"]["semver"])
         self.assertEqual(self.current_open_work_path, ROOT / current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(self.current_open_work_path), current["OPEN_WORK"]["sha256"])
         navigation_paths = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
-        self.assertIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md", navigation_paths)
+        self.assertIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md", navigation_paths)
         self.assertNotIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md", navigation_paths)
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_47"]["lifecycle"])
@@ -958,7 +959,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual("PASS", state["resulting_main_ci"])
         self.assertEqual("PASS", state["post_merge_independent_review"])
         self.assertEqual("COMPLETE", state["post_merge_attestation"])
-        self.assertEqual("IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", state["harden_02_execution"])
+        self.assertEqual("COMPLETE / CERTIFIED", state["harden_02_execution"])
         self.assertEqual("cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4", state["pr_40_certified_head"])
         self.assertEqual("352f304139b9d4f8ee3ba205cde9e34d0ad8437f", state["pr_40_merged_sha"])
         self.assertEqual("9411b34b646d7752d2942afca1363830d3b25f10", state["status_successor_base_sha"])
@@ -997,10 +998,10 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             "https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5830618876",
             state["post_merge_attestation_url"],
         )
-        self.assertEqual("IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", _route_declaration(self.current_open_work, "HARDEN-02 EXECUTION"))
+        self.assertEqual("COMPLETE / CERTIFIED", _route_declaration(self.current_open_work, "HARDEN-02 EXECUTION"))
         self.assertNotIn("POST-MERGE INDEPENDENT INSPECTION AND ATTESTATION PENDING", self.current_open_work)
         self.assertNotIn("POST-MERGE CERTIFICATION: PENDING", self.readme)
-        self.assertEqual("DOWNSTREAM / NOT STARTED", state["engineering_standards_authority_promotion"])
+        self.assertEqual("NEXT / AUTHORISED / NOT STARTED", state["engineering_standards_authority_promotion"])
         self.assertEqual("REQUIRED / DOWNSTREAM / NOT PERFORMED", state["fp001_reconciliation"])
         self.assertEqual("REQUIRED / NOT_STARTED", state["communications"])
         self.assertEqual("CONDITIONAL / PENDING EXPLICIT ADJUDICATION", state["conditional_dossiers"]["privacy_consent"])
@@ -1011,6 +1012,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertEqual("NOT FINALISED", state["proof_classification"])
         self.assertEqual("BLOCKED", state["application_implementation"])
         self.assertEqual("STALE / BLOCKED / NOT AUTHORITY", state["pr_38"])
+        self.assertEqual("0dd89f749eb3d3dbd659d1f6f01485984952ddfd", state["execution_certification_recovery_candidate_sha"])
+        self.assertEqual("6fea69eadf18f2fb79d78c2a94ab035b10abe31f", state["execution_certification_resulting_main_sha"])
+        self.assertEqual("36567933267", state["execution_certification_resulting_main_ci_run"])
+        self.assertEqual("PASS WITH NON-BLOCKING CORRECTIONS", state["execution_certification_post_merge_review"])
+        self.assertEqual("https://github.com/JCSchoeman96/NewYou/pull/59#issuecomment-5890574449", state["execution_certification_post_merge_attestation_url"])
 
     def test_active_open_work_sections_do_not_route_to_historical_contract_recovery(self):
         active_sections = (

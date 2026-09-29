@@ -11,7 +11,7 @@ from tests.test_atlas_authority_boundary import _normalise_atlas_successor
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.3.md"
 ATLAS_SEMANTIC_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.0.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.3.md"
 ATLAS_V0_2_2 = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.2.md"
@@ -19,7 +19,7 @@ ATLAS_V0_2_1 = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
 ATLAS_V0_2_0 = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
 ATLAS_OLDER_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
-CURRENT_OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.50.md"
+CURRENT_OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.51.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 OPEN_WORK_V1_2_40 = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
@@ -132,7 +132,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
             _sha256(DOCS / "archive" / "02_OPEN_WORK_v1.2.38.md"),
         )
         self.assertTrue(ATLAS.is_file())
-        self.assertIn("v0.3.1 → v0.3.2", self.atlas)
+        self.assertIn("v0.3.2 → v0.3.3", self.atlas)
         self.assertIn("PATCH", self.atlas)
         self.assertNotIn("working/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.atlas)
         self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.atlas)
@@ -177,8 +177,8 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("ATLAS_RECONCILIATION", self.atlas)
         self.assertIn("ATLAS-12 NOT_STARTED", self.current_open_work)
         self.assertIn("reconciliation is not ATLAS-12", self.current_open_work)
-        self.assertIn("current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.2.md`", self.current_open_work)
-        self.assertIn("HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.current_open_work)
+        self.assertIn("current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.3.md`", self.current_open_work)
+        self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.current_open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED: REQUIRED", self.current_open_work)
         self.assertIn("COMMUNICATIONS: REQUIRED / NOT_STARTED", self.current_open_work)
         self.assertIn("PHASE 7C: BLOCKED / NOT_STARTED", self.current_open_work)
@@ -186,11 +186,11 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
 
     def test_current_source_routing_refreshed(self):
         sources = _section(self.atlas, "## 1.1 Authority hierarchy", "## 1.2 Purpose")
-        self.assertIn("00_PLATFORM_v1.5.1.md", sources)
+        self.assertIn("00_PLATFORM_v1.5.2.md", sources)
         self.assertIn("01_DECISIONS_v1.5.0.md", sources)
         self.assertIn("03_ARCHITECTURE_v1.1.1.md", sources)
         self.assertIn("04_DOMAIN_MAP_v1.2.0.md", sources)
-        self.assertIn("05_ROADMAP_v1.1.5.md", sources)
+        self.assertIn("05_ROADMAP_v1.1.6.md", sources)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
@@ -321,11 +321,11 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
 
     def test_open_work_readme_routing(self):
         self.assertIn("ATLAS RECONCILIATION: COMPLETE", self.current_open_work)
-        self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.current_open_work)
-        self.assertIn("HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.current_open_work)
+        self.assertIn("ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", self.current_open_work)
+        self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.current_open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.current_open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.current_open_work)
-        self.assertIn("DELIVERY_ATLAS_WORKING_v0.3.2.md", self.readme)
+        self.assertIn("DELIVERY_ATLAS_WORKING_v0.3.3.md", self.readme)
         self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.2.3.md", self.readme)
         self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.2.2.md", self.readme)
         self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.2.1.md", self.readme)
@@ -338,7 +338,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
             "archive/DELIVERY_ATLAS_WORKING_v0.2.3.md` — preserved predecessor to archived working Atlas v0.3.0",
             self.readme,
         )
-        self.assertIn("HARDEN-02_EXECUTION_REQUIRED", self.readme)
+        self.assertIn("ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", self.readme)
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
@@ -366,7 +366,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
             self.assertFalse((ROOT / relative_path).exists(), relative_path)
         # Atlas must not invent HARDEN-02 law; later governed successors may advance independently.
         self.assertIn("HARDEN-02 artifacts are not amended by this successor", self.atlas)
-        self.assertTrue((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md").is_file())
+        self.assertTrue((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.5.md").is_file())
         self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md").is_file())
         self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md").is_file())
         self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md").is_file())

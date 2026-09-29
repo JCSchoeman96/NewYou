@@ -9,22 +9,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ROADMAP = DOCS / "05_ROADMAP_v1.1.5.md"
-ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.1.4.md"
-ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.4.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.50.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
+ROADMAP = DOCS / "05_ROADMAP_v1.1.6.md"
+ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.1.5.md"
+ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.5.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.51.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.3.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-ROADMAP_V1_1_4_SHA256 = "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
+ROADMAP_V1_1_5_SHA256 = "5e5e938343d3ff7210515011b0bc9e11900553bcde24a552ef61cd2c85e7c5fb"
 
 PATCH_SCOPE = (
-    "## v1.1.5 Patch Scope\n\n"
-    "This routing-only PATCH updates the explicit current Product-authority route. It preserves all 17 Feature Packs, outcomes, sequencing, dependencies, gates, proof semantics, implementation STOP and programme lifecycle state. README and current Open Work retain programme routing responsibility.\n\n"
+    "## v1.1.6 Patch Scope\n\n"
+    "This routing-only PATCH refreshes the explicit current Product-authority route after certified HARDEN-02 execution. It preserves all 17 Feature Packs, outcomes, sequencing, dependencies, gates, §21 task-contract/proof semantics, and the implementation STOP. README and current Open Work retain programme routing responsibility. No downstream stage is completed by this Roadmap patch.\n\n"
 )
 PATCH_SCOPE_INSERTION = (
-    "---\n\n"
-    + PATCH_SCOPE
+    PATCH_SCOPE
     + "# 1. Authority, purpose and boundaries"
 )
 
@@ -35,42 +34,32 @@ def _sha256(path: Path) -> str:
 
 def _normalise_roadmap_successor(successor: str, predecessor: str) -> str:
     route_marker = "- **Current programme routing:** `README.md` and the current Open Work path it identifies."
-    route_count = successor.count(route_marker)
-    if route_count != 1:
-        raise ValueError(f"expected one dynamic Roadmap routing marker, found {route_count}")
-    scope_count = successor.count(PATCH_SCOPE)
-    if scope_count != 1:
-        raise ValueError(f"expected one v1.1.5 Patch Scope, found {scope_count}")
-
+    if successor.count(route_marker) != 1:
+        raise ValueError("Roadmap current-routing marker is missing or duplicated")
+    if successor.count(PATCH_SCOPE) != 1 or successor.count(PATCH_SCOPE_INSERTION) != 1:
+        raise ValueError("Roadmap v1.1.6 Patch Scope is missing, duplicated, or relocated")
+    normalised = successor
     replacements = (
-        ("# 05_ROADMAP_v1.1.5.md", "# 05_ROADMAP_v1.1.4.md"),
-        ("**Document version:** v1.1.5", "**Document version:** v1.1.4"),
-        ("**Last updated:** 2026-09-29", "**Last updated:** 2026-09-26"),
-        ("`archive/05_ROADMAP_v1.1.4.md`", "`archive/05_ROADMAP_v1.1.3.md`"),
-        ("`v1.1.4 → v1.1.5`", "`v1.1.3 → v1.1.4`"),
+        ("# 05_ROADMAP_v1.1.6.md", "# 05_ROADMAP_v1.1.5.md"),
+        ("**Document version:** v1.1.6", "**Document version:** v1.1.5"),
+        ("`archive/05_ROADMAP_v1.1.5.md`", "`archive/05_ROADMAP_v1.1.4.md`"),
+        ("`v1.1.5 → v1.1.6`", "`v1.1.4 → v1.1.5`"),
         (
+            "- **Current Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.5.md`, `00_PLATFORM_v1.5.2.md`, `01_DECISIONS_v1.5.0.md`",
             "- **Current Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md`, `00_PLATFORM_v1.5.1.md`, `01_DECISIONS_v1.5.0.md`",
-            "- **Current Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md`, `00_PLATFORM_v1.5.0.md`, `01_DECISIONS_v1.5.0.md`",
         ),
     )
-    normalised = successor
     for current, previous in replacements:
-        count = normalised.count(current)
-        if count != 1:
-            raise ValueError(f"expected one Roadmap successor marker {current!r}, found {count}")
+        if normalised.count(current) != 1:
+            raise ValueError(f"expected one Roadmap successor marker {current!r}")
         normalised = normalised.replace(current, previous, 1)
-    insertion_count = normalised.count(PATCH_SCOPE_INSERTION)
-    if insertion_count != 1:
-        raise ValueError(
-            f"expected one v1.1.5 Patch Scope at its declared insertion point, found {insertion_count}"
-        )
     normalised = normalised.replace(
         PATCH_SCOPE_INSERTION,
-        "---\n\n# 1. Authority, purpose and boundaries",
+        "# 1. Authority, purpose and boundaries",
         1,
     )
     if normalised != predecessor:
-        raise ValueError("Roadmap successor differs outside the declared routing patch")
+        raise ValueError("Roadmap v1.1.6 differs from v1.1.5 outside declared route/self-state patch")
     return normalised
 
 
@@ -99,7 +88,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertTrue(ROADMAP_PREDECESSOR.is_file(), ROADMAP_PREDECESSOR)
         if not ROADMAP.is_file() or not ROADMAP_PREDECESSOR.is_file():
             return
-        self.assertEqual(ROADMAP_V1_1_4_SHA256, _sha256(ROADMAP_PREDECESSOR))
+        self.assertEqual(ROADMAP_V1_1_5_SHA256, _sha256(ROADMAP_PREDECESSOR))
         self.assertEqual(self.predecessor, _normalise_roadmap_successor(self.roadmap, self.predecessor))
 
     def test_normalizer_fails_closed_on_missing_duplicate_or_relocated_markers(self):
@@ -119,8 +108,8 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
             1,
         )
         relocated_scope = self.roadmap.replace(
-            "\n\n" + PATCH_SCOPE + "---\n\n# 1. Authority, purpose and boundaries",
-            "\n\n---\n\n# 1. Authority, purpose and boundaries",
+            PATCH_SCOPE_INSERTION,
+            "# 1. Authority, purpose and boundaries",
             1,
         ) + "\n" + PATCH_SCOPE
         for malformed in (missing_route, duplicate_scope, duplicate_route, relocated_scope):
@@ -129,17 +118,17 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
                     _normalise_roadmap_successor(malformed, self.predecessor)
 
     def test_roadmap_dynamic_routing_resolves_through_readme_and_manifest(self):
-        self.assertTrue(self.roadmap, "current Roadmap v1.1.5 must exist")
+        self.assertTrue(self.roadmap, "current Roadmap v1.1.6 must exist")
         manifest_current = {
             item["document_id"]: item
             for item in self.manifest["governing_documents"]
         }
         roadmap = manifest_current["ROADMAP"]
         open_work = manifest_current["OPEN_WORK"]
-        self.assertEqual("05_ROADMAP_v1.1.5.md", roadmap["canonical_filename"])
-        self.assertEqual("docs/00_platform/05_ROADMAP_v1.1.5.md", roadmap["repository_path"])
+        self.assertEqual("05_ROADMAP_v1.1.6.md", roadmap["canonical_filename"])
+        self.assertEqual("docs/00_platform/05_ROADMAP_v1.1.6.md", roadmap["repository_path"])
         self.assertEqual(_sha256(ROADMAP), roadmap["sha256"])
-        self.assertEqual("02_OPEN_WORK_v1.2.50.md", open_work["canonical_filename"])
+        self.assertEqual("02_OPEN_WORK_v1.2.51.md", open_work["canonical_filename"])
 
         header = self.roadmap.split("## Amendment summary", 1)[0]
         route_lines = re.findall(r"(?m)^- \*\*Current programme routing:\*\* (.+)$", header)
@@ -154,12 +143,12 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertIn(f"`{open_work['canonical_filename']}`", default_context)
 
     def test_readme_manifest_open_work_and_atlas_agree_on_current_roadmap(self):
-        current_route = "05_ROADMAP_v1.1.5.md"
+        current_route = "05_ROADMAP_v1.1.6.md"
         self.assertIn(f"`{current_route}`", self.readme)
         self.assertEqual(6, self.open_work.count(current_route))
         self.assertEqual(6, self.atlas.count(current_route))
 
-        stale_current = re.compile(r"(?<!archive/)05_ROADMAP_v1\.1\.4\.md")
+        stale_current = re.compile(r"(?<!archive/)05_ROADMAP_v1\.1\.5\.md")
         for label, text in (
             ("README", self.readme),
             ("current Open Work", self.open_work),
@@ -171,23 +160,23 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
 
         governing = {entry["document_id"]: entry for entry in self.manifest["governing_documents"]}
         self.assertEqual(current_route, governing["ROADMAP"]["canonical_filename"])
-        self.assertEqual("1.1.5", governing["ROADMAP"]["semver"])
+        self.assertEqual("1.1.6", governing["ROADMAP"]["semver"])
         history = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
-        old_roadmap = history["ROADMAP_V1_1_4"]
-        self.assertEqual("05_ROADMAP_v1.1.4.md", old_roadmap["canonical_filename"])
+        old_roadmap = history["ROADMAP_V1_1_5"]
+        self.assertEqual("05_ROADMAP_v1.1.5.md", old_roadmap["canonical_filename"])
         self.assertEqual(
-            "docs/00_platform/archive/05_ROADMAP_v1.1.4.md",
+            "docs/00_platform/archive/05_ROADMAP_v1.1.5.md",
             old_roadmap["repository_path"],
         )
-        self.assertEqual("1.1.5", old_roadmap["superseded_version"])
-        self.assertEqual(ROADMAP_V1_1_4_SHA256, old_roadmap["sha256"])
+        self.assertEqual("1.1.6", old_roadmap["superseded_version"])
+        self.assertEqual(ROADMAP_V1_1_5_SHA256, old_roadmap["sha256"])
 
         patterns = self.manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"]
-        stale_route_guards = [pattern for pattern in patterns if "05_ROADMAP_v1\\.1\\.4\\.md" in pattern]
-        self.assertEqual([r"(?<!archive/)05_ROADMAP_v1\.1\.4\.md"], stale_route_guards)
+        stale_route_guards = [pattern for pattern in patterns if "05_ROADMAP_v1\\.1\\.5\\.md" in pattern]
+        self.assertEqual([r"(?<!archive/)05_ROADMAP_v1\.1\.5\.md"], stale_route_guards)
         guard = re.compile(stale_route_guards[0])
-        self.assertIsNotNone(guard.search("05_ROADMAP_v1.1.4.md"))
-        self.assertIsNone(guard.search("archive/05_ROADMAP_v1.1.4.md"))
+        self.assertIsNotNone(guard.search("05_ROADMAP_v1.1.5.md"))
+        self.assertIsNone(guard.search("archive/05_ROADMAP_v1.1.5.md"))
 
     def test_all_feature_pack_sections_and_section_21_are_exactly_preserved(self):
         old_packs = _feature_pack_sections(self.predecessor)
@@ -204,7 +193,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
 
     def test_patch_scope_is_narrow_and_stage_neutral(self):
         self.assertIn(PATCH_SCOPE.strip(), self.roadmap)
-        scope = self.roadmap.split("## v1.1.5 Patch Scope\n\n", 1)[1].split("\n\n", 1)[0]
+        scope = self.roadmap.split("## v1.1.6 Patch Scope\n\n", 1)[1].split("\n\n", 1)[0]
         self.assertIn("routing-only PATCH", scope)
         self.assertIn("preserves all 17 Feature Packs", scope)
 

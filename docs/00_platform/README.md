@@ -6,13 +6,13 @@ This directory separates current platform authority from deep evidence and histo
 
 For foundation/default planning and delivery-preparation work, read **only** these current-authority documents first:
 
-1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md`
-2. `00_PLATFORM_v1.5.1.md`
+1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.5.md`
+2. `00_PLATFORM_v1.5.2.md`
 3. `01_DECISIONS_v1.5.0.md`
-4. `02_OPEN_WORK_v1.2.50.md`
+4. `02_OPEN_WORK_v1.2.51.md`
 5. `03_ARCHITECTURE_v1.1.1.md`
 6. `04_DOMAIN_MAP_v1.2.0.md`
-7. `05_ROADMAP_v1.1.5.md`
+7. `05_ROADMAP_v1.1.6.md`
 8. `PLATFORM_OPERATING_MODEL_v1.0.1.md`
 
 For frontend, UI, public-experience, design-system, accessibility, SEO, analytics-UI or Feature Pack planning, additionally load:
@@ -36,8 +36,8 @@ The frozen Frontend Experience System is current authority for affected frontend
 `working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are outside the manifest's governing/reference document records. The manifest may list a derived path under graph rules for integrity scanning without elevating it to authority. Read working artifacts only when a task explicitly concerns them; they must not override the nine current-authority documents. They remain working until an explicit freeze review and governance decision.
 
 - `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register; remains working/non-authoritative provenance.
-- `working/DELIVERY_ATLAS_WORKING_v0.3.2.md` — derived Delivery Atlas navigation with current-source routing for approved Feature Pack planning. It remains working/non-authoritative, outside authority-document records, and is listed only under graph/navigation paths. Atlas navigation may help delivery preparation when relevant; it cannot create a new authority gate or prerequisite. Predecessor v0.3.1 is preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.3.1.md`; v0.2.3 remains preserved at `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`; earlier v0.2.2, v0.2.1 and v0.2.0 files remain at `archive/DELIVERY_ATLAS_WORKING_v0.2.2.md`, `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md` and `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`. The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references.
-- `working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md` — current-source-routing/provenance successor to v0.4.3 for the original v0.4.0 certified HARDEN-02 contract semantics; PR #40 exact-head certification, unchanged merge, both exact-SHA Foundation Integrity runs, fresh independent post-merge review and durable post-merge attestation are COMPLETE / PASS. HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. Working contracts remain outside the authority-document records in `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Predecessor status record v0.4.3 is preserved byte-identically at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.3.md`; earlier v0.4.1 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.1.md`; archived v0.4.2 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.2.md`; certified contract artifact v0.4.0 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md`.
+- `working/DELIVERY_ATLAS_WORKING_v0.3.3.md` — derived Delivery Atlas navigation with current-source routing for approved Feature Pack planning. It remains working/non-authoritative, outside authority-document records, and is listed only under graph/navigation paths. Predecessor v0.3.2 is preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md`; earlier Atlas predecessors remain preserved. Atlas navigation may help delivery preparation when relevant; it cannot create a new authority gate or prerequisite. The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references.
+- `working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md` — execution-certification status successor preserving the original v0.4.0 certified HARDEN-02 contract semantics. HARDEN-02 execution is COMPLETE / CERTIFIED on final recovery resulting main `6fea69eadf18f2fb79d78c2a94ab035b10abe31f`; Engineering Standards Authority Promotion is NEXT / AUTHORISED / NOT STARTED. The fresh PR #59 post-merge review outcome is PASS WITH NON-BLOCKING CORRECTIONS and durable attestation is recorded at comment `5890574449`. Predecessor v0.4.4 is preserved byte-identically at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.4.md`. Working contracts remain outside the authority-document records in `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md` — active Phase 7A planning artifact; OQ-034 is resolved for architecture selection and its Phase 8 executable proof remains incomplete; PMR reconciliation remains downstream and is not performed; intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Predecessor preserved at `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md`.
 - `working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md` — non-authoritative Stage 3B classification; it does not amend Product Law, AR-000, Architecture Law or Engineering Standards and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md` — non-authoritative Stage 4A Architecture Grill evidence; it does not amend Product Law, AR-000 or Architecture Law, creates no ARC identifiers, and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
@@ -47,7 +47,7 @@ The frozen Frontend Experience System is current authority for affected frontend
 
 ## Delivery Atlas routing
 
-Use the [Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.2.md) during delivery preparation when its derived navigation helps with an approved Roadmap Feature Pack or a relevant planning question. Consulting the Atlas is not itself a gate or prerequisite. It does not override the nine current-authority documents above, change Product/Architecture/Domain/Roadmap law, authorise Phase 7 or authorise implementation.
+Use the [Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.3.md) during delivery preparation when its derived navigation helps with an approved Roadmap Feature Pack or a relevant planning question. Consulting the Atlas is not itself a gate or prerequisite. It does not override the nine current-authority documents above, change Product/Architecture/Domain/Roadmap law, authorise Phase 7 or authorise implementation.
 
 Do not load the whole Atlas by default. Load only the relevant sections: the Feature Pack and capability views in §§4–5, active-FP derivation contracts in §§6–12, and the routing/governance rules in §§23–25 as needed. Every material Atlas conclusion must resolve to an exact current upstream authority reference. The Atlas may point to the canonical Phase 7A Feature Pack Skeleton + preliminary Gate Manifest → Phase 7B required JIT Domain Dossiers → Phase 7C Final Feature Pack Contract sequence when relevant; that navigation adds no gate or artifact, and the Atlas creates none of those artifacts.
 
@@ -170,9 +170,9 @@ Engineering Standards are **not yet current authority**. Current routing require
 ## Current State
 
 - PLANNING FOUNDATION: READY
-- CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING
-- NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED
-- CURRENT PRODUCT LAW: `00_PLATFORM_v1.5.1.md`; DEC-299 through DEC-304 record paid-plan, reversal, consent, provenance, repeat-purchase and marketing unsubscribe scope rules
+- CURRENT AUTHORITY-STAGE PROGRAMME: ENGINEERING STANDARDS AUTHORITY PROMOTION
+- NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED
+- CURRENT PRODUCT LAW: `00_PLATFORM_v1.5.2.md`; DEC-299 through DEC-304 record paid-plan, reversal, consent, provenance, repeat-purchase and marketing unsubscribe scope rules
 - DOL-01 POLICY: channel/category opt-out and purpose-level marketing withdrawal have separate participant-visible scope and sole owners; this does not close legal/expert gates or authorize implementation
 - TARGETED PRODUCT AMENDMENT STAGE 1 (GRILL): COMPLETE
 - TARGETED PRODUCT AMENDMENT STAGE 2 (PRODUCT LAW AMENDMENT): COMPLETE
@@ -187,17 +187,17 @@ Engineering Standards are **not yet current authority**. Current routing require
 - DOMAIN PRESSURE TEST: COMPLETE
 - DOMAIN AMENDMENT: COMPLETE — current Domain Law `v1.2.0` (semantic successor to archived v1.1.1); 20 Domains; Domain 19 Research & Feedback; Domain 20 Voting & Balloting
 - ROADMAP SEQUENCING GRILL: COMPLETE
-- ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.5`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
-- ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED
-- ATLAS RECONCILIATION: COMPLETE — current routing successor `working/DELIVERY_ATLAS_WORKING_v0.3.2.md` (derived / non-authoritative; ATLAS-12 remains NOT_STARTED)
+- ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.1.6`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
+- ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED
+- ATLAS RECONCILIATION: COMPLETE — current routing successor `working/DELIVERY_ATLAS_WORKING_v0.3.3.md` (derived / non-authoritative; ATLAS-12 remains NOT_STARTED)
 - HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED
 - PRE-MERGE CERTIFICATION: COMPLETE — [PR #40 record](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5827553565)
 - EXACT-HEAD FOUNDATION INTEGRITY: PASS — [run 36091130615](https://github.com/JCSchoeman96/NewYou/actions/runs/36091130615)
 - CERTIFIED-HEAD MERGE: COMPLETE / UNCHANGED — certified head `cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4` merged as `352f304139b9d4f8ee3ba205cde9e34d0ad8437f`
 - RESULTING-MAIN FOUNDATION INTEGRITY: PASS — [run 36101210535](https://github.com/JCSchoeman96/NewYou/actions/runs/36101210535)
 - POST-MERGE CERTIFICATION: COMPLETE — fresh independent review PASS and durable attestation COMPLETE at [PR #40 record](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5830618876)
-- HARDEN-02 CURRENT STATUS: `working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md` records the completed v0.4.0 lifecycle and execution status; execution-start baseline main SHA is `1c8fc94058176795d88cb82e08857e3d30c553e9`; v0.4.0 semantics are unchanged
-- HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING
+- HARDEN-02 CURRENT STATUS: `working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md` records the completed v0.4.0 contract lifecycle and certified execution status; execution-start baseline was `1c8fc94058176795d88cb82e08857e3d30c553e9`; certified recovery resulting main is `6fea69eadf18f2fb79d78c2a94ab035b10abe31f`; v0.4.0 semantics are unchanged
+- HARDEN-02 EXECUTION: COMPLETE / CERTIFIED
 - PR #38: STALE / BLOCKED / NOT AUTHORITY
 - `FP001_RECONCILIATION_REQUIRED` — DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION
 - COMMUNICATIONS JIT DOMAIN DOSSIER — DOWNSTREAM AFTER NARROW FP-001 RECONCILIATION
@@ -217,8 +217,8 @@ Engineering Standards are **not yet current authority**. Current routing require
 - EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS
 - DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS RECONCILIATION COMPLETE; ATLAS-12 NOT_STARTED (not this reconciliation); DERIVED / NON-AUTHORITATIVE
 
-The v0.4.0 contract lifecycle is COMPLETE / CERTIFIED. Pre-merge attestation [#5827553565](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5827553565) binds the exact certified head and exact-head Foundation Integrity run; post-merge attestation [#5830618876](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5830618876) records PASS on resulting main SHA `352f304139b9d4f8ee3ba205cde9e34d0ad8437f` and resulting-main Foundation Integrity run [36101210535](https://github.com/JCSchoeman96/NewYou/actions/runs/36101210535). HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. The route after certified execution remains Engineering Standards Authority Promotion, certified Standards Promotion, FP-001 reconciliation, Communications, remaining required / conditional Phase-7B work, Phase 7C, proof classification, then Phase 8 only after the Development Entry Hard Stop passes. Store/CER remains excluded from HARDEN-02.
+The v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED. HARDEN-02 execution is COMPLETE / CERTIFIED. The prospective PR #57/#59 recovery chain final resulting main `6fea69eadf18f2fb79d78c2a94ab035b10abe31f`, resulting-main Foundation Integrity run [36567933267](https://github.com/JCSchoeman96/NewYou/actions/runs/36567933267), fresh independent Codex outcome PASS WITH NON-BLOCKING CORRECTIONS, and durable PR #59 post-merge attestation [#5890574449](https://github.com/JCSchoeman96/NewYou/pull/59#issuecomment-5890574449). The retained non-blocking helper-level phase-diagram-body mutation-test note creates no new gate because the whole current Roadmap §21 remains separately byte-pinned. Engineering Standards Authority Promotion is NEXT / AUTHORISED / NOT STARTED; certified Standards Promotion must still precede FP-001 reconciliation, then Communications, remaining required / conditional Phase-7B work, Phase 7C, proof classification, and Phase 8 only after the Development Entry Hard Stop passes. Store/CER remains excluded from HARDEN-02.
 
 Foundation readiness does not authorise implementation. Do not begin FP-001 execution, JIT Domain Dossiers, TOON generation, Architectural Proof, Vertical Slices or implementation unless a later approved task explicitly authorises the applicable preparation and execution gates.
 
-PRODUCT LAW AND GOVERNANCE HARDENING IS RECORDED IN THE CURRENT SUCCESSORS. HARDEN-02 EXECUTION IS IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. EXECUTABLE DEVELOPMENT REMAINS BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.
+PRODUCT LAW AND GOVERNANCE HARDENING IS RECORDED IN THE CURRENT SUCCESSORS. HARDEN-02 EXECUTION IS COMPLETE / CERTIFIED. ENGINEERING STANDARDS AUTHORITY PROMOTION IS NEXT / AUTHORISED / NOT STARTED. EXECUTABLE DEVELOPMENT REMAINS BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS.
