@@ -695,7 +695,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.3.3.md", open_work_header)
         self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md", open_work_header)
         active_status = _section(open_work, "# 9. Immediate Next Action", "# 10. Minimal Tools")
-        self.assertIn("CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md", active_status)
+        self.assertIn("CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md", active_status)
         for filename in (current["PROJECT_NORTH_STAR_AND_MVP"], current["PLATFORM_BASELINE"], current["OPEN_WORK"], current["ROADMAP"]):
             self.assertIn(filename, self.readme)
         self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.3.3.md", self.readme)
@@ -992,7 +992,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "05_ROADMAP_v1.1.2.md",
         ):
             self.assertNotIn(stale_filename, north_star_current_routing)
-        self.assertIn("README and current Open Work own programme routing", north_star_current_routing)
+        self.assertIn("README and current Open Work own the active programme stage and NEXT route", north_star_current_routing)
         self.assertIn("MET (v1.2.5)", _section(north_star, "# 24. Document Stop Condition", "**Implementation STOP:**"))
         self.assertIn("02_OPEN_WORK_v1.2.46.md", decisions)
         roadmap_header_marker = "## Amendment summary"
@@ -1094,7 +1094,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "archive/DELIVERY_ATLAS_WORKING_v0.3.0.md", "archive/DELIVERY_ATLAS_WORKING_v0.3.2.md"
         )
         _validate_open_work_atlas_status_line(current, expected)
-        self.assertIn("current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.2.md`", expected)
+        self.assertIn("current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.3.md`", expected)
         self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md`", expected)
         self.assertIn("pinned v0.2.1 source-at-freeze artifacts remain preserved", expected)
         self.assertNotRegex(
