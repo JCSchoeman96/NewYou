@@ -770,6 +770,10 @@ OPEN_WORK_REVERSE_PAIRS = (
     ("current status recorded by working v0.4.4", "current status recorded by working v0.4.3"),
     ("current North Star v1.2.4:", "current North Star v1.2.3:"),
     ("- **Last updated:** 2026-09-29", "- **Last updated:** 2026-09-28"),
+    (
+        "  - `archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`",
+        "  - `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`",
+    ),
 )
 
 

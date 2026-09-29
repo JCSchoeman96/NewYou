@@ -1883,6 +1883,36 @@ def _check_production_graph(
         else f"document graph root mismatch; governing={sorted(governing_paths)}, reference={sorted(reference_paths)}, historical={sorted(historical_paths)}",
     )
 
+    allowed_governing_filenames = {
+        str(entry.get("canonical_filename"))
+        for entry in governing_entries
+        if entry.get("canonical_filename")
+    }
+    governing_root = root / roots["governing"]
+    extra_governing_artifacts: list[str] = []
+    if governing_root.is_dir():
+        for path in sorted(governing_root.iterdir()):
+            if not path.is_file():
+                continue
+            name = path.name
+            if name == Path(roots["context_index"]).name:
+                continue
+            if name.startswith("CURRENT_AUTHORITY_MANIFEST") and name.endswith(".json"):
+                continue
+            if VERSION_PATTERN.search(name):
+                if name not in allowed_governing_filenames:
+                    extra_governing_artifacts.append(name)
+    governing_root_ok = not extra_governing_artifacts
+    _record_check(
+        report,
+        "governing_root_exclusivity",
+        governing_root_ok,
+        "governing root contains only manifest-listed current authority versioned documents"
+        if governing_root_ok
+        else f"unregistered versioned authority documents in governing root: {extra_governing_artifacts}",
+        path=roots["governing"],
+    )
+
     context_index = roots["context_index"]
     readme = root / context_index
     readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""

@@ -62,9 +62,19 @@ Use `reference/` only when the current authority requires exact evidence or iden
 - `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md` — current cumulative ARQ source tracing and Stage 3A.2 amendment.
 - `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md` — exact ARC legislative reasoning, including the Architecture-amendment successor.
 - `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md` — detailed FLOW evidence and the seven targeted Architecture-amendment reviews.
-- `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` — current machine-backed foundation integrity evidence.
 
 These documents are valuable evidence, but they are not default context for routine planning or delivery preparation.
+
+## Foundation integrity evidence
+
+Current machine-backed foundation integrity evidence is **not** a static Markdown snapshot. It is the combination of:
+
+- the exact `main` commit SHA under review;
+- `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`;
+- `tools/foundation_integrity_audit.py` and the regression tests under `tests/`;
+- a passing **Foundation Integrity** GitHub Actions run on that exact commit.
+
+The frozen August 2026 audit at `archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` remains historical evidence only. It does not attest to the current authority baseline.
 
 ## Archive
 

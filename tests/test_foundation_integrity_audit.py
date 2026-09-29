@@ -722,6 +722,27 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 )
             )
 
+    def test_unregistered_governing_root_authority_document_fails_audit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            shutil.copytree(source_docs, root / "docs" / "00_platform")
+            manifest_path = root / "docs" / "00_platform" / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            stale_copy = root / "docs" / "00_platform" / "00_PLATFORM_v1.4.1.md"
+            archive_copy = root / "docs" / "00_platform" / "archive" / "00_PLATFORM_v1.4.1.md"
+            shutil.copyfile(archive_copy, stale_copy)
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    finding["check"] == "governing_root_exclusivity"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
     def test_explicit_current_routes_in_roadmap_atlas_and_harden_resolve_relationally(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
         mutations = (
