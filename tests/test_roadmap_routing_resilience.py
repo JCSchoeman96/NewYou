@@ -23,8 +23,7 @@ PATCH_SCOPE = (
     "This routing-only PATCH refreshes the explicit current Product-authority route after certified HARDEN-02 execution. It preserves all 17 Feature Packs, outcomes, sequencing, dependencies, gates, §21 task-contract/proof semantics, and the implementation STOP. README and current Open Work retain programme routing responsibility. No downstream stage is completed by this Roadmap patch.\n\n"
 )
 PATCH_SCOPE_INSERTION = (
-    "---\n\n"
-    + PATCH_SCOPE
+    PATCH_SCOPE
     + "# 1. Authority, purpose and boundaries"
 )
 
@@ -56,7 +55,7 @@ def _normalise_roadmap_successor(successor: str, predecessor: str) -> str:
         normalised = normalised.replace(current, previous, 1)
     normalised = normalised.replace(
         PATCH_SCOPE_INSERTION,
-        "---\n\n# 1. Authority, purpose and boundaries",
+        "# 1. Authority, purpose and boundaries",
         1,
     )
     if normalised != predecessor:
@@ -109,8 +108,8 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
             1,
         )
         relocated_scope = self.roadmap.replace(
-            "\n\n" + PATCH_SCOPE + "---\n\n# 1. Authority, purpose and boundaries",
-            "\n\n---\n\n# 1. Authority, purpose and boundaries",
+            PATCH_SCOPE_INSERTION,
+            "# 1. Authority, purpose and boundaries",
             1,
         ) + "\n" + PATCH_SCOPE
         for malformed in (missing_route, duplicate_scope, duplicate_route, relocated_scope):
@@ -161,23 +160,23 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
 
         governing = {entry["document_id"]: entry for entry in self.manifest["governing_documents"]}
         self.assertEqual(current_route, governing["ROADMAP"]["canonical_filename"])
-        self.assertEqual("1.1.5", governing["ROADMAP"]["semver"])
+        self.assertEqual("1.1.6", governing["ROADMAP"]["semver"])
         history = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
-        old_roadmap = history["ROADMAP_V1_1_4"]
-        self.assertEqual("05_ROADMAP_v1.1.4.md", old_roadmap["canonical_filename"])
+        old_roadmap = history["ROADMAP_V1_1_5"]
+        self.assertEqual("05_ROADMAP_v1.1.5.md", old_roadmap["canonical_filename"])
         self.assertEqual(
-            "docs/00_platform/archive/05_ROADMAP_v1.1.4.md",
+            "docs/00_platform/archive/05_ROADMAP_v1.1.5.md",
             old_roadmap["repository_path"],
         )
-        self.assertEqual("1.1.5", old_roadmap["superseded_version"])
+        self.assertEqual("1.1.6", old_roadmap["superseded_version"])
         self.assertEqual(ROADMAP_V1_1_5_SHA256, old_roadmap["sha256"])
 
         patterns = self.manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"]
-        stale_route_guards = [pattern for pattern in patterns if "05_ROADMAP_v1\\.1\\.4\\.md" in pattern]
+        stale_route_guards = [pattern for pattern in patterns if "05_ROADMAP_v1\\.1\\.5\\.md" in pattern]
         self.assertEqual([r"(?<!archive/)05_ROADMAP_v1\.1\.5\.md"], stale_route_guards)
         guard = re.compile(stale_route_guards[0])
-        self.assertIsNotNone(guard.search("05_ROADMAP_v1.1.4.md"))
-        self.assertIsNone(guard.search("archive/05_ROADMAP_v1.1.4.md"))
+        self.assertIsNotNone(guard.search("05_ROADMAP_v1.1.5.md"))
+        self.assertIsNone(guard.search("archive/05_ROADMAP_v1.1.5.md"))
 
     def test_all_feature_pack_sections_and_section_21_are_exactly_preserved(self):
         old_packs = _feature_pack_sections(self.predecessor)
