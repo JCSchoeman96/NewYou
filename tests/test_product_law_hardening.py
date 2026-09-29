@@ -54,8 +54,8 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
-        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.2.md").read_text(encoding="utf-8")
-        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md").read_text(
+        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.3.md").read_text(encoding="utf-8")
+        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.5.md").read_text(
             encoding="utf-8"
         )
         cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md").read_text(
