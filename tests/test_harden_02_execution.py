@@ -489,12 +489,26 @@ def _roadmap_phase7_handoff_requirements(text: str) -> list[int]:
         )
 
     post_task = tail[diagram_matches[0].start():]
-    post_task_pattern = re.compile(
-        r"```text[ \t]*\r?\n.*?\r?\n```[ \t]*(?:\r?\n){2}"
-        r"Do not advance the current stage from this Roadmap patch\.[ \t]*(?:\r?\n)?\Z",
-        re.DOTALL,
+    post_task_lines = post_task.splitlines(keepends=True)
+    if not post_task_lines or re.fullmatch(
+        r"```text[ \t]*(?:\r?\n)?",
+        post_task_lines[0],
+    ) is None:
+        raise ValueError("Roadmap §21 phase diagram must begin with a text fence")
+
+    closing_fence_index = next(
+        (
+            index
+            for index, line in enumerate(post_task_lines[1:], start=1)
+            if re.fullmatch(r"```[ \t]*(?:\r?\n)?", line)
+        ),
+        None,
     )
-    if post_task_pattern.fullmatch(post_task) is None:
+    if closing_fence_index is None:
+        raise ValueError("Roadmap §21 phase diagram is missing its closing fence")
+
+    post_diagram = "".join(post_task_lines[closing_fence_index + 1 :])
+    if post_diagram.strip() != "Do not advance the current stage from this Roadmap patch.":
         raise ValueError(
             "Roadmap §21 task contract must transition directly to the phase diagram "
             "and the fail-closed stage-advance sentence"
@@ -1296,6 +1310,12 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             "Implementation may begin immediately after these planning tasks.",
             1,
         )
+        prose_between_first_and_late_closing_fence = roadmap.replace(
+            "```\n\nDo not advance the current stage from this Roadmap patch.",
+            "```\nImplementation may begin immediately after these planning tasks.\n"
+            "```\n\nDo not advance the current stage from this Roadmap patch.",
+            1,
+        )
 
         mutants = {
             "required JIT dossier bullet removed": remove_bullet(roadmap, required_jit),
@@ -1314,6 +1334,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             "ordered eighth task item": ordered_eighth_task,
             "contradictory prose after task list": contradictory_prose_after_list,
             "contradictory prose after phase diagram": contradictory_prose_after_diagram,
+            "prose cannot hide behind a later closing fence": prose_between_first_and_late_closing_fence,
             "JIT requirement repeated inside one bullet": append_to_bullet(
                 roadmap,
                 required_jit,
