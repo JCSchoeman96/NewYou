@@ -438,6 +438,8 @@ def _roadmap_phase7_handoff_requirements(text: str) -> list[int]:
         for paragraph in re.split(r"\n\s*\n", summary_block)
         if paragraph.strip()
     ]
+    # Integrity witness for the current authoritative Roadmap §21 summary, not a new authority.
+    # Any summary prose change must fail closed until this witness is deliberately reviewed and updated.
     expected_summary_paragraphs = (
         (
             "This Roadmap defines the approved outcome sequence, dependencies and gates. "
