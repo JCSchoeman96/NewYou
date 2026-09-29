@@ -14,15 +14,15 @@ DOCS = ROOT / "docs" / "00_platform"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.50.md"
-OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.49.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
-CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
-ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.51.md"
+OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.50.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.5.md"
+CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.3.md"
+ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
 
 POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
-ROADMAP = DOCS / "05_ROADMAP_v1.1.5.md"
+ROADMAP = DOCS / "05_ROADMAP_v1.1.6.md"
 SKELETON = DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
 
 MATRIX_START = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:START -->"
@@ -30,17 +30,17 @@ MATRIX_END = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:END -->"
 JSON_START = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
 JSON_END = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
 
-CURRENT_STAGE = "HARDEN-02 EXECUTION / STRUCTURAL HARDENING"
-NEXT_STAGE = "HARDEN-02_EXECUTION_REQUIRED"
-EXECUTION_STATUS = "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
-EXECUTION_MATRIX_STATUS = "IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING"
-EXECUTION_MATRIX_EVIDENCE = "`I-01…I-13 execution proofs in progress; certification remains pending`"
+CURRENT_STAGE = "ENGINEERING STANDARDS AUTHORITY PROMOTION"
+NEXT_STAGE = "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED"
+EXECUTION_STATUS = "COMPLETE / CERTIFIED"
+EXECUTION_MATRIX_STATUS = "COMPLETE_CERTIFIED"
+EXECUTION_MATRIX_EVIDENCE = "`I-01…I-13 PASS on resulting main 6fea69eadf18f2fb79d78c2a94ab035b10abe31f; run 36567933267; PR #59 durable post-merge attestation 5890574449`"
 CONTRACT_STATUS = "COMPLETE / CERTIFIED"
 
 EXPECTED_ARCHIVE_SHA256 = {
-    OPEN_WORK_PREDECESSOR: "a42bb0ca6ec23b2fd669197b14ec2fa9974a3d6f70c0e0523cac76730ee3a138",
-    CONTRACT_PREDECESSOR: "86682d7e019c30fcb7940af8e4bc1c9112a480bce199419c10f0f9b7670f90dc",
-    ATLAS_PREDECESSOR: "18d15cc741c8dac4082381b8f825b38da25f831e0041a90c5b9489f733fbca0d",
+    OPEN_WORK_PREDECESSOR: "ea99015d5fca34211e9c85e9f6575e8ad69df2cf9a39da3b255f2e9d3a5abcb7",
+    CONTRACT_PREDECESSOR: "0000000000000000000000000000000000000000000000000000000000000000",
+    ATLAS_PREDECESSOR: "0000000000000000000000000000000000000000000000000000000000000000",
 }
 
 EXPECTED_DOWNSTREAM_ROUTE = [
@@ -250,7 +250,7 @@ def _validate_contract_source_routing(text: str) -> None:
     if len(derived_rows) != 3 or any(len(row) != 2 for row in derived_rows):
         raise ValueError("current derived/source-at-freeze table has missing or unexpected rows")
     derived = {row[0].strip("`"): row[1] for row in derived_rows}
-    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.3.2.md"
+    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.3.3.md"
     skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
     identity_path = "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
     if set(derived) != {atlas_path, skeleton_path, identity_path}:
@@ -275,19 +275,19 @@ def _validate_contract_source_routing(text: str) -> None:
             raise ValueError("Identity dossier is not classified as source-at-freeze evidence")
 
     readme = _read(README)
-    if "working/DELIVERY_ATLAS_WORKING_v0.3.2.md" not in readme:
-        raise ValueError("README does not route current Atlas to v0.3.2")
+    if "working/DELIVERY_ATLAS_WORKING_v0.3.3.md" not in readme:
+        raise ValueError("README does not route current Atlas to v0.3.3")
     if "The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references." not in readme:
         raise ValueError("README does not preserve Atlas v0.2.1 as source-at-freeze evidence")
     atlas_routing = _section(readme, "## Delivery Atlas routing", "## Machine-readable inventory")
-    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.2.md)" not in atlas_routing:
-        raise ValueError("README Delivery Atlas navigation does not target v0.3.2")
-    if "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md" not in readme:
+    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.3.md)" not in atlas_routing:
+        raise ValueError("README Delivery Atlas navigation does not target v0.3.3")
+    if "working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md" not in readme:
         raise ValueError("README does not route the current HARDEN status successor")
     active = _active_window(_read(OPEN_WORK))
     if "- IDENTITY & ACCESS: COMPLETE / MERGED" not in active:
         raise ValueError("current Identity lifecycle status is not sourced from Open Work")
-    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md" not in active:
+    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md" not in active:
         raise ValueError("Open Work does not route the current HARDEN status successor")
 
 
@@ -750,215 +750,214 @@ def _reverse_line_with_pairs(line: str, pairs: tuple[tuple[str, str], ...]) -> s
     return restored + ending
 
 
-OPEN_WORK_REVERSE_PAIRS = (
-    ("# 02_OPEN_WORK_v1.2.50.md", "# 02_OPEN_WORK_v1.2.49.md"),
-    ("PRODUCT LAW AND GOVERNANCE HARDENING OPEN-WORK SUCCESSOR v1.2.50", "PRODUCT LAW AND GOVERNANCE HARDENING OPEN-WORK SUCCESSOR v1.2.49"),
-    ("Document version:** v1.2.50", "Document version:** v1.2.49"),
-    ("`archive/02_OPEN_WORK_v1.2.49.md`", "`archive/02_OPEN_WORK_v1.2.48.md`"),
-    (
-        "`v1.2.49 → v1.2.50` — current-authority routing only",
-        "`v1.2.48 → v1.2.49` — execution-status/routing update only",
-    ),
-    ("PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md", "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md"),
-    ("00_PLATFORM_v1.5.1.md", "00_PLATFORM_v1.5.0.md"),
-    ("05_ROADMAP_v1.1.5.md", "05_ROADMAP_v1.1.4.md"),
-    ("working/DELIVERY_ATLAS_WORKING_v0.3.2.md", "working/DELIVERY_ATLAS_WORKING_v0.3.1.md"),
-    ("archive/DELIVERY_ATLAS_WORKING_v0.3.1.md", "archive/DELIVERY_ATLAS_WORKING_v0.3.0.md"),
-    ("working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md", "working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md"),
-    ("current v0.4.4", "current v0.4.3"),
-    ("Status successor v0.4.4", "Status successor v0.4.3"),
-    ("current status recorded by working v0.4.4", "current status recorded by working v0.4.3"),
-    ("current North Star v1.2.4:", "current North Star v1.2.3:"),
-    ("- **Last updated:** 2026-09-29", "- **Last updated:** 2026-09-28"),
-)
+def _replace_exact(text: str, current: str, previous: str) -> str:
+    if text.count(current) != 1:
+        raise ValueError(f"expected one declared successor delta: {current[:80]!r}")
+    return text.replace(current, previous, 1)
 
 
-OPEN_WORK_CHANGELOG_INSERTIONS = (
-    "",
-    "- Planning-state SemVer transition: `v1.2.49 → v1.2.50`.",
-    "- Archives Open Work v1.2.49 byte-identically and updates current authority and derived-navigation routes; all programme lifecycle states remain unchanged.",
-    "",
-)
-
-OPEN_WORK_PATCH_SCOPE = "- **Patch scope:** PATCH / current-authority and derived-navigation route substitutions only."
+def _line_with_prefix(text: str, prefix: str) -> str:
+    matches = [line for line in text.splitlines() if line.startswith(prefix)]
+    if len(matches) != 1:
+        raise ValueError(f"expected one line starting {prefix!r}, found {len(matches)}")
+    return matches[0]
 
 
 def _normalise_open_work_successor(successor: str, predecessor: str) -> str:
     _assert_lifecycle_markers_in_active_section(successor)
     _assert_lifecycle_markers_in_active_section(predecessor)
     successor_state = _lifecycle_json(successor)
-    predecessor_state = _lifecycle_json(predecessor)
-    if successor_state != predecessor_state:
-        raise ValueError("lifecycle JSON changed outside current-source routing")
     if successor_state.get("harden_02_execution") != EXECUTION_STATUS:
-        raise ValueError("lifecycle JSON execution status is not the candidate state")
-    successor_matrix = _lifecycle_matrix(successor)
-    if successor_matrix["EXECUTION"] != {
-        "status": EXECUTION_MATRIX_STATUS,
-        "evidence": EXECUTION_MATRIX_EVIDENCE,
-    }:
-        raise ValueError("execution matrix row is missing the I-01…I-13 proof state")
-    if successor_state.get("contract_status") != CONTRACT_STATUS:
-        raise ValueError("contract lifecycle must remain complete / certified")
-    for heading in (
-        "# 9. Immediate Next Action",
-        "# 10. Minimal Tools",
-        "## Historical changelog",
-    ):
-        if successor.count(heading) != 1 or predecessor.count(heading) != 1:
-            raise ValueError(f"missing, duplicate, or relocated Open Work section: {heading}")
-    for text, label in ((successor, "successor"), (predecessor, "predecessor")):
-        section_order = [
-            text.index("## Historical changelog"),
-            text.index("# 1. Purpose"),
-            text.index("# 9. Immediate Next Action"),
-            text.index("# 10. Minimal Tools"),
-        ]
-        if section_order != sorted(section_order):
-            raise ValueError(f"relocated Open Work section in {label}")
-    changelog_block = "\n".join(OPEN_WORK_CHANGELOG_INSERTIONS)
-    if successor.count(changelog_block) != 1:
-        raise ValueError("current-routing changelog block is missing, duplicated, or altered")
-    changelog = _section(successor, "## Historical changelog", "# 1. Purpose")
-    if not changelog.startswith("## Historical changelog\n" + changelog_block):
-        raise ValueError("current-routing changelog block is relocated")
-    return _normalise_document_diff(
-        successor,
-        predecessor,
-        lambda line: _reverse_line_with_pairs(line, OPEN_WORK_REVERSE_PAIRS),
-        allowed_insertions=tuple(OPEN_WORK_CHANGELOG_INSERTIONS) + (OPEN_WORK_PATCH_SCOPE,),
+        raise ValueError("lifecycle JSON execution status is not certified")
+    if successor_state.get("current_stage") != CURRENT_STAGE or successor_state.get("next_stage") != NEXT_STAGE:
+        raise ValueError("certified execution does not route exclusively to Engineering Standards promotion")
+    if successor_state.get("engineering_standards_authority_promotion") != "NEXT / AUTHORISED / NOT STARTED":
+        raise ValueError("Engineering Standards promotion is not the sole immediate NEXT stage")
+    _assert_downstream_state(successor_state)
+    matrix = _lifecycle_matrix(successor)
+    if matrix["EXECUTION"] != {"status": EXECUTION_MATRIX_STATUS, "evidence": EXECUTION_MATRIX_EVIDENCE}:
+        raise ValueError("execution matrix does not bind the certified resulting-main evidence")
+
+    restored = successor
+    route_pairs = (
+        ("PROJECT_NORTH_STAR_AND_MVP_v1.2.5.md", "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md"),
+        ("00_PLATFORM_v1.5.2.md", "00_PLATFORM_v1.5.1.md"),
+        ("05_ROADMAP_v1.1.6.md", "05_ROADMAP_v1.1.5.md"),
+        ("working/DELIVERY_ATLAS_WORKING_v0.3.3.md", "working/DELIVERY_ATLAS_WORKING_v0.3.2.md"),
+        ("working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md", "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md"),
+    )
+    for current, previous in route_pairs:
+        restored = restored.replace(current, previous)
+    restored = _replace_exact(restored, "# 02_OPEN_WORK_v1.2.51.md", "# 02_OPEN_WORK_v1.2.50.md")
+    restored = _replace_exact(
+        restored,
+        "PRODUCT LAW AND GOVERNANCE HARDENING OPEN-WORK SUCCESSOR v1.2.51",
+        "PRODUCT LAW AND GOVERNANCE HARDENING OPEN-WORK SUCCESSOR v1.2.50",
+    )
+    restored = _replace_exact(restored, "Document version:** v1.2.51", "Document version:** v1.2.50")
+    restored = _replace_exact(restored, "`archive/02_OPEN_WORK_v1.2.50.md`", "`archive/02_OPEN_WORK_v1.2.49.md`")
+    restored = _replace_exact(
+        restored,
+        "`v1.2.50 → v1.2.51` — certified HARDEN-02 execution status transition; only Engineering Standards Authority Promotion becomes NEXT.",
+        "`v1.2.49 → v1.2.50` — current-authority routing only; no downstream gate advances.",
+    )
+    restored = _replace_exact(
+        restored,
+        "- **Patch scope:** PATCH / certified HARDEN-02 execution status + immediate H02-3R route transition + current-source routing only.",
+        "- **Patch scope:** PATCH / current-authority and derived-navigation route substitutions only.",
     )
 
+    changelog = """- Planning-state SemVer transition: `v1.2.50 → v1.2.51`.
+- Records certified HARDEN-02 execution after I-01…I-13 PASS on final resulting main, exact recovery CI/review/attestation evidence, and routes NEXT exclusively to `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED`.
+- Preserves FP-001 reconciliation as downstream until certified Engineering Standards Authority Promotion; Communications, conditional dossiers, Phase 7C, proof classification and Phase 8 remain at their existing downstream/blocked states.
+- Archives Open Work v1.2.50 byte-identically; refreshes current Product/Roadmap/Atlas/HARDEN successor routes only.
+- Retains the PR #59 reviewer’s phase-diagram-body helper-test note as a non-blocking hardening observation; it creates no new gate.
 
-CONTRACT_REVERSE_PAIRS = (
-    ("# HARDEN-02_CONTRACT_WORKING_v0.4.4.md", "# HARDEN-02_CONTRACT_WORKING_v0.4.3.md"),
-    ("- **Plan / contract version:** `v0.4.4`", "- **Plan / contract version:** `v0.4.3`"),
-    (
-        "- **Predecessor v0.4.3 routing-successor base main SHA:** `4efdac4fe3c79b96b18a243800e47c71e7d369b8`",
-        "- **Predecessor v0.4.2 status-successor base main SHA:** `9411b34b646d7752d2942afca1363830d3b25f10`",
-    ),
-    (
-        "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.3.md` — preserved byte-identically as the prior completed-contract status snapshot",
-        "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` — preserved byte-identically as the prior completed-contract status snapshot",
-    ),
-    (
-        "the original v0.4.0 semantics are certified; this v0.4.4 successor preserves them and records execution status plus current-source routing/provenance",
-        "the original v0.4.0 semantics are certified; this v0.4.3 successor preserves them and records execution status plus current-source routing/provenance",
-    ),
-    ("- **Last updated:** 2026-09-29", "- **Last updated:** 2026-09-28"),
-    (
-        "`PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md` | MVP / Phase 7–8 boundary context",
-        "`PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md` | MVP / Phase 7–8 boundary context",
-    ),
-    (
-        "| `00_PLATFORM_v1.5.1.md` | Product Law; not amended by HARDEN-02 |",
-        "| `00_PLATFORM_v1.5.0.md` | Product Law; not amended by HARDEN-02 |",
-    ),
-    (
-        "| `02_OPEN_WORK_v1.2.50.md` | Programme routing and Development Entry Hard Stop |",
-        "| `02_OPEN_WORK_v1.2.49.md` | Programme routing and Development Entry Hard Stop |",
-    ),
-    (
-        "| `05_ROADMAP_v1.1.5.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |",
-        "| `05_ROADMAP_v1.1.4.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |",
-    ),
-    (
-        "| `working/DELIVERY_ATLAS_WORKING_v0.3.2.md` | Current derived, non-authoritative Phase-7 / proof / HH lifecycle navigation only; pinned `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` remains source-at-freeze evidence, not current navigation; does not create HARDEN-02 law |",
-        "| `working/DELIVERY_ATLAS_WORKING_v0.3.1.md` | Current derived, non-authoritative Phase-7 / proof / HH lifecycle navigation only; pinned `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` remains source-at-freeze evidence, not current navigation; does not create HARDEN-02 law |",
-    ),
-    (
-        "The v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED. The original status-successor base main SHA is `9411b34b646d7752d2942afca1363830d3b25f10`. The v0.4.3 execution-status successor records that HARDEN-02 execution started from exact current main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. This v0.4.4 current-source-routing/provenance successor is based on exact current main SHA `4efdac4fe3c79b96b18a243800e47c71e7d369b8`. Execution remains IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING; execution certification remains pending until the governed post-merge lifecycle is complete. This successor does not revise or recertify v0.4.0 semantics, alter any invariant or scope boundary, or advance a downstream stage.",
-        "The v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED. The original status-successor base main SHA is `9411b34b646d7752d2942afca1363830d3b25f10`. This v0.4.3 status + current-source-routing/provenance successor starts HARDEN-02 execution from exact current main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. Execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING; execution certification remains pending until the governed post-merge lifecycle is complete. This successor does not revise or recertify v0.4.0 semantics, alter any invariant or scope boundary, or advance a downstream stage.",
-    ),
-)
+"""
+    if restored.count(changelog) != 1:
+        raise ValueError("certification changelog is missing, duplicated, or altered")
+    restored = restored.replace(changelog, "", 1)
+
+    restored = restored.replace(
+        _line_with_prefix(restored, "- **Current planning position:**"),
+        _line_with_prefix(predecessor, "- **Current planning position:**"),
+        1,
+    )
+    restored = _replace_exact(
+        restored,
+        "CURRENT AUTHORITY-STAGE PROGRAMME: ENGINEERING STANDARDS AUTHORITY PROMOTION\nNEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
+        "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING\nNEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
+    )
+    restored = _replace_exact(
+        restored,
+        "HARDEN-02 EXECUTION: COMPLETE / CERTIFIED\nENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED",
+        "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING\nENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED",
+    )
+    restored = _replace_exact(
+        restored,
+        "| `EXECUTION` | `COMPLETE_CERTIFIED` | `I-01…I-13 PASS on resulting main 6fea69eadf18f2fb79d78c2a94ab035b10abe31f; run 36567933267; PR #59 durable post-merge attestation 5890574449` |",
+        "| `EXECUTION` | `IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING` | `I-01…I-13 execution proofs in progress; certification remains pending` |",
+    )
+
+    successor_region = _marked_region(restored, JSON_START, JSON_END)
+    predecessor_region = _marked_region(predecessor, JSON_START, JSON_END)
+    restored = restored.replace(successor_region, predecessor_region, 1)
+
+    evidence_start = restored.find("HARDEN-02 execution certification evidence:")
+    if evidence_start < 0:
+        raise ValueError("certified execution evidence paragraph is missing")
+    evidence_end = restored.find(MATRIX_START, evidence_start)
+    if evidence_end < 0:
+        raise ValueError("certified execution evidence is not adjacent to the lifecycle matrix")
+    restored = restored[:evidence_start] + restored[evidence_end:]
+
+    if restored != predecessor:
+        diff = "\n".join(difflib.unified_diff(predecessor.splitlines(), restored.splitlines(), lineterm=""))
+        raise ValueError(f"Open Work successor contains undeclared changes:\n{diff[:4000]}")
+    return predecessor
 
 
 def _normalise_contract_successor(successor: str, predecessor: str) -> str:
     _validate_contract_source_routing(successor)
-    headings = (
-        "### 11.5 PR #40 lifecycle evidence and current state",
-        "## 17. Required proof (exit shape)",
-        "## 20. Contract-stage STOP",
+    if "HARDEN-02 execution **COMPLETE / CERTIFIED**" not in "\n".join(successor.splitlines()[:25]):
+        raise ValueError("contract successor does not record certified HARDEN execution")
+    if "Engineering Standards Authority Promotion **NEXT / AUTHORISED / NOT STARTED**" not in "\n".join(successor.splitlines()[:25]):
+        raise ValueError("contract successor does not expose only the next promotion stage")
+    restored = successor
+    for current, previous in (
+        ("PROJECT_NORTH_STAR_AND_MVP_v1.2.5.md", "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md"),
+        ("00_PLATFORM_v1.5.2.md", "00_PLATFORM_v1.5.1.md"),
+        ("02_OPEN_WORK_v1.2.51.md", "02_OPEN_WORK_v1.2.50.md"),
+        ("05_ROADMAP_v1.1.6.md", "05_ROADMAP_v1.1.5.md"),
+        ("working/DELIVERY_ATLAS_WORKING_v0.3.3.md", "working/DELIVERY_ATLAS_WORKING_v0.3.2.md"),
+    ):
+        restored = restored.replace(current, previous)
+    restored = _replace_exact(restored, "# HARDEN-02_CONTRACT_WORKING_v0.4.5.md", "# HARDEN-02_CONTRACT_WORKING_v0.4.4.md")
+    restored = _replace_exact(restored, "- **Plan / contract version:** `v0.4.5`", "- **Plan / contract version:** `v0.4.4`")
+    restored = _replace_exact(
+        restored,
+        "- **Status:** Original v0.4.0 contract lifecycle **COMPLETE / CERTIFIED** — HARDEN-02 execution **COMPLETE / CERTIFIED** — Engineering Standards Authority Promotion **NEXT / AUTHORISED / NOT STARTED**",
+        "- **Status:** Original v0.4.0 contract lifecycle **COMPLETE / CERTIFIED** — HARDEN-02 execution **IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING**",
     )
-    for heading in headings:
-        if successor.count(heading) != 1 or predecessor.count(heading) != 1:
-            raise ValueError(f"missing or duplicate contract status section: {heading}")
-    for text, label in ((successor, "successor"), (predecessor, "predecessor")):
-        section_order = [text.index(heading) for heading in headings]
-        if section_order != sorted(section_order):
-            raise ValueError(f"relocated contract status section in {label}")
-    if successor.count("HARDEN-02_CONTRACT_WORKING_v0.4.4.md") != 1:
-        raise ValueError("current contract path is missing or duplicated")
-    status_head = "\n".join(successor.splitlines()[:20])
-    if CONTRACT_STATUS not in status_head:
-        raise ValueError("contract lifecycle status must remain complete / certified")
-    insertions = (
-        "- `v0.4.4` — PATCH current-authority/current-derived routing and provenance only. HARDEN execution and every v0.4.0 invariant remain unchanged.",
+    restored = _replace_exact(
+        restored,
+        "- **Predecessor v0.4.4 routing-successor base main SHA:** `4efdac4fe3c79b96b18a243800e47c71e7d369b8`\n- **Execution-certification resulting main SHA:** `6fea69eadf18f2fb79d78c2a94ab035b10abe31f`",
+        "- **Predecessor v0.4.3 routing-successor base main SHA:** `4efdac4fe3c79b96b18a243800e47c71e7d369b8`",
     )
-    return _normalise_document_diff(
-        successor,
-        predecessor,
-        lambda line: _reverse_line_with_pairs(line, CONTRACT_REVERSE_PAIRS),
-        allowed_insertions=insertions,
+    restored = _replace_exact(
+        restored,
+        "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.4.md` — preserved byte-identically as the prior in-progress/current-routing status snapshot",
+        "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.3.md` — preserved byte-identically as the prior completed-contract status snapshot",
     )
+    restored = _replace_exact(
+        restored,
+        "- **Certified contract semantics:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.4.5 successor preserves them and records certified execution status plus current-source routing/provenance",
+        "- **Certified contract semantics:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.4.4 successor preserves them and records execution status plus current-source routing/provenance",
+    )
+    revision = "- `v0.4.5` — PATCH execution-certification status successor. Records I-01…I-13 PASS and the prospective PR #57/#59 recovery certification culminating in resulting main `6fea69eadf18f2fb79d78c2a94ab035b10abe31f`; routes NEXT exclusively to `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED`. It preserves H02-1/H02-2/H02-3R, every v0.4.0 scope/invariant, and all later gates. The PR #59 direct phase-diagram-body helper mutation-test note remains non-blocking evidence-led hardening.\n"
+    if restored.count(revision) != 1:
+        raise ValueError("v0.4.5 revision entry is missing or duplicated")
+    restored = restored.replace(revision, "", 1)
 
+    evidence_start = restored.find("### 11.6 HARDEN-02 execution certification evidence")
+    evidence_end = restored.find("HARDEN-02 remains governance sequencing.", evidence_start)
+    if evidence_start < 0 or evidence_end < 0:
+        raise ValueError("execution certification evidence section is missing or relocated")
+    restored = restored[:evidence_start] + restored[evidence_end:]
 
-ATLAS_REVERSE_PAIRS = (
-    ("# Delivery Atlas working v0.3.2", "# Delivery Atlas working v0.3.1"),
-    (
-        "`archive/DELIVERY_ATLAS_WORKING_v0.3.1.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2 and v0.2.3 predecessors remain preserved.",
-        "`archive/DELIVERY_ATLAS_WORKING_v0.3.0.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2 and v0.2.3 predecessors remain preserved.",
-    ),
-    (
-        "`v0.3.1 → v0.3.2` (PATCH: current-source routing and provenance only; Atlas authority and delivery content are unchanged).",
-        "`v0.3.0 → v0.3.1` (PATCH: current Open Work routing update only; Atlas authority and delivery content are unchanged).",
-    ),
-    (
-        "This `v0.3.2` current-source-routing successor updates current Product, Decision, Open Work and Roadmap source references only; the v0.3.1 authority-boundary and delivery content remain unchanged.",
-        "This `v0.3.1` routing successor updates current Open Work routing only; the v0.3.0 authority-boundary and delivery content remain unchanged.",
-    ),
-    ("docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md", "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md"),
-    ("docs/00_platform/00_PLATFORM_v1.5.1.md", "docs/00_platform/00_PLATFORM_v1.5.0.md"),
-    ("docs/00_platform/02_OPEN_WORK_v1.2.50.md", "docs/00_platform/02_OPEN_WORK_v1.2.49.md"),
-    ("docs/00_platform/05_ROADMAP_v1.1.5.md", "docs/00_platform/05_ROADMAP_v1.1.4.md"),
-    ("02_OPEN_WORK_v1.2.50.md", "02_OPEN_WORK_v1.2.49.md"),
-    (
-        "| Versioned predecessor | Archived routing predecessor is `archive/DELIVERY_ATLAS_WORKING_v0.3.1.md`; its predecessor v0.2.3 remains preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`. |",
-        "| Versioned predecessor | Archived routing predecessor is `archive/DELIVERY_ATLAS_WORKING_v0.3.0.md`; its predecessor v0.2.3 remains preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`. |",
-    ),
-    (
-        "| Current-source routing | §1.1 points to Product `v1.5.1`, Decisions `v1.5.0`, Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.1.5` and current Open Work `v1.2.50`. |",
-        "| Current-source routing | §1.1 points to Product `v1.5.0`, Decisions `v1.5.0`, Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.1.4` and current Open Work `v1.2.49`. |",
-    ),
-    ("current Open Work `v1.2.50`.", "current Open Work `v1.2.49`."),
-    ("05_ROADMAP_v1.1.5.md", "05_ROADMAP_v1.1.4.md"),
-    ("00_PLATFORM_v1.5.1.md", "00_PLATFORM_v1.5.0.md"),
-)
+    restored = _replace_exact(
+        restored,
+        "This status-sync artifact records already-certified HARDEN-02 execution; it does not execute Engineering Standards Authority Promotion.",
+        "This status-sync artifact itself does not execute HARDEN-02.",
+    )
+    restored = _replace_exact(
+        restored,
+        "HARDEN-02 execution is COMPLETE / CERTIFIED. I-01…I-13 pass on resulting main `6fea69eadf18f2fb79d78c2a94ab035b10abe31f`, and the applicable prospective recovery lifecycle is complete through resulting-main CI, fresh independent post-merge review and durable post-merge attestation. Engineering Standards Authority Promotion is NEXT / AUTHORISED / NOT STARTED; this status successor does not perform or certify that promotion.",
+        "Current HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING, begun from execution-start baseline main SHA `1c8fc94058176795d88cb82e08857e3d30c553e9`. Do not mark execution COMPLETE / CERTIFIED until I-01…I-13 execution proofs PASS and the applicable unchanged-merge, resulting-main CI, fresh post-merge review and durable post-merge certification lifecycle is complete.",
+    )
+    if restored != predecessor:
+        diff = "\n".join(difflib.unified_diff(predecessor.splitlines(), restored.splitlines(), lineterm=""))
+        raise ValueError(f"HARDEN status successor contains undeclared changes:\n{diff[:4000]}")
+    return predecessor
 
 
 def _normalise_atlas_successor(successor: str, predecessor: str) -> str:
-    for text, label in ((successor, "successor"), (predecessor, "predecessor")):
-        for heading in ("# Delivery Atlas working", "# 1. Authority, purpose and boundaries"):
-            if len(re.findall(rf"(?m)^{re.escape(heading)}.*$", text)) != 1:
-                raise ValueError(f"missing or duplicate Atlas {label} section: {heading}")
-    if successor.count("# Delivery Atlas working v0.3.2") != 1:
-        raise ValueError("current Atlas heading is missing or duplicated")
-    if successor.count("02_OPEN_WORK_v1.2.50.md") != 2:
-        raise ValueError("expected two current Open Work route markers in Atlas")
-    if successor.count("05_ROADMAP_v1.1.5.md") != 6:
-        raise ValueError("expected six current Roadmap route markers in Atlas")
-    return _normalise_document_diff(
-        successor,
-        predecessor,
-        lambda line: _reverse_line_with_pairs(line, ATLAS_REVERSE_PAIRS),
-        allowed_insertions=("- **Patch scope:** PATCH / current-source routing and provenance only; Atlas authority and delivery content are unchanged.",),
-        check_unique_headings=False,
+    restored = successor
+    restored = _replace_exact(restored, "# Delivery Atlas working v0.3.3", "# Delivery Atlas working v0.3.3")
+    restored = _replace_exact(
+        restored,
+        "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2, v0.2.3, v0.3.0 and v0.3.1 predecessors remain preserved.",
+        "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.1.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2 and v0.2.3 predecessors remain preserved.",
     )
+    restored = _replace_exact(
+        restored,
+        "- **SemVer transition:** `v0.3.2 → v0.3.3` (PATCH: current-source routing and provenance only; Atlas authority and delivery content are unchanged).",
+        "- **SemVer transition:** `v0.3.1 → v0.3.2` (PATCH: current-source routing and provenance only; Atlas authority and delivery content are unchanged).",
+    )
+    restored = restored.replace(
+        _line_with_prefix(restored, "- **Current content state:**"),
+        _line_with_prefix(predecessor, "- **Current content state:**"),
+        1,
+    )
+    for current, previous in (
+        ("docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.5.md", "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md"),
+        ("docs/00_platform/00_PLATFORM_v1.5.2.md", "docs/00_platform/00_PLATFORM_v1.5.1.md"),
+        ("docs/00_platform/02_OPEN_WORK_v1.2.51.md", "docs/00_platform/02_OPEN_WORK_v1.2.50.md"),
+        ("docs/00_platform/05_ROADMAP_v1.1.6.md", "docs/00_platform/05_ROADMAP_v1.1.5.md"),
+        ("current Open Work `v1.2.51`", "current Open Work `v1.2.50`"),
+        ("Product `v1.5.2`", "Product `v1.5.1`"),
+        ("Roadmap `v1.1.6`", "Roadmap `v1.1.5`"),
+    ):
+        restored = restored.replace(current, previous)
+    if restored != predecessor:
+        diff = "\n".join(difflib.unified_diff(predecessor.splitlines(), restored.splitlines(), lineterm=""))
+        raise ValueError(f"Atlas successor contains undeclared changes:\n{diff[:4000]}")
+    return predecessor
 
 
 def _assert_downstream_state(state: dict[str, object]) -> None:
     expected = {
-        "engineering_standards_authority_promotion": "DOWNSTREAM / NOT STARTED",
+        "engineering_standards_authority_promotion": "NEXT / AUTHORISED / NOT STARTED",
         "fp001_reconciliation": "REQUIRED / DOWNSTREAM / NOT PERFORMED",
         "communications": "REQUIRED / NOT_STARTED",
         "phase_7c": "BLOCKED / NOT_STARTED",
@@ -1015,6 +1014,7 @@ def _execution_state_is_valid(text: str, state: dict[str, object]) -> bool:
         "TARGETED PRODUCT AMENDMENT PROGRAMME",
         "FP-001 PHASE 7A",
         "IDENTITY & ACCESS JIT DOMAIN DOSSIER",
+        "HARDEN-02 EXECUTION",
     ]:
         return False
     if state.get("conditional_dossiers") != {
@@ -1031,7 +1031,7 @@ def _execution_state_is_valid(text: str, state: dict[str, object]) -> bool:
     required_active = (
         "HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED",
         f"HARDEN-02 EXECUTION: {EXECUTION_STATUS}",
-        "ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED",
+        "ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED",
         "FP001_RECONCILIATION_REQUIRED: REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
         "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
         "- IDENTITY & ACCESS: COMPLETE / MERGED",
@@ -1133,11 +1133,11 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         active = _active_window(text)
         self.assertRegex(
             active,
-            r"(?m)^HARDEN-02 EXECUTION:\s*IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING\s*$",
+            r"(?m)^HARDEN-02 EXECUTION:\s*COMPLETE / CERTIFIED\s*$",
         )
         self.assertRegex(
             active,
-            r"(?m)^ENGINEERING STANDARDS AUTHORITY PROMOTION:\s*DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED\s*$",
+            r"(?m)^ENGINEERING STANDARDS AUTHORITY PROMOTION:\s*NEXT / AUTHORISED / NOT STARTED\s*$",
         )
         self.assertRegex(
             active,
@@ -1145,10 +1145,9 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         )
         self.assertNotRegex(active, r"(?m)^COMMUNICATIONS:\s*(?:COMPLETE|IN_PROGRESS)")
         self.assertNotRegex(active, r"(?m)^FP001_RECONCILIATION_REQUIRED:\s*(?:COMPLETE|NEXT)")
-        self.assertNotRegex(active, r"(?m)^ENGINEERING STANDARDS AUTHORITY PROMOTION:\s*NEXT\b")
         premature = text.replace(
-            '"engineering_standards_authority_promotion": "DOWNSTREAM / NOT STARTED"',
-            '"engineering_standards_authority_promotion": "NEXT"',
+            '"engineering_standards_authority_promotion": "NEXT / AUTHORISED / NOT STARTED"',
+            '"engineering_standards_authority_promotion": "COMPLETE / CERTIFIED"',
             1,
         )
         self.assertFalse(_execution_state_is_valid(premature, _lifecycle_json(premature)))
@@ -1649,10 +1648,10 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             [row[0].strip("`") for row in rows],
         )
         stale_mutants = (
-            contract.replace("00_PLATFORM_v1.5.1.md", "00_PLATFORM_v1.4.1.md", 1),
-            contract.replace("02_OPEN_WORK_v1.2.50.md", "02_OPEN_WORK_v1.2.45.md", 1),
+            contract.replace("00_PLATFORM_v1.5.2.md", "00_PLATFORM_v1.4.1.md", 1),
+            contract.replace("02_OPEN_WORK_v1.2.51.md", "02_OPEN_WORK_v1.2.45.md", 1),
             contract.replace(
-                "working/DELIVERY_ATLAS_WORKING_v0.3.2.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.3.3.md",
                 "working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
                 1,
             ),
@@ -1737,11 +1736,11 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         successor = self._required(CONTRACT)
         predecessor = self._required(CONTRACT_PREDECESSOR)
         self.assertEqual(EXPECTED_ARCHIVE_SHA256[CONTRACT_PREDECESSOR], _sha256(CONTRACT_PREDECESSOR))
-        self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.2.md").exists())
+        self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md").exists())
         self.assertEqual(predecessor, _normalise_contract_successor(successor, predecessor))
         self.assertRegex(
             successor[:2000],
-            r"(?is)status:.*COMPLETE / CERTIFIED.*HARDEN-02 execution.*IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+            r"(?is)status:.*HARDEN-02 execution.*COMPLETE / CERTIFIED.*Engineering Standards Authority Promotion.*NEXT / AUTHORISED / NOT STARTED",
         )
         unexpected = successor.replace(
             "## 1. Objective",
@@ -1751,7 +1750,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         product_row = next(
             line
             for line in successor.splitlines(keepends=True)
-            if "| `00_PLATFORM_v1.5.1.md` |" in line
+            if "| `00_PLATFORM_v1.5.2.md` |" in line
         )
         missing_row = successor.replace(product_row, "", 1)
         duplicated_row = successor.replace(product_row, product_row + product_row, 1)
@@ -1760,7 +1759,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             "### CURRENT DERIVED EVIDENCE\n" + product_row,
             1,
         )
-        stale_route = successor.replace("00_PLATFORM_v1.5.1.md", "00_PLATFORM_v1.4.1.md", 1)
+        stale_route = successor.replace("00_PLATFORM_v1.5.2.md", "00_PLATFORM_v1.4.1.md", 1)
         for sample in (unexpected, missing_row, duplicated_row, relocated_row, stale_route):
             with self.subTest(sample=sample[:120]):
                 with self.assertRaises(ValueError):
@@ -1770,7 +1769,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         successor = self._required(ATLAS)
         predecessor = self._required(ATLAS_PREDECESSOR)
         self.assertEqual(EXPECTED_ARCHIVE_SHA256[ATLAS_PREDECESSOR], _sha256(ATLAS_PREDECESSOR))
-        self.assertFalse((DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.0.md").exists())
+        self.assertFalse((DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.2.md").exists())
         self.assertEqual(predecessor, _normalise_atlas_successor(successor, predecessor))
         unexpected = successor.replace(
             "# 1. Authority, purpose and boundaries",
