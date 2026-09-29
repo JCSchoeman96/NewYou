@@ -9,11 +9,11 @@
       "semver": "1.2.5",
       "repository_path": "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.5.md",
       "authority_class": "PRODUCT_NORTH_STAR",
-      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sha256": "c392a3e8284ce0720c5c96e94e41af211cdde4eb14fea640b7da6c67e8568102",
       "superseded_version": "1.2.4",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      "provenance_sha256": "c392a3e8284ce0720c5c96e94e41af211cdde4eb14fea640b7da6c67e8568102"
     },
     {
       "document_id": "PLATFORM_BASELINE",
@@ -21,11 +21,11 @@
       "semver": "1.5.2",
       "repository_path": "docs/00_platform/00_PLATFORM_v1.5.2.md",
       "authority_class": "PLATFORM_PRODUCT_LAW",
-      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sha256": "f5b2a29d9e0e4feaa269e48dc3c9d63808ae856d44b91278288f530dfa14ac89",
       "superseded_version": "1.5.1",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      "provenance_sha256": "f5b2a29d9e0e4feaa269e48dc3c9d63808ae856d44b91278288f530dfa14ac89"
     },
     {
       "document_id": "DECISION_REGISTER",
@@ -43,10 +43,10 @@
       "semver": "1.2.51",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.51.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sha256": "f1cdacd9addf8ddc0bd213d651e4a00aebea2e69d8aa95a48ac63703cc85317a",
       "superseded_version": "1.2.50",
       "lifecycle": "current",
-      "provenance_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      "provenance_sha256": "f1cdacd9addf8ddc0bd213d651e4a00aebea2e69d8aa95a48ac63703cc85317a"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -78,11 +78,11 @@
       "semver": "1.1.6",
       "repository_path": "docs/00_platform/05_ROADMAP_v1.1.6.md",
       "authority_class": "ROADMAP",
-      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sha256": "c4504dc655d22c433e99f00e5ad0eb87311e6130db1509bc72b7bf27970626ea",
       "superseded_version": "1.1.5",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      "provenance_sha256": "c4504dc655d22c433e99f00e5ad0eb87311e6130db1509bc72b7bf27970626ea"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",
