@@ -809,6 +809,21 @@ def _normalise_open_work_successor(successor: str, predecessor: str) -> str:
         "- **Patch scope:** PATCH / certified HARDEN-02 execution status + immediate H02-3R route transition + current-source routing only.",
         "- **Patch scope:** PATCH / current-authority and derived-navigation route substitutions only.",
     )
+    restored = _replace_exact(
+        restored,
+        "lifecycle completion is recorded in current v0.4.5",
+        "lifecycle completion is recorded in current v0.4.4",
+    )
+    restored = _replace_exact(
+        restored,
+        "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md`",
+        "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.1.md`",
+    )
+    restored = _replace_exact(
+        restored,
+        "current status recorded by working v0.4.5",
+        "current status recorded by working v0.4.4",
+    )
 
     changelog = """- Planning-state SemVer transition: `v1.2.50 → v1.2.51`.
 - Records certified HARDEN-02 execution after I-01…I-13 PASS on final resulting main, exact recovery CI/review/attestation evidence, and routes NEXT exclusively to `ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED`.
@@ -952,6 +967,11 @@ def _normalise_atlas_successor(successor: str, predecessor: str) -> str:
         ("Roadmap `v1.1.6`", "Roadmap `v1.1.5`"),
     ):
         restored = restored.replace(current, previous)
+    restored = _replace_exact(
+        restored,
+        "`05_ROADMAP_v1.1.6.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.2.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.5.2.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.51.md`.",
+        "`05_ROADMAP_v1.1.5.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.2.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.5.1.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.50.md`.",
+    )
     if restored != predecessor:
         diff = "\n".join(difflib.unified_diff(predecessor.splitlines(), restored.splitlines(), lineterm=""))
         raise ValueError(f"Atlas successor contains undeclared changes:\n{diff[:4000]}")
