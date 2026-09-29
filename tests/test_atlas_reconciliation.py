@@ -322,7 +322,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
     def test_open_work_readme_routing(self):
         self.assertIn("ATLAS RECONCILIATION: COMPLETE", self.current_open_work)
         self.assertIn("ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", self.current_open_work)
-        self.assertIn("HARDEN-02 execution is COMPLETE / CERTIFIED", self.current_open_work)
+        self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.current_open_work)
         self.assertIn("FP001_RECONCILIATION_REQUIRED", self.current_open_work)
         self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", self.current_open_work)
         self.assertIn("DELIVERY_ATLAS_WORKING_v0.3.3.md", self.readme)
