@@ -103,17 +103,43 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
-        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.49.md").read_text(encoding="utf-8")
-        candidate_readme = (source_docs / "README.md").read_text(encoding="utf-8")
+        candidate_open_work = (source_docs / "archive" / "02_OPEN_WORK_v1.2.49.md").read_text(encoding="utf-8")
+        current_readme = (source_docs / "README.md").read_text(encoding="utf-8")
+        current_044_route = "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
+        current_status_route = "working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
+        self.assertEqual(2, current_readme.count(current_044_route))
+        candidate_readme = current_readme.replace(current_044_route, current_status_route)
         self.assertEqual((True, "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"),
                          _h02_lifecycle_state(candidate_open_work, candidate_readme))
 
-        baseline_open_work = (source_docs / "archive" / "02_OPEN_WORK_v1.2.48.md").read_text(encoding="utf-8")
-        baseline_readme = candidate_readme.replace(
-            "working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md` — status + current-source-routing/provenance successor for the original v0.4.0 certified HARDEN-02 contract semantics; PR #40 exact-head certification, unchanged merge, both exact-SHA Foundation Integrity runs, fresh independent post-merge review and durable post-merge attestation are COMPLETE / PASS. HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. Working contracts remain outside the authority-document records in `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Predecessor status record v0.4.2 is preserved byte-identically at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.2.md`; earlier v0.4.1 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.1.md`; certified contract artifact v0.4.0 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md`",
-            "working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` records the completed v0.4.0 lifecycle and execution status; v0.4.0 semantics are unchanged",
+        successor_044_open_work = candidate_open_work
+        successor_044_readme = candidate_readme
+        self.assertEqual(4, successor_044_open_work.count(current_status_route))
+        self.assertEqual(2, successor_044_readme.count(current_status_route))
+        successor_044_open_work = successor_044_open_work.replace(
+            current_status_route,
+            "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md",
+        )
+        successor_044_readme = successor_044_readme.replace(
+            current_status_route,
+            "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md",
+        )
+        successor_044_open_work = successor_044_open_work.replace(
+            '"status_successor_version": "0.4.3"',
+            '"status_successor_version": "0.4.4"',
             1,
-        ).replace(
+        )
+        self.assertEqual((True, "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"),
+                         _h02_lifecycle_state(successor_044_open_work, successor_044_readme))
+
+        baseline_open_work = (source_docs / "archive" / "02_OPEN_WORK_v1.2.48.md").read_text(encoding="utf-8")
+        baseline_readme = candidate_readme
+        current_harden_bullet = next(
+            line for line in baseline_readme.splitlines()
+            if line.startswith("- `working/HARDEN-02_CONTRACT_WORKING_")
+        )
+        baseline_harden_bullet = "- `working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` records the completed v0.4.0 lifecycle and execution status; v0.4.0 semantics are unchanged"
+        baseline_readme = baseline_readme.replace(current_harden_bullet, baseline_harden_bullet, 1).replace(
             "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
             "HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED",
             1,
@@ -540,6 +566,244 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 any(finding["check"] == "document_version_parity" for finding in report["findings"])
             )
 
+    def test_current_north_star_and_product_self_versions_match_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_current_authority_fixture(root)
+
+            for document_id, old_version, new_version in (
+                ("PROJECT_NORTH_STAR_AND_MVP", "1.2.3", "9.9.9"),
+                ("PLATFORM_BASELINE", "1.5.0", "9.9.9"),
+            ):
+                with self.subTest(document_id=document_id):
+                    entry = next(
+                        item for item in manifest["governing_documents"]
+                        if item["document_id"] == document_id
+                    )
+                    path = root / entry["repository_path"]
+                    path.write_text(
+                        path.read_text(encoding="utf-8").replace(
+                            f"**Document version:** v{old_version}",
+                            f"**Document version:** v{new_version}",
+                            1,
+                        ),
+                        encoding="utf-8",
+                    )
+                    refresh_manifest(root, root / "manifest.json")
+
+                    report = run_audit(
+                        root,
+                        root / "manifest.json",
+                        expected_counts=SMALL_COUNTS,
+                    )
+
+                    self.assertTrue(
+                        any(
+                            finding["check"] == "current_authority_self_version"
+                            and finding["path"] == entry["repository_path"]
+                            for finding in report["findings"]
+                        )
+                    )
+
+                    path.write_text(
+                        path.read_text(encoding="utf-8").replace(
+                            f"**Document version:** v{new_version}",
+                            f"**Document version:** v{old_version}",
+                            1,
+                        ),
+                        encoding="utf-8",
+                    )
+                    refresh_manifest(root, root / "manifest.json")
+
+    def test_north_star_governance_self_state_matches_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_current_authority_fixture(root)
+            north_star = next(
+                item for item in manifest["governing_documents"]
+                if item["document_id"] == "PROJECT_NORTH_STAR_AND_MVP"
+            )
+            path = root / north_star["repository_path"]
+            path.write_text(
+                path.read_text(encoding="utf-8").replace(
+                    "governance-alignment condition: MET (v1.2.3)",
+                    "governance-alignment condition: MET (v1.2.2)",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            refresh_manifest(root, root / "manifest.json")
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "current_authority_self_version"
+                    and finding["path"] == north_star["repository_path"]
+                    for finding in report["findings"]
+                )
+            )
+
+    def test_product_current_programme_lifecycle_mirror_is_rejected(self):
+        for lifecycle in (
+            "NEXT / AUTHORISED / NOT STARTED",
+            "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+            "COMPLETE / CERTIFIED",
+        ):
+            with self.subTest(lifecycle=lifecycle), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                manifest = self._write_current_authority_fixture(root)
+                product = next(
+                    item for item in manifest["governing_documents"]
+                    if item["document_id"] == "PLATFORM_BASELINE"
+                )
+                path = root / product["repository_path"]
+                with path.open("a", encoding="utf-8") as file:
+                    file.write(f"HARDEN-02 execution is {lifecycle}.\n")
+                refresh_manifest(root, root / "manifest.json")
+
+                report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+                self.assertTrue(
+                    any(
+                        finding["check"] == "current_authority_delegated_routing"
+                        and finding["path"] == product["repository_path"]
+                        for finding in report["findings"]
+                    )
+                )
+
+    def test_current_authority_fixture_passes_self_state_checks(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_current_authority_fixture(root)
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertEqual("PASS", report["status"])
+            self.assertEqual(
+                {
+                    "current_authority_self_version",
+                    "current_authority_route_resolution",
+                    "current_authority_delegated_routing",
+                },
+                {
+                    check["name"]
+                    for check in report["checks"]
+                    if check["name"].startswith("current_authority_")
+                },
+            )
+
+    def test_current_routing_field_must_resolve_to_manifest_routes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_current_authority_fixture(root)
+            north_star = next(
+                item for item in manifest["governing_documents"]
+                if item["document_id"] == "PROJECT_NORTH_STAR_AND_MVP"
+            )
+            path = root / north_star["repository_path"]
+            path.write_text(
+                path.read_text(encoding="utf-8").replace(
+                    "CURRENT_AUTHORITY_MANIFEST",
+                    "00_PLATFORM_v1.4.1.md",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            refresh_manifest(root, root / "manifest.json")
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "current_authority_route_resolution"
+                    and finding["path"] == north_star["repository_path"]
+                    for finding in report["findings"]
+                )
+            )
+
+    def test_explicit_current_routes_in_roadmap_atlas_and_harden_resolve_relationally(self):
+        source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+        mutations = (
+            (
+                "05_ROADMAP_v1.1.5.md",
+                "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
+                "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
+            ),
+            (
+                "working/DELIVERY_ATLAS_WORKING_v0.3.2.md",
+                "00_PLATFORM_v1.5.1.md",
+                "00_PLATFORM_v1.4.1.md",
+            ),
+            (
+                "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md",
+                "02_OPEN_WORK_v1.2.50.md",
+                "02_OPEN_WORK_v1.2.49.md",
+            ),
+            (
+                "02_OPEN_WORK_v1.2.50.md",
+                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.2.md`",
+                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.1.md`",
+            ),
+        )
+        for relative, current_route, stale_route in mutations:
+            with self.subTest(path=relative), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                fixture_docs = root / "docs" / "00_platform"
+                shutil.copytree(source_docs, fixture_docs)
+                manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                path = fixture_docs / relative
+                text = path.read_text(encoding="utf-8")
+                self.assertIn(current_route, text)
+                path.write_text(text.replace(current_route, stale_route, 1), encoding="utf-8")
+                governing_entry = next(
+                    entry
+                    for entry in manifest["governing_documents"]
+                    if entry["repository_path"] == f"docs/00_platform/{relative}"
+                ) if not relative.startswith("working/") else None
+                if governing_entry is not None and "provenance_sha256" in governing_entry:
+                    governing_entry["provenance_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+                    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+
+                self.assertTrue(
+                    any(
+                        finding["check"] == "current_authority_route_resolution"
+                        for finding in report["findings"]
+                    ),
+                    report["findings"],
+                )
+
+    def test_current_state_delegated_routing_must_match_readme_and_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_current_authority_fixture(root)
+            readme = root / "docs" / "00_platform" / "README.md"
+            current_open_work = next(
+                item for item in manifest["governing_documents"]
+                if item["document_id"] == "OPEN_WORK"
+            )["canonical_filename"]
+            readme.write_text(
+                readme.read_text(encoding="utf-8").replace(
+                    current_open_work,
+                    "02_OPEN_WORK_v1.2.48.md",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "current_authority_delegated_routing"
+                    for finding in report["findings"]
+                )
+            )
+
     def test_refresh_manifest_updates_hashes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -658,6 +922,71 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 }
             )
 
+        (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+        return manifest
+
+    def _write_current_authority_fixture(self, root: Path) -> dict:
+        manifest = self._write_clean_fixture(root)
+        files = {
+            "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md": (
+                "# PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md\n"
+                "- **Document version:** v1.2.3\n"
+                "# 23. Current Planning Position\n"
+                "Current Product/Decision/Roadmap authority is routed by README and CURRENT_AUTHORITY_MANIFEST. README and current Open Work own the active programme stage and NEXT route.\n"
+                "# 24. Document Stop Condition\n"
+                "**Current Product Law / governance-alignment condition: MET (v1.2.3).**\n"
+                "**Implementation STOP:** planning gates remain mandatory.\n"
+            ),
+            "docs/00_platform/00_PLATFORM_v1.5.0.md": (
+                "# 00_PLATFORM_v1.5.0.md\n"
+                "- **Document version:** v1.5.0\n"
+                "# 24. Current Planning Stop Condition\n"
+                "Current Product Law is v1.5.0. This Product Law does not execute HARDEN-02 or authorise implementation. README and current Open Work own current programme routing and lifecycle status.\n"
+            ),
+            "docs/00_platform/02_OPEN_WORK_v1.0.0.md": (
+                "# 02_OPEN_WORK_v1.0.0.md\n"
+                "- **Document version:** v1.0.0\n"
+            ),
+            "docs/00_platform/README.md": (
+                "## Default Agent Context\n"
+                "1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md`\n"
+                "2. `00_PLATFORM_v1.5.0.md`\n"
+                "3. `01_DECISIONS_v1.2.1.md`\n"
+                "4. `02_OPEN_WORK_v1.0.0.md`\n"
+                "5. `05_ROADMAP_v1.0.0.md`\n"
+                "\n## Active Working Artifacts\n"
+            ),
+        }
+        for relative, content in files.items():
+            path = root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding="utf-8")
+
+        authority_classes = {
+            "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md": "PRODUCT_NORTH_STAR",
+            "00_PLATFORM_v1.5.0.md": "PLATFORM_PRODUCT_LAW",
+            "02_OPEN_WORK_v1.0.0.md": "PLANNING_TRACKER",
+        }
+        document_ids = {
+            "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md": "PROJECT_NORTH_STAR_AND_MVP",
+            "00_PLATFORM_v1.5.0.md": "PLATFORM_BASELINE",
+            "02_OPEN_WORK_v1.0.0.md": "OPEN_WORK",
+        }
+        for relative in files:
+            path = root / relative
+            if path.name == "README.md":
+                continue
+            manifest["governing_documents"].append(
+                {
+                    "document_id": document_ids[path.name],
+                    "canonical_filename": path.name,
+                    "semver": path.name.split("_v", 1)[1][:-3],
+                    "repository_path": relative,
+                    "authority_class": authority_classes[path.name],
+                    "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                    "superseded_version": None,
+                }
+            )
         (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
         return manifest
 
