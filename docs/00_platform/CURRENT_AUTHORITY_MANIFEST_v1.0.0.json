@@ -424,6 +424,28 @@
       "provenance_sha256": "ed68c4c5264f07226de3844801402e97e4acd9ed4bbeda086fad284559ddbf63"
     },
     {
+      "document_id": "OPEN_WORK_V1_2_33",
+      "canonical_filename": "02_OPEN_WORK_v1.2.33.md",
+      "semver": "1.2.33",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.33.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "deb0a4ea8584dd1a858f2954470957562d95bbce99d35b6ae165feb306a2605f",
+      "superseded_version": "1.2.34",
+      "lifecycle": "historical",
+      "provenance_sha256": "deb0a4ea8584dd1a858f2954470957562d95bbce99d35b6ae165feb306a2605f"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_34",
+      "canonical_filename": "02_OPEN_WORK_v1.2.34.md",
+      "semver": "1.2.34",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.34.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "2a45d350643199000993474c77d61c0ebf68f13921641b40432e6616ad927598",
+      "superseded_version": "1.2.35",
+      "lifecycle": "historical",
+      "provenance_sha256": "2a45d350643199000993474c77d61c0ebf68f13921641b40432e6616ad927598"
+    },
+    {
       "document_id": "TARGETED_PRODUCT_AMENDMENT_GRILL",
       "canonical_filename": "TARGETED_PRODUCT_AMENDMENT_GRILL_WORKING_v0.5.0.md",
       "semver": "0.5.0",
@@ -896,7 +918,7 @@
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.3\\.0\\.md",
         "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.4\\.2\\.md",
         "(?<!archive/)05_ROADMAP_v1\\.1\\.4\\.md",
-        "(?<!reference/)(?<!archive/)FOUNDATION_INTEGRITY_AUDIT_v1\\.0\\.0\\.md"
+        "(?<!archive/)FOUNDATION_INTEGRITY_AUDIT_v1\\.0\\.0\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",

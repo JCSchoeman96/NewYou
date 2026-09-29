@@ -10,16 +10,27 @@ Apply these on the hosting repository (Settings → Rules → Rulesets, or legac
 |--------|---------|
 | Block direct pushes | Prevent bypass of PR + CI attestation |
 | Require pull request before merge | Enforce independent review path |
-| Require status check **Foundation Integrity** | Gate authority/tooling changes |
+| Require status check **Foundation Integrity** | Gate every merge (see check name below) |
 | Require branches to be up to date before merge | Stale-green protection |
 | Block force pushes | Preserve linear provenance on `main` |
 | Block branch deletion | Prevent accidental loss of trust anchor |
 
 Solo-maintainer repos still benefit: mistakes, compromised tooling, and process drift are blocked at the platform layer.
 
-## Foundation Integrity check name
+## Foundation Integrity workflow and check name
 
-The workflow file is `.github/workflows/foundation-integrity.yml`. The required check name in GitHub is typically **`Foundation Integrity`** (job id `foundation-integrity` under workflow display name **Foundation Integrity**).
+- Workflow: `.github/workflows/foundation-integrity.yml`
+- Triggers: **every** `pull_request` and **every** push to `main` (no `paths:` filters). Required checks must not be skippable by path filtering.
+- Job id: `foundation-integrity`
+- **Required status check context:** **`Foundation Integrity`** — set explicitly via `jobs.foundation-integrity.name` in the workflow.
+
+Do **not** require `foundation-integrity` (job id) unless the Check Runs API on the PR head proves that is the published context. After workflow changes, verify:
+
+```bash
+gh api repos/:owner/:repo/commits/:pr_head_sha/check-runs --jq '.check_runs[] | select(.name | test("Foundation"; "i")) | {name, conclusion, status}'
+```
+
+Configure branch protection / rulesets to match the **exact** `name` field returned there.
 
 ## Administrator bypass
 
@@ -33,3 +44,9 @@ gh api repos/:owner/:repo/rulesets
 ```
 
 A protected `main` should not return HTTP 404 for branch protection or should show an active ruleset targeting `main`.
+
+## Pass 1 merge sequence
+
+1. PR head passes **Foundation Integrity** with the verified check context name.
+2. Activate ruleset / branch protection on `main` **before** merging the Pass 1 closure PR.
+3. Merge through the protection; confirm post-merge **Foundation Integrity** on resulting `main` SHA.
