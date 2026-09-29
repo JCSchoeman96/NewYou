@@ -12,24 +12,30 @@ DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 PREDECESSOR_SHA256 = {
+    "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md": "e3054c8e2f8743fbc3cf61bd97435e792fe6193b01fdc6caeef0c1e294a9eee9",
+    "00_PLATFORM_v1.5.0.md": "4a656b5c69d628003aaa03802b889d555135c4ecb08754f947520e175e0559cd",
     "00_PLATFORM_v1.4.1.md": "868b6a6ca81df7d4322dd534cb4387c051748cd49cdc3834e53626b49040c8ec",
     "01_DECISIONS_v1.4.1.md": "e92564c16c9ad15e8b7558ff76a509efad4310aa786c697b09b0ce2723ec4701",
     "02_OPEN_WORK_v1.2.45.md": "9bc1b0f882125153a9db9668db8f0fee1ed9b1f20f6ba8422882707a4d203087",
     "02_OPEN_WORK_v1.2.46.md": "d19ba98b486478ff8fea36b74a72b4102e8fe192a797af919318a1fc31c8c870",
     "02_OPEN_WORK_v1.2.47.md": "71d6f4641cdc70aaa57c8630887d4b24d1a971d34e390c607dda7dbcc8c05118",
     "02_OPEN_WORK_v1.2.48.md": "270172784629197f2bb6faa60dbe6d4184bd9d04d878876f6877c98390fd8d17",
+    "02_OPEN_WORK_v1.2.49.md": "a42bb0ca6ec23b2fd669197b14ec2fa9974a3d6f70c0e0523cac76730ee3a138",
     "04_DOMAIN_MAP_v1.1.1.md": "ae1b6e44e0e5da2060bcbfda46b8c280a6c7aa0e596b8feb8198cea22aa4bb42",
+    "05_ROADMAP_v1.1.4.md": "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9",
     "DELIVERY_ATLAS_WORKING_v0.2.1.md": "b4c27c8a314d2a9e227acd53bd69dfce0e01a2cc743535e49a45a848f135cc59",
     "DELIVERY_ATLAS_WORKING_v0.2.2.md": "2a9553cd9076333665d340c6d787a8de8bfa0f78509e6cc8b2cfb874730ab02e",
     "DELIVERY_ATLAS_WORKING_v0.2.3.md": "fb107bcc1972f225aef9675bcf36b8709185405e76db19c204c911b7b4a4f1ca",
+    "DELIVERY_ATLAS_WORKING_v0.3.1.md": "18d15cc741c8dac4082381b8f825b38da25f831e0041a90c5b9489f733fbca0d",
 }
 
 EXPECTED_CURRENT = {
-    "PLATFORM_BASELINE": ("00_PLATFORM_v1.5.0.md", "1.5.0"),
+    "PROJECT_NORTH_STAR_AND_MVP": ("PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md", "1.2.4"),
+    "PLATFORM_BASELINE": ("00_PLATFORM_v1.5.1.md", "1.5.1"),
     "DECISION_REGISTER": ("01_DECISIONS_v1.5.0.md", "1.5.0"),
-    "OPEN_WORK": ("02_OPEN_WORK_v1.2.49.md", "1.2.49"),
+    "OPEN_WORK": ("02_OPEN_WORK_v1.2.50.md", "1.2.50"),
     "DOMAIN_MAP": ("04_DOMAIN_MAP_v1.2.0.md", "1.2.0"),
-    "ROADMAP": ("05_ROADMAP_v1.1.4.md", "1.1.4"),
+    "ROADMAP": ("05_ROADMAP_v1.1.5.md", "1.1.5"),
 }
 
 
@@ -212,7 +218,8 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             if line.startswith("- **Primary inputs — current semantic authority for the v1.2.0 DOL-01 amendment:**")
         )
         self.assertEqual("1.2.0", self.domain_entry["semver"])
-        self.assertIn(self.product_entry["canonical_filename"], current_inputs)
+        self.assertIn("00_PLATFORM_v1.5.0.md", current_inputs)
+        self.assertNotIn(self.product_entry["canonical_filename"], current_inputs)
         self.assertIn("§21S", current_inputs)
         self.assertIn(self.decision_entry["canonical_filename"], current_inputs)
         self.assertIn("DEC-304", current_inputs)
@@ -253,11 +260,15 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             self.assertEqual(expected_hash, _sha256(archive), filename)
 
         for document_id, filename in (
+            ("PROJECT_NORTH_STAR_AND_MVP_V1_2_3", "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md"),
+            ("PLATFORM_BASELINE_V1_5_0", "00_PLATFORM_v1.5.0.md"),
             ("PLATFORM_BASELINE_V1_4_1", "00_PLATFORM_v1.4.1.md"),
             ("DECISION_REGISTER_V1_4_1", "01_DECISIONS_v1.4.1.md"),
             ("OPEN_WORK_V1_2_45", "02_OPEN_WORK_v1.2.45.md"),
             ("OPEN_WORK_V1_2_46", "02_OPEN_WORK_v1.2.46.md"),
+            ("OPEN_WORK_V1_2_49", "02_OPEN_WORK_v1.2.49.md"),
             ("DOMAIN_MAP_V1_1_1", "04_DOMAIN_MAP_v1.1.1.md"),
+            ("ROADMAP_V1_1_4", "05_ROADMAP_v1.1.4.md"),
         ):
             entry = historical[document_id]
             self.assertEqual("historical", entry["lifecycle"])
@@ -270,7 +281,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
 
     def test_current_routes_are_current_and_old_paths_remain_archived(self):
-        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.1.md"
+        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.2.md"
         self.assertEqual(
             atlas_path,
             self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"][0],
@@ -293,26 +304,32 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             self.assertIn(filename, current_section)
 
         for stale_name in (
+            "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
+            "00_PLATFORM_v1.5.0.md",
             "00_PLATFORM_v1.4.1.md",
             "01_DECISIONS_v1.4.1.md",
             "02_OPEN_WORK_v1.2.45.md",
+            "02_OPEN_WORK_v1.2.49.md",
             "04_DOMAIN_MAP_v1.1.1.md",
+            "05_ROADMAP_v1.1.4.md",
         ):
             self.assertNotIn(stale_name, current_section)
         immediate_next_action = self.open_work.split("# 9. Immediate Next Action", 1)[1].split("```text", 1)[0]
         for current_name in (
-            "00_PLATFORM_v1.5.0.md",
+            "00_PLATFORM_v1.5.1.md",
             "01_DECISIONS_v1.5.0.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "DELIVERY_ATLAS_WORKING_v0.3.1.md",
+            "DELIVERY_ATLAS_WORKING_v0.3.2.md",
         ):
             self.assertIn(current_name, immediate_next_action)
         for stale_name in (
+            "00_PLATFORM_v1.5.0.md",
             "00_PLATFORM_v1.4.1.md",
             "01_DECISIONS_v1.4.1.md",
             "02_OPEN_WORK_v1.2.45.md",
             "04_DOMAIN_MAP_v1.1.1.md",
             "DELIVERY_ATLAS_WORKING_v0.2.1.md",
+            "DELIVERY_ATLAS_WORKING_v0.3.1.md",
         ):
             self.assertNotIn(stale_name, immediate_next_action)
         for filename in PREDECESSOR_SHA256:
@@ -331,7 +348,15 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         ):
             self.assertNotIn(stale_name, source_table)
         atlas_completion = self.atlas.split("## 26.18 ATLAS reconciliation", 1)[1]
-        for stale_version in ("Product `v1.4.1`", "Decisions `v1.4.1`", "Domain Map `v1.1.1`", "Open Work `v1.2.45`"):
+        for stale_version in (
+            "Product `v1.5.0`",
+            "Product `v1.4.1`",
+            "Decisions `v1.4.1`",
+            "Domain Map `v1.1.1`",
+            "Open Work `v1.2.49`",
+            "Open Work `v1.2.45`",
+            "Roadmap `v1.1.4`",
+        ):
             self.assertNotIn(stale_version, atlas_completion)
 
     def test_downstream_gate_lines_match_the_preserved_open_work_predecessor(self):

@@ -41,6 +41,15 @@ STATUS_VERSION_PATTERN = re.compile(
     r"^-\s+\*\*Document status:\*\*.*?\bv(\d+\.\d+\.\d+)\b", re.MULTILINE
 )
 BOLD_PATTERN = re.compile(r"\*\*([^*]+)\*\*")
+CURRENT_ROUTE_FILENAME_PATTERN = re.compile(
+    r"(?<![\w/.-])(?:[\w.-]+/)*[\w.-]+_v\d+\.\d+\.\d+\.md"
+)
+CURRENT_ROUTE_VERSION_PATTERN = re.compile(r"\bv(\d+\.\d+\.\d+)\b")
+
+CURRENT_AUTHORITY_STATE_SECTIONS = {
+    "PROJECT_NORTH_STAR_AND_MVP": ("# 23. Current Planning Position", "# 24. Document Stop Condition"),
+    "PLATFORM_BASELINE": ("# 24. Current Planning Stop Condition", None),
+}
 
 REQUIRED_ENTRY_FIELDS = {
     "document_id",
@@ -362,11 +371,13 @@ H02_EXECUTION_STATES = {
     "NEXT / AUTHORISED / NOT STARTED": {
         "matrix": "NEXT_AUTHORISED_NOT_STARTED",
         "successor_version": "0.4.2",
+        "successor_versions": ("0.4.2",),
         "readme": "HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED",
     },
     "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING": {
         "matrix": "IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING",
         "successor_version": "0.4.3",
+        "successor_versions": ("0.4.3", "0.4.4"),
         "readme": "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
     },
 }
@@ -443,7 +454,12 @@ def _h02_lifecycle_state(open_work: str, readme: str) -> tuple[bool, str]:
 
     if any(state.get(key) != value for key, value in H02_PR40_LIFECYCLE_FACTS.items()):
         return False, "prior PR #40 certification facts or certified contract lifecycle changed"
-    if state.get("status_successor_version") not in {"0.4.2", "0.4.3"}:
+    supported_successors = {
+        version
+        for expected_state in H02_EXECUTION_STATES.values()
+        for version in expected_state["successor_versions"]
+    }
+    if state.get("status_successor_version") not in supported_successors:
         return False, "HARDEN status successor version is unsupported"
     if state.get("current_stage") != "HARDEN-02 EXECUTION / STRUCTURAL HARDENING":
         return False, "HARDEN current programme stage changed"
@@ -455,7 +471,7 @@ def _h02_lifecycle_state(open_work: str, readme: str) -> tuple[bool, str]:
         return False, "HARDEN execution status is not one of the two permitted states"
     expected_execution = H02_EXECUTION_STATES[execution]
     if (
-        state.get("status_successor_version") != expected_execution["successor_version"]
+        state.get("status_successor_version") not in expected_execution["successor_versions"]
         or matrix.get("EXECUTION") != expected_execution["matrix"]
         or active.count(expected_execution["readme"]) != 1
         or readme.count(expected_execution["readme"]) != 1
@@ -564,8 +580,11 @@ def _h02_lifecycle_state(open_work: str, readme: str) -> tuple[bool, str]:
         if "working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md" not in readme:
             return False, "baseline README does not route to HARDEN status v0.4.2"
     else:
-        if "working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md" not in readme:
-            return False, "in-progress README does not route to HARDEN status v0.4.3"
+        if not any(
+            f"working/HARDEN-02_CONTRACT_WORKING_v{version}.md" in readme
+            for version in expected_execution["successor_versions"]
+        ):
+            return False, "in-progress README does not route to HARDEN status v0.4.3 or v0.4.4"
     return True, "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"
 
 
@@ -993,6 +1012,483 @@ def _check_product_semantics(
         if not pack_issues
         else "; ".join(pack_issues),
         path=str(by_id.get("ROADMAP", {}).get("repository_path", "")),
+    )
+
+
+def _current_authority_north_star_stop_condition(text: str) -> str:
+    start_marker = "# 24. Document Stop Condition"
+    end_marker = "**Implementation STOP:**"
+    start = re.search(rf"(?m)^{re.escape(start_marker)}\s*$", text)
+    if start is None:
+        return ""
+    end = re.search(re.escape(end_marker), text[start.end() :])
+    return text[start.end() : start.end() + end.start()] if end is not None else ""
+
+
+def _current_authority_state_section(
+    text: str,
+    document_id: str,
+) -> str:
+    section_markers = CURRENT_AUTHORITY_STATE_SECTIONS.get(document_id)
+    if section_markers is None:
+        return ""
+    start_marker, end_marker = section_markers
+    start = re.search(rf"(?m)^{re.escape(start_marker)}\s*$", text)
+    if start is None:
+        return ""
+    if end_marker is not None:
+        end = re.search(rf"(?m)^{re.escape(end_marker)}\s*$", text[start.end() :])
+        return text[start.end() : start.end() + end.start()] if end is not None else ""
+    return text[start.end() :]
+
+
+def _readme_current_authority_filenames(text: str) -> list[str]:
+    start = text.find("## Default Agent Context")
+    if start < 0:
+        return []
+    section = text[start:]
+    end = re.search(r"^##\s+", section[len("## Default Agent Context") :], re.MULTILINE)
+    if end is not None:
+        section = section[: len("## Default Agent Context") + end.start()]
+    return re.findall(r"(?m)^\s*\d+\.\s+`([^`]+)`", section)
+
+
+def _current_authority_entries(
+    manifest: dict[str, Any],
+) -> tuple[dict[str, dict[str, Any]], dict[str, dict[str, Any]]]:
+    current_governing = {
+        str(entry.get("document_id")): entry
+        for entry in manifest.get("governing_documents", [])
+        if isinstance(entry, dict) and entry.get("lifecycle", "current") != "historical"
+    }
+    by_filename = {
+        str(entry.get("canonical_filename")): entry
+        for entry in current_governing.values()
+        if entry.get("canonical_filename")
+    }
+    return current_governing, by_filename
+
+
+def _check_current_authority_self_versions(
+    root: Path,
+    manifest: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    current_governing, _ = _current_authority_entries(manifest)
+    target_entries = [
+        current_governing[document_id]
+        for document_id in CURRENT_AUTHORITY_STATE_SECTIONS
+        if document_id in current_governing
+    ]
+    if not target_entries:
+        return
+
+    issues: list[str] = []
+    issue_paths: list[str] = []
+    for entry in target_entries:
+        document_id = str(entry.get("document_id"))
+        relative = _relative_path(entry)
+        path = _entry_path(root, entry)
+        expected_version = str(entry.get("semver", ""))
+        if not path.is_file():
+            issues.append(f"{document_id}: current artifact is missing at {relative}")
+            issue_paths.append(relative)
+            continue
+        text = path.read_text(encoding="utf-8")
+        declared_version = _declared_document_version(text)
+        filename_version = VERSION_PATTERN.search(str(entry.get("canonical_filename", "")))
+        if declared_version != expected_version or filename_version is None or filename_version.group(1) != expected_version:
+            issues.append(
+                f"{document_id}: self-version is {declared_version!r} with manifest {expected_version!r}"
+            )
+            issue_paths.append(relative)
+
+        active = _current_authority_state_section(text, document_id)
+        if document_id == "PROJECT_NORTH_STAR_AND_MVP":
+            stop_condition = _current_authority_north_star_stop_condition(text)
+            current_state_versions = re.findall(
+                r"(?i)Current Product Law / governance-alignment condition:\s+MET\s+\(v(\d+\.\d+\.\d+)\)",
+                stop_condition,
+            )
+            if current_state_versions != [expected_version]:
+                issues.append(
+                    f"{document_id}: active governance-alignment self-state is {current_state_versions!r}, expected {expected_version!r}"
+                )
+                issue_paths.append(relative)
+        elif document_id == "PLATFORM_BASELINE":
+            current_product_versions = re.findall(
+                r"(?im)^\s*Current Product Law\s+(?:is|:)\s+v?(\d+\.\d+\.\d+)\b",
+                active,
+            )
+            if current_product_versions and any(
+                version != expected_version for version in current_product_versions
+            ):
+                issues.append(
+                    f"{document_id}: active Current Product Law versions {current_product_versions!r} do not match {expected_version!r}"
+                )
+                issue_paths.append(relative)
+
+    _record_check(
+        report,
+        "current_authority_self_version",
+        not issues,
+        "current North Star and Product self-versions match their manifest entries"
+        if not issues
+        else "; ".join(issues),
+        path=issue_paths[0] if issue_paths else "",
+    )
+
+
+def _check_current_authority_route_resolution(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    current_governing, by_filename = _current_authority_entries(manifest)
+    target_entries = [
+        current_governing[document_id]
+        for document_id in CURRENT_AUTHORITY_STATE_SECTIONS
+        if document_id in current_governing
+    ]
+    if not target_entries:
+        return
+
+    context_index = str(integrity_rules["document_roots"]["context_index"])
+    readme_path = root / context_index
+    readme_filenames = _readme_current_authority_filenames(
+        readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    )
+    issues: list[str] = []
+    issue_paths: list[str] = []
+    for entry in target_entries:
+        document_id = str(entry.get("document_id"))
+        relative = _relative_path(entry)
+        path = _entry_path(root, entry)
+        active = _current_authority_state_section(
+            path.read_text(encoding="utf-8") if path.is_file() else "",
+            document_id,
+        )
+        if not active:
+            issues.append(f"{document_id}: active current-state section is missing or malformed")
+            issue_paths.append(relative)
+            continue
+
+        route_lines = [
+            line for line in active.splitlines()
+            if re.search(
+                r"(?i)^\s*(?:current\s+routing|current\s+product\s+law|current\s+product/decision/roadmap\s+authority)\s*(?:is|:)",
+                line,
+            )
+        ]
+        if len(route_lines) != 1:
+            issues.append(
+                f"{document_id}: expected one active CURRENT/current-routing field, found {len(route_lines)}"
+            )
+            issue_paths.append(relative)
+            continue
+
+        route_line = route_lines[0]
+        route_filenames = [
+            Path(value).name for value in CURRENT_ROUTE_FILENAME_PATTERN.findall(route_line)
+        ]
+        if document_id == "PROJECT_NORTH_STAR_AND_MVP":
+            if route_filenames:
+                issues.append(
+                    f"{document_id}: active §23 caches versioned current-route filenames {route_filenames!r}"
+                )
+                issue_paths.append(relative)
+            if "README" not in route_line or "CURRENT_AUTHORITY_MANIFEST" not in route_line:
+                issues.append(
+                    f"{document_id}: active §23 routing must delegate Product/Decision/Roadmap authority to README and CURRENT_AUTHORITY_MANIFEST"
+                )
+                issue_paths.append(relative)
+        if document_id == "PLATFORM_BASELINE" and not route_filenames:
+            current_versions = CURRENT_ROUTE_VERSION_PATTERN.findall(route_line)
+            expected_version = str(entry.get("semver", ""))
+            if not current_versions or any(version != expected_version for version in current_versions):
+                issues.append(
+                    f"{document_id}: active Current Product Law version does not resolve to manifest SemVer {expected_version!r}"
+                )
+                issue_paths.append(relative)
+                continue
+            route_filenames = [str(entry.get("canonical_filename", ""))]
+
+        for filename in route_filenames:
+            routed_entry = by_filename.get(filename)
+            if routed_entry is None:
+                issues.append(
+                    f"{document_id}: active route {filename!r} is not a current manifest route"
+                )
+                issue_paths.append(relative)
+                continue
+            if filename not in readme_filenames:
+                issues.append(
+                    f"{document_id}: active route {filename!r} is absent from README current authority"
+                )
+                issue_paths.append(relative)
+
+    def record_current_routes(
+        document_id: str,
+        relative: str,
+        routed_names: list[str],
+        expected_names: list[str],
+    ) -> None:
+        if routed_names != expected_names:
+            issues.append(
+                f"{document_id}: explicitly current routes {routed_names!r} do not match manifest routes {expected_names!r}"
+            )
+            issue_paths.append(relative)
+        for filename in routed_names:
+            if filename not in by_filename:
+                issues.append(f"{document_id}: active route {filename!r} is not a current manifest route")
+                issue_paths.append(relative)
+            elif filename not in readme_filenames:
+                issues.append(f"{document_id}: active route {filename!r} is absent from README current authority")
+                issue_paths.append(relative)
+
+    expected_product_authority = [
+        str(current_governing[document_id].get("canonical_filename", ""))
+        for document_id in ("PROJECT_NORTH_STAR_AND_MVP", "PLATFORM_BASELINE", "DECISION_REGISTER")
+        if document_id in current_governing
+    ]
+    complete_authority_inventory = {
+        "PROJECT_NORTH_STAR_AND_MVP", "PLATFORM_BASELINE", "DECISION_REGISTER", "OPEN_WORK",
+        "ARCHITECTURE_SYNTHESIS", "DOMAIN_MAP", "ROADMAP", "PLATFORM_OPERATING_MODEL",
+        "FRONTEND_EXPERIENCE_SYSTEM",
+    }.issubset(current_governing)
+    roadmap_entry = current_governing.get("ROADMAP")
+    if roadmap_entry is not None:
+        relative = _relative_path(roadmap_entry)
+        path = _entry_path(root, roadmap_entry)
+        roadmap_text = path.read_text(encoding="utf-8") if path.is_file() else ""
+        header = roadmap_text.split("## Amendment summary", 1)[0]
+        current_authority_lines = re.findall(
+            r"(?m)^-\s+\*\*Current Product authority:\*\*\s*(.+)$",
+            header,
+        )
+        route_names = [
+            Path(filename).name
+            for filename in CURRENT_ROUTE_FILENAME_PATTERN.findall(current_authority_lines[0])
+        ] if len(current_authority_lines) == 1 else []
+        if len(current_authority_lines) == 1 or complete_authority_inventory:
+            record_current_routes("ROADMAP", relative, route_names, expected_product_authority)
+
+    graph_rules = integrity_rules.get("graph_rules", {})
+    navigation_paths = [str(path) for path in graph_rules.get("navigation_document_paths", [])]
+    working_nav_paths = [path for path in navigation_paths if path.startswith("docs/00_platform/working/")]
+    readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme_working_section = readme_text.split("## Active Working Artifacts", 1)[-1]
+    readme_working_section = re.split(r"(?m)^##\s+", readme_working_section, maxsplit=1)[0]
+    readme_working_paths = set(
+        re.findall(r"`(working/[^`]+\.md)`", readme_working_section)
+    )
+    for relative in working_nav_paths:
+        working_relative = relative.removeprefix("docs/00_platform/")
+        if working_relative not in readme_working_paths:
+            issues.append(f"README: active working route {working_relative!r} is absent from its working-artifact list")
+            issue_paths.append(context_index)
+
+    atlas_relative = next(
+        (path for path in working_nav_paths if Path(path).name.startswith("DELIVERY_ATLAS_WORKING_")),
+        None,
+    )
+    if atlas_relative is not None:
+        atlas_path = root / atlas_relative
+        atlas_text = atlas_path.read_text(encoding="utf-8") if atlas_path.is_file() else ""
+        start = atlas_text.find("# 1. Authority, purpose and boundaries")
+        end = atlas_text.find("## 1.2 Purpose", start + 1) if start >= 0 else -1
+        current_sources = atlas_text[start:end] if start >= 0 and end > start else ""
+        source_rows: dict[str, list[str]] = {}
+        for line in current_sources.splitlines():
+            if not line.lstrip().startswith("|"):
+                continue
+            cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+            if len(cells) >= 2 and cells[0] in {"Product Law", "Roadmap", "Planning tracker"}:
+                source_rows[cells[0]] = [
+                    Path(filename).name
+                    for filename in CURRENT_ROUTE_FILENAME_PATTERN.findall(cells[1])
+                ]
+        expected_atlas_sources = {
+            "Product Law": expected_product_authority,
+            "Roadmap": [str(current_governing["ROADMAP"].get("canonical_filename", ""))]
+            if "ROADMAP" in current_governing else [],
+            "Planning tracker": [str(current_governing["OPEN_WORK"].get("canonical_filename", ""))]
+            if "OPEN_WORK" in current_governing else [],
+        }
+        for label, expected_names in expected_atlas_sources.items():
+            record_current_routes(
+                "DELIVERY_ATLAS_WORKING",
+                atlas_relative,
+                source_rows.get(label, []),
+                expected_names,
+            )
+
+    harden_relative = next(
+        (path for path in working_nav_paths if Path(path).name.startswith("HARDEN-02_CONTRACT_WORKING_")),
+        None,
+    )
+    harden_nav = next(
+        (path for path in navigation_paths if Path(path).name.startswith("HARDEN-02_CONTRACT_WORKING_")),
+        None,
+    )
+    if harden_relative is not None:
+        harden_path = root / harden_relative
+        harden_text = harden_path.read_text(encoding="utf-8") if harden_path.is_file() else ""
+        authority_start = harden_text.find("### CURRENT AUTHORITY")
+        authority_end = harden_text.find("### CURRENT DERIVED EVIDENCE", authority_start + 1)
+        authority_section = harden_text[authority_start:authority_end] if authority_start >= 0 and authority_end > authority_start else ""
+        authority_sources: list[str] = []
+        for line in authority_section.splitlines():
+            if line.lstrip().startswith("|") and "|---" not in line:
+                cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+                if cells:
+                    authority_sources.extend(
+                        Path(filename).name
+                        for filename in CURRENT_ROUTE_FILENAME_PATTERN.findall(cells[0])
+                    )
+        expected_harden_authority = [
+            str(current_governing[document_id].get("canonical_filename", ""))
+            for document_id in (
+                "PROJECT_NORTH_STAR_AND_MVP", "PLATFORM_BASELINE", "DECISION_REGISTER",
+                "OPEN_WORK", "ARCHITECTURE_SYNTHESIS", "DOMAIN_MAP", "ROADMAP",
+                "PLATFORM_OPERATING_MODEL", "FRONTEND_EXPERIENCE_SYSTEM",
+            )
+            if document_id in current_governing
+        ]
+        record_current_routes(
+            "HARDEN-02_CONTRACT_WORKING",
+            harden_relative,
+            authority_sources,
+            expected_harden_authority,
+        )
+
+    open_work_entry = current_governing.get("OPEN_WORK")
+    if open_work_entry is not None and harden_nav is not None:
+        relative = _relative_path(open_work_entry)
+        open_work_path = _entry_path(root, open_work_entry)
+        open_work_text = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
+        stage = open_work_text.split("# 9. Immediate Next Action", 1)
+        stage = stage[1].split("# 10. Minimal Tools", 1)[0] if len(stage) == 2 else ""
+        harden_current_lines = re.findall(
+            r"(?m)^CURRENT HARDEN-02 STATUS SUCCESSOR:\s*([^;\n]+)",
+            stage,
+        )
+        harden_current_routes = [
+            value.strip().strip("`")
+            for value in harden_current_lines
+        ]
+        expected_harden_route = harden_nav.removeprefix("docs/00_platform/")
+        if harden_current_routes != [expected_harden_route] or expected_harden_route not in readme_working_paths:
+            issues.append(
+                f"OPEN_WORK: explicit CURRENT HARDEN route {harden_current_routes!r} does not match README/manifest navigation path {expected_harden_route!r}"
+            )
+            issue_paths.append(relative)
+
+    open_work_entry = current_governing.get("OPEN_WORK")
+    if open_work_entry is not None and atlas_relative is not None:
+        relative = _relative_path(open_work_entry)
+        open_work_path = _entry_path(root, open_work_entry)
+        open_work_text = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
+        stage = open_work_text.split("# 9. Immediate Next Action", 1)
+        stage = stage[1].split("# 10. Minimal Tools", 1)[0] if len(stage) == 2 else ""
+        atlas_lines = re.findall(r"(?m)^ATLAS RECONCILIATION: COMPLETE.*$", stage)
+        atlas_names = [
+            Path(filename).as_posix()
+            for filename in CURRENT_ROUTE_FILENAME_PATTERN.findall(atlas_lines[0])
+            if filename.startswith("working/") and "DELIVERY_ATLAS_WORKING_" in filename
+        ] if len(atlas_lines) == 1 else []
+        expected_atlas_route = atlas_relative.removeprefix("docs/00_platform/")
+        if atlas_names != [expected_atlas_route] or expected_atlas_route not in readme_working_paths:
+            issues.append(
+                f"OPEN_WORK: current Atlas route {atlas_names!r} does not match README/manifest navigation path {expected_atlas_route!r}"
+            )
+            issue_paths.append(relative)
+
+    _record_check(
+        report,
+        "current_authority_route_resolution",
+        not issues,
+        "active CURRENT/current-routing fields resolve to README and manifest routes"
+        if not issues
+        else "; ".join(issues),
+        path=issue_paths[0] if issue_paths else context_index,
+    )
+
+
+def _check_current_authority_delegated_routing(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    current_governing, _ = _current_authority_entries(manifest)
+    target_entries = [
+        current_governing[document_id]
+        for document_id in CURRENT_AUTHORITY_STATE_SECTIONS
+        if document_id in current_governing
+    ]
+    if not target_entries:
+        return
+
+    context_index = str(integrity_rules["document_roots"]["context_index"])
+    readme_path = root / context_index
+    readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme_filenames = _readme_current_authority_filenames(readme_text)
+    issues: list[str] = []
+    issue_paths: list[str] = []
+    for entry in target_entries:
+        document_id = str(entry.get("document_id"))
+        relative = _relative_path(entry)
+        path = _entry_path(root, entry)
+        active = _current_authority_state_section(
+            path.read_text(encoding="utf-8") if path.is_file() else "",
+            document_id,
+        )
+        delegated_lines = [
+            line for line in active.splitlines()
+            if "readme" in line.lower() and re.search(r"current\s+open\s+work", line, re.IGNORECASE)
+        ]
+        if document_id == "PLATFORM_BASELINE":
+            volatile_states = (
+                "NEXT / AUTHORISED / NOT STARTED",
+                "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+                "COMPLETE / CERTIFIED",
+            )
+            present_states = [state for state in volatile_states if state in active]
+            if present_states:
+                issues.append(
+                    f"{document_id}: §24 mirrors volatile HARDEN execution state {present_states!r}"
+                )
+                issue_paths.append(relative)
+        if not delegated_lines:
+            if document_id in {"PROJECT_NORTH_STAR_AND_MVP", "PLATFORM_BASELINE"}:
+                issues.append(f"{document_id}: active current-state block does not delegate programme routing to README and current Open Work")
+                issue_paths.append(relative)
+            continue
+
+        required_ids = (document_id, "OPEN_WORK")
+        missing_routes = [
+            required_id
+            for required_id in required_ids
+            if required_id not in current_governing
+            or str(current_governing[required_id].get("canonical_filename")) not in readme_filenames
+        ]
+        if len(delegated_lines) != 1 or missing_routes:
+            detail = (
+                f"delegated routing fields={len(delegated_lines)}, missing README/manifest routes={sorted(set(missing_routes))}"
+            )
+            issues.append(f"{document_id}: {detail}")
+            issue_paths.append(relative)
+
+    _record_check(
+        report,
+        "current_authority_delegated_routing",
+        not issues,
+        "active current-state blocks agree with README and delegated current Open Work routing"
+        if not issues
+        else "; ".join(issues),
+        path=issue_paths[0] if issue_paths else context_index,
     )
 
 
@@ -1539,6 +2035,9 @@ def run_audit(
     )
     _check_roadmap_gate_coverage(root, entries, definitions, integrity_rules, report)
     _check_domain_ownership(root, entries, report, counts_expectation, integrity_rules)
+    _check_current_authority_self_versions(root, manifest, report)
+    _check_current_authority_route_resolution(root, manifest, integrity_rules, report)
+    _check_current_authority_delegated_routing(root, manifest, integrity_rules, report)
     if _production_mode(expected_counts):
         _check_production_graph(root, manifest, integrity_rules, report)
         _check_product_semantics(root, entries, integrity_rules, report)

@@ -5,27 +5,27 @@
   "governing_documents": [
     {
       "document_id": "PROJECT_NORTH_STAR_AND_MVP",
-      "canonical_filename": "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
-      "semver": "1.2.3",
-      "repository_path": "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
+      "canonical_filename": "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
+      "semver": "1.2.4",
+      "repository_path": "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
       "authority_class": "PRODUCT_NORTH_STAR",
-      "sha256": "e3054c8e2f8743fbc3cf61bd97435e792fe6193b01fdc6caeef0c1e294a9eee9",
-      "superseded_version": "1.2.2",
+      "sha256": "a3ff58a26d1ec13173b31c9e7994b427be5fcf644d344b3106894b0026272cd6",
+      "superseded_version": "1.2.3",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "e3054c8e2f8743fbc3cf61bd97435e792fe6193b01fdc6caeef0c1e294a9eee9"
+      "provenance_sha256": "a3ff58a26d1ec13173b31c9e7994b427be5fcf644d344b3106894b0026272cd6"
     },
     {
       "document_id": "PLATFORM_BASELINE",
-      "canonical_filename": "00_PLATFORM_v1.5.0.md",
-      "semver": "1.5.0",
-      "repository_path": "docs/00_platform/00_PLATFORM_v1.5.0.md",
+      "canonical_filename": "00_PLATFORM_v1.5.1.md",
+      "semver": "1.5.1",
+      "repository_path": "docs/00_platform/00_PLATFORM_v1.5.1.md",
       "authority_class": "PLATFORM_PRODUCT_LAW",
-      "sha256": "4a656b5c69d628003aaa03802b889d555135c4ecb08754f947520e175e0559cd",
-      "superseded_version": "1.4.1",
+      "sha256": "70e57a6771c3b7cecadcad41d9c97f3dc8ac61d753591200fd1ed855b2417afe",
+      "superseded_version": "1.5.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "4a656b5c69d628003aaa03802b889d555135c4ecb08754f947520e175e0559cd"
+      "provenance_sha256": "70e57a6771c3b7cecadcad41d9c97f3dc8ac61d753591200fd1ed855b2417afe"
     },
     {
       "document_id": "DECISION_REGISTER",
@@ -39,14 +39,14 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.49.md",
-      "semver": "1.2.49",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.49.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.50.md",
+      "semver": "1.2.50",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.50.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "a42bb0ca6ec23b2fd669197b14ec2fa9974a3d6f70c0e0523cac76730ee3a138",
-      "superseded_version": "1.2.48",
+      "sha256": "ea99015d5fca34211e9c85e9f6575e8ad69df2cf9a39da3b255f2e9d3a5abcb7",
+      "superseded_version": "1.2.49",
       "lifecycle": "current",
-      "provenance_sha256": "a42bb0ca6ec23b2fd669197b14ec2fa9974a3d6f70c0e0523cac76730ee3a138"
+      "provenance_sha256": "ea99015d5fca34211e9c85e9f6575e8ad69df2cf9a39da3b255f2e9d3a5abcb7"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -74,15 +74,15 @@
     },
     {
       "document_id": "ROADMAP",
-      "canonical_filename": "05_ROADMAP_v1.1.4.md",
-      "semver": "1.1.4",
-      "repository_path": "docs/00_platform/05_ROADMAP_v1.1.4.md",
+      "canonical_filename": "05_ROADMAP_v1.1.5.md",
+      "semver": "1.1.5",
+      "repository_path": "docs/00_platform/05_ROADMAP_v1.1.5.md",
       "authority_class": "ROADMAP",
-      "sha256": "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9",
-      "superseded_version": "1.1.3",
+      "sha256": "5e5e938343d3ff7210515011b0bc9e11900553bcde24a552ef61cd2c85e7c5fb",
+      "superseded_version": "1.1.4",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
+      "provenance_sha256": "5e5e938343d3ff7210515011b0bc9e11900553bcde24a552ef61cd2c85e7c5fb"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",
@@ -158,6 +158,54 @@
     }
   ],
   "historical_documents": [
+    {
+      "document_id": "ROADMAP_V1_1_4",
+      "canonical_filename": "05_ROADMAP_v1.1.4.md",
+      "semver": "1.1.4",
+      "repository_path": "docs/00_platform/archive/05_ROADMAP_v1.1.4.md",
+      "authority_class": "ROADMAP_HISTORICAL",
+      "sha256": "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9",
+      "superseded_version": "1.1.5",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_49",
+      "canonical_filename": "02_OPEN_WORK_v1.2.49.md",
+      "semver": "1.2.49",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.49.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "a42bb0ca6ec23b2fd669197b14ec2fa9974a3d6f70c0e0523cac76730ee3a138",
+      "superseded_version": "1.2.50",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "a42bb0ca6ec23b2fd669197b14ec2fa9974a3d6f70c0e0523cac76730ee3a138"
+    },
+    {
+      "document_id": "PLATFORM_BASELINE_V1_5_0",
+      "canonical_filename": "00_PLATFORM_v1.5.0.md",
+      "semver": "1.5.0",
+      "repository_path": "docs/00_platform/archive/00_PLATFORM_v1.5.0.md",
+      "authority_class": "PLATFORM_PRODUCT_LAW_HISTORICAL",
+      "sha256": "4a656b5c69d628003aaa03802b889d555135c4ecb08754f947520e175e0559cd",
+      "superseded_version": "1.5.1",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "4a656b5c69d628003aaa03802b889d555135c4ecb08754f947520e175e0559cd"
+    },
+    {
+      "document_id": "PROJECT_NORTH_STAR_AND_MVP_V1_2_3",
+      "canonical_filename": "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
+      "semver": "1.2.3",
+      "repository_path": "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
+      "authority_class": "PRODUCT_NORTH_STAR_HISTORICAL",
+      "sha256": "e3054c8e2f8743fbc3cf61bd97435e792fe6193b01fdc6caeef0c1e294a9eee9",
+      "superseded_version": "1.2.4",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "e3054c8e2f8743fbc3cf61bd97435e792fe6193b01fdc6caeef0c1e294a9eee9"
+    },
     {
       "document_id": "ROADMAP_V1_1_3",
       "canonical_filename": "05_ROADMAP_v1.1.3.md",
@@ -833,7 +881,8 @@
         "(?<!archive/)05_ROADMAP_v1\\.1\\.3\\.md",
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.48\\.md",
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.3\\.0\\.md",
-        "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.4\\.2\\.md"
+        "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.4\\.2\\.md",
+        "(?<!archive/)05_ROADMAP_v1\\.1\\.4\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",
@@ -849,12 +898,12 @@
         "FRONTEND_EXPERIENCE_SYSTEM"
       ],
       "navigation_document_paths": [
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.1.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.2.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
       ],
       "stale_open_work_v1_2_44_guard_note": "The exact 02_OPEN_WORK_v1.2.44.md stale-path pattern rejects unarchived references in active navigation documents. This is a routing guard only; it does not prove lifecycle or policy semantics.",
-      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48, Atlas v0.3.0 and HARDEN-02 status v0.4.2 paths are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records."
+      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48, Roadmap v1.1.4, Atlas v0.3.0 and HARDEN-02 status v0.4.2 paths are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records."
     },
     "product_hardening_bundle_allocation_requirements": {
       "matrix": "BUNDLE-COMPONENT-ALLOCATION",
