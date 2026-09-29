@@ -43,10 +43,10 @@
       "semver": "1.2.51",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.51.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "f1cdacd9addf8ddc0bd213d651e4a00aebea2e69d8aa95a48ac63703cc85317a",
+      "sha256": "ec36b444c126fb6e68a19a8a2343448ce429189ec7d512f178a27336604902f3",
       "superseded_version": "1.2.50",
       "lifecycle": "current",
-      "provenance_sha256": "f1cdacd9addf8ddc0bd213d651e4a00aebea2e69d8aa95a48ac63703cc85317a"
+      "provenance_sha256": "ec36b444c126fb6e68a19a8a2343448ce429189ec7d512f178a27336604902f3"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
