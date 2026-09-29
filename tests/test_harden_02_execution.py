@@ -432,36 +432,35 @@ def _roadmap_phase7_handoff_requirements(text: str) -> list[int]:
     if document_anchors[0].start() != section_offset + anchor_matches[0].start():
         raise ValueError("Roadmap Phase 7 task-contract anchor is outside §21")
 
-    summary = re.sub(r"`", "", handoff[: anchor_matches[0].start()])
-    summary = re.sub(r"\s+", " ", summary).casefold()
-    summary_rules = (
+    summary_block = handoff[len("# 21. Phase 7 handoff") : anchor_matches[0].start()].strip()
+    summary_paragraphs = [
+        re.sub(r"\s+", " ", paragraph.replace("`", "")).strip().casefold()
+        for paragraph in re.split(r"\n\s*\n", summary_block)
+        if paragraph.strip()
+    ]
+    expected_summary_paragraphs = (
         (
-            "FP-001 Phase 7A and Identity dossier state",
-            r"\bfp-001 has existing phase 7a work and an? identity\s*(?:&|and)\s*access dossier\b",
+            "This Roadmap defines the approved outcome sequence, dependencies and gates. "
+            "It does not select or own the active task or stage, grant execution authorisation, "
+            "or record current programme status. README and current Open Work own programme routing "
+            "and current task/stage selection; use those current sources for operational status. "
+            "This Roadmap records the approved sequence and gate boundaries only."
         ),
         (
-            "pending PMR artifact reconciliation state",
-            r"\bpmr(?: artifact)? reconciliation remains required after certified engineering standards authority promotion and has not been performed\b",
-        ),
-        ("gated Phase 7C state", r"\bphase 7c remains gated\b"),
-        ("unfinalised proof classification state", r"\bproof classification is not finali[sz]ed\b"),
-        (
-            "incomplete executable authentication proof state",
-            r"\bexecutable authentication proof (?:is|remains) incomplete\b",
+            "FP-001 has existing Phase 7A work and an Identity & Access dossier. "
+            "The narrow PMR artifact reconciliation remains required after certified Engineering "
+            "Standards Authority Promotion and has not been performed. Phase 7C remains gated, "
+            "proof classification is not finalised, and executable authentication proof is incomplete."
         ),
     )
-    for label, pattern in summary_rules:
-        if len(list(re.finditer(pattern, summary))) != 1:
-            raise ValueError(f"Roadmap §21 summary is missing or duplicates {label}")
-
-    contradiction_rules = (
-        r"\bpmr(?: artifact)? reconciliation (?:has been|was) performed\b",
-        r"\bphase 7c (?:is )?(?:ready|complete|approved)\b",
-        r"\bproof classification is (?:finali[sz]ed|complete|final)\b",
-        r"\bexecutable authentication proof (?:is|was) (?:complete|passed)\b",
+    expected_summary_paragraphs = tuple(
+        re.sub(r"\s+", " ", paragraph).strip().casefold()
+        for paragraph in expected_summary_paragraphs
     )
-    if any(re.search(pattern, summary) for pattern in contradiction_rules):
-        raise ValueError("Roadmap §21 summary contains a contradictory Phase 7 boundary state")
+    if tuple(summary_paragraphs) != expected_summary_paragraphs:
+        raise ValueError(
+            "Roadmap §21 summary must exactly preserve the reviewed two-paragraph Phase 7 boundary"
+        )
 
     anchor_end = anchor_matches[0].end()
     tail = handoff[anchor_end:]
@@ -1395,6 +1394,23 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             "contradictory Phase 7C summary": roadmap.replace(
                 anchor,
                 f"Phase 7C is READY.\n{anchor}",
+                1,
+            ),
+            "summary permits implementation while Phase 8 proof remains incomplete": roadmap.replace(
+                "executable authentication proof is incomplete.",
+                "executable authentication proof is incomplete. "
+                "Implementation may begin immediately while the Phase 8 proof remains incomplete.",
+                1,
+            ),
+            "summary says not to wait for Phase 8 proof": roadmap.replace(
+                "executable authentication proof is incomplete.",
+                "executable authentication proof is incomplete. "
+                "Do not wait for the Phase 8 proof before implementation.",
+                1,
+            ),
+            "unreviewed summary prose added before task anchor": roadmap.replace(
+                anchor,
+                f"Additional unreviewed Phase 7 boundary prose.\n\n{anchor}",
                 1,
             ),
         }
