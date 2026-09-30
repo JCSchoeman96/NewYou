@@ -5890,13 +5890,15 @@ All critical failures must be observable and owned.
 
 ### Product targets
 
+The targets below retain their existing pilot percentages. Their numerator, denominator, qualifying event and usage window use the metric definitions in §21T.7; do not substitute a different cohort or rewrite a prior cohort's definition. Before paid participation, version the complete metric contract required by §21T.7, including exclusions, missing-data treatment and metric-definition version.
+
 Aim for:
 
 ```text
-≥ 80% assessment completion among starters
-≥ 80% health-onboarding completion among eligible purchasers
-≥ 70% plan activation among delivered plans
-≥ 60% meaningful usage during the first 7 days
+≥ 80% assessment completion among §21T.7 starters
+≥ 80% health-onboarding completion using the §21T.7 denominator
+≥ 70% plan activation among successfully delivered personalised plans
+≥ 60% meaningful seven-day usage under the §21T.7 definition
 ```
 
 ### Value target
@@ -5904,12 +5906,12 @@ Aim for:
 Aim for:
 
 ```text
-≥ 70% of surveyed participants
+≥ 70% of survey respondents
 reporting the result/plan as useful,
 clear or personally relevant
 ```
 
-These are pilot decision thresholds, not medical efficacy claims.
+For controlled-pilot interpretation, at least 70% of the cohort must respond to the value survey. Keep non-response visible and report both counts and percentages. These are pilot decision thresholds, not medical efficacy claims.
 
 A missed non-integrity target triggers a deliberate:
 

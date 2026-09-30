@@ -5205,7 +5205,7 @@ Reconciliation is ready for review only when the evidence shows all of the follo
 |---|---|
 | Versioned predecessor | Archived routing predecessor is `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md`; its predecessor v0.2.3 remains preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`. |
 | Non-authority preserved | Artifact remains DERIVED / WORKING / NON-AUTHORITATIVE and outside authority-document records; its path is listed only under graph/navigation paths. |
-| Current-source routing | §1.1 points to Product `v1.5.1`, Decisions `v1.5.0`, Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.1.5` and current Open Work `v1.2.50`. |
+| Current-source routing | §1.1 points to North Star/MVP `v1.3.0`, Product `v1.6.0`, Decisions `v1.6.0`, Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.51`. |
 | Feature Pack set | Exactly 17 Feature Packs `FP-001`–`FP-017`; no Research/Voting/Tools/PMR/Competitions Feature Pack. |
 | Domain set | Exactly 20 Domains, including Domain 19 Research & Feedback and Domain 20 Voting & Balloting. |
 | PMR navigation | FP-001 and CAP-001 reflect required IAM-owned PMR; encoding unfrozen; `FP001_RECONCILIATION_REQUIRED` preserved; FP-001 artifacts unchanged. |

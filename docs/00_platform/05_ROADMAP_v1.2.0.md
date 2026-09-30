@@ -540,7 +540,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Affected Domains:** `Plans & Nutrition`; `Content & Media`; `Entitlements`; `Habits, Journals & Progress`; `Safety & Eligibility`; `Temperament`; `Privacy & Consent`; `Identity & Access`; `Audit & Evidence`; `Analytics`.
 
-**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§8, 9, 12–16`; `00_PLATFORM_v1.6.0.md §§10–14, 21D–21E, 21L.4–21L.6, 21L.21–21L.23, 21R.1–21R.3`; `DEC-096...DEC-122`, `DEC-271...DEC-273`, `DEC-299`, `DEC-300`, `DEC-301`.
+**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§8, 9, 12–17`; `00_PLATFORM_v1.6.0.md §§10–14, 21D–21E, 21L.4–21L.6, 21L.21–21L.23, 21R.1–21R.3, 21T.7`; `DEC-096...DEC-122`, `DEC-271...DEC-273`, `DEC-299`, `DEC-300`, `DEC-301`, `DEC-310`.
 
 **Product Hardening Contract:** `general_wellness_is_not_personalised_plan_fulfilment`; `paid_plan_right_waits_for_delivery_or_component_refund_closeout`; `purpose_withdrawal_stops_future_processing_without_itself_ending_commercial_right`; `component_refund_uses_accepted_order_snapshot`.
 

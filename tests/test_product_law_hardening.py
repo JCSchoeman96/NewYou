@@ -323,8 +323,13 @@ class ProductLawHardeningTests(unittest.TestCase):
         historical_source_routing = next(
             line for line in atlas_reconciliation.splitlines() if "| Current-source routing |" in line
         )
-        self.assertIn("Product `v1.5.1`, Decisions `v1.5.0`", historical_source_routing)
-        self.assertIn("Roadmap `v1.1.5`", historical_source_routing)
+        self.assertIn(
+            "North Star/MVP `v1.3.0`, Product `v1.6.0`, Decisions `v1.6.0`, "
+            "Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.51`",
+            historical_source_routing,
+        )
+        self.assertNotIn("Product `v1.5.1`", historical_source_routing)
+        self.assertNotIn("Roadmap `v1.1.5`", historical_source_routing)
         current_source_table = self.atlas.split("## 1.1 Authority hierarchy", 1)[1].split("## 1.2 Purpose", 1)[0]
         for current_name in (
             "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
@@ -546,6 +551,13 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertIn("MVP success does not prove the long-term North Star", personalisation)
         self.assertIn("no hard customer acquisition cost, lifetime value or profit-margin threshold", personalisation)
         self.assertIn("Practitioner services have separate service economics", personalisation)
+
+        pilot_criteria = self.product.split("## 21L.23 First paid-pilot success criteria", 1)[1].split("## 21L.24", 1)[0]
+        self.assertIn("metric definitions in §21T.7", pilot_criteria)
+        self.assertIn("health-onboarding completion using the §21T.7 denominator", pilot_criteria)
+        self.assertIn("meaningful seven-day usage under the §21T.7 definition", pilot_criteria)
+        self.assertNotIn("among eligible purchasers", pilot_criteria)
+        self.assertIn("at least 70% of the cohort must respond to the value survey", pilot_criteria)
 
         def pack(pack_id: str) -> str:
             start = self.roadmap.index(f"## {pack_id} —")

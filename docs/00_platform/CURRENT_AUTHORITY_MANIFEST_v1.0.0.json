@@ -21,11 +21,11 @@
       "semver": "1.6.0",
       "repository_path": "docs/00_platform/00_PLATFORM_v1.6.0.md",
       "authority_class": "PLATFORM_PRODUCT_LAW",
-      "sha256": "5bc6cb83639cd1d1fcb1395beb8214d6764f96c39d6f7b6458cb9cd6305f463a",
+      "sha256": "230c123e073538f218c998c5ed6eefe2db3be261f007ded85d842a661149c7ce",
       "superseded_version": "1.5.1",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "5bc6cb83639cd1d1fcb1395beb8214d6764f96c39d6f7b6458cb9cd6305f463a"
+      "provenance_sha256": "230c123e073538f218c998c5ed6eefe2db3be261f007ded85d842a661149c7ce"
     },
     {
       "document_id": "DECISION_REGISTER",
@@ -78,11 +78,11 @@
       "semver": "1.2.0",
       "repository_path": "docs/00_platform/05_ROADMAP_v1.2.0.md",
       "authority_class": "ROADMAP",
-      "sha256": "e2587b0f954027f72e1e6534d791f8a636904129770663bf3331a2bb7a2734ed",
+      "sha256": "601172754e78f23df7d6b59e7c4eceb0aefa0b9e5bb65045dafeacd78b9d0fb0",
       "superseded_version": "1.1.5",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "e2587b0f954027f72e1e6534d791f8a636904129770663bf3331a2bb7a2734ed"
+      "provenance_sha256": "601172754e78f23df7d6b59e7c4eceb0aefa0b9e5bb65045dafeacd78b9d0fb0"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",

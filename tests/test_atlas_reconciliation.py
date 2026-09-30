@@ -191,6 +191,12 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         self.assertIn("03_ARCHITECTURE_v1.1.1.md", sources)
         self.assertIn("04_DOMAIN_MAP_v1.2.0.md", sources)
         self.assertIn("05_ROADMAP_v1.2.0.md", sources)
+        reconciliation = _section(self.atlas, "## 26.18 ATLAS reconciliation", "## 26.19")
+        self.assertIn(
+            "§1.1 points to North Star/MVP `v1.3.0`, Product `v1.6.0`, Decisions `v1.6.0`, "
+            "Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.51`.",
+            reconciliation,
+        )
         current = {
             entry["document_id"]: entry
             for section in ("governing_documents", "reference_documents")
