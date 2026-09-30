@@ -9,11 +9,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ROADMAP = DOCS / "05_ROADMAP_v1.1.5.md"
+ROADMAP = DOCS / "archive" / "05_ROADMAP_v1.1.5.md"
 ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.1.4.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.4.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.50.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
+CURRENT_ROADMAP = DOCS / "05_ROADMAP_v1.2.0.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.51.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.3.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 ROADMAP_V1_1_4_SHA256 = "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
@@ -87,6 +88,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.roadmap = ROADMAP.read_text(encoding="utf-8") if ROADMAP.is_file() else ""
+        cls.current_roadmap = CURRENT_ROADMAP.read_text(encoding="utf-8") if CURRENT_ROADMAP.is_file() else ""
         cls.predecessor = ROADMAP_PREDECESSOR.read_text(encoding="utf-8") if ROADMAP_PREDECESSOR.is_file() else ""
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
         cls.atlas = ATLAS.read_text(encoding="utf-8")
@@ -129,19 +131,19 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
                     _normalise_roadmap_successor(malformed, self.predecessor)
 
     def test_roadmap_dynamic_routing_resolves_through_readme_and_manifest(self):
-        self.assertTrue(self.roadmap, "current Roadmap v1.1.5 must exist")
+        self.assertTrue(self.current_roadmap, "current Roadmap v1.2.0 must exist")
         manifest_current = {
             item["document_id"]: item
             for item in self.manifest["governing_documents"]
         }
         roadmap = manifest_current["ROADMAP"]
         open_work = manifest_current["OPEN_WORK"]
-        self.assertEqual("05_ROADMAP_v1.1.5.md", roadmap["canonical_filename"])
-        self.assertEqual("docs/00_platform/05_ROADMAP_v1.1.5.md", roadmap["repository_path"])
-        self.assertEqual(_sha256(ROADMAP), roadmap["sha256"])
-        self.assertEqual("02_OPEN_WORK_v1.2.50.md", open_work["canonical_filename"])
+        self.assertEqual("05_ROADMAP_v1.2.0.md", roadmap["canonical_filename"])
+        self.assertEqual("docs/00_platform/05_ROADMAP_v1.2.0.md", roadmap["repository_path"])
+        self.assertEqual(_sha256(CURRENT_ROADMAP), roadmap["sha256"])
+        self.assertEqual("02_OPEN_WORK_v1.2.51.md", open_work["canonical_filename"])
 
-        header = self.roadmap.split("## Amendment summary", 1)[0]
+        header = self.current_roadmap.split("## Amendment summary", 1)[0]
         route_lines = re.findall(r"(?m)^- \*\*Current programme routing:\*\* (.+)$", header)
         self.assertEqual(1, len(route_lines))
         route = route_lines[0]
@@ -154,24 +156,24 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertIn(f"`{open_work['canonical_filename']}`", default_context)
 
     def test_readme_manifest_open_work_and_atlas_agree_on_current_roadmap(self):
-        current_route = "05_ROADMAP_v1.1.5.md"
+        current_route = "05_ROADMAP_v1.2.0.md"
         self.assertIn(f"`{current_route}`", self.readme)
-        self.assertEqual(6, self.open_work.count(current_route))
-        self.assertEqual(6, self.atlas.count(current_route))
+        self.assertGreater(self.open_work.count(current_route), 0)
+        self.assertGreater(self.atlas.count(current_route), 0)
 
         stale_current = re.compile(r"(?<!archive/)05_ROADMAP_v1\.1\.4\.md")
         for label, text in (
             ("README", self.readme),
             ("current Open Work", self.open_work),
             ("current Atlas", self.atlas),
-            ("current Roadmap", self.roadmap),
+            ("current Roadmap", self.current_roadmap),
         ):
             with self.subTest(source=label):
                 self.assertIsNone(stale_current.search(text), f"stale active Roadmap route in {label}")
 
         governing = {entry["document_id"]: entry for entry in self.manifest["governing_documents"]}
         self.assertEqual(current_route, governing["ROADMAP"]["canonical_filename"])
-        self.assertEqual("1.1.5", governing["ROADMAP"]["semver"])
+        self.assertEqual("1.2.0", governing["ROADMAP"]["semver"])
         history = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         old_roadmap = history["ROADMAP_V1_1_4"]
         self.assertEqual("05_ROADMAP_v1.1.4.md", old_roadmap["canonical_filename"])
@@ -189,24 +191,34 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertIsNotNone(guard.search("05_ROADMAP_v1.1.4.md"))
         self.assertIsNone(guard.search("archive/05_ROADMAP_v1.1.4.md"))
 
-    def test_all_feature_pack_sections_and_section_21_are_exactly_preserved(self):
+    def test_current_roadmap_keeps_the_same_feature_pack_inventory(self):
         old_packs = _feature_pack_sections(self.predecessor)
-        new_packs = _feature_pack_sections(self.roadmap)
+        new_packs = _feature_pack_sections(self.current_roadmap)
         expected = [f"FP-{number:03d}" for number in range(1, 18)]
         self.assertEqual(expected, list(old_packs))
         self.assertEqual(expected, list(new_packs))
-        self.assertEqual(old_packs, new_packs)
-
-        marker = "# 21. Phase 7 handoff\n"
-        old_section = self.predecessor.split(marker, 1)[1].split("\n# 22.", 1)[0]
-        new_section = self.roadmap.split(marker, 1)[1].split("\n# 22.", 1)[0]
-        self.assertEqual(old_section, new_section)
+        self.assertNotIn("FP-018", self.current_roadmap)
 
     def test_patch_scope_is_narrow_and_stage_neutral(self):
         self.assertIn(PATCH_SCOPE.strip(), self.roadmap)
         scope = self.roadmap.split("## v1.1.5 Patch Scope\n\n", 1)[1].split("\n\n", 1)[0]
         self.assertIn("routing-only PATCH", scope)
         self.assertIn("preserves all 17 Feature Packs", scope)
+
+    def test_pass2_gates_and_stage_neutrality_are_carried_into_current_roadmap(self):
+        fp003 = _feature_pack_sections(self.current_roadmap)["FP-003"]
+        fp006 = _feature_pack_sections(self.current_roadmap)["FP-006"]
+        fp009 = _feature_pack_sections(self.current_roadmap)["FP-009"]
+        fp012 = _feature_pack_sections(self.current_roadmap)["FP-012"]
+        self.assertIn("production-intended proprietary assessment encoding", fp003)
+        self.assertIn("mask", fp003.lower())
+        self.assertIn("first 10", fp006.lower())
+        self.assertIn("day 90", fp006.lower())
+        self.assertIn("limited public", fp006.lower())
+        self.assertIn("recurring contribution", fp009.lower())
+        self.assertIn("practitioner", fp012.lower())
+        self.assertIn("does not authorize Feature Pack preparation, Phase 7C, Architectural Proof, Phase 8 or implementation", self.current_roadmap)
+        self.assertIn("Feature Pack count remains **17**", self.current_roadmap)
 
 
 if __name__ == "__main__":

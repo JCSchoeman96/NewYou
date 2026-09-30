@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 CONTRACT = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md"
-CONTRACT_CURRENT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
+CONTRACT_CURRENT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.5.md"
 CONTRACT_STATUS_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
 CONTRACT_V0_4_1_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.1.md"
 CONTRACT_V0_3_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.3.0.md"
@@ -456,12 +456,12 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.1.md").exists())
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.44.md").exists())
 
-    def test_v0_4_4_updates_current_routing_without_changing_contract_semantics(self):
+    def test_v0_4_5_updates_current_routing_without_changing_contract_semantics(self):
         self.assertEqual(
             "86682d7e019c30fcb7940af8e4bc1c9112a480bce199419c10f0f9b7670f90dc",
             _sha256(CONTRACT_STATUS_PREDECESSOR),
         )
-        self.assertIn("Plan / contract version:** `v0.4.4`", self.current_contract)
+        self.assertIn("Plan / contract version:** `v0.4.5`", self.current_contract)
         self.assertIn("original v0.4.0 semantics are certified", self.current_contract)
         self.assertIn("Execution-start baseline main SHA", self.current_contract)
         self.assertIn("IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.current_contract)
@@ -909,7 +909,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
 
     def test_readme_open_work_and_manifest_route_the_lifecycle_successor(self):
         self.assertIn(self.current_open_work_path.name, self.readme)
-        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md", self.readme)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md", self.readme)
         self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
         self.assertNotIn("POST-MERGE CERTIFICATION: PENDING", self.readme)
         self.assertIn("POST-MERGE CERTIFICATION: COMPLETE", self.readme)
@@ -924,11 +924,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.50", current["OPEN_WORK"]["semver"])
+        self.assertEqual("1.2.51", current["OPEN_WORK"]["semver"])
         self.assertEqual(self.current_open_work_path, ROOT / current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(self.current_open_work_path), current["OPEN_WORK"]["sha256"])
         navigation_paths = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
-        self.assertIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md", navigation_paths)
+        self.assertIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md", navigation_paths)
         self.assertNotIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md", navigation_paths)
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_47"]["lifecycle"])

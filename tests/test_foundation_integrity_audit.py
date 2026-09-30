@@ -105,7 +105,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
         candidate_open_work = (source_docs / "archive" / "02_OPEN_WORK_v1.2.49.md").read_text(encoding="utf-8")
         current_readme = (source_docs / "README.md").read_text(encoding="utf-8")
-        current_044_route = "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
+        current_044_route = "working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md"
         current_status_route = "working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
         self.assertEqual(2, current_readme.count(current_044_route))
         candidate_readme = current_readme.replace(current_044_route, current_status_route)
@@ -797,24 +797,24 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
         mutations = (
             (
-                "05_ROADMAP_v1.1.5.md",
+                "05_ROADMAP_v1.2.0.md",
+                "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
                 "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
-                "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
             ),
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.3.2.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.3.3.md",
+                "00_PLATFORM_v1.6.0.md",
                 "00_PLATFORM_v1.5.1.md",
-                "00_PLATFORM_v1.4.1.md",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md",
+                "02_OPEN_WORK_v1.2.51.md",
                 "02_OPEN_WORK_v1.2.50.md",
-                "02_OPEN_WORK_v1.2.49.md",
             ),
             (
-                "02_OPEN_WORK_v1.2.50.md",
+                "02_OPEN_WORK_v1.2.51.md",
+                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.3.md`",
                 "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.2.md`",
-                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.1.md`",
             ),
         )
         for relative, current_route, stale_route in mutations:

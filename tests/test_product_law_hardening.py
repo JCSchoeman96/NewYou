@@ -54,8 +54,8 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
-        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.2.md").read_text(encoding="utf-8")
-        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md").read_text(
+        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.3.md").read_text(encoding="utf-8")
+        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.5.md").read_text(
             encoding="utf-8"
         )
         cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md").read_text(
@@ -305,7 +305,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         )
 
     def test_current_governance_source_trails_resolve_to_current_or_archived_files(self):
-        self.assertIn("05_ROADMAP_v1.1.5.md", self.open_work)
+        self.assertIn("05_ROADMAP_v1.2.0.md", self.open_work)
         self.assertIn("archive/05_ROADMAP_v1.1.0.md", self.open_work)
         self.assertIn("archive/03_ARCHITECTURE_v1.1.0.md", self.open_work)
         self.assertIn("archive/04_DOMAIN_MAP_v1.1.0.md", self.open_work)
@@ -320,23 +320,23 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertIn("docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md", self.fp001)
         self.assertIn("docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.fp001)
         atlas_reconciliation = self.atlas.split("## 26.18 ATLAS reconciliation (`v0.3.0`) completion standard", 1)[1]
-        current_source_routing = next(
+        historical_source_routing = next(
             line for line in atlas_reconciliation.splitlines() if "| Current-source routing |" in line
         )
-        self.assertIn("Product `v1.5.1`, Decisions `v1.5.0`", current_source_routing)
-        self.assertIn("Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.1.5`", current_source_routing)
-        self.assertIn("Open Work `v1.2.50`", current_source_routing)
+        self.assertIn("Product `v1.5.1`, Decisions `v1.5.0`", historical_source_routing)
+        self.assertIn("Roadmap `v1.1.5`", historical_source_routing)
         current_source_table = self.atlas.split("## 1.1 Authority hierarchy", 1)[1].split("## 1.2 Purpose", 1)[0]
         for current_name in (
-            "00_PLATFORM_v1.5.1.md",
-            "01_DECISIONS_v1.5.0.md",
-            "02_OPEN_WORK_v1.2.50.md",
+            "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
+            "00_PLATFORM_v1.6.0.md",
+            "01_DECISIONS_v1.6.0.md",
+            "02_OPEN_WORK_v1.2.51.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "05_ROADMAP_v1.1.5.md",
+            "05_ROADMAP_v1.2.0.md",
         ):
             self.assertIn(current_name, current_source_table)
-        self.assertNotIn("Product `v1.3.0`", current_source_routing)
-        self.assertNotIn("Architecture `v1.1.0`", current_source_routing)
+        self.assertNotIn("Product `v1.3.0`", historical_source_routing)
+        self.assertNotIn("Architecture `v1.1.0`", historical_source_routing)
 
         source_trails = {
             "Open Work": self.open_work,
@@ -406,6 +406,13 @@ class ProductLawHardeningTests(unittest.TestCase):
                     )
 
         archived_source_paths = (
+            "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
+            "docs/00_platform/archive/00_PLATFORM_v1.5.1.md",
+            "docs/00_platform/archive/01_DECISIONS_v1.5.0.md",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.50.md",
+            "docs/00_platform/archive/05_ROADMAP_v1.1.5.md",
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.3.2.md",
+            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.4.4.md",
             "docs/00_platform/archive/05_ROADMAP_v1.1.0.md",
             "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
             "docs/00_platform/archive/00_PLATFORM_v1.2.1.md",
@@ -440,13 +447,17 @@ class ProductLawHardeningTests(unittest.TestCase):
                 self.assertTrue((ROOT / relative_path).is_file())
 
         current_source_paths = (
-            "docs/00_platform/05_ROADMAP_v1.1.5.md",
+            "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
+            "docs/00_platform/00_PLATFORM_v1.6.0.md",
+            "docs/00_platform/01_DECISIONS_v1.6.0.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.51.md",
+            "docs/00_platform/05_ROADMAP_v1.2.0.md",
             "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
             "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
             "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
             "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.2.md",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.3.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md",
             "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
             "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
             "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
@@ -499,15 +510,77 @@ class ProductLawHardeningTests(unittest.TestCase):
                         f"{name} contains an unresolved unarchived source path: {filename}",
                     )
 
+    def test_pass2_product_semantics_and_roadmap_gates_are_encoded_without_closing_lifecycle(self):
+        for number in range(305, 313):
+            with self.subTest(decision=number):
+                self.assertEqual(1, self.decisions.count(f"## DEC-{number:03d} —"))
+
+        personalisation = self.product.split("## 21T.1 Temperament as behavioural-personalisation input", 1)[1].split("# 22.", 1)[0]
+        self.assertIn("clinical / safety truth\n→ nutritional / health truth\n→ participant context and constraints\n→ temperament-informed behavioural strategy\n→ participant feedback and learned preferences\n→ presentation", personalisation)
+        for truth in (
+            "historical assessment result",
+            "current temperament / profile interpretation",
+            "active personalisation preferences",
+            "learned behavioural preferences",
+        ):
+            self.assertIn(truth, personalisation)
+        self.assertIn("not automatically a mask temperament", personalisation)
+        self.assertIn("may version low-risk behavioural application rules", personalisation)
+        self.assertIn("without methodology approval for each application change", personalisation)
+        self.assertIn("Methodology-neutral infrastructure such as assessment attempts", personalisation)
+        self.assertIn("may be designed or implemented where otherwise authorised", personalisation)
+        self.assertIn("must not infer trauma", personalisation)
+        self.assertIn("remain methodology-owned", personalisation)
+        self.assertIn("a clinical personality diagnosis", personalisation)
+
+        self.assertIn("not fulfilment of the purchased personalised plan", personalisation)
+        self.assertIn("plan entitlement remains held_unconsumed", personalisation)
+        self.assertIn("automatically refunds the plan component after 14 days", personalisation)
+        self.assertIn("NewYou remains intentionally a platform", personalisation)
+        self.assertIn("100%-discount purchases", personalisation)
+        self.assertIn("3 or more pauses commercial expansion", personalisation)
+        self.assertIn("Considering what you paid", personalisation)
+        self.assertIn("two Afrikaans-first and two English-first", personalisation)
+        self.assertIn("at least one engagement after Day 1", personalisation)
+        self.assertIn("at least 70% survey response", personalisation)
+        self.assertIn("MVP success does not prove the long-term North Star", personalisation)
+        self.assertIn("no hard customer acquisition cost, lifetime value or profit-margin threshold", personalisation)
+        self.assertIn("Practitioner services have separate service economics", personalisation)
+
+        def pack(pack_id: str) -> str:
+            start = self.roadmap.index(f"## {pack_id} —")
+            following = re.search(r"(?m)^## FP-\d{3} —", self.roadmap[start + 1 :])
+            end = start + 1 + following.start() if following else len(self.roadmap)
+            return self.roadmap[start:end]
+
+        fp003 = pack("FP-003")
+        self.assertIn("production-intended proprietary assessment encoding", fp003)
+        self.assertIn("may be designed or implemented only where otherwise authorised", fp003)
+        fp006 = pack("FP-006")
+        for metric_field in ("numerator", "denominator", "qualifying event", "measurement window", "missing-data treatment", "definition version"):
+            self.assertIn(metric_field, fp006)
+        self.assertIn("Day 30 and Day 90 evidence in parallel", fp006)
+        fp009 = pack("FP-009")
+        self.assertIn("Before recurring scale is treated as commercially validated", fp009)
+        self.assertIn("does not establish healthy economics", fp009)
+        fp012 = pack("FP-012")
+        self.assertIn("Practitioner-service economics are reviewed separately", fp012)
+
+        self.assertIn("Pass 2 remains **ADJUDICATED / CORRECTION SPEC APPROVED**", self.open_work)
+        self.assertIn("Pass 2 may be marked CLOSED only after", self.open_work)
+        self.assertIn("Phase 7C, Architectural Proof, Phase 8, application implementation", self.open_work)
+        self.assertIn("PHASE 7C: BLOCKED / NOT_STARTED", self.open_work)
+        self.assertIn('"proof_classification": "NOT FINALISED"', self.open_work)
+
     def test_atlas_routes_to_current_authorities_and_does_not_block_on_resolved_oq034(self):
         current_sources = (
-            "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
-            "00_PLATFORM_v1.5.1.md",
-            "01_DECISIONS_v1.5.0.md",
+            "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
+            "00_PLATFORM_v1.6.0.md",
+            "01_DECISIONS_v1.6.0.md",
             "03_ARCHITECTURE_v1.1.1.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "05_ROADMAP_v1.1.5.md",
-            "02_OPEN_WORK_v1.2.50.md",
+            "05_ROADMAP_v1.2.0.md",
+            "02_OPEN_WORK_v1.2.51.md",
             "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
         )
         source_table = self.atlas.split("## 1.2 Purpose", 1)[0]

@@ -14,15 +14,21 @@ DOCS = ROOT / "docs" / "00_platform"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.50.md"
-OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.49.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
-CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
-ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.51.md"
+OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.50.md"
+OPEN_WORK_ROUTING_SUCCESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.50.md"
+OPEN_WORK_ROUTING_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.49.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.5.md"
+CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
+CONTRACT_ROUTING_SUCCESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
+CONTRACT_ROUTING_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.3.md"
+ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
+ATLAS_ROUTING_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
+ATLAS_ROUTING_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
 
 POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
-ROADMAP = DOCS / "05_ROADMAP_v1.1.5.md"
+ROADMAP = DOCS / "05_ROADMAP_v1.2.0.md"
 SKELETON = DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
 
 MATRIX_START = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:START -->"
@@ -38,9 +44,9 @@ EXECUTION_MATRIX_EVIDENCE = "`I-01…I-13 execution proofs in progress; certific
 CONTRACT_STATUS = "COMPLETE / CERTIFIED"
 
 EXPECTED_ARCHIVE_SHA256 = {
-    OPEN_WORK_PREDECESSOR: "a42bb0ca6ec23b2fd669197b14ec2fa9974a3d6f70c0e0523cac76730ee3a138",
-    CONTRACT_PREDECESSOR: "86682d7e019c30fcb7940af8e4bc1c9112a480bce199419c10f0f9b7670f90dc",
-    ATLAS_PREDECESSOR: "18d15cc741c8dac4082381b8f825b38da25f831e0041a90c5b9489f733fbca0d",
+    OPEN_WORK_PREDECESSOR: "8defa430be6fd6c013ec7b28203e73e4fdfc82bdb6a444636fcad0a2389823d4",
+    CONTRACT_PREDECESSOR: "496df83ba06d3e3ad1e871b8415a5352147662ae694005d945359f7b1f7976da",
+    ATLAS_PREDECESSOR: "b24bcaaac4f82617a766f1602418e8301a5076594d9ac8f90afb302174bf706e",
 }
 
 EXPECTED_DOWNSTREAM_ROUTE = [
@@ -250,7 +256,7 @@ def _validate_contract_source_routing(text: str) -> None:
     if len(derived_rows) != 3 or any(len(row) != 2 for row in derived_rows):
         raise ValueError("current derived/source-at-freeze table has missing or unexpected rows")
     derived = {row[0].strip("`"): row[1] for row in derived_rows}
-    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.3.2.md"
+    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.3.3.md"
     skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
     identity_path = "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
     if set(derived) != {atlas_path, skeleton_path, identity_path}:
@@ -275,19 +281,19 @@ def _validate_contract_source_routing(text: str) -> None:
             raise ValueError("Identity dossier is not classified as source-at-freeze evidence")
 
     readme = _read(README)
-    if "working/DELIVERY_ATLAS_WORKING_v0.3.2.md" not in readme:
-        raise ValueError("README does not route current Atlas to v0.3.2")
+    if "working/DELIVERY_ATLAS_WORKING_v0.3.3.md" not in readme:
+        raise ValueError("README does not route current Atlas to v0.3.3")
     if "The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references." not in readme:
         raise ValueError("README does not preserve Atlas v0.2.1 as source-at-freeze evidence")
     atlas_routing = _section(readme, "## Delivery Atlas routing", "## Machine-readable inventory")
-    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.2.md)" not in atlas_routing:
-        raise ValueError("README Delivery Atlas navigation does not target v0.3.2")
-    if "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md" not in readme:
+    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.3.md)" not in atlas_routing:
+        raise ValueError("README Delivery Atlas navigation does not target v0.3.3")
+    if "working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md" not in readme:
         raise ValueError("README does not route the current HARDEN status successor")
     active = _active_window(_read(OPEN_WORK))
     if "- IDENTITY & ACCESS: COMPLETE / MERGED" not in active:
         raise ValueError("current Identity lifecycle status is not sourced from Open Work")
-    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md" not in active:
+    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md" not in active:
         raise ValueError("Open Work does not route the current HARDEN status successor")
 
 
@@ -877,8 +883,14 @@ CONTRACT_REVERSE_PAIRS = (
 )
 
 
-def _normalise_contract_successor(successor: str, predecessor: str) -> str:
-    _validate_contract_source_routing(successor)
+def _normalise_contract_successor(
+    successor: str,
+    predecessor: str,
+    *,
+    validate_current_routes: bool = True,
+) -> str:
+    if validate_current_routes:
+        _validate_contract_source_routing(successor)
     headings = (
         "### 11.5 PR #40 lifecycle evidence and current state",
         "## 17. Required proof (exit shape)",
@@ -1115,7 +1127,8 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
     def test_i02_completed_stages_stay_completed(self):
         text, state, _ = self._state_and_matrix()
         self.assertIn("STAGE 1 — TARGETED PRODUCT AMENDMENT GRILL: COMPLETE", text)
-        self.assertIn("ROADMAP AMENDMENT: COMPLETE", text)
+        self.assertIn("ROADMAP SEQUENCING AMENDMENT: COMPLETE", text)
+        self.assertIn("current semantic successor 05_ROADMAP_v1.2.0.md", text)
         self.assertIn("PHASE 7A COMPLETE", text)
         self.assertIn("IDENTITY & ACCESS JIT DOMAIN DOSSIER COMPLETE / MERGED", text)
         self.assertIn("OQ-034 ARCHITECTURE SELECTION RESOLVED", text)
@@ -1653,10 +1666,10 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             [row[0].strip("`") for row in rows],
         )
         stale_mutants = (
-            contract.replace("00_PLATFORM_v1.5.1.md", "00_PLATFORM_v1.4.1.md", 1),
-            contract.replace("02_OPEN_WORK_v1.2.50.md", "02_OPEN_WORK_v1.2.45.md", 1),
+            contract.replace("00_PLATFORM_v1.6.0.md", "00_PLATFORM_v1.5.1.md", 1),
+            contract.replace("02_OPEN_WORK_v1.2.51.md", "02_OPEN_WORK_v1.2.50.md", 1),
             contract.replace(
-                "working/DELIVERY_ATLAS_WORKING_v0.3.2.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.3.3.md",
                 "working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
                 1,
             ),
@@ -1713,36 +1726,48 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             _lifecycle_json(relocated)
 
-    def test_successor_predecessor_archives_are_exact_and_open_work_normalizer_is_fail_closed(self):
+    def test_current_open_work_preserves_harden_lifecycle_and_pass2_close_boundary(self):
         successor = self._open_work()
         predecessor = self._required(OPEN_WORK_PREDECESSOR)
         self.assertEqual(EXPECTED_ARCHIVE_SHA256[OPEN_WORK_PREDECESSOR], _sha256(OPEN_WORK_PREDECESSOR))
-        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.48.md").exists())
-        self.assertEqual(predecessor, _normalise_open_work_successor(successor, predecessor))
-        missing = successor.replace(MATRIX_START, "", 1)
-        duplicate = successor + "\n" + MATRIX_START
-        relocated = successor.replace(
-            MATRIX_START,
-            "",
-            1,
-        ).replace("# 10. Minimal Tools", MATRIX_START + "\n# 10. Minimal Tools", 1)
-        unexpected = successor + "\n## 99. Unexpected lifecycle section\n"
+        self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.50.md").exists())
+        successor_state = _lifecycle_json(successor)
+        self.assertEqual(_lifecycle_json(predecessor), successor_state)
+        _assert_downstream_state(successor_state)
+        self.assertIn("Pass 2 remains **ADJUDICATED / CORRECTION SPEC APPROVED**", successor)
+        self.assertIn("Pass 2 may be marked CLOSED only after", successor)
+        self.assertIn("PHASE 7C: BLOCKED / NOT_STARTED", successor)
+        self.assertIn("Architectural Proof remains not started", successor)
+        self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", successor)
+
+        malformed = (
+            successor.replace(JSON_START, "", 1),
+            successor.replace(JSON_START, JSON_START + "\n" + JSON_START, 1),
+            successor.replace(MATRIX_END, "", 1),
+        )
+        for sample in malformed:
+            with self.subTest(sample=sample[:100]):
+                with self.assertRaises(ValueError):
+                    _lifecycle_json(sample)
+
         downstream_mutation = successor.replace(
             '"phase_7c": "BLOCKED / NOT_STARTED"',
             '"phase_7c": "COMPLETE / CERTIFIED"',
             1,
         )
-        for sample in (missing, duplicate, relocated, unexpected, downstream_mutation):
-            with self.subTest(sample=sample[:100]):
-                with self.assertRaises(ValueError):
-                    _normalise_open_work_successor(sample, predecessor)
+        self.assertNotEqual(successor_state, _lifecycle_json(downstream_mutation))
+
+    def test_archived_open_work_routing_successor_still_normalizes_exactly(self):
+        successor = self._required(OPEN_WORK_ROUTING_SUCCESSOR)
+        predecessor = self._required(OPEN_WORK_ROUTING_PREDECESSOR)
+        self.assertEqual(predecessor, _normalise_open_work_successor(successor, predecessor))
 
     def test_contract_successor_normalizes_only_declared_status_and_source_routing_provenance(self):
-        successor = self._required(CONTRACT)
-        predecessor = self._required(CONTRACT_PREDECESSOR)
-        self.assertEqual(EXPECTED_ARCHIVE_SHA256[CONTRACT_PREDECESSOR], _sha256(CONTRACT_PREDECESSOR))
+        successor = self._required(CONTRACT_ROUTING_SUCCESSOR)
+        predecessor = self._required(CONTRACT_ROUTING_PREDECESSOR)
+        self.assertEqual("496df83ba06d3e3ad1e871b8415a5352147662ae694005d945359f7b1f7976da", _sha256(CONTRACT_ROUTING_SUCCESSOR))
         self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.2.md").exists())
-        self.assertEqual(predecessor, _normalise_contract_successor(successor, predecessor))
+        self.assertEqual(predecessor, _normalise_contract_successor(successor, predecessor, validate_current_routes=False))
         self.assertRegex(
             successor[:2000],
             r"(?is)status:.*COMPLETE / CERTIFIED.*HARDEN-02 execution.*IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
@@ -1768,12 +1793,11 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         for sample in (unexpected, missing_row, duplicated_row, relocated_row, stale_route):
             with self.subTest(sample=sample[:120]):
                 with self.assertRaises(ValueError):
-                    _normalise_contract_successor(sample, predecessor)
+                    _normalise_contract_successor(sample, predecessor, validate_current_routes=False)
 
-    def test_atlas_successor_normalizes_only_declared_routing_substitutions(self):
-        successor = self._required(ATLAS)
-        predecessor = self._required(ATLAS_PREDECESSOR)
-        self.assertEqual(EXPECTED_ARCHIVE_SHA256[ATLAS_PREDECESSOR], _sha256(ATLAS_PREDECESSOR))
+    def test_archived_atlas_successor_normalizes_only_declared_routing_substitutions(self):
+        successor = self._required(ATLAS_ROUTING_SUCCESSOR)
+        predecessor = self._required(ATLAS_ROUTING_PREDECESSOR)
         self.assertFalse((DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.0.md").exists())
         self.assertEqual(predecessor, _normalise_atlas_successor(successor, predecessor))
         unexpected = successor.replace(

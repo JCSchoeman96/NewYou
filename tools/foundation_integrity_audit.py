@@ -378,6 +378,7 @@ H02_EXECUTION_STATES = {
         "matrix": "IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING",
         "successor_version": "0.4.3",
         "successor_versions": ("0.4.3", "0.4.4"),
+        "route_versions": ("0.4.3", "0.4.4", "0.4.5"),
         "readme": "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
     },
 }
@@ -582,9 +583,9 @@ def _h02_lifecycle_state(open_work: str, readme: str) -> tuple[bool, str]:
     else:
         if not any(
             f"working/HARDEN-02_CONTRACT_WORKING_v{version}.md" in readme
-            for version in expected_execution["successor_versions"]
+            for version in expected_execution.get("route_versions", expected_execution["successor_versions"])
         ):
-            return False, "in-progress README does not route to HARDEN status v0.4.3 or v0.4.4"
+            return False, "in-progress README does not route to a supported HARDEN status or routing successor"
     return True, "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"
 
 
