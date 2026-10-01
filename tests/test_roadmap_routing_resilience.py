@@ -13,8 +13,8 @@ ROADMAP = DOCS / "archive" / "05_ROADMAP_v1.1.5.md"
 ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.1.4.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.4.md"
 CURRENT_ROADMAP = DOCS / "05_ROADMAP_v1.2.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.52.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.4.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.53.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.5.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 ROADMAP_V1_1_4_SHA256 = "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
@@ -84,6 +84,21 @@ def _feature_pack_sections(text: str) -> dict[str, str]:
     return sections
 
 
+def _section_bytes(path: Path, heading: str, next_heading_prefix: str) -> bytes:
+    lines = path.read_bytes().splitlines(keepends=True)
+    start = next(
+        index for index, line in enumerate(lines)
+        if heading.encode("utf-8") in line
+    )
+    end = len(lines)
+    if next_heading_prefix:
+        end = next(
+            index for index in range(start + 1, len(lines))
+            if lines[index].lstrip().startswith(next_heading_prefix.encode("utf-8"))
+        )
+    return b"".join(lines[start:end])
+
+
 class RoadmapRoutingResilienceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -141,7 +156,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertEqual("05_ROADMAP_v1.2.0.md", roadmap["canonical_filename"])
         self.assertEqual("docs/00_platform/05_ROADMAP_v1.2.0.md", roadmap["repository_path"])
         self.assertEqual(_sha256(CURRENT_ROADMAP), roadmap["sha256"])
-        self.assertEqual("02_OPEN_WORK_v1.2.52.md", open_work["canonical_filename"])
+        self.assertEqual("02_OPEN_WORK_v1.2.53.md", open_work["canonical_filename"])
 
         header = self.current_roadmap.split("## Amendment summary", 1)[0]
         route_lines = re.findall(r"(?m)^- \*\*Current programme routing:\*\* (.+)$", header)
@@ -158,7 +173,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
     def test_readme_manifest_open_work_and_atlas_agree_on_current_roadmap(self):
         current_route = "05_ROADMAP_v1.2.0.md"
         self.assertIn(f"`{current_route}`", self.readme)
-        self.assertEqual(8, self.open_work.count(current_route))
+        self.assertEqual(7, self.open_work.count(current_route))
         self.assertEqual(6, self.atlas.count(current_route))
 
         stale_current = re.compile(r"(?<!archive/)05_ROADMAP_v1\.1\.4\.md")
@@ -198,6 +213,18 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertEqual(expected, list(old_packs))
         self.assertEqual(expected, list(new_packs))
         self.assertNotIn("FP-018", self.current_roadmap)
+
+    def test_all_feature_pack_sections_and_section_21_are_exactly_preserved(self):
+        self.assertTrue(CURRENT_ROADMAP.is_file(), CURRENT_ROADMAP)
+        self.assertTrue(ROADMAP.is_file(), ROADMAP)
+        for heading, next_heading in (("# 21. Phase 7 handoff", ""),):
+            current = _section_bytes(CURRENT_ROADMAP, heading, next_heading)
+            predecessor = _section_bytes(ROADMAP, heading, next_heading)
+            self.assertEqual(predecessor, current, heading)
+            self.assertEqual(
+                "611abef74ce306eba824f44241189413c6be0c305c922166f3a338cc7f019b83",
+                hashlib.sha256(current).hexdigest(),
+            )
 
     def test_patch_scope_is_narrow_and_stage_neutral(self):
         self.assertIn(PATCH_SCOPE.strip(), self.roadmap)
