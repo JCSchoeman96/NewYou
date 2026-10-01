@@ -767,6 +767,130 @@ def _h02_lifecycle_state(
         else "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"
     )
 
+
+def _engineering_standards_promotion_state(
+    root: Path,
+    manifest: dict[str, Any],
+    readme: str,
+    open_work: str,
+    harden: str,
+) -> tuple[bool, str]:
+    """Validate the fail-closed, pre-certification Standards promotion candidate."""
+
+    docs = Path(root) / "docs" / "00_platform"
+    candidate = docs / "reference" / "ENGINEERING_STANDARDS_v1.0.0.md"
+    prohibited = (
+        docs / "ENGINEERING_STANDARDS_v1.0.0.md",
+        docs / "reference" / "ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
+        docs / "working" / "ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
+    )
+    if not candidate.is_file():
+        return False, "Engineering Standards promotion candidate artifact is missing"
+    if any(path.exists() for path in prohibited):
+        return False, "a prohibited or stale Engineering Standards path exists"
+    competing_artifacts = [
+        path
+        for path in docs.rglob("*.md")
+        if "ENGINEERING_STANDARDS" in path.name and path != candidate
+    ]
+    if competing_artifacts:
+        return False, "duplicate or competing Engineering Standards artifact exists"
+
+    candidate_text = candidate.read_text(encoding="utf-8")
+    if candidate_text.count("- **Status:** PROMOTION CANDIDATE / NOT CERTIFIED") != 1:
+        return False, "candidate status is missing, duplicated, or claims certification"
+    if candidate_text.count("- **Authority class:** SUPPORTING AUTHORITY / ENGINEERING STANDARDS CANDIDATE") != 1:
+        return False, "candidate authority classification is missing or contradictory"
+    if "Promotion baseline main SHA:** `73eca9d9148a82cab8ae988c5950539bfee0d7f9`" not in candidate_text:
+        return False, "candidate is not bound to the live main baseline"
+    if "Source Grill:** `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`" not in candidate_text:
+        return False, "candidate source Grill route is missing"
+    if "Source Grill SHA-256:** `27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017`" not in candidate_text:
+        return False, "candidate source Grill provenance is missing"
+    if "No package, framework, tool, version, flag, provider or vendor is selected by this candidate." not in candidate_text:
+        return False, "candidate does not preserve deferred package and tool selection"
+    if "No Architecture, Product or Domain rule is copied into this document as a new authority." not in candidate_text:
+        return False, "candidate does not preserve the upstream-authority boundary"
+    if re.search(r"(?im)^\s*[-*].*\b(?:DEC|ARC|ARQ|DOL|OQ)-\d+\b", candidate_text):
+        return False, "candidate introduces an unapproved upstream governed identifier"
+
+    required_provenance = (
+        "EP-Q1",
+        "EP-Q2",
+        "EP-Q3",
+        "EP-Q4",
+        "EP-Q5",
+        "A-08",
+        "B-09",
+        "D-02",
+        "D-03",
+        "D-04",
+        "D-05",
+        "D-07",
+    )
+    if any(marker not in candidate_text for marker in required_provenance):
+        return False, "candidate normative content lacks complete Grill provenance"
+    if re.search(r"(?im)^.*ENGINEERING STANDARDS.*COMPLETE / CERTIFIED.*$", candidate_text):
+        return False, "candidate claims uncertified Standards are complete or certified"
+
+    forbidden_advancement = (
+        r"(?im)FP-001 reconciliation is COMPLETE / PERFORMED",
+        r"(?im)COMMUNICATIONS\s*:\s*(?:STARTED|COMPLETE|AUTHORI[ZS]ED)",
+        r"(?im)PHASE 7C\s*:\s*(?:NEXT|UNBLOCKED|COMPLETE|AUTHORI[ZS]ED)",
+        r"(?im)PROOF CLASSIFICATION\s*:\s*FINALI[SZ]ED",
+        r"(?im)(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE)",
+        r"(?im)STORE\s*/\s*CER\s*:\s*IN SCOPE",
+    )
+    if any(re.search(pattern, candidate_text) for pattern in forbidden_advancement):
+        return False, "candidate advances a downstream stage or expands HARDEN-02 scope"
+
+    entries = [entry for key in ("governing_documents", "reference_documents", "historical_documents") for entry in manifest.get(key, [])]
+    candidate_entries = [entry for entry in entries if entry.get("document_id") == "ENGINEERING_STANDARDS_CANDIDATE"]
+    if len(candidate_entries) != 1:
+        return False, "candidate must have exactly one manifest entry"
+    entry = candidate_entries[0]
+    if entry not in manifest.get("reference_documents", []):
+        return False, "candidate must be registered under reference_documents"
+    if entry.get("repository_path") != "docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.0.md":
+        return False, "candidate manifest route is not canonical"
+    if entry.get("canonical_filename") != "ENGINEERING_STANDARDS_v1.0.0.md":
+        return False, "candidate manifest filename is not canonical"
+    if entry.get("semver") != "1.0.0":
+        return False, "candidate manifest version is not v1.0.0"
+    if entry.get("authority_class") != "ENGINEERING_STANDARDS_SUPPORTING_AUTHORITY_CANDIDATE":
+        return False, "candidate manifest authority class is missing or competing"
+    if entry.get("lifecycle") != "candidate":
+        return False, "candidate manifest lifecycle must remain candidate until certification"
+    if entry.get("sha256") != sha256_file(candidate):
+        return False, "candidate manifest hash does not match the artifact"
+    if any(
+        entry_item is not entry
+        and re.search(r"ENGINEERING_STANDARDS", str(entry_item.get("repository_path", "")))
+        and entry_item.get("document_id") != "ENGINEERING_STANDARDS_CANDIDATE"
+        for entry_item in entries
+    ):
+        return False, "duplicate or competing Engineering Standards manifest route exists"
+
+    if readme.count("## Engineering Standards promotion candidate") != 1:
+        return False, "README candidate route is missing or duplicated"
+    if readme.count("reference/ENGINEERING_STANDARDS_v1.0.0.md") != 1:
+        return False, "README does not route the canonical candidate"
+    if len(re.findall(r"(?m)^- ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED$", readme)) != 1:
+        return False, "README incorrectly advances or omits the pre-certification status"
+    if re.search(r"(?m)^- ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED$", readme):
+        return False, "README claims Standards certification before the lifecycle completes"
+    if open_work.count("ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED") != 1:
+        return False, "Open Work incorrectly advances or omits the pre-certification status"
+    if "FP001_RECONCILIATION_REQUIRED: REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED" not in open_work:
+        return False, "Open Work does not preserve the downstream FP-001 gate"
+    current_harden_status = re.search(
+        r"(?m)^\| `ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED` \|",
+        harden,
+    )
+    if current_harden_status is None:
+        return False, "HARDEN status does not preserve the pre-certification route"
+    return True, "Engineering Standards promotion candidate is registered, traceable and not certified"
+
 def _section_body(text: str, heading_pattern: str) -> str:
     match = re.search(heading_pattern, text, re.MULTILINE)
     if match is None:
@@ -2256,6 +2380,29 @@ def run_audit(
     _check_current_authority_self_versions(root, manifest, report)
     _check_current_authority_route_resolution(root, manifest, integrity_rules, report)
     _check_current_authority_delegated_routing(root, manifest, integrity_rules, report)
+    if any(
+        entry.get("document_id") == "ENGINEERING_STANDARDS_CANDIDATE"
+        for entry in _all_entries(manifest)
+    ):
+        docs = root / "docs" / "00_platform"
+        standards_ok, standards_message = _engineering_standards_promotion_state(
+            root,
+            manifest,
+            (docs / "README.md").read_text(encoding="utf-8") if (docs / "README.md").is_file() else "",
+            (docs / "02_OPEN_WORK_v1.2.53.md").read_text(encoding="utf-8")
+            if (docs / "02_OPEN_WORK_v1.2.53.md").is_file()
+            else "",
+            (docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.7.md").read_text(encoding="utf-8")
+            if (docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.7.md").is_file()
+            else "",
+        )
+        _record_check(
+            report,
+            "engineering_standards_promotion_candidate",
+            standards_ok,
+            standards_message,
+            path="docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.0.md",
+        )
     if _production_mode(expected_counts):
         _check_production_graph(root, manifest, integrity_rules, report)
         _check_product_semantics(root, entries, integrity_rules, report)

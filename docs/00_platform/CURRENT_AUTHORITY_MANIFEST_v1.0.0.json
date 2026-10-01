@@ -145,6 +145,16 @@
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "0d8e25170ae692df39f7f771189f95ab76ab64f2701823fb2cde214946650d3f"
+    },
+    {
+      "document_id": "ENGINEERING_STANDARDS_CANDIDATE",
+      "canonical_filename": "ENGINEERING_STANDARDS_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.0.md",
+      "authority_class": "ENGINEERING_STANDARDS_SUPPORTING_AUTHORITY_CANDIDATE",
+      "sha256": "d69d59d32e636d4bd9ed46809c5d7c4284249ef03baef5636826edc294d583b1",
+      "superseded_version": null,
+      "lifecycle": "candidate"
     }
   ],
   "historical_documents": [
