@@ -81,9 +81,9 @@ Preserve the existing Architecture separation between metrics, traces, structure
 
 Minimise sensitive data before logging or telemetry. Account IDs, participant identifiers, health content and other sensitive or high-cardinality values must not be used casually as metric labels. Correlation identifiers must not become authentication, Account identity or business authority.
 
-A material alert needs an identified owner, a meaningful operator action or decision and a clear reason to exist. Dashboards are projections for operational understanding, never business authority. When a dashboard disagrees with authoritative state, authoritative state wins and the discrepancy is investigated.
+A material alert needs an identified owner, a meaningful operator action or decision and a clear reason to exist. Do not manufacture alerts simply because a metric exists. Dashboards are projections for operational understanding, never business authority. When a dashboard disagrees with authoritative state, authoritative state wins and the discrepancy is investigated.
 
-Telemetry and exporter failure may reduce visibility but must not fail an otherwise valid business transaction. Telemetry remains bounded and failure-isolated. For HIGH changes, provide enough evidence where applicable to correlate request, job and provider activity, find unresolved obligations or important outcomes, reconstruct consequential incidents and diagnose provider or reconciliation failures. Risk-sensitive sampling is allowed.
+Telemetry and exporter failure may reduce visibility but must not fail an otherwise valid business transaction. Telemetry remains bounded and failure-isolated. For HIGH changes, provide enough evidence where applicable to correlate request, job and provider activity, find unresolved obligations or important outcomes, reconstruct consequential incidents and diagnose provider or reconciliation failures. Risk-sensitive sampling is allowed. Do not require zero sampling globally.
 
 ## Code contracts and automated quality
 
@@ -111,7 +111,7 @@ The proof menu may include positive and negative tests, invariant or state-trans
 
 Use property or generative testing when a generator meaningfully attacks an invariant or state space. Require concurrency testing when correctness materially depends on concurrent execution, duplicate requests, ordering or idempotency. Do not require it for code without a concurrency surface.
 
-HIGH changes receive review appropriate to the consequence tag. Permanent CI contains cheap repeatable checks appropriate to the application. Load testing, game days, restore testing, penetration testing and large-scale concurrency proof remain JIT or stage-specific unless repeated evidence justifies permanent automation. Do not move later Architecture Proof or Release Readiness work into every PR. Coverage is diagnostic; no universal numeric coverage target is authority for correctness.
+HIGH changes should receive review appropriate to the applicable consequence tag. Permanent CI contains cheap repeatable checks appropriate to the application. Load testing, game days, restore testing, penetration testing and large-scale concurrency proof remain JIT or stage-specific unless repeated evidence justifies permanent automation. Do not move later Architecture Proof or Release Readiness work into every PR. Coverage is diagnostic; no universal numeric coverage target is authority for correctness.
 
 ## Deferred choices and closed alternatives
 
