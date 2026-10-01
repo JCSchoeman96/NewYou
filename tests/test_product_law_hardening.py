@@ -593,11 +593,9 @@ class ProductLawHardeningTests(unittest.TestCase):
         )[1].split("# 22.", 1)[0]
         assessment = self.product.split("## 21B.5 Primary, secondary and score display", 1)[1].split("## 21B.6", 1)[0]
         decisions = self.decisions.split("## DEC-306 —", 1)[1].split("## DEC-307 —", 1)[0]
-        decision307 = self.decisions.split("## DEC-307 —", 1)[1].split("## DEC-308 —", 1)[0]
         decision308 = self.decisions.split("## DEC-308 —", 1)[1].split("## DEC-309 —", 1)[0]
         decision299 = self.decisions.split("## DEC-299 —", 1)[1].split("## DEC-300 —", 1)[0]
         decision058 = self.decisions.split("## DEC-058 —", 1)[1].split("## DEC-059 —", 1)[0]
-        roadmap_fp006 = self.roadmap.split("## FP-006 —", 1)[1].split("## FP-007 —", 1)[0]
 
         for required in (
             "determined by the governing IP agreement",
@@ -641,14 +639,6 @@ class ProductLawHardeningTests(unittest.TestCase):
             "applicable pre-purchase disclosure",
         ):
             self.assertIn(requirement, decision308)
-        for requirement in (
-            "non-gating discovery/directional signals",
-            "not paid-demand evidence",
-            "do not gate MVP success",
-            "authorize building future products",
-        ):
-            self.assertIn(requirement, decision307)
-
         for required in (
             "does not expire solely because she remains `general_wellness_only`",
             "future expiry or forced closure requires separately governed and versioned Product Law",
@@ -658,23 +648,6 @@ class ProductLawHardeningTests(unittest.TestCase):
             self.assertIn(required, temperament)
         self.assertNotIn("after the governed decision and reminder period", temperament)
 
-        for signal in (
-            "Would you recommend NewYou?",
-            "Would you purchase another relevant NewYou product?",
-            "Do you intend or want to continue with NewYou?",
-            "interest in Nuwe Jy",
-            "interest in future membership",
-        ):
-            self.assertIn(signal, temperament)
-            self.assertIn(signal, roadmap_fp006)
-        for restriction in (
-            "discovery or directional product evidence only",
-            "not paid-demand evidence",
-            "do not gate MVP success",
-            "do not authorize building Nuwe Jy, Membership",
-        ):
-            self.assertIn(restriction, temperament)
-            self.assertIn(restriction, roadmap_fp006)
 
     def test_atlas_routes_to_current_authorities_and_does_not_block_on_resolved_oq034(self):
         current_sources = (

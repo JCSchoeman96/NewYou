@@ -6500,8 +6500,6 @@ For the first 10, a product-value or dissatisfaction refund signal of 0–1 is n
 
 Measure support burden before setting a time threshold: participants needing support, contacts per participant, support minutes, issue category, manual intervention, and whether developer or expert intervention was required. Add the separate price-value question: “Considering what you paid, did the product provide good value?” For discounted participants, ask whether they believe they would have purchased at normal list price. Treat stated intent as weaker evidence than an actual purchase.
 
-Ask participants, "Would you recommend NewYou?", "Would you purchase another relevant NewYou product?", and "Do you intend or want to continue with NewYou?" Also record their interest in Nuwe Jy and their interest in future membership. Treat responses as discovery or directional product evidence only. They are not paid-demand evidence, do not replace actual purchases or subscriptions, do not gate MVP success, and do not authorize building Nuwe Jy, Membership or another future product.
-
 ## 21T.6 First paid cohort
 
 The first 10 are ten genuine self-paying adult women from the approved South African launch audience, recruited primarily through existing book, event or media reach, using the real bilingual product and catalogue, without artificial selection for a desired temperament or eligibility outcome.
