@@ -68,8 +68,8 @@ Use the current Ash/Splode error model. Do not create a parallel NewYou-wide err
 - Create a custom `Splode.Error` only for a stable, meaningful application distinction that the built-in model cannot express. Do not create one for different wording alone.
 - Participant-facing messages must be safe and localisable through the approved Gettext path. They must not expose sensitive or internal diagnostics, authorisation policy detail or unsafe existence information.
 - Keep richer technical diagnostics internal, access-controlled and redacted as needed.
-- Adapters translate provider failures into application-understood semantics. Raw provider payloads and SDK details are not participant contracts or business authority.
-- The responsible application or provider boundary classifies retryable, terminal, unresolved or unknown outcomes where that distinction matters. Do not infer retryability only from a Splode class. An ambiguous provider acknowledgement is not success and must not trigger blind duplicate retries.
+- Adapters translate provider failures into application-understood semantics. Raw provider payloads, exception detail and provider SDK semantics are not participant-facing contracts or business authority.
+- Where operationally relevant, the responsible application or provider boundary classifies retryable, terminal, unresolved/unknown or reconciliation-required outcomes according to existing Architecture failure semantics. Do not infer retryability only from a Splode class. `unknown` does not automatically mean retryable. A provider timeout or ambiguous acknowledgement must not silently become success or trigger blind duplicate retries.
 
 Apply the risk model proportionally. LOW uses ordinary result or exception handling. STANDARD uses framework-native handling and separates public copy from diagnostics. HIGH adds explicit failure, retry and reconciliation semantics where applicable, plus leakage and non-enumeration proof where privacy or security requires it.
 
