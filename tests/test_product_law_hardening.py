@@ -584,7 +584,11 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertIn("**Evaluation status:** CLOSED / PASS.", self.open_work)
         self.assertIn("24eeb2834d58e19e0c833f09d769118d75fc9061", self.open_work)
         self.assertIn("36852114112", self.open_work)
-        self.assertIn("Phase 7C, Architectural Proof, Phase 8, application implementation", self.open_work)
+        self.assertIn("HARDEN-02 execution remains IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.open_work)
+        self.assertIn("Phase 7C remains blocked / not started", self.open_work)
+        self.assertIn("Architectural Proof remains not started", self.open_work)
+        self.assertIn("proof classification remains not finalised", self.open_work)
+        self.assertIn("executable development remains blocked", self.open_work)
         self.assertIn("PHASE 7C: BLOCKED / NOT_STARTED", self.open_work)
         self.assertIn('"proof_classification": "NOT FINALISED"', self.open_work)
 

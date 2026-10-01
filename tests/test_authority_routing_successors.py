@@ -592,9 +592,14 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             [current["PROJECT_NORTH_STAR_AND_MVP"], current["PLATFORM_BASELINE"], current["DECISION_REGISTER"]],
             re.findall(r"[A-Za-z0-9_.-]+_v\d+\.\d+\.\d+\.md", current_product_route.group(1) if current_product_route else ""),
         )
-        self.assertIn(current["DECISION_REGISTER"], product.split("- **Related documents:**", 1)[1].splitlines()[0])
-        self.assertIn(current["OPEN_WORK"], product.split("- **Related documents:**", 1)[1].splitlines()[0])
-        self.assertIn(current["PROJECT_NORTH_STAR_AND_MVP"], product.split("- **Related documents:**", 1)[1].splitlines()[0])
+        product_related = product.split("- **Related documents:**", 1)[1].splitlines()[0]
+        self.assertIn(current["DECISION_REGISTER"], product_related)
+        self.assertIn(current["PROJECT_NORTH_STAR_AND_MVP"], product_related)
+        # Product v1.6.0 is intentionally unchanged by this planning-status successor.
+        # Its contemporaneous Open Work reference remains provenance; live routing is
+        # owned by README + manifest + current Open Work and is checked below.
+        self.assertIn("02_OPEN_WORK_v1.2.51.md", product_related)
+        self.assertNotIn(current["OPEN_WORK"], product_related)
 
         atlas_sources = _section(atlas, "# 1. Authority, purpose and boundaries", "## 1.2 Purpose")
         current_rows = {
