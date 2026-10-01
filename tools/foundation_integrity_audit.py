@@ -768,6 +768,45 @@ def _h02_lifecycle_state(
     )
 
 
+def _engineering_standards_candidate_signal(
+    root: Path,
+    manifest: dict[str, Any],
+    readme: str,
+) -> bool:
+    """Detect any Standards-candidate signal so production audit cannot skip validation."""
+
+    docs = Path(root) / "docs" / "00_platform"
+    manifest_signal = any(
+        "ENGINEERING_STANDARDS" in str(entry.get(field, "")).upper()
+        for entry in _all_entries(manifest)
+        for field in ("document_id", "canonical_filename", "repository_path", "authority_class")
+    )
+    readme_signal = (
+        "## Engineering Standards promotion candidate" in readme
+        or "reference/ENGINEERING_STANDARDS_v1.0.0.md" in readme
+    )
+
+    artifact_signal = False
+    if docs.is_dir():
+        for path in docs.rglob("*.md"):
+            if "ENGINEERING_STANDARDS" in path.name.upper():
+                artifact_signal = True
+                break
+            try:
+                text = path.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            if (
+                "# Engineering Standards v1.0.0" in text
+                or "- **Status:** PROMOTION CANDIDATE / NOT CERTIFIED" in text
+                or "- **Authority class:** SUPPORTING AUTHORITY / ENGINEERING STANDARDS CANDIDATE" in text
+            ):
+                artifact_signal = True
+                break
+
+    return manifest_signal or readme_signal or artifact_signal
+
+
 def _engineering_standards_promotion_state(
     root: Path,
     manifest: dict[str, Any],
@@ -2380,15 +2419,17 @@ def run_audit(
     _check_current_authority_self_versions(root, manifest, report)
     _check_current_authority_route_resolution(root, manifest, integrity_rules, report)
     _check_current_authority_delegated_routing(root, manifest, integrity_rules, report)
-    if any(
-        entry.get("document_id") == "ENGINEERING_STANDARDS_CANDIDATE"
-        for entry in _all_entries(manifest)
-    ):
-        docs = root / "docs" / "00_platform"
+    docs = root / "docs" / "00_platform"
+    standards_readme = (
+        (docs / "README.md").read_text(encoding="utf-8")
+        if (docs / "README.md").is_file()
+        else ""
+    )
+    if _engineering_standards_candidate_signal(root, manifest, standards_readme):
         standards_ok, standards_message = _engineering_standards_promotion_state(
             root,
             manifest,
-            (docs / "README.md").read_text(encoding="utf-8") if (docs / "README.md").is_file() else "",
+            standards_readme,
             (docs / "02_OPEN_WORK_v1.2.53.md").read_text(encoding="utf-8")
             if (docs / "02_OPEN_WORK_v1.2.53.md").is_file()
             else "",
