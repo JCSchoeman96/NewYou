@@ -60,16 +60,16 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             open_work = open_work_path.read_text(encoding="utf-8")
             replacements = (
                 (
-                    "| `POST_MERGE_INDEPENDENT_REVIEW` | `PASS`",
-                    "| `POST_MERGE_INDEPENDENT_INSPECTION` | `PENDING`",
+                    "| POST_MERGE_INDEPENDENT_REVIEW | PASS |",
+                    "| POST_MERGE_INDEPENDENT_REVIEW | PENDING |",
                 ),
                 (
-                    "| `POST_MERGE_ATTESTATION` | `COMPLETE`",
-                    "| `POST_MERGE_ATTESTATION` | `PENDING`",
+                    "| POST_MERGE_ATTESTATION | COMPLETE |",
+                    "| POST_MERGE_ATTESTATION | PENDING |",
                 ),
                 (
-                    "| `EXECUTION` | `IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING`",
-                    "| `EXECUTION` | `COMPLETE_CERTIFIED_PREMATURE`",
+                    "| EXECUTION | COMPLETE_CERTIFIED |",
+                    "| EXECUTION | IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING |",
                 ),
             )
             for current, stale in replacements:
@@ -80,12 +80,11 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             readme_path = fixture_docs / "README.md"
             readme = readme_path.read_text(encoding="utf-8")
             for current, stale in (
-                ("HARDEN-02 EXECUTION / STRUCTURAL HARDENING", "HARDEN-02 POST-MERGE CERTIFICATION / CONTRACT LIFECYCLE"),
-                ("HARDEN-02_EXECUTION_REQUIRED", "HARDEN-02_POST_MERGE_CERTIFICATION_REQUIRED"),
-                ("POST-MERGE CERTIFICATION: COMPLETE", "POST-MERGE CERTIFICATION: PENDING"),
+                ("CURRENT AUTHORITY-STAGE PROGRAMME: ENGINEERING STANDARDS AUTHORITY PROMOTION", "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING"),
+                ("NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED"),
                 (
-                    "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
                     "HARDEN-02 EXECUTION: COMPLETE / CERTIFIED",
+                    "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
                 ),
             ):
                 self.assertEqual(1, readme.count(current), current)
@@ -103,80 +102,36 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
-        candidate_open_work = (source_docs / "archive" / "02_OPEN_WORK_v1.2.49.md").read_text(encoding="utf-8")
+        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.53.md").read_text(encoding="utf-8")
         current_readme = (source_docs / "README.md").read_text(encoding="utf-8")
-        current_044_route = "working/HARDEN-02_CONTRACT_WORKING_v0.4.6.md"
-        current_status_route = "working/HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
-        self.assertEqual(2, current_readme.count(current_044_route))
-        candidate_readme = current_readme.replace(current_044_route, current_status_route)
-        self.assertEqual((True, "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"),
-                         _h02_lifecycle_state(candidate_open_work, candidate_readme))
+        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.7.md").read_text(encoding="utf-8")
+        expected = (True, "HARDEN-02 execution completion and downstream route are coherent")
+        self.assertEqual(expected, _h02_lifecycle_state(candidate_open_work, current_readme, contract))
 
-        successor_044_open_work = candidate_open_work
-        successor_044_readme = candidate_readme
-        self.assertEqual(4, successor_044_open_work.count(current_status_route))
-        self.assertEqual(2, successor_044_readme.count(current_status_route))
-        successor_044_open_work = successor_044_open_work.replace(
-            current_status_route,
-            "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md",
-        )
-        successor_044_readme = successor_044_readme.replace(
-            current_status_route,
-            "working/HARDEN-02_CONTRACT_WORKING_v0.4.4.md",
-        )
-        successor_044_open_work = successor_044_open_work.replace(
-            '"status_successor_version": "0.4.3"',
-            '"status_successor_version": "0.4.4"',
-            1,
-        )
-        self.assertEqual((True, "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"),
-                         _h02_lifecycle_state(successor_044_open_work, successor_044_readme))
-
-        baseline_open_work = (source_docs / "archive" / "02_OPEN_WORK_v1.2.48.md").read_text(encoding="utf-8")
-        baseline_readme = candidate_readme
-        current_harden_bullet = next(
-            line for line in baseline_readme.splitlines()
-            if line.startswith("- `working/HARDEN-02_CONTRACT_WORKING_")
-        )
-        baseline_harden_bullet = "- `working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` records the completed v0.4.0 lifecycle and execution status; v0.4.0 semantics are unchanged"
-        baseline_readme = baseline_readme.replace(current_harden_bullet, baseline_harden_bullet, 1).replace(
-            "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
-            "HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED",
-            1,
-        ).replace(
-            "HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING.",
-            "HARDEN-02 execution is NEXT / AUTHORISED / NOT STARTED.",
-            1,
-        )
-        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md", baseline_readme)
-        self.assertEqual((True, "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"),
-                         _h02_lifecycle_state(baseline_open_work, baseline_readme))
-
-        matrix_start = "| `EXECUTION` | `IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING`"
-        mixed_open_work = candidate_open_work.replace(
-            matrix_start,
-            "| `EXECUTION` | `NEXT_AUTHORISED_NOT_STARTED`",
-            1,
-        )
-        self.assertFalse(_h02_lifecycle_state(mixed_open_work, candidate_readme)[0])
-
-        premature_open_work = candidate_open_work.replace(
-            '"harden_02_execution": "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"',
+        incomplete = candidate_open_work.replace(
             '"harden_02_execution": "COMPLETE / CERTIFIED"',
+            '"harden_02_execution": "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"',
             1,
         )
-        self.assertFalse(_h02_lifecycle_state(premature_open_work, candidate_readme)[0])
+        self.assertFalse(_h02_lifecycle_state(incomplete, current_readme, contract)[0])
 
-        advanced_open_work = candidate_open_work.replace(
-            '"next_stage": "HARDEN-02_EXECUTION_REQUIRED"',
-            '"next_stage": "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED"',
+        old_route = candidate_open_work.replace(
+            "CURRENT AUTHORITY-STAGE PROGRAMME: ENGINEERING STANDARDS AUTHORITY PROMOTION",
+            "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
             1,
         ).replace(
-            "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
             "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
+            "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
             1,
         )
-        self.assertFalse(_h02_lifecycle_state(advanced_open_work, candidate_readme)[0])
+        self.assertFalse(_h02_lifecycle_state(old_route, current_readme, contract)[0])
+
+        premature_standards = candidate_open_work.replace(
+            '"engineering_standards_authority_promotion": "NEXT / AUTHORISED / NOT STARTED"',
+            '"engineering_standards_authority_promotion": "COMPLETE / CERTIFIED"',
+            1,
+        )
+        self.assertFalse(_h02_lifecycle_state(premature_standards, current_readme, contract)[0])
 
     def test_production_audit_uses_manifest_expectations(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -802,18 +757,18 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
             ),
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.3.4.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.3.5.md",
                 "00_PLATFORM_v1.6.0.md",
                 "00_PLATFORM_v1.5.1.md",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.4.6.md",
-                "02_OPEN_WORK_v1.2.52.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.4.7.md",
+                "02_OPEN_WORK_v1.2.53.md",
                 "02_OPEN_WORK_v1.2.50.md",
             ),
             (
-                "02_OPEN_WORK_v1.2.52.md",
-                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.4.md`",
+                "02_OPEN_WORK_v1.2.53.md",
+                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.5.md`",
                 "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.2.md`",
             ),
         )

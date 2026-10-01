@@ -324,7 +324,6 @@ H02_LIFECYCLE_MATRIX_STATUSES = {
 }
 
 H02_PR40_LIFECYCLE_FACTS = {
-    "status_successor_base_sha": "9411b34b646d7752d2942afca1363830d3b25f10",
     "certified_contract_version": "0.4.0",
     "contract_status": "COMPLETE / CERTIFIED",
     "pr_40_certified_head": "cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4",
@@ -370,17 +369,85 @@ H02_PR40_LIFECYCLE_FACTS = {
 H02_EXECUTION_STATES = {
     "NEXT / AUTHORISED / NOT STARTED": {
         "matrix": "NEXT_AUTHORISED_NOT_STARTED",
-        "successor_version": "0.4.2",
         "successor_versions": ("0.4.2",),
+        "current_stage": "HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
+        "next_stage": "HARDEN-02_EXECUTION_REQUIRED",
         "readme": "HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED",
+        "programme_status": "HARDEN-02 EXECUTION NEXT / AUTHORISED / NOT STARTED",
     },
     "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING": {
         "matrix": "IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING",
-        "successor_version": "0.4.3",
-        "successor_versions": ("0.4.3", "0.4.4"),
-        "route_versions": ("0.4.3", "0.4.4", "0.4.5", "0.4.6"),
+        "successor_versions": ("0.4.3", "0.4.4", "0.4.5", "0.4.6"),
+        "current_stage": "HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
+        "next_stage": "HARDEN-02_EXECUTION_REQUIRED",
         "readme": "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+        "programme_status": "HARDEN-02 EXECUTION IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
     },
+    "COMPLETE / CERTIFIED": {
+        "matrix": "COMPLETE_CERTIFIED",
+        "successor_versions": ("0.4.7",),
+        "current_stage": "ENGINEERING STANDARDS AUTHORITY PROMOTION",
+        "next_stage": "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
+        "readme": "HARDEN-02 EXECUTION: COMPLETE / CERTIFIED",
+        "programme_status": "HARDEN-02 EXECUTION COMPLETE / CERTIFIED; ENGINEERING STANDARDS AUTHORITY PROMOTION NEXT / AUTHORISED / NOT STARTED",
+    },
+}
+
+H02_COMPLETE_CERTIFICATION_FACTS = {
+    "historical_execution_pr56": {
+        "pr_url": "https://github.com/JCSchoeman96/NewYou/pull/56",
+        "exact_head_ci_run_url": "https://github.com/JCSchoeman96/NewYou/actions/runs/36452024211",
+        "exact_head_ci_result": "PASS / 229 TESTS / 424 FIA ASSERTIONS / ZERO FINDINGS",
+        "resulting_main_ci_run_url": "https://github.com/JCSchoeman96/NewYou/actions/runs/36462211976",
+        "resulting_main_ci_result": "PASS / 229 TESTS / 424 FIA ASSERTIONS / ZERO FINDINGS",
+        "classification": "HISTORICAL EXECUTION EVIDENCE; NOT THE FINAL COMPLETION CERTIFICATION",
+    },
+    "pr57_prospective_recovery": {
+        "pr_url": "https://github.com/JCSchoeman96/NewYou/pull/57",
+        "candidate_head_sha": "264ca5f7dfd600440e9b4e53adac9929e46b30d3",
+        "pre_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/57#issuecomment-5889396716",
+        "exact_head_ci_run_url": "https://github.com/JCSchoeman96/NewYou/actions/runs/36556153518",
+        "resulting_main_sha": "11ac2d940cf1e9728ea40f505ac44eafe45f305b",
+        "resulting_main_ci_run_url": "https://github.com/JCSchoeman96/NewYou/actions/runs/36563392212",
+        "classification": "PROSPECTIVE RECOVERY; PR #59 LATER FOUND A SUMMARY-PATH BYPASS; REQUIRED DURABLE POST-MERGE ATTESTATION WAS ABSENT",
+    },
+    "pr59_final_summary_recovery": {
+        "pr_url": "https://github.com/JCSchoeman96/NewYou/pull/59",
+        "base_main_sha": "11ac2d940cf1e9728ea40f505ac44eafe45f305b",
+        "candidate_sha": "0dd89f749eb3d3dbd659d1f6f01485984952ddfd",
+        "candidate_tree_sha": "9c7f70df8fd4d7a688e7c76e7c217cf33c0c5752",
+        "pre_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/59#issuecomment-5890210520",
+        "exact_head_ci_run_url": "https://github.com/JCSchoeman96/NewYou/actions/runs/36565948391",
+        "exact_head_ci_result": "PASS / 241 TESTS / 451 FIA ASSERTIONS / ZERO FINDINGS",
+        "resulting_main_sha": "6fea69eadf18f2fb79d78c2a94ab035b10abe31f",
+        "resulting_main_tree_sha": "9c7f70df8fd4d7a688e7c76e7c217cf33c0c5752",
+        "resulting_main_ci_run_url": "https://github.com/JCSchoeman96/NewYou/actions/runs/36567933267",
+        "resulting_main_ci_result": "PASS / 241 TESTS / 451 FIA ASSERTIONS / ZERO FINDINGS",
+        "post_merge_review_outcome": "PASS WITH NON-BLOCKING CORRECTIONS",
+        "non_blocking_correction": "Direct helper-level mutation coverage for the Roadmap §21 fenced phase-diagram body was absent. On resulting main 6fea69e, the entire Roadmap §21 section remained byte-identical to its archived source, so the reviewer classified this as non-blocking.",
+        "post_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/59#issuecomment-5890574449",
+    },
+    "current_main_revalidation": {
+        "main_sha": "d4e7390b71cdf61b649b534e1080102a044efe63",
+        "foundation_integrity_run_url": "https://github.com/JCSchoeman96/NewYou/actions/runs/36856102830",
+        "foundation_integrity_job_url": "https://github.com/JCSchoeman96/NewYou/actions/runs/36856102830/job/110348834922",
+        "unit_tests": "251 PASS",
+        "invariant_proofs": "I-01 THROUGH I-13 PASS",
+        "i04_adversarial_tests": "BOTH PASS",
+        "fia_assertions": 506,
+        "fia_findings": 0,
+        "fia_result": "PASS",
+    },
+    "pre_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/59#issuecomment-5890210520",
+    "exact_head_ci_run_url": "https://github.com/JCSchoeman96/NewYou/actions/runs/36565948391",
+    "candidate_sha": "0dd89f749eb3d3dbd659d1f6f01485984952ddfd",
+    "resulting_main_sha": "6fea69eadf18f2fb79d78c2a94ab035b10abe31f",
+    "resulting_main_tree_sha": "9c7f70df8fd4d7a688e7c76e7c217cf33c0c5752",
+    "resulting_main_ci_run_url": "https://github.com/JCSchoeman96/NewYou/actions/runs/36567933267",
+    "post_merge_review_outcome": "PASS WITH NON-BLOCKING CORRECTIONS",
+    "post_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/59#issuecomment-5890574449",
+    "whole_roadmap_section_21_preserved_sha256": "611abef74ce306eba824f44241189413c6be0c305c922166f3a338cc7f019b83",
+    "whole_roadmap_section_21_test": "test_all_feature_pack_sections_and_section_21_are_exactly_preserved",
 }
 
 
@@ -393,8 +460,12 @@ def _reject_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return result
 
 
-def _h02_lifecycle_state(open_work: str, readme: str) -> tuple[bool, str]:
-    """Fail closed on the two currently permitted HARDEN lifecycle states."""
+def _h02_lifecycle_state(
+    open_work: str,
+    readme: str,
+    contract: str = "",
+) -> tuple[bool, str]:
+    """Fail closed across HARDEN-02 lifecycle, completion proof and downstream routing."""
     matrix_start = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:START -->"
     matrix_end = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:END -->"
     json_start = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
@@ -411,22 +482,13 @@ def _h02_lifecycle_state(open_work: str, readme: str) -> tuple[bool, str]:
         return False, "HARDEN lifecycle markers are outside the active-state section"
     active = open_work[active_start:active_end]
 
-    current_routes = re.findall(
-        r"(?m)^CURRENT AUTHORITY-STAGE PROGRAMME:\s*(.*?)\s*$", active
-    )
-    next_routes = re.findall(r"(?m)^NEXT STAGE:\s*(.*?)\s*$", active)
-    if current_routes != ["HARDEN-02 EXECUTION / STRUCTURAL HARDENING"]:
-        return False, "HARDEN current programme route is missing, duplicate, or contradictory"
-    if next_routes != ["HARDEN-02_EXECUTION_REQUIRED"]:
-        return False, "HARDEN execution stage token is missing, duplicate, or contradictory"
-
     matrix_body = open_work.split(matrix_start, 1)[1].split(matrix_end, 1)[0]
     matrix_lines = [line.strip() for line in matrix_body.splitlines() if line.strip().startswith("|")]
     if len(matrix_lines) < 3:
         return False, "HARDEN lifecycle matrix is malformed"
 
     def cells(line: str) -> list[str]:
-        return [cell.strip().strip("`") for cell in line.strip().strip("|").split("|")]
+        return [cell.strip().strip(chr(96)) for cell in line.strip().strip("|").split("|")]
 
     if cells(matrix_lines[0]) != ["gate", "status", "evidence"]:
         return False, "HARDEN lifecycle matrix header is invalid"
@@ -442,8 +504,9 @@ def _h02_lifecycle_state(open_work: str, readme: str) -> tuple[bool, str]:
     if any(matrix.get(gate) != status for gate, status in H02_LIFECYCLE_MATRIX_STATUSES.items()):
         return False, "HARDEN v0.4.0 contract lifecycle facts are inconsistent"
 
+    fence = chr(96) * 3
     json_region = open_work.split(json_start, 1)[1].split(json_end, 1)[0]
-    json_blocks = re.findall(r"```json\s*(\{.*?\})\s*```", json_region, re.DOTALL)
+    json_blocks = re.findall(re.escape(fence) + r"json\s*(\{.*?\})\s*" + re.escape(fence), json_region, re.DOTALL)
     if len(json_blocks) != 1:
         return False, "HARDEN lifecycle JSON block is missing, duplicate, or malformed"
     try:
@@ -452,82 +515,97 @@ def _h02_lifecycle_state(open_work: str, readme: str) -> tuple[bool, str]:
         return False, f"HARDEN lifecycle JSON is invalid: {error}"
     if not isinstance(state, dict):
         return False, "HARDEN lifecycle JSON must be an object"
-
     if any(state.get(key) != value for key, value in H02_PR40_LIFECYCLE_FACTS.items()):
         return False, "prior PR #40 certification facts or certified contract lifecycle changed"
-    supported_successors = {
-        version
-        for expected_state in H02_EXECUTION_STATES.values()
-        for version in expected_state["successor_versions"]
-    }
-    if state.get("status_successor_version") not in supported_successors:
-        return False, "HARDEN status successor version is unsupported"
-    if state.get("current_stage") != "HARDEN-02 EXECUTION / STRUCTURAL HARDENING":
-        return False, "HARDEN current programme stage changed"
-    if state.get("next_stage") != "HARDEN-02_EXECUTION_REQUIRED":
-        return False, "HARDEN execution stage advanced prematurely"
 
     execution = state.get("harden_02_execution")
     if execution not in H02_EXECUTION_STATES:
-        return False, "HARDEN execution status is not one of the two permitted states"
-    expected_execution = H02_EXECUTION_STATES[execution]
-    if (
-        state.get("status_successor_version") not in expected_execution["successor_versions"]
-        or matrix.get("EXECUTION") != expected_execution["matrix"]
-        or active.count(expected_execution["readme"]) != 1
-        or readme.count(expected_execution["readme"]) != 1
-    ):
-        return False, "HARDEN execution status, matrix, successor version, or README wording disagree"
-    other_execution = next(
-        value["readme"] for label, value in H02_EXECUTION_STATES.items() if label != execution
-    )
-    if other_execution in active or other_execution in readme:
-        return False, "HARDEN current execution state contains a conflicting status"
+        return False, "HARDEN execution status is not one of the permitted lifecycle states"
+    expected = H02_EXECUTION_STATES[execution]
+    if state.get("status_successor_version") not in expected["successor_versions"]:
+        return False, "HARDEN status successor version is unsupported"
+    if state.get("current_stage") != expected["current_stage"]:
+        return False, "HARDEN current programme route disagrees with execution lifecycle state"
+    if state.get("next_stage") != expected["next_stage"]:
+        return False, "HARDEN NEXT stage token disagrees with execution lifecycle state"
+
+    current_routes = re.findall(r"(?m)^CURRENT AUTHORITY-STAGE PROGRAMME:\s*(.*?)\s*$", active)
+    next_routes = re.findall(r"(?m)^NEXT STAGE:\s*(.*?)\s*$", active)
+    if current_routes != [expected["current_stage"]]:
+        return False, "HARDEN current programme route is missing, duplicate, or contradictory"
+    if next_routes != [expected["next_stage"]]:
+        return False, "HARDEN next-stage token is missing, duplicate, or contradictory"
+
+    if matrix.get("EXECUTION") != expected["matrix"]:
+        return False, "HARDEN lifecycle matrix disagrees with the execution state"
+    if active.count(expected["readme"]) != 1:
+        return False, "Open Work current execution status is missing or duplicated"
+    other_statuses = [item["readme"] for label, item in H02_EXECUTION_STATES.items() if label != execution]
+    if any(status in active for status in other_statuses):
+        return False, "Open Work active state contains a contradictory execution status"
+
+    programme_start = open_work.find("## 12.1 Programme state")
+    programme_end = open_work.find("## 12.2", programme_start + 1)
+    if programme_start < 0 or programme_end < 0 or programme_start >= programme_end:
+        return False, "Open Work programme-state table is missing or malformed"
+    programme_rows = [
+        line.strip()
+        for line in open_work[programme_start:programme_end].splitlines()
+        if line.startswith("| Current / later |")
+    ]
+    if len(programme_rows) != 1 or expected["programme_status"] not in programme_rows[0]:
+        return False, "Open Work current programme-state row disagrees with the execution lifecycle"
+    other_programme_statuses = [
+        item["programme_status"] for label, item in H02_EXECUTION_STATES.items() if label != execution
+    ]
+    if any(status in programme_rows[0] for status in other_programme_statuses):
+        return False, "Open Work current programme-state row contains a contradictory execution status"
+    expected_status_version = state.get("status_successor_version")
+    expected_status_path = f"working/HARDEN-02_CONTRACT_WORKING_v{expected_status_version}.md"
+    if execution in {"NEXT / AUTHORISED / NOT STARTED", "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", "COMPLETE / CERTIFIED"}:
+        if expected_status_path not in programme_rows[0]:
+            return False, "Open Work current programme-state row does not name its current HARDEN successor"
 
     expected_milestones = [
         "TARGETED PRODUCT AMENDMENT PROGRAMME",
         "FP-001 PHASE 7A",
         "IDENTITY & ACCESS JIT DOMAIN DOSSIER",
     ]
-    if state.get("completed_milestones") != expected_milestones:
-        return False, "completed amendment, Phase 7A, or Identity milestones regressed"
     expected_downstream = {
         "harden_02_scope": "PHASE-7 GOVERNANCE / STRUCTURAL HARDENING ONLY",
         "store_cer": "EXCLUDED",
-        "engineering_standards_authority_promotion": "DOWNSTREAM / NOT STARTED",
-        "fp001_reconciliation": "REQUIRED / DOWNSTREAM / NOT PERFORMED",
-        "communications": "REQUIRED / NOT_STARTED",
         "phase_7c": "BLOCKED / NOT_STARTED",
         "proof_classification": "NOT FINALISED",
         "application_implementation": "BLOCKED",
         "pr_38": "STALE / BLOCKED / NOT AUTHORITY",
     }
+    if execution == "COMPLETE / CERTIFIED":
+        expected_milestones = expected_milestones + ["HARDEN-02 EXECUTION"]
+        expected_downstream.update({
+            "engineering_standards_authority_promotion": "NEXT / AUTHORISED / NOT STARTED",
+            "fp001_reconciliation": "REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
+            "communications": "REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
+            "pr_60": "STALE HISTORICAL CANDIDATE / SUPERSEDED BY THIS SUCCESSOR / NOT MERGED / NOT AUTHORITY",
+        })
+    else:
+        expected_downstream.update({
+            "engineering_standards_authority_promotion": "DOWNSTREAM / NOT STARTED",
+            "fp001_reconciliation": "REQUIRED / DOWNSTREAM / NOT PERFORMED",
+            "communications": "REQUIRED / NOT_STARTED",
+        })
+    if state.get("completed_milestones") != expected_milestones:
+        return False, "completed programme milestones are missing, duplicated, or changed"
     if any(state.get(key) != value for key, value in expected_downstream.items()):
         return False, "a downstream, blocked, or excluded HARDEN state changed"
-    if state.get("conditional_dossiers") != {
+    expected_conditionals = {
         "privacy_consent": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
         "content_media": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
         "audit_evidence": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
         "analytics": "NOT REQUIRED",
-    }:
+    }
+    if state.get("conditional_dossiers") != expected_conditionals:
         return False, "conditional dossier or Analytics state changed"
-    required_open_work = (
-        "HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED",
-        "ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED",
-        "FP001_RECONCILIATION_REQUIRED: REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
-        "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
-        "PR #38: STALE / BLOCKED / NOT AUTHORITY",
-        "LAST APPROVED FP-001 MILESTONE: PHASE 7A COMPLETE; IDENTITY & ACCESS JIT DOMAIN DOSSIER COMPLETE / MERGED; OQ-034 ARCHITECTURE SELECTION RESOLVED",
-        "- IDENTITY & ACCESS: COMPLETE / MERGED",
-        "- COMMUNICATIONS: REQUIRED / NOT_STARTED",
-        "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
-        "PHASE 7C: BLOCKED / NOT_STARTED PENDING COMMUNICATIONS AND CONDITIONAL-DOSSIER DISPOSITIONS",
-        "PROOF CLASSIFICATION: NOT FINALISED",
-        "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
-        "STORE / CER: EXCLUDED FROM HARDEN-02",
-    )
-    if any(active.count(line) != 1 for line in required_open_work):
-        return False, "Open Work lifecycle text disagrees with the marked state or omits a downstream boundary"
+
     expected_route = [
         "CERTIFIED HARDEN-02 EXECUTION",
         "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
@@ -541,24 +619,75 @@ def _h02_lifecycle_state(open_work: str, readme: str) -> tuple[bool, str]:
     ]
     if state.get("downstream_route") != expected_route:
         return False, "the governed post-execution route changed"
-
     if execution == "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING":
         if state.get("execution_start_baseline_main_sha") != "1c8fc94058176795d88cb82e08857e3d30c553e9":
             return False, "HARDEN execution-start baseline main SHA is missing or incorrect"
+    elif execution == "COMPLETE / CERTIFIED":
+        if state.get("execution_start_baseline_main_sha") != "1c8fc94058176795d88cb82e08857e3d30c553e9":
+            return False, "completed execution lost its execution-start provenance"
     elif "execution_start_baseline_main_sha" in state:
         return False, "not-started HARDEN state must not claim an execution-start baseline"
 
+    if execution == "COMPLETE / CERTIFIED":
+        cert = state.get("execution_certification")
+        if not isinstance(cert, dict):
+            return False, "complete execution certification evidence is missing"
+        if cert != H02_COMPLETE_CERTIFICATION_FACTS:
+            return False, "complete execution certification evidence is incomplete or contradictory"
+        if state.get("status_successor_base_sha") != "d4e7390b71cdf61b649b534e1080102a044efe63":
+            return False, "completion status successor is not based on verified current main"
+        required_active = (
+            "ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED",
+            "FP001_RECONCILIATION_REQUIRED: REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
+            "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
+            "PR #38: STALE / BLOCKED / NOT AUTHORITY",
+            "PR #60: STALE HISTORICAL CANDIDATE / SUPERSEDED BY THIS SUCCESSOR / NOT MERGED / NOT AUTHORITY",
+            "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
+            "PHASE 7C: BLOCKED / NOT_STARTED",
+            "PROOF CLASSIFICATION: NOT FINALISED",
+            "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+            "STORE / CER: EXCLUDED FROM HARDEN-02",
+        )
+        if any(active.count(line) != 1 for line in required_active):
+            return False, "Open Work omits a required completion or downstream boundary"
+    else:
+        required_active = (
+            "ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED",
+            "FP001_RECONCILIATION_REQUIRED: REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
+            "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
+            "PR #38: STALE / BLOCKED / NOT AUTHORITY",
+            "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
+            "PHASE 7C: BLOCKED / NOT_STARTED",
+            "PROOF CLASSIFICATION: NOT FINALISED",
+            "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+            "STORE / CER: EXCLUDED FROM HARDEN-02",
+        )
+        if any(active.count(line) != 1 for line in required_active):
+            return False, "Open Work omits a required downstream boundary"
+
+    readme_start = readme.find("## Current State")
+    if readme_start < 0:
+        return False, "README current-state section is missing"
+    readme_current = readme[readme_start:]
+    readme_status = "- " + expected["readme"]
+    if readme_current.count(readme_status) != 1:
+        return False, "README execution status is missing, duplicated, or contradictory"
+    stale_current_routes = (
+        "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
+        "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
+        "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+        "HARDEN-02 EXECUTION: NEXT / AUTHORISED / NOT STARTED",
+    )
+    if any(line in readme_current for line in stale_current_routes):
+        return False, "README retains a contradictory current HARDEN route"
     required_readme = (
-        "- CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
-        "- NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
-        "- HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED",
-        "- PRE-MERGE CERTIFICATION: COMPLETE — [PR #40 record](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5827553565)",
-        "- EXACT-HEAD FOUNDATION INTEGRITY: PASS — [run 36091130615](https://github.com/JCSchoeman96/NewYou/actions/runs/36091130615)",
-        "- CERTIFIED-HEAD MERGE: COMPLETE / UNCHANGED — certified head `cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4` merged as `352f304139b9d4f8ee3ba205cde9e34d0ad8437f`",
-        "- RESULTING-MAIN FOUNDATION INTEGRITY: PASS — [run 36101210535](https://github.com/JCSchoeman96/NewYou/actions/runs/36101210535)",
-        "- POST-MERGE CERTIFICATION: COMPLETE — fresh independent review PASS and durable attestation COMPLETE at [PR #40 record](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5830618876)",
-        "- ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED",
-        "- COMMUNICATIONS DOSSIER: REQUIRED / NOT_STARTED",
+        "- CURRENT AUTHORITY-STAGE PROGRAMME: " + expected["current_stage"],
+        "- NEXT STAGE: " + expected["next_stage"],
+        "- ENGINEERING STANDARDS AUTHORITY PROMOTION: " + (
+            "NEXT / AUTHORISED / NOT STARTED"
+            if execution == "COMPLETE / CERTIFIED"
+            else "DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED"
+        ),
         "- PRIVACY & CONSENT DOSSIER: CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
         "- CONTENT & MEDIA DOSSIER: CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
         "- AUDIT & EVIDENCE DOSSIER: CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
@@ -567,27 +696,76 @@ def _h02_lifecycle_state(open_work: str, readme: str) -> tuple[bool, str]:
         "- PROOF CLASSIFICATION: NOT FINALISED",
         "- EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
     )
-    if any(readme.count(line) != 1 for line in required_readme):
+    if any(readme_current.count(line) != 1 for line in required_readme):
         return False, "README current route or downstream status is missing or contradictory"
-    required_summary = "HARDEN-02 execution is " + execution + "."
-    if readme.count(required_summary) < 1:
-        return False, "README prose does not match the current HARDEN execution state"
-    if "Store/CER remains excluded from HARDEN-02." not in readme:
+    communications_status = (
+        "- COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION"
+        if execution == "COMPLETE / CERTIFIED"
+        else "- COMMUNICATIONS DOSSIER: REQUIRED / NOT_STARTED"
+    )
+    if readme_current.count(communications_status) != 1:
+        return False, "README Communications status or downstream route is missing or contradictory"
+    if execution == "COMPLETE / CERTIFIED":
+        required_completed_readme = (
+            "- FP001_RECONCILIATION_REQUIRED: REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
+            "- ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED",
+        )
+        if any(readme_current.count(line) != 1 for line in required_completed_readme):
+            return False, "README completed HARDEN route or FP-001 gate is missing or contradictory"
+    if "Store/CER remains excluded from HARDEN-02." not in readme_current:
         return False, "README does not preserve the Store/CER exclusion"
 
-    if execution == "NEXT / AUTHORISED / NOT STARTED":
-        if "execution_start_baseline_main_sha" in state:
-            return False, "not-started HARDEN state contains candidate-only provenance"
-        if "working/HARDEN-02_CONTRACT_WORKING_v0.4.2.md" not in readme:
-            return False, "baseline README does not route to HARDEN status v0.4.2"
-    else:
-        if not any(
-            f"working/HARDEN-02_CONTRACT_WORKING_v{version}.md" in readme
-            for version in expected_execution.get("route_versions", expected_execution["successor_versions"])
-        ):
-            return False, "in-progress README does not route to a supported HARDEN status or routing successor"
-    return True, "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"
+    if execution == "COMPLETE / CERTIFIED":
+        if not contract:
+            return False, "current HARDEN status successor is missing from lifecycle validation"
+        version_header = contract.split("## 1. Objective", 1)[0]
+        version_marker = "**Plan / contract version:** " + chr(96) + "v0.4.7" + chr(96)
+        if version_marker not in version_header:
+            return False, "current HARDEN status successor version is missing or unsupported"
+        contract_current_start = contract.rfind("## 20. Contract-stage STOP")
+        if contract_current_start < 0:
+            return False, "current HARDEN status successor has no current STOP section"
+        contract_current = contract[contract_current_start:]
+        required_contract = (
+            "HARDEN-02 execution is COMPLETE / CERTIFIED",
+            "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
+            "Engineering Standards Authority Promotion NEXT / AUTHORISED / NOT STARTED",
+            "PASS WITH NON-BLOCKING CORRECTIONS",
+            "36565948391",
+            "36567933267",
+            "36856102830",
+            "110348834922",
+            "611abef74ce306eba824f44241189413c6be0c305c922166f3a338cc7f019b83",
+        )
+        if any(value not in contract_current for value in required_contract):
+            return False, "current HARDEN contract completion evidence or next route is incomplete"
+        if "Current HARDEN-02 execution is IN PROGRESS" in contract_current:
+            return False, "current HARDEN contract retains an active pre-completion route"
+        route_start = contract_current.find("## 21. Current execution certification and next stage")
+        if route_start < 0:
+            return False, "current HARDEN contract has no explicit completion route section"
+        current_route = contract_current[route_start:]
+        required_route = (
+            "HARDEN-02 execution is COMPLETE / CERTIFIED",
+            "immediate next stage is ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
+            "Engineering Standards Authority Promotion NEXT / AUTHORISED / NOT STARTED",
+        )
+        if any(current_route.count(value) != 1 for value in required_route):
+            return False, "current HARDEN contract completion route is missing or duplicated"
+        contradictory_route = (
+            "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
+            "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
+            "HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+            "Engineering Standards Authority Promotion is DOWNSTREAM / NOT STARTED",
+        )
+        if any(value in current_route for value in contradictory_route):
+            return False, "current HARDEN contract retains a contradictory execution or downstream route"
 
+    return True, (
+        "HARDEN-02 execution completion and downstream route are coherent"
+        if execution == "COMPLETE / CERTIFIED"
+        else "HARDEN-02 preserves the certified v0.4.0 lifecycle and one coherent permitted execution state"
+    )
 
 def _section_body(text: str, heading_pattern: str) -> str:
     match = re.search(heading_pattern, text, re.MULTILINE)
@@ -977,7 +1155,16 @@ def _check_product_semantics(
         path=str(by_id.get("ROADMAP", {}).get("repository_path", "")),
     )
 
-    h02_ok, h02_message = _h02_lifecycle_state(open_work, readme)
+    contract = ""
+    contract_route = re.search(
+        r"(?m)^CURRENT HARDEN-02 STATUS SUCCESSOR:\s*([^;\s]+)",
+        open_work,
+    )
+    if contract_route:
+        contract_path = root / "docs/00_platform" / contract_route.group(1)
+        if contract_path.is_file():
+            contract = contract_path.read_text(encoding="utf-8")
+    h02_ok, h02_message = _h02_lifecycle_state(open_work, readme, contract)
     _record_check(
         report,
         "harden_02_lifecycle_state",

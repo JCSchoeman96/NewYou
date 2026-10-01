@@ -40,7 +40,7 @@ EXPECTED_CURRENT = {
     "PROJECT_NORTH_STAR_AND_MVP": ("PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md", "1.3.0"),
     "PLATFORM_BASELINE": ("00_PLATFORM_v1.6.0.md", "1.6.0"),
     "DECISION_REGISTER": ("01_DECISIONS_v1.6.0.md", "1.6.0"),
-    "OPEN_WORK": ("02_OPEN_WORK_v1.2.52.md", "1.2.52"),
+    "OPEN_WORK": ("02_OPEN_WORK_v1.2.53.md", "1.2.53"),
     "DOMAIN_MAP": ("04_DOMAIN_MAP_v1.2.0.md", "1.2.0"),
     "ROADMAP": ("05_ROADMAP_v1.2.0.md", "1.2.0"),
 }
@@ -291,7 +291,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
 
     def test_current_routes_are_current_and_old_paths_remain_archived(self):
-        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.4.md"
+        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.5.md"
         self.assertEqual(
             atlas_path,
             self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"][0],
@@ -333,7 +333,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             "00_PLATFORM_v1.6.0.md",
             "01_DECISIONS_v1.6.0.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "DELIVERY_ATLAS_WORKING_v0.3.4.md",
+            "DELIVERY_ATLAS_WORKING_v0.3.5.md",
         ):
             self.assertIn(current_name, immediate_next_action)
         for stale_name in (
@@ -369,12 +369,14 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         if not predecessor_path.is_file():
             self.fail(f"missing archived Open Work predecessor: {predecessor_path}")
         predecessor = _read(predecessor_path)
-        predecessor_gates = [line for line in _gate_lines(predecessor) if not line.startswith("HARDEN-02 EXECUTION:")]
-        current_gates = [line for line in _gate_lines(self.open_work) if not line.startswith("HARDEN-02 EXECUTION:")]
+        advanced_prefixes = ("HARDEN-02 EXECUTION:", "ENGINEERING STANDARDS AUTHORITY PROMOTION:")
+        predecessor_gates = [line for line in _gate_lines(predecessor) if not line.startswith(advanced_prefixes)]
+        current_gates = [line for line in _gate_lines(self.open_work) if not line.startswith(advanced_prefixes)]
         self.assertEqual(predecessor_gates, current_gates)
         self.assertIn("DOL-01", self.open_work)
         self.assertIn("REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED", self.open_work)
-        self.assertIn("HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.open_work)
+        self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.open_work)
+        self.assertIn("ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED", self.open_work)
 
 
 if __name__ == "__main__":

@@ -39,14 +39,14 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.52.md",
-      "semver": "1.2.52",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.52.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.53.md",
+      "semver": "1.2.53",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.53.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "322b709a1f2f5b7474c63d93484c2c95525e01885a783350a9a2b63221437fd0",
-      "superseded_version": "1.2.51",
+      "sha256": "9a9b49b55be383c3d4f21d3cec867f668481f29b9f0ecbf2102f03804af5aefa",
+      "superseded_version": "1.2.52",
       "lifecycle": "current",
-      "provenance_sha256": "322b709a1f2f5b7474c63d93484c2c95525e01885a783350a9a2b63221437fd0"
+      "provenance_sha256": "9a9b49b55be383c3d4f21d3cec867f668481f29b9f0ecbf2102f03804af5aefa"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -886,6 +886,17 @@
       "superseded_version": "1.2.0",
       "lifecycle": "historical",
       "provenance_sha256": "ae1b6e44e0e5da2060bcbfda46b8c280a6c7aa0e596b8feb8198cea22aa4bb42"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_52",
+      "canonical_filename": "02_OPEN_WORK_v1.2.52.md",
+      "semver": "1.2.52",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.52.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "322b709a1f2f5b7474c63d93484c2c95525e01885a783350a9a2b63221437fd0",
+      "superseded_version": "1.2.53",
+      "lifecycle": "historical",
+      "provenance_sha256": "322b709a1f2f5b7474c63d93484c2c95525e01885a783350a9a2b63221437fd0"
     }
   ],
   "integrity_rules": {
@@ -985,6 +996,9 @@
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.48\\.md",
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.3\\.0\\.md",
         "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.4\\.2\\.md",
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.52\\.md",
+        "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.3\\.4\\.md",
+        "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.4\\.6\\.md",
         "(?<!archive/)05_ROADMAP_v1\\.1\\.4\\.md",
         "(?<!archive/)FOUNDATION_INTEGRITY_AUDIT_v1\\.0\\.0\\.md"
       ],
@@ -1002,12 +1016,12 @@
         "FRONTEND_EXPERIENCE_SYSTEM"
       ],
       "navigation_document_paths": [
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.4.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.5.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.6.md"
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.7.md"
       ],
       "stale_open_work_v1_2_44_guard_note": "The exact 02_OPEN_WORK_v1.2.44.md stale-path pattern rejects unarchived references in active navigation documents. This is a routing guard only; it does not prove lifecycle or policy semantics.",
-      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48, Roadmap v1.1.4, Atlas v0.3.0 and HARDEN-02 status v0.4.2 paths are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records."
+      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4 and HARDEN-02 status v0.4.2/v0.4.6 paths are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records."
     },
     "product_hardening_bundle_allocation_requirements": {
       "matrix": "BUNDLE-COMPONENT-ALLOCATION",
