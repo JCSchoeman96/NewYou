@@ -788,13 +788,17 @@ def _engineering_standards_candidate_signal(
 
     artifact_signal = False
     if docs.is_dir():
-        for path in docs.rglob("*.md"):
-            if "ENGINEERING_STANDARDS" in path.name.upper():
+        for path in docs.rglob("*"):
+            if not path.is_file():
+                continue
+            if "engineering_standards" in path.name.casefold():
                 artifact_signal = True
                 break
+            if path.suffix.casefold() != ".md":
+                continue
             try:
                 text = path.read_text(encoding="utf-8")
-            except OSError:
+            except (OSError, UnicodeError):
                 continue
             if (
                 "# Engineering Standards v1.0.0" in text
@@ -829,8 +833,10 @@ def _engineering_standards_promotion_state(
         return False, "a prohibited or stale Engineering Standards path exists"
     competing_artifacts = [
         path
-        for path in docs.rglob("*.md")
-        if "ENGINEERING_STANDARDS" in path.name and path != candidate
+        for path in docs.rglob("*")
+        if path.is_file()
+        and "engineering_standards" in path.name.casefold()
+        and path != candidate
     ]
     if competing_artifacts:
         return False, "duplicate or competing Engineering Standards artifact exists"
@@ -904,7 +910,11 @@ def _engineering_standards_promotion_state(
         return False, "candidate manifest hash does not match the artifact"
     if any(
         entry_item is not entry
-        and re.search(r"ENGINEERING_STANDARDS", str(entry_item.get("repository_path", "")))
+        and re.search(
+            r"ENGINEERING_STANDARDS",
+            str(entry_item.get("repository_path", "")),
+            re.IGNORECASE,
+        )
         and entry_item.get("document_id") != "ENGINEERING_STANDARDS_CANDIDATE"
         for entry_item in entries
     ):
