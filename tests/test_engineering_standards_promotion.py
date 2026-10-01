@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.foundation_integrity_audit import _engineering_standards_promotion_state
+from tools.foundation_integrity_audit import _engineering_standards_promotion_state, run_audit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -181,6 +181,63 @@ class EngineeringStandardsPromotionTests(unittest.TestCase):
                 (root / "docs/00_platform/README.md").read_text(),
                 (root / "docs/00_platform/02_OPEN_WORK_v1.2.53.md").read_text(),
                 (root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.7.md").read_text(),
+            )
+
+    def test_run_audit_fails_when_candidate_manifest_registration_is_missing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copytree(ROOT / "docs", root / "docs")
+            manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["reference_documents"] = [
+                entry
+                for entry in manifest["reference_documents"]
+                if entry.get("document_id") != EXPECTED_DOCUMENT_ID
+            ]
+            manifest_path.write_text(
+                json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    finding["check"] == "engineering_standards_promotion_candidate"
+                    and "exactly one manifest entry" in finding["message"]
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+    def test_run_audit_fails_when_candidate_manifest_registration_is_renamed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copytree(ROOT / "docs", root / "docs")
+            manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            entry = next(
+                entry
+                for entry in manifest["reference_documents"]
+                if entry.get("document_id") == EXPECTED_DOCUMENT_ID
+            )
+            entry["document_id"] = "RENAMED_ENGINEERING_STANDARDS_CANDIDATE"
+            manifest_path.write_text(
+                json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    finding["check"] == "engineering_standards_promotion_candidate"
+                    and "exactly one manifest entry" in finding["message"]
+                    for finding in report["findings"]
+                ),
+                report["findings"],
             )
 
     def test_incomplete_promotion_cannot_advance_downstream_work(self):
