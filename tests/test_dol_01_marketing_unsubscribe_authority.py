@@ -12,6 +12,13 @@ DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 PREDECESSOR_SHA256 = {
+    "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md": "a3ff58a26d1ec13173b31c9e7994b427be5fcf644d344b3106894b0026272cd6",
+    "00_PLATFORM_v1.5.1.md": "70e57a6771c3b7cecadcad41d9c97f3dc8ac61d753591200fd1ed855b2417afe",
+    "01_DECISIONS_v1.5.0.md": "00c046646ff2ef5d6ac3591b4b3392ca63923fb75b986005d9a58c39a2c4c0d2",
+    "02_OPEN_WORK_v1.2.50.md": "8defa430be6fd6c013ec7b28203e73e4fdfc82bdb6a444636fcad0a2389823d4",
+    "05_ROADMAP_v1.1.5.md": "5e5e938343d3ff7210515011b0bc9e11900553bcde24a552ef61cd2c85e7c5fb",
+    "DELIVERY_ATLAS_WORKING_v0.3.2.md": "b24bcaaac4f82617a766f1602418e8301a5076594d9ac8f90afb302174bf706e",
+    "HARDEN-02_CONTRACT_WORKING_v0.4.4.md": "496df83ba06d3e3ad1e871b8415a5352147662ae694005d945359f7b1f7976da",
     "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md": "e3054c8e2f8743fbc3cf61bd97435e792fe6193b01fdc6caeef0c1e294a9eee9",
     "00_PLATFORM_v1.5.0.md": "4a656b5c69d628003aaa03802b889d555135c4ecb08754f947520e175e0559cd",
     "00_PLATFORM_v1.4.1.md": "868b6a6ca81df7d4322dd534cb4387c051748cd49cdc3834e53626b49040c8ec",
@@ -30,12 +37,12 @@ PREDECESSOR_SHA256 = {
 }
 
 EXPECTED_CURRENT = {
-    "PROJECT_NORTH_STAR_AND_MVP": ("PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md", "1.2.4"),
-    "PLATFORM_BASELINE": ("00_PLATFORM_v1.5.1.md", "1.5.1"),
-    "DECISION_REGISTER": ("01_DECISIONS_v1.5.0.md", "1.5.0"),
-    "OPEN_WORK": ("02_OPEN_WORK_v1.2.50.md", "1.2.50"),
+    "PROJECT_NORTH_STAR_AND_MVP": ("PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md", "1.3.0"),
+    "PLATFORM_BASELINE": ("00_PLATFORM_v1.6.0.md", "1.6.0"),
+    "DECISION_REGISTER": ("01_DECISIONS_v1.6.0.md", "1.6.0"),
+    "OPEN_WORK": ("02_OPEN_WORK_v1.2.51.md", "1.2.51"),
     "DOMAIN_MAP": ("04_DOMAIN_MAP_v1.2.0.md", "1.2.0"),
-    "ROADMAP": ("05_ROADMAP_v1.1.5.md", "1.1.5"),
+    "ROADMAP": ("05_ROADMAP_v1.2.0.md", "1.2.0"),
 }
 
 
@@ -192,11 +199,14 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertIn("delivery re-checks current marketing-purpose permission", privacy_to_comm[0]["Contract / dependency"].lower())
         self.assertIn("Communications may not directly mutate Privacy & Consent persistence", self.domain)
 
-    def test_decision_register_records_the_next_decision_without_rewriting_prior_decisions(self):
+    def test_pass2_decisions_append_without_rewriting_dec304(self):
         identifiers = re.findall(r"^## DEC-(\d{3}) — ", self.decisions, re.MULTILINE)
-        self.assertEqual([f"{number:03d}" for number in range(1, 305)], identifiers)
+        self.assertEqual([f"{number:03d}" for number in range(1, 313)], identifiers)
         self.assertEqual(1, self.decisions.count("## DEC-304 — Marketing unsubscribe scope and consent ownership"))
-        decision = self.decisions.split("## DEC-304 —", 1)[1]
+        archived_decisions = _read(DOCS / "archive" / "01_DECISIONS_v1.5.0.md")
+        decision = self.decisions.split("## DEC-304 —", 1)[1].split("## DEC-305 —", 1)[0]
+        archived_decision = archived_decisions.split("## DEC-304 —", 1)[1].split("# Open Gates", 1)[0]
+        self.assertEqual(archived_decision.strip(), decision.strip())
         self.assertTrue(decision.startswith(" Marketing unsubscribe scope and consent ownership"))
         self.assertIn("DEC-094", decision)
         self.assertIn("DEC-232", decision)
@@ -221,7 +231,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertIn("00_PLATFORM_v1.5.0.md", current_inputs)
         self.assertNotIn(self.product_entry["canonical_filename"], current_inputs)
         self.assertIn("§21S", current_inputs)
-        self.assertIn(self.decision_entry["canonical_filename"], current_inputs)
+        self.assertIn("01_DECISIONS_v1.5.0.md", current_inputs)
         self.assertIn("DEC-304", current_inputs)
         self.assertIn("# 21S. Marketing Permission and Communication Preferences", self.product)
         self.assertIn("## DEC-304 — Marketing unsubscribe scope and consent ownership", self.decisions)
@@ -275,13 +285,13 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             self.assertEqual(f"docs/00_platform/archive/{filename}", entry["repository_path"])
             self.assertEqual(PREDECESSOR_SHA256[filename], entry["sha256"])
 
-        self.assertEqual(304, self.manifest["integrity_rules"]["expected_counts"]["decisions"])
-        self.assertEqual(304, self.manifest["integrity_rules"]["contiguous_ranges"]["DEC"]["end"])
+        self.assertEqual(312, self.manifest["integrity_rules"]["expected_counts"]["decisions"])
+        self.assertEqual(312, self.manifest["integrity_rules"]["contiguous_ranges"]["DEC"]["end"])
         self.assertEqual(61, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
 
     def test_current_routes_are_current_and_old_paths_remain_archived(self):
-        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.2.md"
+        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.3.md"
         self.assertEqual(
             atlas_path,
             self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"][0],
@@ -304,26 +314,30 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             self.assertIn(filename, current_section)
 
         for stale_name in (
+            "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
             "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
-            "00_PLATFORM_v1.5.0.md",
+            "00_PLATFORM_v1.5.1.md",
             "00_PLATFORM_v1.4.1.md",
+            "01_DECISIONS_v1.5.0.md",
             "01_DECISIONS_v1.4.1.md",
             "02_OPEN_WORK_v1.2.45.md",
+            "02_OPEN_WORK_v1.2.50.md",
             "02_OPEN_WORK_v1.2.49.md",
             "04_DOMAIN_MAP_v1.1.1.md",
+            "05_ROADMAP_v1.1.5.md",
             "05_ROADMAP_v1.1.4.md",
         ):
             self.assertNotIn(stale_name, current_section)
         immediate_next_action = self.open_work.split("# 9. Immediate Next Action", 1)[1].split("```text", 1)[0]
         for current_name in (
-            "00_PLATFORM_v1.5.1.md",
-            "01_DECISIONS_v1.5.0.md",
+            "00_PLATFORM_v1.6.0.md",
+            "01_DECISIONS_v1.6.0.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "DELIVERY_ATLAS_WORKING_v0.3.2.md",
+            "DELIVERY_ATLAS_WORKING_v0.3.3.md",
         ):
             self.assertIn(current_name, immediate_next_action)
         for stale_name in (
-            "00_PLATFORM_v1.5.0.md",
+            "00_PLATFORM_v1.5.1.md",
             "00_PLATFORM_v1.4.1.md",
             "01_DECISIONS_v1.4.1.md",
             "02_OPEN_WORK_v1.2.45.md",
@@ -347,17 +361,8 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             "04_DOMAIN_MAP_v1.1.1.md",
         ):
             self.assertNotIn(stale_name, source_table)
-        atlas_completion = self.atlas.split("## 26.18 ATLAS reconciliation", 1)[1]
-        for stale_version in (
-            "Product `v1.5.0`",
-            "Product `v1.4.1`",
-            "Decisions `v1.4.1`",
-            "Domain Map `v1.1.1`",
-            "Open Work `v1.2.49`",
-            "Open Work `v1.2.45`",
-            "Roadmap `v1.1.4`",
-        ):
-            self.assertNotIn(stale_version, atlas_completion)
+        atlas_completion = self.atlas.split("## 26.18 ATLAS reconciliation (`v0.3.0`) completion standard", 1)[1]
+        self.assertIn("completion standard for the post-Roadmap derived Atlas reconciliation", atlas_completion)
 
     def test_downstream_gate_lines_match_the_preserved_open_work_predecessor(self):
         predecessor_path = DOCS / "archive" / "02_OPEN_WORK_v1.2.46.md"
