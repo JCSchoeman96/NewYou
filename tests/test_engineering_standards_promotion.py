@@ -240,6 +240,35 @@ class EngineeringStandardsPromotionTests(unittest.TestCase):
                 report["findings"],
             )
 
+    def test_run_audit_fails_on_case_or_extension_variant_competing_artifacts(self):
+        variants = (
+            "engineering_standards_copy_v1.0.0.md",
+            "Engineering_Standards_Copy_v1.0.0.MD",
+            "ENGINEERING_STANDARDS_COPY_v1.0.0",
+        )
+        for filename in variants:
+            with self.subTest(filename=filename), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                shutil.copytree(ROOT / "docs", root / "docs")
+                duplicate = root / "docs/00_platform/reference" / filename
+                duplicate.write_text("competing Engineering Standards candidate\n", encoding="utf-8")
+
+                report = run_audit(
+                    root,
+                    root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json",
+                )
+
+                self.assertEqual("FAIL", report["status"])
+                self.assertTrue(
+                    any(
+                        finding["check"] == "engineering_standards_promotion_candidate"
+                        and "duplicate or competing Engineering Standards artifact exists"
+                        in finding["message"]
+                        for finding in report["findings"]
+                    ),
+                    report["findings"],
+                )
+
     def test_incomplete_promotion_cannot_advance_downstream_work(self):
         mutated = self.standards + "\nFP-001 reconciliation is COMPLETE / PERFORMED.\n"
         with tempfile.TemporaryDirectory() as directory:
