@@ -378,7 +378,7 @@ H02_EXECUTION_STATES = {
         "matrix": "IN_PROGRESS_NOT_COMPLETE_CERTIFICATION_PENDING",
         "successor_version": "0.4.3",
         "successor_versions": ("0.4.3", "0.4.4"),
-        "route_versions": ("0.4.3", "0.4.4", "0.4.5"),
+        "route_versions": ("0.4.3", "0.4.4", "0.4.5", "0.4.6"),
         "readme": "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
     },
 }

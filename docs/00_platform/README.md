@@ -9,7 +9,7 @@ For foundation/default planning and delivery-preparation work, read **only** the
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`
 2. `00_PLATFORM_v1.6.0.md`
 3. `01_DECISIONS_v1.6.0.md`
-4. `02_OPEN_WORK_v1.2.51.md`
+4. `02_OPEN_WORK_v1.2.52.md`
 5. `03_ARCHITECTURE_v1.1.1.md`
 6. `04_DOMAIN_MAP_v1.2.0.md`
 7. `05_ROADMAP_v1.2.0.md`
@@ -36,8 +36,8 @@ The frozen Frontend Experience System is current authority for affected frontend
 `working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are outside the manifest's governing/reference document records. The manifest may list a derived path under graph rules for integrity scanning without elevating it to authority. Read working artifacts only when a task explicitly concerns them; they must not override the nine current-authority documents. They remain working until an explicit freeze review and governance decision.
 
 - `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register; remains working/non-authoritative provenance.
-- `working/DELIVERY_ATLAS_WORKING_v0.3.3.md` — derived Delivery Atlas navigation with current-source routing for approved Feature Pack planning. It remains working/non-authoritative, outside authority-document records, and is listed only under graph/navigation paths. Atlas navigation may help delivery preparation when relevant; it cannot create a new authority gate or prerequisite. Predecessor v0.3.2 is preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md`; v0.3.1 remains at `archive/DELIVERY_ATLAS_WORKING_v0.3.1.md`; v0.2.3 remains preserved at `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`; earlier v0.2.2, v0.2.1 and v0.2.0 files remain at `archive/DELIVERY_ATLAS_WORKING_v0.2.2.md`, `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md` and `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`. The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references.
-- `working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md` — current-source-routing successor to v0.4.4 for the original v0.4.0 certified HARDEN-02 contract semantics; PR #40 exact-head certification, unchanged merge, both exact-SHA Foundation Integrity runs, fresh independent post-merge review and durable post-merge attestation are COMPLETE / PASS. HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. Working contracts remain outside the authority-document records in `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Predecessor v0.4.4 is preserved byte-identically at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.4.md`; v0.4.3 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.3.md`; earlier v0.4.1 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.1.md`; archived v0.4.2 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.2.md`; certified contract artifact v0.4.0 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md`.
+- `working/DELIVERY_ATLAS_WORKING_v0.3.4.md` — derived Delivery Atlas navigation with current-source routing for approved Feature Pack planning. It remains working/non-authoritative, outside authority-document records, and is listed only under graph/navigation paths. Atlas navigation may help delivery preparation when relevant; it cannot create a new authority gate or prerequisite. Predecessor v0.3.3 is preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.3.3.md`; v0.3.2 remains at `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md`; v0.3.1 remains at `archive/DELIVERY_ATLAS_WORKING_v0.3.1.md`; v0.2.3 remains preserved at `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`; earlier v0.2.2, v0.2.1 and v0.2.0 files remain at `archive/DELIVERY_ATLAS_WORKING_v0.2.2.md`, `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md` and `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md`. The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references.
+- `working/HARDEN-02_CONTRACT_WORKING_v0.4.6.md` — current-source-routing successor to v0.4.5 for the original v0.4.0 certified HARDEN-02 contract semantics; PR #40 exact-head certification, unchanged merge, both exact-SHA Foundation Integrity runs, fresh independent post-merge review and durable post-merge attestation are COMPLETE / PASS. HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. Working contracts remain outside the authority-document records in `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Predecessor v0.4.5 is preserved byte-identically at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.5.md`; v0.4.4 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.4.md`; v0.4.3 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.3.md`; earlier v0.4.1 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.1.md`; archived v0.4.2 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.2.md`; certified contract artifact v0.4.0 remains at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md`.
 - `working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md` — active Phase 7A planning artifact; OQ-034 is resolved for architecture selection and its Phase 8 executable proof remains incomplete; PMR reconciliation remains downstream and is not performed; intentionally outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Predecessor preserved at `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md`.
 - `working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md` — non-authoritative Stage 3B classification; it does not amend Product Law, AR-000, Architecture Law or Engineering Standards and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
 - `working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md` — non-authoritative Stage 4A Architecture Grill evidence; it does not amend Product Law, AR-000 or Architecture Law, creates no ARC identifiers, and remains outside `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`.
@@ -47,7 +47,7 @@ The frozen Frontend Experience System is current authority for affected frontend
 
 ## Delivery Atlas routing
 
-Use the [Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.3.md) during delivery preparation when its derived navigation helps with an approved Roadmap Feature Pack or a relevant planning question. Consulting the Atlas is not itself a gate or prerequisite. It does not override the nine current-authority documents above, change Product/Architecture/Domain/Roadmap law, authorise Phase 7 or authorise implementation.
+Use the [Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.4.md) during delivery preparation when its derived navigation helps with an approved Roadmap Feature Pack or a relevant planning question. Consulting the Atlas is not itself a gate or prerequisite. It does not override the nine current-authority documents above, change Product/Architecture/Domain/Roadmap law, authorise Phase 7 or authorise implementation.
 
 Do not load the whole Atlas by default. Load only the relevant sections: the Feature Pack and capability views in §§4–5, active-FP derivation contracts in §§6–12, and the routing/governance rules in §§23–25 as needed. Every material Atlas conclusion must resolve to an exact current upstream authority reference. The Atlas may point to the canonical Phase 7A Feature Pack Skeleton + preliminary Gate Manifest → Phase 7B required JIT Domain Dossiers → Phase 7C Final Feature Pack Contract sequence when relevant; that navigation adds no gate or artifact, and the Atlas creates none of those artifacts.
 
@@ -137,7 +137,8 @@ The frozen August 2026 audit at `archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` r
 - `archive/02_OPEN_WORK_v1.2.47.md` — byte-identical predecessor to archived Open Work v1.2.48.
 - `archive/02_OPEN_WORK_v1.2.48.md` — byte-identical predecessor to archived Open Work v1.2.49.
 - `archive/02_OPEN_WORK_v1.2.49.md` — preserved predecessor to archived Open Work v1.2.50.
-- `archive/02_OPEN_WORK_v1.2.50.md` — byte-identical predecessor to current Open Work v1.2.51.
+- `archive/02_OPEN_WORK_v1.2.51.md` — byte-identical predecessor to current Open Work v1.2.52.
+- `archive/02_OPEN_WORK_v1.2.50.md` — preserved predecessor to archived Open Work v1.2.51.
 - `archive/02_OPEN_WORK_v1.2.43.md` — earlier preserved Open Work predecessor.
 - `archive/05_ROADMAP_v1.1.0.md` — preserved earlier Roadmap predecessor in the v1.1.0 → v1.1.1 → v1.1.2 history.
 - `archive/05_ROADMAP_v1.1.1.md` — preserved predecessor to archived Roadmap v1.1.2.
@@ -153,6 +154,7 @@ The frozen August 2026 audit at `archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` r
 - `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md` — preserved FP-001 Phase 7A skeleton before current-source/OQ-034 routing correction.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.1.md` — preserved pending-post-merge status snapshot.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` — preserved completed-contract status snapshot; superseded for current routing and provenance by archived v0.4.3/v0.4.4 and current v0.4.5.
+- `archive/HARDEN-02_CONTRACT_WORKING_v0.4.5.md` — byte-identical predecessor to current v0.4.6 routing successor.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.4.md` — byte-identical predecessor to current v0.4.5 routing successor.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.3.md` — byte-identical predecessor to archived routing successor v0.4.4.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.4.md` — byte-identical predecessor to current routing successor v0.4.5.
@@ -167,7 +169,8 @@ The frozen August 2026 audit at `archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` r
 - `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md` — preserved predecessor to archived working Atlas v0.3.0.
 - `archive/DELIVERY_ATLAS_WORKING_v0.3.0.md` — byte-identical routing predecessor to archived working Atlas v0.3.1.
 - `archive/DELIVERY_ATLAS_WORKING_v0.3.1.md` — byte-identical routing predecessor to archived working Atlas v0.3.2.
-- `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md` — byte-identical routing predecessor to current working Atlas v0.3.3.
+- `archive/DELIVERY_ATLAS_WORKING_v0.3.3.md` — byte-identical routing predecessor to current working Atlas v0.3.4.
+- `archive/DELIVERY_ATLAS_WORKING_v0.3.2.md` — preserved routing predecessor to archived Atlas v0.3.3.
 
 Archive files are historical evidence only and are never current authority. Never use an archived document to override a current authoritative document.
 
@@ -191,7 +194,7 @@ Engineering Standards are **not yet current authority**. Current routing require
 - CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING
 - NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED
 - CURRENT PRODUCT LAW: `00_PLATFORM_v1.6.0.md`; DEC-299 through DEC-312 record the accepted paid-plan, reversal, consent, provenance, marketing, personalisation, pilot and economics decisions
-- PASS 2 FOUNDATION EVALUATION: ADJUDICATED / CORRECTION SPEC APPROVED; closure remains pending merge of the exact reviewed head, resulting-main Foundation Integrity and independent post-merge review
+- PASS 2 FOUNDATION EVALUATION: **CLOSED / PASS** — reviewed head `4d18ef33ed8799340d6147403ac51c61237853ca` merged through PR #62 to resulting `main` `24eeb2834d58e19e0c833f09d769118d75fc9061`; reviewed and merged trees are identical (`aa4edc210d0a98aabbbdccb5ab9d4adbdc57a296`); post-merge Foundation Integrity run `36852114112` passed (250 tests / 500 assertions); independent post-merge semantic review passed. This closure advances no downstream lifecycle stage.
 - ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.2.0`; the 17 existing Feature Pack identifiers are preserved
 - DOL-01 POLICY: channel/category opt-out and purpose-level marketing withdrawal have separate participant-visible scope and sole owners; this does not close legal/expert gates or authorize implementation
 - TARGETED PRODUCT AMENDMENT STAGE 1 (GRILL): COMPLETE
@@ -209,14 +212,14 @@ Engineering Standards are **not yet current authority**. Current routing require
 - ROADMAP SEQUENCING GRILL: COMPLETE
 - ROADMAP SEQUENCING AMENDMENT: COMPLETE — current semantic successor `05_ROADMAP_v1.2.0.md`; predecessor `archive/05_ROADMAP_v1.1.5.md`; Feature Packs 17; PMR REQUIRED in FP-001; Research/Voting FUTURE-GATED / FEATURE-PACK-UNASSIGNED
 - ENGINEERING STANDARDS AUTHORITY PROMOTION: DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED
-- ATLAS RECONCILIATION: COMPLETE — current routing successor `working/DELIVERY_ATLAS_WORKING_v0.3.3.md` (derived / non-authoritative; ATLAS-12 remains NOT_STARTED)
+- ATLAS RECONCILIATION: COMPLETE — current routing successor `working/DELIVERY_ATLAS_WORKING_v0.3.4.md` (derived / non-authoritative; ATLAS-12 remains NOT_STARTED)
 - HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED
 - PRE-MERGE CERTIFICATION: COMPLETE — [PR #40 record](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5827553565)
 - EXACT-HEAD FOUNDATION INTEGRITY: PASS — [run 36091130615](https://github.com/JCSchoeman96/NewYou/actions/runs/36091130615)
 - CERTIFIED-HEAD MERGE: COMPLETE / UNCHANGED — certified head `cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4` merged as `352f304139b9d4f8ee3ba205cde9e34d0ad8437f`
 - RESULTING-MAIN FOUNDATION INTEGRITY: PASS — [run 36101210535](https://github.com/JCSchoeman96/NewYou/actions/runs/36101210535)
 - POST-MERGE CERTIFICATION: COMPLETE — fresh independent review PASS and durable attestation COMPLETE at [PR #40 record](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5830618876)
-- HARDEN-02 CURRENT STATUS: `working/HARDEN-02_CONTRACT_WORKING_v0.4.5.md` records the completed v0.4.0 lifecycle and execution status; execution-start baseline main SHA is `1c8fc94058176795d88cb82e08857e3d30c553e9`; v0.4.0 semantics are unchanged
+- HARDEN-02 CURRENT STATUS: `working/HARDEN-02_CONTRACT_WORKING_v0.4.6.md` records the completed v0.4.0 lifecycle and execution status; execution-start baseline main SHA is `1c8fc94058176795d88cb82e08857e3d30c553e9`; v0.4.0 semantics are unchanged
 - HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING
 - PR #38: STALE / BLOCKED / NOT AUTHORITY
 - `FP001_RECONCILIATION_REQUIRED` — DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION
