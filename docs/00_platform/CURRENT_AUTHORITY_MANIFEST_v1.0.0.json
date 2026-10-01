@@ -152,7 +152,7 @@
       "semver": "1.0.0",
       "repository_path": "docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.0.md",
       "authority_class": "ENGINEERING_STANDARDS_SUPPORTING_AUTHORITY_CANDIDATE",
-      "sha256": "0814831b1ef28f432e9e390bcac08e5b44a52a476c7574e4c22e972e01473459",
+      "sha256": "feb2bf132fdca74bd534c83526a19e06659879a9b4f09bec7f5ca4b2e3c89df4",
       "superseded_version": null,
       "lifecycle": "candidate"
     }
