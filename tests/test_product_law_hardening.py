@@ -82,6 +82,8 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertIn("no_expiry_for_incomplete_information", cases["insufficient_information"]["entitlement consequence"])
         self.assertIn("held_unconsumed_pending_review", cases["professional_review_required"]["entitlement consequence"])
         self.assertIn("not_personalised_plan_fulfilment", cases["general_wellness_only"]["commercial consequence"])
+        self.assertIn("retained_right_no_expiry_solely_due_to_gw_status", cases["general_wellness_only"]["entitlement consequence"])
+        self.assertIn("no_choice_by_end_of_single_14_day_window=refund_snapshot_and_close", cases["general_wellness_only"]["commercial consequence"])
         self.assertIn("refund_allocated_plan_component", cases["terminal_unfulfillable_outcome"]["commercial consequence"])
 
     def test_commercial_reversal_matrix_covers_access_and_history_consequences(self):
@@ -540,7 +542,7 @@ class ProductLawHardeningTests(unittest.TestCase):
 
         self.assertIn("not fulfilment of the purchased personalised plan", personalisation)
         self.assertIn("plan entitlement remains held_unconsumed", personalisation)
-        self.assertIn("automatically refunds the plan component after 14 days", personalisation)
+        self.assertIn("automatically refunds the original snapshotted plan-component allocation", personalisation)
         self.assertIn("NewYou remains intentionally a platform", personalisation)
         self.assertIn("100%-discount purchases", personalisation)
         self.assertIn("3 or more pauses commercial expansion", personalisation)
@@ -583,6 +585,96 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertIn("Phase 7C, Architectural Proof, Phase 8, application implementation", self.open_work)
         self.assertIn("PHASE 7C: BLOCKED / NOT_STARTED", self.open_work)
         self.assertIn('"proof_classification": "NOT FINALISED"', self.open_work)
+
+    def test_pass2_review_corrections_are_locked_without_resolving_methodology_or_future_products(self):
+        product_sections = self.product.split("# 17. Data Ownership and Control", 1)[1].split("# 18.", 1)[0]
+        temperament = self.product.split(
+            "## 21T.1 Temperament as behavioural-personalisation input", 1
+        )[1].split("# 22.", 1)[0]
+        assessment = self.product.split("## 21B.5 Primary, secondary and score display", 1)[1].split("## 21B.6", 1)[0]
+        decisions = self.decisions.split("## DEC-306 —", 1)[1].split("## DEC-307 —", 1)[0]
+        decision307 = self.decisions.split("## DEC-307 —", 1)[1].split("## DEC-308 —", 1)[0]
+        decision308 = self.decisions.split("## DEC-308 —", 1)[1].split("## DEC-309 —", 1)[0]
+        decision299 = self.decisions.split("## DEC-299 —", 1)[1].split("## DEC-300 —", 1)[0]
+        decision058 = self.decisions.split("## DEC-058 —", 1)[1].split("## DEC-059 —", 1)[0]
+        roadmap_fp006 = self.roadmap.split("## FP-006 —", 1)[1].split("## FP-007 —", 1)[0]
+
+        for required in (
+            "determined by the governing IP agreement",
+            "Participant-specific personal, account and health records",
+            "only to the extent owned or licensed under applicable agreements",
+        ):
+            self.assertIn(required, product_sections)
+        self.assertNotIn("The platform retains intellectual-property rights in the assessment methodology", product_sections)
+        self.assertNotIn("scoring logic", product_sections)
+
+        for required in (
+            "approved percentage/proportion result across all four colours",
+            "does not state that a participant is a percentage of a colour as a person",
+            "underlying governed scores",
+            "only when the approved methodology resolves that ordering",
+            "unresolved exact ties or other ambiguity visibly as tied or ambiguous",
+        ):
+            self.assertIn(required.lower(), assessment.lower())
+
+        for required in (
+            "approved percentage/proportion result across all four colours",
+            "does not describe a participant as a percentage of a colour",
+            "underlying governed scores",
+            "only when the approved methodology resolves that ordering",
+            "unresolved exact ties or other ambiguity visibly as tied or ambiguous",
+            "two distinguishing dimensions",
+            "extrovert ↔ introvert",
+            "relationship-oriented ↔ task-oriented",
+        ):
+            self.assertIn(required.lower(), temperament.lower())
+        self.assertIn("DEC-058", decisions)
+        self.assertIn("percentage/proportion result", decisions)
+        self.assertIn("Preserve unresolved exact ties or other ambiguity visibly", decisions)
+        self.assertIn("**Status:** SUPERSEDED IN PART BY DEC-306", decision058)
+        self.assertIn("DEC-308 and §21T.4", decision299)
+
+        for requirement in (
+            "does not expire solely because she remains `general_wellness_only`",
+            "one 14-day choice window",
+            "Any reminders occur within that same window",
+            "applicable pre-purchase disclosure",
+        ):
+            self.assertIn(requirement, decision308)
+        for requirement in (
+            "non-gating discovery/directional signals",
+            "not paid-demand evidence",
+            "do not gate MVP success",
+            "authorize building future products",
+        ):
+            self.assertIn(requirement, decision307)
+
+        for required in (
+            "does not expire solely because she remains `general_wellness_only`",
+            "future expiry or forced closure requires separately governed and versioned Product Law",
+            "Any reminders occur within that same 14-day window",
+            "by the end of the window",
+        ):
+            self.assertIn(required, temperament)
+        self.assertNotIn("after the governed decision and reminder period", temperament)
+
+        for signal in (
+            "Would you recommend NewYou?",
+            "Would you purchase another relevant NewYou product?",
+            "Do you intend or want to continue with NewYou?",
+            "interest in Nuwe Jy",
+            "interest in future membership",
+        ):
+            self.assertIn(signal, temperament)
+            self.assertIn(signal, roadmap_fp006)
+        for restriction in (
+            "discovery or directional product evidence only",
+            "not paid-demand evidence",
+            "do not gate MVP success",
+            "do not authorize building Nuwe Jy, Membership",
+        ):
+            self.assertIn(restriction, temperament)
+            self.assertIn(restriction, roadmap_fp006)
 
     def test_atlas_routes_to_current_authorities_and_does_not_block_on_resolved_oq034(self):
         current_sources = (

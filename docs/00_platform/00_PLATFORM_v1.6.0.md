@@ -1029,17 +1029,7 @@ The participant should be able to:
 - manage consent;
 - and request account deletion subject to legitimate retention obligations.
 
-The platform retains intellectual-property rights in:
-
-- the assessment methodology;
-- scoring logic;
-- algorithms;
-- templates;
-- educational content;
-- programme designs;
-- and generic recommendation frameworks.
-
-Those rights do not permit disclosure or repurposing of identifiable participant data without an authorised basis.
+Ownership and licence rights for Four-Colour methodology and scoring are determined by the governing IP agreement; this section makes no ownership or licence finding. Participant-specific personal, account and health records are governed separately from methodology IP under applicable privacy, consent and data-governance rules. Rights in platform software, algorithms, templates, educational content, programme designs and generic recommendation frameworks exist only to the extent owned or licensed under applicable agreements. No methodology or content right permits disclosure or repurposing of identifiable participant data without an authorised basis.
 
 ---
 
@@ -1523,10 +1513,10 @@ Published versions remain immutable.
 
 ## 21B.5 Primary, secondary and score display
 
-- The highest score becomes the primary temperament.
-- The second-highest score becomes the secondary temperament.
-- Exact colour scores are shown.
-- Exact ties follow the approved tie-resolution workflow.
+- The digital assessment presents the approved percentage/proportion result across all four colours as an assessment-result distribution or alignment. It does not state that a participant is a percentage of a colour as a person.
+- Preserve all four underlying governed scores with the result.
+- The approved methodology defines the score normalization and percentage/proportion calculation.
+- Assign primary, secondary, tertiary and fourth only when the approved methodology resolves that ordering. Preserve unresolved exact ties or other ambiguity visibly as tied or ambiguous; do not assign an arbitrary total order.
 - Strong-dominance, balanced, close-result and mixed-distance labels are disabled until exact thresholds are approved.
 
 ## 21B.6 Tie-resolution workflow
@@ -6250,7 +6240,7 @@ This section makes the paid-plan and assessment consequences explicit without ch
 
 ## 21R.1 Paid plan entitlement by eligibility outcome
 
-`held_unconsumed` means the paid plan right remains reserved for the purchase, has not been used to fulfil a plan, cannot be reused or silently converted, and does not expire solely because required information is incomplete or review is pending. A final unfulfillable outcome closes that right through the disclosed plan-component refund below. A bundle's deterministic, versioned allocation rule and each component amount must be selected before sale; component amounts must reconcile exactly to the accepted bundle amount after governed discounts and promotions, in the order currency's minor units.
+`held_unconsumed` means the paid plan right remains reserved for the purchase, has not been used to fulfil a plan, cannot be reused or silently converted, and does not expire solely because required information is incomplete or review is pending. A final unfulfillable outcome closes that right through the disclosed plan-component refund below. For `general_wellness_only`, §21T.4 governs participant choice and no-response closeout; retaining the right does not let it expire solely because that outcome continues. A bundle's deterministic, versioned allocation rule and each component amount must be selected before sale; component amounts must reconcile exactly to the accepted bundle amount after governed discounts and promotions, in the order currency's minor units.
 
 <!-- NEWYOU:PRODUCT-MATRIX:ELIGIBILITY-PAID-PLAN:START -->
 | case | entitlement consequence | commercial consequence |
@@ -6258,7 +6248,7 @@ This section makes the paid-plan and assessment consequences explicit without ch
 | `eligible_automated` | `consume_on_successful_delivery; technical_failure=preserve_unconsumed` | `deliver_governed_personalised_plan; consume_only_after_delivery` |
 | `insufficient_information` | `held_unconsumed; no_expiry_for_incomplete_information; unavailable_for_reuse_or_conversion` | `no_plan_until_missing_information_is_supplied; re_evaluate_after_completion` |
 | `professional_review_required` | `held_unconsumed_pending_review; no_expiry_while_review_pending; same_entitlement_if_review_authorises` | `no_automated_plan; governed_review_controls_authorisation` |
-| `general_wellness_only` | `held_unconsumed; wellness_does_not_consume` | `offer_safe_general_wellness; not_personalised_plan_fulfilment; preserve_paid_right` |
+| `general_wellness_only` | `held_unconsumed; wellness_does_not_consume; retained_right_no_expiry_solely_due_to_gw_status` | `offer_safe_general_wellness; not_personalised_plan_fulfilment; participant_choice_retain_or_refund; no_choice_by_end_of_single_14_day_window=refund_snapshot_and_close; see_21T.4` |
 | `terminal_unfulfillable_outcome` | `close_plan_entitlement_after_component_refund; preserve_separately_delivered_assessment` | `refund_allocated_plan_component; end_plan_right; never_substitute_general_wellness` |
 <!-- NEWYOU:PRODUCT-MATRIX:ELIGIBILITY-PAID-PLAN:END -->
 
@@ -6401,7 +6391,7 @@ These are behavioural design inputs, not deterministic statements about every pe
 
 ## 21T.2 Mixed profiles and distinct participant truths
 
-The governed assessment retains four colour scores and identifies primary, secondary, tertiary and fourth results. V1 personalisation remains intentionally coarse. A Yellow/Red 80/20 result need not behave materially differently from Yellow/Red 60/40 because of finer percentages. Capture the approved high-resolution assessment result; add finer behavioural weighting only when evidence justifies it and methodology authority permits it.
+The digital assessment preserves all four underlying governed scores and presents the approved percentage/proportion result across all four colours as the assessment-result distribution or alignment. It does not describe a participant as a percentage of a colour. Exact score normalization and percentage/proportion calculation remain methodology-owned. Assign primary, secondary, tertiary and fourth only when the approved methodology resolves that ordering; preserve unresolved exact ties or other ambiguity visibly as tied or ambiguous rather than assigning an arbitrary total order. V1 personalisation remains intentionally coarse. A Yellow/Red 80/20 result need not behave materially differently from Yellow/Red 60/40 because of finer percentages. Capture the approved high-resolution assessment result; add finer behavioural weighting only when evidence justifies it and methodology authority permits it.
 
 Keep these concepts distinct:
 
@@ -6446,7 +6436,7 @@ raw colour scores
    OR preserve ambiguity
 ```
 
-The framework's four axes are Yellow = extrovert + relationship, Red = extrovert + task, Green = introvert + relationship, and Blue = introvert + task. Childhood or natural-self questions may help distinguish natural temperament from later learned presentation. Exact questions, score rules and deterministic classification consequences remain methodology-owned. The assessment may preserve ambiguity when the approved method does not resolve it.
+The Four-Colour framework combines two distinguishing dimensions: extrovert ↔ introvert and relationship-oriented ↔ task-oriented. Together they map Yellow = extrovert + relationship, Red = extrovert + task, Green = introvert + relationship, and Blue = introvert + task. Childhood or natural-self questions may help distinguish natural temperament from later learned presentation. Exact questions, score rules and deterministic classification consequences remain methodology-owned. The assessment may preserve ambiguity when the approved method does not resolve it.
 
 Present temperament to create insight. Do not describe it as a clinical personality diagnosis, a validated medical predictor, a deterministic statement about every person of a colour, or proof that a colour causes a health outcome.
 
@@ -6474,7 +6464,9 @@ refund
 
 Support or Commerce may not create eligibility. `general_wellness_only` does not automatically become `professional_review_required`; only Safety & Eligibility may create that pathway through governed rules.
 
-If the participant does not choose after the governed decision and reminder period, NewYou automatically refunds the plan component after 14 days and closes its entitlement. Fourteen days is Product configuration. A change requires governed re-versioning and the required customer disclosure.
+When the participant explicitly chooses to retain the paid plan-component entitlement, it remains `held_unconsumed` and does not expire solely because she remains `general_wellness_only`. Any future expiry or forced closure requires separately governed and versioned Product Law and applicable pre-purchase disclosure.
+
+The participant receives one 14-day choice window when NewYou communicates the governed decision and the retain-or-refund choice. Any reminders occur within that same 14-day window. If no choice is recorded by the end of the window, NewYou automatically refunds the original snapshotted plan-component allocation and closes that component entitlement. Preserve any separately valid assessment entitlement and report. Fourteen days is Product configuration; a change requires governed re-versioning and applicable customer disclosure. This is not a second reminder period followed by another 14 days.
 
 ## 21T.5 Paid-pilot commercial evidence
 
@@ -6507,6 +6499,8 @@ Record refund reasons as `technical_failure`, `duplicate_or_erroneous_payment`, 
 For the first 10, a product-value or dissatisfaction refund signal of 0–1 is not strong negative evidence; 2 requires review before expansion; 3 or more pauses commercial expansion pending investigation. Technical/payment corrections and governed eligibility refunds do not count as dissatisfaction refunds.
 
 Measure support burden before setting a time threshold: participants needing support, contacts per participant, support minutes, issue category, manual intervention, and whether developer or expert intervention was required. Add the separate price-value question: “Considering what you paid, did the product provide good value?” For discounted participants, ask whether they believe they would have purchased at normal list price. Treat stated intent as weaker evidence than an actual purchase.
+
+Ask participants, "Would you recommend NewYou?", "Would you purchase another relevant NewYou product?", and "Do you intend or want to continue with NewYou?" Also record their interest in Nuwe Jy and their interest in future membership. Treat responses as discovery or directional product evidence only. They are not paid-demand evidence, do not replace actual purchases or subscriptions, do not gate MVP success, and do not authorize building Nuwe Jy, Membership or another future product.
 
 ## 21T.6 First paid cohort
 

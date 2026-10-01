@@ -158,8 +158,8 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
     def test_readme_manifest_open_work_and_atlas_agree_on_current_roadmap(self):
         current_route = "05_ROADMAP_v1.2.0.md"
         self.assertIn(f"`{current_route}`", self.readme)
-        self.assertGreater(self.open_work.count(current_route), 0)
-        self.assertGreater(self.atlas.count(current_route), 0)
+        self.assertEqual(8, self.open_work.count(current_route))
+        self.assertEqual(6, self.atlas.count(current_route))
 
         stale_current = re.compile(r"(?<!archive/)05_ROADMAP_v1\.1\.4\.md")
         for label, text in (

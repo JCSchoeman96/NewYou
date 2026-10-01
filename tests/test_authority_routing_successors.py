@@ -882,6 +882,20 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "Only Venessa and Super Admin, acting under the intellectual-property agreement, may approve or alter assessment methodology.",
             1,
         )
+        self.assertIn(
+            "## DEC-058 — Primary and secondary results\n**Status:** SUPERSEDED IN PART BY DEC-306",
+            new_decisions,
+        )
+        new_decision_body = new_decision_body.replace(
+            "## DEC-058 — Primary and secondary results\n**Status:** SUPERSEDED IN PART BY DEC-306\nHistorical rule: Highest score is primary, second-highest is secondary and exact colour scores are shown. DEC-306 supersedes the fixed highest/second-highest ordering and clarifies score display. Current digital result representation and ordering follow DEC-306 and Product Law §21B.5.",
+            "## DEC-058 — Primary and secondary results\n**Status:** LOCKED\nHighest score is primary, second-highest is secondary and exact colour scores are shown.",
+            1,
+        )
+        new_decision_body = new_decision_body.replace(
+            " DEC-308 and §21T.4 govern its retain/refund choice and no-response closeout.",
+            "",
+            1,
+        )
         self.assertEqual(old_decision_body.strip(), new_decision_body.strip())
         self.assertIn(
             "## DEC-051 — Methodology authority\n**Status:** SUPERSEDED IN PART BY DEC-309\nHistorical DEC-051 wording, superseded in part by DEC-309:",

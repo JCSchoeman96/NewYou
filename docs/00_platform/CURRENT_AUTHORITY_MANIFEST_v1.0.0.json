@@ -21,11 +21,11 @@
       "semver": "1.6.0",
       "repository_path": "docs/00_platform/00_PLATFORM_v1.6.0.md",
       "authority_class": "PLATFORM_PRODUCT_LAW",
-      "sha256": "230c123e073538f218c998c5ed6eefe2db3be261f007ded85d842a661149c7ce",
+      "sha256": "79bf969d1e266f0dca8aa568cde348dc1d80e0dc6bdd747d390d389473f8f8ff",
       "superseded_version": "1.5.1",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "230c123e073538f218c998c5ed6eefe2db3be261f007ded85d842a661149c7ce"
+      "provenance_sha256": "79bf969d1e266f0dca8aa568cde348dc1d80e0dc6bdd747d390d389473f8f8ff"
     },
     {
       "document_id": "DECISION_REGISTER",
@@ -33,7 +33,7 @@
       "semver": "1.6.0",
       "repository_path": "docs/00_platform/01_DECISIONS_v1.6.0.md",
       "authority_class": "DECISION_REGISTER",
-      "sha256": "698e45ab7a4f3a1b1af672e45d0e07749fff8561fc2fe4c1c2063e6136559913",
+      "sha256": "ff41402e99c287413369b56dd40fb0c5a9896bdffdfee1177a080f3de6695287",
       "superseded_version": "1.5.0",
       "lifecycle": "current"
     },
@@ -78,11 +78,11 @@
       "semver": "1.2.0",
       "repository_path": "docs/00_platform/05_ROADMAP_v1.2.0.md",
       "authority_class": "ROADMAP",
-      "sha256": "601172754e78f23df7d6b59e7c4eceb0aefa0b9e5bb65045dafeacd78b9d0fb0",
+      "sha256": "eab365502ab42051c1448cf3d8208a0625c25182463fb46ac7e15c546f278b57",
       "superseded_version": "1.1.5",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "601172754e78f23df7d6b59e7c4eceb0aefa0b9e5bb65045dafeacd78b9d0fb0"
+      "provenance_sha256": "eab365502ab42051c1448cf3d8208a0625c25182463fb46ac7e15c546f278b57"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",
