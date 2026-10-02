@@ -80,8 +80,8 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             readme_path = fixture_docs / "README.md"
             readme = readme_path.read_text(encoding="utf-8")
             for current, stale in (
-                ("CURRENT AUTHORITY-STAGE PROGRAMME: ENGINEERING STANDARDS AUTHORITY PROMOTION", "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING"),
-                ("NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED", "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED"),
+                ("CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION", "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING"),
+                ("NEXT STAGE: FP001_RECONCILIATION_REQUIRED", "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED"),
                 (
                     "HARDEN-02 EXECUTION: COMPLETE / CERTIFIED",
                     "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
@@ -102,9 +102,9 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
-        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.53.md").read_text(encoding="utf-8")
+        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.54.md").read_text(encoding="utf-8")
         current_readme = (source_docs / "README.md").read_text(encoding="utf-8")
-        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.7.md").read_text(encoding="utf-8")
+        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md").read_text(encoding="utf-8")
         expected = (True, "HARDEN-02 execution completion and downstream route are coherent")
         self.assertEqual(expected, _h02_lifecycle_state(candidate_open_work, current_readme, contract))
 
@@ -116,19 +116,19 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         self.assertFalse(_h02_lifecycle_state(incomplete, current_readme, contract)[0])
 
         old_route = candidate_open_work.replace(
-            "CURRENT AUTHORITY-STAGE PROGRAMME: ENGINEERING STANDARDS AUTHORITY PROMOTION",
+            "CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION",
             "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
             1,
         ).replace(
-            "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
+            "NEXT STAGE: FP001_RECONCILIATION_REQUIRED",
             "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
             1,
         )
         self.assertFalse(_h02_lifecycle_state(old_route, current_readme, contract)[0])
 
         premature_standards = candidate_open_work.replace(
-            '"engineering_standards_authority_promotion": "NEXT / AUTHORISED / NOT STARTED"',
             '"engineering_standards_authority_promotion": "COMPLETE / CERTIFIED"',
+            '"engineering_standards_authority_promotion": "NEXT / AUTHORISED / NOT STARTED"',
             1,
         )
         self.assertFalse(_h02_lifecycle_state(premature_standards, current_readme, contract)[0])
@@ -757,18 +757,18 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
             ),
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.3.5.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.3.6.md",
                 "00_PLATFORM_v1.6.0.md",
                 "00_PLATFORM_v1.5.1.md",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.4.7.md",
-                "02_OPEN_WORK_v1.2.53.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.4.8.md",
+                "02_OPEN_WORK_v1.2.54.md",
                 "02_OPEN_WORK_v1.2.50.md",
             ),
             (
-                "02_OPEN_WORK_v1.2.53.md",
-                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.5.md`",
+                "02_OPEN_WORK_v1.2.54.md",
+                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.6.md`",
                 "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.2.md`",
             ),
         )

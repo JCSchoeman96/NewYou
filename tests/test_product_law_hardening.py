@@ -54,8 +54,8 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
-        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.5.md").read_text(encoding="utf-8")
-        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.7.md").read_text(
+        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.6.md").read_text(encoding="utf-8")
+        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md").read_text(
             encoding="utf-8"
         )
         cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md").read_text(
@@ -215,7 +215,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         )
         self.assertIn("POST-MERGE CERTIFICATION: COMPLETE", self.readme)
         self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.readme)
-        self.assertIn("ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED", self.readme)
+        self.assertIn("ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED", self.readme)
         self.assertNotIn("PENDING INDEPENDENT PRE-MERGE CERTIFICATION", self.readme)
         self.assertIn("352f304139b9d4f8ee3ba205cde9e34d0ad8437f", self.harden02)
         self.assertIn("36101210535", self.harden02)
@@ -328,7 +328,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         )
         self.assertIn(
             "North Star/MVP `v1.3.0`, Product `v1.6.0`, Decisions `v1.6.0`, "
-            "Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.53`",
+            "Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.54`",
             historical_source_routing,
         )
         self.assertNotIn("Product `v1.5.1`", historical_source_routing)
@@ -338,7 +338,7 @@ class ProductLawHardeningTests(unittest.TestCase):
             "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
             "00_PLATFORM_v1.6.0.md",
             "01_DECISIONS_v1.6.0.md",
-            "02_OPEN_WORK_v1.2.53.md",
+            "02_OPEN_WORK_v1.2.54.md",
             "04_DOMAIN_MAP_v1.2.0.md",
             "05_ROADMAP_v1.2.0.md",
         ):
@@ -458,14 +458,14 @@ class ProductLawHardeningTests(unittest.TestCase):
             "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
             "docs/00_platform/00_PLATFORM_v1.6.0.md",
             "docs/00_platform/01_DECISIONS_v1.6.0.md",
-            "docs/00_platform/02_OPEN_WORK_v1.2.53.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.54.md",
             "docs/00_platform/05_ROADMAP_v1.2.0.md",
             "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
             "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
             "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
             "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.5.md",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.7.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.6.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.8.md",
             "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
             "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
             "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
@@ -585,7 +585,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertIn("**Evaluation status:** CLOSED / PASS.", self.open_work)
         self.assertIn("24eeb2834d58e19e0c833f09d769118d75fc9061", self.open_work)
         self.assertIn("36852114112", self.open_work)
-        self.assertIn("HARDEN-02 execution is COMPLETE / CERTIFIED", self.open_work)
+        self.assertIn("HARDEN-02 execution remains COMPLETE / CERTIFIED under the original v0.4.0 semantics", self.open_work)
         self.assertIn("Phase 7C remains blocked / not started", self.open_work)
         self.assertIn("proof classification remains not finalised", self.open_work)
         self.assertIn("proof classification remains not finalised", self.open_work)
@@ -664,7 +664,7 @@ class ProductLawHardeningTests(unittest.TestCase):
             "03_ARCHITECTURE_v1.1.1.md",
             "04_DOMAIN_MAP_v1.2.0.md",
             "05_ROADMAP_v1.2.0.md",
-            "02_OPEN_WORK_v1.2.53.md",
+            "02_OPEN_WORK_v1.2.54.md",
             "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
         )
         source_table = self.atlas.split("## 1.2 Purpose", 1)[0]
