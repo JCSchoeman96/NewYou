@@ -2538,11 +2538,11 @@ def _check_fp001_pmr_reconciliation(
     integrity_rules: dict[str, Any],
     report: dict[str, Any],
 ) -> None:
-    """Fail closed around the narrow FP-001 PMR reconciliation candidate."""
+    """Fail closed around the certified FP-001 PMR reconciliation lifecycle."""
 
     docs = root / "docs" / "00_platform"
-    skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
-    dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md"
+    skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md"
+    dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md"
     candidate_skeleton = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
     candidate_dossier = docs / "archive" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md"
     predecessor_skeleton = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
@@ -2563,24 +2563,6 @@ def _check_fp001_pmr_reconciliation(
     )
     open_work_path = root / _relative_path(open_work_entry) if open_work_entry else None
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path and open_work_path.is_file() else ""
-
-    candidate_present = skeleton.is_file() or dossier.is_file()
-    if not candidate_present:
-        baseline_ok = (
-            "NEXT STAGE: FP001_RECONCILIATION_REQUIRED" in open_work
-            and "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED" in open_work
-            and "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" not in open_work
-        )
-        _record_check(
-            report,
-            "fp001_pmr_reconciliation",
-            baseline_ok,
-            "FP-001 PMR reconciliation remains the authorised next task and has not been performed"
-            if baseline_ok
-            else "pre-reconciliation Open Work route is missing or prematurely complete",
-            path="docs/00_platform/02_OPEN_WORK_v1.2.54.md",
-        )
-        return
 
     issues: list[str] = []
     if stale_candidate_skeleton.is_file() or stale_candidate_dossier.is_file():
