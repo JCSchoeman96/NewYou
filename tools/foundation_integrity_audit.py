@@ -1429,7 +1429,11 @@ def _check_product_semantics(
     roots = integrity_rules["document_roots"]
     readme_path = root / roots["context_index"]
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
-    fp001_path = root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
+    fp001_candidates = (
+        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
+        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
+    )
+    fp001_path = next((path for path in fp001_candidates if path.is_file()), fp001_candidates[-1])
     fp001 = fp001_path.read_text(encoding="utf-8") if fp001_path.is_file() else ""
     atlas_relative_path = next(
         (
@@ -2528,6 +2532,224 @@ def _path_is_under(path: str, directory: str) -> bool:
     return path.startswith(f"{normalized_directory}/")
 
 
+def _check_fp001_pmr_reconciliation(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    """Fail closed around the narrow FP-001 PMR reconciliation candidate."""
+
+    docs = root / "docs" / "00_platform"
+    skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
+    dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md"
+    predecessor_skeleton = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
+    predecessor_dossier = docs / "archive" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+    legacy_skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
+    legacy_dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+    readme = docs / "README.md"
+    open_work_entry = next(
+        (
+            entry
+            for entry in _all_entries(manifest)
+            if entry.get("document_id") == "OPEN_WORK"
+            and entry.get("lifecycle", "current") != "historical"
+        ),
+        None,
+    )
+    open_work_path = root / _relative_path(open_work_entry) if open_work_entry else None
+    open_work = open_work_path.read_text(encoding="utf-8") if open_work_path and open_work_path.is_file() else ""
+
+    candidate_present = skeleton.is_file() or dossier.is_file()
+    if not candidate_present:
+        baseline_ok = (
+            "NEXT STAGE: FP001_RECONCILIATION_REQUIRED" in open_work
+            and "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED" in open_work
+            and "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" not in open_work
+        )
+        _record_check(
+            report,
+            "fp001_pmr_reconciliation",
+            baseline_ok,
+            "FP-001 PMR reconciliation remains the authorised next task and has not been performed"
+            if baseline_ok
+            else "pre-reconciliation Open Work route is missing or prematurely complete",
+            path="docs/00_platform/02_OPEN_WORK_v1.2.54.md",
+        )
+        return
+
+    issues: list[str] = []
+    if not skeleton.is_file() or not dossier.is_file():
+        issues.append("both PMR reconciliation successor artifacts are required")
+    for predecessor, legacy, label in (
+        (predecessor_skeleton, legacy_skeleton, "skeleton"),
+        (predecessor_dossier, legacy_dossier, "Identity dossier"),
+    ):
+        if not predecessor.is_file():
+            issues.append(f"{label} predecessor archive is missing")
+        elif legacy.is_file() and predecessor.read_bytes() != legacy.read_bytes():
+            issues.append(f"{label} predecessor archive is not byte-identical to the predecessor")
+
+    readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""
+    active_routes = tuple(
+        str(path)
+        for path in integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
+    )
+    required_routes = {
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
+        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md",
+    }
+    if not required_routes <= set(active_routes):
+        issues.append("manifest graph navigation does not route both reconciliation successors")
+    for stale in (
+        "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
+        "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+    ):
+        if stale in readme_text and f"archive/{Path(stale).name}" not in readme_text:
+            issues.append(f"README retains stale active route {stale}")
+
+    def marked_block(text: str) -> str:
+        start = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->"
+        end = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->"
+        if text.count(start) != 1 or text.count(end) != 1:
+            return ""
+        before, after = text.split(start, 1)
+        body, _ = after.split(end, 1)
+        return body
+
+    skeleton_text = skeleton.read_text(encoding="utf-8") if skeleton.is_file() else ""
+    dossier_text = dossier.read_text(encoding="utf-8") if dossier.is_file() else ""
+    skeleton_pmr = marked_block(skeleton_text)
+    dossier_pmr = marked_block(dossier_text)
+    if not skeleton_pmr or not dossier_pmr:
+        issues.append("each successor must contain exactly one PMR reconciliation block")
+    if "### F.10 Platform Member Reference reconciliation" not in dossier_text:
+        issues.append("Identity dossier PMR reconciliation section is missing")
+
+    required_skeleton = (
+        "required human-facing Platform Member Reference (PMR)",
+        "exactly one canonical active PMR under Identity & Access ownership",
+        "not database identity",
+        "not authentication",
+        "not authorisation",
+        "not verification assurance",
+        "not paid Membership",
+        "not subscription state",
+        "not entitlement",
+        "not payment authority",
+        "not a bearer credential",
+        "non-secret but private-by-default",
+        "Possession proves none",
+        "Active PMR uniqueness is preserved",
+        "Ordinary PMR values are immutable",
+        "Legitimate reactivation retains",
+        "never reassigned or reused",
+        "duplicate-account reconciliation",
+        "collision-safe",
+        "concurrency-correct",
+        "retry-safe",
+        "purpose-scoped",
+        "minimum-disclosure",
+        "non-authoritative",
+        "beneficiary key",
+        "ARQ-IAM-013",
+        "representation remains unfrozen",
+    )
+    required_dossier = (
+        "Identity & Access Account truth",
+        "only after successful individual Account creation",
+        "one canonical active PMR per canonical individual Account",
+        "not database identity",
+        "not authentication",
+        "not authorisation",
+        "not verification assurance",
+        "not paid Membership",
+        "not subscription state",
+        "not entitlement",
+        "not payment authority",
+        "not a bearer credential",
+        "non-secret but private-by-default",
+        "Possession of a PMR proves none",
+        "Ordinary PMR values are immutable",
+        "reactivation retains",
+        "never reassign or reuse it",
+        "Duplicate-account reconciliation",
+        "collision-safe",
+        "concurrency-correct",
+        "idempotent",
+        "purpose-scoped",
+        "minimum-disclosure",
+        "non-authoritative",
+        "beneficiary key",
+        "ARQ-IAM-013",
+        "representation remains unfrozen",
+    )
+    for token in required_skeleton:
+        if token.casefold() not in (skeleton_text if token in required_skeleton[:2] else skeleton_pmr).casefold():
+            issues.append(f"skeleton PMR block omits required meaning: {token}")
+    for token in required_dossier:
+        if token.casefold() not in dossier_pmr.casefold():
+            issues.append(f"Identity dossier PMR block omits required meaning: {token}")
+
+    frozen_representation = re.compile(
+        r"(?i)\b(?:prefix|alphabet|grouping|length|checksum|check\s+algorithm|generator|schema|index\s+strategy|database\s+representation)\b\s*(?:is|=|:)"
+    )
+    if frozen_representation.search(skeleton_pmr) or frozen_representation.search(dossier_pmr):
+        issues.append("PMR reconciliation freezes an exact representation")
+
+    required_open_work = (
+        "NEXT STAGE: FP001_RECONCILIATION_REQUIRED",
+        "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED",
+        "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
+        "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
+        "PHASE 7C: BLOCKED / NOT_STARTED",
+        "PROOF CLASSIFICATION: NOT FINALISED",
+        "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+    )
+    for token in required_open_work:
+        if token not in open_work:
+            issues.append(f"Open Work route is missing: {token}")
+    if "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" in open_work:
+        issues.append("reconciliation is prematurely self-certified")
+    forbidden_advancement = (
+        ("Communications", r"(?im)^.*COMMUNICATIONS\s*:\s*(?:STARTED|COMPLETE|CERTIFIED|AUTHORI[ZS]ED).*$"),
+        ("conditional dossiers", r"(?im)^.*CONDITIONAL DOSSIERS:.*\b(?:COMPLETE|CERTIFIED|ADJUDICATED)\b.*$"),
+        ("Phase 7C", r"(?im)^.*PHASE 7C\s*:\s*(?:NEXT|READY|UNBLOCKED|COMPLETE|CERTIFIED|AUTHORI[ZS]ED).*$"),
+        ("proof classification", r"(?im)^.*PROOF CLASSIFICATION\s*:\s*(?:FINAL|FINALI[ZS]ED|CERTIFIED).*$"),
+        ("Phase 8/application implementation", r"(?im)^.*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$"),
+    )
+    for label, pattern in forbidden_advancement:
+        if re.search(pattern, open_work):
+            issues.append(f"{label} advanced during PMR reconciliation")
+
+    if "OQ-034` | `RESOLVED / ARCHITECTURE SELECTION; PHASE 8 PROOF REQUIRED" not in skeleton_text:
+        issues.append("OQ-034 architecture selection or Phase 8 proof boundary changed")
+    for token in (
+        "OQ-035` | `BLOCKS_RELEASE_ONLY",
+        "OQ-036` | `BLOCKS_RELEASE_ONLY",
+        "OQ-038",
+        "executable proof is not complete",
+        "proof classification is not finalised",
+    ):
+        if token not in skeleton_text:
+            issues.append(f"gate preservation token is missing: {token}")
+
+    if re.search(r"(?im)FP-001 reconciliation is (?:COMPLETE|PERFORMED)", skeleton_text + dossier_text):
+        issues.append("candidate claims FP-001 reconciliation is complete")
+    if "COMMUNICATIONS" in dossier_text and re.search(r"(?im)COMMUNICATIONS\s*:\s*(?:STARTED|COMPLETE|CERTIFIED|AUTHORI[ZS]ED)", dossier_text):
+        issues.append("candidate starts Communications")
+
+    _record_check(
+        report,
+        "fp001_pmr_reconciliation",
+        not issues,
+        "FP-001 Phase 7 artifacts carry the governed PMR contract without freezing representation or advancing later work"
+        if not issues
+        else "; ".join(issues),
+        path="docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
+    )
+
+
 def _check_production_graph(
     root: Path,
     manifest: dict[str, Any],
@@ -2780,6 +3002,7 @@ def run_audit(
     if _production_mode(expected_counts):
         _check_production_graph(root, manifest, integrity_rules, report)
         _check_product_semantics(root, entries, integrity_rules, report)
+        _check_fp001_pmr_reconciliation(root, manifest, integrity_rules, report)
     else:
         _record_check(report, "fixture_graph_scope", True, "fixture graph checks use explicit reduced expectations")
 
