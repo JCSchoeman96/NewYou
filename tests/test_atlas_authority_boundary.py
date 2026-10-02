@@ -496,7 +496,7 @@ class AtlasAuthorityBoundaryTests(unittest.TestCase):
             entry for entry in self.manifest["historical_documents"] if entry["document_id"] == "OPEN_WORK_V1_2_47"
         )
         self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), old_open_work["sha256"])
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md").read_text(encoding="utf-8"))
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md").read_text(encoding="utf-8"))
         self.assertFalse(any(pattern.search("working/DELIVERY_ATLAS_WORKING_v0.2.1.md") for pattern in stale_patterns))
         self.assertEqual(
             _sha256(DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"),

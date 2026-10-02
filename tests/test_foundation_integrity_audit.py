@@ -100,6 +100,127 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
             self.assertEqual("FAIL", lifecycle_check["status"])
 
+    def test_fp001_pmr_candidate_passes_production_audit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+
+            report = run_audit(root, manifest_path)
+
+            check = next(
+                check for check in report["checks"] if check["name"] == "fp001_pmr_reconciliation"
+            )
+            self.assertEqual("PASS", check["status"], check["message"])
+
+    def test_fp001_pmr_mutation_matrix_fails_closed(self):
+        mutations = (
+            ("skeleton_pre_pmr_outcome", "skeleton", "A public visitor can choose Afrikaans or English, understand the launch-facing product and safety boundaries, create an individual 18+ account, receive that Account's required human-facing Platform Member Reference (PMR), verify email, recover access and use a controlled support/admin path without exposing unfinished product spaces.", "A public visitor can choose Afrikaans or English, understand the launch-facing product and safety boundaries, create an individual 18+ account, verify email, recover access and use a controlled support/admin path without exposing unfinished product spaces."),
+            ("identity_dossier_omits_pmr", "dossier", "### F.10 Platform Member Reference reconciliation", "### F.10 Account lifecycle reconciliation"),
+            ("pmr_before_account_success", "dossier", "only after successful individual Account creation", "before successful individual Account creation"),
+            ("pmr_other_domain_owner", "dossier", "The Platform Member Reference is Identity & Access Account truth", "The Platform Member Reference is Communications Account truth"),
+            ("pmr_is_authentication", "dossier", "it is not authentication", "it is authentication"),
+            ("pmr_is_authorisation", "dossier", "it is not authorisation", "it is authorisation"),
+            ("pmr_is_entitlement", "dossier", "it is not entitlement", "it is entitlement"),
+            ("pmr_is_payment_authority", "dossier", "it is not payment authority", "it is payment authority"),
+            ("multiple_active_pmrs", "dossier", "one canonical active PMR per canonical individual Account", "multiple canonical active PMRs per canonical individual Account"),
+            ("retired_reuse", "dossier", "never reassign or reuse it", "may reassign or reuse it"),
+            ("representation_frozen", "skeleton", "Exact PMR representation remains unfrozen under `ARQ-IAM-013`", "The PMR prefix is VG and the alphabet is fixed"),
+            ("arq_iam_013_resolved", "skeleton", "Exact PMR representation remains unfrozen under `ARQ-IAM-013`", "Exact PMR representation is resolved under `ARQ-IAM-013`"),
+            ("oq034_proof_complete", "skeleton", "The approved authentication architecture is selected; executable proof is not complete and proof classification is not finalised.", "The approved authentication architecture is selected; executable proof is complete and proof classification is final.") ,
+            ("oq035_resolved", "skeleton", "| `OQ-035` | `BLOCKS_RELEASE_ONLY` |", "| `OQ-035` | `RESOLVED` |"),
+            ("oq036_resolved", "skeleton", "| `OQ-036` | `BLOCKS_RELEASE_ONLY` |", "| `OQ-036` | `RESOLVED` |"),
+            ("communications_started", "open_work", "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION", "COMMUNICATIONS: COMPLETE / CERTIFIED"),
+            ("conditional_dossiers_adjudicated", "open_work", "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED", "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE COMPLETE; ANALYTICS NOT REQUIRED"),
+            ("phase_7c_unblocked", "open_work", "PHASE 7C: BLOCKED / NOT_STARTED PENDING COMMUNICATIONS AND CONDITIONAL-DOSSIER DISPOSITIONS", "PHASE 7C: READY / NOT_BLOCKED"),
+            ("proof_finalised", "open_work", "PROOF CLASSIFICATION: NOT FINALISED", "PROOF CLASSIFICATION: FINAL"),
+            ("phase_8_authorised", "open_work", "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS", "EXECUTABLE DEVELOPMENT: AUTHORISED"),
+            ("reconciliation_marked_complete_on_stale_skeleton", "open_work", "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED", "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED"),
+        )
+        source_root = Path(__file__).resolve().parents[1]
+        for name, target, current, replacement in mutations:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                relative = {
+                    "skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
+                    "dossier": "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md",
+                    "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.54.md",
+                }[target]
+                path = root / relative
+                text = path.read_text(encoding="utf-8")
+                self.assertIn(current, text, f"mutation anchor missing: {name}")
+                path.write_text(text.replace(current, replacement, 1), encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+
+                self.assertTrue(
+                    any(
+                        finding["check"] == "fp001_pmr_reconciliation"
+                        for finding in report["findings"]
+                    ),
+                    report["findings"],
+                )
+
+    def test_fp001_pmr_successor_requires_archived_predecessors_and_current_routes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            predecessor_paths = (
+                root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
+                root / "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+            )
+            for predecessor in predecessor_paths:
+                predecessor.unlink()
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+    def test_fp001_pmr_corrupted_skeleton_archive_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            archive = root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
+            archive.write_bytes(archive.read_bytes() + b"\nARCHIVE CORRUPTION\n")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+    def test_fp001_pmr_corrupted_identity_archive_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            archive = root / "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+            archive.write_bytes(archive.read_bytes() + b"\nARCHIVE CORRUPTION\n")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+    def _copy_production_fixture(self, root: Path) -> tuple[Path, Path]:
+        source_root = Path(__file__).resolve().parents[1]
+        fixture_docs = root / "docs" / "00_platform"
+        shutil.copytree(source_root / "docs" / "00_platform", fixture_docs)
+        manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        refresh_manifest(root, manifest_path)
+        return root, manifest_path
+
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
         candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.54.md").read_text(encoding="utf-8")

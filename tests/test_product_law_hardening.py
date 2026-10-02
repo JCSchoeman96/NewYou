@@ -58,7 +58,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md").read_text(
             encoding="utf-8"
         )
-        cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md").read_text(
+        cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md").read_text(
             encoding="utf-8"
         )
         cls.integrity_rules = json.loads(MANIFEST.read_text(encoding="utf-8"))["integrity_rules"]

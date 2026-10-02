@@ -987,6 +987,10 @@
       "roadmap": "ROADMAP",
       "domain_map": "DOMAIN_LAW"
     },
+    "fp001_pmr_predecessor_archives": {
+      "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md": "7038f1634677f129ba44230b1f104198a7ab3b4a33e68af5e8cffd5bb87b06dd",
+      "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b"
+    },
     "graph_rules": {
       "stale_reference_patterns": [
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.(?:[0-9]|1[0-9]|2[0-6])\\.md",
@@ -1050,11 +1054,12 @@
         "PLATFORM_OPERATING_MODEL",
         "FRONTEND_EXPERIENCE_SYSTEM"
       ],
-      "navigation_document_paths": [
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.6.md",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.8.md"
-      ],
+    "navigation_document_paths": [
+      "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.6.md",
+      "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
+      "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md",
+      "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.8.md"
+    ],
       "stale_open_work_v1_2_44_guard_note": "The exact 02_OPEN_WORK_v1.2.44.md stale-path pattern rejects unarchived references in active navigation documents. This is a routing guard only; it does not prove lifecycle or policy semantics.",
       "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52/v1.2.53, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4/v0.3.5, HARDEN-02 status v0.4.2/v0.4.6/v0.4.7, and Engineering Standards candidate v1.0.0 paths are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records."
     },

@@ -842,8 +842,8 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "04_DOMAIN_MAP_v1.2.0.md": "e09e14ee0a773c5855257c48685cf3a75d413c983a98d22a56b42af57dc2c078",
             "PLATFORM_OPERATING_MODEL_v1.0.1.md": "7cb725adcdb796ba112d39c4be6fd09c90026b49e772b61f0867db62828b9d12",
             "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md": "58c733e8e0cc73c72b102b623cb756b60cbadb084f8cc710051be42d0877fdb4",
-            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md": "7038f1634677f129ba44230b1f104198a7ab3b4a33e68af5e8cffd5bb87b06dd",
-            "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
+            "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md": "7038f1634677f129ba44230b1f104198a7ab3b4a33e68af5e8cffd5bb87b06dd",
+            "archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
         }
         for relative_path, expected_sha in protected.items():
             with self.subTest(relative_path=relative_path):
@@ -1105,7 +1105,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             guard = re.compile(guard_text)
             self.assertIsNotNone(guard.search(active))
             self.assertIsNone(guard.search(archived))
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", _read(DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"))
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", _read(DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"))
 
     def test_pass2_closure_successor_records_exact_post_merge_evidence_without_stage_advance(self):
         current = _read(DOCS / "archive/02_OPEN_WORK_v1.2.52.md")
