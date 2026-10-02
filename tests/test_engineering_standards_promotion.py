@@ -16,7 +16,7 @@ DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
 CURRENT_STANDARDS_RELATIVE = Path("docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md")
 ARCHIVED_CANDIDATE_RELATIVE = Path("docs/00_platform/archive/ENGINEERING_STANDARDS_v1.0.0.md")
-OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.54.md")
+OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.55.md")
 README_RELATIVE = Path("docs/00_platform/README.md")
 
 
@@ -158,22 +158,22 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def next_token_still_names_standards(root: Path, manifest: dict) -> None:
-            _rewrite_open_work(root, "NEXT STAGE: FP001_RECONCILIATION_REQUIRED", "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED")
+            _rewrite_open_work(root, "NEXT STAGE: COMMUNICATIONS JIT DOMAIN DOSSIER", "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED")
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def fp001_already_performed(root: Path, manifest: dict) -> None:
             _rewrite_open_work(
                 root,
+                "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
                 "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED",
-                "FP001_RECONCILIATION_REQUIRED: COMPLETE / PERFORMED",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def communications_started(root: Path, manifest: dict) -> None:
             _rewrite_open_work(
                 root,
-                "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
-                "COMMUNICATIONS: REQUIRED / STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
+                "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED",
+                "COMMUNICATIONS: REQUIRED / STARTED",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
@@ -219,15 +219,15 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
         def multiple_stages_advanced(root: Path, manifest: dict) -> None:
             _rewrite_open_work(
                 root,
+                "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
                 "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED",
-                "FP001_RECONCILIATION_REQUIRED: COMPLETE / PERFORMED",
             )
             _rewrite_open_work(
                 root,
-                "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
-                "COMMUNICATIONS: CURRENT / NEXT",
+                "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED",
+                "COMMUNICATIONS: REQUIRED / STARTED",
             )
-            _rewrite_open_work(root, "NEXT STAGE: FP001_RECONCILIATION_REQUIRED", "NEXT STAGE: COMMUNICATIONS")
+            _rewrite_open_work(root, "NEXT STAGE: COMMUNICATIONS JIT DOMAIN DOSSIER", "NEXT STAGE: REMAINING REQUIRED / CONDITIONAL PHASE 7B")
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         return [

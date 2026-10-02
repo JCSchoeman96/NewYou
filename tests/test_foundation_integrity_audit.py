@@ -80,8 +80,8 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             readme_path = fixture_docs / "README.md"
             readme = readme_path.read_text(encoding="utf-8")
             for current, stale in (
-                ("CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION", "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING"),
-                ("NEXT STAGE: FP001_RECONCILIATION_REQUIRED", "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED"),
+                ("CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 PMR RECONCILIATION", "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING"),
+                ("NEXT STAGE: COMMUNICATIONS JIT DOMAIN DOSSIER", "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED"),
                 (
                     "HARDEN-02 EXECUTION: COMPLETE / CERTIFIED",
                     "HARDEN-02 EXECUTION: IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
@@ -100,7 +100,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
             self.assertEqual("FAIL", lifecycle_check["status"])
 
-    def test_fp001_pmr_candidate_passes_production_audit(self):
+    def test_fp001_pmr_certified_successors_pass_production_audit(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
 
@@ -111,38 +111,98 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             )
             self.assertEqual("PASS", check["status"], check["message"])
 
+    def test_fp001_pmr_rejects_multiple_active_skeleton_versions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            working = root / "docs/00_platform/working"
+            active = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md"
+            duplicate = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md"
+            duplicate.write_bytes(active.read_bytes())
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+    def test_fp001_pmr_rejects_multiple_active_identity_dossier_versions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            working = root / "docs/00_platform/working"
+            active = working / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md"
+            duplicate = working / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md"
+            duplicate.write_bytes(active.read_bytes())
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
     def test_fp001_pmr_mutation_matrix_fails_closed(self):
         mutations = (
             ("skeleton_pre_pmr_outcome", "skeleton", "A public visitor can choose Afrikaans or English, understand the launch-facing product and safety boundaries, create an individual 18+ account, receive that Account's required human-facing Platform Member Reference (PMR), verify email, recover access and use a controlled support/admin path without exposing unfinished product spaces.", "A public visitor can choose Afrikaans or English, understand the launch-facing product and safety boundaries, create an individual 18+ account, verify email, recover access and use a controlled support/admin path without exposing unfinished product spaces."),
-            ("identity_dossier_omits_pmr", "dossier", "### F.10 Platform Member Reference reconciliation", "### F.10 Account lifecycle reconciliation"),
+            ("identity_dossier_omits_pmr", "dossier", "The PMR is stable and human-facing.", "The PMR is opaque and non-human-facing."),
             ("pmr_before_account_success", "dossier", "only after successful individual Account creation", "before successful individual Account creation"),
+            ("failed_partial_ambiguous_creation_exposes_pmr", "dossier", "A failed, partial or ambiguous Account creation does not assign an externally usable PMR", "A failed, partial or ambiguous Account creation assigns an externally usable PMR"),
+            ("retry_does_not_converge", "dossier", "retries converge on the one committed Account/reference result", "retries create a new PMR on each attempt"),
+            ("reference_not_stable_human_facing", "dossier", "The PMR is stable and human-facing.", "The PMR is unstable and opaque."),
             ("pmr_other_domain_owner", "dossier", "The Platform Member Reference is Identity & Access Account truth", "The Platform Member Reference is Communications Account truth"),
             ("pmr_is_authentication", "dossier", "it is not authentication", "it is authentication"),
             ("pmr_is_authorisation", "dossier", "it is not authorisation", "it is authorisation"),
+            ("pmr_is_database_identity", "dossier", "It is not database identity", "It is database identity"),
+            ("pmr_is_verification_assurance", "dossier", "it is not verification assurance", "it is verification assurance"),
+            ("pmr_is_membership", "dossier", "it is not paid Membership", "it is paid Membership"),
+            ("pmr_is_subscription", "dossier", "it is not subscription state", "it is subscription state"),
             ("pmr_is_entitlement", "dossier", "it is not entitlement", "it is entitlement"),
             ("pmr_is_payment_authority", "dossier", "it is not payment authority", "it is payment authority"),
+            ("pmr_is_voucher_coupon_discount_authority", "dossier", "it is not a voucher/coupon/discount authority", "it is a voucher/coupon/discount authority"),
+            ("pmr_is_bearer_credential", "dossier", "it is not a bearer credential", "it is a bearer credential"),
             ("multiple_active_pmrs", "dossier", "one canonical active PMR per canonical individual Account", "multiple canonical active PMRs per canonical individual Account"),
+            ("ordinary_pmr_mutable", "dossier", "Ordinary PMR values are immutable.", "Ordinary PMR values are mutable."),
+            ("reactivation_loses_reference", "dossier", "Legitimate reactivation retains the correct reference.", "Legitimate reactivation issues a new reference."),
             ("retired_reuse", "dossier", "never reassign or reuse it", "may reassign or reuse it"),
+            ("duplicate_survivor_semantics_changed", "dossier", "one canonical active Account/reference and permanently retires the non-surviving reference", "two canonical active Accounts/references are retained"),
+            ("allocation_collision_safety_lost", "dossier", "collision-safe, concurrency-correct and idempotent", "collision-prone, concurrency-unsafe and non-idempotent"),
+            ("lookup_not_purpose_scoped", "dossier", "purpose-scoped, minimum-disclosure and non-authoritative", "unscoped, full-disclosure and authoritative"),
+            ("lifecycle_dimensions_collapsed", "dossier", "orthogonal account, verification and security dimensions", "one collapsed Account status for account, verification and security"),
             ("representation_frozen", "skeleton", "Exact PMR representation remains unfrozen under `ARQ-IAM-013`", "The PMR prefix is VG and the alphabet is fixed"),
             ("arq_iam_013_resolved", "skeleton", "Exact PMR representation remains unfrozen under `ARQ-IAM-013`", "Exact PMR representation is resolved under `ARQ-IAM-013`"),
             ("oq034_proof_complete", "skeleton", "The approved authentication architecture is selected; executable proof is not complete and proof classification is not finalised.", "The approved authentication architecture is selected; executable proof is complete and proof classification is final.") ,
             ("oq035_resolved", "skeleton", "| `OQ-035` | `BLOCKS_RELEASE_ONLY` |", "| `OQ-035` | `RESOLVED` |"),
             ("oq036_resolved", "skeleton", "| `OQ-036` | `BLOCKS_RELEASE_ONLY` |", "| `OQ-036` | `RESOLVED` |"),
-            ("communications_started", "open_work", "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION", "COMMUNICATIONS: COMPLETE / CERTIFIED"),
+            ("communications_completed", "open_work", "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED", "COMMUNICATIONS: COMPLETE / CERTIFIED"),
+            ("communications_route_still_downstream", "open_work", "NEXT STAGE: COMMUNICATIONS JIT DOMAIN DOSSIER", "NEXT STAGE: FP001_RECONCILIATION_REQUIRED"),
+            ("reconciliation_still_not_performed", "open_work", "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED\nCOMMUNICATIONS:", "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED\nCOMMUNICATIONS:"),
+            ("communications_dossier_started", "dossier", "COMMUNICATIONS DOSSIER STARTED: NO", "COMMUNICATIONS DOSSIER STARTED: YES"),
             ("conditional_dossiers_adjudicated", "open_work", "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED", "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE COMPLETE; ANALYTICS NOT REQUIRED"),
             ("phase_7c_unblocked", "open_work", "PHASE 7C: BLOCKED / NOT_STARTED PENDING COMMUNICATIONS AND CONDITIONAL-DOSSIER DISPOSITIONS", "PHASE 7C: READY / NOT_BLOCKED"),
             ("proof_finalised", "open_work", "PROOF CLASSIFICATION: NOT FINALISED", "PROOF CLASSIFICATION: FINAL"),
             ("phase_8_authorised", "open_work", "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS", "EXECUTABLE DEVELOPMENT: AUTHORISED"),
-            ("reconciliation_marked_complete_on_stale_skeleton", "open_work", "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED", "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED"),
+            ("candidate_status_promoted_without_pr67_evidence", "skeleton", "79d0540c66f0224ece0330181e61dfef8ab4b458", "0000000000000000000000000000000000000000"),
+            ("skeleton_remains_candidate", "skeleton", "**Lifecycle status:** `CERTIFIED / CURRENT`", "**Lifecycle status:** `RECONCILIATION CANDIDATE / NOT CERTIFIED`"),
+            ("identity_dossier_remains_candidate", "dossier", "**Status:** `CERTIFIED / CURRENT`", "**Status:** `RECONCILIATION CANDIDATE / NOT CERTIFIED`"),
+            ("communication_started", "open_work", "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED", "COMMUNICATIONS: STARTED"),
+            ("second_lifecycle_stage_advanced", "open_work", '    "FP-001 PMR RECONCILIATION"\n  ],\n  "engineering_standards_authority_promotion"', '    "FP-001 PMR RECONCILIATION",\n    "COMMUNICATIONS JIT DOMAIN DOSSIER"\n  ],\n  "engineering_standards_authority_promotion"'),
+            ("oq038_changed", "skeleton", "| `OQ-038` | `FUTURE_ONLY` |", "| `OQ-038` | `BLOCKS_RELEASE_ONLY` |"),
+            ("store_cer_included", "open_work", "STORE / CER: EXCLUDED FROM HARDEN-02", "STORE / CER: INCLUDED IN SCOPE"),
         )
         source_root = Path(__file__).resolve().parents[1]
         for name, target, current, replacement in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
                 relative = {
-                    "skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
-                    "dossier": "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md",
-                    "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.54.md",
+                    "skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md",
+                    "dossier": "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md",
+                    "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.55.md",
                 }[target]
                 path = root / relative
                 text = path.read_text(encoding="utf-8")
@@ -166,9 +226,93 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             predecessor_paths = (
                 root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
                 root / "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+                root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
+                root / "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md",
             )
             for predecessor in predecessor_paths:
                 predecessor.unlink()
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+    def test_fp001_pmr_rejects_stale_candidate_path_alongside_certified_successor(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            working = root / "docs/00_platform/working"
+            stale = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
+            certified = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md"
+            stale.write_bytes(certified.read_bytes())
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+    def test_fp001_pmr_rejects_created_communications_dossier(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            communications = root / "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+            communications.write_text("status-only PR mutation\n", encoding="utf-8")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+    def test_fp001_pmr_archive_hash_contract_mutations_fail_closed(self):
+        archive_paths = {
+            "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
+            "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+            "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
+            "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md",
+        }
+        for mutation in ("missing", "malformed", "wrong", "path_substitution"):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                hashes = manifest["integrity_rules"]["fp001_pmr_predecessor_archives"]
+                if mutation == "missing":
+                    hashes.pop("docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md")
+                elif mutation == "malformed":
+                    hashes["docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"] = "not-a-sha256"
+                elif mutation == "wrong":
+                    hashes["docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"] = "0" * 64
+                else:
+                    hashes.pop("docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md")
+                    hashes["docs/00_platform/archive/UNEXPECTED_SUBSTITUTE.md"] = "a09bf07b189cbf3384cfe803d2ef1f32c3eaa6556333141fde1e323b6174b207"
+                manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+                report = run_audit(root, manifest_path)
+
+                self.assertTrue(
+                    any(
+                        finding["check"] == "fp001_pmr_reconciliation"
+                        for finding in report["findings"]
+                    ),
+                    report["findings"],
+                )
+
+    def test_fp001_pmr_candidate_archive_missing_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            (root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md").unlink()
 
             report = run_audit(root, manifest_path)
 
@@ -212,6 +356,22 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 report["findings"],
             )
 
+    def test_fp001_pmr_corrupted_candidate_archive_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            archive = root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
+            archive.write_bytes(archive.read_bytes() + b"\nARCHIVE CORRUPTION\n")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
     def _copy_production_fixture(self, root: Path) -> tuple[Path, Path]:
         source_root = Path(__file__).resolve().parents[1]
         fixture_docs = root / "docs" / "00_platform"
@@ -223,9 +383,9 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
-        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.54.md").read_text(encoding="utf-8")
+        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.55.md").read_text(encoding="utf-8")
         current_readme = (source_docs / "README.md").read_text(encoding="utf-8")
-        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md").read_text(encoding="utf-8")
+        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.9.md").read_text(encoding="utf-8")
         expected = (True, "HARDEN-02 execution completion and downstream route are coherent")
         self.assertEqual(expected, _h02_lifecycle_state(candidate_open_work, current_readme, contract))
 
@@ -237,11 +397,11 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         self.assertFalse(_h02_lifecycle_state(incomplete, current_readme, contract)[0])
 
         old_route = candidate_open_work.replace(
-            "CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION",
+            "CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 PMR RECONCILIATION",
             "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
             1,
         ).replace(
-            "NEXT STAGE: FP001_RECONCILIATION_REQUIRED",
+            "NEXT STAGE: COMMUNICATIONS JIT DOMAIN DOSSIER",
             "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
             1,
         )
@@ -878,18 +1038,18 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
             ),
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.3.6.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.3.7.md",
                 "00_PLATFORM_v1.6.0.md",
                 "00_PLATFORM_v1.5.1.md",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.4.8.md",
-                "02_OPEN_WORK_v1.2.54.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.4.9.md",
+                "02_OPEN_WORK_v1.2.55.md",
                 "02_OPEN_WORK_v1.2.50.md",
             ),
             (
-                "02_OPEN_WORK_v1.2.54.md",
-                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.6.md`",
+                "02_OPEN_WORK_v1.2.55.md",
+                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.7.md`",
                 "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.2.md`",
             ),
         )
