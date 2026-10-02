@@ -180,6 +180,38 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 report["findings"],
             )
 
+    def test_fp001_pmr_corrupted_skeleton_archive_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            archive = root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
+            archive.write_bytes(archive.read_bytes() + b"\nARCHIVE CORRUPTION\n")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+    def test_fp001_pmr_corrupted_identity_archive_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            archive = root / "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+            archive.write_bytes(archive.read_bytes() + b"\nARCHIVE CORRUPTION\n")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertTrue(
+                any(
+                    finding["check"] == "fp001_pmr_reconciliation"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
     def _copy_production_fixture(self, root: Path) -> tuple[Path, Path]:
         source_root = Path(__file__).resolve().parents[1]
         fixture_docs = root / "docs" / "00_platform"

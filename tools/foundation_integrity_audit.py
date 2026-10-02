@@ -2589,6 +2589,19 @@ def _check_fp001_pmr_reconciliation(
             issues.append(f"{label} predecessor archive is missing")
         elif legacy.is_file() and predecessor.read_bytes() != legacy.read_bytes():
             issues.append(f"{label} predecessor archive is not byte-identical to the predecessor")
+    expected_archive_hashes = integrity_rules.get("fp001_pmr_predecessor_archives")
+    if not isinstance(expected_archive_hashes, dict):
+        issues.append("manifest does not pin FP-001 predecessor archive hashes")
+    else:
+        for archive, label in (
+            (predecessor_skeleton, "skeleton"),
+            (predecessor_dossier, "Identity dossier"),
+        ):
+            expected_hash = expected_archive_hashes.get(str(archive.relative_to(root)))
+            if not isinstance(expected_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_hash):
+                issues.append(f"manifest archive hash for {label} is missing or invalid")
+            elif archive.is_file() and sha256_file(archive) != expected_hash:
+                issues.append(f"{label} predecessor archive hash does not match the pinned bytes")
 
     readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""
     active_routes = tuple(
