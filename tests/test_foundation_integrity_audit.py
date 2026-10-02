@@ -111,6 +111,40 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             )
             self.assertEqual("PASS", check["status"], check["message"])
 
+    def test_fp001_pmr_rejects_unarchived_predecessor_route_in_current_atlas(self):
+        mutations = (
+            ("working/DELIVERY_ATLAS_WORKING_v0.3.7.md", "02_OPEN_WORK_v1.2.54.md"),
+            ("working/DELIVERY_ATLAS_WORKING_v0.3.7.md", "DELIVERY_ATLAS_WORKING_v0.3.6.md"),
+            ("working/HARDEN-02_CONTRACT_WORKING_v0.4.9.md", "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"),
+        )
+        for route_path, predecessor in mutations:
+            with self.subTest(predecessor=predecessor), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                current_route = root / "docs/00_platform" / route_path
+                current_route.write_text(
+                    current_route.read_text(encoding="utf-8")
+                    + f"\nCurrent route pointer: {predecessor}\n",
+                    encoding="utf-8",
+                )
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+
+                self.assertTrue(
+                    any(
+                        finding["check"] == "fp001_pmr_reconciliation"
+                        for finding in report["findings"]
+                    ),
+                    report["findings"],
+                )
+                self.assertTrue(
+                    any(
+                        finding["check"] == "active_document_graph"
+                        for finding in report["findings"]
+                    ),
+                    report["findings"],
+                )
+
     def test_fp001_pmr_rejects_multiple_active_skeleton_versions(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))

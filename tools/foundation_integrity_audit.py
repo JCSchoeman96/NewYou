@@ -2948,6 +2948,29 @@ def _check_fp001_pmr_reconciliation(
     if "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED" not in harden_current or "PHASE 7C: BLOCKED / NOT_STARTED" not in harden_current:
         issues.append("current HARDEN-02 route starts Communications or advances a later gate")
 
+    stale_predecessor_routes = (
+        ("Open Work v1.2.54", r"(?<!archive/)02_OPEN_WORK_v1\.2\.54\.md"),
+        ("Delivery Atlas v0.3.6", r"(?<!archive/)DELIVERY_ATLAS_WORKING_v0\.3\.6\.md"),
+        ("HARDEN-02 v0.4.8", r"(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\.4\.8\.md"),
+    )
+    graph_rules = integrity_rules.get("graph_rules", {})
+    configured_stale_patterns = graph_rules.get("stale_reference_patterns", [])
+    current_route_surfaces = (
+        ("README", readme),
+        ("Open Work", open_work),
+        ("skeleton", skeleton_text),
+        ("Identity dossier", dossier_text),
+        ("Delivery Atlas", atlas),
+        ("HARDEN-02 current route", harden_current),
+    )
+    for predecessor, stale_pattern in stale_predecessor_routes:
+        if stale_pattern not in configured_stale_patterns:
+            issues.append(f"manifest does not reject unarchived {predecessor} routes")
+        pattern = re.compile(stale_pattern)
+        for surface, text in current_route_surfaces:
+            if pattern.search(text):
+                issues.append(f"current {surface} route still references unarchived {predecessor}")
+
     _record_check(
         report,
         "fp001_pmr_reconciliation",
