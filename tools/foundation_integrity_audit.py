@@ -385,7 +385,7 @@ H02_EXECUTION_STATES = {
     },
     "COMPLETE / CERTIFIED": {
         "matrix": "COMPLETE_CERTIFIED",
-        "successor_versions": ("0.4.7",),
+        "successor_versions": ("0.4.7", "0.4.8"),
         "current_stage": "ENGINEERING STANDARDS AUTHORITY PROMOTION",
         "next_stage": "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
         "readme": "HARDEN-02 EXECUTION: COMPLETE / CERTIFIED",
@@ -521,7 +521,22 @@ def _h02_lifecycle_state(
     execution = state.get("harden_02_execution")
     if execution not in H02_EXECUTION_STATES:
         return False, "HARDEN execution status is not one of the permitted lifecycle states"
-    expected = H02_EXECUTION_STATES[execution]
+    expected = dict(H02_EXECUTION_STATES[execution])
+    promotion_status = state.get("engineering_standards_authority_promotion")
+    if execution == "COMPLETE / CERTIFIED":
+        if promotion_status == "COMPLETE / CERTIFIED":
+            expected.update(
+                {
+                    "successor_versions": ("0.4.8",),
+                    "current_stage": "CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION",
+                    "next_stage": "FP001_RECONCILIATION_REQUIRED",
+                    "programme_status": "HARDEN-02 EXECUTION COMPLETE / CERTIFIED; ENGINEERING STANDARDS AUTHORITY PROMOTION COMPLETE / CERTIFIED; FP-001 RECONCILIATION REQUIRED / NEXT / NOT PERFORMED",
+                }
+            )
+        elif promotion_status != "NEXT / AUTHORISED / NOT STARTED":
+            return False, "completed HARDEN execution must route through one permitted Standards promotion state"
+    elif promotion_status != "DOWNSTREAM / NOT STARTED":
+        return False, "incomplete HARDEN execution cannot advance Engineering Standards promotion"
     if state.get("status_successor_version") not in expected["successor_versions"]:
         return False, "HARDEN status successor version is unsupported"
     if state.get("current_stage") != expected["current_stage"]:
@@ -581,12 +596,21 @@ def _h02_lifecycle_state(
     }
     if execution == "COMPLETE / CERTIFIED":
         expected_milestones = expected_milestones + ["HARDEN-02 EXECUTION"]
-        expected_downstream.update({
-            "engineering_standards_authority_promotion": "NEXT / AUTHORISED / NOT STARTED",
-            "fp001_reconciliation": "REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
-            "communications": "REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
-            "pr_60": "STALE HISTORICAL CANDIDATE / SUPERSEDED BY THIS SUCCESSOR / NOT MERGED / NOT AUTHORITY",
-        })
+        if promotion_status == "COMPLETE / CERTIFIED":
+            expected_milestones = expected_milestones + ["ENGINEERING STANDARDS AUTHORITY PROMOTION"]
+            expected_downstream.update({
+                "engineering_standards_authority_promotion": "COMPLETE / CERTIFIED",
+                "fp001_reconciliation": "REQUIRED / NEXT / NOT PERFORMED",
+                "communications": "REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
+                "pr_60": "STALE HISTORICAL CANDIDATE / SUPERSEDED BY THIS SUCCESSOR / NOT MERGED / NOT AUTHORITY",
+            })
+        else:
+            expected_downstream.update({
+                "engineering_standards_authority_promotion": "NEXT / AUTHORISED / NOT STARTED",
+                "fp001_reconciliation": "REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
+                "communications": "REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
+                "pr_60": "STALE HISTORICAL CANDIDATE / SUPERSEDED BY THIS SUCCESSOR / NOT MERGED / NOT AUTHORITY",
+            })
     else:
         expected_downstream.update({
             "engineering_standards_authority_promotion": "DOWNSTREAM / NOT STARTED",
@@ -634,11 +658,25 @@ def _h02_lifecycle_state(
             return False, "complete execution certification evidence is missing"
         if cert != H02_COMPLETE_CERTIFICATION_FACTS:
             return False, "complete execution certification evidence is incomplete or contradictory"
-        if state.get("status_successor_base_sha") != "d4e7390b71cdf61b649b534e1080102a044efe63":
+        expected_base_sha = (
+            "596d9560aa2b3b3cb941560b01bdc6c8ba7c525a"
+            if promotion_status == "COMPLETE / CERTIFIED"
+            else "d4e7390b71cdf61b649b534e1080102a044efe63"
+        )
+        if state.get("status_successor_base_sha") != expected_base_sha:
             return False, "completion status successor is not based on verified current main"
-        required_active = (
-            "ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED",
-            "FP001_RECONCILIATION_REQUIRED: REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
+        promotion_route = (
+            (
+                "ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED",
+                "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED",
+            )
+            if promotion_status == "COMPLETE / CERTIFIED"
+            else (
+                "ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED",
+                "FP001_RECONCILIATION_REQUIRED: REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
+            )
+        )
+        required_active = promotion_route + (
             "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
             "PR #38: STALE / BLOCKED / NOT AUTHORITY",
             "PR #60: STALE HISTORICAL CANDIDATE / SUPERSEDED BY THIS SUCCESSOR / NOT MERGED / NOT AUTHORITY",
@@ -684,7 +722,9 @@ def _h02_lifecycle_state(
         "- CURRENT AUTHORITY-STAGE PROGRAMME: " + expected["current_stage"],
         "- NEXT STAGE: " + expected["next_stage"],
         "- ENGINEERING STANDARDS AUTHORITY PROMOTION: " + (
-            "NEXT / AUTHORISED / NOT STARTED"
+            "COMPLETE / CERTIFIED"
+            if promotion_status == "COMPLETE / CERTIFIED"
+            else "NEXT / AUTHORISED / NOT STARTED"
             if execution == "COMPLETE / CERTIFIED"
             else "DOWNSTREAM AFTER CERTIFIED HARDEN-02 EXECUTION / NOT STARTED"
         ),
@@ -707,8 +747,12 @@ def _h02_lifecycle_state(
         return False, "README Communications status or downstream route is missing or contradictory"
     if execution == "COMPLETE / CERTIFIED":
         required_completed_readme = (
-            "- FP001_RECONCILIATION_REQUIRED: REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
-            "- ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED",
+            "- FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED"
+            if promotion_status == "COMPLETE / CERTIFIED"
+            else "- FP001_RECONCILIATION_REQUIRED: REQUIRED / DOWNSTREAM AFTER CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION / NOT PERFORMED",
+            "- ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED"
+            if promotion_status == "COMPLETE / CERTIFIED"
+            else "- ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED",
         )
         if any(readme_current.count(line) != 1 for line in required_completed_readme):
             return False, "README completed HARDEN route or FP-001 gate is missing or contradictory"
@@ -719,7 +763,8 @@ def _h02_lifecycle_state(
         if not contract:
             return False, "current HARDEN status successor is missing from lifecycle validation"
         version_header = contract.split("## 1. Objective", 1)[0]
-        version_marker = "**Plan / contract version:** " + chr(96) + "v0.4.7" + chr(96)
+        expected_harden_version = "0.4.8" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"
+        version_marker = "**Plan / contract version:** " + chr(96) + f"v{expected_harden_version}" + chr(96)
         if version_marker not in version_header:
             return False, "current HARDEN status successor version is missing or unsupported"
         contract_current_start = contract.rfind("## 20. Contract-stage STOP")
@@ -728,8 +773,6 @@ def _h02_lifecycle_state(
         contract_current = contract[contract_current_start:]
         required_contract = (
             "HARDEN-02 execution is COMPLETE / CERTIFIED",
-            "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
-            "Engineering Standards Authority Promotion NEXT / AUTHORISED / NOT STARTED",
             "PASS WITH NON-BLOCKING CORRECTIONS",
             "36565948391",
             "36567933267",
@@ -739,6 +782,13 @@ def _h02_lifecycle_state(
         )
         if any(value not in contract_current for value in required_contract):
             return False, "current HARDEN contract completion evidence or next route is incomplete"
+        expected_promotion_contract_status = (
+            "Engineering Standards Authority Promotion is COMPLETE / CERTIFIED"
+            if promotion_status == "COMPLETE / CERTIFIED"
+            else "Engineering Standards Authority Promotion NEXT / AUTHORISED / NOT STARTED"
+        )
+        if expected_promotion_contract_status not in contract_current:
+            return False, "current HARDEN contract Standards promotion status is missing or contradictory"
         if "Current HARDEN-02 execution is IN PROGRESS" in contract_current:
             return False, "current HARDEN contract retains an active pre-completion route"
         route_start = contract_current.find("## 21. Current execution certification and next stage")
@@ -746,9 +796,18 @@ def _h02_lifecycle_state(
             return False, "current HARDEN contract has no explicit completion route section"
         current_route = contract_current[route_start:]
         required_route = (
-            "HARDEN-02 execution is COMPLETE / CERTIFIED",
-            "immediate next stage is ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
-            "Engineering Standards Authority Promotion NEXT / AUTHORISED / NOT STARTED",
+            (
+                "HARDEN-02 execution and Engineering Standards Authority Promotion are COMPLETE / CERTIFIED",
+                "immediate next stage is `FP001_RECONCILIATION_REQUIRED`",
+                "ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED",
+                "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED",
+            )
+            if promotion_status == "COMPLETE / CERTIFIED"
+            else (
+                "HARDEN-02 execution is COMPLETE / CERTIFIED",
+                "immediate next stage is ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
+                "Engineering Standards Authority Promotion NEXT / AUTHORISED / NOT STARTED",
+            )
         )
         if any(current_route.count(value) != 1 for value in required_route):
             return False, "current HARDEN contract completion route is missing or duplicated"
@@ -939,6 +998,268 @@ def _engineering_standards_promotion_state(
     if current_harden_status is None:
         return False, "HARDEN status does not preserve the pre-certification route"
     return True, "Engineering Standards promotion candidate is registered, traceable and not certified"
+
+
+def _engineering_standards_normative_body(text: str) -> str:
+    start = re.search(r"(?m)^## Risk classification\s*$", text)
+    end = re.search(r"(?m)^## Deferred choices and closed alternatives\s*$", text)
+    if start is None or end is None or start.start() >= end.start():
+        return ""
+    return text[start.start() : end.start()]
+
+
+def _engineering_standards_certified_state(
+    root: Path,
+    manifest: dict[str, Any],
+    readme: str,
+    open_work: str,
+    harden: str,
+) -> tuple[bool, str]:
+    """Validate the certified Standards authority and its one-stage downstream route."""
+
+    docs = Path(root) / "docs" / "00_platform"
+    current = docs / "reference" / "ENGINEERING_STANDARDS_v1.0.1.md"
+    predecessor = docs / "archive" / "ENGINEERING_STANDARDS_v1.0.0.md"
+    source_grill = docs / "working" / "TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md"
+    expected_source_sha = "27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017"
+    expected_predecessor_sha = "feb2bf132fdca74bd534c83526a19e06659879a9b4f09bec7f5ca4b2e3c89df4"
+
+    all_entries = _all_entries(manifest)
+    is_standards_entry = lambda entry: (
+        "ENGINEERING_STANDARDS" in str(entry.get("document_id", "")).upper()
+        or "ENGINEERING_STANDARDS" in str(entry.get("authority_class", "")).upper()
+        or "ENGINEERING_STANDARDS" in str(entry.get("repository_path", "")).upper()
+    )
+    active_entries = [
+        entry
+        for key in ("governing_documents", "reference_documents")
+        for entry in manifest.get(key, [])
+        if is_standards_entry(entry) and entry.get("lifecycle", "current") != "historical"
+    ]
+    if len(active_entries) != 1:
+        return False, "exactly one active Engineering Standards registration is required"
+    active_entry = active_entries[0]
+    if active_entry not in manifest.get("reference_documents", []):
+        return False, "certified Engineering Standards must remain under reference_documents"
+    if active_entry in manifest.get("governing_documents", []):
+        return False, "certified Engineering Standards cannot be governing-root authority"
+    if (
+        active_entry.get("document_id") != "ENGINEERING_STANDARDS"
+        or active_entry.get("repository_path") != "docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md"
+        or active_entry.get("canonical_filename") != "ENGINEERING_STANDARDS_v1.0.1.md"
+        or active_entry.get("semver") != "1.0.1"
+        or active_entry.get("authority_class") != "ENGINEERING_STANDARDS_SUPPORTING_AUTHORITY"
+        or active_entry.get("lifecycle") != "current"
+        or active_entry.get("superseded_version") != "1.0.0"
+    ):
+        return False, "certified Engineering Standards registration has an unsupported route, class, lifecycle or version"
+
+    historical_candidates = [
+        entry
+        for entry in manifest.get("historical_documents", [])
+        if entry.get("document_id") == "ENGINEERING_STANDARDS_CANDIDATE_V1_0_0"
+    ]
+    if len(historical_candidates) != 1:
+        return False, "the PR #65 candidate must be retained as one historical manifest registration"
+    archived = historical_candidates[0]
+    if (
+        archived.get("repository_path") != "docs/00_platform/archive/ENGINEERING_STANDARDS_v1.0.0.md"
+        or archived.get("canonical_filename") != "ENGINEERING_STANDARDS_v1.0.0.md"
+        or archived.get("semver") != "1.0.0"
+        or archived.get("authority_class") != "ENGINEERING_STANDARDS_SUPPORTING_AUTHORITY_CANDIDATE"
+        or archived.get("lifecycle") != "historical"
+        or archived.get("sha256") != expected_predecessor_sha
+    ):
+        return False, "the archived PR #65 candidate registration is missing or contradictory"
+    active_candidate_entries = [
+        entry
+        for entry in all_entries
+        if entry.get("authority_class") == "ENGINEERING_STANDARDS_SUPPORTING_AUTHORITY_CANDIDATE"
+        and entry.get("lifecycle", "current") != "historical"
+    ]
+    if active_candidate_entries:
+        return False, "a candidate and certified Engineering Standards authority cannot both be active"
+
+    if not current.is_file() or not predecessor.is_file():
+        return False, "the certified Standards artifact or byte-preserved candidate archive is missing"
+    competing_artifacts = [
+        path
+        for path in docs.rglob("*")
+        if path.is_file()
+        and "engineering_standards" in path.name.casefold()
+        and path not in {current, predecessor}
+    ]
+    if competing_artifacts:
+        return False, "duplicate or competing Engineering Standards artifact exists"
+    current_text = current.read_text(encoding="utf-8")
+    predecessor_text = predecessor.read_text(encoding="utf-8")
+    if sha256_file(predecessor) != expected_predecessor_sha:
+        return False, "archived candidate bytes do not match the PR #65 candidate SHA-256"
+    if active_entry.get("sha256") != sha256_file(current):
+        return False, "certified Standards manifest hash does not match the artifact"
+    if _engineering_standards_normative_body(current_text) != _engineering_standards_normative_body(predecessor_text):
+        return False, "certified Standards normative body differs from the byte-preserved candidate"
+    if not _engineering_standards_normative_body(current_text):
+        return False, "certified Standards normative body could not be isolated"
+    if not source_grill.is_file() or sha256_file(source_grill) != expected_source_sha:
+        return False, "the sole Stage 4B source Grill is missing or has changed"
+
+    required_metadata = (
+        "# Engineering Standards v1.0.1",
+        "- **Document version:** v1.0.1",
+        "- **Status:** CERTIFIED / CURRENT",
+        "- **Authority class:** SUPPORTING AUTHORITY / ENGINEERING STANDARDS",
+        "Promotion baseline main SHA:** `73eca9d9148a82cab8ae988c5950539bfee0d7f9`",
+        "Certification status successor base main SHA:** `596d9560aa2b3b3cb941560b01bdc6c8ba7c525a`",
+        "Source Grill:** `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`",
+        f"Source Grill SHA-256:** `{expected_source_sha}`",
+        "PR | [#65](https://github.com/JCSchoeman96/NewYou/pull/65)",
+        "Certified pre-merge candidate head | `36de8f04c83a837f8b2d5e162ce10cc29f817d55`",
+        "Candidate and resulting-main tree | `1206905fe7b5391564841fa2a8b9198635c84848`",
+        "Resulting main | `596d9560aa2b3b3cb941560b01bdc6c8ba7c525a`",
+        f"Candidate artifact SHA-256 | `{expected_predecessor_sha}`",
+        "Exact-head Foundation Integrity run | [36920390090]",
+        "Resulting-main Foundation Integrity run | [36967771106]",
+        "Pre-merge attestation | [PR #65 comment 5945899280]",
+        "Post-merge attestation | [PR #65 comment 5946270554]",
+        "Fresh independent post-merge review | PASS",
+    )
+    if any(marker not in current_text for marker in required_metadata):
+        return False, "certified Standards lifecycle evidence is incomplete or contradictory"
+    if "PROMOTION CANDIDATE / NOT CERTIFIED" in current_text:
+        return False, "the current Standards artifact still says NOT CERTIFIED"
+    if re.search(r"(?im)^.*ENGINEERING STANDARDS AUTHORITY PROMOTION.*NEXT / AUTHORISED / NOT STARTED.*$", current_text):
+        return False, "certified Standards still routes its own promotion as NEXT"
+    if "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED" in current_text:
+        return False, "certified Standards retains the stale candidate-only promotion route"
+
+    if readme.count("## Certified Engineering Standards supporting authority") != 1:
+        return False, "README certified Standards route is missing or duplicated"
+    if "reference/ENGINEERING_STANDARDS_v1.0.1.md" not in readme:
+        return False, "README does not route the certified Standards artifact"
+    if "archive/ENGINEERING_STANDARDS_v1.0.0.md" not in readme:
+        return False, "README does not identify the archived PR #65 candidate"
+    if "## Engineering Standards promotion candidate" in readme:
+        return False, "README retains stale candidate-only Standards routing"
+
+    active_start = open_work.find("# 9. Immediate Next Action")
+    active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
+    if active_start < 0 or active_end < 0 or active_start >= active_end:
+        return False, "current Open Work programme-state section is missing"
+    active = open_work[active_start:active_end]
+    required_route = (
+        "ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED",
+        "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED",
+        "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
+        "PR #38: STALE / BLOCKED / NOT AUTHORITY",
+        "PR #60: STALE HISTORICAL CANDIDATE / SUPERSEDED BY THIS SUCCESSOR / NOT MERGED / NOT AUTHORITY",
+        "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
+        "PHASE 7C: BLOCKED / NOT_STARTED",
+        "PROOF CLASSIFICATION: NOT FINALISED",
+        "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+        "STORE / CER: EXCLUDED FROM HARDEN-02",
+    )
+    if any(active.count(line) != 1 for line in required_route):
+        return False, "Open Work current route omits or duplicates the certified stage or a downstream boundary"
+    if "NEXT STAGE: FP001_RECONCILIATION_REQUIRED" not in active:
+        return False, "Open Work does not route NEXT to FP001_RECONCILIATION_REQUIRED"
+    historical_pr59_status = "**Historical pre-PR #65 status as recorded in Open Work v1.2.53:**"
+    former_promotion_status = "Engineering Standards Authority Promotion was NEXT / AUTHORISED / NOT STARTED"
+    if active.count(historical_pr59_status) != 1:
+        return False, "the superseded pre-PR #65 promotion state is not clearly marked as historical"
+    historical_status_start = active.index(historical_pr59_status)
+    historical_status_end = active.find("\n\n", historical_status_start)
+    if historical_status_end < 0:
+        historical_status_end = len(active)
+    historical_status = active[historical_status_start:historical_status_end]
+    if historical_status.count(former_promotion_status) != 1:
+        return False, "the prior promotion NEXT state is not confined to its labelled historical record"
+    if active.count(former_promotion_status) != 1:
+        return False, "Open Work retains an unlabelled stale Standards promotion NEXT status"
+    if re.search(r"(?im)FP-001 reconciliation is (?:COMPLETE|PERFORMED)", active):
+        return False, "the status successor performs FP-001 reconciliation"
+    if re.search(r"(?im)^.*COMMUNICATIONS\s*:\s*(?:STARTED|COMPLETE|AUTHORI[ZS]ED).*$", active):
+        return False, "Communications has advanced before FP-001 reconciliation"
+    if re.search(r"(?im)^.*PHASE 7C\s*:\s*(?:NEXT|UNBLOCKED|COMPLETE|AUTHORI[ZS]ED).*$", active):
+        return False, "Phase 7C has been unblocked prematurely"
+    if re.search(r"(?im)^.*PROOF CLASSIFICATION\s*:\s*FINALI[ZS]ED.*$", active):
+        return False, "proof classification has been finalised prematurely"
+    if re.search(r"(?im)^.*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$", active):
+        return False, "Phase 8 or application implementation has been authorised prematurely"
+    if re.search(r"(?im)^.*STORE\s*/\s*CER\s*:\s*IN SCOPE.*$", active):
+        return False, "Store/CER has been included in scope"
+
+    harden_section_start = open_work.find("## 12.9 — HARDEN-02 contract lifecycle completion")
+    harden_section_end = open_work.find("## 12.10", harden_section_start + 1)
+    if harden_section_start < 0 or harden_section_end < 0 or harden_section_start >= harden_section_end:
+        return False, "Open Work current HARDEN lifecycle status section is missing or malformed"
+    harden_section = open_work[harden_section_start:harden_section_end]
+    required_harden_status = (
+        "Engineering Standards Authority Promotion is COMPLETE / CERTIFIED under `reference/ENGINEERING_STANDARDS_v1.0.1.md`",
+        "FP-001 reconciliation is REQUIRED / NEXT / NOT PERFORMED",
+        "Communications remains required / not started / downstream after FP-001 reconciliation",
+        "Phase 7C remains blocked / not started",
+        "proof classification remains not finalised",
+        "executable development remains blocked until Phase 8 entry conditions pass",
+    )
+    if any(harden_section.count(line) != 1 for line in required_harden_status):
+        return False, "Open Work current HARDEN status section has stale promotion status or altered downstream gates"
+    if "Engineering Standards Authority Promotion is NEXT / AUTHORISED / NOT STARTED" in harden_section:
+        return False, "Open Work current HARDEN status section retains the pre-certification Standards route"
+
+    if not harden:
+        return False, "current HARDEN status successor is missing"
+    harden_route_start = harden.rfind("## 21. Current execution certification and next stage")
+    if harden_route_start < 0:
+        return False, "current HARDEN successor has no current route section"
+    harden_route = harden[harden_route_start:]
+    required_harden_route = (
+        "Engineering Standards Authority Promotion are COMPLETE / CERTIFIED",
+        "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED",
+    )
+    if any(value not in harden_route for value in required_harden_route):
+        return False, "current HARDEN successor does not route the certified promotion to FP-001"
+    if "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION" not in harden_route:
+        return False, "current HARDEN successor starts or misroutes Communications"
+    if "PHASE 7C: BLOCKED / NOT_STARTED" not in harden_route:
+        return False, "current HARDEN successor unblocks Phase 7C"
+    if "PROOF CLASSIFICATION: NOT FINALISED" not in harden_route:
+        return False, "current HARDEN successor finalises proof classification"
+    if "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS" not in harden_route:
+        return False, "current HARDEN successor authorises Phase 8 or implementation"
+    if "STORE / CER: EXCLUDED FROM HARDEN-02" not in harden_route:
+        return False, "current HARDEN successor includes Store/CER"
+
+    return True, "certified Engineering Standards is current supporting authority and routes NEXT to FP-001 reconciliation"
+
+
+def _engineering_standards_lifecycle_state(
+    root: Path,
+    manifest: dict[str, Any],
+    readme: str,
+    open_work: str,
+    harden: str,
+) -> tuple[bool, str]:
+    """Accept the current candidate predecessor or its fully certified successor."""
+
+    active_entries = [
+        entry
+        for key in ("governing_documents", "reference_documents")
+        for entry in manifest.get(key, [])
+        if "ENGINEERING_STANDARDS" in (
+            str(entry.get("document_id", ""))
+            + str(entry.get("authority_class", ""))
+            + str(entry.get("repository_path", ""))
+        ).upper()
+        and entry.get("lifecycle", "current") != "historical"
+    ]
+    if (
+        len(active_entries) == 1
+        and active_entries[0].get("document_id") == "ENGINEERING_STANDARDS_CANDIDATE"
+        and active_entries[0].get("lifecycle") == "candidate"
+    ):
+        return _engineering_standards_promotion_state(root, manifest, readme, open_work, harden)
+    return _engineering_standards_certified_state(root, manifest, readme, open_work, harden)
 
 def _section_body(text: str, heading_pattern: str) -> str:
     match = re.search(heading_pattern, text, re.MULTILINE)
@@ -2407,6 +2728,7 @@ def run_audit(
         return report
 
     entries = _check_manifest_shape(root, manifest, report)
+    by_id = {str(entry.get("document_id", "")): entry for entry in entries}
     try:
         integrity_rules = _load_integrity_rules(manifest)
     except ValueError as error:
@@ -2430,29 +2752,30 @@ def run_audit(
     _check_current_authority_route_resolution(root, manifest, integrity_rules, report)
     _check_current_authority_delegated_routing(root, manifest, integrity_rules, report)
     docs = root / "docs" / "00_platform"
-    standards_readme = (
-        (docs / "README.md").read_text(encoding="utf-8")
-        if (docs / "README.md").is_file()
-        else ""
+    standards_readme = (docs / "README.md").read_text(encoding="utf-8") if (docs / "README.md").is_file() else ""
+    open_work_entry = by_id.get("OPEN_WORK", {})
+    open_work_path = root / _relative_path(open_work_entry) if open_work_entry else None
+    current_open_work = open_work_path.read_text(encoding="utf-8") if open_work_path and open_work_path.is_file() else ""
+    harden_route = re.search(
+        r"(?m)^CURRENT HARDEN-02 STATUS SUCCESSOR:\s*([^;\s]+)",
+        current_open_work,
     )
+    harden_path = docs / harden_route.group(1) if harden_route else None
+    current_harden = harden_path.read_text(encoding="utf-8") if harden_path and harden_path.is_file() else ""
     if _engineering_standards_candidate_signal(root, manifest, standards_readme):
-        standards_ok, standards_message = _engineering_standards_promotion_state(
+        standards_ok, standards_message = _engineering_standards_lifecycle_state(
             root,
             manifest,
             standards_readme,
-            (docs / "02_OPEN_WORK_v1.2.53.md").read_text(encoding="utf-8")
-            if (docs / "02_OPEN_WORK_v1.2.53.md").is_file()
-            else "",
-            (docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.7.md").read_text(encoding="utf-8")
-            if (docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.7.md").is_file()
-            else "",
+            current_open_work,
+            current_harden,
         )
         _record_check(
             report,
-            "engineering_standards_promotion_candidate",
+            "engineering_standards_lifecycle",
             standards_ok,
             standards_message,
-            path="docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.0.md",
+            path="docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md",
         )
     if _production_mode(expected_counts):
         _check_production_graph(root, manifest, integrity_rules, report)
