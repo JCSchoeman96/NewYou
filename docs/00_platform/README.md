@@ -65,6 +65,12 @@ Use `reference/` only when the current authority requires exact evidence or iden
 
 These documents are valuable evidence, but they are not default context for routine planning or delivery preparation.
 
+## Engineering Standards promotion candidate
+
+`reference/ENGINEERING_STANDARDS_v1.0.0.md` is the candidate supporting-authority document for the separately authorised Engineering Standards Authority Promotion stage. It is registered in the manifest as a reference candidate, not as a governing document. Its only normative source is the accepted Stage 4B Engineering-Policy Grill at `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`; the Grill remains working/non-authoritative provenance.
+
+The candidate is **PROMOTION CANDIDATE / NOT CERTIFIED**. The current route remains `ENGINEERING STANDARDS AUTHORITY PROMOTION: NEXT / AUTHORISED / NOT STARTED` until the exact-head, independent-review, merge and post-merge certification lifecycle completes. FP-001 reconciliation and every later stage remain downstream.
+
 ## Foundation integrity evidence
 
 Current machine-backed foundation integrity evidence is **not** a static Markdown snapshot. It is the combination of:
