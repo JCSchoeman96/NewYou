@@ -128,21 +128,23 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             ("oq034_proof_complete", "skeleton", "The approved authentication architecture is selected; executable proof is not complete and proof classification is not finalised.", "The approved authentication architecture is selected; executable proof is complete and proof classification is final.") ,
             ("oq035_resolved", "skeleton", "| `OQ-035` | `BLOCKS_RELEASE_ONLY` |", "| `OQ-035` | `RESOLVED` |"),
             ("oq036_resolved", "skeleton", "| `OQ-036` | `BLOCKS_RELEASE_ONLY` |", "| `OQ-036` | `RESOLVED` |"),
-            ("communications_started", "open_work", "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION", "COMMUNICATIONS: COMPLETE / CERTIFIED"),
+            ("communications_started", "open_work", "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED", "COMMUNICATIONS: COMPLETE / CERTIFIED"),
             ("conditional_dossiers_adjudicated", "open_work", "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED", "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE COMPLETE; ANALYTICS NOT REQUIRED"),
             ("phase_7c_unblocked", "open_work", "PHASE 7C: BLOCKED / NOT_STARTED PENDING COMMUNICATIONS AND CONDITIONAL-DOSSIER DISPOSITIONS", "PHASE 7C: READY / NOT_BLOCKED"),
             ("proof_finalised", "open_work", "PROOF CLASSIFICATION: NOT FINALISED", "PROOF CLASSIFICATION: FINAL"),
             ("phase_8_authorised", "open_work", "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS", "EXECUTABLE DEVELOPMENT: AUTHORISED"),
-            ("reconciliation_marked_complete_on_stale_skeleton", "open_work", "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED", "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED"),
+            ("reconciliation_reverted_to_not_performed", "open_work", "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED", "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED"),
+            ("skeleton_reverted_to_candidate", "skeleton", "**Reconciliation lifecycle:** `COMPLETE / CERTIFIED`", "**Candidate lifecycle:** `RECONCILIATION CANDIDATE / NOT CERTIFIED`"),
+            ("dossier_reverted_to_candidate", "dossier", "**Status:** `RECONCILIATION COMPLETE / CERTIFIED`", "**Status:** `RECONCILIATION CANDIDATE / NOT CERTIFIED`"),
         )
         source_root = Path(__file__).resolve().parents[1]
         for name, target, current, replacement in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
                 relative = {
-                    "skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
-                    "dossier": "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md",
-                    "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.54.md",
+                    "skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md",
+                    "dossier": "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md",
+                    "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.55.md",
                 }[target]
                 path = root / relative
                 text = path.read_text(encoding="utf-8")

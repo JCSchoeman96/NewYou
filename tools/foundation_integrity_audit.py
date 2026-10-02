@@ -1430,7 +1430,7 @@ def _check_product_semantics(
     readme_path = root / roots["context_index"]
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     fp001_candidates = (
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
+        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
     )
     fp001_path = next((path for path in fp001_candidates if path.is_file()), fp001_candidates[-1])
@@ -2538,15 +2538,19 @@ def _check_fp001_pmr_reconciliation(
     integrity_rules: dict[str, Any],
     report: dict[str, Any],
 ) -> None:
-    """Fail closed around the narrow FP-001 PMR reconciliation candidate."""
+    """Fail closed around the certified FP-001 PMR reconciliation lifecycle."""
 
     docs = root / "docs" / "00_platform"
-    skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
-    dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md"
+    skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md"
+    dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md"
+    candidate_skeleton = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
+    candidate_dossier = docs / "archive" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md"
     predecessor_skeleton = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
     predecessor_dossier = docs / "archive" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
     legacy_skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
     legacy_dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+    stale_candidate_skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
+    stale_candidate_dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md"
     readme = docs / "README.md"
     open_work_entry = next(
         (
@@ -2560,25 +2564,11 @@ def _check_fp001_pmr_reconciliation(
     open_work_path = root / _relative_path(open_work_entry) if open_work_entry else None
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path and open_work_path.is_file() else ""
 
-    candidate_present = skeleton.is_file() or dossier.is_file()
-    if not candidate_present:
-        baseline_ok = (
-            "NEXT STAGE: FP001_RECONCILIATION_REQUIRED" in open_work
-            and "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED" in open_work
-            and "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" not in open_work
-        )
-        _record_check(
-            report,
-            "fp001_pmr_reconciliation",
-            baseline_ok,
-            "FP-001 PMR reconciliation remains the authorised next task and has not been performed"
-            if baseline_ok
-            else "pre-reconciliation Open Work route is missing or prematurely complete",
-            path="docs/00_platform/02_OPEN_WORK_v1.2.54.md",
-        )
-        return
-
     issues: list[str] = []
+    if stale_candidate_skeleton.is_file() or stale_candidate_dossier.is_file():
+        issues.append("candidate and certified FP-001 reconciliation artifacts cannot both remain active")
+    if not candidate_skeleton.is_file() or not candidate_dossier.is_file():
+        issues.append("both PR #67 reconciliation candidates must be archived")
     if not skeleton.is_file() or not dossier.is_file():
         issues.append("both PMR reconciliation successor artifacts are required")
     for predecessor, legacy, label in (
@@ -2603,14 +2593,25 @@ def _check_fp001_pmr_reconciliation(
             elif archive.is_file() and sha256_file(archive) != expected_hash:
                 issues.append(f"{label} predecessor archive hash does not match the pinned bytes")
 
+    expected_candidate_hashes = integrity_rules.get("fp001_pmr_reconciliation_candidate_archives")
+    if not isinstance(expected_candidate_hashes, dict):
+        issues.append("manifest does not pin FP-001 reconciliation candidate archive hashes")
+    else:
+        for archive, label in ((candidate_skeleton, "skeleton candidate"), (candidate_dossier, "Identity dossier candidate")):
+            expected_hash = expected_candidate_hashes.get(str(archive.relative_to(root)))
+            if not isinstance(expected_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_hash):
+                issues.append(f"manifest archive hash for {label} is missing or invalid")
+            elif archive.is_file() and sha256_file(archive) != expected_hash:
+                issues.append(f"{label} archive hash does not match the pinned bytes")
+
     readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""
     active_routes = tuple(
         str(path)
         for path in integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
     )
     required_routes = {
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
-        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md",
+        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md",
     }
     if not required_routes <= set(active_routes):
         issues.append("manifest graph navigation does not route both reconciliation successors")
@@ -2634,8 +2635,16 @@ def _check_fp001_pmr_reconciliation(
     dossier_text = dossier.read_text(encoding="utf-8") if dossier.is_file() else ""
     skeleton_pmr = marked_block(skeleton_text)
     dossier_pmr = marked_block(dossier_text)
-    if not skeleton_pmr or not dossier_pmr:
-        issues.append("each successor must contain exactly one PMR reconciliation block")
+    candidate_skeleton_text = candidate_skeleton.read_text(encoding="utf-8") if candidate_skeleton.is_file() else ""
+    candidate_dossier_text = candidate_dossier.read_text(encoding="utf-8") if candidate_dossier.is_file() else ""
+    candidate_skeleton_pmr = marked_block(candidate_skeleton_text)
+    candidate_dossier_pmr = marked_block(candidate_dossier_text)
+    if not skeleton_pmr or not dossier_pmr or not candidate_skeleton_pmr or not candidate_dossier_pmr:
+        issues.append("current successors and archived PR #67 candidates must each contain exactly one PMR reconciliation block")
+    if skeleton_pmr != candidate_skeleton_pmr:
+        issues.append("certified skeleton PMR contract differs from archived PR #67 candidate")
+    if dossier_pmr != candidate_dossier_pmr:
+        issues.append("certified Identity dossier PMR contract differs from archived PR #67 candidate")
     if "### F.10 Platform Member Reference reconciliation" not in dossier_text:
         issues.append("Identity dossier PMR reconciliation section is missing")
 
@@ -2711,9 +2720,9 @@ def _check_fp001_pmr_reconciliation(
         issues.append("PMR reconciliation freezes an exact representation")
 
     required_open_work = (
-        "NEXT STAGE: FP001_RECONCILIATION_REQUIRED",
-        "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED",
-        "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
+        "NEXT STAGE: COMMUNICATIONS JIT DOMAIN DOSSIER",
+        "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
+        "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED",
         "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
         "PHASE 7C: BLOCKED / NOT_STARTED",
         "PROOF CLASSIFICATION: NOT FINALISED",
@@ -2722,8 +2731,8 @@ def _check_fp001_pmr_reconciliation(
     for token in required_open_work:
         if token not in open_work:
             issues.append(f"Open Work route is missing: {token}")
-    if "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" in open_work:
-        issues.append("reconciliation is prematurely self-certified")
+    if "NEXT STAGE: FP001_RECONCILIATION_REQUIRED" in open_work or "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED" in open_work:
+        issues.append("Open Work retains the stale pre-certification FP-001 route")
     forbidden_advancement = (
         ("Communications", r"(?im)^.*COMMUNICATIONS\s*:\s*(?:STARTED|COMPLETE|CERTIFIED|AUTHORI[ZS]ED).*$"),
         ("conditional dossiers", r"(?im)^.*CONDITIONAL DOSSIERS:.*\b(?:COMPLETE|CERTIFIED|ADJUDICATED)\b.*$"),
@@ -2747,8 +2756,13 @@ def _check_fp001_pmr_reconciliation(
         if token not in skeleton_text:
             issues.append(f"gate preservation token is missing: {token}")
 
-    if re.search(r"(?im)FP-001 reconciliation is (?:COMPLETE|PERFORMED)", skeleton_text + dossier_text):
-        issues.append("candidate claims FP-001 reconciliation is complete")
+    if "**Reconciliation lifecycle:** `COMPLETE / CERTIFIED`" not in skeleton_text:
+        issues.append("skeleton does not record certified reconciliation lifecycle")
+    if "**Status:** `RECONCILIATION COMPLETE / CERTIFIED`" not in dossier_text:
+        issues.append("Identity dossier does not record certified reconciliation lifecycle")
+    for evidence in ("79d0540c66f0224ece0330181e61dfef8ab4b458", "4000ae50660930114e3ad43108dc029fd0673d32", "a71dbeb2cca79bea0013f9997e40f34769f262f3", "36991113390", "37009244020", "5952693308", "5955641536"):
+        if evidence not in skeleton_text or evidence not in dossier_text:
+            issues.append(f"certification provenance is incomplete: {evidence}")
     if "COMMUNICATIONS" in dossier_text and re.search(r"(?im)COMMUNICATIONS\s*:\s*(?:STARTED|COMPLETE|CERTIFIED|AUTHORI[ZS]ED)", dossier_text):
         issues.append("candidate starts Communications")
 
@@ -2756,10 +2770,10 @@ def _check_fp001_pmr_reconciliation(
         report,
         "fp001_pmr_reconciliation",
         not issues,
-        "FP-001 Phase 7 artifacts carry the governed PMR contract without freezing representation or advancing later work"
+        "FP-001 PMR reconciliation is COMPLETE / CERTIFIED, preserves the PR #67 PMR contract, and routes NEXT only to unstarted Communications"
         if not issues
         else "; ".join(issues),
-        path="docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
+        path="docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md",
     )
 
 

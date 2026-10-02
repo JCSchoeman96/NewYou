@@ -14,15 +14,15 @@ DOCS = ROOT / "docs" / "00_platform"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.54.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.55.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.53.md"
 OPEN_WORK_ROUTING_SUCCESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.50.md"
 OPEN_WORK_ROUTING_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.49.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.9.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.7.md"
 CONTRACT_ROUTING_SUCCESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
 CONTRACT_ROUTING_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.6.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.7.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.5.md"
 ATLAS_ROUTING_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
 ATLAS_ROUTING_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
@@ -256,7 +256,7 @@ def _validate_contract_source_routing(text: str) -> None:
     if len(derived_rows) != 3 or any(len(row) != 2 for row in derived_rows):
         raise ValueError("current derived/source-at-freeze table has missing or unexpected rows")
     derived = {row[0].strip("`"): row[1] for row in derived_rows}
-    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.3.6.md"
+    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.3.7.md"
     skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
     identity_path = "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
     if set(derived) != {atlas_path, skeleton_path, identity_path}:
@@ -281,19 +281,19 @@ def _validate_contract_source_routing(text: str) -> None:
             raise ValueError("Identity dossier is not classified as source-at-freeze evidence")
 
     readme = _read(README)
-    if "working/DELIVERY_ATLAS_WORKING_v0.3.6.md" not in readme:
+    if "working/DELIVERY_ATLAS_WORKING_v0.3.7.md" not in readme:
         raise ValueError("README does not route current Atlas to v0.3.4")
     if "The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references." not in readme:
         raise ValueError("README does not preserve Atlas v0.2.1 as source-at-freeze evidence")
     atlas_routing = _section(readme, "## Delivery Atlas routing", "## Machine-readable inventory")
-    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.6.md)" not in atlas_routing:
+    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.7.md)" not in atlas_routing:
         raise ValueError("README Delivery Atlas navigation does not target v0.3.4")
-    if "working/HARDEN-02_CONTRACT_WORKING_v0.4.8.md" not in readme:
+    if "working/HARDEN-02_CONTRACT_WORKING_v0.4.9.md" not in readme:
         raise ValueError("README does not route the current HARDEN status successor")
     active = _active_window(_read(OPEN_WORK))
     if "- IDENTITY & ACCESS: COMPLETE / MERGED" not in active:
         raise ValueError("current Identity lifecycle status is not sourced from Open Work")
-    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.4.8.md" not in active:
+    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.4.9.md" not in active:
         raise ValueError("Open Work does not route the current HARDEN status successor")
 
 
@@ -1064,8 +1064,8 @@ def _execution_state_is_valid(text: str, state: dict[str, object]) -> bool:
         "HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED",
         f"HARDEN-02 EXECUTION: {EXECUTION_STATUS}",
         "ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED",
-        "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED",
-        "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION",
+        "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
+        "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED",
         "- IDENTITY & ACCESS: COMPLETE / MERGED",
         "- COMMUNICATIONS: REQUIRED / NOT_STARTED",
         "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
@@ -1135,7 +1135,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         contradictory = (
             text
             + "\nCURRENT AUTHORITY-STAGE PROGRAMME: FP-001 RECONCILIATION\n"
-            + "NEXT STAGE: FP001_RECONCILIATION_REQUIRED\n"
+            + "NEXT STAGE: COMMUNICATIONS JIT DOMAIN DOSSIER\n"
         )
         self.assertFalse(_route_state(contradictory, state))
         self.assertFalse(_execution_state_is_valid(contradictory, state))
@@ -1467,7 +1467,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
     def test_i05_required_dossiers_cannot_be_skipped(self):
         text, state, _ = self._state_and_matrix()
         self.assertEqual("REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION", state.get("communications"))
-        self.assertIn("COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION", _active_window(text))
+        self.assertIn("COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED", _active_window(text))
         self.assertIn("Communications", _read(SKELETON))
         self.assertIn("Required dossiers", _read(SKELETON))
         self.assertNotRegex(_active_window(text), r"(?i)communications.*(?:COMPLETE|MERGED|OPTIONAL)")
@@ -1684,9 +1684,9 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         )
         stale_mutants = (
             contract.replace("00_PLATFORM_v1.6.0.md", "00_PLATFORM_v1.5.1.md", 1),
-            contract.replace("02_OPEN_WORK_v1.2.54.md", "02_OPEN_WORK_v1.2.51.md", 1),
+            contract.replace("02_OPEN_WORK_v1.2.55.md", "02_OPEN_WORK_v1.2.51.md", 1),
             contract.replace(
-                "working/DELIVERY_ATLAS_WORKING_v0.3.6.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.3.7.md",
                 "working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
                 1,
             ),
@@ -1830,7 +1830,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
                 "`FP001_RECONCILIATION_REQUIRED` remains the current next task; this Atlas does not perform it.",
                 "`FP001_RECONCILIATION_REQUIRED` remains downstream.",
             ),
-            ("02_OPEN_WORK_v1.2.54.md", "02_OPEN_WORK_v1.2.53.md"),
+            ("02_OPEN_WORK_v1.2.55.md", "02_OPEN_WORK_v1.2.53.md"),
             ("current Open Work `v1.2.54`.", "current Open Work `v1.2.53`."),
         )
         normalized = successor

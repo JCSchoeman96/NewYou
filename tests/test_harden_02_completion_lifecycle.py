@@ -10,9 +10,9 @@ from tools.foundation_integrity_audit import _h02_lifecycle_state
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.54.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.55.md"
 README = DOCS / "README.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.9.md"
 JSON_START = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
 JSON_END = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
 JSON_BLOCK = re.compile(
@@ -66,11 +66,11 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         state["next_stage"] = "HARDEN-02_EXECUTION_REQUIRED"
         text = self._with_state(state)
         text = text.replace(
-            "CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION",
+            "CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 PMR RECONCILIATION",
             "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
             1,
         ).replace(
-            "NEXT STAGE: FP001_RECONCILIATION_REQUIRED",
+            "NEXT STAGE: COMMUNICATIONS JIT DOMAIN DOSSIER",
             "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
             1,
         )
@@ -97,7 +97,7 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         end = self.open_work.index("## 12.2", start)
         row = self.open_work[start:end]
         changed_row = row.replace(
-            "`working/HARDEN-02_CONTRACT_WORKING_v0.4.8.md`",
+            "`working/HARDEN-02_CONTRACT_WORKING_v0.4.9.md`",
             "`working/HARDEN-02_CONTRACT_WORKING_v0.4.6.md`",
             1,
         )
@@ -160,7 +160,7 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         self._assert_rejected(
             self.open_work,
             self.readme.replace(
-            "- CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION",
+            "- CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 PMR RECONCILIATION",
                 "- CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
                 1,
             ),
