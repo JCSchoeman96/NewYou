@@ -39,12 +39,12 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.55.md",
-      "semver": "1.2.55",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.55.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.56.md",
+      "semver": "1.2.56",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.56.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "a923e3341538dc4a2721f36713a0b7d11386cfe3cdb5129f9f0292b1b52cf8cb",
-      "superseded_version": "1.2.54",
+      "sha256": "63ae83b12c6e669b8f6057a1c6df9ab2d4a38162e69275adff5e56032f875654",
+      "superseded_version": "1.2.55",
       "lifecycle": "current"
     },
     {
@@ -157,6 +157,17 @@
     }
   ],
   "historical_documents": [
+    {
+      "document_id": "OPEN_WORK_V1_2_55",
+      "canonical_filename": "02_OPEN_WORK_v1.2.55.md",
+      "semver": "1.2.55",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.55.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "a923e3341538dc4a2721f36713a0b7d11386cfe3cdb5129f9f0292b1b52cf8cb",
+      "superseded_version": "1.2.56",
+      "lifecycle": "historical",
+      "provenance_sha256": "a923e3341538dc4a2721f36713a0b7d11386cfe3cdb5129f9f0292b1b52cf8cb"
+    },
     {
       "document_id": "OPEN_WORK_V1_2_54",
       "canonical_filename": "02_OPEN_WORK_v1.2.54.md",
@@ -1001,7 +1012,9 @@
       "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md": "7038f1634677f129ba44230b1f104198a7ab3b4a33e68af5e8cffd5bb87b06dd",
       "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
       "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md": "a09bf07b189cbf3384cfe803d2ef1f32c3eaa6556333141fde1e323b6174b207",
-      "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md": "5e396cf47f17e051c76dcafd12746ec5bf0ab13bb886efcb07810e60815fae5c"
+      "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md": "5e396cf47f17e051c76dcafd12746ec5bf0ab13bb886efcb07810e60815fae5c",
+      "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md": "28dfe34dce0e9c48c737f666b112aeb89ccf45c0dfa10d2cfb81877def2538db",
+      "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md": "52fe67fcf6335bc0f2675c772a15a5ccdf75150f2ac4d92c98d61a9c48369285"
     },
     "graph_rules": {
       "stale_reference_patterns": [
@@ -1056,7 +1069,11 @@
         "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.4\\.8\\.md",
         "(?<!archive/)ENGINEERING_STANDARDS_v1\\.0\\.0\\.md",
         "(?<!archive/)FP-001_FEATURE_PACK_SKELETON_WORKING_v0\\.1\\.2\\.md",
-        "(?<!archive/)FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0\\.1\\.1\\.md"
+        "(?<!archive/)FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0\\.1\\.1\\.md",
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.55\\.md",
+        "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.3\\.7\\.md",
+        "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.4\\.9\\.md",
+        "(?<!archive/)FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0\\.1\\.2\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",
@@ -1072,13 +1089,13 @@
         "FRONTEND_EXPERIENCE_SYSTEM"
       ],
       "navigation_document_paths": [
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.7.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.8.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md",
-        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.9.md"
+        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md"
       ],
       "stale_open_work_v1_2_44_guard_note": "The exact 02_OPEN_WORK_v1.2.44.md stale-path pattern rejects unarchived references in active navigation documents. This is a routing guard only; it does not prove lifecycle or policy semantics.",
-      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52/v1.2.53/v1.2.54, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4/v0.3.5/v0.3.6, HARDEN-02 status v0.4.2/v0.4.6/v0.4.7/v0.4.8, Engineering Standards candidate v1.0.0, and FP-001 reconciliation candidates v0.1.2/v0.1.1 are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records."
+      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52/v1.2.53/v1.2.54/v1.2.55, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4/v0.3.5/v0.3.6/v0.3.7, HARDEN-02 status v0.4.2/v0.4.6/v0.4.7/v0.4.8/v0.4.9, Engineering Standards candidate v1.0.0, Identity dossier v0.1.2 and FP-001 reconciliation candidates v0.1.2/v0.1.1 are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records."
     },
     "product_hardening_bundle_allocation_requirements": {
       "matrix": "BUNDLE-COMPONENT-ALLOCATION",

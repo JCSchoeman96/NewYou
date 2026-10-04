@@ -16,7 +16,7 @@ DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
 CURRENT_STANDARDS_RELATIVE = Path("docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md")
 ARCHIVED_CANDIDATE_RELATIVE = Path("docs/00_platform/archive/ENGINEERING_STANDARDS_v1.0.0.md")
-OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.55.md")
+OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.56.md")
 README_RELATIVE = Path("docs/00_platform/README.md")
 
 
