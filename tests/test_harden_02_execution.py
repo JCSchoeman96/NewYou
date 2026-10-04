@@ -14,15 +14,15 @@ DOCS = ROOT / "docs" / "00_platform"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.55.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.56.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.54.md"
 OPEN_WORK_ROUTING_SUCCESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.50.md"
 OPEN_WORK_ROUTING_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.49.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.9.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.0.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"
 CONTRACT_ROUTING_SUCCESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
 CONTRACT_ROUTING_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.7.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.8.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.6.md"
 ATLAS_ROUTING_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
 ATLAS_ROUTING_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
@@ -36,7 +36,7 @@ MATRIX_END = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:END -->"
 JSON_START = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
 JSON_END = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
 
-CURRENT_STAGE = "CERTIFIED FP-001 PMR RECONCILIATION"
+CURRENT_STAGE = "CERTIFIED FP-001 IDENTITY v0.1.3 PATCH PROMOTION"
 NEXT_STAGE = "COMMUNICATIONS JIT DOMAIN DOSSIER"
 EXECUTION_STATUS = "COMPLETE / CERTIFIED"
 EXECUTION_MATRIX_STATUS = "COMPLETE_CERTIFIED"
@@ -54,6 +54,7 @@ EXPECTED_DOWNSTREAM_ROUTE = [
     "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
     "CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION",
     "FP001_RECONCILIATION_REQUIRED",
+    "CERTIFIED FP-001 IDENTITY v0.1.3 PATCH PROMOTION",
     "COMMUNICATIONS JIT DOMAIN DOSSIER",
     "REMAINING REQUIRED / CONDITIONAL PHASE 7B",
     "PHASE 7C",
@@ -256,9 +257,9 @@ def _validate_contract_source_routing(text: str) -> None:
     if len(derived_rows) != 3 or any(len(row) != 2 for row in derived_rows):
         raise ValueError("current derived/source-at-freeze table has missing or unexpected rows")
     derived = {row[0].strip("`"): row[1] for row in derived_rows}
-    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.3.7.md"
+    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.3.8.md"
     skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md"
-    identity_path = "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md"
+    identity_path = "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md"
     if set(derived) != {atlas_path, skeleton_path, identity_path}:
         raise ValueError("derived/source-at-freeze rows do not identify the current artifacts")
     atlas_use = derived[atlas_path].casefold()
@@ -280,19 +281,19 @@ def _validate_contract_source_routing(text: str) -> None:
             raise ValueError("current Identity dossier does not record certified reconciliation status")
 
     readme = _read(README)
-    if "working/DELIVERY_ATLAS_WORKING_v0.3.7.md" not in readme:
-        raise ValueError("README does not route current Atlas to v0.3.7")
+    if "working/DELIVERY_ATLAS_WORKING_v0.3.8.md" not in readme:
+        raise ValueError("README does not route current Atlas to v0.3.8")
     if "The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references." not in readme:
         raise ValueError("README does not preserve Atlas v0.2.1 as source-at-freeze evidence")
     atlas_routing = _section(readme, "## Delivery Atlas routing", "## Machine-readable inventory")
-    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.7.md)" not in atlas_routing:
-        raise ValueError("README Delivery Atlas navigation does not target v0.3.7")
-    if "working/HARDEN-02_CONTRACT_WORKING_v0.4.9.md" not in readme:
+    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.8.md)" not in atlas_routing:
+        raise ValueError("README Delivery Atlas navigation does not target v0.3.8")
+    if "working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md" not in readme:
         raise ValueError("README does not route the current HARDEN status successor")
     active = _active_window(_read(OPEN_WORK))
-    if "- IDENTITY & ACCESS: COMPLETE / MERGED" not in active:
+    if "- IDENTITY & ACCESS: COMPLETE / CERTIFIED / CURRENT v0.1.3" not in active:
         raise ValueError("current Identity lifecycle status is not sourced from Open Work")
-    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.4.9.md" not in active:
+    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md" not in active:
         raise ValueError("Open Work does not route the current HARDEN status successor")
 
 
@@ -969,7 +970,10 @@ def _assert_downstream_state(state: dict[str, object]) -> None:
     expected = {
         "engineering_standards_authority_promotion": "COMPLETE / CERTIFIED",
         "fp001_reconciliation": "COMPLETE / CERTIFIED",
+        "identity_dossier": "CERTIFIED / CURRENT v0.1.3",
+        "identity_dossier_promotion": "COMPLETE / CERTIFIED / CURRENT",
         "communications": "REQUIRED / NEXT / NOT_STARTED",
+        "communications_finalisation": "BLOCKED / STOP",
         "phase_7c": "BLOCKED / NOT_STARTED",
         "proof_classification": "NOT FINALISED",
         "application_implementation": "BLOCKED",
@@ -1027,6 +1031,7 @@ def _execution_state_is_valid(text: str, state: dict[str, object]) -> bool:
         "HARDEN-02 EXECUTION",
         "ENGINEERING STANDARDS AUTHORITY PROMOTION",
         "FP-001 PMR RECONCILIATION",
+        "FP-001 IDENTITY v0.1.3 DURABLE-DELIVERY PATCH PROMOTION",
     ]:
         return False
     certification = state.get("execution_certification")
@@ -1065,7 +1070,8 @@ def _execution_state_is_valid(text: str, state: dict[str, object]) -> bool:
         f"HARDEN-02 EXECUTION: {EXECUTION_STATUS}",
         "ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED",
         "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
-        "- IDENTITY & ACCESS: COMPLETE / MERGED",
+        "IDENTITY v0.1.3 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
+        "- IDENTITY & ACCESS: COMPLETE / CERTIFIED / CURRENT v0.1.3",
         "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
         "PHASE 7C: BLOCKED / NOT_STARTED PENDING COMMUNICATIONS AND CONDITIONAL-DOSSIER DISPOSITIONS",
         "PROOF CLASSIFICATION: NOT FINALISED",
@@ -1131,7 +1137,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         self.assertRegex(contract[:2000], r"(?is)status:.*COMPLETE / CERTIFIED")
         self.assertIn("I-01", matrix["EXECUTION"]["evidence"])
         self.assertIn("I-13", matrix["EXECUTION"]["evidence"])
-        self.assertEqual("0.4.9", state.get("status_successor_version"))
+        self.assertEqual("0.5.0", state.get("status_successor_version"))
         contradictory = (
             text
             + "\nCURRENT AUTHORITY-STAGE PROGRAMME: FP-001 RECONCILIATION\n"
@@ -1146,7 +1152,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         self.assertIn("ROADMAP SEQUENCING AMENDMENT: COMPLETE", text)
         self.assertIn("current semantic successor 05_ROADMAP_v1.2.0.md", text)
         self.assertIn("PHASE 7A COMPLETE", text)
-        self.assertIn("IDENTITY & ACCESS JIT DOMAIN DOSSIER COMPLETE / MERGED", text)
+        self.assertIn("IDENTITY & ACCESS JIT DOMAIN DOSSIER v0.1.3 COMPLETE / CERTIFIED / CURRENT", text)
         self.assertIn("OQ-034 ARCHITECTURE SELECTION RESOLVED", text)
         self.assertIn("TARGETED PRODUCT AMENDMENT PROGRAMME", state.get("completed_milestones", []))
         self.assertIn("FP-001 PHASE 7A", state.get("completed_milestones", []))
@@ -1681,9 +1687,9 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         )
         stale_mutants = (
             contract.replace("00_PLATFORM_v1.6.0.md", "00_PLATFORM_v1.5.1.md", 1),
-            contract.replace("02_OPEN_WORK_v1.2.55.md", "02_OPEN_WORK_v1.2.51.md", 1),
+            contract.replace("02_OPEN_WORK_v1.2.56.md", "02_OPEN_WORK_v1.2.51.md", 1),
             contract.replace(
-                "working/DELIVERY_ATLAS_WORKING_v0.3.7.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.3.8.md",
                 "working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
                 1,
             ),
@@ -1811,38 +1817,38 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         successor = self._required(ATLAS)
         predecessor = self._required(ATLAS_PREDECESSOR)
         replacements = (
-            ("# Delivery Atlas working v0.3.7", "# Delivery Atlas working v0.3.6"),
+            ("# Delivery Atlas working v0.3.8", "# Delivery Atlas working v0.3.6"),
             (
-                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.6.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2, v0.2.3, v0.3.1 and v0.3.2 predecessors remain preserved.",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.7.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2, v0.2.3, v0.3.1 and v0.3.2 predecessors remain preserved.",
                 "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.5.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2, v0.2.3, v0.3.1 and v0.3.2 predecessors remain preserved.",
             ),
             (
-                "- **SemVer transition:** `v0.3.6 → v0.3.7` (PATCH: current Open Work and FP-001 status route only; Atlas authority and delivery content are unchanged).",
+                "- **SemVer transition:** `v0.3.7 → v0.3.8` (PATCH: current Open Work and Identity status routing only; Atlas authority and delivery content are unchanged).",
                 "- **SemVer transition:** `v0.3.5 → v0.3.6` (PATCH: current Open Work route only; Atlas authority and delivery content are unchanged).",
             ),
             (
-                "- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This `v0.3.7` successor updates the current Open Work source reference after PR #67 reconciliation certification. It preserves the existing Feature Pack relationships, PMR meaning, capability rows, Domain participation derivation and all upstream meanings. FP-001 reconciliation is COMPLETE / CERTIFIED; `COMMUNICATIONS JIT DOMAIN DOSSIER` is the current next task and remains NOT_STARTED. This successor does **not** populate a new ATLAS-12 view, amend FP-001 semantics, HARDEN-02 contract semantics or Engineering Standards, authorise Phase 7C, proof classification or implementation, or create the Communications dossier.",
+                "- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This `v0.3.8` successor updates the current Open Work and FP-001 Identity dossier routes after PR #70 certification. It preserves the existing Feature Pack relationships, PMR meaning, capability rows, Domain participation derivation and all upstream law. FP-001 PMR reconciliation remains COMPLETE / CERTIFIED; Identity dossier v0.1.3 is CERTIFIED / CURRENT; `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED, and Communications finalisation remains BLOCKED / STOP. This successor does **not** populate a new ATLAS-12 view, amend upstream law or HARDEN-02 contract semantics, authorise Phase 7C, proof classification or implementation, or create the Communications dossier.",
                 "- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This `v0.3.6` successor updates the current Open Work source reference after Engineering Standards promotion certification. It preserves the existing Feature Pack relationships, FP-001/PMR routing, capability rows, Domain participation derivation and all upstream meanings. Grill-Me prompts, handoff summaries and revalidation guidance are advisory unless a current upstream source or approved contract owns a requirement. This successor does **not** populate a new ATLAS-12 view, amend FP-001 Skeleton/dossiers, HARDEN-02 or Engineering Standards, authorise implementation, or advance any stage. HARDEN-02 semantics are not amended by this successor. `FP001_RECONCILIATION_REQUIRED` remains the current next task; this Atlas does not perform it.",
             ),
-            ("## v0.3.7 Patch Scope", "## v0.3.6 Patch Scope"),
+            ("## v0.3.8 Patch Scope", "## v0.3.6 Patch Scope"),
             (
-                "This routing-only successor updates the current Open Work filename and records the certified FP-001 reconciliation status. It does not change any derived capability, lifecycle, Domain, Feature Pack, gate, or later programme-stage meaning.",
+                "This routing-only successor updates the current Open Work and Identity dossier routes and records the certified Identity v0.1.3 status. It does not change any derived capability, Domain, Feature Pack, gate or later programme-stage meaning.",
                 "This routing-only successor updates the current Open Work filename after Engineering Standards promotion certification. It does not change any derived capability, lifecycle, Domain, Feature Pack, gate, or programme-stage meaning.",
             ),
             (
-                "`docs/00_platform/02_OPEN_WORK_v1.2.55.md`",
+                "`docs/00_platform/02_OPEN_WORK_v1.2.56.md`",
                 "`docs/00_platform/02_OPEN_WORK_v1.2.54.md`",
             ),
             (
-                "- Platform Member Reference is **REQUIRED** inside this outcome (`RQ-1` / current Roadmap). Exact PMR encoding remains unfrozen (`ARQ-IAM-013`). FP-001 PMR reconciliation is COMPLETE / CERTIFIED under current Open Work. `COMMUNICATIONS JIT DOMAIN DOSSIER` is NEXT and remains NOT_STARTED; this Atlas view does not create that dossier or amend the FP-001 Skeleton, Gate Manifest, Identity dossier, Final Contract or proof classification.",
+                "- Platform Member Reference is **REQUIRED** inside this outcome (`RQ-1` / current Roadmap). Exact PMR encoding remains unfrozen (`ARQ-IAM-013`). FP-001 PMR reconciliation is COMPLETE / CERTIFIED under current Open Work. Identity dossier v0.1.3 is CERTIFIED / CURRENT following PR #70. `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED; Communications finalisation remains BLOCKED / STOP. This Atlas view does not create that dossier or amend the FP-001 Skeleton, Gate Manifest, Identity dossier, Final Contract or proof classification.",
                 "- Platform Member Reference is **REQUIRED** inside this outcome (`RQ-1` / current Roadmap). Exact PMR encoding remains unfrozen (`ARQ-IAM-013`). `FP001_RECONCILIATION_REQUIRED` remains for later narrow FP-001 artifact reconciliation; this Atlas view does not amend FP-001 Skeleton, Gate Manifest, Identity dossier, Communications dossier, Final Contract or proof classification.",
             ),
             (
-                "`05_ROADMAP_v1.2.0.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.2.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.6.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.55.md`.",
+                "`05_ROADMAP_v1.2.0.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.2.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.6.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.56.md`.",
                 "`05_ROADMAP_v1.2.0.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.2.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.6.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.54.md`.",
             ),
             (
-                "**JIT Boundary:** Credential and session Resource/action contracts, recovery assurance, field policies, abuse-control implementation and exact PMR encoding/prefix/alphabet/grouping/length/checksum/generator/schema (`ARQ-IAM-013`) remain downstream. FP-001 PMR reconciliation is COMPLETE / CERTIFIED. `COMMUNICATIONS JIT DOMAIN DOSSIER` is NEXT; this Atlas successor does not perform that task.",
+                "**JIT Boundary:** Credential and session Resource/action contracts, recovery assurance, field policies, abuse-control implementation and exact PMR encoding/prefix/alphabet/grouping/length/checksum/generator/schema (`ARQ-IAM-013`) remain downstream. FP-001 PMR reconciliation is COMPLETE / CERTIFIED. Identity dossier v0.1.3 is CERTIFIED / CURRENT. `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED, with finalisation BLOCKED / STOP. This Atlas successor does not create that dossier or authorise later gates.",
                 "**JIT Boundary:** Credential and session Resource/action contracts, recovery assurance, field policies, abuse-control implementation and exact PMR encoding/prefix/alphabet/grouping/length/checksum/generator/schema (`ARQ-IAM-013`) remain downstream. `FP001_RECONCILIATION_REQUIRED` is preserved and is not performed by this Atlas successor.",
             ),
             (
@@ -1850,11 +1856,11 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
                 "| CAP-001 | FP-001 | `I` | FP-001 material identity introduction now includes required PMR Account truth under Identity & Access. Encoding remains unfrozen; `FP001_RECONCILIATION_REQUIRED` is preserved. | `archive/05_ROADMAP_v1.1.0.md §6 FP-001`; `04_DOMAIN_MAP_v1.2.0.md §6.1` |",
             ),
             (
-                "| Current-source routing | §1.1 points to North Star/MVP `v1.3.0`, Product `v1.6.0`, Decisions `v1.6.0`, Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.55`. |",
+                "| Current-source routing | §1.1 points to North Star/MVP `v1.3.0`, Product `v1.6.0`, Decisions `v1.6.0`, Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.56`. |",
                 "| Current-source routing | §1.1 points to North Star/MVP `v1.3.0`, Product `v1.6.0`, Decisions `v1.6.0`, Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.54`. |",
             ),
             (
-                "| PMR navigation | FP-001 and CAP-001 reflect required IAM-owned PMR; encoding unfrozen; FP-001 reconciliation COMPLETE / CERTIFIED; `COMMUNICATIONS JIT DOMAIN DOSSIER` NEXT; current FP-001 semantics unchanged. |",
+                "| FP-001 status navigation | FP-001 and CAP-001 retain required IAM-owned PMR with encoding unfrozen; PMR reconciliation and Identity v0.1.3 promotion are COMPLETE / CERTIFIED; `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED, with finalisation BLOCKED / STOP. |",
                 "| PMR navigation | FP-001 and CAP-001 reflect required IAM-owned PMR; encoding unfrozen; `FP001_RECONCILIATION_REQUIRED` preserved; FP-001 artifacts unchanged. |",
             ),
         )

@@ -527,10 +527,10 @@ def _h02_lifecycle_state(
         if promotion_status == "COMPLETE / CERTIFIED":
             expected.update(
                 {
-                    "successor_versions": ("0.4.9",),
-                    "current_stage": "CERTIFIED FP-001 PMR RECONCILIATION",
+                    "successor_versions": ("0.5.0",),
+                    "current_stage": "CERTIFIED FP-001 IDENTITY v0.1.3 PATCH PROMOTION",
                     "next_stage": "COMMUNICATIONS JIT DOMAIN DOSSIER",
-                    "programme_status": "HARDEN-02 EXECUTION COMPLETE / CERTIFIED; ENGINEERING STANDARDS AUTHORITY PROMOTION COMPLETE / CERTIFIED; FP-001 RECONCILIATION COMPLETE / CERTIFIED",
+                    "programme_status": "HARDEN-02 EXECUTION COMPLETE / CERTIFIED; ENGINEERING STANDARDS AUTHORITY PROMOTION COMPLETE / CERTIFIED; FP-001 RECONCILIATION COMPLETE / CERTIFIED; IDENTITY v0.1.3 COMPLETE / CERTIFIED / CURRENT",
                 }
             )
         elif promotion_status != "NEXT / AUTHORISED / NOT STARTED":
@@ -600,6 +600,7 @@ def _h02_lifecycle_state(
             expected_milestones = expected_milestones + [
                 "ENGINEERING STANDARDS AUTHORITY PROMOTION",
                 "FP-001 PMR RECONCILIATION",
+                "FP-001 IDENTITY v0.1.3 DURABLE-DELIVERY PATCH PROMOTION",
             ]
             expected_downstream.update({
                 "engineering_standards_authority_promotion": "COMPLETE / CERTIFIED",
@@ -638,6 +639,7 @@ def _h02_lifecycle_state(
         "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
         "CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION",
         "FP001_RECONCILIATION_REQUIRED",
+        "CERTIFIED FP-001 IDENTITY v0.1.3 PATCH PROMOTION",
         "COMMUNICATIONS JIT DOMAIN DOSSIER",
         "REMAINING REQUIRED / CONDITIONAL PHASE 7B",
         "PHASE 7C",
@@ -662,7 +664,7 @@ def _h02_lifecycle_state(
         if cert != H02_COMPLETE_CERTIFICATION_FACTS:
             return False, "complete execution certification evidence is incomplete or contradictory"
         expected_base_sha = (
-            "4000ae50660930114e3ad43108dc029fd0673d32"
+            "df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb"
             if promotion_status == "COMPLETE / CERTIFIED"
             else "d4e7390b71cdf61b649b534e1080102a044efe63"
         )
@@ -687,6 +689,7 @@ def _h02_lifecycle_state(
             (
                 "ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED",
                 "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
+                "IDENTITY v0.1.3 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
             )
             if promotion_status == "COMPLETE / CERTIFIED"
             else (
@@ -745,6 +748,8 @@ def _h02_lifecycle_state(
     required_readme = (
         "- CURRENT AUTHORITY-STAGE PROGRAMME: " + expected["current_stage"],
         "- NEXT STAGE: " + expected["next_stage"],
+        "- IDENTITY v0.1.3: CERTIFIED / CURRENT under PR #70",
+        "- COMMUNICATIONS FINALISATION: BLOCKED / STOP",
         "- ENGINEERING STANDARDS AUTHORITY PROMOTION: " + (
             "COMPLETE / CERTIFIED"
             if promotion_status == "COMPLETE / CERTIFIED"
@@ -789,7 +794,7 @@ def _h02_lifecycle_state(
         if not contract:
             return False, "current HARDEN status successor is missing from lifecycle validation"
         version_header = contract.split("## 1. Objective", 1)[0]
-        expected_harden_version = "0.4.9" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"
+        expected_harden_version = "0.5.0" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"
         version_marker = "**Plan / contract version:** " + chr(96) + f"v{expected_harden_version}" + chr(96)
         if version_marker not in version_header:
             return False, "current HARDEN status successor version is missing or unsupported"
@@ -827,9 +832,10 @@ def _h02_lifecycle_state(
         current_route = contract_current[route_start:]
         required_route = (
             (
-                "HARDEN-02 execution, Engineering Standards Authority Promotion and FP-001 PMR reconciliation are COMPLETE / CERTIFIED",
+                "HARDEN-02 execution, Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.3 are COMPLETE / CERTIFIED",
                 "immediate next task is `COMMUNICATIONS JIT DOMAIN DOSSIER`",
                 "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
+                "IDENTITY v0.1.3 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
                 "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED",
             )
             if promotion_status == "COMPLETE / CERTIFIED"
@@ -1228,6 +1234,7 @@ def _engineering_standards_certified_state(
     required_harden_status = (
         "Engineering Standards Authority Promotion is COMPLETE / CERTIFIED under `reference/ENGINEERING_STANDARDS_v1.0.1.md`",
         "FP-001 PMR reconciliation is COMPLETE / CERTIFIED under PR #67",
+        "Identity v0.1.3 is COMPLETE / CERTIFIED / CURRENT under PR #70",
         "NEXT is `COMMUNICATIONS JIT DOMAIN DOSSIER`, REQUIRED / NEXT / NOT_STARTED",
         "Phase 7C remains blocked / not started",
         "proof classification remains not finalised",
@@ -1245,7 +1252,8 @@ def _engineering_standards_certified_state(
         return False, "current HARDEN successor has no current route section"
     harden_route = harden[harden_route_start:]
     required_harden_route = (
-        "Engineering Standards Authority Promotion and FP-001 PMR reconciliation are COMPLETE / CERTIFIED",
+        "Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.3 are COMPLETE / CERTIFIED",
+        "IDENTITY v0.1.3 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
         "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
         "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED",
     )
@@ -1262,7 +1270,7 @@ def _engineering_standards_certified_state(
     if "STORE / CER: EXCLUDED FROM HARDEN-02" not in harden_route:
         return False, "current HARDEN successor includes Store/CER"
 
-    return True, "certified Engineering Standards and FP-001 reconciliation route NEXT to the Communications JIT Domain Dossier"
+    return True, "certified Engineering Standards, FP-001 reconciliation and Identity promotion route NEXT to the Communications JIT Domain Dossier"
 
 
 def _engineering_standards_lifecycle_state(
@@ -2572,9 +2580,11 @@ def _check_fp001_pmr_reconciliation(
 ) -> None:
     docs = root / "docs" / "00_platform"
     skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md"
-    dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md"
+    dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md"
     skeleton_candidate = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
     dossier_candidate = docs / "archive" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md"
+    identity_predecessor = docs / "archive" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md"
+    identity_promotion_candidate = docs / "archive" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md"
     predecessor_skeleton = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
     predecessor_dossier = docs / "archive" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
     readme_path = docs / "README.md"
@@ -2594,11 +2604,11 @@ def _check_fp001_pmr_reconciliation(
         current_open_work = current_entries[0]
         open_work_path = root / _relative_path(current_open_work)
         open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
-        if _relative_path(current_open_work) != "docs/00_platform/02_OPEN_WORK_v1.2.55.md":
-            issues.append("manifest Open Work route is not v1.2.55")
-        if current_open_work.get("canonical_filename") != "02_OPEN_WORK_v1.2.55.md":
+        if _relative_path(current_open_work) != "docs/00_platform/02_OPEN_WORK_v1.2.56.md":
+            issues.append("manifest Open Work route is not v1.2.56")
+        if current_open_work.get("canonical_filename") != "02_OPEN_WORK_v1.2.56.md":
             issues.append("manifest current Open Work filename is stale")
-        if current_open_work.get("semver") != "1.2.55":
+        if current_open_work.get("semver") != "1.2.56":
             issues.append("manifest current Open Work version is stale")
 
     expected_active_skeletons = [skeleton]
@@ -2608,7 +2618,7 @@ def _check_fp001_pmr_reconciliation(
     if active_skeletons != expected_active_skeletons:
         issues.append("exactly one active certified/current skeleton v0.1.3 is required; stale candidates or extra versions remain active")
     if active_dossiers != expected_active_dossiers:
-        issues.append("exactly one active certified/current Identity dossier v0.1.2 is required; stale candidates or extra versions remain active")
+        issues.append("exactly one active certified/current Identity dossier v0.1.3 is required; stale candidates or extra versions remain active")
     for path, label in ((skeleton, "certified skeleton"), (dossier, "certified Identity dossier")):
         if not path.is_file():
             issues.append(f"{label} is missing")
@@ -2618,10 +2628,12 @@ def _check_fp001_pmr_reconciliation(
         "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
         "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
         "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md",
+        "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md",
+        "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md",
     }
     expected_archive_hashes = integrity_rules.get("fp001_pmr_predecessor_archives")
     if not isinstance(expected_archive_hashes, dict):
-        issues.append("manifest does not pin predecessor and PR #67 candidate archive hashes")
+        issues.append("manifest does not pin predecessor and PR #67 / #70 candidate archive hashes")
         expected_archive_hashes = {}
     if set(expected_archive_hashes) != required_archive_hashes:
         issues.append("manifest FP-001 archive hash paths are missing, substituted or unexpected")
@@ -2637,10 +2649,10 @@ def _check_fp001_pmr_reconciliation(
 
     navigation_paths = integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
     expected_navigation_paths = {
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.7.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.8.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md",
-        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.9.md",
+        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md",
     }
     if not isinstance(navigation_paths, list) or set(navigation_paths) != expected_navigation_paths or len(navigation_paths) != len(expected_navigation_paths):
         issues.append("manifest navigation does not route exactly the current FP-001, Atlas and HARDEN successors")
@@ -2649,17 +2661,18 @@ def _check_fp001_pmr_reconciliation(
     dossier_text = dossier.read_text(encoding="utf-8") if dossier.is_file() else ""
     skeleton_candidate_text = skeleton_candidate.read_text(encoding="utf-8") if skeleton_candidate.is_file() else ""
     dossier_candidate_text = dossier_candidate.read_text(encoding="utf-8") if dossier_candidate.is_file() else ""
+    identity_promotion_candidate_text = identity_promotion_candidate.read_text(encoding="utf-8") if identity_promotion_candidate.is_file() else ""
 
     if "**Lifecycle status:** " + chr(96) + "CERTIFIED / CURRENT" + chr(96) not in skeleton_text:
         issues.append("skeleton v0.1.3 is not marked CERTIFIED / CURRENT")
     if "**Status:** " + chr(96) + "CERTIFIED / CURRENT" + chr(96) not in dossier_text:
-        issues.append("Identity dossier v0.1.2 is not marked CERTIFIED / CURRENT")
+        issues.append("Identity dossier v0.1.3 is not marked CERTIFIED / CURRENT")
     if "RECONCILIATION CANDIDATE / NOT CERTIFIED" in skeleton_text:
         issues.append("active skeleton remains a reconciliation candidate")
     if "RECONCILIATION CANDIDATE / NOT CERTIFIED" in dossier_text:
         issues.append("active Identity dossier remains a reconciliation candidate")
-    if "next task is " + chr(96) + "COMMUNICATIONS JIT DOMAIN DOSSIER" not in dossier_text or "REQUIRED / NEXT / NOT_STARTED" not in dossier_text:
-        issues.append("certified Identity dossier does not route NEXT to the existing Communications JIT Domain Dossier")
+    if "Communications remains " + chr(96) + "REQUIRED / NEXT / NOT_STARTED" + chr(96) not in dossier_text or "Communications finalisation remains " + chr(96) + "BLOCKED / STOP" + chr(96) not in dossier_text or "No Communications dossier or implementation starts here." not in dossier_text:
+        issues.append("certified Identity dossier does not preserve the Communications NEXT and finalisation stop boundary")
 
     evidence = (
         "PR #67",
@@ -2690,11 +2703,14 @@ def _check_fp001_pmr_reconciliation(
     except (json.JSONDecodeError, TypeError, ValueError):
         lifecycle_state = {}
     expected_fp001_state = {
-        "status_successor_base_sha": "4000ae50660930114e3ad43108dc029fd0673d32",
-        "current_stage": "CERTIFIED FP-001 PMR RECONCILIATION",
+        "status_successor_base_sha": "df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb",
+        "current_stage": "CERTIFIED FP-001 IDENTITY v0.1.3 PATCH PROMOTION",
         "next_stage": "COMMUNICATIONS JIT DOMAIN DOSSIER",
-        "status_successor_version": "0.4.9",
+        "status_successor_version": "0.5.0",
         "fp001_reconciliation": "COMPLETE / CERTIFIED",
+        "identity_dossier": "CERTIFIED / CURRENT v0.1.3",
+        "identity_dossier_promotion": "COMPLETE / CERTIFIED / CURRENT",
+        "communications_finalisation": "BLOCKED / STOP",
         "communications": "REQUIRED / NEXT / NOT_STARTED",
         "conditional_dossiers": {
             "privacy_consent": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
@@ -2713,6 +2729,7 @@ def _check_fp001_pmr_reconciliation(
             "HARDEN-02 EXECUTION",
             "ENGINEERING STANDARDS AUTHORITY PROMOTION",
             "FP-001 PMR RECONCILIATION",
+            "FP-001 IDENTITY v0.1.3 DURABLE-DELIVERY PATCH PROMOTION",
         ],
     }
     if not isinstance(lifecycle_state, dict) or any(
@@ -2733,6 +2750,73 @@ def _check_fp001_pmr_reconciliation(
     }
     if lifecycle_state.get("fp001_reconciliation_certification") != expected_fp001_evidence:
         issues.append("current Open Work does not bind the complete verified PR #67 reconciliation certification evidence")
+
+    expected_identity_evidence = {
+        "pr_url": "https://github.com/JCSchoeman96/NewYou/pull/70",
+        "candidate_head_sha": "613ea1d52f6ffdadb3910cee3c62ea5dbd88f583",
+        "candidate_tree_sha": "421b9c1670586699e12807bc28f01179ca755fa7",
+        "prior_main_sha": "d9174de272ac7b98c5a14f0d55c60c80e15759fb",
+        "resulting_main_sha": "df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb",
+        "resulting_main_tree_sha": "421b9c1670586699e12807bc28f01179ca755fa7",
+        "candidate_merged_unchanged": True,
+        "candidate_to_resulting_main_changed_files": 0,
+        "exact_head_ci_run": "37198148095",
+        "exact_head_ci_result": "PASS / 287 TESTS / 535 FIA ASSERTIONS / ZERO FINDINGS",
+        "pre_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/70#issuecomment-5980442552",
+        "exact_head_independent_review": "PASS",
+        "resulting_main_ci_run": "37205571249",
+        "resulting_main_ci_result": "PASS / 287 TESTS / 535 FIA ASSERTIONS / ZERO FINDINGS",
+        "post_merge_independent_review": "PASS",
+        "post_merge_independent_review_actor": "ChatGPT / GPT-5.6 Sol",
+        "post_merge_attestation_poster": "JCSchoeman96",
+        "post_merge_poster_equals_pr_author_disclosed": True,
+        "post_merge_review_actor_authored_or_modified_candidate": False,
+        "post_merge_substantive_reviewer_is_review_actor_not_poster": True,
+        "post_merge_attestation": "COMPLETE",
+        "post_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/70#issuecomment-5981764432",
+    }
+    identity_certification = lifecycle_state.get("identity_durable_delivery_certification")
+    expected_identity_attestation_url = (
+        "https://github.com/JCSchoeman96/NewYou/pull/70#issuecomment-5981764432"
+    )
+    if (
+        not isinstance(identity_certification, dict)
+        or identity_certification.get("post_merge_attestation_url")
+        != expected_identity_attestation_url
+    ):
+        issues.append(
+            "current Open Work must bind PR #70 durable post-merge attestation to its exact GitHub comment URL"
+        )
+    if identity_certification != expected_identity_evidence:
+        issues.append("current Open Work does not bind the complete PR #70 durable-delivery certification evidence")
+
+    if not identity_predecessor.is_file() or not identity_promotion_candidate.is_file():
+        issues.append("Identity v0.1.2 predecessor and exact PR #70 candidate archives are required")
+    if (docs / "working" / "candidates" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md").exists():
+        issues.append("promoted Identity v0.1.3 remains in the candidate route")
+    if "### J.1 Narrow Identity/Communications durable-delivery correction" in dossier_text and "### J.2 Technical evidence and certification boundary" in dossier_text:
+        active_j1 = dossier_text.split("### J.1 Narrow Identity/Communications durable-delivery correction", 1)[1].split("### J.2 Technical evidence and certification boundary", 1)[0]
+        candidate_j1 = identity_promotion_candidate_text.split("### J.1 Narrow Identity/Communications durable-delivery correction", 1)[1].split("### J.2 Technical evidence and certification boundary", 1)[0] if "### J.1 Narrow Identity/Communications durable-delivery correction" in identity_promotion_candidate_text and "### J.2 Technical evidence and certification boundary" in identity_promotion_candidate_text else ""
+        if not candidate_j1 or active_j1 != candidate_j1:
+            issues.append("active Identity v0.1.3 durable-delivery correction differs from the exact PR #70 candidate")
+    else:
+        issues.append("active Identity dossier is missing the PR #70 durable-delivery correction")
+
+    identity_evidence = (
+        "613ea1d52f6ffdadb3910cee3c62ea5dbd88f583",
+        "421b9c1670586699e12807bc28f01179ca755fa7",
+        "d9174de272ac7b98c5a14f0d55c60c80e15759fb",
+        "df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb",
+        "37198148095",
+        "37205571249",
+        "287 tests, 535 assertions, zero findings",
+        "https://github.com/JCSchoeman96/NewYou/pull/70#issuecomment-5980442552",
+        "CERTIFIED / CURRENT",
+        "COMMUNICATIONS FINALISATION: BLOCKED / STOP",
+    )
+    for token in identity_evidence:
+        if token not in dossier_text:
+            issues.append(f"Identity v0.1.3 promotion record omits PR #70 certification evidence: {token}")
 
     def marked_block(text: str, name: str) -> str:
         start_marker = "<!-- NEWYOU:" + name + ":START -->"
@@ -2847,7 +2931,9 @@ def _check_fp001_pmr_reconciliation(
 
     if oq_references(skeleton_text) != oq_references(skeleton_candidate_text):
         issues.append("OQ classifications or OQ references changed during status promotion")
-    if oq_references(dossier_text) != oq_references(dossier_candidate_text):
+    active_identity_semantics = dossier_text.split("## A. Baseline and scope", 1)
+    candidate_identity_semantics = identity_promotion_candidate_text.split("## A. Baseline and scope", 1)
+    if len(active_identity_semantics) != 2 or len(candidate_identity_semantics) != 2 or oq_references(active_identity_semantics[-1]) != oq_references(candidate_identity_semantics[-1]):
         issues.append("Identity dossier OQ references changed during status promotion")
     if "OQ-034" not in skeleton_text or "executable proof is not complete" not in skeleton_text.casefold() or "proof classification is not finalised" not in skeleton_text.casefold():
         issues.append("OQ-034 architecture selection or incomplete Phase 8 proof boundary changed")
@@ -2869,9 +2955,11 @@ def _check_fp001_pmr_reconciliation(
     if next_routes != ["COMMUNICATIONS JIT DOMAIN DOSSIER"]:
         issues.append("current Open Work NEXT route is not the existing Communications JIT Domain Dossier task")
     for token in (
-        "CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 PMR RECONCILIATION",
+        "CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 IDENTITY v0.1.3 PATCH PROMOTION",
         "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
+        "IDENTITY v0.1.3 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
         "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED",
+        "COMMUNICATIONS FINALISATION: BLOCKED / STOP",
         "- COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED",
         "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
         "OPEN GATES: OQ-035 SECURITY / OPERATIONS REVIEW UNRESOLVED / RELEASE-ONLY; OQ-036 VENDOR / OPERATIONS REVIEW UNRESOLVED / RELEASE-ONLY",
@@ -2913,8 +3001,9 @@ def _check_fp001_pmr_reconciliation(
         issues.append("Communications JIT Domain Dossier was created in the status-only successor")
 
     readme_route = (
-        "Current programme status is in Open Work v1.2.55.",
+        "Current programme status is in Open Work v1.2.56.",
         "PR #67 PMR reconciliation is COMPLETE / CERTIFIED",
+        "PR #70 Identity v0.1.3 promotion are COMPLETE / CERTIFIED",
         "NEXT is " + chr(96) + "COMMUNICATIONS JIT DOMAIN DOSSIER" + chr(96),
         "Communications dossier has not started",
     )
@@ -2922,36 +3011,40 @@ def _check_fp001_pmr_reconciliation(
         if token not in readme:
             issues.append(f"README current route is missing or stale: {token}")
     readme_active_routes = (
-        "4. `02_OPEN_WORK_v1.2.55.md`",
-        "`working/DELIVERY_ATLAS_WORKING_v0.3.7.md` — derived Delivery Atlas",
-        "`working/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` — preserves certified HARDEN-02",
+        "4. `02_OPEN_WORK_v1.2.56.md`",
+        "`working/DELIVERY_ATLAS_WORKING_v0.3.8.md` — derived Delivery Atlas",
+        "`working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md` — preserves certified HARDEN-02",
         "`working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md` — certified/current",
-        "`working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md` — certified/current",
+        "`working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md` — certified/current",
     )
     for token in readme_active_routes:
         if token not in readme:
             issues.append(f"README active route is missing or stale: {token}")
 
-    atlas_path = docs / "working" / "DELIVERY_ATLAS_WORKING_v0.3.7.md"
+    atlas_path = docs / "working" / "DELIVERY_ATLAS_WORKING_v0.3.8.md"
     atlas = atlas_path.read_text(encoding="utf-8") if atlas_path.is_file() else ""
-    if "docs/00_platform/02_OPEN_WORK_v1.2.55.md" not in atlas:
-        issues.append("current Delivery Atlas does not point to Open Work v1.2.55")
-    if "FP-001 reconciliation is COMPLETE / CERTIFIED" not in atlas or "COMMUNICATIONS JIT DOMAIN DOSSIER" not in atlas:
-        issues.append("current Delivery Atlas route is stale or omits the Communications task")
+    if "docs/00_platform/02_OPEN_WORK_v1.2.56.md" not in atlas:
+        issues.append("current Delivery Atlas does not point to Open Work v1.2.56")
+    if "FP-001 PMR reconciliation remains COMPLETE / CERTIFIED" not in atlas or "Identity dossier v0.1.3 is CERTIFIED / CURRENT" not in atlas or "COMMUNICATIONS JIT DOMAIN DOSSIER" not in atlas:
+        issues.append("current Delivery Atlas route is stale or omits the Identity promotion or Communications task")
 
-    harden_path = docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.9.md"
+    harden_path = docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.0.md"
     harden = harden_path.read_text(encoding="utf-8") if harden_path.is_file() else ""
     harden_current = harden.split("## 21. Current execution certification and next stage", 1)
     harden_current = harden_current[1] if len(harden_current) == 2 else ""
-    if "Open Work v1.2.55" not in harden_current or "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" not in harden_current:
-        issues.append("current HARDEN-02 status route is stale or omits completed reconciliation")
-    if "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED" not in harden_current or "PHASE 7C: BLOCKED / NOT_STARTED" not in harden_current:
+    if "Open Work v1.2.56" not in harden_current or "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" not in harden_current or "IDENTITY v0.1.3 PROMOTION: COMPLETE / CERTIFIED / CURRENT" not in harden_current:
+        issues.append("current HARDEN-02 status route is stale or omits completed Identity promotion")
+    if "COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED" not in harden_current or "COMMUNICATIONS FINALISATION: BLOCKED / STOP" not in harden_current or "PHASE 7C: BLOCKED / NOT_STARTED" not in harden_current:
         issues.append("current HARDEN-02 route starts Communications or advances a later gate")
 
     stale_predecessor_routes = (
         ("Open Work v1.2.54", r"(?<!archive/)02_OPEN_WORK_v1\.2\.54\.md"),
+        ("Open Work v1.2.55", r"(?<!archive/)02_OPEN_WORK_v1\.2\.55\.md"),
         ("Delivery Atlas v0.3.6", r"(?<!archive/)DELIVERY_ATLAS_WORKING_v0\.3\.6\.md"),
+        ("Delivery Atlas v0.3.7", r"(?<!archive/)DELIVERY_ATLAS_WORKING_v0\.3\.7\.md"),
         ("HARDEN-02 v0.4.8", r"(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\.4\.8\.md"),
+        ("HARDEN-02 v0.4.9", r"(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\.4\.9\.md"),
+        ("Identity dossier v0.1.2", r"(?<!archive/)FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0\.1\.2\.md"),
     )
     graph_rules = integrity_rules.get("graph_rules", {})
     configured_stale_patterns = graph_rules.get("stale_reference_patterns", [])
@@ -2975,10 +3068,10 @@ def _check_fp001_pmr_reconciliation(
         report,
         "fp001_pmr_reconciliation",
         not issues,
-        "FP-001 PMR reconciliation status, PR #67 provenance, candidate archive integrity and downstream route are consistent"
+        "FP-001 PMR reconciliation and Identity v0.1.3 promotion status, PR #67/#70 provenance, candidate archive integrity and downstream route are consistent"
         if not issues
         else "; ".join(issues),
-        path="docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md",
+        path="docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md",
     )
 
 def _check_production_graph(
