@@ -46,6 +46,14 @@ The frozen Frontend Experience System is current authority for affected frontend
 - `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md` — non-authoritative targeted Domain pressure-test evidence; it does not itself create Domain Law. Domain Law is created only by the versioned Domain Map successor.
 - `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` — non-authoritative Stage Roadmap Sequencing Grill evidence; it does not itself create Roadmap Law. Roadmap Law is created only by the versioned Roadmap successor.
 
+
+The Identity/Communications durable-delivery seam has a known dossier-level contradiction. The certified Identity wording forbids all presented-secret retention while requiring must-not-lose verification/recovery delivery. Communications retains `REQUIRED / NEXT / NOT_STARTED`, but its finalisation is `BLOCKED / STOP` pending certification of the narrow [Identity v0.1.3 PATCH candidate](working/candidates/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md).
+
+The candidate is `NOT CURRENT / CERTIFICATION PENDING`; it permits only bounded protected delivery material, keeps Identity proof authority unchanged and requires `MessageIntent` and `DeliveryAttempt` for FP-001.
+
+The separate candidate directory excludes this unapproved successor from active dossier selection. Prior certification does not certify this correction. Active navigation promotion and predecessor archival remain pending the certification lifecycle.
+
+
 ## Delivery Atlas routing
 
 Use the [Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.7.md) during delivery preparation when its derived navigation helps with an approved Roadmap Feature Pack or a relevant planning question. Consulting the Atlas is not itself a gate or prerequisite. It does not override the nine current-authority documents above, change Product/Architecture/Domain/Roadmap law, authorise Phase 7 or authorise implementation.
