@@ -141,6 +141,47 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             "promotion must preserve the certified durable-delivery correction byte-for-byte",
         )
 
+    def test_fp001_durable_delivery_attestation_requires_bound_post_merge_comment(self):
+        mutations = (
+            ("missing_url", lambda evidence: evidence.pop("post_merge_attestation_url", None)),
+            (
+                "self_assertion_used_as_url",
+                lambda evidence: evidence.update(
+                    {
+                        "post_merge_attestation": "COMPLETE",
+                        "post_merge_attestation_url": (
+                            "COMPLETE / preserved in this status successor and Identity dossier v0.1.3"
+                        ),
+                    }
+                ),
+            ),
+        )
+        for name, mutate in mutations:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.56.md"
+                open_work = open_work_path.read_text(encoding="utf-8")
+                lifecycle_start = open_work.index("<!-- HARDEN_02_LIFECYCLE_STATE_START -->")
+                json_start = open_work.index("{", lifecycle_start)
+                json_end = open_work.index("\n```", json_start)
+                lifecycle_state = json.loads(open_work[json_start:json_end])
+                mutate(lifecycle_state["identity_durable_delivery_certification"])
+                open_work = (
+                    open_work[:json_start]
+                    + json.dumps(lifecycle_state, indent=2)
+                    + open_work[json_end:]
+                )
+                open_work_path.write_text(open_work, encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+                reconciliation = next(
+                    check for check in report["checks"]
+                    if check["name"] == "fp001_pmr_reconciliation"
+                )
+
+                self.assertEqual("FAIL", reconciliation["status"], reconciliation["message"])
+
     def test_fp001_pmr_rejects_unarchived_predecessor_route_in_current_atlas(self):
         mutations = (
             ("working/DELIVERY_ATLAS_WORKING_v0.3.8.md", "02_OPEN_WORK_v1.2.54.md"),

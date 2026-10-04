@@ -1209,7 +1209,13 @@ Historical PR #40 contract-lifecycle evidence: certified head `cb710860f4db65ce4
     "resulting_main_ci_run": "37205571249",
     "resulting_main_ci_result": "PASS / 287 TESTS / 535 FIA ASSERTIONS / ZERO FINDINGS",
     "post_merge_independent_review": "PASS",
-    "post_merge_attestation": "COMPLETE / preserved in this status successor and Identity dossier v0.1.3"
+    "post_merge_independent_review_actor": "ChatGPT / GPT-5.6 Sol",
+    "post_merge_attestation_poster": "JCSchoeman96",
+    "post_merge_poster_equals_pr_author_disclosed": true,
+    "post_merge_review_actor_authored_or_modified_candidate": false,
+    "post_merge_substantive_reviewer_is_review_actor_not_poster": true,
+    "post_merge_attestation": "COMPLETE",
+    "post_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/70#issuecomment-5981764432"
   }
 }
 ```
@@ -1229,7 +1235,7 @@ Historical PR #40 contract-lifecycle evidence: certified head `cb710860f4db65ce4
 | Fresh independent exact-head review | PASS; [PR #70 attestation](https://github.com/JCSchoeman96/NewYou/pull/70#issuecomment-5980442552) |
 | Resulting-main Foundation Integrity | [Run 37205571249](https://github.com/JCSchoeman96/NewYou/actions/runs/37205571249), SUCCESS on the resulting-main SHA; 287 tests, 535 assertions, zero findings |
 | Fresh independent post-merge review | PASS on resulting main `df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb` |
-| Durable post-merge attestation | COMPLETE; this section and Identity dossier v0.1.3 preserve the supplied attestation |
+| Durable post-merge attestation | COMPLETE; [PR #70 post-merge attestation](https://github.com/JCSchoeman96/NewYou/pull/70#issuecomment-5981764432) |
 
 The correction covers email verification, password reset, recovery and new-address primary-email-change confirmation. Identity & Access remains the sole authority for proof purpose, validity, expiry, supersession, revocation, consumption and primary-email-change truth. Communications gains no Identity authority from provider acceptance or delivery. Bounded protected delivery retention remains limited to the approved crash-safe delivery purpose. Optional magic-link authentication and session bearer tokens stay outside the exception.
 

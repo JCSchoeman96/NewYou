@@ -2767,9 +2767,27 @@ def _check_fp001_pmr_reconciliation(
         "resulting_main_ci_run": "37205571249",
         "resulting_main_ci_result": "PASS / 287 TESTS / 535 FIA ASSERTIONS / ZERO FINDINGS",
         "post_merge_independent_review": "PASS",
-        "post_merge_attestation": "COMPLETE / preserved in this status successor and Identity dossier v0.1.3",
+        "post_merge_independent_review_actor": "ChatGPT / GPT-5.6 Sol",
+        "post_merge_attestation_poster": "JCSchoeman96",
+        "post_merge_poster_equals_pr_author_disclosed": True,
+        "post_merge_review_actor_authored_or_modified_candidate": False,
+        "post_merge_substantive_reviewer_is_review_actor_not_poster": True,
+        "post_merge_attestation": "COMPLETE",
+        "post_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/70#issuecomment-5981764432",
     }
-    if lifecycle_state.get("identity_durable_delivery_certification") != expected_identity_evidence:
+    identity_certification = lifecycle_state.get("identity_durable_delivery_certification")
+    expected_identity_attestation_url = (
+        "https://github.com/JCSchoeman96/NewYou/pull/70#issuecomment-5981764432"
+    )
+    if (
+        not isinstance(identity_certification, dict)
+        or identity_certification.get("post_merge_attestation_url")
+        != expected_identity_attestation_url
+    ):
+        issues.append(
+            "current Open Work must bind PR #70 durable post-merge attestation to its exact GitHub comment URL"
+        )
+    if identity_certification != expected_identity_evidence:
         issues.append("current Open Work does not bind the complete PR #70 durable-delivery certification evidence")
 
     if not identity_predecessor.is_file() or not identity_promotion_candidate.is_file():
