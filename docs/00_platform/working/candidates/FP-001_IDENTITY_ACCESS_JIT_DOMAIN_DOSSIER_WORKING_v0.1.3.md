@@ -12,7 +12,7 @@ DOES NOT OVERRIDE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 
 **Artifact version:** v0.1.3, narrow PATCH successor candidate for the Identity/Communications durable-delivery boundary. The certified v0.1.2 remains unchanged at `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md` until this candidate completes certification. Base main is `d9174de272ac7b98c5a14f0d55c60c80e15759fb`.
 
-**Status:** `CANDIDATE / CERTIFICATION PENDING / NOT CURRENT`. This candidate corrects the absolute bearer-storage prohibition that contradicts must-not-lose verification/recovery delivery. PR #67 certification covers the predecessor, not this correction. Communications retains its governed `REQUIRED / NEXT / NOT_STARTED` route, but finalisation is `BLOCKED / STOP` until this correction is certified. No Communications dossier or implementation starts here.
+**Status:** `CANDIDATE / CERTIFICATION PENDING / NOT CURRENT`. This candidate corrects the absolute bearer-storage prohibition that contradicts must-not-lose verification, recovery and primary-email-change confirmation delivery. PR #67 certification covers the predecessor, not this correction. Communications retains its governed `REQUIRED / NEXT / NOT_STARTED` route, but finalisation is `BLOCKED / STOP` until this correction is certified. No Communications dossier or implementation starts here.
 
 ```text
 Phase 7A Skeleton
@@ -34,7 +34,7 @@ This remains a planning contract, not a Phase 8 proof claim. `OQ-034` architectu
 
 The governing sequence is Product Law → Architecture Law → Domain Law → Roadmap → approved Phase 7A Skeleton → this dossier. Relevant current anchors are `01_DECISIONS_v1.6.0.md` DEC-017–028, DEC-244–267, DEC-297–298 and OQ-034–036, `00_PLATFORM_v1.6.0.md` §§15, 16, 21J.1–21J.24 and 21P, `03_ARCHITECTURE_v1.1.1.md` §§4–16 including §6.6, `04_DOMAIN_MAP_v1.2.0.md` §§3–6.1, `05_ROADMAP_v1.2.0.md` FP-001, the reconciled Phase 7A skeleton §§5–17, and current FLOW-01 evidence in `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`.
 
-The predecessor contains a dossier-level contradiction between durable verification/recovery delivery and an absolute prohibition on retaining presented bearer material. Section J.1 corrects that boundary under existing Domain Law §6.1. No Product, Architecture, Domain or Roadmap amendment is required. PMR ownership and lifecycle meaning are already established by Product, Architecture, Domain and Roadmap authority. The dossier does not add a Product rule, move durable truth, create a Domain, decide relationship authority, choose Communications infrastructure, resolve `OQ-035` or `OQ-036`, amend `01_DECISIONS`, start Phase 7C, or select a final proof classification. `OQ-034` architecture selection is already resolved; its executable proof remains a Phase 8 obligation.
+The predecessor contains a dossier-level contradiction between durable verification, recovery and primary-email-change confirmation delivery and an absolute prohibition on retaining presented bearer material. Section J.1 corrects that boundary under existing Domain Law §6.1. No Product, Architecture, Domain or Roadmap amendment is required. PMR ownership and lifecycle meaning are already established by Product, Architecture, Domain and Roadmap authority. The dossier does not add a Product rule, move durable truth, create a Domain, decide relationship authority, choose Communications infrastructure, resolve `OQ-035` or `OQ-036`, amend `01_DECISIONS`, start Phase 7C, or select a final proof classification. `OQ-034` architecture selection is already resolved; its executable proof remains a Phase 8 obligation.
 
 ## C. Outcome and design test
 
@@ -91,9 +91,9 @@ Seven-resource physical Ash implementation set with additional logical Identity 
 #### 2. Authentication Credential (domain concept; no separate Ash Resource)
 
 * **Purpose/owner/authority:** Password credential and authentication-method status for one Account; Identity & Access/PostgreSQL, implemented by Account's stable AshAuthentication fields/actions.
-* **Attributes:** account reference, method (`password` or optional `magic_link` capability), password hash metadata, credential status, created/changed/revoked timestamps, and version. Raw passwords and magic-link authentication tokens are never persisted. Verification/reset/recovery delivery material may be retained only as the protected delivery capability in J.1, never as an ordinary credential field.
+* **Attributes:** account reference, method (`password` or optional `magic_link` capability), password hash metadata, credential status, created/changed/revoked timestamps, and version. Raw passwords and magic-link authentication tokens are never persisted. Verification, password-reset, recovery and primary-email-change confirmation delivery material may be retained only as the protected delivery capability in J.1, never as an ordinary credential field.
 * **Relationships:** belongs to Account; invalidates linked Sessions and Device Assurances when a security-changing action requires it.
-* **Sensitive/immutability:** hash and security metadata are highly restricted; hashes are replaceable, raw passwords never recoverable. Only the bounded delivery executor may recover protected verification/reset/recovery material under J.1. History is retained only as minimal security evidence.
+* **Sensitive/immutability:** hash and security metadata are highly restricted; hashes are replaceable, raw passwords never recoverable. Only the bounded delivery executor may recover protected verification, password-reset, recovery and primary-email-change confirmation material under J.1. History is retained only as minimal security evidence.
 * **Lifecycle/actions:** password credential `absent → active → replaced/revoked`; `set_password`, `authenticate_password`, `reset_password`, `revoke_credential`. Magic link is an authentication strategy, not a second identity.
 * **Policy/audit/integration:** password fields are sensitive and write-only; authentication returns a generic failure. Password hashing is delegated to the selected maintained provider. Credential changes emit revocation/security consequences and audit evidence.
 * **Persistence:** no independent persistence; Account is the single password authority. A separate Credential Resource would duplicate the stable framework's `hashed_password` expectation and create contradictory credential lifecycle state.
@@ -101,7 +101,7 @@ Seven-resource physical Ash implementation set with additional logical Identity 
 #### 3. Security Challenge (domain concept; Identity Token Resource representation)
 
 * **Purpose/owner/authority:** One-purpose, bounded proof capability for email verification, password reset, recovery proof or email-change confirmation; represented by the Identity-owned PostgreSQL-backed Token Resource configured with the `AshAuthentication.TokenResource` extension.
-* **Attributes:** UUIDv7 id, account reference where known, purpose, secret fingerprint/hash, issued/expiry/consumed/revoked timestamps, supersession reference, attempt/usage metadata, and correlation/provenance. The Identity Token Resource does not store the presented bearer token. Only the protected delivery capability in J.1 may retain verification/reset/recovery material for crash-safe Communications retry.
+* **Attributes:** UUIDv7 id, account reference where known, purpose, secret fingerprint/hash, issued/expiry/consumed/revoked timestamps, supersession reference, attempt/usage metadata, and correlation/provenance. The Identity Token Resource does not store the presented bearer token. Only the protected delivery capability in J.1 may retain verification, password-reset, recovery and primary-email-change confirmation material for crash-safe Communications retry.
 * **Relationships:** belongs to Account or a Recovery Case; may be linked to an Email Change attempt by purpose/reference. Communications receives a separate intent id.
 * **Lifecycle/actions:** `issued → valid → consumed`; `issued → expired`, `revoked` or `superseded`; replay is a terminal rejected observation, not a second transition.
 * **Policy/audit/integration:** purpose-specific action only; no generic “verify anything” endpoint. Confirmation establishes Identity truth only after server-side fingerprint, purpose, expiry and account-state checks.
@@ -302,11 +302,11 @@ Session/device revocation required to prevent access is atomic Identity work. Li
 
 ### J.1 Narrow Identity/Communications durable-delivery correction
 
-This correction changes no Product Law, Architecture Law, Domain ownership, Roadmap outcome, authentication authority, verification/recovery semantics or provider selection. It resolves only durable delivery of one-purpose verification/reset/recovery bearer material required by FP-001 Communications. It does not extend retention to optional magic-link authentication or session bearer tokens.
+This correction changes no Product Law, Architecture Law, Domain ownership, Roadmap outcome, authentication authority, verification/recovery semantics or provider selection. It resolves only durable delivery of one-purpose verification, password-reset, recovery and primary-email-change confirmation bearer material required by FP-001 Communications. It does not extend retention to optional magic-link authentication or session bearer tokens.
 
 Identity & Access remains the sole authority for the Security Challenge, its purpose, validity, expiry, supersession, revocation and consumption. The Identity Token Resource stores information about tokens, not the presented tokens themselves. A protected delivery capability is sensitive delivery machinery, never a second Security Challenge authority.
 
-Plaintext verification, reset or recovery bearer material must never be persisted in ordinary Identity fields, ordinary Communications fields, Oban job arguments, logs, telemetry, audit evidence, analytics, provider metadata beyond the minimum unavoidable provider request, or browser/client state beyond the bounded participant-facing link itself.
+Plaintext verification, password-reset, recovery or primary-email-change confirmation bearer material must never be persisted in ordinary Identity fields, ordinary Communications fields, Oban job arguments, logs, telemetry, audit evidence, analytics, provider metadata beyond the minimum unavoidable provider request, or browser/client state beyond the bounded participant-facing link itself.
 
 Where crash-safe durable retry requires generated bearer material after the AshAuthentication sender invocation returns, Communications may retain a short-lived protected delivery capability under the platform's approved protected-secret mechanism. That capability:
 
@@ -337,7 +337,7 @@ Source issuance, durable intent and the required protected capability must commi
 
 Before a retry that could deliver stale material, Communications uses the non-secret source reference/current-validity contract supplied by Identity to establish that delivery remains permitted. Expired, superseded, revoked, consumed or otherwise invalid challenges cannot be revived by retry. Future proof must cover invalidation racing with delivery authorisation and capability cleanup; exact coordination remains an implementation detail.
 
-Provider acceptance or delivery does not consume the proof or establish verification/recovery success:
+Provider acceptance or delivery does not consume the proof, establish verification/recovery success or confirm a primary-email change:
 
 ```text
 provider accepted != provider delivered
@@ -349,15 +349,15 @@ Only Identity & Access establishes email verified, recovery completed, email cha
 
 For the later FP-001 Communications dossier, `MessageIntent` and `DeliveryAttempt` are the two required durable business concepts. Protected capability storage is sensitive delivery machinery. `SubscriberContact`, `NotificationPreference`, `CommunicationJourney` and `InAppNotification` are not required FP-001 Resources merely because broader Domain Law contains them. Destination handling and privacy minimisation remain required without speculative Resource expansion.
 
-Future executable proof must demonstrate:
+Future executable proof must cover each permitted purpose: verification, password reset, recovery and new-address primary-email-change confirmation. It must demonstrate:
 
 - No bearer token or rendered secret-bearing URL in Oban arguments, application logs, telemetry or audit evidence.
-- Durable retry survives application restart, including failure before the first provider attempt.
+- Durable retry survives application restart for every permitted purpose, including primary-email-change confirmation, after Sender invocation and before the first provider attempt or after provider failure.
 - Ordinary application/domain access cannot recover protected delivery material.
-- Expiry, revocation, supersession and consumption prevent stale delivery.
+- Expiry, revocation, supersession and consumption prevent stale delivery for every permitted purpose, including an expired, cancelled or superseded primary-email-change operation and races between retry and Identity invalidation.
 - Duplicate executor runs do not multiply the logical message outside approved retry policy.
 - Provider timeout/unknown status cannot fabricate success.
-- Provider delivery cannot establish Identity verification/recovery.
+- Provider delivery cannot establish Identity verification/recovery or confirm/apply a primary-email change.
 - Protected material is cleared or irrecoverable at the required terminal boundary.
 - Failure to establish durable intent or required capability cannot leave a committed must-not-lose issuance without durable delivery state.
 
@@ -370,9 +370,10 @@ Official sources checked on 2026-10-04:
 - [Hex package listing](https://hex.pm/packages/ash_authentication) lists stable 4.15.0. The predecessor's 4.14.2 record is a historical research snapshot, not a current-version claim or package pin.
 - [AshAuthentication.Sender](https://ash-authentication.hexdocs.pm/AshAuthentication.Sender.html) documents `send(user, token, opts)`, ignores results/failures and delegates retries to the sending system.
 - [AshAuthentication.TokenResource](https://ash-authentication.hexdocs.pm/AshAuthentication.TokenResource.html) documents storage of token information without the tokens themselves.
+- [AshAuthentication confirmation tutorial v4.15.0](https://ash-authentication.hexdocs.pm/confirmation.html) configures new-address email-change confirmation and passes its generated confirmation token to `send(user, token, opts)`. This has the same durable-delivery requirement as verification/reset/recovery.
 - Current Domain Law §6.1 in `04_DOMAIN_MAP_v1.2.0.md` permits one-purpose secrets through approved protected secret/token mechanisms.
 
-The contradiction follows from these contracts: token metadata cannot reproduce the authorised bearer link after volatile material is lost. Bounded protected delivery retention corrects the dossier restriction without changing Identity authority.
+The contradiction follows from these contracts: token metadata cannot reproduce the authorised bearer link after volatile material is lost, including the new-address primary-email-change confirmation link. Bounded protected delivery retention corrects the dossier restriction without changing Identity authority.
 
 Certification is pending. Required evidence is independent review of the exact candidate head, exact-head Foundation Integrity CI, certified-head merge and fresh independent post-merge review/resulting-main CI. Local checks or this candidate's existence do not certify it. The predecessor remains registered current until that lifecycle completes; Communications finalisation must stop at the known contradiction in the meantime. After certification, preserve the predecessor byte-identically in archive and update active navigation through the governed status-successor process before resuming Communications.
 
@@ -386,7 +387,7 @@ The primary hypothesis is maintained stable Ash Authentication v4 plus stable As
 * Argon2id through the maintained Ash Authentication hash-provider boundary, with cost benchmarked and bounded for the deployment budget;
 * confirmation add-on for new-account email proof and monitored primary-email changes, with interaction required where the browser must not mutate state by GET;
 * password reset/recovery strategy for ordinary recovery, extended by Identity-owned graduated/manual Recovery Case and security-hold actions;
-* Token Resource with stored token presence enabled for durable revocation semantics where needed, secret material hashed/fingerprinted, one-purpose challenges, bounded expiry and no plaintext token persistence; protected verification/reset/recovery delivery material is governed exclusively by J.1;
+* Token Resource with stored token presence enabled for durable revocation semantics where needed, secret material hashed/fingerprinted, one-purpose challenges, bounded expiry and no plaintext token persistence; protected verification, password-reset, recovery and primary-email-change confirmation delivery material is governed exclusively by J.1;
 * secure HttpOnly, Secure, appropriate SameSite browser cookie transport; session identity is server-governed and linked to a durable Session record and framework token reference. `PUBLIC / EXTERNAL API BEARER AUTHENTICATION = NONE FOR FP-001`; internal first-party authentication token mechanisms remain permitted where required by the selected Ash Authentication browser/session architecture;
 * Phoenix/Plug browser CSRF protection on cookie-authenticated state-changing requests, with LiveView event handling remaining server-authorised and current-state checked;
 * Ash Authentication Phoenix LiveSession/on-mount integration to reconstruct authenticated subjects on LiveView mount/reconnect, followed by Identity policy checks for current session, grant and hold state. A LiveView process is never session authority;
@@ -530,7 +531,7 @@ Distributed locks are not required by the model. PostgreSQL uniqueness, conditio
 
 ## R. Security review
 
-Argon2id hashes passwords with benchmarked bounded cost; raw passwords never enter storage or logs, and plaintext bearer tokens never enter durable storage or logs. Section J.1 permits only protected verification/reset/recovery delivery material for bounded retry. Challenge secrets are random, purpose-bound, fingerprinted, single-use, expiring and superseded/revoked. Cookies are Secure, HttpOnly and appropriate SameSite; session id is rotated on authentication and sensitive transitions to prevent fixation. Plug/Phoenix CSRF protects cookie-authenticated mutations; LiveView assigns and params remain untrusted.
+Argon2id hashes passwords with benchmarked bounded cost; raw passwords never enter storage or logs, and plaintext bearer tokens never enter durable storage or logs. Section J.1 permits only protected verification, password-reset, recovery and primary-email-change confirmation delivery material for bounded retry. Challenge secrets are random, purpose-bound, fingerprinted, single-use, expiring and superseded/revoked. Cookies are Secure, HttpOnly and appropriate SameSite; session id is rotated on authentication and sensitive transitions to prevent fixation. Plug/Phoenix CSRF protects cookie-authenticated mutations; LiveView assigns and params remain untrusted.
 
 Public registration/login/recovery responses do not reveal account existence or challenge validity beyond safe categories. Cloudflare/application/shared velocity controls address stuffing/brute force; OQ-035 retains thresholds. Recovery and email change require verified proof, reauthentication, holds/delay where risk demands and old-address/security notices. Current grant/session/relationship/consent checks prevent stale authorization and privilege escalation. Compromise revokes sessions/devices, freezes sensitive actions and requires verified recovery. Staff recovery is named, scoped, MFA-protected and second-person controlled for privileged accounts. Break-glass is exceptional, expiring, alerted and reviewed.
 
@@ -567,7 +568,7 @@ Security audit is separate and restricted: account lifecycle, verification proof
 
 ## V. Test contract
 
-Future executable work must include resource/action, policy, field-policy, state-transition and invalid-transition tests; property tests for one canonical email, one-use proof, no authority from delivery and no grant beyond current scope; idempotency/retry/concurrency tests for every table in section O; token replay/expiry, session fixation, CSRF, cookie flags, enumeration, stuffing/rate boundary and logging-redaction tests; Account-owned MFA enrollment/disable/reset, encrypted-secret access, TOTP same-period replay and factor-revocation tests; durable Session step-up purpose/expiry, trusted-device non-bypass and clearing on hold/logout/recovery/credential change; recovery/manual-review/hold and email-change races; session/device/global revocation and restart/reconnect/multi-node reconstruction; grant self-approval/break-glass expiry; duplicate reconciliation/provenance/conflict/correction; audit completeness/minimisation; provider outage and durable consequence tests; hash-cost and bounded-resource tests; and failure/degradation tests proving no guessed identity, verification or access.
+Future executable work must include resource/action, policy, field-policy, state-transition and invalid-transition tests; property tests for one canonical email, one-use proof, no authority from delivery and no grant beyond current scope; idempotency/retry/concurrency tests for every table in section O; token replay/expiry, session fixation, CSRF, cookie flags, enumeration, stuffing/rate boundary and logging-redaction tests; Account-owned MFA enrollment/disable/reset, encrypted-secret access, TOTP same-period replay and factor-revocation tests; durable Session step-up purpose/expiry, trusted-device non-bypass and clearing on hold/logout/recovery/credential change; recovery/manual-review/hold and email-change races; session/device/global revocation and restart/reconnect/multi-node reconstruction; grant self-approval/break-glass expiry; duplicate reconciliation/provenance/conflict/correction; audit completeness/minimisation; provider outage and durable consequence tests for verification, password reset, recovery and primary-email-change confirmation, including crash/restart retry and stale-proof rejection; hash-cost and bounded-resource tests; and failure/degradation tests proving no guessed identity, verification or access.
 
 The proof must test empty-cache/restart behaviour for any later acceleration, queue duplicate/reorder semantics, current-policy re-read on long-lived LiveView actions, secret rotation, and representative burst/contention. It must not be replaced by a clean happy-path test or final proof label at dossier time.
 
