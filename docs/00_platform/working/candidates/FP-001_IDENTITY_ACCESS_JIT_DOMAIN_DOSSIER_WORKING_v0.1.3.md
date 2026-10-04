@@ -24,7 +24,7 @@ Phase 7A Skeleton
 
 ## A. Baseline and scope
 
-The dossier starts from the live certified `main` at `38022caea64cb2522ab8fc4db730099a94cd6600`, the reconciled Phase 7A skeleton candidate and current Product, Architecture, Domain and Roadmap authority. It covers Identity & Access only for the FP-001 outcome: a public visitor can become a verified individual 18+ account holder, receive exactly one canonical active PMR after successful Account creation, authenticate, recover access and traverse a controlled support/admin boundary without exposing unfinished product spaces.
+The original dossier baseline was certified `main` at `38022caea64cb2522ab8fc4db730099a94cd6600` and the reconciled Phase 7A skeleton candidate. This PATCH starts from `d9174de272ac7b98c5a14f0d55c60c80e15759fb` and current Product, Architecture, Domain and Roadmap authority. It covers Identity & Access only for the FP-001 outcome: a public visitor can become a verified individual 18+ account holder, receive exactly one canonical active PMR after successful Account creation, authenticate, recover access and traverse a controlled support/admin boundary without exposing unfinished product spaces.
 
 In scope are the minimum account, email verification, password/magic-link authentication, session, device assurance, recovery, primary-email change, identity-side grant, compromise, duplicate-reconciliation and Platform Member Reference contracts needed for that outcome. Social login, passkeys, native clients, generic tenancy, participant MFA user experience/configuration, full deletion orchestration, relationship permissions, Commerce and Communications implementation remain outside this dossier.
 
@@ -313,7 +313,7 @@ Where crash-safe durable retry requires generated bearer material after the AshA
 1. Exists only to reproduce the already-authorised communication for durable delivery/retry.
 2. Is encrypted/protected at rest and inaccessible through ordinary Resource reads. Only the purpose-scoped delivery executor may recover it for an authorised provider attempt.
 3. Is bound to one Communications message intent and the corresponding Identity-owned purpose/challenge.
-4. Expires no later than the underlying Identity proof capability.
+4. Remains recoverable while a permitted bounded retry obligation requires it, and expires no later than the underlying Identity proof capability. Early loss of required material is a delivery failure requiring reconciliation, never a silent discharge of the must-not-lose obligation.
 5. Is unusable as Identity authority by Communications.
 6. Cannot mark an Account verified, complete recovery or mutate Identity truth.
 7. Is cleared or rendered irrecoverable when its delivery obligation no longer requires retry, and in all cases no later than the proof's terminal expiry/revocation/supersession boundary. Consumption invalidates further delivery and ends any remaining retry obligation.
