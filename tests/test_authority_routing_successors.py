@@ -1154,11 +1154,11 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         expected = OPEN_WORK_ATLAS_CURRENT_V031_STATUS_LINE.replace(
             "working/DELIVERY_ATLAS_WORKING_v0.3.1.md", "working/DELIVERY_ATLAS_WORKING_v0.3.9.md"
         ).replace(
-            "archive/DELIVERY_ATLAS_WORKING_v0.3.0.md", "archive/DELIVERY_ATLAS_WORKING_v0.3.7.md"
+            "archive/DELIVERY_ATLAS_WORKING_v0.3.0.md", "archive/DELIVERY_ATLAS_WORKING_v0.3.8.md"
         )
         _validate_open_work_atlas_status_line(current, expected)
         self.assertIn("current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.9.md`", expected)
-        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.7.md`", expected)
+        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md`", expected)
         self.assertIn("pinned v0.2.1 source-at-freeze artifacts remain preserved", expected)
         self.assertNotRegex(
             expected,
@@ -1175,7 +1175,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         line = OPEN_WORK_ATLAS_CURRENT_V031_STATUS_LINE.replace(
             "working/DELIVERY_ATLAS_WORKING_v0.3.1.md", "working/DELIVERY_ATLAS_WORKING_v0.3.9.md"
         ).replace(
-            "archive/DELIVERY_ATLAS_WORKING_v0.3.0.md", "archive/DELIVERY_ATLAS_WORKING_v0.3.7.md"
+            "archive/DELIVERY_ATLAS_WORKING_v0.3.0.md", "archive/DELIVERY_ATLAS_WORKING_v0.3.8.md"
         )
         malformed = (
             current.replace(line + "\n", "", 1),
@@ -1184,7 +1184,12 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
                 "# 10. Minimal Tools", "# 10. Minimal Tools\n" + line, 1
             ),
             current.replace(
-            "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.7.md`",
+                "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md`",
+                "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.7.md`",
+                1,
+            ),
+            current.replace(
+                "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md`",
                 "predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md`",
                 1,
             ),

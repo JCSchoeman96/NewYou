@@ -2616,6 +2616,18 @@ def _check_fp001_pmr_reconciliation(
         if current_open_work.get("semver") != "1.2.57":
             issues.append("manifest current Open Work version is stale")
 
+    atlas_status_lines = re.findall(r"(?m)^ATLAS RECONCILIATION: COMPLETE.*$", open_work)
+    expected_atlas_status = (
+        "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.9.md`; "
+        "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md`; "
+        "pinned v0.2.1 source-at-freeze artifacts remain preserved; DERIVED / NON-AUTHORITATIVE; "
+        "ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12"
+    )
+    if atlas_status_lines != [expected_atlas_status]:
+        issues.append(
+            "Open Work v1.2.57 Atlas route must name archived Atlas v0.3.8 as its immediate routing predecessor"
+        )
+
     expected_active_skeletons = [skeleton]
     expected_active_dossiers = [dossier]
     active_skeletons = sorted((docs / "working").glob("FP-001_FEATURE_PACK_SKELETON_WORKING_v*.md"))
@@ -2710,6 +2722,38 @@ def _check_fp001_pmr_reconciliation(
         or "No Communications dossier, Phase 7C work or implementation starts here." not in dossier_text
     ):
         issues.append("certified Identity dossier does not preserve the Communications NEXT and finalisation stop boundary")
+
+    phase7c_start = dossier_text.find("### `BLOCKS_PHASE7C`")
+    phase7c_end = dossier_text.find("### `BLOCKS_RELEASE_ONLY`", phase7c_start + 1)
+    if phase7c_start < 0 or phase7c_end <= phase7c_start:
+        issues.append("active Identity BLOCKS_PHASE7C lifecycle section is missing or malformed")
+    else:
+        phase7c_section = dossier_text[phase7c_start:phase7c_end]
+        pending_lifecycle_patterns = (
+            r"\bNOT\s+CURRENT\b",
+            r"\bCERTIFICATION\s+PENDING\b",
+            r"\b(?:await(?:s|ed|ing)?|pending)\b.{0,100}\b(?:certification|promotion)\b",
+            r"\b(?:certification|promotion)\b.{0,100}\b(?:pending|awaiting)\b",
+            r"\bthis\b.{0,40}\b(?:v0\.1\.4\s+)?candidate\b",
+            r"\bIdentity(?:\s+&\s+Access)?(?:\s+dossier)?\s+v0\.1\.[0-3]\b.{0,80}\b(?:current|certified)\b",
+            r"\b(?:current|certified)\b.{0,80}\bIdentity(?:\s+&\s+Access)?(?:\s+dossier)?\s+v0\.1\.[0-3]\b",
+        )
+        if any(re.search(pattern, phase7c_section, flags=re.IGNORECASE | re.DOTALL) for pattern in pending_lifecycle_patterns):
+            issues.append("active Identity BLOCKS_PHASE7C lifecycle contradicts CERTIFIED / CURRENT")
+        required_phase7c_state = (
+            "PR #76 certification/promotion is `COMPLETE`",
+            "Identity v0.1.4 is `CERTIFIED / CURRENT`",
+            "Communications remains `REQUIRED / NEXT / NOT_STARTED`",
+            "Communications finalisation remains `BLOCKED / STOP` pending its own dossier and applicable gates",
+            "Phase 7C remains `BLOCKED / NOT_STARTED`",
+            "required Phase 7B work remains",
+            "separately authorised Communications dossier is not started",
+            "conditional dossiers remain subject to explicit adjudication",
+            "applicable blocking gates must be resolved",
+        )
+        for token in required_phase7c_state:
+            if token.casefold() not in phase7c_section.casefold():
+                issues.append(f"active Identity BLOCKS_PHASE7C lifecycle omits current promotion/STOP state: {token}")
 
     evidence = (
         "PR #67",

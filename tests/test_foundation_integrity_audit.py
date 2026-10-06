@@ -202,6 +202,88 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 set(pinned_archives),
             )
 
+    def test_fp001_identity_v014_current_stop_section_rejects_pending_promotion_claim(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+            dossier = dossier_path.read_text(encoding="utf-8")
+            section_header = "### `BLOCKS_PHASE7C`\n"
+            pending_claim = (
+                "* This v0.1.4 candidate is `NOT CURRENT / CERTIFICATION PENDING`; "
+                "Communications finalisation remains `BLOCKED / STOP` until the two narrow "
+                "Identity seam corrections are independently certified and promoted."
+            )
+            self.assertIn(section_header, dossier)
+            dossier_path.write_text(
+                dossier.replace(section_header, section_header + "\n" + pending_claim + "\n", 1),
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+            promotion_check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_pmr_reconciliation"
+            )
+
+            self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+            self.assertIn(
+                "active Identity BLOCKS_PHASE7C lifecycle contradicts CERTIFIED / CURRENT",
+                promotion_check["message"],
+            )
+
+    def test_fp001_identity_v014_current_stop_section_rejects_older_current_dossier_claim(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+            dossier = dossier_path.read_text(encoding="utf-8")
+            section_header = "### `BLOCKS_PHASE7C`\n"
+            conflicting_claim = "* Identity v0.1.3 remains `CERTIFIED / CURRENT`."
+            self.assertIn(section_header, dossier)
+            dossier_path.write_text(
+                dossier.replace(section_header, section_header + "\n" + conflicting_claim + "\n", 1),
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+            promotion_check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_pmr_reconciliation"
+            )
+
+            self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+            self.assertIn(
+                "active Identity BLOCKS_PHASE7C lifecycle contradicts CERTIFIED / CURRENT",
+                promotion_check["message"],
+            )
+
+    def test_fp001_identity_v014_promotion_rejects_non_immediate_atlas_predecessor(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.57.md"
+            open_work = open_work_path.read_text(encoding="utf-8")
+            current_predecessor = "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md`"
+            stale_predecessor = "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.7.md`"
+            if current_predecessor in open_work:
+                open_work = open_work.replace(current_predecessor, stale_predecessor, 1)
+            elif stale_predecessor not in open_work:
+                self.fail("Open Work Atlas predecessor mutation anchor is missing")
+            open_work_path.write_text(open_work, encoding="utf-8")
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+            promotion_check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_pmr_reconciliation"
+            )
+
+            self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+            self.assertIn(
+                "Open Work v1.2.57 Atlas route must name archived Atlas v0.3.8 as its immediate routing predecessor",
+                promotion_check["message"],
+            )
+
     def test_fp001_identity_v014_promotion_rejects_lineage_route_and_gate_mutations(self):
         def rewrite_current_open_work_state(root: Path, mutate) -> None:
             manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
@@ -229,6 +311,16 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 raise AssertionError(f"mutation anchor missing from {relative}: {old}")
             path.write_text(text.replace(old, new, 1), encoding="utf-8")
 
+        def restore_candidate_route(root: Path) -> None:
+            candidate = (
+                root / "docs/00_platform/working/candidates/"
+                "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+            )
+            candidate.parent.mkdir(parents=True, exist_ok=True)
+            candidate.write_bytes(
+                (root / "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md").read_bytes()
+            )
+
         mutations = (
             (
                 "wrong current dossier version",
@@ -241,12 +333,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             ),
             (
                 "candidate remains on active route",
-                lambda root: (
-                    root / "docs/00_platform/working/candidates" /
-                    "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
-                ).write_bytes(
-                    (root / "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md").read_bytes()
-                ),
+                restore_candidate_route,
             ),
             (
                 "missing exact PR #76 candidate archive",

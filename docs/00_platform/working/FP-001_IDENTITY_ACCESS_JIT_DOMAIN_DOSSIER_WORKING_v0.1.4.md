@@ -49,11 +49,11 @@ The table above records inherited v0.1.3 certification. The following PR #76 lif
 
 PR #70 closed the durable-delivery contradiction for email verification, password reset, recovery and new-address primary-email-change confirmation. Provider acceptance or delivery grants Communications no Identity authority. The approved bounded protected-delivery retention remains limited to the crash-safe delivery purpose. Optional magic-link authentication and session bearer tokens remain outside this exception.
 
-This candidate records no Product, Architecture, Domain or Roadmap amendment and changes no PMR semantics. It selects no notification provider, email vendor, encryption product, key-management product, exact protected-storage representation, queue or worker configuration, retry policy or OQ-036 resolution. `MessageIntent` and `DeliveryAttempt` remain the only required durable FP-001 Communications business concepts. Phase 7C, proof classification and implementation remain unauthorised.
+This dossier records no Product, Architecture, Domain or Roadmap amendment and changes no PMR semantics. It selects no notification provider, email vendor, encryption product, key-management product, exact protected-storage representation, queue or worker configuration, retry policy or OQ-036 resolution. `MessageIntent` and `DeliveryAttempt` remain the only required durable FP-001 Communications business concepts. Phase 7C, proof classification and implementation remain unauthorised.
 
 ```text
 Phase 7A Skeleton
-→ this Identity & Access JIT Domain Dossier candidate
+→ this Identity & Access JIT Domain Dossier
 → required remaining Phase 7B work
 → explicit blocking-gate resolution
 → Phase 7C Final Feature Pack Contract
@@ -61,7 +61,7 @@ Phase 7A Skeleton
 
 ## A. Baseline and scope
 
-The original dossier baseline was certified `main` at `38022caea64cb2522ab8fc4db730099a94cd6600` and the reconciled Phase 7A skeleton candidate. The v0.1.3 durable-delivery correction is certified/current. This PATCH candidate starts from `3f06eafe58c2cc441a090e804b4169c1c3c4ca2b` and current Product, Architecture, Domain and Roadmap authority. It covers Identity & Access only for the FP-001 outcome: a public visitor can become a verified individual 18+ account holder, receive exactly one canonical active PMR after successful Account creation, authenticate, recover access and traverse a controlled support/admin boundary without exposing unfinished product spaces.
+The original dossier baseline was certified `main` at `38022caea64cb2522ab8fc4db730099a94cd6600` and the reconciled Phase 7A skeleton candidate. The v0.1.3 durable-delivery correction is certified/current. The v0.1.4 PATCH successor was prepared from `3f06eafe58c2cc441a090e804b4169c1c3c4ca2b` and current Product, Architecture, Domain and Roadmap authority. It covers Identity & Access only for the FP-001 outcome: a public visitor can become a verified individual 18+ account holder, receive exactly one canonical active PMR after successful Account creation, authenticate, recover access and traverse a controlled support/admin boundary without exposing unfinished product spaces.
 
 In scope are the minimum account, email verification, password/magic-link authentication, session, device assurance, recovery, primary-email change, identity-side grant, compromise, duplicate-reconciliation and Platform Member Reference contracts needed for that outcome. Social login, passkeys, native clients, generic tenancy, participant MFA user experience/configuration, full deletion orchestration, relationship permissions, Commerce and Communications implementation remain outside this dossier.
 
@@ -71,7 +71,7 @@ This remains a planning contract, not a Phase 8 proof claim. `OQ-034` architectu
 
 The governing sequence is Product Law → Architecture Law → Domain Law → Roadmap → approved Phase 7A Skeleton → this dossier. Relevant current anchors are `01_DECISIONS_v1.6.0.md` DEC-017–028, DEC-244–267, DEC-297–298 and OQ-034–036, `00_PLATFORM_v1.6.0.md` §§15, 16, 21J.1–21J.24 and 21P, `03_ARCHITECTURE_v1.1.1.md` §§4–16 including §6.6 and §10.4, `04_DOMAIN_MAP_v1.2.0.md` §§3–6.15, `05_ROADMAP_v1.2.0.md` FP-001, the reconciled Phase 7A skeleton §§5–17, and current FLOW-01 evidence in `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`.
 
-The v0.1.3 predecessor corrected the durable-delivery contradiction between must-not-lose verification/recovery delivery and an absolute presented-bearer retention prohibition. That protected-delivery seam remains unchanged in J.1. This v0.1.4 candidate corrects two remaining dossier-level seams under existing higher authority: current Domain Law and Architecture Law assign governed message/template content versions to Content & Media while Communications owns delivery intent/execution/evidence and exact delivery provenance; and Identity proof consumption must not allow automated retrieval/scanners/previews/prefetch to become the consuming actor. No Product, Architecture, Domain or Roadmap amendment is required.
+The v0.1.3 predecessor corrected the durable-delivery contradiction between must-not-lose verification/recovery delivery and an absolute presented-bearer retention prohibition. That protected-delivery seam remains unchanged in J.1. This v0.1.4 PATCH corrects two remaining dossier-level seams under existing higher authority: current Domain Law and Architecture Law assign governed message/template content versions to Content & Media while Communications owns delivery intent/execution/evidence and exact delivery provenance; and Identity proof consumption must not allow automated retrieval/scanners/previews/prefetch to become the consuming actor. No Product, Architecture, Domain or Roadmap amendment is required.
 
 PMR ownership and lifecycle meaning are already established by Product, Architecture, Domain and Roadmap authority. The dossier does not add a Product rule, move durable truth, create a Domain, decide relationship authority, choose Communications infrastructure, resolve `OQ-035` or `OQ-036`, amend `01_DECISIONS`, start Phase 7C, or select a final proof classification. `OQ-034` architecture selection is already resolved; its executable proof remains a Phase 8 obligation.
 
@@ -662,8 +662,9 @@ Resource names represent business concepts, not database tables, screens or work
 ### `BLOCKS_PHASE7C`
 
 * `OQ-034` selection is resolved; its executable Phase 8 proof remains required before development-entry acceptance.
-* This v0.1.4 candidate is `NOT CURRENT / CERTIFICATION PENDING`; Communications finalisation remains `BLOCKED / STOP` until the two narrow Identity seam corrections are independently certified and promoted.
-* Remaining Phase 7B work includes the separately authorised Communications dossier and any conditional dossiers only if their current law proves insufficient. Phase 7C must consume their contracts without inventing identity semantics.
+* PR #76 certification/promotion is `COMPLETE`; Identity v0.1.4 is `CERTIFIED / CURRENT`.
+* Communications remains `REQUIRED / NEXT / NOT_STARTED`; Communications finalisation remains `BLOCKED / STOP` pending its own dossier and applicable gates.
+* Phase 7C remains `BLOCKED / NOT_STARTED` while required Phase 7B work remains: the separately authorised Communications dossier is not started, conditional dossiers remain subject to explicit adjudication where current law proves insufficient, and applicable blocking gates must be resolved. Phase 7C must consume their contracts without inventing Identity semantics.
 
 ### `BLOCKS_RELEASE_ONLY`
 
