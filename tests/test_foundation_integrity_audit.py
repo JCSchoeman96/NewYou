@@ -228,7 +228,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
             self.assertIn(
-                "active Identity BLOCKS_PHASE7C lifecycle contradicts CERTIFIED / CURRENT",
+                "active Identity dossier lifecycle contradicts CERTIFIED / CURRENT",
                 promotion_check["message"],
             )
 
@@ -254,9 +254,191 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
             self.assertIn(
-                "active Identity BLOCKS_PHASE7C lifecycle contradicts CERTIFIED / CURRENT",
+                "active Identity dossier lifecycle contradicts CERTIFIED / CURRENT",
                 promotion_check["message"],
             )
+
+    def test_fp001_identity_v014_current_lifecycle_rejects_claims_across_active_text(self):
+        mutations = (
+            (
+                "active status area",
+                "**Status:** `CERTIFIED / CURRENT`.",
+                "**Status:** `CERTIFIED / CURRENT`. Current lifecycle: `NOT CURRENT / CERTIFICATION PENDING`; "
+                "this v0.1.4 candidate awaits certification and promotion.",
+            ),
+            (
+                "active nonhistorical section",
+                "## X. Open questions / remaining gates\n",
+                "## X. Open questions / remaining gates\n\n"
+                "Current lifecycle: `NOT CURRENT / CERTIFICATION PENDING`; "
+                "this v0.1.4 candidate awaits certification and promotion.\n",
+            ),
+        )
+        for name, anchor, replacement in mutations:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+                dossier = dossier_path.read_text(encoding="utf-8")
+                self.assertIn(anchor, dossier)
+                dossier_path.write_text(dossier.replace(anchor, replacement, 1), encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+                promotion_check = next(
+                    check for check in report["checks"]
+                    if check["name"] == "fp001_pmr_reconciliation"
+                )
+
+                self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+                self.assertIn("active Identity dossier lifecycle contradicts CERTIFIED / CURRENT", promotion_check["message"])
+
+    def test_fp001_identity_v014_historical_candidate_certification_evidence_is_exempt(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+            dossier = dossier_path.read_text(encoding="utf-8")
+            historical_heading = "### Inherited v0.1.3 certification evidence\n"
+            historical_claim = (
+                "Historical PR #76 evidence: the exact v0.1.4 candidate was not current and its "
+                "certification was pending before promotion.\n\n"
+            )
+            self.assertEqual(1, dossier.count(historical_heading))
+            dossier_path.write_text(
+                dossier.replace(historical_heading, historical_heading + "\n" + historical_claim, 1),
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+            promotion_check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_pmr_reconciliation"
+            )
+
+            self.assertEqual("PASS", promotion_check["status"], promotion_check["message"])
+
+    def test_fp001_identity_v014_lifecycle_evidence_boundaries_fail_closed(self):
+        mutations = (
+            ("missing evidence boundary", "### Inherited v0.1.3 certification evidence\n", ""),
+            (
+                "duplicate evidence boundary",
+                "## A. Baseline and scope\n",
+                "### Inherited v0.1.3 certification evidence\n\n## A. Baseline and scope\n",
+            ),
+            (
+                "malformed evidence boundary",
+                "## A. Baseline and scope\n",
+                "### A. Baseline and scope\n",
+            ),
+        )
+        for name, anchor, replacement in mutations:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+                dossier = dossier_path.read_text(encoding="utf-8")
+                self.assertIn(anchor, dossier)
+                dossier_path.write_text(dossier.replace(anchor, replacement, 1), encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+                promotion_check = next(
+                    check for check in report["checks"]
+                    if check["name"] == "fp001_pmr_reconciliation"
+                )
+
+                self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+                self.assertIn("active Identity lifecycle evidence boundaries", promotion_check["message"])
+
+    def test_fp001_pmr_validates_atlas_artifact_lineage_independently_of_open_work(self):
+        mutations = (
+            (
+                "wrong direct predecessor",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md`",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.7.md`",
+            ),
+            (
+                "wrong semver transition",
+                "- **SemVer transition:** `v0.3.8 → v0.3.9`",
+                "- **SemVer transition:** `v0.3.7 → v0.3.9`",
+            ),
+            (
+                "missing predecessor metadata",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2, v0.2.3, v0.3.1 and v0.3.2 predecessors remain preserved.\n",
+                "",
+            ),
+            (
+                "duplicate predecessor metadata",
+                "- **SemVer transition:** `v0.3.8 → v0.3.9`",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md` (duplicate)\n"
+                "- **SemVer transition:** `v0.3.8 → v0.3.9`",
+            ),
+        )
+        for name, anchor, replacement in mutations:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.9.md"
+                original_open_work = (root / "docs/00_platform/02_OPEN_WORK_v1.2.57.md").read_bytes()
+                atlas = atlas_path.read_text(encoding="utf-8")
+                self.assertIn(anchor, atlas)
+                atlas_path.write_text(atlas.replace(anchor, replacement, 1), encoding="utf-8")
+                self.assertEqual(original_open_work, (root / "docs/00_platform/02_OPEN_WORK_v1.2.57.md").read_bytes())
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+                promotion_check = next(
+                    check for check in report["checks"]
+                    if check["name"] == "fp001_pmr_reconciliation"
+                )
+
+                self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+                self.assertIn("current Atlas artifact lineage", promotion_check["message"])
+
+    def test_fp001_pmr_validates_harden_v051_successor_metadata(self):
+        predecessor = "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.0.md` — byte-identical prior current-status snapshot\n"
+        mutations = (
+            (
+                "multiple current predecessors",
+                predecessor,
+                predecessor + "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md`\n",
+            ),
+            (
+                "wrong current predecessor",
+                predecessor,
+                "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` — wrong direct predecessor\n",
+            ),
+            (
+                "wrong certified successor version",
+                "this v0.5.1 successor preserves them",
+                "this v0.5.0 successor preserves them",
+            ),
+            (
+                "missing successor base SHA",
+                "- **v0.5.1 status-successor base main SHA:** `90f96ba3452c95112bf6ec4ce5bb897676adbed4`\n",
+                "",
+            ),
+            (
+                "incorrect successor base SHA",
+                "- **v0.5.1 status-successor base main SHA:** `90f96ba3452c95112bf6ec4ce5bb897676adbed4`",
+                "- **v0.5.1 status-successor base main SHA:** `0000000000000000000000000000000000000000`",
+            ),
+        )
+        for name, anchor, replacement in mutations:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.1.md"
+                harden = harden_path.read_text(encoding="utf-8")
+                self.assertIn(anchor, harden)
+                harden_path.write_text(harden.replace(anchor, replacement, 1), encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+                promotion_check = next(
+                    check for check in report["checks"]
+                    if check["name"] == "fp001_pmr_reconciliation"
+                )
+
+                self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+                self.assertIn("current HARDEN-02 v0.5.1 successor metadata", promotion_check["message"])
 
     def test_fp001_identity_v014_promotion_rejects_non_immediate_atlas_predecessor(self):
         with tempfile.TemporaryDirectory() as directory:

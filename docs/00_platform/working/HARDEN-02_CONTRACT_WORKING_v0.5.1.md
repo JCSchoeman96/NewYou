@@ -11,12 +11,13 @@
 - **Predecessor v0.4.3 routing-successor base main SHA:** `4efdac4fe3c79b96b18a243800e47c71e7d369b8`
 - **Execution-start baseline main SHA:** `1c8fc94058176795d88cb82e08857e3d30c553e9`
 - **Certified contract PR:** [#40](https://github.com/JCSchoeman96/NewYou/pull/40), exact head `cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4`, merged unchanged as `352f304139b9d4f8ee3ba205cde9e34d0ad8437f`
-- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` — preserved byte-identically as the prior current-status snapshot
+- **Earlier historical status predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` — preserved byte-identically as an earlier current-status snapshot
 - **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.0.md` — byte-identical prior current-status snapshot
 - **v0.4.7 status-successor base main SHA:** `d4e7390b71cdf61b649b534e1080102a044efe63`
 - **v0.4.8 status-successor base main SHA:** `596d9560aa2b3b3cb941560b01bdc6c8ba7c525a`
 - **v0.5.0 status-successor base main SHA:** `df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb`
-- **Certified contract semantics:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.5.0 successor preserves them and records current status plus source routing/provenance
+- **v0.5.1 status-successor base main SHA:** `90f96ba3452c95112bf6ec4ce5bb897676adbed4`
+- **Certified contract semantics:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.5.1 successor preserves them and records current status plus source routing/provenance
 - **Historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — merged through PR #39; v0.3.0 GitHub-identity independence mechanism not satisfied for solo-maintainer workflow; not retroactively certified
 - **Earlier historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — previous contract attempt; not certified
 - **Accepted human scope decisions:** `H02-1`, `H02-2`, `H02-3` (2026-09-09), `H02-3R` (2026-09-23; routing refinement)

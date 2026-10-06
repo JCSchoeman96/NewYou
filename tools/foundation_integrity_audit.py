@@ -460,6 +460,28 @@ def _reject_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return result
 
 
+def _markdown_header_metadata(text: str, expected_title: str) -> list[str] | None:
+    """Return the contiguous metadata bullets directly below a document title."""
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != expected_title:
+        return None
+    index = 1
+    while index < len(lines) and not lines[index].strip():
+        index += 1
+    fields: list[str] = []
+    while index < len(lines) and lines[index].startswith("- "):
+        fields.append(lines[index])
+        index += 1
+    return fields or None
+
+
+def _metadata_values(fields: list[str] | None, label: str) -> list[str]:
+    if fields is None:
+        return []
+    pattern = re.compile(rf"^-\s+\*\*{re.escape(label)}:\*\*\s*(.*?)\s*$")
+    return [match.group(1) for field in fields if (match := pattern.fullmatch(field))]
+
+
 def _h02_lifecycle_state(
     open_work: str,
     readme: str,
@@ -2723,23 +2745,45 @@ def _check_fp001_pmr_reconciliation(
     ):
         issues.append("certified Identity dossier does not preserve the Communications NEXT and finalisation stop boundary")
 
-    phase7c_start = dossier_text.find("### `BLOCKS_PHASE7C`")
-    phase7c_end = dossier_text.find("### `BLOCKS_RELEASE_ONLY`", phase7c_start + 1)
-    if phase7c_start < 0 or phase7c_end <= phase7c_start:
-        issues.append("active Identity BLOCKS_PHASE7C lifecycle section is missing or malformed")
+    headings = list(re.finditer(r"(?m)^(#{1,6})\s+(.+?)\s*#*\s*$", dossier_text))
+    history_headings = [
+        heading for heading in headings
+        if heading.group(1) == "###" and heading.group(2) == "Inherited v0.1.3 certification evidence"
+    ]
+    baseline_headings = [
+        heading for heading in headings
+        if heading.group(1) == "##" and heading.group(2) == "A. Baseline and scope"
+    ]
+    historical_boundary_ok = len(history_headings) == 1 and len(baseline_headings) == 1
+    if historical_boundary_ok:
+        history_heading = history_headings[0]
+        baseline_heading = baseline_headings[0]
+        following_headings = [heading for heading in headings if heading.start() > history_heading.start()]
+        historical_boundary_ok = (
+            history_heading.start() < baseline_heading.start()
+            and len(following_headings) > 0
+            and following_headings[0] == baseline_heading
+        )
+    if not historical_boundary_ok:
+        issues.append("active Identity lifecycle evidence boundaries are missing, duplicated or malformed")
     else:
-        phase7c_section = dossier_text[phase7c_start:phase7c_end]
+        historical_evidence_start = history_headings[0].start()
+        historical_evidence_end = baseline_headings[0].start()
+        active_identity_text = (
+            dossier_text[:historical_evidence_start]
+            + dossier_text[historical_evidence_end:]
+        )
         pending_lifecycle_patterns = (
             r"\bNOT\s+CURRENT\b",
             r"\bCERTIFICATION\s+PENDING\b",
             r"\b(?:await(?:s|ed|ing)?|pending)\b.{0,100}\b(?:certification|promotion)\b",
             r"\b(?:certification|promotion)\b.{0,100}\b(?:pending|awaiting)\b",
-            r"\bthis\b.{0,40}\b(?:v0\.1\.4\s+)?candidate\b",
+            r"\bthis\b.{0,40}\bv0\.1\.4\s+candidate\b",
             r"\bIdentity(?:\s+&\s+Access)?(?:\s+dossier)?\s+v0\.1\.[0-3]\b.{0,80}\b(?:current|certified)\b",
             r"\b(?:current|certified)\b.{0,80}\bIdentity(?:\s+&\s+Access)?(?:\s+dossier)?\s+v0\.1\.[0-3]\b",
         )
-        if any(re.search(pattern, phase7c_section, flags=re.IGNORECASE | re.DOTALL) for pattern in pending_lifecycle_patterns):
-            issues.append("active Identity BLOCKS_PHASE7C lifecycle contradicts CERTIFIED / CURRENT")
+        if any(re.search(pattern, active_identity_text, flags=re.IGNORECASE | re.DOTALL) for pattern in pending_lifecycle_patterns):
+            issues.append("active Identity dossier lifecycle contradicts CERTIFIED / CURRENT")
         required_phase7c_state = (
             "PR #76 certification/promotion is `COMPLETE`",
             "Identity v0.1.4 is `CERTIFIED / CURRENT`",
@@ -2751,6 +2795,13 @@ def _check_fp001_pmr_reconciliation(
             "conditional dossiers remain subject to explicit adjudication",
             "applicable blocking gates must be resolved",
         )
+        phase7c_start = dossier_text.find("### `BLOCKS_PHASE7C`")
+        phase7c_end = dossier_text.find("### `BLOCKS_RELEASE_ONLY`", phase7c_start + 1)
+        if phase7c_start < 0 or phase7c_end <= phase7c_start:
+            issues.append("active Identity BLOCKS_PHASE7C lifecycle section is missing or malformed")
+            phase7c_section = ""
+        else:
+            phase7c_section = dossier_text[phase7c_start:phase7c_end]
         for token in required_phase7c_state:
             if token.casefold() not in phase7c_section.casefold():
                 issues.append(f"active Identity BLOCKS_PHASE7C lifecycle omits current promotion/STOP state: {token}")
@@ -3174,6 +3225,17 @@ def _check_fp001_pmr_reconciliation(
 
     atlas_path = docs / "working" / "DELIVERY_ATLAS_WORKING_v0.3.9.md"
     atlas = atlas_path.read_text(encoding="utf-8") if atlas_path.is_file() else ""
+    atlas_header = _markdown_header_metadata(atlas, "# Delivery Atlas working v0.3.9")
+    atlas_predecessors = _metadata_values(atlas_header, "Predecessor")
+    atlas_transitions = _metadata_values(atlas_header, "SemVer transition")
+    if len(atlas_predecessors) != 1 or not atlas_predecessors[0].startswith(
+        "`archive/DELIVERY_ATLAS_WORKING_v0.3.8.md`"
+    ):
+        issues.append(
+            "current Atlas artifact lineage must declare exactly one direct predecessor, archived v0.3.8"
+        )
+    if len(atlas_transitions) != 1 or not atlas_transitions[0].startswith("`v0.3.8 → v0.3.9`"):
+        issues.append("current Atlas artifact lineage must declare exactly one v0.3.8 to v0.3.9 transition")
     if "docs/00_platform/02_OPEN_WORK_v1.2.57.md" not in atlas:
         issues.append("current Delivery Atlas does not point to Open Work v1.2.57")
     if "FP-001 PMR reconciliation remains COMPLETE / CERTIFIED" not in atlas or "Identity dossier v0.1.4 is CERTIFIED / CURRENT" not in atlas or "COMMUNICATIONS JIT DOMAIN DOSSIER" not in atlas or "Identity dossier v0.1.3 is CERTIFIED / CURRENT" in atlas:
@@ -3181,6 +3243,34 @@ def _check_fp001_pmr_reconciliation(
 
     harden_path = docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.1.md"
     harden = harden_path.read_text(encoding="utf-8") if harden_path.is_file() else ""
+    harden_header = _markdown_header_metadata(harden, "# HARDEN-02_CONTRACT_WORKING_v0.5.1.md")
+    harden_current_predecessors = _metadata_values(harden_header, "Current predecessor")
+    harden_historical_predecessors = _metadata_values(harden_header, "Earlier historical status predecessor")
+    harden_certified_semantics = _metadata_values(harden_header, "Certified contract semantics")
+    harden_v051_bases = _metadata_values(harden_header, "v0.5.1 status-successor base main SHA")
+    harden_v050_bases = _metadata_values(harden_header, "v0.5.0 status-successor base main SHA")
+    if len(harden_current_predecessors) != 1 or not harden_current_predecessors[0].startswith(
+        "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.0.md`"
+    ):
+        issues.append(
+            "current HARDEN-02 v0.5.1 successor metadata must declare only archived v0.5.0 as current predecessor"
+        )
+    if len(harden_historical_predecessors) != 1 or not harden_historical_predecessors[0].startswith(
+        "`archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md`"
+    ):
+        issues.append("current HARDEN-02 v0.5.1 successor metadata must preserve v0.4.9 as historical status provenance")
+    if (
+        len(harden_certified_semantics) != 1
+        or not harden_certified_semantics[0].startswith("`archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md`")
+        or "this v0.5.1 successor" not in harden_certified_semantics[0]
+    ):
+        issues.append(
+            "current HARDEN-02 v0.5.1 successor metadata must preserve certified v0.4.0 semantics and identify itself as v0.5.1"
+        )
+    if harden_v051_bases != ["`90f96ba3452c95112bf6ec4ce5bb897676adbed4`"]:
+        issues.append("current HARDEN-02 v0.5.1 successor metadata has missing, duplicate or incorrect base main SHA")
+    if harden_v050_bases != ["`df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb`"]:
+        issues.append("current HARDEN-02 v0.5.1 successor metadata must preserve historical v0.5.0 base provenance")
     harden_current = harden.split("## 21. Current execution certification and next stage", 1)
     harden_current = harden_current[1] if len(harden_current) == 2 else ""
     if "Open Work v1.2.57" not in harden_current or "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" not in harden_current or "IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT" not in harden_current:
