@@ -2,7 +2,7 @@
 
 - **Contract ID:** `HARDEN-02`
 - **Plan / contract version:** `v0.5.1`
-- **Status:** Original v0.4.0 contract lifecycle **COMPLETE / CERTIFIED** — HARDEN-02 execution **COMPLETE / CERTIFIED** — Engineering Standards Authority Promotion **COMPLETE / CERTIFIED** — FP-001 PMR reconciliation **COMPLETE / CERTIFIED** — Identity v0.1.4 **COMPLETE / CERTIFIED / CURRENT**
+- **Status:** Original v0.4.0 contract lifecycle **COMPLETE / CERTIFIED** — HARDEN-02 execution **COMPLETE / CERTIFIED** — Engineering Standards Authority Promotion **COMPLETE / CERTIFIED** — FP-001 PMR reconciliation **COMPLETE / CERTIFIED** — Identity v0.1.4 **COMPLETE / CERTIFIED / CURRENT under the separate PR #77 status successor**
 - **Authority class:** WORKING GOVERNANCE CONTRACT — Phase-7 delivery-pipeline sequencing and structural-hardening obligations only
 - **Authoritative for:** HARDEN-02 identity, objective, in/out scope, structural invariants, permitted/prohibited execution classes, proof obligations, exit criteria, STOP criteria, and post-HARDEN-02 resume order
 - **Not authoritative for:** Product Law, Architecture Law, Domain Law, Roadmap Law, Operating Model freeze meaning, Feature Pack capability content, OQ resolution, Horizontal Hardening (`HH-nnn`), Store Blueprint / CER reuse, Commerce/Entitlements semantics, or implementation
@@ -39,7 +39,7 @@
 - `v0.4.8` — PATCH status and current-source-routing successor from live main `596d9560aa2b3b3cb941560b01bdc6c8ba7c525a`. Records the separate Engineering Standards Authority Promotion status as COMPLETE / CERTIFIED and routes NEXT to `FP001_RECONCILIATION_REQUIRED`. HARDEN-02 execution evidence, original v0.4.0 semantics, I-01…I-13 and every later gate remain unchanged; FP-001 reconciliation remains NOT PERFORMED.
 - `v0.4.9` — PATCH status and current-source-routing successor from live main `4000ae50660930114e3ad43108dc029fd0673d32`. Records the completed PR #67 FP-001 PMR reconciliation lifecycle as COMPLETE / CERTIFIED and routes NEXT to `COMMUNICATIONS JIT DOMAIN DOSSIER`. Communications remains REQUIRED / NEXT / NOT_STARTED. This successor does not create the dossier or change the certified v0.4.0 HARDEN-02 semantics or any later gate.
 - `v0.5.0` — PATCH status and current-source-routing successor from resulting main `df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb`. Records the completed PR #70 Identity v0.1.3 durable-delivery certification as COMPLETE / CERTIFIED / CURRENT. Communications remains REQUIRED / NEXT / NOT_STARTED, and Communications finalisation remains BLOCKED / STOP. The original v0.4.0 HARDEN-02 semantics, execution evidence and later gates remain unchanged.
-- v0.5.1 — PATCH status and routing successor from resulting main 90f96ba3452c95112bf6ec4ce5bb897676adbed4. Records PR #76 Identity v0.1.4 certification as COMPLETE / CERTIFIED / CURRENT. Communications remains REQUIRED / NEXT / NOT_STARTED; finalisation remains BLOCKED / STOP; HARDEN-02 semantics and later gates remain unchanged.
+- v0.5.1 — PATCH status and routing successor from resulting main 90f96ba3452c95112bf6ec4ce5bb897676adbed4. Records PR #76 candidate certification and completed post-merge certification evidence; the separate PR #77 status successor records Identity v0.1.4 as CERTIFIED / CURRENT. Communications remains REQUIRED / NEXT / NOT_STARTED; finalisation remains BLOCKED / STOP; HARDEN-02 semantics and later gates remain unchanged.
 
 ---
 
@@ -653,7 +653,7 @@ This artifact records the HARDEN-02 contract lifecycle status only. HARDEN-02 is
 
 This status-sync artifact itself does not execute HARDEN-02. The original v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED on its recorded evidence. Do not reopen it or describe its evidence as missing without new contradictory repository evidence that challenges a recorded lifecycle requirement. If such evidence appears, STOP and resolve it through the applicable governed review. This status successor does not alter the certified v0.4.0 semantics.
 
-HARDEN-02 execution remains COMPLETE / CERTIFIED under this status successor, based on the full PR #59 exact-head / unchanged-merge / resulting-main CI / independent post-merge review / durable-attestation lifecycle and its current-main revalidation on `d4e7390b71cdf61b649b534e1080102a044efe63` (run 36856102830, job 110348834922; 251 tests; I-01 through I-13 and both I-04 adversarial tests PASS; 506 FIA assertions; zero findings). The PR #59 review outcome remains exactly PASS WITH NON-BLOCKING CORRECTIONS; its retained correction concerns direct helper-level mutation coverage for Roadmap §21. Current Roadmap v1.2.0 §21 is byte-identical to archived v1.1.5, and current tests assert this complete-section preservation. Engineering Standards Authority Promotion is COMPLETE / CERTIFIED under `reference/ENGINEERING_STANDARDS_v1.0.1.md`. FP-001 PMR reconciliation remains COMPLETE / CERTIFIED under PR #67. Identity v0.1.4 is COMPLETE / CERTIFIED / CURRENT under PR #76. This status successor does not create or start the Communications dossier.
+HARDEN-02 execution remains COMPLETE / CERTIFIED under this status successor, based on the full PR #59 exact-head / unchanged-merge / resulting-main CI / independent post-merge review / durable-attestation lifecycle and its current-main revalidation on `d4e7390b71cdf61b649b534e1080102a044efe63` (run 36856102830, job 110348834922; 251 tests; I-01 through I-13 and both I-04 adversarial tests PASS; 506 FIA assertions; zero findings). The PR #59 review outcome remains exactly PASS WITH NON-BLOCKING CORRECTIONS; its retained correction concerns direct helper-level mutation coverage for Roadmap §21. Current Roadmap v1.2.0 §21 is byte-identical to archived v1.1.5, and current tests assert this complete-section preservation. Engineering Standards Authority Promotion is COMPLETE / CERTIFIED under `reference/ENGINEERING_STANDARDS_v1.0.1.md`. FP-001 PMR reconciliation remains COMPLETE / CERTIFIED under PR #67. PR #76 candidate certification and completed post-merge certification evidence are COMPLETE; the separate PR #77 status successor records Identity v0.1.4 as COMPLETE / CERTIFIED / CURRENT. This status successor does not create or start the Communications dossier.
 
 Preserve the fail-closed downstream gates:
 
@@ -668,7 +668,7 @@ Preserve the fail-closed downstream gates:
 
 ## 21. Current execution certification and next stage
 
-The governing route is recorded in Open Work v1.2.57. HARDEN-02 execution, Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.4 are COMPLETE / CERTIFIED. The immediate next task is `COMMUNICATIONS JIT DOMAIN DOSSIER`, with status REQUIRED / NEXT / NOT_STARTED; Communications finalisation remains BLOCKED / STOP pending its dossier and applicable gates. PR #76 certified Identity v0.1.4; its evidence is preserved in Open Work v1.2.57 and the current Identity dossier. This successor does not create the Communications dossier.
+The governing route is recorded in Open Work v1.2.57. HARDEN-02 execution, Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.4 are COMPLETE / CERTIFIED. The immediate next task is `COMMUNICATIONS JIT DOMAIN DOSSIER`, with status REQUIRED / NEXT / NOT_STARTED; Communications finalisation remains BLOCKED / STOP pending its dossier and applicable gates. PR #76 certified the candidate and supplied completed post-merge certification evidence; the separate PR #77 status successor records Identity v0.1.4 as CURRENT, with its evidence preserved in Open Work v1.2.57 and the current Identity dossier. This successor does not create the Communications dossier.
 
 PR #67 lifecycle evidence: candidate `79d0540c66f0224ece0330181e61dfef8ab4b458` from prior main `38022caea64cb2522ab8fc4db730099a94cd6600`, unchanged candidate/result tree `a71dbeb2cca79bea0013f9997e40f34769f262f3`, resulting main `4000ae50660930114e3ad43108dc029fd0673d32`, exact-head CI `36991113390`, resulting-main CI `37009244020`, pre-merge attestation comment `5952693308`, post-merge attestation comment `5955641536`, and fresh independent post-merge review PASS.
 
@@ -679,6 +679,7 @@ HARDEN-02 EXECUTION: COMPLETE / CERTIFIED
 ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED
 FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED
 IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT
+IDENTITY v0.1.4 CURRENT-STATUS PROMOTION SOURCE: PR #77 STATUS SUCCESSOR; PR #76 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE
 COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED
 COMMUNICATIONS FINALISATION: BLOCKED / STOP
 CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED

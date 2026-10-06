@@ -37,7 +37,9 @@ IDENTITY_LIFECYCLE_END = "<!-- IDENTITY_V014_CURRENT_LIFECYCLE_STATE_END -->"
 IDENTITY_LIFECYCLE_STATE = {
     "artifact_version": "v0.1.4",
     "identity_lifecycle": "CERTIFIED / CURRENT",
-    "pr_76_certification_promotion": "COMPLETE",
+    "pr_76_candidate_certification": "COMPLETE",
+    "pr_76_post_merge_certification_evidence": "COMPLETE",
+    "current_status_promotion": "PR #77 STATUS SUCCESSOR",
     "communications": "REQUIRED / NEXT / NOT_STARTED",
     "communications_finalisation": "BLOCKED / STOP",
     "phase_7c": "BLOCKED / NOT_STARTED",
@@ -305,7 +307,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
         def wrong_header_status(dossier: str) -> str:
             return dossier.replace(
-                "**Status:** `CERTIFIED / CURRENT`.",
+                "**Status:** `CERTIFIED / CURRENT`",
                 "**Status:** `NOT CURRENT`.",
                 1,
             )
@@ -315,6 +317,43 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 "Identity v0.1.4 is `CERTIFIED / CURRENT`",
                 "Identity v0.1.4 is `NOT CURRENT`",
                 1,
+            )
+
+        def wrong_header_provenance(dossier: str) -> str:
+            status_start = dossier.index("**Status:**")
+            status_end = dossier.index("\n", status_start)
+            status_line = dossier[status_start:status_end]
+            if "current-status promotion is `PR #77 STATUS SUCCESSOR`" in status_line:
+                changed = status_line.replace(
+                    "PR #77 STATUS SUCCESSOR", "PR #76 CERTIFICATION/PROMOTION", 1
+                )
+            else:
+                changed = status_line.replace(
+                    "PR #76 certified and merged this v0.1.4 dossier unchanged.",
+                    "PR #76 certified and merged this v0.1.4 dossier unchanged and made it current.",
+                    1,
+                )
+            return dossier[:status_start] + changed + dossier[status_end:]
+
+        def pr76_claims_phase7c_promotion(dossier: str) -> str:
+            current_promotion = "* Current-status promotion is recorded by `PR #77 STATUS SUCCESSOR`."
+            if current_promotion in dossier:
+                return dossier.replace(
+                    current_promotion,
+                    "* Current-status promotion is recorded by `PR #76`;",
+                    1,
+                )
+            communications = "* Communications remains `REQUIRED / NEXT / NOT_STARTED`;"
+            self.assertEqual(1, dossier.count(communications))
+            return dossier.replace(
+                communications,
+                "* Current-status promotion is recorded by `PR #76`;\n" + communications,
+                1,
+            )
+
+        def remove_state_field(field: str):
+            return lambda dossier: self._rewrite_identity_lifecycle_payload(
+                dossier, lambda payload: payload.pop(field, None)
             )
 
         mutations = (
@@ -331,12 +370,40 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             ("Communications advanced", wrong_payload("communications", "COMPLETE / FINALISED")),
             ("Phase 7C advanced", wrong_payload("phase_7c", "READY / STARTED")),
             ("proof classification finalised", wrong_payload("proof_classification", "FINALISED")),
+            ("unexpected canonical JSON field", wrong_payload("unexpected_state", "UNEXPECTED")),
+            (
+                "PR #76 cannot collapse certification and promotion",
+                wrong_payload("pr_76_certification_promotion", "COMPLETE"),
+            ),
+            ("PR #76 candidate certification missing", remove_state_field("pr_76_candidate_certification")),
+            (
+                "PR #76 candidate certification wrong",
+                wrong_payload("pr_76_candidate_certification", "PENDING"),
+            ),
+            (
+                "PR #76 post-merge certification evidence missing",
+                remove_state_field("pr_76_post_merge_certification_evidence"),
+            ),
+            (
+                "PR #76 post-merge certification evidence wrong",
+                wrong_payload("pr_76_post_merge_certification_evidence", "PENDING"),
+            ),
+            (
+                "current-status promotion source missing",
+                remove_state_field("current_status_promotion"),
+            ),
+            (
+                "current-status promotion source wrong",
+                wrong_payload("current_status_promotion", "PR #76"),
+            ),
             (
                 "Phase 8 authorised",
                 wrong_payload("phase_8_application_implementation", "AUTHORISED"),
             ),
             ("header Status conflicts", wrong_header_status),
             ("BLOCKS_PHASE7C mirror conflicts", wrong_phase7c_mirror),
+            ("header Status provenance conflicts", wrong_header_provenance),
+            ("BLOCKS_PHASE7C attributes promotion to PR #76", pr76_claims_phase7c_promotion),
         )
         for name, mutate in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
@@ -379,6 +446,39 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             )
 
             self.assertEqual("PASS", promotion_check["status"], promotion_check["message"])
+
+    def test_fp001_identity_v014_open_work_separates_pr76_certification_from_pr77_promotion(self):
+        canonical_provenance = (
+            "PR #76 certified the v0.1.4 candidate and supplied completed post-merge certification evidence. "
+            "It did not make v0.1.4 current. This separate PR #77 status successor records the current-status "
+            "promotion; the resulting Identity state is CERTIFIED / CURRENT."
+        )
+        collapsed_provenance = "PR #76 certification/promotion is COMPLETE / CERTIFIED / CURRENT."
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.57.md"
+            open_work = open_work_path.read_text(encoding="utf-8")
+            section_start = open_work.index("## 12.14 —")
+            section_end = open_work.find("\n## ", section_start + 1)
+            if section_end < 0:
+                section_end = len(open_work)
+            section = open_work[section_start:section_end]
+            if canonical_provenance in section:
+                section = section.replace(canonical_provenance, collapsed_provenance, 1)
+                open_work = open_work[:section_start] + section + open_work[section_end:]
+            else:
+                open_work = open_work[:section_end] + "\n\n" + collapsed_provenance + open_work[section_end:]
+            open_work_path.write_text(open_work, encoding="utf-8")
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+            promotion_check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_pmr_reconciliation"
+            )
+
+            self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+            self.assertIn("Open Work §12.14", promotion_check["message"])
 
     def test_fp001_identity_v014_lifecycle_evidence_boundaries_fail_closed(self):
         mutations = (
@@ -743,7 +843,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 lambda root: replace_once(
                     root,
                     "README.md",
-                    "- IDENTITY v0.1.4: CERTIFIED / CURRENT under PR #76",
+                    "- IDENTITY v0.1.4: CERTIFIED / CURRENT under the separate PR #77 status successor; PR #76 candidate and post-merge certification evidence are COMPLETE",
                     "- IDENTITY v0.1.3: CERTIFIED / CURRENT under PR #70",
                 ),
             ),

@@ -9,13 +9,13 @@
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
 - **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2, v0.2.3, v0.3.1 and v0.3.2 predecessors remain preserved.
 - **SemVer transition:** `v0.3.8 → v0.3.9` (PATCH: current Open Work and Identity status routing only; Atlas authority and delivery content are unchanged).
-- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This `v0.3.9` successor updates the current Open Work and FP-001 Identity dossier routes after PR #76 certification. It preserves the existing Feature Pack relationships, PMR meaning, capability rows, Domain participation derivation and all upstream law. FP-001 PMR reconciliation remains COMPLETE / CERTIFIED; Identity dossier v0.1.4 is CERTIFIED / CURRENT; `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED, and Communications finalisation remains BLOCKED / STOP. This successor does **not** populate a new ATLAS-12 view, amend upstream law or HARDEN-02 contract semantics, authorise Phase 7C, proof classification or implementation, or create the Communications dossier.
+- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This `v0.3.9` successor updates the current Open Work and FP-001 Identity dossier routes using PR #76 certification evidence and the separate PR #77 status successor. It preserves the existing Feature Pack relationships, PMR meaning, capability rows, Domain participation derivation and all upstream law. FP-001 PMR reconciliation remains COMPLETE / CERTIFIED; Identity dossier v0.1.4 is CERTIFIED / CURRENT under the separate PR #77 status successor; `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED, and Communications finalisation remains BLOCKED / STOP. This successor does **not** populate a new ATLAS-12 view, amend upstream law or HARDEN-02 contract semantics, authorise Phase 7C, proof classification or implementation, or create the Communications dossier.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 - **Patch scope:** PATCH / current-source routing only; Atlas authority and delivery content are unchanged.
 
 ## v0.3.9 Patch Scope
 
-This routing-only successor follows Open Work v1.2.57 and Identity dossier v0.1.4 after PR #76 certification. The exact candidate and both distinct v0.1.3 predecessor artifacts remain preserved in their manifest-pinned archive paths.
+This routing-only successor follows Open Work v1.2.57 and Identity dossier v0.1.4 using PR #76 candidate and post-merge certification evidence; the separate PR #77 status successor records the current Identity route. The exact candidate and both distinct v0.1.3 predecessor artifacts remain preserved in their manifest-pinned archive paths.
 
 This routing-only successor updates the current Open Work and Identity dossier routes and records the certified Identity v0.1.4 status. It does not change any derived capability, Domain, Feature Pack, gate or later programme-stage meaning.
 
@@ -541,7 +541,7 @@ A public visitor can choose Afrikaans or English, understand the launch-facing p
 - Phase 1, Trusted entry and commercial truth.
 - Relative position: 1 of 17 and the first node on the approved core path.
 - Delivery character: foundational.
-- Platform Member Reference is **REQUIRED** inside this outcome (`RQ-1` / current Roadmap). Exact PMR encoding remains unfrozen (`ARQ-IAM-013`). FP-001 PMR reconciliation is COMPLETE / CERTIFIED under current Open Work. Identity dossier v0.1.4 is CERTIFIED / CURRENT following PR #76. `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED; Communications finalisation remains BLOCKED / STOP. This Atlas view does not create that dossier or amend the FP-001 Skeleton, Gate Manifest, Identity dossier, Final Contract or proof classification.
+- Platform Member Reference is **REQUIRED** inside this outcome (`RQ-1` / current Roadmap). Exact PMR encoding remains unfrozen (`ARQ-IAM-013`). FP-001 PMR reconciliation is COMPLETE / CERTIFIED under current Open Work. Identity dossier v0.1.4 is CERTIFIED / CURRENT under the separate PR #77 status successor, based on PR #76 certification evidence. `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED; Communications finalisation remains BLOCKED / STOP. This Atlas view does not create that dossier or amend the FP-001 Skeleton, Gate Manifest, Identity dossier, Final Contract or proof classification.
 
 ### Approved Dependencies
 
