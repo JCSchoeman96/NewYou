@@ -32,8 +32,46 @@ FAD72C1_FROZEN_HASHES = {
     "docs/00_platform/archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md": "f93c18ac442b33cf9197d6fbf0aabe6b7fd0cc4a67ceac35ab15edd6c6718c20",
 }
 
+IDENTITY_LIFECYCLE_START = "<!-- IDENTITY_V014_CURRENT_LIFECYCLE_STATE_START -->"
+IDENTITY_LIFECYCLE_END = "<!-- IDENTITY_V014_CURRENT_LIFECYCLE_STATE_END -->"
+IDENTITY_LIFECYCLE_STATE = {
+    "artifact_version": "v0.1.4",
+    "identity_lifecycle": "CERTIFIED / CURRENT",
+    "pr_76_certification_promotion": "COMPLETE",
+    "communications": "REQUIRED / NEXT / NOT_STARTED",
+    "communications_finalisation": "BLOCKED / STOP",
+    "phase_7c": "BLOCKED / NOT_STARTED",
+    "proof_classification": "NOT FINALISED",
+    "phase_8_application_implementation": "UNAUTHORISED",
+}
+
 
 class FoundationIntegrityAuditTests(unittest.TestCase):
+    def _ensure_identity_lifecycle_block(self, dossier_path: Path) -> str:
+        dossier = dossier_path.read_text(encoding="utf-8")
+        if IDENTITY_LIFECYCLE_START in dossier or IDENTITY_LIFECYCLE_END in dossier:
+            return dossier
+        status_start = dossier.index("**Status:**")
+        status_end = dossier.index("\n", status_start)
+        block = (
+            f"{IDENTITY_LIFECYCLE_START}\n"
+            "This structured block is the machine-authoritative lifecycle projection for this artifact. "
+            "Historical narrative and explanatory prose do not independently redefine current lifecycle state.\n"
+            "```json\n"
+            f"{json.dumps(IDENTITY_LIFECYCLE_STATE, indent=2)}\n"
+            "```\n"
+            f"{IDENTITY_LIFECYCLE_END}\n"
+        )
+        return dossier[: status_end + 1] + "\n" + block + dossier[status_end + 1 :]
+
+    def _rewrite_identity_lifecycle_payload(self, dossier: str, mutate) -> str:
+        start = dossier.index(IDENTITY_LIFECYCLE_START)
+        payload_start = dossier.index("```json\n", start) + len("```json\n")
+        payload_end = dossier.index("\n```", payload_start)
+        payload = json.loads(dossier[payload_start:payload_end])
+        mutate(payload)
+        return dossier[:payload_start] + json.dumps(payload, indent=2) + dossier[payload_end:]
+
     def test_clean_fixture_returns_pass_report(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -202,85 +240,110 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 set(pinned_archives),
             )
 
-    def test_fp001_identity_v014_current_stop_section_rejects_pending_promotion_claim(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
-            dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
-            dossier = dossier_path.read_text(encoding="utf-8")
-            section_header = "### `BLOCKS_PHASE7C`\n"
-            pending_claim = (
-                "* This v0.1.4 candidate is `NOT CURRENT / CERTIFICATION PENDING`; "
-                "Communications finalisation remains `BLOCKED / STOP` until the two narrow "
-                "Identity seam corrections are independently certified and promoted."
-            )
-            self.assertIn(section_header, dossier)
-            dossier_path.write_text(
-                dossier.replace(section_header, section_header + "\n" + pending_claim + "\n", 1),
-                encoding="utf-8",
-            )
-            refresh_manifest(root, manifest_path)
+    def test_fp001_identity_v014_structured_lifecycle_rejects_invalid_state_and_mirrors(self):
+        def remove_block(dossier: str) -> str:
+            start = dossier.index(IDENTITY_LIFECYCLE_START)
+            end = dossier.index(IDENTITY_LIFECYCLE_END, start) + len(IDENTITY_LIFECYCLE_END)
+            return dossier[:start] + dossier[end:]
 
-            report = run_audit(root, manifest_path)
-            promotion_check = next(
-                check for check in report["checks"]
-                if check["name"] == "fp001_pmr_reconciliation"
-            )
+        def duplicate_block(dossier: str) -> str:
+            start = dossier.index(IDENTITY_LIFECYCLE_START)
+            end = dossier.index(IDENTITY_LIFECYCLE_END, start) + len(IDENTITY_LIFECYCLE_END)
+            block = dossier[start:end]
+            history = dossier.index("### Inherited v0.1.3 certification evidence")
+            return dossier[:history] + block + "\n\n" + dossier[history:]
 
-            self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-            self.assertIn(
-                "active Identity dossier lifecycle contradicts CERTIFIED / CURRENT",
-                promotion_check["message"],
+        def malformed_marker(dossier: str) -> str:
+            return dossier.replace(IDENTITY_LIFECYCLE_START, "<!-- IDENTITY_V014_CURRENT_LIFECYCLE_STATE_BEGIN -->", 1)
+
+        def relocate_block(dossier: str) -> str:
+            start = dossier.index(IDENTITY_LIFECYCLE_START)
+            end = dossier.index(IDENTITY_LIFECYCLE_END, start) + len(IDENTITY_LIFECYCLE_END)
+            block = dossier[start:end]
+            remaining = dossier[:start] + dossier[end:]
+            history = remaining.index("### Inherited v0.1.3 certification evidence")
+            return remaining.replace(
+                "### Inherited v0.1.3 certification evidence",
+                "### Inherited v0.1.3 certification evidence\n\n" + block,
+                1,
             )
 
-    def test_fp001_identity_v014_current_stop_section_rejects_older_current_dossier_claim(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
-            dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
-            dossier = dossier_path.read_text(encoding="utf-8")
-            section_header = "### `BLOCKS_PHASE7C`\n"
-            conflicting_claim = "* Identity v0.1.3 remains `CERTIFIED / CURRENT`."
-            self.assertIn(section_header, dossier)
-            dossier_path.write_text(
-                dossier.replace(section_header, section_header + "\n" + conflicting_claim + "\n", 1),
-                encoding="utf-8",
-            )
-            refresh_manifest(root, manifest_path)
-
-            report = run_audit(root, manifest_path)
-            promotion_check = next(
-                check for check in report["checks"]
-                if check["name"] == "fp001_pmr_reconciliation"
+        def reverse_markers(dossier: str) -> str:
+            start = dossier.index(IDENTITY_LIFECYCLE_START)
+            end = dossier.index(IDENTITY_LIFECYCLE_END, start)
+            return (
+                dossier[:start]
+                + dossier[end : end + len(IDENTITY_LIFECYCLE_END)]
+                + dossier[start + len(IDENTITY_LIFECYCLE_START) : end]
+                + IDENTITY_LIFECYCLE_START
+                + dossier[end + len(IDENTITY_LIFECYCLE_END) :]
             )
 
-            self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-            self.assertIn(
-                "active Identity dossier lifecycle contradicts CERTIFIED / CURRENT",
-                promotion_check["message"],
+        def malformed_payload(dossier: str) -> str:
+            return self._rewrite_identity_lifecycle_payload(dossier, lambda _payload: None).replace(
+                '"artifact_version": "v0.1.4"',
+                '"artifact_version": v0.1.4',
+                1,
             )
 
-    def test_fp001_identity_v014_current_lifecycle_rejects_claims_across_active_text(self):
-        mutations = (
-            (
-                "active status area",
+        def duplicate_json_key(dossier: str) -> str:
+            return dossier.replace(
+                '"artifact_version": "v0.1.4",',
+                '"artifact_version": "v0.1.4",\n  "artifact_version": "v0.1.4",',
+                1,
+            )
+
+        def missing_field(dossier: str) -> str:
+            return self._rewrite_identity_lifecycle_payload(
+                dossier, lambda payload: payload.pop("communications_finalisation")
+            )
+
+        def wrong_payload(field: str, value: str):
+            return lambda dossier: self._rewrite_identity_lifecycle_payload(
+                dossier, lambda payload: payload.update({field: value})
+            )
+
+        def wrong_header_status(dossier: str) -> str:
+            return dossier.replace(
                 "**Status:** `CERTIFIED / CURRENT`.",
-                "**Status:** `CERTIFIED / CURRENT`. Current lifecycle: `NOT CURRENT / CERTIFICATION PENDING`; "
-                "this v0.1.4 candidate awaits certification and promotion.",
-            ),
+                "**Status:** `NOT CURRENT`.",
+                1,
+            )
+
+        def wrong_phase7c_mirror(dossier: str) -> str:
+            return dossier.replace(
+                "Identity v0.1.4 is `CERTIFIED / CURRENT`",
+                "Identity v0.1.4 is `NOT CURRENT`",
+                1,
+            )
+
+        mutations = (
+            ("missing block", remove_block),
+            ("duplicate block", duplicate_block),
+            ("malformed marker", malformed_marker),
+            ("block outside current-state region", relocate_block),
+            ("out-of-order markers", reverse_markers),
+            ("malformed JSON", malformed_payload),
+            ("duplicate JSON key", duplicate_json_key),
+            ("missing required field", missing_field),
+            ("wrong Identity lifecycle", wrong_payload("identity_lifecycle", "NOT CURRENT")),
+            ("wrong dossier version", wrong_payload("artifact_version", "v0.1.3")),
+            ("Communications advanced", wrong_payload("communications", "COMPLETE / FINALISED")),
+            ("Phase 7C advanced", wrong_payload("phase_7c", "READY / STARTED")),
+            ("proof classification finalised", wrong_payload("proof_classification", "FINALISED")),
             (
-                "active nonhistorical section",
-                "## X. Open questions / remaining gates\n",
-                "## X. Open questions / remaining gates\n\n"
-                "Current lifecycle: `NOT CURRENT / CERTIFICATION PENDING`; "
-                "this v0.1.4 candidate awaits certification and promotion.\n",
+                "Phase 8 authorised",
+                wrong_payload("phase_8_application_implementation", "AUTHORISED"),
             ),
+            ("header Status conflicts", wrong_header_status),
+            ("BLOCKS_PHASE7C mirror conflicts", wrong_phase7c_mirror),
         )
-        for name, anchor, replacement in mutations:
+        for name, mutate in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
                 dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
-                dossier = dossier_path.read_text(encoding="utf-8")
-                self.assertIn(anchor, dossier)
-                dossier_path.write_text(dossier.replace(anchor, replacement, 1), encoding="utf-8")
+                dossier = self._ensure_identity_lifecycle_block(dossier_path)
+                dossier_path.write_text(mutate(dossier), encoding="utf-8")
                 refresh_manifest(root, manifest_path)
 
                 report = run_audit(root, manifest_path)
@@ -290,13 +353,13 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 )
 
                 self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-                self.assertIn("active Identity dossier lifecycle contradicts CERTIFIED / CURRENT", promotion_check["message"])
+                self.assertIn("Identity current lifecycle", promotion_check["message"])
 
     def test_fp001_identity_v014_historical_candidate_certification_evidence_is_exempt(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
             dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
-            dossier = dossier_path.read_text(encoding="utf-8")
+            dossier = self._ensure_identity_lifecycle_block(dossier_path)
             historical_heading = "### Inherited v0.1.3 certification evidence\n"
             historical_claim = (
                 "Historical PR #76 evidence: the exact v0.1.4 candidate was not current and its "
@@ -335,7 +398,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
                 dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
-                dossier = dossier_path.read_text(encoding="utf-8")
+                dossier = self._ensure_identity_lifecycle_block(dossier_path)
                 self.assertIn(anchor, dossier)
                 dossier_path.write_text(dossier.replace(anchor, replacement, 1), encoding="utf-8")
                 refresh_manifest(root, manifest_path)
@@ -393,6 +456,62 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
                 self.assertIn("current Atlas artifact lineage", promotion_check["message"])
 
+    def test_fp001_pmr_rejects_atlas_metadata_declarations_outside_header(self):
+        mutations = (
+            (
+                "later predecessor declaration",
+                "\n- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.7.md` (contradictory later declaration)\n",
+            ),
+            (
+                "later transition declaration",
+                "\n- **SemVer transition:** `v0.3.7 → v0.3.9` (contradictory later declaration)\n",
+            ),
+        )
+        for name, declaration in mutations:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.9.md"
+                atlas = atlas_path.read_text(encoding="utf-8")
+                header = atlas.split("## v0.3.9 Patch Scope", 1)[0]
+                self.assertIn("- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md`", header)
+                self.assertIn("- **SemVer transition:** `v0.3.8 → v0.3.9`", header)
+                atlas_path.write_text(atlas + declaration, encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+                promotion_check = next(
+                    check for check in report["checks"]
+                    if check["name"] == "fp001_pmr_reconciliation"
+                )
+
+                self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+                self.assertIn("Atlas metadata declaration", promotion_check["message"])
+
+    def test_fp001_pmr_allows_historical_lineage_prose_without_metadata_declarations(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.9.md"
+            atlas_path.write_text(
+                atlas_path.read_text(encoding="utf-8")
+                + "\nHistorical prose: Atlas v0.3.7 preceded the direct v0.3.8 predecessor, and the current transition is v0.3.8 to v0.3.9.\n",
+                encoding="utf-8",
+            )
+            harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.1.md"
+            harden_path.write_text(
+                harden_path.read_text(encoding="utf-8")
+                + "\nHistorical prose: v0.4.9 came before the current v0.5.0 predecessor; the certified semantics originate in v0.4.0.\n",
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+            promotion_check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_pmr_reconciliation"
+            )
+
+            self.assertEqual("PASS", promotion_check["status"], promotion_check["message"])
+
     def test_fp001_pmr_validates_harden_v051_successor_metadata(self):
         predecessor = "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.0.md` — byte-identical prior current-status snapshot\n"
         mutations = (
@@ -439,6 +558,37 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
                 self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
                 self.assertIn("current HARDEN-02 v0.5.1 successor metadata", promotion_check["message"])
+
+    def test_fp001_pmr_rejects_harden_metadata_declarations_outside_header(self):
+        declarations = (
+            ("Plan / contract version", "v0.5.0"),
+            ("Current predecessor", "`archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md`"),
+            ("Earlier historical status predecessor", "`archive/HARDEN-02_CONTRACT_WORKING_v0.4.8.md`"),
+            (
+                "Certified contract semantics",
+                "`archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` — this v0.4.9 successor changes status",
+            ),
+            ("v0.5.0 status-successor base main SHA", "`0000000000000000000000000000000000000000`"),
+            ("v0.5.1 status-successor base main SHA", "`0000000000000000000000000000000000000000`"),
+        )
+        for field, value in declarations:
+            declaration = f"\n- **{field}:** {value}\n"
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.1.md"
+                harden = harden_path.read_text(encoding="utf-8")
+                self.assertIn("- **Plan / contract version:** `v0.5.1`", harden.split("### Revision log", 1)[0])
+                harden_path.write_text(harden + declaration, encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+                promotion_check = next(
+                    check for check in report["checks"]
+                    if check["name"] == "fp001_pmr_reconciliation"
+                )
+
+                self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+                self.assertIn("HARDEN-02 v0.5.1 successor metadata declaration", promotion_check["message"])
 
     def test_fp001_identity_v014_promotion_rejects_non_immediate_atlas_predecessor(self):
         with tempfile.TemporaryDirectory() as directory:

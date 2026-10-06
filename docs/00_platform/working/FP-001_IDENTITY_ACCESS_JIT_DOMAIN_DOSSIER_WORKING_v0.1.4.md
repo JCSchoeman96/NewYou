@@ -14,6 +14,22 @@ DOES NOT OVERRIDE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 
 **Status:** `CERTIFIED / CURRENT`. PR #76 certified and merged this v0.1.4 dossier unchanged. The corrections address governed message/template-content ownership (COMM-UPD-001) and scanner/prefetch-safe proof consumption (COMM-UPD-002). Identity & Access remains sole authority for proof and primary-email-change truth. Communications remains `REQUIRED / NEXT / NOT_STARTED`; finalisation remains `BLOCKED / STOP` pending the Communications dossier and applicable gates. No Communications dossier, Phase 7C work or implementation starts here.
 
+<!-- IDENTITY_V014_CURRENT_LIFECYCLE_STATE_START -->
+This structured block is the machine-authoritative lifecycle projection for this artifact. Historical narrative and explanatory prose do not independently redefine current lifecycle state.
+```json
+{
+  "artifact_version": "v0.1.4",
+  "identity_lifecycle": "CERTIFIED / CURRENT",
+  "pr_76_certification_promotion": "COMPLETE",
+  "communications": "REQUIRED / NEXT / NOT_STARTED",
+  "communications_finalisation": "BLOCKED / STOP",
+  "phase_7c": "BLOCKED / NOT_STARTED",
+  "proof_classification": "NOT FINALISED",
+  "phase_8_application_implementation": "UNAUTHORISED"
+}
+```
+<!-- IDENTITY_V014_CURRENT_LIFECYCLE_STATE_END -->
+
 ### Inherited v0.1.3 certification evidence
 
 | Evidence | Result |
@@ -665,6 +681,8 @@ Resource names represent business concepts, not database tables, screens or work
 * PR #76 certification/promotion is `COMPLETE`; Identity v0.1.4 is `CERTIFIED / CURRENT`.
 * Communications remains `REQUIRED / NEXT / NOT_STARTED`; Communications finalisation remains `BLOCKED / STOP` pending its own dossier and applicable gates.
 * Phase 7C remains `BLOCKED / NOT_STARTED` while required Phase 7B work remains: the separately authorised Communications dossier is not started, conditional dossiers remain subject to explicit adjudication where current law proves insufficient, and applicable blocking gates must be resolved. Phase 7C must consume their contracts without inventing Identity semantics.
+* Proof classification remains `NOT FINALISED`.
+* Phase 8/application implementation remains `UNAUTHORISED`.
 
 ### `BLOCKS_RELEASE_ONLY`
 
