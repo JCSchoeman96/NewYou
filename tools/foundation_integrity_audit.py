@@ -487,16 +487,29 @@ def _metadata_declarations(text: str, label: str) -> list[str]:
     pattern = re.compile(rf"^-\s+\*\*{re.escape(label)}:\*\*\s*(.*?)\s*$")
     declarations: list[str] = []
     fence_character: str | None = None
+    fence_length = 0
     for line in text.splitlines():
-        fence = re.match(r"^\s*(`{3,}|~{3,})", line)
-        if fence:
-            marker = fence.group(1)[0]
-            if fence_character is None:
-                fence_character = marker
-            elif marker == fence_character:
+        if fence_character is not None:
+            closing_fence = re.fullmatch(
+                rf" {{0,3}}{re.escape(fence_character)}{{{fence_length},}}[ \t]*",
+                line,
+            )
+            if closing_fence is not None:
                 fence_character = None
+                fence_length = 0
             continue
-        if fence_character is None and (match := pattern.fullmatch(line)):
+
+        opening_fence = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
+        if opening_fence is not None:
+            marker = opening_fence.group(1)
+            info_string = opening_fence.group(2)
+            if marker[0] == "`" and "`" in info_string:
+                continue
+            fence_character = marker[0]
+            fence_length = len(marker)
+            continue
+
+        if match := pattern.fullmatch(line):
             declarations.append(match.group(1))
     return declarations
 
@@ -1280,7 +1293,7 @@ def _engineering_standards_certified_state(
     required_harden_status = (
         "Engineering Standards Authority Promotion is COMPLETE / CERTIFIED under `reference/ENGINEERING_STANDARDS_v1.0.1.md`",
         "FP-001 PMR reconciliation is COMPLETE / CERTIFIED under PR #67",
-        "Identity v0.1.3 is COMPLETE / CERTIFIED / CURRENT under PR #70",
+        "Identity v0.1.4 is COMPLETE / CERTIFIED / CURRENT under the separate PR #77 status successor",
         "PR #76 candidate certification and completed post-merge certification evidence are COMPLETE; the separate PR #77 status successor records Identity v0.1.4 as COMPLETE / CERTIFIED / CURRENT.",
         "NEXT is `COMMUNICATIONS JIT DOMAIN DOSSIER`, REQUIRED / NEXT / NOT_STARTED",
         "Phase 7C remains blocked / not started",
@@ -2742,6 +2755,20 @@ def _check_fp001_pmr_reconciliation(
     }
     if not isinstance(navigation_paths, list) or set(navigation_paths) != expected_navigation_paths or len(navigation_paths) != len(expected_navigation_paths):
         issues.append("manifest navigation does not route exactly the current FP-001, Atlas and HARDEN successors")
+
+    retired_working_predecessors = (
+        (
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.8.md",
+            "immediate Atlas predecessor remains in the working route",
+        ),
+        (
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md",
+            "immediate HARDEN-02 predecessor remains in the working route",
+        ),
+    )
+    for relative_path, issue in retired_working_predecessors:
+        if (root / relative_path).exists():
+            issues.append(issue)
 
     skeleton_text = skeleton.read_text(encoding="utf-8") if skeleton.is_file() else ""
     dossier_text = dossier.read_text(encoding="utf-8") if dossier.is_file() else ""

@@ -690,6 +690,146 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
                 self.assertIn("HARDEN-02 v0.5.1 successor metadata declaration", promotion_check["message"])
 
+    def test_fp001_pmr_rejects_immediate_predecessors_left_in_working_routes(self):
+        stale_routes = (
+            (
+                "Atlas v0.3.8",
+                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.8.md",
+                "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md",
+                "immediate Atlas predecessor remains in the working route",
+            ),
+            (
+                "HARDEN-02 v0.5.0",
+                "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md",
+                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.8.md",
+                "immediate HARDEN-02 predecessor remains in the working route",
+            ),
+        )
+        for name, stale_route, other_route, expected_message in stale_routes:
+            with self.subTest(route=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                stale_path = root / stale_route
+                other_path = root / other_route
+                archive_path = root / stale_route.replace("/working/", "/archive/")
+                self.assertTrue(archive_path.is_file())
+                stale_path.write_bytes(archive_path.read_bytes())
+                if other_path.exists():
+                    other_path.unlink()
+
+                report = run_audit(root, manifest_path)
+                promotion_check = next(
+                    check for check in report["checks"]
+                    if check["name"] == "fp001_pmr_reconciliation"
+                )
+
+                self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+                self.assertIn(expected_message, promotion_check["message"])
+
+    def test_fp001_pmr_metadata_declarations_follow_commonmark_fence_state(self):
+        cases = (
+            (
+                "real declarations outside fences are counted",
+                "{declaration}\n",
+                "FAIL",
+            ),
+            (
+                "ordinary backtick example hides duplicate",
+                "```text\n{declaration}\n```\n",
+                "PASS",
+            ),
+            (
+                "three-space-indented fence is valid",
+                "   ```text\n{declaration}\n   ```\n",
+                "PASS",
+            ),
+            (
+                "tilde example hides duplicate",
+                "~~~text\n{declaration}\n~~~\n",
+                "PASS",
+            ),
+            (
+                "backtick run cannot close a tilde fence",
+                "~~~text\n```\n{declaration}\n~~~\n",
+                "PASS",
+            ),
+            (
+                "short same-character run does not close a longer fence",
+                "`````text\n```\n{declaration}\n``````\n",
+                "PASS",
+            ),
+            (
+                "non-whitespace after a close run keeps the fence open",
+                "```text\n``` trailing text\n{declaration}\n```\n",
+                "PASS",
+            ),
+            (
+                "four-space indentation cannot open a fence",
+                "    ```text\n{declaration}\n    ```\n",
+                "FAIL",
+            ),
+            (
+                "four-space indentation cannot close a fence",
+                "```text\n    ```\n{declaration}\n```\n",
+                "PASS",
+            ),
+            (
+                "backtick in info string prevents an opening fence",
+                "```invalid`info\n{declaration}\n```\n",
+                "FAIL",
+            ),
+            (
+                "sufficiently long close exposes a later declaration",
+                "`````text\nexample\n``````\n{declaration}\n",
+                "FAIL",
+            ),
+            (
+                "closed example does not hide a later declaration",
+                "```text\nexample\n```\n{declaration}\n",
+                "FAIL",
+            ),
+            (
+                "historical prose that mentions labels is not a declaration",
+                "Historical prose discusses the **Predecessor:** label and a SemVer transition without declaring either.\n",
+                "PASS",
+            ),
+        )
+        metadata_documents = (
+            (
+                "Atlas",
+                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.9.md",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.7.md` (example duplicate)",
+            ),
+            (
+                "HARDEN-02",
+                "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.1.md",
+                "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` (example duplicate)",
+            ),
+        )
+        for case, suffix, expected_status in cases:
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                for _, relative_path, declaration in metadata_documents:
+                    path = root / relative_path
+                    path.write_text(
+                        path.read_text(encoding="utf-8") + "\n" + suffix.format(declaration=declaration),
+                        encoding="utf-8",
+                    )
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+                promotion_check = next(
+                    check for check in report["checks"]
+                    if check["name"] == "fp001_pmr_reconciliation"
+                )
+
+                self.assertEqual(expected_status, promotion_check["status"], promotion_check["message"])
+                if expected_status == "FAIL":
+                    self.assertIn("current Atlas artifact lineage", promotion_check["message"])
+                    self.assertIn(
+                        "current HARDEN-02 v0.5.1 successor metadata declaration",
+                        promotion_check["message"],
+                    )
+
     def test_fp001_identity_v014_promotion_rejects_non_immediate_atlas_predecessor(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))

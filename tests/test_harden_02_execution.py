@@ -1819,8 +1819,8 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         predecessor = self._required(DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.8.md")
         B = chr(96)
         extra_provenance = (
-            "This routing-only successor follows Open Work v1.2.57 and Identity dossier v0.1.4 after PR #76 certification. "
-            "The exact candidate and both distinct v0.1.3 predecessor artifacts remain preserved in their manifest-pinned archive paths.\n\n"
+            "This routing-only successor follows Open Work v1.2.57 and Identity dossier v0.1.4 using PR #76 candidate and post-merge certification evidence; "
+            "the separate PR #77 status successor records the current Identity route. The exact candidate and both distinct v0.1.3 predecessor artifacts remain preserved in their manifest-pinned archive paths.\n\n"
         )
         self.assertEqual(1, successor.count(extra_provenance))
         normalized = successor.replace(extra_provenance, "", 1)
@@ -1833,6 +1833,18 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             ("02_OPEN_WORK_v1.2.57.md", "02_OPEN_WORK_v1.2.56.md"),
             ("v1.2.57", "v1.2.56"),
             ("PR #76", "PR #70"),
+            (
+                "using PR #70 certification evidence and the separate PR #77 status successor",
+                "after PR #70 certification",
+            ),
+            (
+                "Identity dossier v0.1.3 is CERTIFIED / CURRENT under the separate PR #77 status successor, based on PR #70 certification evidence",
+                "Identity dossier v0.1.3 is CERTIFIED / CURRENT following PR #70",
+            ),
+            (
+                "Identity dossier v0.1.3 is CERTIFIED / CURRENT under the separate PR #77 status successor",
+                "Identity dossier v0.1.3 is CERTIFIED / CURRENT",
+            ),
             ("archive/DELIVERY_ATLAS_WORKING_v0.3.8.md" + B + "; its predecessor", "archive/DELIVERY_ATLAS_WORKING_v0.3.2.md" + B + "; its predecessor"),
         ):
             if current not in normalized:
