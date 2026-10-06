@@ -10,9 +10,9 @@ from tools.foundation_integrity_audit import _h02_lifecycle_state
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.56.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.57.md"
 README = DOCS / "README.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.0.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.1.md"
 JSON_START = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
 JSON_END = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
 JSON_BLOCK = re.compile(
@@ -51,7 +51,7 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
     def test_complete_state_binds_the_execution_evidence_and_downstream_route(self):
         state = self._state()
         self.assertEqual("COMPLETE / CERTIFIED", state["harden_02_execution"])
-        self.assertEqual("CERTIFIED FP-001 IDENTITY v0.1.3 PATCH PROMOTION", state["current_stage"])
+        self.assertEqual("CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION", state["current_stage"])
         self.assertEqual("COMMUNICATIONS JIT DOMAIN DOSSIER", state["next_stage"])
         self.assertEqual("COMPLETE / CERTIFIED", state["engineering_standards_authority_promotion"])
         self.assertEqual("COMPLETE / CERTIFIED", state["fp001_reconciliation"])
@@ -67,7 +67,7 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         state["next_stage"] = "HARDEN-02_EXECUTION_REQUIRED"
         text = self._with_state(state)
         text = text.replace(
-            "CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 IDENTITY v0.1.3 PATCH PROMOTION",
+            "CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
             "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
             1,
         ).replace(
@@ -98,7 +98,7 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         end = self.open_work.index("## 12.2", start)
         row = self.open_work[start:end]
         changed_row = row.replace(
-            "`working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md`",
+            "`working/HARDEN-02_CONTRACT_WORKING_v0.5.1.md`",
             "`working/HARDEN-02_CONTRACT_WORKING_v0.4.6.md`",
             1,
         )
@@ -161,7 +161,7 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         self._assert_rejected(
             self.open_work,
             self.readme.replace(
-            "- CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 IDENTITY v0.1.3 PATCH PROMOTION",
+            "- CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
                 "- CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
                 1,
             ),

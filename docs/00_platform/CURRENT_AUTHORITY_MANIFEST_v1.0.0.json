@@ -39,12 +39,12 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.56.md",
-      "semver": "1.2.56",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.56.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.57.md",
+      "semver": "1.2.57",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.57.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "c14474cd91a236eaa6df8509e3f21ab0a4d2236942e7930d2be19a74b68b0516",
-      "superseded_version": "1.2.55",
+      "sha256": "4c9098360dbc5b3d56cb0f8b1de97c42271d87f9895f0947363d7d35e01564c6",
+      "superseded_version": "1.2.56",
       "lifecycle": "current"
     },
     {
@@ -157,6 +157,17 @@
     }
   ],
   "historical_documents": [
+    {
+      "document_id": "OPEN_WORK_V1_2_56",
+      "canonical_filename": "02_OPEN_WORK_v1.2.56.md",
+      "semver": "1.2.56",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.56.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "c14474cd91a236eaa6df8509e3f21ab0a4d2236942e7930d2be19a74b68b0516",
+      "superseded_version": "1.2.57",
+      "lifecycle": "historical",
+      "provenance_sha256": "c14474cd91a236eaa6df8509e3f21ab0a4d2236942e7930d2be19a74b68b0516"
+    },
     {
       "document_id": "OPEN_WORK_V1_2_55",
       "canonical_filename": "02_OPEN_WORK_v1.2.55.md",
@@ -1073,7 +1084,11 @@
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.55\\.md",
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.3\\.7\\.md",
         "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.4\\.9\\.md",
-        "(?<!archive/)FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0\\.1\\.2\\.md"
+        "(?<!archive/)FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0\\.1\\.2\\.md",
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.56\\.md",
+        "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.3\\.8\\.md",
+        "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.5\\.0\\.md",
+        "(?<!archive/)FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0\\.1\\.3\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",
@@ -1089,10 +1104,10 @@
         "FRONTEND_EXPERIENCE_SYSTEM"
       ],
       "navigation_document_paths": [
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.8.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.9.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md",
-        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.0.md"
+        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.1.md"
       ],
       "stale_open_work_v1_2_44_guard_note": "The exact 02_OPEN_WORK_v1.2.44.md stale-path pattern rejects unarchived references in active navigation documents. This is a routing guard only; it does not prove lifecycle or policy semantics.",
       "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52/v1.2.53/v1.2.54/v1.2.55, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4/v0.3.5/v0.3.6/v0.3.7, HARDEN-02 status v0.4.2/v0.4.6/v0.4.7/v0.4.8/v0.4.9, Engineering Standards candidate v1.0.0, Identity dossier v0.1.2 and FP-001 reconciliation candidates v0.1.2/v0.1.1 are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records."
@@ -1224,6 +1239,13 @@
           "withdrawal_does_not_rewrite_delivered_plan_history"
         ]
       }
+    },
+    "identity_v014_promotion_archives": {
+      "docs/00_platform/archive/02_OPEN_WORK_v1.2.56.md": "c14474cd91a236eaa6df8509e3f21ab0a4d2236942e7930d2be19a74b68b0516",
+      "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.3.8.md": "c557741ff03707eb159a9daaf06aa23a05cc2c5c90f8a4c831caa82d0a50af12",
+      "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.0.md": "3397af97ebd5a1a7a7b5696ff9f8ab75c18f1befb9ad4808b7d0f0cc60234fef",
+      "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3_SUPERSEDED_PROMOTED_CURRENT.md": "a88f993d92ea9ff0dc5652c284ccf4e2c17f4bb16b31759fb3417044d7f8e254",
+      "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md": "1557a4bded20b94fc363d96dd5a601213de105e0daccfa1970b869a0e38f362f"
     }
   }
 }
