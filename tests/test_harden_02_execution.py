@@ -14,29 +14,29 @@ DOCS = ROOT / "docs" / "00_platform"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.57.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.58.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.54.md"
 OPEN_WORK_ROUTING_SUCCESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.50.md"
 OPEN_WORK_ROUTING_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.49.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.1.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.2.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"
 CONTRACT_ROUTING_SUCCESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
 CONTRACT_ROUTING_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.9.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.0.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.6.md"
 ATLAS_ROUTING_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
 ATLAS_ROUTING_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
 
 POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
 ROADMAP = DOCS / "05_ROADMAP_v1.2.0.md"
-SKELETON = DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md"
+SKELETON = DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md"
 
 MATRIX_START = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:START -->"
 MATRIX_END = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:END -->"
 JSON_START = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
 JSON_END = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
 
-CURRENT_STAGE = "CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION"
+CURRENT_STAGE = "COMMUNICATIONS JIT DOMAIN DOSSIER WORK START"
 NEXT_STAGE = "COMMUNICATIONS JIT DOMAIN DOSSIER"
 EXECUTION_STATUS = "COMPLETE / CERTIFIED"
 EXECUTION_MATRIX_STATUS = "COMPLETE_CERTIFIED"
@@ -257,8 +257,8 @@ def _validate_contract_source_routing(text: str) -> None:
     if len(derived_rows) != 3 or any(len(row) != 2 for row in derived_rows):
         raise ValueError("current derived/source-at-freeze table has missing or unexpected rows")
     derived = {row[0].strip("`"): row[1] for row in derived_rows}
-    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.3.9.md"
-    skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md"
+    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.4.0.md"
+    skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md"
     identity_path = "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
     if set(derived) != {atlas_path, skeleton_path, identity_path}:
         raise ValueError("derived/source-at-freeze rows do not identify the current artifacts")
@@ -281,19 +281,19 @@ def _validate_contract_source_routing(text: str) -> None:
             raise ValueError("current Identity dossier does not record certified reconciliation status")
 
     readme = _read(README)
-    if "working/DELIVERY_ATLAS_WORKING_v0.3.9.md" not in readme:
+    if "working/DELIVERY_ATLAS_WORKING_v0.4.0.md" not in readme:
         raise ValueError("README does not route current Atlas to v0.3.9")
     if "The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references." not in readme:
         raise ValueError("README does not preserve Atlas v0.2.1 as source-at-freeze evidence")
     atlas_routing = _section(readme, "## Delivery Atlas routing", "## Machine-readable inventory")
-    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.3.9.md)" not in atlas_routing:
+    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.4.0.md)" not in atlas_routing:
         raise ValueError("README Delivery Atlas navigation does not target v0.3.9")
-    if "working/HARDEN-02_CONTRACT_WORKING_v0.5.1.md" not in readme:
+    if "working/HARDEN-02_CONTRACT_WORKING_v0.5.2.md" not in readme:
         raise ValueError("README does not route the current HARDEN status successor")
     active = _active_window(_read(OPEN_WORK))
     if "- IDENTITY & ACCESS: COMPLETE / CERTIFIED / CURRENT v0.1.4" not in active:
         raise ValueError("current Identity lifecycle status is not sourced from Open Work")
-    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.5.1.md" not in active:
+    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.5.2.md" not in active:
         raise ValueError("Open Work does not route the current HARDEN status successor")
 
 
@@ -972,7 +972,7 @@ def _assert_downstream_state(state: dict[str, object]) -> None:
         "fp001_reconciliation": "COMPLETE / CERTIFIED",
         "identity_dossier": "CERTIFIED / CURRENT v0.1.4",
         "identity_dossier_promotion": "COMPLETE / CERTIFIED / CURRENT",
-        "communications": "REQUIRED / NEXT / NOT_STARTED",
+        "communications": "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
         "communications_finalisation": "BLOCKED / STOP",
         "phase_7c": "BLOCKED / NOT_STARTED",
         "proof_classification": "NOT FINALISED",
@@ -1081,7 +1081,7 @@ def _execution_state_is_valid(text: str, state: dict[str, object]) -> bool:
     )
     if any(active.count(line) != 1 for line in required_active):
         return False
-    if active.count("COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED") != 2:
+    if active.count("COMMUNICATIONS: REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING") != 2:
         return False
     route_lines = [line.strip("→ ") for line in active.splitlines() if line.lstrip().startswith("→")]
     if active.count("H02-3R POST-EXECUTION ROUTE:") != 1 or route_lines != expected_route[1:]:
@@ -1096,7 +1096,7 @@ def _affirmative_prohibited_scope(text: str) -> list[str]:
         r"(?im)^\s*(?:HARDEN-02|H02-1).*\b(?:Product Law|Architecture Law|Domain Law|Roadmap Law|Feature Pack|Horizontal Hardening)\b.*\b(?:is|becomes|owns|requires)\b",
         r"(?im)^\s*HARDEN-02\s+(?:is|becomes|acts as|constitutes)\s+(?:a\s+|an\s+)?(?:Product requirement|Roadmap gate|blocking OQ|Feature Pack|Horizontal Hardening|Store hardening|Commerce/Entitlements hardening)\b",
         r"(?im)^\s*(?:STORE\s*/\s*CER|Store Blueprint|\bCER\b).*\b(?:IN SCOPE|REQUIRED|AUTHORISED|AUTHORIZED|COMPLETE)\b",
-        r"(?im)^\s*COMMUNICATIONS.*\b(?:COMPLETE|STARTED|AUTHORISED|AUTHORIZED)\b",
+        r"(?im)^\s*COMMUNICATIONS.*(?:(?<!NOT )\bCOMPLETE\b|\b(?:STARTED|AUTHORISED|AUTHORIZED)\b)",
         r"(?im)^\s*(?:PHASE 7C|PROOF CLASSIFICATION|PHASE 8|EXECUTABLE DEVELOPMENT|APPLICATION IMPLEMENTATION).*\b(?:COMPLETE|APPROVED|PASSED|AUTHORISED|AUTHORIZED|READY)\b",
         r"(?im)^\s*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT|TB|VS|HH|PACKAGE INSTALLS?|MIGRATIONS?|PROVIDER CHANGES?)\s*:\s*(?:AUTHORISED|AUTHORIZED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE|ALLOWED)\b",
         r"(?im)\bStore repository SHA\b",
@@ -1138,7 +1138,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         self.assertRegex(contract[:2000], r"(?is)status:.*COMPLETE / CERTIFIED")
         self.assertIn("I-01", matrix["EXECUTION"]["evidence"])
         self.assertIn("I-13", matrix["EXECUTION"]["evidence"])
-        self.assertEqual("0.5.1", state.get("status_successor_version"))
+        self.assertEqual("0.5.2", state.get("status_successor_version"))
         contradictory = (
             text
             + "\nCURRENT AUTHORITY-STAGE PROGRAMME: FP-001 RECONCILIATION\n"
@@ -1183,7 +1183,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             active,
             r"(?m)^FP001_RECONCILIATION_REQUIRED:\s*COMPLETE / CERTIFIED\s*$",
         )
-        self.assertRegex(active, r"(?m)^COMMUNICATIONS:\s*REQUIRED / NEXT / NOT_STARTED$")
+        self.assertRegex(active, r"(?m)^COMMUNICATIONS:\s*REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING$")
         self.assertNotRegex(active, r"(?m)^COMMUNICATIONS:\s*(?:COMPLETE|STARTED|IN_PROGRESS)")
         premature = text.replace(
             '"fp001_reconciliation": "COMPLETE / CERTIFIED"',
@@ -1470,16 +1470,17 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     _roadmap_phase7_handoff_requirements(mutant)
 
-    def test_i05_communications_is_next_but_not_started(self):
+    def test_i05_communications_work_has_started_but_finalisation_stays_blocked(self):
         text, state, _ = self._state_and_matrix()
-        self.assertEqual("REQUIRED / NEXT / NOT_STARTED", state.get("communications"))
-        self.assertIn("COMMUNICATIONS: REQUIRED / NEXT / NOT_STARTED", _active_window(text))
+        self.assertEqual("REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", state.get("communications"))
+        self.assertIn("COMMUNICATIONS: REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", _active_window(text))
+        self.assertIn("COMMUNICATIONS FINALISATION: BLOCKED / STOP", _active_window(text))
         self.assertIn("Communications", _read(SKELETON))
         self.assertIn("Required dossiers", _read(SKELETON))
-        self.assertNotRegex(_active_window(text), r"(?im)^COMMUNICATIONS:.*\b(?:COMPLETE|MERGED|STARTED|OPTIONAL)\b")
+        self.assertNotRegex(_active_window(text), r"(?im)^COMMUNICATIONS:.*(?:(?<!NOT )\bCOMPLETE\b|\b(?:MERGED|OPTIONAL)\b)")
         premature = text.replace(
-            '"communications": "REQUIRED / NEXT / NOT_STARTED"',
-            '"communications": "REQUIRED / STARTED"',
+            '"communications": "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"',
+            '"communications": "COMPLETE / CERTIFIED"',
             1,
         )
         self.assertFalse(_execution_state_is_valid(premature, _lifecycle_json(premature)))
@@ -1688,9 +1689,9 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         )
         stale_mutants = (
             contract.replace("00_PLATFORM_v1.6.0.md", "00_PLATFORM_v1.5.1.md", 1),
-            contract.replace("02_OPEN_WORK_v1.2.57.md", "02_OPEN_WORK_v1.2.51.md", 1),
+            contract.replace("02_OPEN_WORK_v1.2.58.md", "02_OPEN_WORK_v1.2.51.md", 1),
             contract.replace(
-                "working/DELIVERY_ATLAS_WORKING_v0.3.9.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.0.md",
                 "working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
                 1,
             ),
@@ -1802,13 +1803,20 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             ("## 3. Accepted human scope decisions", "## 4. In scope"),
             ("## 4. In scope", "## 5. Explicitly out of scope"),
             ("## 5. Explicitly out of scope", "## 6. Reuse classification"),
-            ("## 8. Current structural invariant suite", "## 9. Stale-state / restart pressure tests"),
             ("## 13. Failure / recovery / STOP criteria", "## 14. Domain-authority boundaries"),
             ("### Execution stage (later, separately authorised)", "## 18. Downstream consequence"),
             ("## 18. Downstream consequence", "## 19. Explicit exclusion confirmations"),
             ("## 19. Explicit exclusion confirmations", "## 20. Contract-stage STOP"),
         ):
             self.assertEqual(_section(predecessor, start, end), _section(current, start, end), start)
+        current_i05 = _section(current, "## 8. Current structural invariant suite", "## 9. Stale-state / restart pressure tests")
+        predecessor_i05 = _section(predecessor, "## 8. Current structural invariant suite", "## 9. Stale-state / restart pressure tests")
+        current_i05 = current_i05.replace(
+            "Identity complete/merged is factual. Communications remains required; its JIT dossier is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING, while Communications finalisation remains BLOCKED / STOP. HARDEN-02 must not mark Communications complete or optional.",
+            "Identity complete/merged is factual. Communications remains REQUIRED / NOT_STARTED. HARDEN-02 must not mark Communications complete or optional.",
+            1,
+        )
+        self.assertEqual(predecessor_i05, current_i05)
         self.assertIn("HARDEN-02 execution is COMPLETE / CERTIFIED", current)
         self.assertIn("PASS WITH NON-BLOCKING CORRECTIONS", current)
         self.assertNotIn("Current HARDEN-02 execution is IN PROGRESS", current)
@@ -1816,40 +1824,63 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
 
     def test_atlas_successor_normalizes_to_route_only_change(self):
         successor = self._required(ATLAS)
-        predecessor = self._required(DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.8.md")
-        B = chr(96)
-        extra_provenance = (
-            "This routing-only successor follows Open Work v1.2.57 and Identity dossier v0.1.4 using PR #76 candidate and post-merge certification evidence; "
-            "the separate PR #77 status successor records the current Identity route. The exact candidate and both distinct v0.1.3 predecessor artifacts remain preserved in their manifest-pinned archive paths.\n\n"
+        predecessor = self._required(DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.9.md")
+        reverse_lines = (
+            ("# Delivery Atlas working v0.4.0", "# Delivery Atlas working v0.3.9"),
+            (
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.9.md` (routing predecessor; preserved byte-identically). Earlier predecessors remain preserved at their archive paths.",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md` (routing predecessor; preserved byte-identically). Earlier v0.2.0, v0.2.1, v0.2.2, v0.2.3, v0.3.1 and v0.3.2 predecessors remain preserved.",
+            ),
+            (
+                "- **SemVer transition:** `v0.3.9 → v0.4.0` (PATCH: current Open Work and Communications task-status routing only; Atlas authority and delivery content are unchanged).",
+                "- **SemVer transition:** `v0.3.8 → v0.3.9` (PATCH: current Open Work and Identity status routing only; Atlas authority and delivery content are unchanged).",
+            ),
+            (
+                "- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This `v0.4.0` successor updates current routing to Open Work v1.2.58 and records Communications JIT Domain Dossier work as IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING, following the separate PR #77 Identity status successor. It preserves the existing Feature Pack relationships, PMR meaning, capability rows, Domain participation derivation and all upstream law. FP-001 PMR reconciliation remains COMPLETE / CERTIFIED; Identity dossier v0.1.4 is CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP. This successor does **not** populate a new ATLAS-12 view, amend upstream law or HARDEN-02 contract semantics, certify the Communications dossier candidate, authorise Phase 7C, proof classification or implementation.",
+                "- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This `v0.3.9` successor updates the current Open Work and FP-001 Identity dossier routes using PR #76 certification evidence and the separate PR #77 status successor. It preserves the existing Feature Pack relationships, PMR meaning, capability rows, Domain participation derivation and all upstream law. FP-001 PMR reconciliation remains COMPLETE / CERTIFIED; Identity dossier v0.1.4 is CERTIFIED / CURRENT under the separate PR #77 status successor; `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED, and Communications finalisation remains BLOCKED / STOP. This successor does **not** populate a new ATLAS-12 view, amend upstream law or HARDEN-02 contract semantics, authorise Phase 7C, proof classification or implementation, or create the Communications dossier.",
+            ),
+            ("## v0.4.0 Patch Scope", "## v0.3.9 Patch Scope"),
+            (
+                "This routing-only successor follows Open Work v1.2.58 and Identity dossier v0.1.4. PR #76 candidate and post-merge certification evidence remain distinct from the separate PR #77 current-status successor. The Communications JIT Domain Dossier task is now IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING; its finalisation remains BLOCKED / STOP. The v0.3.9 predecessor and both distinct Identity v0.1.3 predecessor artifacts remain preserved in their manifest-pinned archive paths.",
+                "This routing-only successor follows Open Work v1.2.57 and Identity dossier v0.1.4 using PR #76 candidate and post-merge certification evidence; the separate PR #77 status successor records the current Identity route. The exact candidate and both distinct v0.1.3 predecessor artifacts remain preserved in their manifest-pinned archive paths.",
+            ),
+            (
+                "This routing-only successor updates the current Open Work, Identity dossier and Communications task-status routes. It does not change any derived capability, Domain, Feature Pack, gate or later programme-stage meaning.",
+                "This routing-only successor updates the current Open Work and Identity dossier routes and records the certified Identity v0.1.4 status. It does not change any derived capability, Domain, Feature Pack, gate or later programme-stage meaning.",
+            ),
+            (
+                "| Planning tracker | `docs/00_platform/02_OPEN_WORK_v1.2.58.md` | Tracks unresolved gates, planning sequence and development stop conditions. It does not outrank Product, Architecture, Domain or Roadmap authority. |",
+                "| Planning tracker | `docs/00_platform/02_OPEN_WORK_v1.2.57.md` | Tracks unresolved gates, planning sequence and development stop conditions. It does not outrank Product, Architecture, Domain or Roadmap authority. |",
+            ),
+            (
+                "- Platform Member Reference is **REQUIRED** inside this outcome (`RQ-1` / current Roadmap). Exact PMR encoding remains unfrozen (`ARQ-IAM-013`). FP-001 PMR reconciliation is COMPLETE / CERTIFIED under current Open Work. Identity dossier v0.1.4 is CERTIFIED / CURRENT under the separate PR #77 status successor, based on PR #76 certification evidence. Communications JIT Domain Dossier work is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING; Communications finalisation remains BLOCKED / STOP. This Atlas view does not certify the dossier candidate or amend the FP-001 Skeleton, Gate Manifest, Identity dossier, Final Contract or proof classification.",
+                "- Platform Member Reference is **REQUIRED** inside this outcome (`RQ-1` / current Roadmap). Exact PMR encoding remains unfrozen (`ARQ-IAM-013`). FP-001 PMR reconciliation is COMPLETE / CERTIFIED under current Open Work. Identity dossier v0.1.4 is CERTIFIED / CURRENT under the separate PR #77 status successor, based on PR #76 certification evidence. `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED; Communications finalisation remains BLOCKED / STOP. This Atlas view does not create that dossier or amend the FP-001 Skeleton, Gate Manifest, Identity dossier, Final Contract or proof classification.",
+            ),
+            (
+                "`05_ROADMAP_v1.2.0.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.2.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.6.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.58.md`.",
+                "`05_ROADMAP_v1.2.0.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.2.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.6.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.57.md`.",
+            ),
+            (
+                "**JIT Boundary:** Credential and session Resource/action contracts, recovery assurance, field policies, abuse-control implementation and exact PMR encoding/prefix/alphabet/grouping/length/checksum/generator/schema (`ARQ-IAM-013`) remain downstream. FP-001 PMR reconciliation is COMPLETE / CERTIFIED. Identity dossier v0.1.4 is CERTIFIED / CURRENT. Communications JIT Domain Dossier work is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING, with finalisation BLOCKED / STOP. This Atlas successor does not certify the Communications dossier candidate or authorise later gates.",
+                "**JIT Boundary:** Credential and session Resource/action contracts, recovery assurance, field policies, abuse-control implementation and exact PMR encoding/prefix/alphabet/grouping/length/checksum/generator/schema (`ARQ-IAM-013`) remain downstream. FP-001 PMR reconciliation is COMPLETE / CERTIFIED. Identity dossier v0.1.4 is CERTIFIED / CURRENT. `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED, with finalisation BLOCKED / STOP. This Atlas successor does not create that dossier or authorise later gates.",
+            ),
+            (
+                "| CAP-001 | FP-001 | `I` | FP-001 material identity includes the certified IAM-owned PMR reconciliation. Encoding remains unfrozen; Communications JIT Domain Dossier work is the current in-progress task. | `archive/05_ROADMAP_v1.1.0.md §6 FP-001`; `04_DOMAIN_MAP_v1.2.0.md §6.1` |",
+                "| CAP-001 | FP-001 | `I` | FP-001 material identity includes the certified IAM-owned PMR reconciliation. Encoding remains unfrozen; `COMMUNICATIONS JIT DOMAIN DOSSIER` is the current next task. | `archive/05_ROADMAP_v1.1.0.md §6 FP-001`; `04_DOMAIN_MAP_v1.2.0.md §6.1` |",
+            ),
+            (
+                "| Current-source routing | §1.1 points to North Star/MVP `v1.3.0`, Product `v1.6.0`, Decisions `v1.6.0`, Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.58`. |",
+                "| Current-source routing | §1.1 points to North Star/MVP `v1.3.0`, Product `v1.6.0`, Decisions `v1.6.0`, Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.57`. |",
+            ),
+            (
+                "| FP-001 status navigation | FP-001 and CAP-001 retain required IAM-owned PMR with encoding unfrozen; PMR reconciliation and Identity v0.1.4 promotion is COMPLETE / CERTIFIED; Communications JIT Domain Dossier work is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING, with finalisation BLOCKED / STOP. |",
+                "| FP-001 status navigation | FP-001 and CAP-001 retain required IAM-owned PMR with encoding unfrozen; PMR reconciliation and Identity v0.1.4 promotion is COMPLETE / CERTIFIED; `COMMUNICATIONS JIT DOMAIN DOSSIER` remains REQUIRED / NEXT / NOT_STARTED, with finalisation BLOCKED / STOP. |",
+            ),
         )
-        self.assertEqual(1, successor.count(extra_provenance))
-        normalized = successor.replace(extra_provenance, "", 1)
-        for current, old in (
-            ("v0.3.8 → v0.3.9", "v0.3.7 → v0.3.8"),
-            ("archive/DELIVERY_ATLAS_WORKING_v0.3.8.md" + B + " (routing predecessor", "archive/DELIVERY_ATLAS_WORKING_v0.3.7.md" + B + " (routing predecessor"),
-            ("v0.3.9", "v0.3.8"),
-            ("Identity v0.1.4 promotion is COMPLETE / CERTIFIED", "Identity v0.1.3 promotion are COMPLETE / CERTIFIED"),
-            ("v0.1.4", "v0.1.3"),
-            ("02_OPEN_WORK_v1.2.57.md", "02_OPEN_WORK_v1.2.56.md"),
-            ("v1.2.57", "v1.2.56"),
-            ("PR #76", "PR #70"),
-            (
-                "using PR #70 certification evidence and the separate PR #77 status successor",
-                "after PR #70 certification",
-            ),
-            (
-                "Identity dossier v0.1.3 is CERTIFIED / CURRENT under the separate PR #77 status successor, based on PR #70 certification evidence",
-                "Identity dossier v0.1.3 is CERTIFIED / CURRENT following PR #70",
-            ),
-            (
-                "Identity dossier v0.1.3 is CERTIFIED / CURRENT under the separate PR #77 status successor",
-                "Identity dossier v0.1.3 is CERTIFIED / CURRENT",
-            ),
-            ("archive/DELIVERY_ATLAS_WORKING_v0.3.8.md" + B + "; its predecessor", "archive/DELIVERY_ATLAS_WORKING_v0.3.2.md" + B + "; its predecessor"),
-        ):
-            if current not in normalized:
-                raise AssertionError(f"missing current Atlas route token: {current}")
-            normalized = normalized.replace(current, old)
+        normalized = successor
+        for current, previous in reverse_lines:
+            self.assertEqual(1, normalized.count(current + "\n"), current[:100])
+            normalized = normalized.replace(current + "\n", previous + "\n", 1)
         self.assertEqual(predecessor, normalized)
 
     def test_archived_open_work_routing_successor_still_normalizes_exactly(self):
