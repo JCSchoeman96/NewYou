@@ -43,7 +43,7 @@ The live README and manifest identify these current sources and versions:
 | Product direction | docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md | §§5.1, 8, 10-13 for bilingual entry, account scope and first-launch boundaries |
 | Product Law | docs/00_platform/00_PLATFORM_v1.6.0.md | §21I.24; §§21E.1-21E.10; §§21J.1-21J.2, 21J.7-21J.8, 21J.10, 21J.18-21J.20, 21J.24 |
 | Decision Register | docs/00_platform/01_DECISIONS_v1.6.0.md | DEC-017-028; DEC-244-267; DEC-297-298; OQ-034-036 |
-| Open Work | docs/00_platform/02_OPEN_WORK_v1.2.57.md | §§7B, 7C, 9, 12.14; Communications next-stage status and conditional-dossier status |
+| Open Work | docs/00_platform/02_OPEN_WORK_v1.2.58.md | §§7B, 7C, 9, 12.14-12.15; Communications work-start status and conditional-dossier status |
 | Architecture | docs/00_platform/03_ARCHITECTURE_v1.1.1.md | §§4-8, 10.1, 10.4, 11.1-11.2, 12.1-12.4, 13, 14-16 |
 | Domain Law | docs/00_platform/04_DOMAIN_MAP_v1.2.0.md | §§4-5; §§6.1, 6.2, 6.7, 6.15, 6.18 |
 | Roadmap | docs/00_platform/05_ROADMAP_v1.2.0.md | §6 FP-001 |
@@ -56,10 +56,10 @@ docs/00_platform/README.md identifies these as current. docs/00_platform/CURRENT
 
 | Contract | Current source | Material use |
 |---|---|---|
-| Phase 7A Skeleton | docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md | §§5-8, 10, 12-17; FP-001 scope, required Communications dossier, conditional candidates and Phase 7C stop |
+| Phase 7A Skeleton | docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md | §§5-8, 10, 12-17; FP-001 scope, required Communications dossier, conditional candidates and Phase 7C stop |
 | Identity & Access dossier | docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md | §§I-J, J.1, J.1a, R-U, X-AA; ownership, atomic handoff, protected capability and proof consumption |
 
-Open Work v1.2.57 §12.14 and the current Identity dossier record Identity v0.1.4 as CERTIFIED / CURRENT under the separate PR #77 status successor. The dossier preserves the completed PR #76 candidate certification and post-merge evidence. Identity remains the sole authority for proof and primary-email-change truth.
+Open Work v1.2.58 §12.14 and the current Identity dossier record Identity v0.1.4 as CERTIFIED / CURRENT under the separate PR #77 status successor. Open Work §12.15 records that Communications JIT Domain Dossier work has begun. The archived Open Work v1.2.57 and current Identity dossier preserve the earlier PR #77 NOT_STARTED state as history. The dossier preserves the completed PR #76 candidate certification and post-merge evidence. Identity remains the sole authority for proof and primary-email-change truth.
 
 ### 1.4 Post-Identity-correction delta revalidation
 
@@ -72,7 +72,7 @@ The Communications Pre-JIT README and v0.10.0 consolidation are WORKING / NON-AU
 
 The current Identity contract and Open Work independently preserve the two-Resource FP-001 Communications model. Domain Map §6.15 describes broader mature Communications concepts, but it does not require each concept to become a Resource in FP-001.
 
-I found no Product, Architecture, Domain or Roadmap contradiction in this revalidation. The old Pre-JIT BLOCKED / STOP wording describes its earlier baseline. Current Open Work still says Communications is REQUIRED / NEXT / NOT_STARTED and Communications finalisation is BLOCKED / STOP because this dossier and applicable dispositions remain outstanding. This candidate does not change that status.
+I found no Product, Architecture, Domain or Roadmap contradiction in this revalidation. The old Pre-JIT BLOCKED / STOP wording describes its earlier baseline. Current Open Work records Communications JIT Domain Dossier work as IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING; Communications finalisation remains BLOCKED / STOP. This candidate is still NOT CERTIFIED / NOT CURRENT and does not certify or finalise Communications.
 
 ## 2. Purpose and scope
 
@@ -144,13 +144,14 @@ The durable intent records only what its invariants require:
 - closed semantic communication role and source purpose reference;
 - the exact destination value authorised by Identity, its source/provenance and the point at which it was authorised; a reference is sufficient only if it always resolves to that same historical value and never to the current Account email;
 - intended locale fixed for this obligation;
-- exact Content & Media content and locale version once bound;
+- a bounded, immutable, non-secret render-input snapshot captured from the source operation when the intent is created, containing only the closed typed fields allowed for that semantic role and their source provenance; the snapshot may be empty if the role is static apart from protected bearer material;
+- exact Content & Media content and locale version once bound, plus a minimal append-only history of superseded binding facts on this MessageIntent;
 - independent dispatch disposition and terminal reason;
 - safe correlation and idempotency references;
 - creation, binding, attempt-admission and terminal timestamps needed for recovery and explanation;
 - minimal, non-secret pre-provider failure and reconciliation facts.
 
-Do not persist the bearer token, a rendered secret-bearing URL, a complete rendered body, provider credentials, or a high-detail raw provider payload in MessageIntent. A provider or channel label is bounded routing metadata, not a Provider or Channel Resource.
+The render snapshot is a closed, role-specific allow-list of immutable typed values captured from the authorised source operation. Each governed template version may use only a subset of that role's frozen input shape; a template requesting an absent or unapproved field is ineligible for this intent. A retry renders from the same snapshot and bound Content & Media version; it does not re-read mutable participant or Domain data. The protected executor injects bearer material transiently. Do not put bearer material in the snapshot or persist a rendered secret-bearing URL, complete rendered body, provider credentials, or a high-detail raw provider payload in MessageIntent. A provider or channel label is bounded routing metadata, not a Provider or Channel Resource.
 
 The intent's side effect is to establish one durable communication obligation and make it discoverable for execution. It does not itself make a provider call or change Identity truth.
 
@@ -166,7 +167,8 @@ A single MessageIntent status must not collapse independent facts. Preserve thes
 | Source eligibility | Identity supplies a fresh, non-secret, role-specific allow/stop result for the exact source reference. Communications does not own or cache it as current proof truth. |
 | Attempt admission | Communications records whether a concrete provider operation has crossed the durable attempt-admission boundary. Admission is not provider evidence. |
 | Provider outcome | Derived from DeliveryAttempts: no provider observation yet, rejected before submission, accepted, delivered where established, bounced/failed, or unknown. |
-| Content binding | unbound, bound to one exact eligible content/locale version, or held because the binding became ineligible. |
+| Content binding | unbound, bound to one exact eligible content/locale version with its bounded binding history, or held because the binding became ineligible. |
+| Render inputs | not required for a static template apart from protected bearer material, or frozen to the intent's immutable typed non-secret snapshot and provenance. |
 | Protected capability | Not required, recoverable for this intent, or irrecoverable/cleared. It is governed separately from the intent’s send status. |
 
 Accepted does not mean delivered. Delivered does not mean proof consumed or Identity success. A source becoming invalid ends future send authority but does not rewrite already-recorded attempt evidence.
@@ -177,7 +179,8 @@ Accepted does not mean delivered. Delivered does not mean proof consumed or Iden
 - An open intent can remain open while awaiting execution, content binding or a transient dependency. A pre-provider validation, rendering, admission or queue failure is recorded against the intent and does not create a DeliveryAttempt.
 - A missing or ineligible source/content prerequisite holds the intent. Resolve it only through the owning Domain’s current contract.
 - Any possibly submitted provider operation with unknown outcome moves the intent to reconciliation_required. No new provider submission is admitted while ambiguity remains.
-- A conclusive provider rejection or failure may permit a new attempt under the same intent only if current Identity eligibility, destination, content and the future channel/provider policy allow it.
+- Only a `closed_before_invocation` admission, conclusive provider rejection/non-delivery, or reconciled `confirmed_no_operation` may permit a new attempt under the same intent, and only when current Identity eligibility, destination, content and the future channel/provider policy allow it.
+- A content correction or withdrawal before a safe provider submission holds the intent when its current binding is no longer eligible. Communications may bind an explicitly eligible successor only through the Content & Media owner contract, appending the former and new minimal binding facts to this MessageIntent. The history records version/locale references, eligibility/correction provenance and time, not message bodies. Each DeliveryAttempt retains the binding and render-input provenance used for that operation. An ambiguous, accepted or already delivered operation is never silently rebound.
 - A source invalidation, expiry, revocation, supersession or consumption ends send authority for a protected proof obligation. Communications closes or holds the intent according to its evidence, clears the protected capability and does not revive the obligation.
 - Delivery evidence or a governed terminal delivery decision closes the dispatch obligation. It does not change the originating Identity state.
 - A participant resend that creates new Identity proof is not a transition back to open. It creates a new MessageIntent.
@@ -188,7 +191,7 @@ The dispatch disposition never substitutes for the Identity source dimension, pr
 
 - One source obligation plus role produces at most one logical intent.
 - Each intent preserves its authorised destination and intended locale.
-- One intent can have multiple DeliveryAttempts only when prior external ambiguity is resolved and a new attempt is safe.
+- One intent can have multiple DeliveryAttempts only when every prior attempt has a conclusive terminal admission/outcome that establishes no unresolved external operation, including proven closure before invocation or reconciled `confirmed_no_operation`, and a new attempt is safe.
 - Provider execution cannot change source truth, content eligibility, consent or canonical email.
 - Closing an intent prevents future submissions. It does not erase delivery history or authorise a new source operation.
 - Terminal reasons remain distinguishable: delivery observed; source invalid/expired/revoked/superseded/consumed; explicit source cancellation; or terminal delivery failure.
@@ -199,11 +202,11 @@ The dispatch disposition never substitutes for the Identity source dimension, pr
 
 ### 6.1 Purpose, ownership and identity
 
-A DeliveryAttempt is one concrete provider/channel submission operation and its evidence. Communications owns the record. Durable attempt admission and the provider's outcome are separate facts; admission alone does not establish that a provider accepted or delivered anything.
+A DeliveryAttempt is the durable admission record for one intended concrete provider/channel operation, plus its evidence if invocation begins. Communications owns the record. Durable attempt admission, whether provider invocation began, provider observations and any reconciliation conclusion are separate facts; admission alone does not establish that a provider accepted or delivered anything.
 
-It has an opaque durable identifier tied to exactly one MessageIntent, one selected channel/provider operation and the exact content/locale binding used. A replay of the identical provider operation may use the same attempt identity only where the selected provider contract proves it is the same operation. Every new external submission operation is a new DeliveryAttempt. Provider retries are never new MessageIntents.
+It has an opaque durable identifier tied to exactly one MessageIntent, one selected channel/provider operation, the exact content/locale binding and the render-input snapshot provenance used. A replay of the identical provider operation may use the same attempt identity only where the selected provider contract proves it is the same operation. Every new external submission operation is a new DeliveryAttempt. A submission later proven never to have been invoked remains a terminal historical admission; any later provider call receives a new DeliveryAttempt. Provider retries are never new MessageIntents.
 
-No DeliveryAttempt is created for local validation, rendering, queueing, rate/policy rejection or any other failure before the final durable attempt-admission cutover. At that cutover, create the attempt for one concrete provider call with its safe operation identity, then make the call. This is the last durable step before external I/O and serialises concurrent executors. Do not hold an authoritative database transaction open across provider I/O. If a crash leaves it unclear whether the call began, treat the attempt outcome as unknown. If the system can prove the provider invocation did not begin, close that admission as not submitted and allow safe same-intent admission later.
+No DeliveryAttempt is created for local validation, rendering, queueing, rate/policy rejection or any other failure before the final durable attempt-admission cutover. At that cutover, create the admission for one intended provider call with its safe operation identity, then make the call. This is the last durable step before external I/O and serialises concurrent executors. Do not hold an authoritative database transaction open across provider I/O. If a crash leaves it unclear whether the call began, record an unknown provider outcome and reconcile it. If the system can prove the provider invocation did not begin, close that admission as `closed_before_invocation`; retain the historical admission and create a new DeliveryAttempt for any later provider call after all guards pass.
 
 The attempt's side effect is one external provider/channel submission operation. It never changes Identity, Content & Media or Privacy truth. A provider observation may later update only this attempt's delivery evidence.
 
@@ -214,36 +217,53 @@ An attempt carries the minimum information needed to identify and reconcile its 
 - attempt and MessageIntent identifiers;
 - bounded channel/provider route value selected under the later OQ-036 policy;
 - exact content/locale version reference used;
+- reference to the immutable MessageIntent render-input snapshot and its schema/provenance;
 - safe provider operation/idempotency reference where supported;
-- admission and submission timing;
-- one normalised outcome plus minimal authenticated evidence identifiers and observation times;
+- admission disposition and invocation/reconciliation timing;
+- provider observation plus any distinct reconciliation conclusion, with minimal authenticated evidence identifiers and observation times;
 - conflict/reconciliation facts where observations disagree.
 
-The provider outcome is separate from MessageIntent dispatch, attempt admission, source validity, content eligibility and capability validity:
+Admission disposition, provider observation and reconciliation conclusion are separate from MessageIntent dispatch, source validity, content eligibility and capability validity:
 
-| Outcome | Meaning and retry effect |
+| Admission disposition | Meaning |
 |---|---|
-| rejected_before_submission | The provider conclusively confirms the concrete submission request was rejected before message acceptance or delivery. This attempt is terminal. A same-intent attempt is possible only after all other guards pass. |
+| admitted | Durable admission for one concrete external provider call. Invocation may be pending or may have begun. |
+| closed_before_invocation | Communications can prove the provider call never began. This is a terminal local admission fact, not a provider rejection or provider outcome. A later call requires a new DeliveryAttempt. |
+
+| Provider observation | Meaning |
+|---|---|
+| none / pending | No provider evidence has been established yet. |
+| rejected_before_submission | The provider conclusively rejected a real submission request before message acceptance or delivery. This is provider evidence and is distinct from a local `closed_before_invocation` admission. |
 | accepted | Provider accepted the operation. This does not prove delivery. Do not submit again while it may still deliver. |
 | delivered | Provider establishes this delivery observation. It is delivery evidence only. |
-| bounced_or_failed | Provider establishes non-delivery/failure for this attempt. Any retry still needs fresh source and content checks and a safe policy decision. |
+| bounced_or_failed | Provider establishes non-delivery/failure for this operation. |
 | unknown | The operation may have occurred but its outcome is unresolved. This is not retryable failure. No new attempt or failover is admitted. |
 
-Before any provider observation, the attempt remains admitted with outcome pending. An accepted attempt remains accepted and pending if later delivery evidence is absent; it does not regress to unknown and cannot be resubmitted. It may later receive delivered or bounced_or_failed evidence. An unknown outcome may be resolved only through reconciliation evidence. These transitions update the same attempt. A callback does not create another attempt.
+| Reconciliation conclusion | Meaning |
+|---|---|
+| none | No unresolved provider ambiguity has been reconciled. |
+| confirmed_no_operation | Authenticated evidence establishes that no provider operation was accepted or delivered. This resolves ambiguity without mislabelling it as provider rejection and can permit a new attempt after every other guard passes. |
+
+Do not persist a complete rendered body or a bearer-bearing rendering in DeliveryAttempt, durable executor/Oban job arguments, callback records, logs, telemetry, Audit, Analytics or ordinary operational views. The attempt retains only the exact version references and immutable render-input snapshot provenance needed to explain its operation.
+
+These dimensions remain separate from one another and from MessageIntent dispatch, attempt admission, source validity, content eligibility and protected-capability validity:
+
+Before any provider observation, an admitted attempt has provider outcome pending. `closed_before_invocation` has no provider outcome. An accepted attempt remains accepted and pending if later delivery evidence is absent; it does not regress to unknown and cannot be resubmitted. It may later receive delivered or bounced_or_failed evidence. An unknown outcome may be resolved only through authenticated reconciliation evidence, including `confirmed_no_operation`. These transitions update the same attempt. A callback does not create another attempt.
 
 ~~~text
+admitted / pending → closed_before_invocation (only when invocation is proven not to have begun)
 admitted / pending → rejected_before_submission | accepted | unknown
 accepted → delivered | bounced_or_failed
-unknown → reconciled rejected_before_submission | accepted | delivered | bounced_or_failed
-rejected_before_submission / delivered / bounced_or_failed → terminal for this attempt
+unknown → reconciled confirmed_no_operation | rejected_before_submission | accepted | delivered | bounced_or_failed
+closed_before_invocation / rejected_before_submission / confirmed_no_operation / delivered / bounced_or_failed → terminal for this attempt/admission
 ~~~
 
 ### 6.3 Guards, terminal states and evidence handling
 
 - Create an attempt only after source eligibility, destination, content/locale eligibility and provider admission checks pass.
 - Only one executor may hold an active attempt admission for an intent at a time. The concurrency guard ends before network I/O.
-- A definitive no-submission/no-delivery outcome is required before another external operation is safe. Unknown and accepted-but-unresolved outcomes block retry and failover.
-- An attempt becomes terminal when its final outcome is known. Unknown remains unresolved, not terminal.
+- A definitive no-submission/no-delivery outcome is required before another external operation is safe. `closed_before_invocation`, provider rejection, or authenticated `confirmed_no_operation` evidence can establish that condition. Unknown and accepted-but-unresolved outcomes block retry and failover.
+- An admission becomes terminal when it is closed before invocation or its provider/reconciliation outcome is conclusive. Unknown remains unresolved, not terminal.
 - Reconciliation attaches minimal normalised evidence to the existing attempt. It does not create a DeliveryReconciliationCase, provider-event Resource or new MessageIntent.
 - Reconciliation uses authenticated provider callbacks or a provider status/evidence path selected under OQ-036, matched to the safe operation reference. An authorised operator may record verified provider-side evidence through the same Communications boundary. If no authoritative evidence can resolve the operation, the attempt remains unknown and requires attention.
 - Authenticated duplicate callbacks are idempotent. Reordered callbacks may add evidence but may not regress stronger known evidence. A contradiction is preserved and surfaced for attention rather than resolved by arrival order.
@@ -295,11 +315,11 @@ authoritative Identity transition / challenge issuance
 → retry, reconciliation or terminal delivery result
 ~~~
 
-The authoritative Identity transition/source event and its MessageIntent must commit atomically or fail closed. Any required protected capability also commits atomically for bearer-bearing roles only. A committed source obligation must not silently lose its delivery obligation. The Identity owner invokes the Communications-owned intent boundary; no Domain directly writes another Domain’s persistence. A post-commit callback or Sender return value alone is not sufficient evidence of the handoff.
+The authoritative Identity transition/source event and its MessageIntent must commit atomically or fail closed. The intent includes the authorised destination and any required frozen non-secret render-input snapshot. Any required protected capability also commits atomically for bearer-bearing roles only. A committed source obligation must not silently lose its delivery obligation. The Identity owner invokes the Communications-owned intent boundary; no Domain directly writes another Domain’s persistence. A post-commit callback or Sender return value alone is not sufficient evidence of the handoff.
 
 Provider I/O occurs after the authoritative transaction commits. Durable job/executor arguments contain only non-secret identifiers and bounded routing metadata. They never contain bearer tokens, protected capability values or rendered secret-bearing URLs.
 
-PostgreSQL is the default durable structured authority. Oban may be the default durable executor under current Architecture and Operating Model. An Oban job, job uniqueness, PubSub message or LiveView process is not the MessageIntent or business idempotency authority. A committed intent remains discoverable and recoverable if a job is lost, duplicated, delayed or recreated. PubSub and LiveView may improve freshness only.
+DEC-263 is LOCKED and requires durable Oban-backed idempotent, deduplicated, retryable and observable notification delivery. Oban-backed execution is required; worker names, queues, retry counts, backoff and schedules remain deferred. PostgreSQL is the default durable structured authority and MessageIntent is the business obligation. An Oban job or job uniqueness is not the MessageIntent or business idempotency invariant. A committed intent remains discoverable and recoverable if its job is delayed, duplicated, or lost and recreated. PubSub and LiveView may improve freshness only.
 
 If a future implementation cannot establish the atomic handoff or recover a committed intent independently of one job, stop and return to the owning authority. Do not weaken the invariant by adding an ungoverned third Resource or generic event bus.
 
@@ -307,14 +327,14 @@ If a future implementation cannot establish the atomic handoff or recover a comm
 
 Content & Media owns governed message/template body versions, locale versions, approval, publication, correction and withdrawal. Communications owns the exact binding used for one delivery operation.
 
-Before the first external submission, bind the MessageIntent to the exact currently eligible Content & Media content version and locale version. Capture the intended locale from the authorised source context. Core registration, authentication, onboarding, terms/privacy and applicable safety communication retain the approved Afrikaans and English obligations in Product Law. Send the intended eligible locale; do not send duplicate copies in both languages or silently fall back to an unapproved translation.
+The MessageIntent captures the intended locale and closed role-specific render-input snapshot from the authorised source operation when it is created. Before the first external submission, bind it to the exact currently eligible Content & Media content version and locale version, then validate that the version's typed input contract is a subset of the frozen snapshot. If not, hold the intent and do not re-read current mutable data. Retry uses the same snapshot and exact content/locale binding; it never dereferences “latest”. Core registration, authentication, onboarding, terms/privacy and applicable safety communication retain the approved Afrikaans and English obligations in Product Law. Send the intended eligible locale; do not send duplicate copies in both languages or silently fall back to an unapproved translation.
 
-Retry never dereferences "latest". The intent and each attempt retain the exact version reference used. A content correction or withdrawal does not rewrite a prior binding or attempt:
+Each binding fact on the MessageIntent is minimal and append-only: content and locale version references, the eligibility/correction provenance and the binding time. This preserves a superseded pre-send binding without a separate ContentBinding or other Resource. Every DeliveryAttempt retains the exact binding and render-input snapshot provenance used for that operation. A content correction or withdrawal does not rewrite a prior binding or attempt:
 
 | Timing of correction/withdrawal | Required handling |
 |---|---|
-| Before any external submission | Hold the intent if its binding is no longer eligible. Bind an explicitly eligible successor version before submission and preserve the prior binding fact. |
-| After a confirmed non-delivery attempt | A successor may be bound and retried under the same intent only if source eligibility remains current and the provider outcome is conclusive. Preserve the old attempt and its content reference. |
+| Before any external submission | Hold the intent if its binding is no longer eligible. Bind an explicitly eligible successor version before submission, append the new binding fact and retain the prior minimal binding fact. |
+| After a confirmed non-delivery attempt | A successor may be bound and retried under the same intent only if source eligibility remains current and the provider outcome is conclusive. Append the new binding fact and preserve the old attempt's exact binding and render-input provenance. |
 | During an unknown/ambiguous outcome | Do not rebind and do not submit again. Reconcile the prior provider operation first. |
 | After an accepted or delivered operation | Do not rewrite the submitted content provenance. Any required correction communication comes from a new source-authorised obligation. |
 
@@ -326,7 +346,7 @@ Before every new provider submission capable of sending protected material, Comm
 
 A new attempt is admissible only when all applicable conditions hold:
 
-1. The MessageIntent remains open and no prior provider operation is accepted-but-unresolved or unknown.
+1. The MessageIntent remains open; no active admission exists; and no prior provider operation is accepted-but-unresolved or unknown. A prior admission closed before invocation is historical and permits a new admission only after all guards pass.
 2. Identity currently permits this exact source and semantic role.
 3. The original destination remains the authorised destination for that obligation.
 4. The exact content/locale version is currently eligible, or a safe explicit successor binding has been recorded.
@@ -340,8 +360,8 @@ Provider ambiguity is a correctness problem:
 
 - timeout after possible submission, crash across the submission/result boundary, or an unclassified provider response yields unknown;
 - no blind retry, alternate provider or failover is allowed while an attempt is unknown or accepted but unresolved;
-- reconciliation must establish either that no provider operation/delivery occurred, or that the existing operation was accepted/delivered/failed;
-- only conclusive non-delivery can make a later submission eligible, subject to all other current guards;
+- reconciliation must establish either a `confirmed_no_operation` conclusion, or that the existing provider operation was rejected, accepted, delivered or failed;
+- only `closed_before_invocation`, conclusive provider rejection/non-delivery, or reconciled `confirmed_no_operation` can make a later submission eligible, subject to all other current guards;
 - accepted-only evidence remains accepted and pending. It continues to block retry and failover until conclusive non-delivery is established; accepted evidence alone never makes another submission safe;
 - if authoritative reconciliation is unavailable, keep the intent ambiguous and require attention; do not manufacture success or duplicate the message.
 
@@ -358,7 +378,7 @@ The exact retry count, delay/backoff, launch channel/provider policy, failover p
 | Participant resend races old provider attempt | New challenge creates a new intent. Old intent cannot retry after supersession. An already-submitted old message may arrive, but its proof cannot be consumed. Old ambiguity or acceptance blocks only the old intent; the new intent is independently admitted against its own current Identity source. No account- or destination-wide lock or dedupe key may merge or block the two obligations. |
 | Provider timeout or response lost | Mark the admitted attempt unknown; reconcile that operation before any new submission. |
 | Crash before first provider attempt | The committed intent remains discoverable. Rebuild/recreate durable execution from the intent; no DeliveryAttempt exists unless provider submission admission began. |
-| Crash after durable attempt admission but before provider invocation is known to have begun | If recovery can prove invocation never began, close the admission as not submitted and allow a fresh admission after all guards pass. Otherwise treat it as unknown and reconcile before any new submission. |
+| Crash after durable attempt admission but before provider invocation is known to have begun | If recovery proves invocation never began, set the admission disposition to `closed_before_invocation`, retain that terminal historical admission with no provider outcome, and allow a fresh DeliveryAttempt after all guards pass. Otherwise record unknown and reconcile the existing attempt before any new submission. |
 | Crash after provider submission but before local result persistence | Recover the existing attempt as ambiguous and reconcile by its safe operation reference/evidence. Do not submit again. |
 | Duplicate or reordered provider callbacks | Authenticate, deduplicate and attach minimal evidence to the same attempt. Preserve stronger evidence and never use arrival order to regress it. |
 | Late evidence from an older attempt after a newer attempt exists | Attach to the older attempt. If it conflicts with the reason a newer attempt was admitted, freeze further sends and require reconciliation. |
@@ -423,7 +443,7 @@ On backup/PITR restore, Communications outbound delivery remains recovery-gated 
 
 Account closure follows Identity's closure disposition and does not itself mean full deletion. Full deletion and any applicable suppression, retention, legal-hold or external-processor requirements follow Privacy & Consent's current owner contract. Communications applies that disposition to pending delivery and protected capability, preserves only evidence that remains authorised, and does not infer permission to send from later Account reactivation. Exact deletion periods, policy and orchestration remain with Privacy & Consent and the current deletion/restore gates.
 
-PostgreSQL is the structured authority. Oban is an optional/default execution mechanism under current Architecture and Operating Model, not authority. PubSub may update operational freshness only. No Redis, ETS, Cachex, custom GenServer, separate queue, vendor-specific data store or cache is required by this contract. Exact resource/action performance mapping remains subject to the current Phase 7B/OQ-039 process; this dossier selects no performance number or infrastructure topology.
+PostgreSQL remains the structured authority; DEC-263 requires durable Oban-backed execution. Oban jobs are execution records, not business authority, and job uniqueness does not replace MessageIntent idempotency. PubSub may update operational freshness only. No Redis, ETS, Cachex, custom GenServer, separate queue, vendor-specific data store or cache is required by this contract. OQ-039 remains a downstream implementation-grade performance/scaling mapping requirement when an affected action enters a later implementation boundary; this dossier does not add OQ-039 as an FP-001 Roadmap classification. It selects no performance number or infrastructure topology.
 
 ## 17. Conditional-dossier impact
 
@@ -436,7 +456,7 @@ This is an explicit impact assessment for the Communications seam only. It does 
 | Audit & Evidence | No new JIT dossier is forced by this delivery contract. | Existing authority already separates Communications delivery ledger from minimum restricted central evidence and bars Audit from becoming business truth. No new Audit-owned lifecycle is introduced. |
 | Analytics | Not required. | Analytics is unnecessary for delivery correctness, proof consumption, provider reconciliation or FP-001 completion. |
 
-Open Work v1.2.57 still records Privacy & Consent, Content & Media and Audit & Evidence as CONDITIONAL / PENDING EXPLICIT ADJUDICATION, with Analytics NOT REQUIRED. This dossier does not close, change or imply completion of that programme-wide gate. Its impact findings are evidence for the separately governed adjudication.
+Open Work v1.2.58 records Privacy & Consent, Content & Media and Audit & Evidence as CONDITIONAL / PENDING EXPLICIT ADJUDICATION, with Analytics NOT REQUIRED. This dossier does not close, change or imply completion of that programme-wide gate. Its impact findings are evidence for the separately governed adjudication.
 
 ## 18. OQ-036 and downstream boundary
 
@@ -458,8 +478,8 @@ No Phase 7C Final Feature Pack Contract is created or approved. Proof classifica
 No proof is performed or classified here. Future evidence must demonstrate:
 
 1. Atomic source transition/event and MessageIntent creation for every required in-scope Identity communication role, plus protected-capability persistence for bearer-bearing roles. Failure must leave no committed source without its durable obligation.
-2. No bearer token or secret-bearing URL in durable jobs, logs, telemetry, Audit, Analytics or ordinary operational views.
-3. Restart-safe discovery and retry after a committed intent, including when an execution job is lost or duplicated.
+2. No bearer token, secret-bearing URL or complete rendered body in DeliveryAttempt, durable jobs, callback records, render-input snapshots, logs, telemetry, Audit, Analytics or ordinary operational views.
+3. Durable Oban-backed delivery and restart-safe discovery/retry after a committed intent, including when an execution job is delayed, duplicated, or lost and recreated.
 4. Expiry, revocation, supersession and consumption block stale delivery for every protected purpose.
 5. Duplicate source handoff and duplicate executor runs preserve one logical obligation and do not multiply provider operations.
 6. Unknown provider outcome blocks blind retry and failover until reconciled.
@@ -468,8 +488,8 @@ No proof is performed or classified here. Future evidence must demonstrate:
 9. New-address confirmation and old-address email-change notice preserve separate source roles and destination snapshots.
 10. Protected material becomes inaccessible and is cleared/irrecoverable when retry authority ends, no later than the source proof boundary.
 11. Duplicate, stale, contradictory and reordered callbacks remain idempotent and cannot regress stronger evidence or overwrite a newer attempt.
-12. Each attempt retains exact Content & Media content/locale provenance; correction and withdrawal races do not rewrite prior attempt history.
-13. Crash recovery is bounded at intent commit, execution scheduling, attempt admission, provider submission, outcome persistence and callback processing.
+12. Each attempt retains exact Content & Media content/locale and immutable non-secret render-input provenance; correction and withdrawal races do not rewrite prior binding or attempt history.
+13. Crash recovery is bounded at intent commit, execution scheduling, attempt admission, proven pre-invocation closure, provider submission, outcome persistence and callback processing. A proven not-invoked admission remains historical and a later provider call uses a new DeliveryAttempt; uncertain invocation remains unknown pending reconciliation.
 14. A late callback from an older attempt cannot silently change the outcome of a newer attempt or infer Identity success.
 15. Source change and resend races produce a new intent for a new Identity challenge; the old intent cannot revive superseded proof.
 16. Operator retry/reconcile actions cannot bypass Identity, Content, Privacy or ambiguity guards.
@@ -505,9 +525,9 @@ The current authority files and exact versions are listed in §1.2. Their materi
 
 #### Certified FP-001 working contracts
 
-- docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md, §§5-8, 10, 12-17.
+- docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md, §§5-8, 10, 12-17.
 - docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md, §§I-J, J.1, J.1a, R-U, X-AA.
-- Current lifecycle and certification route: docs/00_platform/02_OPEN_WORK_v1.2.57.md, §12.14.
+- Current lifecycle and certification route: docs/00_platform/02_OPEN_WORK_v1.2.58.md, §§12.14-12.15.
 
 #### Non-authoritative Communications evidence
 
@@ -517,7 +537,7 @@ The current authority files and exact versions are listed in §1.2. Their materi
 
 #### Historical evidence
 
-- Current Open Work v1.2.57 §12.14 records PR #76 candidate certification/post-merge evidence and PR #77 current-status promotion.
+- Current Open Work v1.2.58 §12.14 records PR #76 candidate certification/post-merge evidence and PR #77 current-status promotion; §12.15 records the Communications work start.
 - docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md and docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3_SUPERSEDED_PROMOTED_CURRENT.md are historical Identity artifacts only. They do not override v0.1.4.
 - The Pre-JIT v0.10.0 authority pin is historical baseline context, not current repository authority.
 
