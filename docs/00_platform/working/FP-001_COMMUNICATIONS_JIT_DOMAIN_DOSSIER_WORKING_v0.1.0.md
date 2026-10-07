@@ -32,12 +32,15 @@ This structured block is the machine-authoritative lifecycle projection for this
 ```
 <!-- COMMUNICATIONS_V010_CURRENT_LIFECYCLE_STATE_END -->
 
+The unchanged semantic body from section 1 onward preserves source-at-certification provenance, including references to Open Work v1.2.58 and other paths as they stood when PR #78 certified the candidate. Current routing is supplied only by the README, manifest and current Open Work v1.2.59.
+
 ### Inherited PR #78 certification evidence
 
 | Evidence | Result |
 |---|---|
 | PR #78 | [Merged](https://github.com/JCSchoeman96/NewYou/pull/78) |
 | Certified candidate head | `8623fd622fb40e3fa1ec1c2540f1ad228dc57e65` |
+| PR #78 merge base | `ff1ff5c64b764fc4229e4dccfc46e58482d2b3d0` |
 | Candidate / resulting-main tree | `a83cf3f939f72fc3e33c80db52986ef80fe76a35` |
 | Status-successor base main SHA | `a062bd56e3ae94e815e2991ee00bf133ee9f3b56` |
 | Exact-head Foundation Integrity | [Run 37609981185](https://github.com/JCSchoeman96/NewYou/actions/runs/37609981185), SUCCESS |

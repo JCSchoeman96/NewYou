@@ -700,6 +700,7 @@ def _h02_lifecycle_state(
         "FP001_RECONCILIATION_REQUIRED",
         "CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
         "COMMUNICATIONS JIT DOMAIN DOSSIER",
+        "CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION",
         "REMAINING REQUIRED / CONDITIONAL PHASE 7B",
         "PHASE 7C",
         "PROOF CLASSIFICATION",
@@ -3157,6 +3158,7 @@ def _check_fp001_pmr_reconciliation(
     expected_communications_v010_certification = {
         "pr_url": "https://github.com/JCSchoeman96/NewYou/pull/78",
         "candidate_head_sha": "8623fd622fb40e3fa1ec1c2540f1ad228dc57e65",
+        "candidate_base_sha": "ff1ff5c64b764fc4229e4dccfc46e58482d2b3d0",
         "candidate_tree_sha": "a83cf3f939f72fc3e33c80db52986ef80fe76a35",
         "resulting_main_sha": "a062bd56e3ae94e815e2991ee00bf133ee9f3b56",
         "resulting_main_tree_sha": "a83cf3f939f72fc3e33c80db52986ef80fe76a35",
@@ -3510,6 +3512,37 @@ def _check_fp001_pmr_reconciliation(
         issues.append(
             "Open Work §12.16 does not separate PR #78 candidate/post-merge certification evidence from the PR #81 current-status successor"
         )
+    if re.search(
+        r"PR #78 certified candidate `8623fd622fb40e3fa1ec1c2540f1ad228dc57e65` based on `a062bd56e3ae94e815e2991ee00bf133ee9f3b56`",
+        open_work,
+    ):
+        issues.append("Open Work §12.16 records PR #78 resulting main as the reviewed merge base")
+    comm_cert = lifecycle_state.get("communications_v010_promotion_certification")
+    if not isinstance(comm_cert, dict) or comm_cert.get("candidate_base_sha") != "ff1ff5c64b764fc4229e4dccfc46e58482d2b3d0":
+        issues.append("Open Work does not bind PR #78 merge base separately from resulting main")
+    open_work_section_matches = list(re.finditer(r"(?m)^## 12\.1[56][^\n]*$", open_work))
+    if len(open_work_section_matches) < 2:
+        issues.append("Open Work Communications lifecycle sections are missing or malformed")
+    elif open_work_section_matches[0].group(0) != "## 12.15 — Communications JIT dossier work start (historical predecessor record)":
+        issues.append("Open Work §12.15 must precede §12.16 and be labelled as historical predecessor evidence")
+    elif open_work_section_matches[1].group(0) != open_work_comm_provenance_heading:
+        issues.append("Open Work §12.16 must follow the historical §12.15 predecessor record")
+    section_1215_start = open_work.find("## 12.15 — Communications JIT dossier work start")
+    section_1216_start = open_work.find(open_work_comm_provenance_heading)
+    if section_1215_start >= 0 and section_1216_start > section_1215_start:
+        section_1215_text = open_work[section_1215_start:section_1216_start]
+        if re.search(
+            r"(?im)Its status is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+            section_1215_text,
+        ) or re.search(r"(?im)remains NOT CERTIFIED / NOT CURRENT until", section_1215_text):
+            issues.append(
+                "Open Work §12.15 still reads as live Communications IN PROGRESS / NOT CERTIFIED state"
+            )
+    if re.search(
+        r"(?im)Communications Phase 7B work has begun with the FP-001 Communications JIT Domain Dossier candidate in PR #78\. Its status is",
+        open_work,
+    ):
+        issues.append("Open Work retains a live Communications work-start state after promotion")
 
     atlas_path = docs / "working" / "DELIVERY_ATLAS_WORKING_v0.4.1.md"
     atlas = atlas_path.read_text(encoding="utf-8") if atlas_path.is_file() else ""
@@ -3608,6 +3641,25 @@ def _check_fp001_pmr_reconciliation(
         or "Identity dossier v0.1.3 are COMPLETE / CERTIFIED" in harden_current
     ):
         issues.append("current HARDEN-02 route does not record Communications promotion or advances a later gate")
+    harden_before_history = harden.split("### 11.5 PR #40 lifecycle evidence", 1)[0]
+    if re.search(
+        r"(?im)Current Open Work v1\.2\.58 records Communications JIT Domain Dossier work as IN PROGRESS",
+        harden_before_history,
+    ):
+        issues.append("current HARDEN-02 prose still treats Open Work v1.2.58 Communications as live IN PROGRESS state")
+    i07_parts = harden.split("### I-07 — Phase 7C readiness fail-closed", 1)
+    i07_section = i07_parts[1].split("### I-08 —", 1)[0] if len(i07_parts) == 2 else ""
+    if "required Communications dossier and conditional dispositions remain unresolved" in i07_section:
+        issues.append("HARDEN I-07 still blocks Phase 7C on the Communications dossier itself after promotion")
+    if (
+        "→ COMMUNICATIONS JIT DOMAIN DOSSIER\n→ REMAINING REQUIRED / CONDITIONAL PHASE 7B"
+        in harden
+        and "→ CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION\n→ REMAINING REQUIRED / CONDITIONAL PHASE 7B"
+        not in harden
+    ):
+        issues.append("current HARDEN-02 route omits completed Communications dossier promotion before remaining Phase 7B")
+    if "does not create or start the Communications dossier" in harden_before_history:
+        issues.append("current HARDEN-02 §20 still denies Communications dossier promotion that is now recorded as complete")
 
     stale_predecessor_routes = (
         ("Open Work v1.2.59", r"(?<!archive/)02_OPEN_WORK_v1\.2\.58\.md"),

@@ -56,6 +56,7 @@ EXPECTED_DOWNSTREAM_ROUTE = [
     "FP001_RECONCILIATION_REQUIRED",
     "CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
     "COMMUNICATIONS JIT DOMAIN DOSSIER",
+    "CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION",
     "REMAINING REQUIRED / CONDITIONAL PHASE 7B",
     "PHASE 7C",
     "PROOF CLASSIFICATION",
@@ -1811,7 +1812,6 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             ("## 5. Explicitly out of scope", "## 6. Reuse classification"),
             ("## 13. Failure / recovery / STOP criteria", "## 14. Domain-authority boundaries"),
             ("### Execution stage (later, separately authorised)", "## 18. Downstream consequence"),
-            ("## 18. Downstream consequence", "## 19. Explicit exclusion confirmations"),
             ("## 19. Explicit exclusion confirmations", "## 20. Contract-stage STOP"),
         ):
             self.assertEqual(_section(predecessor, start, end), _section(current, start, end), start)
@@ -1820,6 +1820,11 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         current_i05 = current_i05.replace(
             "Identity complete/merged is factual. Communications dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP. HARDEN-02 must not mark Communications finalisation complete or optional.",
             "Identity complete/merged is factual. Communications remains REQUIRED / NOT_STARTED. HARDEN-02 must not mark Communications complete or optional.",
+            1,
+        )
+        current_i05 = current_i05.replace(
+            "Phase 7C remains BLOCKED / NOT_STARTED while remaining required / conditional Phase 7B dispositions (including explicit conditional-dossier adjudication) remain unresolved. Communications dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP.",
+            "Phase 7C remains BLOCKED / NOT_STARTED while required Communications dossier and conditional dispositions remain unresolved.",
             1,
         )
         self.assertEqual(predecessor_i05, current_i05)

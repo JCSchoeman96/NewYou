@@ -479,7 +479,6 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             ("## 5. Explicitly out of scope", "## 6. Reuse classification"),
             ("## 13. Failure / recovery / STOP criteria", "## 14. Domain-authority boundaries"),
             ("### Execution stage (later, separately authorised)", "## 18. Downstream consequence"),
-            ("## 18. Downstream consequence", "## 19. Explicit exclusion confirmations"),
             ("## 19. Explicit exclusion confirmations", "## 20. Contract-stage STOP"),
         ):
             self.assertEqual(
@@ -500,6 +499,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         current_i05 = current_i05.replace(
             "Identity complete/merged is factual. Communications dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP. HARDEN-02 must not mark Communications finalisation complete or optional.",
             "Identity complete/merged is factual. Communications remains required; its JIT dossier is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING, while Communications finalisation remains BLOCKED / STOP. HARDEN-02 must not mark Communications complete or optional.",
+            1,
+        )
+        current_i05 = current_i05.replace(
+            "Phase 7C remains BLOCKED / NOT_STARTED while remaining required / conditional Phase 7B dispositions (including explicit conditional-dossier adjudication) remain unresolved. Communications dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP.",
+            "Phase 7C remains BLOCKED / NOT_STARTED while required Communications dossier and conditional dispositions remain unresolved.",
             1,
         )
         self.assertEqual(predecessor_i05, current_i05)

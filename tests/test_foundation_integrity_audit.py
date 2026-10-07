@@ -1334,6 +1334,71 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 hashlib.sha256(archive.read_bytes()).hexdigest(),
             )
 
+    def test_fp001_communications_v010_promotion_coherence_guards_fail_closed(self):
+        mutations = (
+            (
+                "wrong_pr78_base",
+                lambda text: text.replace(
+                    "based on merge base `ff1ff5c64b764fc4229e4dccfc46e58482d2b3d0`",
+                    "based on `a062bd56e3ae94e815e2991ee00bf133ee9f3b56`",
+                    1,
+                ),
+            ),
+            (
+                "live_work_start_section",
+                lambda text: text.replace(
+                    "(historical predecessor record)",
+                    "",
+                    1,
+                ).replace(
+                    "At the Open Work v1.2.58 predecessor state, Communications Phase 7B work had begun",
+                    "Communications Phase 7B work has begun",
+                    1,
+                ),
+            ),
+            (
+                "harden_i07_stale",
+                None,
+            ),
+            (
+                "harden_route_stale",
+                None,
+            ),
+        )
+        for label, mutator in mutations:
+            with self.subTest(mutation=label), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                if label == "harden_i07_stale":
+                    path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md"
+                    path.write_text(
+                        path.read_text(encoding="utf-8").replace(
+                            "while remaining required / conditional Phase 7B dispositions (including explicit conditional-dossier adjudication) remain unresolved. Communications dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP.",
+                            "while required Communications dossier and conditional dispositions remain unresolved.",
+                            1,
+                        ),
+                        encoding="utf-8",
+                    )
+                elif label == "harden_route_stale":
+                    path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md"
+                    path.write_text(
+                        path.read_text(encoding="utf-8").replace(
+                            "→ CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION\n→ REMAINING REQUIRED / CONDITIONAL PHASE 7B",
+                            "→ REMAINING REQUIRED / CONDITIONAL PHASE 7B",
+                        ),
+                        encoding="utf-8",
+                    )
+                else:
+                    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.59.md"
+                    open_work_path.write_text(mutator(open_work_path.read_text(encoding="utf-8")), encoding="utf-8")
+                    refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+
+                self.assertTrue(
+                    any(finding["check"] == "fp001_pmr_reconciliation" for finding in report["findings"]),
+                    report["findings"],
+                )
+
     def test_communications_v010_promotion_archive_manifest_contract_fails_closed(self):
         relative = "docs/00_platform/archive/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
         for mutation in ("missing", "wrong_hash", "path_substitution"):

@@ -83,19 +83,17 @@ PR #76 certified the v0.1.4 candidate and supplied completed post-merge certific
 
 Identity v0.1.4 is CERTIFIED / CURRENT under this separate PR #77 status successor. The exact PR #76 candidate, PR #70 candidate and promoted/current v0.1.3 snapshot are separate byte-identical archive artifacts. COMM-UPD-001 content ownership, COMM-UPD-002 explicit-action/fresh Identity validation/single-use proof boundaries and J.1 protected delivery are preserved. Identity & Access remains sole authority for proof and primary-email-change truth. MessageIntent and DeliveryAttempt remain the only required durable FP-001 Communications concepts. No provider, package, storage representation, retry policy, queue/worker or OQ-036 selection is made. At the v1.2.57 predecessor point, Communications remained REQUIRED / NEXT / NOT_STARTED and finalisation remained BLOCKED / STOP; that prior state is preserved in the archive and Identity dossier. Phase 7C is BLOCKED / NOT_STARTED, proof classification NOT FINALISED, and Phase 8/application implementation unauthorised.
 
+## 12.15 — Communications JIT dossier work start (historical predecessor record)
+
+At the Open Work v1.2.58 predecessor state, Communications Phase 7B work had begun with the FP-001 Communications JIT Domain Dossier candidate in PR #78. That predecessor recorded status `IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING` and `NOT CERTIFIED / NOT CURRENT`. That live state is preserved byte-identically in `archive/02_OPEN_WORK_v1.2.58.md` and is not current after v1.2.59.
+
 ## 12.16 — PR #78 candidate certification and post-merge evidence; PR #81 current-status promotion
 
-PR #78 certified candidate `8623fd622fb40e3fa1ec1c2540f1ad228dc57e65` based on `a062bd56e3ae94e815e2991ee00bf133ee9f3b56`. It merged unchanged to resulting main `a062bd56e3ae94e815e2991ee00bf133ee9f3b56`; candidate/resulting-main trees are identical at `a83cf3f939f72fc3e33c80db52986ef80fe76a35`, with zero changed files. Exact-head run 37609981185 and resulting-main run 37612931207 both passed. Fresh independent exact-head and post-merge semantic reviews passed. Attestations: https://github.com/JCSchoeman96/NewYou/pull/78#issuecomment-6036677517 and https://github.com/JCSchoeman96/NewYou/pull/78#issuecomment-6038969688.
+PR #78 certified candidate `8623fd622fb40e3fa1ec1c2540f1ad228dc57e65` based on merge base `ff1ff5c64b764fc4229e4dccfc46e58482d2b3d0`. It merged unchanged to resulting main `a062bd56e3ae94e815e2991ee00bf133ee9f3b56`; candidate/resulting-main trees are identical at `a83cf3f939f72fc3e33c80db52986ef80fe76a35`, with zero changed files. Exact-head run 37609981185 and resulting-main run 37612931207 both passed. Fresh independent exact-head and post-merge semantic reviews passed. Attestations: https://github.com/JCSchoeman96/NewYou/pull/78#issuecomment-6036677517 and https://github.com/JCSchoeman96/NewYou/pull/78#issuecomment-6038969688.
 
 At resulting main `a062bd56e3ae94e815e2991ee00bf133ee9f3b56`, the Communications dossier candidate remained NOT CURRENT until this separate status successor.
 
 PR #78 certified the v0.1.0 candidate and supplied completed post-merge certification evidence. It did not make v0.1.0 current. This separate PR #81 status successor records the current-status promotion; the resulting Communications dossier state is CERTIFIED / CURRENT. Communications finalisation remains BLOCKED / STOP. Privacy & Consent, Content & Media and Audit & Evidence remain CONDITIONAL / PENDING EXPLICIT ADJUDICATION; Analytics remains NOT REQUIRED. Phase 7C remains BLOCKED / NOT_STARTED, proof classification NOT FINALISED, and Phase 8/application implementation unauthorised.
-
-## 12.15 — Communications JIT dossier work start
-
-Communications Phase 7B work has begun with the FP-001 Communications JIT Domain Dossier candidate in PR #78. Its status is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING. This records task start only; the candidate remains NOT CERTIFIED / NOT CURRENT until its review and certification lifecycle completes.
-
-Communications finalisation remains BLOCKED / STOP. Privacy & Consent, Content & Media and Audit & Evidence remain CONDITIONAL / PENDING EXPLICIT ADJUDICATION; Analytics remains NOT REQUIRED. Phase 7C remains BLOCKED / NOT_STARTED, proof classification remains NOT FINALISED, and Phase 8/application implementation remain unauthorised. This status successor changes no Product, Architecture, Domain or Roadmap law and makes no OQ-036 selection.
 
 ## Historical changelog
 
@@ -1043,6 +1041,7 @@ CERTIFIED HARDEN-02 EXECUTION
 → FP001_RECONCILIATION_REQUIRED
 → CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION
 → COMMUNICATIONS JIT DOMAIN DOSSIER
+→ CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION
 → REMAINING REQUIRED / CONDITIONAL PHASE 7B
 → PHASE 7C
 → PROOF CLASSIFICATION
@@ -1148,6 +1147,7 @@ Historical PR #40 contract-lifecycle evidence: certified head `cb710860f4db65ce4
     "FP001_RECONCILIATION_REQUIRED",
     "CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
     "COMMUNICATIONS JIT DOMAIN DOSSIER",
+    "CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION",
     "REMAINING REQUIRED / CONDITIONAL PHASE 7B",
     "PHASE 7C",
     "PROOF CLASSIFICATION",
@@ -1281,6 +1281,7 @@ Historical PR #40 contract-lifecycle evidence: certified head `cb710860f4db65ce4
   "communications_v010_promotion_certification": {
     "pr_url": "https://github.com/JCSchoeman96/NewYou/pull/78",
     "candidate_head_sha": "8623fd622fb40e3fa1ec1c2540f1ad228dc57e65",
+    "candidate_base_sha": "ff1ff5c64b764fc4229e4dccfc46e58482d2b3d0",
     "candidate_tree_sha": "a83cf3f939f72fc3e33c80db52986ef80fe76a35",
     "resulting_main_sha": "a062bd56e3ae94e815e2991ee00bf133ee9f3b56",
     "resulting_main_tree_sha": "a83cf3f939f72fc3e33c80db52986ef80fe76a35",
