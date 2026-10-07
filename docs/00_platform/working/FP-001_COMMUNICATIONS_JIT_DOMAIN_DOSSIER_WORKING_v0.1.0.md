@@ -14,7 +14,7 @@ DOES NOT AMEND PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 
 This path and version are proposed for review. This file is a working candidate, not a governed identifier, current authority, certification record or implementation approval.
 
-The authority baseline is live GitHub main at 0473cd69416f72fd94f2cee24a4d02c7f4fe0992, verified against git ls-remote and the checked out main commit. The live main SHA has not moved from the supplied baseline.
+The authority baseline for this candidate is PR #79 resulting-main commit 352fd0116c5cb101bec980e4d86ba50754e6141c (tree 195849f1d4774303e2b0683077d51f4093c37c90), which records Communications JIT Domain Dossier work as in progress while preserving the certified Identity v0.1.4 state.
 
 ## 1. Authority, baseline and post-Identity delta
 
