@@ -1,51 +1,20 @@
 # FP-001 Communications JIT Domain Dossier
 
-```text
-PHASE 7B JIT DOMAIN DOSSIER
+~~~text
+PROPOSED PATH: docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md
+PROPOSED VERSION: v0.1.0
+PHASE: 7B implementation-grade planning
 FEATURE PACK: FP-001
 DOMAIN: COMMUNICATIONS
-IMPLEMENTATION-GRADE PLANNING LAW
+STATUS: CANDIDATE / REVIEW-READY / NOT CERTIFIED / NOT CURRENT
 NON-EXECUTABLE
 NOT PHASE 7C DEVELOPMENT-ENTRY AUTHORITY
-DOES NOT OVERRIDE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
-```
+DOES NOT AMEND PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
+~~~
 
-**Artifact version:** v0.1.0 narrow status successor. Exact PR #78 candidate bytes are preserved byte-identically at `archive/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` (SHA-256 `039f1b0e249f62dfd606fc6484681d4e821077fb4c89eba65c4f33eb752277a9`).
+This path and version are proposed for review. This file is a working candidate, not a governed identifier, current authority, certification record or implementation approval.
 
-**Status:** `CERTIFIED / CURRENT`; PR #78 candidate certification is `COMPLETE`; PR #78 post-merge certification evidence is `COMPLETE`; current-status promotion is `PR #79 STATUS SUCCESSOR`. PR #78 certified the candidate and merged it unchanged but did not perform the dossier current-status promotion. This separate status successor records the current Communications dossier lifecycle state. Communications finalisation remains `BLOCKED / STOP` pending applicable gates and conditional-dossier adjudication. No Phase 7C work, proof classification or implementation starts here.
-
-<!-- COMMUNICATIONS_V010_CURRENT_LIFECYCLE_STATE_START -->
-This structured block is the machine-authoritative lifecycle projection for this artifact. Historical narrative and explanatory prose do not independently redefine current lifecycle state.
-```json
-{
-  "artifact_version": "v0.1.0",
-  "communications_lifecycle": "CERTIFIED / CURRENT",
-  "pr_78_candidate_certification": "COMPLETE",
-  "pr_78_post_merge_certification_evidence": "COMPLETE",
-  "current_status_promotion": "PR #79 STATUS SUCCESSOR",
-  "communications_finalisation": "BLOCKED / STOP",
-  "conditional_dossiers": "PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
-  "phase_7c": "BLOCKED / NOT_STARTED",
-  "proof_classification": "NOT FINALISED",
-  "phase_8_application_implementation": "UNAUTHORISED"
-}
-```
-<!-- COMMUNICATIONS_V010_CURRENT_LIFECYCLE_STATE_END -->
-
-### Inherited PR #78 certification evidence
-
-| Evidence | Result |
-|---|---|
-| PR #78 | [Merged](https://github.com/JCSchoeman96/NewYou/pull/78) |
-| Certified candidate head | `8623fd622fb40e3fa1ec1c2540f1ad228dc57e65` |
-| Candidate / resulting-main tree | `a83cf3f939f72fc3e33c80db52986ef80fe76a35` |
-| Status-successor base main SHA | `a062bd56e3ae94e815e2991ee00bf133ee9f3b56` |
-| Exact-head Foundation Integrity | [Run 37609981185](https://github.com/JCSchoeman96/NewYou/actions/runs/37609981185), SUCCESS |
-| Resulting-main Foundation Integrity | [Run 37612931207](https://github.com/JCSchoeman96/NewYou/actions/runs/37612931207), SUCCESS on resulting main |
-| Fresh independent exact-head and post-merge semantic review | PASS |
-| Pre-merge attestation | https://github.com/JCSchoeman96/NewYou/pull/78#issuecomment-6036677517 |
-| Post-merge attestation | https://github.com/JCSchoeman96/NewYou/pull/78#issuecomment-6038969688 |
-| Exact PR #78 candidate archive SHA-256 | 039f1b0e249f62dfd606fc6484681d4e821077fb4c89eba65c4f33eb752277a9 |
+The authority baseline for this candidate is PR #79 resulting-main commit 352fd0116c5cb101bec980e4d86ba50754e6141c (tree 195849f1d4774303e2b0683077d51f4093c37c90), which records Communications JIT Domain Dossier work as in progress while preserving the certified Identity v0.1.4 state.
 
 ## 1. Authority, baseline and post-Identity delta
 

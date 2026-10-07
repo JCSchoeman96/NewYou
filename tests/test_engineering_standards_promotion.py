@@ -16,7 +16,7 @@ DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
 CURRENT_STANDARDS_RELATIVE = Path("docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md")
 ARCHIVED_CANDIDATE_RELATIVE = Path("docs/00_platform/archive/ENGINEERING_STANDARDS_v1.0.0.md")
-OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.58.md")
+OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.59.md")
 README_RELATIVE = Path("docs/00_platform/README.md")
 
 
@@ -158,7 +158,7 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def next_token_still_names_standards(root: Path, manifest: dict) -> None:
-            _rewrite_open_work(root, "NEXT STAGE: COMMUNICATIONS JIT DOMAIN DOSSIER", "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED")
+            _rewrite_open_work(root, "NEXT STAGE: REMAINING REQUIRED / CONDITIONAL PHASE 7B", "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED")
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def fp001_already_performed(root: Path, manifest: dict) -> None:
@@ -172,7 +172,7 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
         def communications_started(root: Path, manifest: dict) -> None:
             _rewrite_open_work(
                 root,
-                "COMMUNICATIONS: REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+                "COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0",
                 "COMMUNICATIONS: REQUIRED / STARTED",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
@@ -224,10 +224,10 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             )
             _rewrite_open_work(
                 root,
-                "COMMUNICATIONS: REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+                "COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0",
                 "COMMUNICATIONS: REQUIRED / STARTED",
             )
-            _rewrite_open_work(root, "NEXT STAGE: COMMUNICATIONS JIT DOMAIN DOSSIER", "NEXT STAGE: REMAINING REQUIRED / CONDITIONAL PHASE 7B")
+            _rewrite_open_work(root, "NEXT STAGE: REMAINING REQUIRED / CONDITIONAL PHASE 7B", "NEXT STAGE: REMAINING REQUIRED / CONDITIONAL PHASE 7B")
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         return [

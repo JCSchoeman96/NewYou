@@ -39,12 +39,12 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.58.md",
-      "semver": "1.2.58",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.58.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.59.md",
+      "semver": "1.2.59",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.59.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "a05a502f00a374026d531a2c2f303ec2bc6129e7bbde508c7a29c601561a9da1",
-      "superseded_version": "1.2.57",
+      "sha256": "26e2f8ea48bf6b518cc2a5926898a56559a8adfa3d2ba9b2b29b53fc0982cd66",
+      "superseded_version": "1.2.58",
       "lifecycle": "current"
     },
     {
@@ -157,6 +157,17 @@
     }
   ],
   "historical_documents": [
+    {
+      "document_id": "OPEN_WORK_V1_2_58",
+      "canonical_filename": "02_OPEN_WORK_v1.2.58.md",
+      "semver": "1.2.58",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.58.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "a05a502f00a374026d531a2c2f303ec2bc6129e7bbde508c7a29c601561a9da1",
+      "superseded_version": "1.2.59",
+      "lifecycle": "historical",
+      "provenance_sha256": "a05a502f00a374026d531a2c2f303ec2bc6129e7bbde508c7a29c601561a9da1"
+    },
     {
       "document_id": "OPEN_WORK_V1_2_57",
       "canonical_filename": "02_OPEN_WORK_v1.2.57.md",
@@ -1103,7 +1114,11 @@
         "(?<!archive/)02_OPEN_WORK_v1\\.2\\.57\\.md",
         "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.3\\.9\\.md",
         "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.5\\.1\\.md",
-        "(?<!archive/)FP-001_FEATURE_PACK_SKELETON_WORKING_v0\\.1\\.3\\.md"
+        "(?<!archive/)FP-001_FEATURE_PACK_SKELETON_WORKING_v0\\.1\\.3\\.md",
+        "(?<!archive/)02_OPEN_WORK_v1\\.2\\.58\\.md",
+        "(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.4\\.0\\.md",
+        "(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.5\\.2\\.md",
+        "(?<!archive/)FP-001_FEATURE_PACK_SKELETON_WORKING_v0\\.1\\.4\\.md"
       ],
       "reference_header_lines": 35,
       "frozen_provenance_policy": "frozen_provenance",
@@ -1119,13 +1134,14 @@
         "FRONTEND_EXPERIENCE_SYSTEM"
       ],
       "navigation_document_paths": [
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.0.md",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.1.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.2.md"
+        "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md"
       ],
       "stale_open_work_v1_2_44_guard_note": "The exact 02_OPEN_WORK_v1.2.44.md stale-path pattern rejects unarchived references in active navigation documents. This is a routing guard only; it does not prove lifecycle or policy semantics.",
-      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52/v1.2.53/v1.2.54/v1.2.55, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4/v0.3.5/v0.3.6/v0.3.7, HARDEN-02 status v0.4.2/v0.4.6/v0.4.7/v0.4.8/v0.4.9, Engineering Standards candidate v1.0.0, Identity dossier v0.1.2 and FP-001 reconciliation candidates v0.1.2/v0.1.1 are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records. The immediate PR #77/Open Work v1.2.57, Atlas v0.3.9, HARDEN-02 v0.5.1 and FP-001 Skeleton v0.1.3 predecessors are also archive-qualified only."
+      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52/v1.2.53/v1.2.54/v1.2.55, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4/v0.3.5/v0.3.6/v0.3.7, HARDEN-02 status v0.4.2/v0.4.6/v0.4.7/v0.4.8/v0.4.9, Engineering Standards candidate v1.0.0, Identity dossier v0.1.2 and FP-001 reconciliation candidates v0.1.2/v0.1.1 are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records. The immediate PR #77/Open Work v1.2.57, Atlas v0.3.9, HARDEN-02 v0.5.1 and FP-001 Skeleton v0.1.3 predecessors are also archive-qualified only. The immediate PR #79/Open Work v1.2.58, Atlas v0.4.0, HARDEN-02 v0.5.2 and FP-001 Skeleton v0.1.4 predecessors are also archive-qualified only."
     },
     "product_hardening_bundle_allocation_requirements": {
       "matrix": "BUNDLE-COMPONENT-ALLOCATION",
@@ -1267,6 +1283,13 @@
       "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.3.9.md": "1cdbb6e47bd307b78f53b6bddabbbaa7d8fcddf0fb6fabb5542a50fed674cb69",
       "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.1.md": "098569e5a872a212a5c403104494668b566cd7173e95d4d6ce6ee5f7de4de36e",
       "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md": "0a472eadd814591d8a98c20a163cfe5c9013e0dba297c78546163cb147d3dcb1"
+    },
+    "communications_v010_promotion_archives": {
+      "docs/00_platform/archive/02_OPEN_WORK_v1.2.58.md": "a05a502f00a374026d531a2c2f303ec2bc6129e7bbde508c7a29c601561a9da1",
+      "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.0.md": "e582ea9c83e096ef0f7489da27e057ae0de41e82810bf9820caaefa80cbc3209",
+      "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.2.md": "68d807b2dd26962ffa44472fba483cc8f3e7baddeafe5af8a5492175b44e51e1",
+      "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md": "5316d909bfacb3d3e0776cbbdd7636f09b40d0a9b4ce405841a7f6c8155c3e1d",
+      "docs/00_platform/archive/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "039f1b0e249f62dfd606fc6484681d4e821077fb4c89eba65c4f33eb752277a9"
     }
   }
 }
