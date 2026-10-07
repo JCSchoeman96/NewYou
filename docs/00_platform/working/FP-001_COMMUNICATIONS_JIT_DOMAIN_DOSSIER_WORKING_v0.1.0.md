@@ -209,7 +209,7 @@ It has an opaque durable identifier tied to exactly one MessageIntent, one selec
 
 No DeliveryAttempt is created for local validation, rendering, queueing, rate/policy rejection or any other failure before the final durable attempt-admission cutover. At that cutover, create the admission for one intended provider call with its safe operation identity, then make the call. This is the last durable step before external I/O and serialises concurrent executors. Do not hold an authoritative database transaction open across provider I/O. If a crash leaves it unclear whether the call began, record an unknown provider outcome and reconcile it. If the system can prove the provider invocation did not begin, close that admission as `closed_before_invocation`; retain the historical admission and create a new DeliveryAttempt for any later provider call after all guards pass.
 
-The attempt's side effect is one external provider/channel submission operation. It never changes Identity, Content & Media or Privacy truth. A provider observation may later update only this attempt's delivery evidence.
+An attempt whose provider invocation begins may cause at most one external provider/channel submission; a `closed_before_invocation` attempt causes none. It never changes Identity, Content & Media or Privacy truth. A provider observation may later update only this attempt's delivery evidence.
 
 ### 6.2 Required concepts and outcome states
 
