@@ -10,9 +10,9 @@ from tools.foundation_integrity_audit import _h02_lifecycle_state
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.57.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.58.md"
 README = DOCS / "README.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.1.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.2.md"
 JSON_START = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
 JSON_END = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
 JSON_BLOCK = re.compile(
@@ -51,11 +51,11 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
     def test_complete_state_binds_the_execution_evidence_and_downstream_route(self):
         state = self._state()
         self.assertEqual("COMPLETE / CERTIFIED", state["harden_02_execution"])
-        self.assertEqual("CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION", state["current_stage"])
+        self.assertEqual("COMMUNICATIONS JIT DOMAIN DOSSIER WORK START", state["current_stage"])
         self.assertEqual("COMMUNICATIONS JIT DOMAIN DOSSIER", state["next_stage"])
         self.assertEqual("COMPLETE / CERTIFIED", state["engineering_standards_authority_promotion"])
         self.assertEqual("COMPLETE / CERTIFIED", state["fp001_reconciliation"])
-        self.assertEqual("REQUIRED / NEXT / NOT_STARTED", state["communications"])
+        self.assertEqual("REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", state["communications"])
         self.assertEqual(
             (True, "HARDEN-02 execution completion and downstream route are coherent"),
             _h02_lifecycle_state(self.open_work, self.readme, self.contract),
@@ -67,7 +67,7 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         state["next_stage"] = "HARDEN-02_EXECUTION_REQUIRED"
         text = self._with_state(state)
         text = text.replace(
-            "CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
+            "CURRENT AUTHORITY-STAGE PROGRAMME: COMMUNICATIONS JIT DOMAIN DOSSIER WORK START",
             "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
             1,
         ).replace(
@@ -78,9 +78,11 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         self._assert_rejected(text)
 
     def test_complete_execution_cannot_keep_a_conflicting_current_contract_route(self):
-        contract = self.contract.replace(
-            "The immediate next task is `COMMUNICATIONS JIT DOMAIN DOSSIER`",
-            "The immediate next task is HARDEN-02_EXECUTION_REQUIRED",
+        route_start = self.contract.rfind("## 21. Current execution certification and next stage")
+        self.assertGreaterEqual(route_start, 0)
+        contract = self.contract[:route_start] + self.contract[route_start:].replace(
+            "Communications JIT Domain Dossier work is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+            "Communications JIT Domain Dossier work is REQUIRED / NEXT / NOT_STARTED",
             1,
         )
         self._assert_rejected(self.open_work, contract=contract)
@@ -98,7 +100,7 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         end = self.open_work.index("## 12.2", start)
         row = self.open_work[start:end]
         changed_row = row.replace(
-            "`working/HARDEN-02_CONTRACT_WORKING_v0.5.1.md`",
+            "`working/HARDEN-02_CONTRACT_WORKING_v0.5.2.md`",
             "`working/HARDEN-02_CONTRACT_WORKING_v0.4.6.md`",
             1,
         )
@@ -122,9 +124,9 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         state["fp001_reconciliation"] = "REQUIRED / NEXT / NOT PERFORMED"
         self._assert_rejected(self._with_state(state))
 
-    def test_communications_cannot_start_early(self):
+    def test_communications_cannot_be_certified_before_its_lifecycle_completes(self):
         state = self._state()
-        state["communications"] = "REQUIRED / STARTED"
+        state["communications"] = "COMPLETE / CERTIFIED"
         self._assert_rejected(self._with_state(state))
 
     def test_phase_7c_cannot_be_unblocked(self):
@@ -161,7 +163,7 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         self._assert_rejected(
             self.open_work,
             self.readme.replace(
-            "- CURRENT AUTHORITY-STAGE PROGRAMME: CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
+                "- CURRENT AUTHORITY-STAGE PROGRAMME: COMMUNICATIONS JIT DOMAIN DOSSIER WORK START",
                 "- CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
                 1,
             ),

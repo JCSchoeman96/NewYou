@@ -9,11 +9,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.3.9.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.0.md"
 ATLAS_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.0.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.3.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.48.md"
-CURRENT_OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.57.md"
+CURRENT_OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.58.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
@@ -482,21 +482,21 @@ class AtlasAuthorityBoundaryTests(unittest.TestCase):
         )
         graph = self.manifest["integrity_rules"]["graph_rules"]
         self.assertIn(
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.3.9.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.0.md",
             graph["navigation_document_paths"],
         )
         stale_patterns = [re.compile(pattern) for pattern in graph["stale_reference_patterns"]]
         self.assertTrue(any(pattern.search("working/DELIVERY_ATLAS_WORKING_v0.2.3.md") for pattern in stale_patterns))
         self.assertFalse(any(pattern.search("archive/DELIVERY_ATLAS_WORKING_v0.2.3.md") for pattern in stale_patterns))
         open_work_entry = next(entry for entry in self.manifest["governing_documents"] if entry["document_id"] == "OPEN_WORK")
-        self.assertEqual("02_OPEN_WORK_v1.2.57.md", open_work_entry["canonical_filename"])
+        self.assertEqual("02_OPEN_WORK_v1.2.58.md", open_work_entry["canonical_filename"])
         self.assertEqual(_sha256(CURRENT_OPEN_WORK), open_work_entry["sha256"])
         self.assertTrue(any(entry["document_id"] == "OPEN_WORK_V1_2_48" for entry in self.manifest["historical_documents"]))
         old_open_work = next(
             entry for entry in self.manifest["historical_documents"] if entry["document_id"] == "OPEN_WORK_V1_2_47"
         )
         self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), old_open_work["sha256"])
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md").read_text(encoding="utf-8"))
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md").read_text(encoding="utf-8"))
         self.assertFalse(any(pattern.search("working/DELIVERY_ATLAS_WORKING_v0.2.1.md") for pattern in stale_patterns))
         self.assertEqual(
             _sha256(DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"),
