@@ -144,14 +144,14 @@ The durable intent records only what its invariants require:
 - closed semantic communication role and source purpose reference;
 - the exact destination value authorised by Identity, its source/provenance and the point at which it was authorised; a reference is sufficient only if it always resolves to that same historical value and never to the current Account email;
 - intended locale fixed for this obligation;
-- a bounded, immutable, non-secret render-input snapshot captured from the source operation when the intent is created, containing only the closed typed fields allowed for that semantic role and their source provenance; the snapshot may be empty if the role is static apart from protected bearer material;
-- exact Content & Media content and locale version once bound, plus a minimal append-only history of superseded binding facts on this MessageIntent;
+- a bounded, immutable, non-secret render-input snapshot captured from the source operation when the intent is created, with a stable schema/version reference and digest, containing only the closed typed fields allowed for that semantic role and their source provenance; the snapshot may be empty if the role is static apart from protected bearer material;
+- exact Content & Media content-version and locale-version references once bound, plus a minimal append-only history of superseded binding facts on this MessageIntent;
 - independent dispatch disposition and terminal reason;
 - safe correlation and idempotency references;
 - creation, binding, attempt-admission and terminal timestamps needed for recovery and explanation;
 - minimal, non-secret pre-provider failure and reconciliation facts.
 
-The render snapshot is a closed, role-specific allow-list of immutable typed values captured from the authorised source operation. Each governed template version may use only a subset of that role's frozen input shape; a template requesting an absent or unapproved field is ineligible for this intent. A retry renders from the same snapshot and bound Content & Media version; it does not re-read mutable participant or Domain data. The protected executor injects bearer material transiently. Do not put bearer material in the snapshot or persist a rendered secret-bearing URL, complete rendered body, provider credentials, or a high-detail raw provider payload in MessageIntent. A provider or channel label is bounded routing metadata, not a Provider or Channel Resource.
+The render snapshot is a closed, role-specific allow-list of immutable typed values captured from the authorised source operation and immutable after intent creation. Each governed template version may use only a subset of that role's frozen input shape; a template requesting an absent or unapproved field is ineligible for this intent. A retry renders from the same snapshot and bound Content & Media version; it does not re-read mutable participant or Domain data. Each DeliveryAttempt records the snapshot's immutable version/digest, schema and provenance without copying its values. Retain the snapshot values only while retry or reconciliation requires them, then apply Privacy's retention/disposition authority. The protected executor injects bearer material transiently. Do not put bearer material in the snapshot or persist a rendered secret-bearing URL, complete rendered body, provider credentials, or a high-detail raw provider payload in MessageIntent. A provider or channel label is bounded routing metadata, not a Provider or Channel Resource.
 
 The intent's side effect is to establish one durable communication obligation and make it discoverable for execution. It does not itself make a provider call or change Identity truth.
 
@@ -217,7 +217,7 @@ An attempt carries the minimum information needed to identify and reconcile its 
 - attempt and MessageIntent identifiers;
 - bounded channel/provider route value selected under the later OQ-036 policy;
 - exact content/locale version reference used;
-- reference to the immutable MessageIntent render-input snapshot and its schema/provenance;
+- reference to the immutable MessageIntent render-input snapshot's version/digest, schema and provenance; the values are not duplicated in DeliveryAttempt;
 - safe provider operation/idempotency reference where supported;
 - admission disposition and invocation/reconciliation timing;
 - provider observation plus any distinct reconciliation conclusion, with minimal authenticated evidence identifiers and observation times;
@@ -346,7 +346,7 @@ Before every new provider submission capable of sending protected material, Comm
 
 A new attempt is admissible only when all applicable conditions hold:
 
-1. The MessageIntent remains open; no active admission exists; and no prior provider operation is accepted-but-unresolved or unknown. A prior admission closed before invocation is historical and permits a new admission only after all guards pass.
+1. The MessageIntent remains open; no active admission exists; and no prior provider operation is accepted-but-unresolved or has an unresolved unknown outcome. A prior admission closed before invocation or an ambiguity resolved as `confirmed_no_operation` is historical and permits a new admission only after all guards pass.
 2. Identity currently permits this exact source and semantic role.
 3. The original destination remains the authorised destination for that obligation.
 4. The exact content/locale version is currently eligible, or a safe explicit successor binding has been recorded.
