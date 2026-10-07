@@ -46,7 +46,7 @@ PROTECTED_HASHES = {
     "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
     "docs/00_platform/working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md": "af35b9cd6159f8f1b5154bc5df8baa2c0547e7f0f94b8b8b37dbc182846a18cb",
-    ".github/workflows/foundation-integrity.yml": "1e9161e066465d93ba9b2a74ae103accfd0d732393aff2e797f16fb1d27c6091",
+    ".github/workflows/foundation-integrity.yml": "30a3db501c260fd471d96a621707c945e4ed808efd44f706d6d0344a19743757",
 }
 
 REQUIRED_SUCCESSOR_PATHS = (

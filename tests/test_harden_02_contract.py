@@ -56,7 +56,7 @@ PROTECTED_UPSTREAM_HASHES = {
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e",
     "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md": "71615d3363a91a7e6002d907c6edd474fbd87f77bdfc6a38f5b11afd240a5626",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md": EXPECTED_ATLAS_V0_2_SHA256,
-    ".github/workflows/foundation-integrity.yml": "1e9161e066465d93ba9b2a74ae103accfd0d732393aff2e797f16fb1d27c6091",
+    ".github/workflows/foundation-integrity.yml": "30a3db501c260fd471d96a621707c945e4ed808efd44f706d6d0344a19743757",
 }
 
 PROHIBITED_PRESENT_PATHS = (
@@ -1127,6 +1127,20 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
                 **attestation,
             },
         }
+
+
+class FoundationIntegrityWorkflowTests(unittest.TestCase):
+    def test_workflow_exact_head_dispatch_binds_checkout_and_github_sha(self):
+        workflow = (ROOT / ".github" / "workflows" / "foundation-integrity.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertIn("Verify exact-head checkout", workflow)
+        self.assertIn("github.event_name == 'workflow_dispatch'", workflow)
+        self.assertIn("EXPECTED_REF: ${{ inputs.ref }}", workflow)
+        self.assertIn('expected="$EXPECTED_REF"', workflow)
+        self.assertIn('"${GITHUB_SHA}" != "$expected"', workflow)
+        self.assertNotIn('expected="${{ inputs.ref }}"', workflow)
 
 
 if __name__ == "__main__":
