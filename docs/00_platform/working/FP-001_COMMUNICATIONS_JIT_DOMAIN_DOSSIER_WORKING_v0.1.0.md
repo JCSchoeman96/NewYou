@@ -12,7 +12,7 @@ DOES NOT OVERRIDE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 
 **Artifact version:** v0.1.0 narrow status successor. Exact PR #78 candidate bytes are preserved byte-identically at `archive/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` (SHA-256 `039f1b0e249f62dfd606fc6484681d4e821077fb4c89eba65c4f33eb752277a9`).
 
-**Status:** `CERTIFIED / CURRENT`; PR #78 candidate certification is `COMPLETE`; PR #78 post-merge certification evidence is `COMPLETE`; current-status promotion is `PR #79 STATUS SUCCESSOR`. PR #78 certified the candidate and merged it unchanged but did not perform the dossier current-status promotion. This separate status successor records the current Communications dossier lifecycle state. Communications finalisation remains `BLOCKED / STOP` pending applicable gates and conditional-dossier adjudication. No Phase 7C work, proof classification or implementation starts here.
+**Status:** `CERTIFIED / CURRENT`; PR #78 candidate certification is `COMPLETE`; PR #78 post-merge certification evidence is `COMPLETE`; current-status promotion is `PR #81 STATUS SUCCESSOR`. PR #78 certified the candidate and merged it unchanged but did not perform the dossier current-status promotion. This separate status successor records the current Communications dossier lifecycle state. Communications finalisation remains `BLOCKED / STOP` pending applicable gates and conditional-dossier adjudication. No Phase 7C work, proof classification or implementation starts here.
 
 <!-- COMMUNICATIONS_V010_CURRENT_LIFECYCLE_STATE_START -->
 This structured block is the machine-authoritative lifecycle projection for this artifact. Historical narrative and explanatory prose do not independently redefine current lifecycle state.
@@ -22,7 +22,7 @@ This structured block is the machine-authoritative lifecycle projection for this
   "communications_lifecycle": "CERTIFIED / CURRENT",
   "pr_78_candidate_certification": "COMPLETE",
   "pr_78_post_merge_certification_evidence": "COMPLETE",
-  "current_status_promotion": "PR #79 STATUS SUCCESSOR",
+  "current_status_promotion": "PR #81 STATUS SUCCESSOR",
   "communications_finalisation": "BLOCKED / STOP",
   "conditional_dossiers": "PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
   "phase_7c": "BLOCKED / NOT_STARTED",

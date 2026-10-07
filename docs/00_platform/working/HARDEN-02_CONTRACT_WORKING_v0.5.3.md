@@ -44,7 +44,7 @@
 - `v0.5.0` — PATCH status and current-source-routing successor from resulting main `df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb`. Records the completed PR #70 Identity v0.1.3 durable-delivery certification as COMPLETE / CERTIFIED / CURRENT. Communications remains REQUIRED / NEXT / NOT_STARTED, and Communications finalisation remains BLOCKED / STOP. The original v0.4.0 HARDEN-02 semantics, execution evidence and later gates remain unchanged.
 - v0.5.1 — PATCH status and routing successor from resulting main 90f96ba3452c95112bf6ec4ce5bb897676adbed4. Records PR #76 candidate certification and completed post-merge certification evidence; the separate PR #77 status successor records Identity v0.1.4 as CERTIFIED / CURRENT. Communications remains REQUIRED / NEXT / NOT_STARTED; finalisation remains BLOCKED / STOP; HARDEN-02 semantics and later gates remain unchanged.
 - v0.5.2 — PATCH status and routing successor from main `0473cd69416f72fd94f2cee24a4d02c7f4fe0992`. Records Communications JIT Domain Dossier work as IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING under Open Work v1.2.58. Communications finalisation remains BLOCKED / STOP; HARDEN-02 semantics, conditional-dossier dispositions and later gates remain unchanged.
-- v0.5.3 — PATCH status and routing successor from main `a062bd56e3ae94e815e2991ee00bf133ee9f3b56`. Records PR #78 Communications dossier certification and the separate PR #79 current-status promotion under Open Work v1.2.59. Communications dossier v0.1.0 is CERTIFIED / CURRENT; finalisation remains BLOCKED / STOP; HARDEN-02 semantics, conditional-dossier dispositions and later gates remain unchanged.
+- v0.5.3 — PATCH status and routing successor from main `a062bd56e3ae94e815e2991ee00bf133ee9f3b56`. Records PR #78 Communications dossier certification and the separate PR #81 current-status promotion under Open Work v1.2.59. Communications dossier v0.1.0 is CERTIFIED / CURRENT; finalisation remains BLOCKED / STOP; HARDEN-02 semantics, conditional-dossier dispositions and later gates remain unchanged.
 
 ---
 
@@ -673,7 +673,7 @@ Preserve the fail-closed downstream gates:
 
 ## 21. Current execution certification and next stage
 
-The governing route is recorded in Open Work v1.2.59. HARDEN-02 execution, Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.4 are COMPLETE / CERTIFIED. Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT under the separate PR #79 status successor. Communications finalisation remains BLOCKED / STOP pending applicable gates and conditional-dossier adjudication. PR #76 certified the candidate and supplied completed post-merge certification evidence; the separate PR #77 status successor records Identity v0.1.4 as CURRENT, with its prior Communications NOT_STARTED state preserved in archived Open Work v1.2.57 and the current Identity dossier.
+The governing route is recorded in Open Work v1.2.59. HARDEN-02 execution, Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.4 are COMPLETE / CERTIFIED. Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT under the separate PR #81 status successor. Communications finalisation remains BLOCKED / STOP pending applicable gates and conditional-dossier adjudication. PR #76 certified the candidate and supplied completed post-merge certification evidence; the separate PR #77 status successor records Identity v0.1.4 as CURRENT, with its prior Communications NOT_STARTED state preserved in archived Open Work v1.2.57 and the current Identity dossier.
 
 PR #67 lifecycle evidence: candidate `79d0540c66f0224ece0330181e61dfef8ab4b458` from prior main `38022caea64cb2522ab8fc4db730099a94cd6600`, unchanged candidate/result tree `a71dbeb2cca79bea0013f9997e40f34769f262f3`, resulting main `4000ae50660930114e3ad43108dc029fd0673d32`, exact-head CI `36991113390`, resulting-main CI `37009244020`, pre-merge attestation comment `5952693308`, post-merge attestation comment `5955641536`, and fresh independent post-merge review PASS.
 
@@ -686,7 +686,7 @@ FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED
 IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT
 IDENTITY v0.1.4 CURRENT-STATUS PROMOTION SOURCE: PR #77 STATUS SUCCESSOR; PR #76 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE
 COMMUNICATIONS v0.1.0 PROMOTION: COMPLETE / CERTIFIED / CURRENT
-COMMUNICATIONS v0.1.0 CURRENT-STATUS PROMOTION SOURCE: PR #79 STATUS SUCCESSOR; PR #78 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE
+COMMUNICATIONS v0.1.0 CURRENT-STATUS PROMOTION SOURCE: PR #81 STATUS SUCCESSOR; PR #78 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE
 COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0
 COMMUNICATIONS FINALISATION: BLOCKED / STOP
 CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED

@@ -584,7 +584,7 @@ def _h02_lifecycle_state(
                     "successor_versions": ("0.5.3",),
                     "current_stage": "COMMUNICATIONS v0.1.0 CURRENT-STATUS PROMOTION",
                     "next_stage": "REMAINING REQUIRED / CONDITIONAL PHASE 7B",
-                    "programme_status": "HARDEN-02 EXECUTION COMPLETE / CERTIFIED; ENGINEERING STANDARDS AUTHORITY PROMOTION COMPLETE / CERTIFIED; FP-001 RECONCILIATION COMPLETE / CERTIFIED; IDENTITY v0.1.4 COMPLETE / CERTIFIED / CURRENT under the separate PR #77 status successor, based on PR #76 candidate and post-merge certification evidence; COMMUNICATIONS JIT DOMAIN DOSSIER v0.1.0 COMPLETE / CERTIFIED / CURRENT under the separate PR #79 status successor, based on PR #78 candidate and post-merge certification evidence",
+                    "programme_status": "HARDEN-02 EXECUTION COMPLETE / CERTIFIED; ENGINEERING STANDARDS AUTHORITY PROMOTION COMPLETE / CERTIFIED; FP-001 RECONCILIATION COMPLETE / CERTIFIED; IDENTITY v0.1.4 COMPLETE / CERTIFIED / CURRENT under the separate PR #77 status successor, based on PR #76 candidate and post-merge certification evidence; COMMUNICATIONS JIT DOMAIN DOSSIER v0.1.0 COMPLETE / CERTIFIED / CURRENT under the separate PR #81 status successor, based on PR #78 candidate and post-merge certification evidence",
                 }
             )
         elif promotion_status != "NEXT / AUTHORISED / NOT STARTED":
@@ -902,7 +902,7 @@ def _h02_lifecycle_state(
                 "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
                 "IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
                 "IDENTITY v0.1.4 CURRENT-STATUS PROMOTION SOURCE: PR #77 STATUS SUCCESSOR; PR #76 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE",
-                "Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT under the separate PR #79 status successor",
+                "Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT under the separate PR #81 status successor",
                 "Communications finalisation remains BLOCKED / STOP pending applicable gates and conditional-dossier adjudication",
             )
             if promotion_status == "COMPLETE / CERTIFIED"
@@ -1310,7 +1310,7 @@ def _engineering_standards_certified_state(
         "FP-001 PMR reconciliation is COMPLETE / CERTIFIED under PR #67",
         "Identity v0.1.4 is COMPLETE / CERTIFIED / CURRENT under the separate PR #77 status successor",
         "PR #76 candidate certification and completed post-merge certification evidence are COMPLETE; the separate PR #77 status successor records Identity v0.1.4 as COMPLETE / CERTIFIED / CURRENT.",
-        "Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT under the separate PR #79 status successor",
+        "Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT under the separate PR #81 status successor",
         "Phase 7C remains blocked / not started",
         "proof classification remains not finalised",
         "executable development remains blocked until Phase 8 entry conditions pass",
@@ -3395,7 +3395,7 @@ def _check_fp001_pmr_reconciliation(
         "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
         "IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
         "COMMUNICATIONS v0.1.0 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
-        "COMMUNICATIONS v0.1.0 CURRENT-STATUS PROMOTION SOURCE: PR #79 STATUS SUCCESSOR; PR #78 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE",
+        "COMMUNICATIONS v0.1.0 CURRENT-STATUS PROMOTION SOURCE: PR #81 STATUS SUCCESSOR; PR #78 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE",
         "COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0",
         "COMMUNICATIONS FINALISATION: BLOCKED / STOP",
         "- COMMUNICATIONS: COMPLETE / CERTIFIED / CURRENT v0.1.0",
@@ -3449,7 +3449,7 @@ def _check_fp001_pmr_reconciliation(
         "The separate PR #77 status successor records Identity v0.1.4 as CERTIFIED / CURRENT",
         "- IDENTITY v0.1.4: CERTIFIED / CURRENT under the separate PR #77 status successor; PR #76 candidate and post-merge certification evidence are COMPLETE",
         "PR #78 candidate certification and post-merge certification evidence are COMPLETE / CERTIFIED",
-        "The separate PR #79 status successor records Communications dossier v0.1.0 as CERTIFIED / CURRENT",
+        "The separate PR #81 status successor records Communications dossier v0.1.0 as CERTIFIED / CURRENT",
     )
     for token in readme_route:
         if token not in readme:
@@ -3499,16 +3499,16 @@ def _check_fp001_pmr_reconciliation(
             issues.append(f"README active route is missing or stale: {token}")
 
     open_work_comm_provenance_heading = (
-        "## 12.16 — PR #78 candidate certification and post-merge evidence; PR #79 current-status promotion"
+        "## 12.16 — PR #78 candidate certification and post-merge evidence; PR #81 current-status promotion"
     )
     open_work_comm_provenance = (
         "PR #78 certified the v0.1.0 candidate and supplied completed post-merge certification evidence. "
-        "It did not make v0.1.0 current. This separate PR #79 status successor records the current-status "
+        "It did not make v0.1.0 current. This separate PR #81 status successor records the current-status "
         "promotion; the resulting Communications dossier state is CERTIFIED / CURRENT."
     )
     if open_work_comm_provenance not in open_work or open_work_comm_provenance_heading not in open_work:
         issues.append(
-            "Open Work §12.16 does not separate PR #78 candidate/post-merge certification evidence from the PR #79 current-status successor"
+            "Open Work §12.16 does not separate PR #78 candidate/post-merge certification evidence from the PR #81 current-status successor"
         )
 
     atlas_path = docs / "working" / "DELIVERY_ATLAS_WORKING_v0.4.1.md"
@@ -3592,7 +3592,7 @@ def _check_fp001_pmr_reconciliation(
             "Records PR #76 candidate certification and completed post-merge certification evidence; the separate PR #77 status successor records Identity v0.1.4 as CERTIFIED / CURRENT."
         ) != 1
         or harden_revision_text.count(
-            "Records PR #78 Communications dossier certification and the separate PR #79 current-status promotion under Open Work v1.2.59."
+            "Records PR #78 Communications dossier certification and the separate PR #81 current-status promotion under Open Work v1.2.59."
         ) != 1
     ):
         issues.append("current HARDEN-02 v0.5.3 status header or revision log confuses certification with current-status promotion")

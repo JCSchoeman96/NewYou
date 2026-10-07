@@ -12,7 +12,7 @@ DOES NOT REPLACE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 
 **Artifact version:** v0.1.5 — PATCH status successor. Direct predecessor v0.1.4 is preserved byte-identically at `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md`. Predecessor v0.1.3 remains at `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.3.md`. The PR #67 reconciliation candidate v0.1.2 and its predecessor v0.1.1 remain preserved at their archive paths.
 
-**Lifecycle status:** `CERTIFIED / CURRENT`. The normative PMR block and PR #67 reconciliation certification evidence below remain unchanged. `FP001_RECONCILIATION_REQUIRED` is `COMPLETE / CERTIFIED`. Communications JIT Domain Dossier v0.1.0 is `COMPLETE / CERTIFIED / CURRENT` under current Open Work v1.2.59 and the separate PR #79 status successor. Communications finalisation remains `BLOCKED / STOP`.
+**Lifecycle status:** `CERTIFIED / CURRENT`. The normative PMR block and PR #67 reconciliation certification evidence below remain unchanged. `FP001_RECONCILIATION_REQUIRED` is `COMPLETE / CERTIFIED`. Communications JIT Domain Dossier v0.1.0 is `COMPLETE / CERTIFIED / CURRENT` under current Open Work v1.2.59 and the separate PR #81 status successor. Communications finalisation remains `BLOCKED / STOP`.
 
 **Certification evidence:**
 
