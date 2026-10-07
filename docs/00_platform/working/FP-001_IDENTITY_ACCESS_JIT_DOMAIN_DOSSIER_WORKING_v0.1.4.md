@@ -12,7 +12,7 @@ DOES NOT OVERRIDE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 
 **Artifact version:** v0.1.4 narrow PATCH successor. It supersedes promoted/current v0.1.3, preserved byte-identically at `archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3_SUPERSEDED_PROMOTED_CURRENT.md`; exact PR #70 candidate remains separately preserved at `archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md`. Exact PR #76 candidate is preserved byte-identically at `archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md` (SHA-256 `1557a4bded20b94fc363d96dd5a601213de105e0daccfa1970b869a0e38f362f`).
 
-**Status:** `CERTIFIED / CURRENT`; PR #76 candidate certification is `COMPLETE`; PR #76 post-merge certification evidence is `COMPLETE`; current-status promotion is `PR #77 STATUS SUCCESSOR`. PR #76 certified the candidate and merged it unchanged but did not make v0.1.4 current. This separate status successor records the current Identity state. The corrections address governed message/template-content ownership (COMM-UPD-001) and scanner/prefetch-safe proof consumption (COMM-UPD-002). Identity & Access remains sole authority for proof and primary-email-change truth. Communications remains `REQUIRED / NEXT / NOT_STARTED`; finalisation remains `BLOCKED / STOP` pending the Communications dossier and applicable gates. No Communications dossier, Phase 7C work or implementation starts here.
+**Status:** `CERTIFIED / CURRENT`; PR #76 candidate certification is `COMPLETE`; PR #76 post-merge certification evidence is `COMPLETE`; current-status promotion is `PR #77 STATUS SUCCESSOR`. PR #76 certified the candidate and merged it unchanged but did not make v0.1.4 current. This separate status successor records the current Identity state. The corrections address governed message/template-content ownership (COMM-UPD-001) and scanner/prefetch-safe proof consumption (COMM-UPD-002). Identity & Access remains sole authority for proof and primary-email-change truth. Communications dossier v0.1.0 is `COMPLETE / CERTIFIED / CURRENT`; finalisation remains `BLOCKED / STOP` pending applicable gates and conditional-dossier adjudication. No Communications dossier, Phase 7C work or implementation starts here.
 
 <!-- IDENTITY_V014_CURRENT_LIFECYCLE_STATE_START -->
 This structured block is the machine-authoritative lifecycle projection for this artifact. Historical narrative and explanatory prose do not independently redefine current lifecycle state.
@@ -23,7 +23,7 @@ This structured block is the machine-authoritative lifecycle projection for this
   "pr_76_candidate_certification": "COMPLETE",
   "pr_76_post_merge_certification_evidence": "COMPLETE",
   "current_status_promotion": "PR #77 STATUS SUCCESSOR",
-  "communications": "REQUIRED / NEXT / NOT_STARTED",
+  "communications": "COMPLETE / CERTIFIED / CURRENT v0.1.0",
   "communications_finalisation": "BLOCKED / STOP",
   "phase_7c": "BLOCKED / NOT_STARTED",
   "proof_classification": "NOT FINALISED",
@@ -684,8 +684,8 @@ Resource names represent business concepts, not database tables, screens or work
 * PR #76 post-merge certification evidence is `COMPLETE`.
 * Current-status promotion is recorded by `PR #77 STATUS SUCCESSOR`.
 * Identity v0.1.4 is `CERTIFIED / CURRENT`.
-* Communications remains `REQUIRED / NEXT / NOT_STARTED`; Communications finalisation remains `BLOCKED / STOP` pending its own dossier and applicable gates.
-* Phase 7C remains `BLOCKED / NOT_STARTED` while required Phase 7B work remains: the separately authorised Communications dossier is not started, conditional dossiers remain subject to explicit adjudication where current law proves insufficient, and applicable blocking gates must be resolved. Phase 7C must consume their contracts without inventing Identity semantics.
+* Communications remains `COMPLETE / CERTIFIED / CURRENT v0.1.0`; Communications finalisation remains `BLOCKED / STOP` pending applicable gates and conditional-dossier adjudication.
+* Phase 7C remains `BLOCKED / NOT_STARTED` while required Phase 7B work remains: conditional dossiers remain subject to explicit adjudication where current law proves insufficient, and applicable blocking gates must be resolved. Phase 7C must consume their contracts without inventing Identity semantics.
 * Proof classification remains `NOT FINALISED`.
 * Phase 8/application implementation remains `UNAUTHORISED`.
 
