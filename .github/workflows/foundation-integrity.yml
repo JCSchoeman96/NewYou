@@ -28,16 +28,23 @@ jobs:
       - name: Verify exact-head checkout
         if: github.event_name == 'workflow_dispatch'
         shell: bash
+        env:
+          EXPECTED_REF: ${{ inputs.ref }}
         run: |
           set -euo pipefail
-          expected="${{ inputs.ref }}"
+          expected="$EXPECTED_REF"
           if ! [[ "$expected" =~ ^[0-9a-f]{40}$ ]]; then
             echo "ref must be a 40-character commit SHA; got: $expected"
             exit 1
           fi
+          if [[ "${GITHUB_SHA}" != "$expected" ]]; then
+            echo "GITHUB_SHA ${GITHUB_SHA} does not match ref input ${expected}"
+            echo "Use workflow from the branch whose tip is the certified SHA."
+            exit 1
+          fi
           actual="$(git rev-parse HEAD)"
           if [[ "$actual" != "$expected" ]]; then
-            echo "Checked out $actual but ref input was $expected"
+            echo "Checked out ${actual} but ref input was ${expected}"
             exit 1
           fi
       - name: Set up Python

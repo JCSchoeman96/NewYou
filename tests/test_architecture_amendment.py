@@ -80,7 +80,7 @@ PROTECTED_HASHES = {
     "docs/00_platform/working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md": "64deb759ae8eda7391208c2a23db755651e2fc722fdd3142dd4a2f6a7c531511",
     "docs/00_platform/working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md": "2ad2d2f5e3410ef01e28f8fc6f5cf7a709f58e5dbec8d2d034e73cef659b2e7e",
     "docs/00_platform/working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md": "27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017",
-    ".github/workflows/foundation-integrity.yml": "50e96e78c0fe94167c65433ebe24e464288dd89501dca99ebcd86a03a936b492",
+    ".github/workflows/foundation-integrity.yml": "30a3db501c260fd471d96a621707c945e4ed808efd44f706d6d0344a19743757",
 }
 
 REQUIRED_SUCCESSOR_PATHS = (
