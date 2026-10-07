@@ -20,7 +20,8 @@ Solo-maintainer repos still benefit: mistakes, compromised tooling, and process 
 ## Foundation Integrity workflow and check name
 
 - Workflow: `.github/workflows/foundation-integrity.yml`
-- Triggers: **every** `pull_request` and **every** push to `main` (no `paths:` filters). Required checks must not be skippable by path filtering.
+- Triggers: **every** `pull_request`, **every** push to `main`, and manual `workflow_dispatch` (no `paths:` filters). Required checks must not be skippable by path filtering.
+- **Merge-preview vs exact-head:** `pull_request` runs validate GitHub’s PR merge preview (integration evidence). Pre-merge **exact-head** certification requires a `workflow_dispatch` run on the candidate branch with `ref` set to the **40-character certified head SHA**; the workflow fails closed if checkout does not match that SHA. Bind attestation `pre_merge_ci.head_sha` to the Actions run only when the run `event` is `workflow_dispatch` and `head_sha` equals that same certified SHA.
 - Job id: `foundation-integrity`
 - **Required status check context:** **`Foundation Integrity`** — set explicitly via `jobs.foundation-integrity.name` in the workflow.
 

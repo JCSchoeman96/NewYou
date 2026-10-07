@@ -5,6 +5,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Exact commit SHA to check out and validate (40-character git object id).
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -17,6 +23,23 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.sha }}
+      - name: Verify exact-head checkout
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="${{ inputs.ref }}"
+          if ! [[ "$expected" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "ref must be a 40-character commit SHA; got: $expected"
+            exit 1
+          fi
+          actual="$(git rev-parse HEAD)"
+          if [[ "$actual" != "$expected" ]]; then
+            echo "Checked out $actual but ref input was $expected"
+            exit 1
+          fi
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
