@@ -4,9 +4,11 @@
 >
 > **Implementation authority:** NONE
 >
-> **Pack version:** `v0.1.0`
+> **Pack version:** `v0.1.1`
 >
 > **Independent review disposition:** `PASS WITH NON-BLOCKING CORRECTIONS — DOCUMENTARY PRE-JIT FROZEN`
+>
+> **v0.1.1 scope:** compression-fidelity patch only; no new Assessment / Temperament semantic decision and no Product/Domain/Roadmap authority change.
 
 This directory is the normal-context surface for Assessment / Temperament Pre-JIT work. It compresses the completed append-only discovery stream without creating Product Law, Architecture Law, Domain Law, Roadmap authority, JIT authority, proof classification or implementation permission.
 
@@ -15,24 +17,51 @@ Live governed repository authority always wins.
 ## Read order
 
 1. Read live `main` authority routing from `docs/00_platform/README.md` and the current authority manifest.
-2. Read `NEWYOU_AT_PREJIT_CONTRACT_WORKING_v0.1.0.md` for the compact durable Assessment / Temperament model.
-3. Read `NEWYOU_AT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md` for unresolved Product / Domain / Roadmap adjudication and JIT routing.
-4. Use `NEWYOU_AT_EVIDENCE_INDEX_WORKING_v0.1.0.md` when exact provenance, pressure-test or source-version tracing is required.
-5. Use `NEWYOU_AT_COMPRESSION_AUDIT_WORKING_v0.1.0.md` to verify that compression preserved the accepted discovery and did not promote candidate policy into authority.
-6. Use `PACK_MANIFEST_v0.1.0.json` for the exact compact/deep inventory.
+2. Read `NEWYOU_AT_PREJIT_CONTRACT_WORKING_v0.1.1.md` for the current compact durable Assessment / Temperament model.
+3. Read the unchanged `NEWYOU_AT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md` for unresolved Product / Domain / Roadmap adjudication and JIT routing.
+4. Use `NEWYOU_AT_EVIDENCE_INDEX_WORKING_v0.1.1.md` when exact provenance, pressure-test or source-version tracing is required.
+5. Use `NEWYOU_AT_COMPRESSION_AUDIT_WORKING_v0.1.1.md` for the current compression-fidelity certification.
+6. Use `PACK_MANIFEST_v0.1.1.json` for the exact current compact/deep inventory and predecessor blob identities.
 7. Load `deep/` only when exact historical reasoning or append-only predecessor wording is required.
+
+## What changed in v0.1.1
+
+A fresh full-lineage review found that the v0.1.0 compact contract had preserved every working-decision heading but compressed several still-current sub-invariants too aggressively for a normal FP-003 planning input.
+
+v0.1.1 restores compact visibility of only those durable guardrails:
+
+- technical-recovery boundary/support/refund/subscription-survival guardrails;
+- declaration-history and durable downstream temperament-source provenance;
+- accepted-submission → canonical-result pending cutover;
+- methodology translation-meaning, source-book, atomic-publication and approval-provenance gates;
+- exact attempt-expiry visibility and persistent in-product continuation route;
+- Research/Feedback `response does not equal command` and Entitlements-owned incentive-right consequence.
+
+These are fidelity restorations from the preserved deep lineage, not new semantic decisions.
 
 ## Deep evidence
 
-The complete append-only discovery lineage `v0.1.0` through `v0.23.1` is preserved under `deep/` using the same Git blob identities as the pre-compression files.
+The complete append-only discovery lineage `v0.1.0` through `v0.23.1` remains preserved under `deep/` using the same Git blob identities as before compression.
 
-The latest deep status/classification successor is:
+The latest deep status/classification successor remains:
 
 `deep/NEWYOU_ASSESSMENT_TEMPERAMENT_PREJIT_DISCOVERY_WORKING_v0.23.1.md`
 
 Git blob: `41da4e92f6bf61f73979303d394a9865d6d0158d`
 
-Do not load the full deep chain by default. The compact contract is the normal JIT-planning input; the Evidence Index locates the exact deep source when required.
+Do not load the full deep chain by default. The v0.1.1 compact contract is the normal JIT-planning input; the Evidence Index locates exact deep source evidence when required.
+
+## Predecessor compact pack
+
+The original v0.1.0 versioned compact artifacts remain unchanged:
+
+- `NEWYOU_AT_PREJIT_CONTRACT_WORKING_v0.1.0.md`
+- `NEWYOU_AT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md`
+- `NEWYOU_AT_EVIDENCE_INDEX_WORKING_v0.1.0.md`
+- `NEWYOU_AT_COMPRESSION_AUDIT_WORKING_v0.1.0.md`
+- `PACK_MANIFEST_v0.1.0.json`
+
+The unversioned README advances as the routing pointer. Its v0.1.0 blob identity is preserved in both pack manifests/history.
 
 ## Current authority boundary
 

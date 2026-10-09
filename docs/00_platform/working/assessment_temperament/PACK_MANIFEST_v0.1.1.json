@@ -1,0 +1,77 @@
+{
+  "pack": "assessment_temperament_prejit",
+  "pack_version": "v0.1.1",
+  "status": "FINAL_COMPACT_WORKING_PACK_NON_AUTHORITATIVE",
+  "implementation_authority": "NONE",
+  "patch_scope": "Compression-fidelity patch only. Restores still-current deep guardrails to the compact normal-context surface; creates no new Assessment/Temperament semantics or governed authority.",
+  "live_main_consolidation_pin": "086ade7b28c000de1c387acb9760e5eb08bb0413",
+  "source_branch_before_patch_head": "e372336d4e3b14c3832413ae8e3ed6f2adce5eca",
+  "latest_deep_classification_version": "v0.23.1",
+  "latest_deep_classification_blob": "41da4e92f6bf61f73979303d394a9865d6d0158d",
+  "predecessor_pack": {
+    "version": "v0.1.0",
+    "manifest_path": "PACK_MANIFEST_v0.1.0.json",
+    "manifest_git_blob_sha": "f25efa0da4fb589fa89adcda53a71fb0f5d6effd",
+    "routing_readme_git_blob_sha": "af0c6eba921bf7d4fbe76b6c65bb605387b903c8",
+    "contract_git_blob_sha": "dabb549c2b768b9b94fb3123a946cffaa65baf03",
+    "delta_register_git_blob_sha": "7600e770b376852792b4040d5a31657d0e528d7e",
+    "evidence_index_git_blob_sha": "d6ae9bf594858966a8df3e6bce0ec02301b6362c",
+    "compression_audit_git_blob_sha": "88bf25af7bfb18bfe18df80769418fbebe3caa75"
+  },
+  "compact_files": [
+    {
+      "path": "README.md",
+      "git_blob_sha": "4a81defd6d50d6a77384a6ff0539a5f1177f85ed",
+      "purpose": "normal-context navigation and authority boundary"
+    },
+    {
+      "path": "NEWYOU_AT_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+      "git_blob_sha": "cf0f5dcd7d466c320cd851697b6558591a149769",
+      "purpose": "current compact durable Assessment / Temperament model with compression-fidelity restorations"
+    },
+    {
+      "path": "NEWYOU_AT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md",
+      "git_blob_sha": "7600e770b376852792b4040d5a31657d0e528d7e",
+      "purpose": "unchanged unresolved Product / Domain / Roadmap / JIT routing"
+    },
+    {
+      "path": "NEWYOU_AT_EVIDENCE_INDEX_WORKING_v0.1.1.md",
+      "git_blob_sha": "6edba24aeac9fda99d45f15ad8eed6e5b1044159",
+      "purpose": "current working-decision, pressure-test and deep-source provenance index"
+    },
+    {
+      "path": "NEWYOU_AT_COMPRESSION_AUDIT_WORKING_v0.1.1.md",
+      "git_blob_sha": "3609bb5bce07fb58a74aead0b10c7233714978ec",
+      "purpose": "current semantic/classification compression-fidelity verification"
+    }
+  ],
+  "deep_files": [
+    {"version":"v0.1.0","git_blob_sha":"65b87d9b9e5897a22fe8d56df5ea310f04cb968e","byte_size":30815},
+    {"version":"v0.2.0","git_blob_sha":"4ed3beae14b6b8bad15a7b36683f69c49221476e","byte_size":12211},
+    {"version":"v0.3.0","git_blob_sha":"4c9d759b7762d9c82fd59b82be29bbed3b6d5d3c","byte_size":9984},
+    {"version":"v0.4.0","git_blob_sha":"cfc2e52b6ee8dd2c6b55631fd756259c0732ecf7","byte_size":9135},
+    {"version":"v0.5.0","git_blob_sha":"7e6994a9e5752fe16bafd810c18b1ffd722daec4","byte_size":9371},
+    {"version":"v0.6.0","git_blob_sha":"3d83c1ae2c6b89333171b9578d35240d91ce22b2","byte_size":11768},
+    {"version":"v0.7.0","git_blob_sha":"379b3a7ec526eadaa4bf82fb1602064486ee0ee4","byte_size":9217},
+    {"version":"v0.8.0","git_blob_sha":"33abf23b541b94c2ff13f19c3fde25757b62710e","byte_size":13018},
+    {"version":"v0.9.0","git_blob_sha":"64c50eb50e3f486d601af2ac7f79e588d6e84a87","byte_size":11508},
+    {"version":"v0.10.0","git_blob_sha":"9334323ca516c03a707539778543c36959e8f225","byte_size":13585},
+    {"version":"v0.11.0","git_blob_sha":"09c3497c535b0f1f4f2b5d508cfa88084d04446c","byte_size":15089},
+    {"version":"v0.12.0","git_blob_sha":"f855bf382c097ae223f4e71146c3bb55007f50cc","byte_size":12554},
+    {"version":"v0.13.0","git_blob_sha":"efb5387491a8065f953cc054e6cc326a2e05d0ec","byte_size":14662},
+    {"version":"v0.14.0","git_blob_sha":"94328d1e0302a58d18b1f1b4cd6985a77c885adc","byte_size":12885},
+    {"version":"v0.15.0","git_blob_sha":"85ecc58bceb352879d54306687760db2b621d5f4","byte_size":16587},
+    {"version":"v0.16.0","git_blob_sha":"3f620dc8da5681a6f487d96246d985868d3b6a03","byte_size":30067},
+    {"version":"v0.17.0","git_blob_sha":"b6e7a2dbeb6e93d4811bc2ee0e7075f2cb2b1515","byte_size":10706},
+    {"version":"v0.18.0","git_blob_sha":"22e3c9c395c04e1bafcde17f49c78e41a8166a73","byte_size":9570},
+    {"version":"v0.19.0","git_blob_sha":"43922c71d53c2a8ee781f3bebf27514542b74592","byte_size":13488},
+    {"version":"v0.20.0","git_blob_sha":"20f78d10b6a4ce70cded97e3593a5e2bff92cc73","byte_size":6677},
+    {"version":"v0.21.0","git_blob_sha":"e6e097d98b970e26f800b6a46534218c32880b4c","byte_size":12666},
+    {"version":"v0.22.0","git_blob_sha":"1c2ba76945498c9805afc758d70a02d60be0eba2","byte_size":10930},
+    {"version":"v0.23.0","git_blob_sha":"ac5d39c40730476b5a8a4561f042bbd97149d1c2","byte_size":10260},
+    {"version":"v0.23.1","git_blob_sha":"41da4e92f6bf61f73979303d394a9865d6d0158d","byte_size":13290}
+  ],
+  "deep_preservation_rule": "Each deep file retains its pre-compression Git blob SHA; v0.1.1 changes no deep file.",
+  "predecessor_preservation_rule": "Existing versioned v0.1.0 compact files remain unchanged. The routing README advances, with its predecessor blob identity retained in the predecessor pack inventory.",
+  "authority_rule": "Live governed main always wins. This pack is working evidence/navigation only."
+}
