@@ -1,0 +1,42 @@
+name: Pass 9 v7 exact candidate verification
+on:
+  push:
+    branches: [prejit/analytics-pass9-v5]
+permissions:
+  contents: write
+jobs:
+  verify:
+    if: "${{ github.event.head_commit.message == 'ci: verify final Pass 9 targeted corrections' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Apply bounded repair
+        run: |
+          python tools/pass9_repair_tmp.py
+          python tools/pass9_repair_delta_tmp.py
+          python tools/pass9_repair_delta2_tmp.py
+          rm -f tools/pass9_repair_tmp.py tools/pass9_repair_delta_tmp.py tools/pass9_repair_delta2_tmp.py .github/workflows/pass9-v5.yml .github/workflows/pass9-v5-diag.yml .github/workflows/pass9-v6.yml .github/workflows/pass9-v7.yml
+      - name: Targeted routing and lifecycle tests
+        run: >-
+          python -m unittest -v
+          tests.test_roadmap_routing_resilience
+          tests.test_roadmap_amendment
+          tests.test_authority_routing_successors
+          tests.test_atlas_reconciliation
+          tests.test_harden_02_contract
+          tests.test_harden_02_execution
+          tests.test_harden_02_completion_lifecycle
+          tests.test_engineering_standards_promotion
+      - name: Full unit suite
+        run: python -m unittest discover -s tests -v
+      - name: Foundation Integrity
+        run: python tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+      - name: Commit verified candidate
+        run: |
+          git config user.name 'Pass 9 verification automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'test: align integrity guards with Roadmap v1.3.0 promotion'
+          git push origin HEAD:prejit/analytics-pass9-v5
