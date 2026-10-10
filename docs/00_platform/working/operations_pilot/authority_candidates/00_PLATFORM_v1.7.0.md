@@ -17,7 +17,7 @@
 
 ## v1.7.0 Amendment Scope
 
-This substantive Product successor repairs the assessment-credit consumption contradiction exposed by OPS-UPD-004. It preserves prior Product Law except for the explicit assessment-credit claim/closure/consumption refinement: first-answer save claims/holds the existing ordinary paid assessment credit without consuming it; successful digital assessment delivery consumes exactly once when the immutable governed result and paid report are durably available to the authorised participant; pre-first-answer expiry leaves the credit available unused; post-first-answer nontechnical expiry closes the credit unconsumed; and genuine technical failure preserves the same paid obligation for controlled recovery or the existing technical-failure refund path. DEC-313 records the decision. The amendment changes no methodology, scoring, annual retake interval, Domain ownership, Architecture, provider/channel policy or legal-sufficiency finding.
+This substantive Product successor repairs the assessment-credit consumption contradiction exposed by OPS-UPD-004. It preserves prior Product Law except for the explicit assessment-credit claim, complete-delivery, release and consumption refinement: first-answer save claims/holds the existing ordinary paid assessment credit without consuming it; successful digital assessment delivery consumes exactly once only when the complete paid digital-assessment deliverable required by current Product Law is durably available to the authorised participant; pre-first-answer expiry leaves the credit available unused; post-first-answer nontechnical expiry ends the expired attempt and releases the same credit back to available-unused state; the DEC-034 annual retake interval is evaluated from the prior successful digital assessment delivery; and genuine technical failure preserves the same paid obligation for controlled recovery or the existing technical-failure refund path. DEC-313 records the decision. The amendment changes no assessment methodology, scoring, one-retake-per-year limit, Domain ownership, Architecture, provider/channel policy or legal-sufficiency finding.
 
 ## v1.6.0 Amendment Scope
 
@@ -1494,7 +1494,7 @@ A material change creates a new methodology version and never silently changes c
 - Save and resume is supported.
 - Only one active attempt is permitted per participant at a time.
 - Saving the first answer claims/holds the existing ordinary paid assessment credit for that active or recoverable attempt; it does not consume the credit.
-- Assessment-credit availability, closure and consumption follow §21R.6 and DEC-313.
+- Assessment-credit availability, release and consumption follow §21R.6 and DEC-313.
 - An unfinished attempt remains active for 30 days.
 - A warning is issued before expiry.
 - Controlled support recovery is permitted for genuine technical failure.
@@ -6336,28 +6336,28 @@ Purchase eligibility, an unused paid assessment entitlement, a completed attempt
 
 The approved plan-only offer is the R399 7-Day Personalised Plan in §21L.15. This rule does not change Premium eligibility, payment accounting, refund rights or the one-retake-per-year limit after a valid assessment entitlement.
 
-## 21R.6 Assessment-credit claim, delivery, closure and consumption
+## 21R.6 Assessment-credit claim, complete delivery, release and consumption
 
-Assessment attempt/result/report state and commercial credit state are separate. An ordinary paid assessment credit may be unavailable for another attempt or sale while still commercially unconsumed.
+Assessment-attempt/result/report state, paid-deliverable state, annual-retake eligibility and commercial credit state are separate. An ordinary paid assessment credit may be unavailable for another attempt or sale while still commercially unconsumed.
 
 | Assessment-credit situation | Product consequence |
 |---|---|
 | valid ordinary paid credit; no first answer saved | `available_unused` |
 | first answer saved; attempt active/recoverable; no successful delivery | `held_unconsumed` |
-| immutable governed result exists but paid report is not yet durably participant-available | `held_unconsumed` |
-| immutable governed result and paid report are both durably available to the authorised participant through the approved access path | `consume_exactly_once` |
+| immutable governed result exists but the complete paid deliverable is not yet durably participant-available | `held_unconsumed` |
+| immutable governed result, paid temperament result report, required primary/secondary temperament guidance and required introductory personalised guidance are all durably available to the authorised participant through the approved access path | `consume_exactly_once` |
 | attempt expires before first answer | `release_to_available_unused` |
-| attempt expires after first answer; no successful delivery; no live genuine technical-recovery case | `close_unconsumed` |
+| attempt expires after first answer; no successful delivery; no live genuine technical-recovery case | `release_same_credit_to_available_unused; expired_attempt_terminal` |
 | genuine technical failure under controlled recovery | `preserve_same_paid_obligation; recover_existing_lineage_where_present` |
 | valid technical-failure refund | `close_credit_after_refund; not_delivery_or_consumption` |
 | notification/provider failure after qualifying in-product delivery | `no_change_to_consumption_truth` |
-| participant never opens/views an otherwise qualifying result/report | `no_change_to_consumption_truth` |
+| participant never opens/views an otherwise qualifying complete paid deliverable | `no_change_to_consumption_truth` |
 
-Saving the first answer claims/holds the existing ordinary paid credit; it does not consume it. Successful digital assessment delivery is the durable availability of both the immutable governed digital result and the paid digital report to the authorised participant through the approved participant-access path. Temperament owns attempt, result and report truth; Entitlements owns current assessment-credit/right truth; Identity & Access governs access assurance. Notification/provider acceptance or delivery, result creation alone, report generation alone, and participant open/read/view telemetry do not independently establish consumption.
+Saving the first scored answer claims/holds the existing ordinary paid credit; it does not consume it. Successful digital assessment delivery occurs only when the complete paid digital-assessment deliverable required by current Product Law has been durably made available to the authorised participant through an approved participant-access path. The complete deliverable includes the immutable governed digital result, the paid temperament result report, the required primary and secondary temperament guidance and the required introductory personalised guidance. These outputs may be packaged together or separately; packaging does not alter the delivery requirement. Temperament owns attempt, result and report truth; Entitlements owns current assessment-credit/right truth; Identity & Access governs access assurance. Notification/provider acceptance or delivery, Analytics events, result creation alone, report generation alone, any incomplete subset of the paid Product promise, and participant open/read/view telemetry do not independently establish consumption.
 
-A qualifying delivery consumes the ordinary paid assessment credit exactly once. If the attempt expires before the first answer, the attempt ends and the credit remains available unused. If it expires after the first answer without successful delivery and no genuine technical-recovery case remains live, the attempt ends and the credit closes unconsumed. Closure is not delivery or consumption. Genuine technical failure preserves one paid obligation for controlled recovery of the same lineage where one exists, or follows the existing technical-failure refund path. A valid technical-failure refund closes the affected right and is not recorded as delivery or consumption.
+A qualifying complete delivery consumes the ordinary paid assessment credit exactly once. If the attempt expires before the first answer, the attempt ends and the credit remains available unused. If it expires after the first answer without successful delivery and no genuine technical-recovery case remains live, the expired attempt is terminal and the same ordinary paid credit is released back to `available_unused`. The expired attempt cannot be resumed; release is not refund, successful delivery or consumption and does not mint a new credit. Genuine technical failure preserves one paid obligation for controlled recovery of the same result/report/guidance lineage where one exists, or follows the existing technical-failure refund path. A valid technical-failure refund closes the affected right and is not recorded as delivery or consumption.
 
-Refundability remains governed separately by DEC-045. The annual retake interval in DEC-034 remains separate and unchanged; this amendment does not redefine its clock. The assessment-completion metric remains separate from commercial credit consumption and cannot become Entitlements authority. Duplicate/retried submission, recovery, report availability, delivery processing or consumption signals must converge on one logical credit/result/report lineage and may not create duplicate rights, immutable results/reports or consumption.
+Refundability remains governed separately by DEC-045. For DEC-034, the annual retake interval is evaluated from the prior successful digital assessment delivery. Purchase, credit grant, attempt admission, first-answer save, ordinary credit claim/hold, nontechnical attempt expiry, technical failure before successful delivery, or refund without successful delivery does not start or reset that interval. A fresh attempt after an expired undelivered attempt remains subject to any DEC-034 eligibility already running from a prior successful delivery. Premium annual reassessment-credit accrual and expiry remain separate. The assessment-completion metric remains separate from commercial credit consumption and cannot become Entitlements authority. Duplicate/retried submission, recovery, result/report/guidance availability, delivery processing or consumption signals must converge on one logical paid credit and complete paid-deliverable lineage and may not create duplicate rights, immutable results/reports/guidance or consumption.
 
 The lifecycle labels in this section are Product semantics, not mandated database enums, tables, Ash Resources or action names.
 

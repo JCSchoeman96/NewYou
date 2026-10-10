@@ -33,7 +33,7 @@ This substantive successor preserves DEC-001 through DEC-303 and appends DEC-304
 
 ## v1.7.0 Amendment Scope
 
-This substantive successor preserves prior decision history, explicitly supersedes DEC-055 with DEC-313 for ordinary paid assessment-credit claim, closure and consumption semantics, and appends DEC-313. It changes no assessment methodology, scoring, annual retake interval, Architecture, Domain ownership, provider/channel policy or legal-sufficiency conclusion.
+This substantive successor preserves prior decision history, explicitly supersedes DEC-055 with DEC-313 for ordinary paid assessment-credit claim, complete-delivery, release and consumption semantics, and appends DEC-313. It defines successful digital assessment delivery against the complete paid Product promise and defines the DEC-034 annual retake reference event as the prior successful digital assessment delivery without changing the one-retake-per-year limit. It changes no assessment methodology, scoring, Architecture, Domain ownership, provider/channel policy or legal-sufficiency conclusion.
 
 ## v1.6.0 Amendment Scope
 
@@ -293,7 +293,7 @@ Support save and resume, one active attempt at a time and controlled recovery fo
 
 ## DEC-055 — Entitlement consumption
 **Status:** SUPERSEDED BY DEC-313
-Historical DEC-055 wording: “Do not consume the entitlement until the first answer is saved. Mark it used once the attempt begins.” Current assessment-credit claim, closure and consumption semantics follow DEC-313 and Product Law §21R.6.
+Historical DEC-055 wording: “Do not consume the entitlement until the first answer is saved. Mark it used once the attempt begins.” Current assessment-credit claim, complete-delivery, release and consumption semantics follow DEC-313 and Product Law §21R.6.
 
 ## DEC-056 — Attempt expiry
 **Status:** LOCKED
@@ -1356,17 +1356,19 @@ Day 7 supports early usability, safety, relevance, activation, initial usage and
 **Status:** LOCKED
 First 10/25/50 economics are measurement-oriented and have no invented CAC, LTV, profit-margin or gross-margin thresholds. Track once-off contribution before fixed overhead, actual founder/staff effort and fixed overhead separately. Start channel CAC measurement at limited public release. Evaluate retention, churn, failed payments, refunds, fees, support, moderation, live/content delivery, member-serving cost and recurring contribution before recurring scale. The existing 500 × approximately R200 target is gross MRR, not proof of healthy economics. Practitioner services require separate time, capacity, turnaround, follow-up, cost and contribution evidence.
 
-## DEC-313 — Assessment-credit claim, closure and consumption
+## DEC-313 — Assessment-credit claim, complete delivery, release and consumption
 **Status:** LOCKED
-An ordinary paid digital-assessment credit is not consumed when an assessment attempt is admitted or when the first answer is saved. Saving the first answer claims/holds the existing credit for the active or recoverable attempt. A claimed credit remains commercially unconsumed but is unavailable for another ordinary assessment purchase or independent attempt.
+An ordinary paid digital-assessment credit is not consumed when an assessment attempt is admitted or when the first scored answer is saved. Saving the first scored answer claims/holds the existing credit for the active or recoverable attempt. A claimed credit remains commercially unconsumed but is unavailable for another ordinary assessment purchase or independent attempt.
 
-Successful digital assessment delivery occurs when the participant's immutable governed digital result and the paid digital report permitted by current Product Law have both been durably made available to the authorised participant through an approved participant-access path. Temperament owns attempt, result and report truth; Entitlements owns the assessment-credit/right state; Identity & Access governs access assurance. Participant open/read/view behaviour is not required. Notification-provider acceptance, notification delivery, result creation alone and report generation alone do not independently establish this consumption event.
+Successful digital assessment delivery requires durable authorised-participant availability of the complete paid assessment deliverable required by Product Law: the immutable governed digital result, paid temperament result report, required primary/secondary temperament guidance and required introductory personalised guidance. These outputs may be packaged together or separately. Temperament owns attempt, result and report truth; Entitlements owns the assessment-credit/right state; Identity & Access governs access assurance. Participant open/read/view behaviour is not required. Notification-provider acceptance or delivery, Analytics state, result creation alone, report generation alone, or any incomplete subset of the paid Product promise does not establish this consumption event.
 
-The ordinary paid assessment credit is consumed exactly once at successful digital assessment delivery. If an attempt expires under DEC-056 before the first answer has been saved, the attempt ends and the credit remains available and unused. If an attempt expires after the first answer has been saved without successful delivery and the case is not still governed as a genuine technical-failure recovery, the attempt ends and the credit closes unconsumed. Closure is neither successful delivery nor consumption; ordinary refundability remains governed separately by DEC-045.
+The ordinary paid credit is consumed exactly once only at that complete successful-delivery boundary. If an attempt expires under DEC-056 before the first answer has been saved, the attempt ends and the credit remains available and unused. If an attempt expires after the first answer has been saved without successful delivery and the case is not still governed as genuine technical-failure recovery, the expired attempt ends and the same paid credit returns to available-unused state. The expired attempt cannot be resumed; release does not mint a new credit and is neither refund, successful delivery nor consumption. Ordinary refundability remains governed separately by DEC-045.
 
-A genuine technical failure resolves through controlled recovery of the same paid obligation and existing result/report lineage where one exists, or through the existing technical-failure refund path. Recovery must not mint a duplicate credit, immutable result, report or consumption. A valid technical-failure refund closes the affected credit/right and is not recorded as delivery or consumption. Duplicate or retried submission, result/report recovery, delivery processing and consumption signals must converge on one logical paid credit/result/report lineage and may consume at most once.
+A genuine technical failure preserves the same paid obligation for controlled recovery of the existing result/report/guidance lineage where present or the existing technical-failure refund path. Recovery must not mint a duplicate credit, immutable result, report, guidance deliverable or consumption. A valid technical-failure refund closes the affected right and is not successful delivery or consumption. Duplicate or retried submission, result/report/guidance recovery, delivery processing and consumption signals must converge on one logical paid credit/complete-deliverable lineage and may consume at most once.
 
-DEC-034, DEC-045, DEC-054, DEC-056, DEC-057, DEC-061, DEC-066, DEC-067 and DEC-303 otherwise remain unchanged. DEC-313 supersedes DEC-055 for assessment-credit claim, closure and consumption semantics only.
+For DEC-034, the annual retake interval is evaluated from the prior successful digital assessment delivery. Purchase, credit claim, first-answer save, attempt expiry, technical failure or refund without successful delivery does not start or reset that interval. An undelivered expired attempt does not itself consume the annual retake opportunity. Any later fresh attempt must still satisfy current DEC-034 eligibility arising from any prior successful delivery. DEC-045 refundability remains separate; Premium annual reassessment-credit accrual and expiry remain separate.
+
+DEC-054, DEC-056, DEC-057, DEC-061, DEC-066, DEC-067 and DEC-303 otherwise remain unchanged. DEC-313 supersedes DEC-055 for ordinary paid assessment-credit claim, complete-delivery, release and consumption semantics only.
 
 # Open Gates
 
