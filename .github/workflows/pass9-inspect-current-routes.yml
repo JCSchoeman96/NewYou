@@ -1,0 +1,63 @@
+name: Pass 9 inspect current-route coupling
+
+on:
+  push:
+    branches: [prejit/analytics-pass9-final]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    if: "${{ github.event.head_commit.message == 'ci: inspect Pass 9 successor coupling' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Rebuild prior Pass 9 candidate in workspace
+        run: |
+          python tools/pass9_repair_tmp.py
+          python tools/pass9_repair_delta_tmp.py
+          python tools/pass9_repair_delta2_tmp.py
+          python tools/pass9_final_patch_tmp.py
+          python tools/pass9_current_successor_delta_tmp.py
+      - name: Print exact current-route coupling
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def function_block(path, name):
+              text = Path(path).read_text(encoding='utf-8')
+              start = text.index(f'def {name}(')
+              end = text.find('\ndef ', start + 4)
+              if end < 0:
+                  end = len(text)
+              print(f'===== {path} :: {name} =====')
+              print(text[start:end])
+
+          function_block('tools/foundation_integrity_audit.py', '_check_fp001_pmr_reconciliation')
+
+          files = [
+              'tests/test_product_law_hardening.py',
+              'tests/test_atlas_authority_boundary.py',
+              'tests/test_dol_01_marketing_unsubscribe_authority.py',
+              'tests/test_foundation_integrity_audit.py',
+              'tests/test_engineering_standards_certification.py',
+          ]
+          needles = [
+              '02_OPEN_WORK_v1.2.59.md', '02_OPEN_WORK_v1.2.60.md',
+              '05_ROADMAP_v1.2.0.md', '05_ROADMAP_v1.3.0.md',
+              'DELIVERY_ATLAS_WORKING_v0.4.0.md', 'DELIVERY_ATLAS_WORKING_v0.4.1.md', 'DELIVERY_ATLAS_WORKING_v0.4.2.md',
+              'HARDEN-02_CONTRACT_WORKING_v0.5.3.md', 'HARDEN-02_CONTRACT_WORKING_v0.5.4.md',
+              'current HARDEN-02 v0.5.3 successor metadata', 'current HARDEN-02 v0.5.4 successor metadata',
+          ]
+          for file in files:
+              lines = Path(file).read_text(encoding='utf-8').splitlines()
+              print(f'===== {file} matching current-route literals =====')
+              for i, line in enumerate(lines, 1):
+                  if any(n in line for n in needles):
+                      lo=max(1,i-2); hi=min(len(lines),i+2)
+                      print(f'--- lines {lo}-{hi} ---')
+                      for j in range(lo,hi+1): print(f'{j:04}: {lines[j-1]}')
+          PY
