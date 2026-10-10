@@ -12,5 +12,10 @@ text = text.replace(
     'old_harden_bullet = next(line for line in readme.splitlines() if line.startswith("- `working/HARDEN-02_CONTRACT_WORKING_v0.5."))',
     1,
 )
+text = text.replace(
+    '    "## 22.",\n    (\n        ("Open Work v1.2.59", "Open Work v1.2.60"),',
+    '    "PR #67 lifecycle evidence:",\n    (\n        ("Open Work v1.2.59", "Open Work v1.2.60"),',
+    1,
+)
 path.write_text(text, encoding="utf-8")
 print("PASS9_DYNAMIC_CURRENT_ROUTES_FIX_APPLIED")
