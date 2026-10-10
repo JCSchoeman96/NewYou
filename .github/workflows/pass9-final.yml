@@ -1,4 +1,4 @@
-name: Pass 9 final exact-head verification
+name: Pass 9 final exact-head verification v2
 on:
   push:
     branches: [prejit/analytics-pass9-final]
