@@ -18,5 +18,8 @@ text = text.replace(
     '    "PR #67 lifecycle evidence:",\n    (\n        ("Open Work v1.2.59", "Open Work v1.2.60"),',
     1,
 )
+# One earlier scratch generator emits a single trailing space in a current-route
+# test line. Normalize that exact generated line; do not strip historical files.
+text += '''\n# Diff-hygiene repair for exact generated current-route test line.\np = ROOT / "tests" / "test_authority_routing_successors.py"\ns = read(p)\ns = s.replace(\n    '        for filename in ("00_PLATFORM_v1.6.0.md", "01_DECISIONS_v1.6.0.md", "02_OPEN_WORK_v1.2.60.md", "04_DOMAIN_MAP_v1.2.0.md"): \\n',\n    '        for filename in ("00_PLATFORM_v1.6.0.md", "01_DECISIONS_v1.6.0.md", "02_OPEN_WORK_v1.2.60.md", "04_DOMAIN_MAP_v1.2.0.md"):\\n',\n    1,\n)\nwrite(p, s)\n'''
 path.write_text(text, encoding="utf-8")
 print("PASS9_DYNAMIC_CURRENT_ROUTES_FIX_APPLIED")
