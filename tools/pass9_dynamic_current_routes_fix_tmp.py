@@ -1,5 +1,6 @@
 from pathlib import Path
 
+# Scratch-only verifier transformation; deleted before retained-tree tests run.
 path = Path(__file__).with_name("pass9_dynamic_current_routes_tmp.py")
 text = path.read_text(encoding="utf-8")
 text = text.replace(
