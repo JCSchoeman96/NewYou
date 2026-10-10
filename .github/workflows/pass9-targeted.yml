@@ -1,0 +1,55 @@
+name: Pass 9 targeted routing diagnostics
+on:
+  push:
+    branches: [prejit/analytics-pass9-verify]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    if: "${{ github.event.head_commit.message == 'ci: capture Pass 9 targeted routing failures' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Rebuild exact candidate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text=Path('.github/workflows/pass9-verify.yml').read_text(); script=text.split('        run: |\n',1)[1]; lines=[]
+          for line in script.splitlines():
+            if line.startswith('          '): lines.append(line[10:])
+            elif not line.strip(): lines.append('')
+            else: break
+          script='\n'.join(lines); Path('/tmp/build.sh').write_text(script[:script.index("echo '=== UNIT TESTS ==='")])
+          PY
+          bash /tmp/build.sh
+      - name: Run targeted tests
+        id: tests
+        continue-on-error: true
+        run: |
+          python -m unittest -v \
+            tests.test_roadmap_routing_resilience \
+            tests.test_roadmap_amendment \
+            tests.test_authority_routing_successors \
+            tests.test_atlas_reconciliation \
+            tests.test_product_law_hardening \
+            tests.test_harden_02_contract \
+            tests.test_harden_02_execution \
+            tests.test_harden_02_completion_lifecycle \
+            tests.test_engineering_standards_promotion > /tmp/targeted.log 2>&1
+      - name: Compact report
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          a=Path('/tmp/targeted.log').read_text(errors='replace').splitlines(); out=[]
+          for i,l in enumerate(a):
+            if l.startswith(('FAIL:','ERROR:')): out += a[max(0,i-2):min(len(a),i+24)] + ['---']
+          out += [l for l in a[-20:] if l.startswith(('Ran ','FAILED','OK'))]
+          Path('/tmp/pass9-targeted.txt').write_text('\n'.join(out)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pass9-targeted-failures
+          path: /tmp/pass9-targeted.txt
+          retention-days: 1
