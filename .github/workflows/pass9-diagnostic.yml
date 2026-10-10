@@ -1,0 +1,71 @@
+name: Pass 9 diagnostic failure capture
+
+on:
+  push:
+    branches: [prejit/analytics-pass9-verify]
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    if: "${{ github.event.head_commit.message == 'ci: capture Pass 9 unit-test failures' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Rebuild exact candidate from verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/pass9-verify.yml').read_text()
+          marker = '        run: |\n'
+          script = text.split(marker, 1)[1]
+          lines = []
+          for line in script.splitlines():
+              if line.startswith('          '):
+                  lines.append(line[10:])
+              elif not line.strip():
+                  lines.append('')
+              else:
+                  break
+          script = '\n'.join(lines)
+          cut = script.index("echo '=== UNIT TESTS ==='")
+          Path('/tmp/pass9-build.sh').write_text(script[:cut])
+          PY
+          bash /tmp/pass9-build.sh
+      - name: Capture full unit-test failures
+        id: tests
+        continue-on-error: true
+        shell: bash
+        run: |
+          python -m unittest discover -s tests -v > /tmp/unit-tests.log 2>&1
+      - name: Build compact failure report
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          log = Path('/tmp/unit-tests.log').read_text(errors='replace') if Path('/tmp/unit-tests.log').exists() else 'unit test log missing\n'
+          lines = log.splitlines()
+          out = []
+          for i, line in enumerate(lines):
+              if line.startswith(('FAIL:', 'ERROR:')):
+                  start = max(0, i - 2)
+                  end = min(len(lines), i + 28)
+                  out.extend(lines[start:end])
+                  out.append('\n---\n')
+          for line in lines[-20:]:
+              if line.startswith(('Ran ', 'FAILED', 'OK')):
+                  out.append(line)
+          Path('/tmp/pass9-failures.txt').write_text('\n'.join(out) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pass9-unit-test-failures
+          path: |
+            /tmp/pass9-failures.txt
+            /tmp/unit-tests.log
+          retention-days: 1
