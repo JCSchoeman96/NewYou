@@ -22,7 +22,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Apply deterministic repair and remove temporary automation
-        run: python tools/pass9_apply.py
+        run: |
+          python tools/pass9_apply.py
+          python tools/pass9_fix2.py
       - name: Run targeted lifecycle and routing tests
         run: >-
           python -m unittest -v
