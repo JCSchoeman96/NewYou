@@ -23,6 +23,7 @@ jobs:
           python tools/pass9_repair_delta2_tmp.py
           python tools/pass9_final_patch_tmp.py
           python tools/pass9_current_successor_delta_tmp.py
+          python tools/pass9_dynamic_current_routes_fix_tmp.py
           python tools/pass9_dynamic_current_routes_tmp.py
 
       - name: Remove all temporary Pass 9 machinery before verification
