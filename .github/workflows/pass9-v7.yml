@@ -1,4 +1,4 @@
-name: Pass 9 v7r exact candidate verification
+name: Pass 9 v7s exact candidate verification
 on:
   push:
     branches: [prejit/analytics-pass9-v5]
