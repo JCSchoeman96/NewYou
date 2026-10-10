@@ -56,7 +56,9 @@ This pass additionally keeps the Pre-JIT contract fields required by the Analyti
 - freshness/incompleteness behaviour;
 - limitations.
 
-A target percentage without these semantics is **not** treated as a release-grade metric contract.
+For small pilot cohorts, every reported rate must show both count and percentage, for example `8 / 10 (80%)`. Denominator selection follows the prospectively frozen metric contract and may not be changed retrospectively to improve the reported result.
+
+A target percentage without these semantics is **not** treated as a complete paid-pilot gate metric contract.
 
 ---
 
@@ -95,7 +97,7 @@ A target percentage without these semantics is **not** treated as a release-grad
 
 **Limitations:** this measures governed assessment completion, not report usefulness, correctness of self-reported/book-derived temperament, or paid conversion.
 
-**Pre-JIT state:** `CONTRACTABLE WITH JIT CUTOFF LOCK`.
+**Pre-JIT state:** `CONTRACTABLE WITH JIT COMPLETION REQUIRED BEFORE FIRST PAID PARTICIPATION`; the remaining cohort cutoff/measurement-window extraction details and metric-definition version must be prospectively frozen before the cohort begins.
 
 ---
 
@@ -131,7 +133,7 @@ A target percentage without these semantics is **not** treated as a release-grad
 
 **Limitations:** this does not measure clinical appropriateness, plan activation or value.
 
-**Pre-JIT state:** `CONTRACTABLE WITH JIT CUTOFF LOCK`.
+**Pre-JIT state:** `CONTRACTABLE WITH JIT COMPLETION REQUIRED BEFORE FIRST PAID PARTICIPATION`; the remaining cohort cutoff/extraction details and metric-definition version must be prospectively frozen before the cohort begins.
 
 ---
 
@@ -159,7 +161,7 @@ A target percentage without these semantics is **not** treated as a release-grad
 
 **Anonymous continuity:** not required.
 
-**Pre-JIT state:** `NEEDS_JIT_WORKING_DELTA` before release use.
+**Pre-JIT state:** `NEEDS_JIT_WORKING_DELTA` before first paid participation.
 
 ---
 
@@ -187,7 +189,7 @@ A target percentage without these semantics is **not** treated as a release-grad
 
 **Anonymous continuity:** not required for the core paid-plan measurement.
 
-**Pre-JIT state:** `NEEDS_JIT_WORKING_DELTA` before release use.
+**Pre-JIT state:** `NEEDS_JIT_WORKING_DELTA` before first paid participation.
 
 ---
 
@@ -195,9 +197,9 @@ A target percentage without these semantics is **not** treated as a release-grad
 
 **Product operational aim:** `≥ 95% successful plan generation`.
 
-**Authoritative source:** Plans & Nutrition generation request/outcome and immutable delivered plan provenance (`ANL-EV-008`).
+**Authoritative sources:** Plans & Nutrition owns generation request/outcome and immutable delivered-plan provenance (`ANL-EV-008`). The denominator source remains dependent on the prospectively selected denominator unit: if the denominator is broader than generation requests, the qualifying population may additionally require Commerce, Entitlements and Safety & Eligibility source truth. Analytics does not own or infer that denominator.
 
-**Current safe statement:** Analytics can measure a rate only from governed Plans facts; generation, successful delivery, General Wellness output, held personalised right and final unfulfillable/refunded outcomes must remain distinct.
+**Current safe statement:** Analytics may derive successful generation only from governed source-domain facts. Plans & Nutrition supplies generation/outcome truth; any broader qualifying-population denominator must come from its authoritative source Domain(s). Generation, successful delivery, General Wellness output, held personalised right and final unfulfillable/refunded outcomes must remain distinct.
 
 **Missing contract semantics:** current Product wording does not explicitly freeze:
 
@@ -209,7 +211,7 @@ A target percentage without these semantics is **not** treated as a release-grad
 
 **Hard boundary:** `general_wellness_only` must not be counted as fulfilment of a purchased personalised-plan right. The metric contract must not erase that Product/Roadmap distinction.
 
-**Pre-JIT state:** `NEEDS_JIT_WORKING_DELTA`; the `≥95%` target is not release-grade until the denominator/business-obligation unit is prospectively frozen.
+**Pre-JIT state:** `NEEDS_JIT_WORKING_DELTA`; the `≥95%` target is not usable for paid-pilot gating until the denominator/business-obligation unit and remaining complete metric contract are prospectively frozen before first paid participation.
 
 ---
 
@@ -231,15 +233,15 @@ A target percentage without these semantics is **not** treated as a release-grad
 
 **Zero-tolerance interaction:** duplicate entitlements remain a separate zero-tolerance integrity failure and must never be hidden by a high aggregate fulfilment percentage.
 
-**Pre-JIT state:** `NEEDS_JIT_WORKING_DELTA`; the `≥95%` target is not release-grade until the business-obligation denominator and recovery window are frozen.
+**Pre-JIT state:** `NEEDS_JIT_WORKING_DELTA`; the `≥95%` target is not usable for paid-pilot gating until the business-obligation denominator, recovery window and remaining complete metric contract are prospectively frozen before first paid participation.
 
 ---
 
 # 4. Pressure tests
 
-## ANL-PT-028 — Can a target percentage be treated as a complete release metric without the Product-Law contract fields?
+## ANL-PT-028 — Can a target percentage be treated as a complete paid-pilot gate metric without the Product-Law contract fields?
 
-**Analysis:** No. Product Law expressly requires prospective numerator, denominator, qualifying condition, window, exclusions, missing-data treatment, cohort and version. A percentage alone is not a gate contract.
+**Analysis:** No. Product Law expressly requires prospective numerator, denominator, qualifying condition, window, exclusions, missing-data treatment, cohort and version before first paid participation. A percentage alone is not a gate contract.
 
 **Disposition:** `CONFLICT` for denominator/window-by-implication.
 
@@ -247,7 +249,7 @@ A target percentage without these semantics is **not** treated as a release-grad
 
 ## ANL-PT-029 — Is assessment completion sufficiently specified for Pre-JIT contracting?
 
-**Analysis:** Yes at semantic/source level. Starter, completion and authoritative owner are explicit. The cohort cutoff still must be prospectively frozen before paid participation.
+**Analysis:** Yes at semantic/source level. Starter, completion and authoritative owner are explicit. The remaining cohort cutoff/measurement-window extraction details and metric-definition version must be prospectively frozen before first paid participation.
 
 **Disposition:** `PASS_WITH_REFINEMENT`.
 
@@ -255,7 +257,7 @@ A target percentage without these semantics is **not** treated as a release-grad
 
 ## ANL-PT-030 — Is health-onboarding completion sufficiently specified for Pre-JIT contracting?
 
-**Analysis:** Yes at semantic/source level. Population, exclusion and numerator meaning are explicit; the cohort cutoff and exact extraction contract remain JIT.
+**Analysis:** Yes at semantic/source level. Population, exclusion and numerator meaning are explicit; the remaining cohort cutoff/extraction details and metric-definition version must be prospectively frozen before first paid participation.
 
 **Disposition:** `PASS_WITH_REFINEMENT`.
 
@@ -279,7 +281,7 @@ A target percentage without these semantics is **not** treated as a release-grad
 
 ## ANL-PT-033 — Are the two `≥95%` operational aims already release-grade metrics?
 
-**Analysis:** No. The targets are authoritative aims, but current authority does not fully freeze the business-obligation denominator, retry/recovery window and lifecycle exclusions. These must be completed prospectively in FP-006 JIT without weakening source-domain ownership.
+**Analysis:** No. The targets are authoritative aims, but current authority does not fully freeze the business-obligation denominator, retry/recovery window and lifecycle exclusions. These must be completed prospectively in FP-006 JIT before first paid participation without weakening source-domain ownership.
 
 **Disposition:** `NEEDS_WORKING_DELTA`.
 
@@ -296,7 +298,7 @@ A target percentage without these semantics is **not** treated as a release-grad
 - `ANL-METRIC-001` Assessment completion;
 - `ANL-METRIC-002` Health-onboarding completion.
 
-**Requires owning-Domain / FP-006 JIT completion before release use:**
+**Requires owning-Domain / FP-006 JIT completion before first paid participation:**
 
 - `ANL-METRIC-003` Plan activation — exhaustive qualifying action + window + replacement-plan treatment;
 - `ANL-METRIC-004` Meaningful seven-day use — denominator + qualifying engagement + Day-1 anchor/timezone rule;
@@ -315,10 +317,11 @@ This gap does not justify a Product, Architecture or Domain amendment on current
 
 The safe working result is:
 
-1. assessment completion and health-onboarding completion are semantically contractable now, subject to prospective cohort cutoff/version lock;
-2. plan activation, meaningful seven-day use and both `≥95%` operational aims are **not** release-grade until their missing denominator/window/qualifying semantics are frozen prospectively in FP-006 JIT;
+1. assessment completion and health-onboarding completion are semantically contractable now, with the remaining complete metric-contract details prospectively frozen before first paid participation;
+2. plan activation, meaningful seven-day use and both `≥95%` operational aims are **not usable for paid-pilot gating** until their missing denominator/window/qualifying semantics and other required contract fields are frozen prospectively in FP-006 JIT before first paid participation;
 3. Analytics must derive from source-domain authority and must not repair those gaps with UI events, denominator choice or retry heuristics;
-4. Research/value survey metrics remain outside this pass and still depend on `ANL-GAP-001` / Roadmap activation;
-5. Roadmap promotion/tooling remains outside this pass and still depends on `ANL-GAP-002`.
+4. small-cohort reporting must show counts with percentages under the frozen denominator; denominator shopping remains prohibited;
+5. Research/value survey metrics remain outside this pass and still depend on `ANL-GAP-001` / Roadmap activation;
+6. Roadmap promotion/tooling remains outside this pass and still depends on `ANL-GAP-002`.
 
-**Recommended next focused pass after human acceptance:** pressure-test cohort/time/correction semantics shared across these six core metrics (cohort membership, cutoff immutability, late-arriving facts, historical restatement and small-cohort reporting) without defining event names or storage schemas.
+**Recommended next focused pass after human acceptance:** pressure-test the remaining cohort/time/correction semantics shared across these six core metrics (cohort membership, cutoff immutability, late-arriving facts and historical restatement) while treating count-plus-percentage reporting and anti-denominator-shopping as already locked Product Law, and without defining event names or storage schemas.
