@@ -13,19 +13,22 @@ def replace_func(s,name,body):
     if b<0: b=len(s)
     return s[:a]+body.rstrip()+'\n'+s[b:]
 
-def replace_exact(s,old,new,label):
-    n=s.count(old)
-    if n != 1:
-        raise AssertionError(f'{label}: expected exactly one old marker, found {n}')
-    return s.replace(old,new,1)
+def ensure_transition(s,old,new,label):
+    old_count=s.count(old)
+    new_count=s.count(new)
+    if old_count == 1 and new_count == 0:
+        return s.replace(old,new,1)
+    if old_count == 0 and new_count == 1:
+        return s
+    raise AssertionError(f'{label}: expected one old→new transition or one already-new marker; old={old_count}, new={new_count}')
 
-# 1. Anchor CURRENT_AUTHORITY itself, not any similar occurrence elsewhere in the file.
+# 1. Anchor CURRENT_AUTHORITY itself, while accepting a prior repair layer that already advanced it.
 p=ROOT/'tests/test_authority_routing_successors.py'; s=r(p)
-s=replace_exact(s,
+s=ensure_transition(s,
     '    "OPEN_WORK": "02_OPEN_WORK_v1.2.59.md",\n    "ARCHITECTURE_SYNTHESIS": "03_ARCHITECTURE_v1.1.1.md",',
     '    "OPEN_WORK": "02_OPEN_WORK_v1.2.60.md",\n    "ARCHITECTURE_SYNTHESIS": "03_ARCHITECTURE_v1.1.1.md",',
     'CURRENT_AUTHORITY OPEN_WORK')
-s=replace_exact(s,
+s=ensure_transition(s,
     '    "DOMAIN_MAP": "04_DOMAIN_MAP_v1.2.0.md",\n    "ROADMAP": "05_ROADMAP_v1.2.0.md",',
     '    "DOMAIN_MAP": "04_DOMAIN_MAP_v1.2.0.md",\n    "ROADMAP": "05_ROADMAP_v1.3.0.md",',
     'CURRENT_AUTHORITY ROADMAP')
@@ -33,8 +36,8 @@ w(p,s)
 
 # 2. HARDEN v0.5.4 must carry its own current lifecycle successor metadata, not only a new header.
 p=ROOT/'docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md'; s=r(p)
-s=replace_exact(s,'"status_successor_version": "0.5.3"','"status_successor_version": "0.5.4"','HARDEN lifecycle version')
-s=replace_exact(s,
+s=ensure_transition(s,'"status_successor_version": "0.5.3"','"status_successor_version": "0.5.4"','HARDEN lifecycle version')
+s=ensure_transition(s,
     '"status_successor_base_sha": "a062bd56e3ae94e815e2991ee00bf133ee9f3b56"',
     f'"status_successor_base_sha": "{MAIN}"',
     'HARDEN lifecycle base SHA')
@@ -63,17 +66,18 @@ w(p,s)
 p=ROOT/'tools/foundation_integrity_audit.py'; s=r(p)
 old='        "successor_versions": ("0.4.7", "0.4.8", "0.4.9", "0.5.0", "0.5.1", "0.5.2", "0.5.3"),'
 new='        "successor_versions": ("0.4.7", "0.4.8", "0.4.9", "0.5.0", "0.5.1", "0.5.2", "0.5.3", "0.5.4"),'
-s=replace_exact(s,old,new,'H02 complete successor_versions')
-s=s.replace('expected_harden_version = "0.5.3" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"','expected_harden_version = "0.5.4" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"',1)
-needle='''        expected_base_sha = (
+s=ensure_transition(s,old,new,'H02 complete successor_versions')
+old_version='expected_harden_version = "0.5.3" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"'
+new_version='expected_harden_version = "0.5.4" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"'
+s=ensure_transition(s,old_version,new_version,'expected HARDEN version')
+old_base='''        expected_base_sha = (
             "a062bd56e3ae94e815e2991ee00bf133ee9f3b56"
             if state.get("status_successor_version") == "0.5.3"'''
-replacement=f'''        expected_base_sha = (
+new_base=f'''        expected_base_sha = (
             "{MAIN}"
             if state.get("status_successor_version") == "0.5.4"
             else "a062bd56e3ae94e815e2991ee00bf133ee9f3b56"
             if state.get("status_successor_version") == "0.5.3"'''
-if needle in s:
-    s=s.replace(needle,replacement,1)
+s=ensure_transition(s,old_base,new_base,'HARDEN base SHA routing')
 w(p,s)
 print('PASS9_DELTA2_APPLIED')
