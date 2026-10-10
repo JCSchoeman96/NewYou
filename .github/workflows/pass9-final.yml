@@ -1,0 +1,49 @@
+name: Pass 9 final isolated verification
+
+on:
+  push:
+    branches:
+      - prejit/analytics-pass9-verify
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out verification branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Apply deterministic repair and remove temporary automation
+        run: python tools/pass9_apply.py
+      - name: Run targeted lifecycle and routing tests
+        run: >-
+          python -m unittest -v
+          tests.test_roadmap_routing_resilience
+          tests.test_roadmap_amendment
+          tests.test_authority_routing_successors
+          tests.test_atlas_reconciliation
+          tests.test_harden_02_contract
+          tests.test_harden_02_execution
+          tests.test_harden_02_completion_lifecycle
+          tests.test_engineering_standards_promotion
+      - name: Run full unit suite
+        run: python -m unittest discover -s tests -v
+      - name: Run Foundation Integrity
+        run: python tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+      - name: Commit verified candidate tree
+        run: |
+          set -euo pipefail
+          git config user.name "Pass 9 verification automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "test: align integrity guards with Roadmap v1.3.0 promotion"
+          git push origin HEAD:prejit/analytics-pass9-verify
