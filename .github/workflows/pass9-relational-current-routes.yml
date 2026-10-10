@@ -1,0 +1,79 @@
+name: Pass 9 relational current-route verification
+
+on:
+  push:
+    branches: [prejit/analytics-pass9-final]
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: "${{ github.event.head_commit.message == 'ci: verify Pass 9 relational current routes' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild promotion candidate and apply relational repair
+        run: |
+          python tools/pass9_repair_tmp.py
+          python tools/pass9_repair_delta_tmp.py
+          python tools/pass9_repair_delta2_tmp.py
+          python tools/pass9_final_patch_tmp.py
+          python tools/pass9_current_successor_delta_tmp.py
+          python tools/pass9_dynamic_current_routes_tmp.py
+
+      - name: Remove all temporary Pass 9 machinery before verification
+        run: |
+          rm -f tools/pass9_*_tmp.py
+          rm -f .github/workflows/pass9-*.yml
+          test -z "$(find tools .github/workflows -maxdepth 1 -type f \( -name 'pass9-*' -o -name 'pass9_*_tmp.py' \) -print)"
+
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Targeted regression suite
+        run: >-
+          python -m unittest -v
+          tests.test_roadmap_routing_resilience
+          tests.test_roadmap_amendment
+          tests.test_authority_routing_successors
+          tests.test_atlas_reconciliation
+          tests.test_atlas_authority_boundary
+          tests.test_product_law_hardening
+          tests.test_dol_01_marketing_unsubscribe_authority
+          tests.test_harden_02_contract
+          tests.test_harden_02_execution
+          tests.test_harden_02_completion_lifecycle
+          tests.test_engineering_standards_promotion
+          tests.test_engineering_standards_certification
+          tests.test_foundation_integrity_audit
+
+      - name: Full unit suite
+        run: python -m unittest discover -s tests -v
+
+      - name: Foundation Integrity production audit
+        run: |
+          python tools/foundation_integrity_audit.py \
+            --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json \
+            --json > /tmp/fia.json
+          cat /tmp/fia.json
+          python - <<'PY'
+          import json
+          report = json.load(open('/tmp/fia.json', encoding='utf-8'))
+          if report.get('status') != 'PASS':
+              raise SystemExit(f"Foundation Integrity is not PASS: {report.get('findings')}")
+          if report.get('findings'):
+              raise SystemExit(f"Foundation Integrity has findings: {report['findings']}")
+          PY
+
+      - name: Record verified candidate tree on scratch branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git status --short
+          git add -A
+          git commit -m "test: verify relational governance successor routing"
+          git push origin HEAD:prejit/analytics-pass9-final
