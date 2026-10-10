@@ -1,0 +1,124 @@
+name: Pass 9 surgical candidate v4
+on:
+  push:
+    branches: [prejit/analytics-pass9-verify]
+permissions:
+  contents: write
+jobs:
+  verify:
+    if: "${{ github.event.head_commit.message == 'ci: refine Pass 9 lifecycle and historical guards' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: {fetch-depth: 0}
+      - name: Execute refined surgical verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          text=Path('.github/workflows/pass9-candidate2.yml').read_text()
+          script=text.split('        run: |\n',1)[1]
+          lines=[]
+          for line in script.splitlines():
+              if line.startswith('          '): lines.append(line[10:])
+              elif not line.strip(): lines.append('')
+              else: break
+          script='\n'.join(lines)
+          old="s=section_replace(s,'## Current State','## Delivery Atlas routing',current_repls,'README current state')"
+          new="a=s.find('## Current State'); assert a >= 0; sec=s[a:];\nfor old_current,new_current in current_repls: sec=sec.replace(old_current,new_current)\ns=s[:a]+sec"
+          assert script.count(old)==1
+          script=script.replace(old,new,1)
+          cut=script.index("echo '=== TARGETED ==='")
+          extra=r'''python - <<'PY2'
+from pathlib import Path
+import hashlib, json, re
+
+def rw(path): return Path(path).read_text()
+def ww(path,text): Path(path).write_text(text)
+
+def function_region(text,name):
+    start=text.index('    def '+name+'(')
+    nxt=text.find('\n    def ',start+8)
+    return start, len(text) if nxt<0 else nxt
+
+# Finish current Open Work successor lifecycle state and recompute its manifest hash.
+p='docs/00_platform/02_OPEN_WORK_v1.2.60.md'; s=rw(p)
+s=s.replace('"status_successor_version": "0.5.3"','"status_successor_version": "0.5.4"',1)
+s=s.replace('"status_successor_base_sha": "a062bd56e3ae94e815e2991ee00bf133ee9f3b56"','"status_successor_base_sha": "086ade7b28c000de1c387acb9760e5eb08bb0413"',1)
+s=s.replace('current status routing is v0.5.3','current status routing is v0.5.4')
+s=s.replace('current semantic successor `05_ROADMAP_v1.3.0.md`; predecessor `v1.1.5` is preserved at `archive/05_ROADMAP_v1.2.0.md`','current semantic successor `05_ROADMAP_v1.3.0.md`; predecessor `v1.2.0` is preserved at `archive/05_ROADMAP_v1.2.0.md`')
+ww(p,s)
+mp=Path('docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json'); m=json.loads(mp.read_text()); ow=next(x for x in m['governing_documents'] if x['document_id']=='OPEN_WORK'); ow['sha256']=hashlib.sha256(Path(p).read_bytes()).hexdigest(); mp.write_text(json.dumps(m,indent=2,ensure_ascii=False)+'\n')
+
+# Current authority routing tests: root current Open Work references all move; archived history is untouched.
+p='tests/test_authority_routing_successors.py'; s=rw(p)
+s=s.replace('DOCS / "02_OPEN_WORK_v1.2.59.md"','DOCS / "02_OPEN_WORK_v1.2.60.md"')
+s=s.replace('"working/DELIVERY_ATLAS_WORKING_v0.4.1.md", _section(harden','"working/DELIVERY_ATLAS_WORKING_v0.4.2.md", _section(harden')
+s=s.replace('"docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.1.md", graph_paths','"docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.2.md", graph_paths')
+s=s.replace('"docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md", graph_paths','"docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md", graph_paths')
+ww(p,s)
+
+# Atlas reconciliation uses current route only; preserve its existing source-at-freeze protection.
+p='tests/test_atlas_reconciliation.py'; s=rw(p)
+s=s.replace('`working/DELIVERY_ATLAS_WORKING_v0.4.1.md`','`working/DELIVERY_ATLAS_WORKING_v0.4.2.md`')
+s=s.replace('`working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md`','`working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md`')
+ww(p,s)
+
+# Preserve the historical v0.5.3 routing-normalization test against archived v0.5.3/v0.5.2.
+p='tests/test_harden_02_contract.py'; s=rw(p)
+a,b=function_region(s,'test_v0_5_3_updates_current_route_without_changing_contract_semantics')
+reg=s[a:b]
+line=reg.find('\n')+1
+reg=reg[:line]+'        historical_v053 = (DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.5.3.md").read_text(encoding="utf-8")\n'+reg[line:]
+reg=reg.replace('self.current_contract','historical_v053').replace('CONTRACT_CURRENT_PREDECESSOR','DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.5.2.md"')
+s=s[:a]+reg+s[b:]
+# Current v0.5.4 gets an exact predecessor/hash + lifecycle test, rather than weakening v0.5.3 coverage.
+insert='''\n    def test_v0_5_4_is_current_routing_only_successor(self):\n        predecessor = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.5.3.md"\n        self.assertTrue(predecessor.is_file())\n        self.assertIn("Plan / contract version:** `v0.5.4`", self.current_contract)\n        self.assertIn("Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.3.md`", self.current_contract)\n        self.assertIn("02_OPEN_WORK_v1.2.60.md", self.current_contract)\n        self.assertIn("05_ROADMAP_v1.3.0.md", self.current_contract)\n        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.2.md", self.current_contract)\n        self.assertEqual("0.5.4", _lifecycle_json(self.current_contract)["status_successor_version"])\n        self.assertEqual("086ade7b28c000de1c387acb9760e5eb08bb0413", _lifecycle_json(self.current_contract)["status_successor_base_sha"])\n\n'''
+pos=s.rfind('\n\nif __name__ == "__main__":'); s=s[:pos]+insert+s[pos:]
+ww(p,s)
+
+# HARDEN execution: all quoted current Atlas/HARDEN/root authority paths move, then preserve old Atlas normalizer as historical.
+p='tests/test_harden_02_execution.py'; s=rw(p)
+s=s.replace('"working/DELIVERY_ATLAS_WORKING_v0.4.1.md"','"working/DELIVERY_ATLAS_WORKING_v0.4.2.md"')
+s=s.replace('"working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md"','"working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md"')
+s=s.replace('"02_OPEN_WORK_v1.2.59.md"','"02_OPEN_WORK_v1.2.60.md"')
+s=s.replace('"05_ROADMAP_v1.2.0.md"','"05_ROADMAP_v1.3.0.md"')
+a,b=function_region(s,'test_atlas_successor_normalizes_to_route_only_change'); reg=s[a:b]; line=reg.find('\n')+1
+reg=reg[:line]+'        historical_atlas = _read(DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.4.1.md")\n'+reg[line:]
+reg=reg.replace('self.atlas','historical_atlas')
+# historical v0.4.1 normalizer must still target its v0.4.0 metadata, not current v0.4.2.
+reg=reg.replace('v0.4.2','v0.4.1').replace('v0.4.1 → v0.4.2','v0.4.0 → v0.4.1')
+s=s[:a]+reg+s[b:]
+# Add an explicit current Atlas routing-only boundary test.
+insert='''\n    def test_current_atlas_v0_4_2_routes_new_authority_without_becoming_authority(self):\n        self.assertIn("v0.4.1 → v0.4.2", self.atlas)\n        self.assertIn("05_ROADMAP_v1.3.0.md", self.atlas)\n        self.assertIn("02_OPEN_WORK_v1.2.60.md", self.atlas)\n        self.assertIn("DOES NOT MODIFY PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW", self.atlas)\n        self.assertIn("does not amend upstream law or HARDEN-02 contract semantics", self.atlas)\n\n'''
+pos=s.rfind('\n\nif __name__ == "__main__":'); s=s[:pos]+insert+s[pos:]
+ww(p,s)
+
+# Completion lifecycle negative mutation must target the actual current successor.
+p='tests/test_harden_02_completion_lifecycle.py'; s=rw(p)
+s=s.replace('`working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md`','`working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md`')
+ww(p,s)
+
+# Engineering Standards mutation fixture follows manifest-current Open Work.
+p='tests/test_engineering_standards_promotion.py'; s=rw(p).replace('Path("docs/00_platform/02_OPEN_WORK_v1.2.59.md")','Path("docs/00_platform/02_OPEN_WORK_v1.2.60.md")'); ww(p,s)
+
+# Production audit current-route expectations + HARDEN v0.5.4 lifecycle.
+p='tools/foundation_integrity_audit.py'; s=rw(p)
+s=s.replace('docs/00_platform/02_OPEN_WORK_v1.2.59.md','docs/00_platform/02_OPEN_WORK_v1.2.60.md')
+s=s.replace('02_OPEN_WORK_v1.2.59.md','02_OPEN_WORK_v1.2.60.md')
+s=s.replace('working/DELIVERY_ATLAS_WORKING_v0.4.1.md','working/DELIVERY_ATLAS_WORKING_v0.4.2.md')
+s=s.replace('working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md','working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md')
+s=s.replace('current Atlas v0.4.1','current Atlas v0.4.2').replace('current HARDEN-02 v0.5.3','current HARDEN-02 v0.5.4')
+s=s.replace('("0.4.7", "0.4.8", "0.4.9", "0.5.0", "0.5.1", "0.5.2", "0.5.3")','("0.4.7", "0.4.8", "0.4.9", "0.5.0", "0.5.1", "0.5.2", "0.5.3", "0.5.4")')
+s=s.replace('expected_harden_version = "0.5.3" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"','expected_harden_version = "0.5.4" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"')
+needle='expected_base_sha = (\n            "a062bd56e3ae94e815e2991ee00bf133ee9f3b56"\n            if state.get("status_successor_version") == "0.5.3"'
+if needle in s:
+    s=s.replace(needle,'expected_base_sha = (\n            "086ade7b28c000de1c387acb9760e5eb08bb0413"\n            if state.get("status_successor_version") == "0.5.4"\n            else "a062bd56e3ae94e815e2991ee00bf133ee9f3b56"\n            if state.get("status_successor_version") == "0.5.3"',1)
+ww(p,s)
+PY2
+'''
+          script=script[:cut]+extra+script[cut:]
+          Path('/tmp/pass9-v4.sh').write_text(script)
+          PY
+          bash /tmp/pass9-v4.sh
