@@ -13,12 +13,14 @@ def replace_func(s,name,body):
     if b<0: b=len(s)
     return s[:a]+body.rstrip()+'\n'+s[b:]
 
-# 1. Force current authority mapping to the promoted routes.
+# 1. Force current authority mapping to the promoted routes; accept already-current state.
 p=ROOT/'tests/test_authority_routing_successors.py'; s=r(p)
-s,n=re.subn(r'(?m)^(\s*"OPEN_WORK":\s*)"02_OPEN_WORK_v1\.2\.59\.md"',r'\1"02_OPEN_WORK_v1.2.60.md"',s)
-if n<1: raise AssertionError('CURRENT_AUTHORITY OPEN_WORK route not found')
-s,n2=re.subn(r'(?m)^(\s*"ROADMAP":\s*)"05_ROADMAP_v1\.2\.0\.md"',r'\1"05_ROADMAP_v1.3.0.md"',s)
-if n2<1: raise AssertionError('CURRENT_AUTHORITY ROADMAP route not found')
+if '"OPEN_WORK": "02_OPEN_WORK_v1.2.60.md"' not in s:
+    s,n=re.subn(r'(?m)^(\s*"OPEN_WORK":\s*)"02_OPEN_WORK_v1\.2\.59\.md"',r'\1"02_OPEN_WORK_v1.2.60.md"',s)
+    if n<1: raise AssertionError('CURRENT_AUTHORITY OPEN_WORK route not found')
+if '"ROADMAP": "05_ROADMAP_v1.3.0.md"' not in s:
+    s,n2=re.subn(r'(?m)^(\s*"ROADMAP":\s*)"05_ROADMAP_v1\.2\.0\.md"',r'\1"05_ROADMAP_v1.3.0.md"',s)
+    if n2<1: raise AssertionError('CURRENT_AUTHORITY ROADMAP route not found')
 w(p,s)
 
 # 2. New HARDEN current-successor test uses content assertions only; lifecycle coherence is covered by dedicated suites.
@@ -48,9 +50,7 @@ versions=m.group(2)
 if '"0.5.4"' not in versions:
     versions=versions.rstrip()+', "0.5.4"'
 s=s[:m.start(2)]+versions+s[m.end(2):]
-# Ensure current certified contract metadata check follows v0.5.4.
 s=s.replace('expected_harden_version = "0.5.3" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"','expected_harden_version = "0.5.4" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"')
-# Ensure v0.5.4 base SHA is recognized before the historical v0.5.3 branch.
 needle='''        expected_base_sha = (
             "a062bd56e3ae94e815e2991ee00bf133ee9f3b56"
             if state.get("status_successor_version") == "0.5.3"'''
