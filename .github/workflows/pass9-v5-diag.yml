@@ -1,0 +1,50 @@
+name: Pass 9 v5 targeted diagnostic
+on:
+  push:
+    branches: [prejit/analytics-pass9-v5]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    if: "${{ github.event.head_commit.message == 'ci: capture Pass 9 v5 targeted failures' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Apply repair
+        run: python tools/pass9_repair_tmp.py
+      - name: Run targeted suite and capture
+        continue-on-error: true
+        run: |
+          python -m unittest -v \
+            tests.test_roadmap_routing_resilience \
+            tests.test_roadmap_amendment \
+            tests.test_authority_routing_successors \
+            tests.test_atlas_reconciliation \
+            tests.test_harden_02_contract \
+            tests.test_harden_02_execution \
+            tests.test_harden_02_completion_lifecycle \
+            tests.test_engineering_standards_promotion > /tmp/targeted.log 2>&1
+      - name: Compact failures
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          lines=Path('/tmp/targeted.log').read_text(errors='replace').splitlines() if Path('/tmp/targeted.log').exists() else ['log missing']
+          out=[]
+          for i,line in enumerate(lines):
+              if line.startswith(('FAIL:','ERROR:')):
+                  j=i+1
+                  while j < len(lines) and not (j>i+1 and lines[j].startswith('======================================================================')):
+                      j+=1
+                  out.extend(lines[i:min(j,i+35)])
+                  out.append('---')
+          out.extend([line for line in lines[-30:] if line.startswith(('Ran ','FAILED','OK'))])
+          Path('/tmp/pass9-v5-targeted.txt').write_text('\n'.join(out)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pass9-v5-targeted-failures
+          path: /tmp/pass9-v5-targeted.txt
+          retention-days: 1
