@@ -1,0 +1,35 @@
+name: Pass 9 surgical candidate v3
+on:
+  push:
+    branches: [prejit/analytics-pass9-verify]
+permissions:
+  contents: write
+jobs:
+  verify:
+    if: "${{ github.event.head_commit.message == 'ci: rerun Pass 9 repair with README boundary correction' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: {fetch-depth: 0}
+      - name: Execute corrected surgical verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          text=Path('.github/workflows/pass9-candidate2.yml').read_text()
+          marker='        run: |\n'
+          script=text.split(marker,1)[1]
+          lines=[]
+          for line in script.splitlines():
+              if line.startswith('          '): lines.append(line[10:])
+              elif not line.strip(): lines.append('')
+              else: break
+          script='\n'.join(lines)
+          old="s=section_replace(s,'## Current State','## Delivery Atlas routing',current_repls,'README current state')"
+          new="a=s.find('## Current State'); assert a >= 0; sec=s[a:];\nfor old_current,new_current in current_repls: sec=sec.replace(old_current,new_current)\ns=s[:a]+sec"
+          assert script.count(old)==1
+          script=script.replace(old,new,1)
+          Path('/tmp/pass9-v3.sh').write_text(script)
+          PY
+          bash /tmp/pass9-v3.sh
