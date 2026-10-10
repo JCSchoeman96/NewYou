@@ -9,10 +9,10 @@ For foundation/default planning and delivery-preparation work, read **only** the
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`
 2. `00_PLATFORM_v1.6.0.md`
 3. `01_DECISIONS_v1.6.0.md`
-4. `02_OPEN_WORK_v1.2.59.md`
+4. `02_OPEN_WORK_v1.2.60.md`
 5. `03_ARCHITECTURE_v1.1.1.md`
 6. `04_DOMAIN_MAP_v1.2.0.md`
-7. `05_ROADMAP_v1.2.0.md`
+7. `05_ROADMAP_v1.3.0.md`
 8. `PLATFORM_OPERATING_MODEL_v1.0.1.md`
 
 For frontend, UI, public-experience, design-system, accessibility, SEO, analytics-UI or Feature Pack planning, additionally load:
@@ -36,8 +36,8 @@ The frozen Frontend Experience System is current authority for affected frontend
 `working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are outside the manifest's governing/reference document records. The manifest may list a derived path under graph rules for integrity scanning without elevating it to authority. Read working artifacts only when a task explicitly concerns them; they must not override the nine current-authority documents. They remain working until an explicit freeze review and governance decision.
 
 - `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register; remains working/non-authoritative provenance.
-- `working/DELIVERY_ATLAS_WORKING_v0.4.1.md` — derived Delivery Atlas navigation with current-source routing for approved Feature Pack planning. It remains working/non-authoritative, outside authority-document records, and is listed only under graph/navigation paths. Its active Open Work route is v1.2.59; direct predecessor v0.4.0 is preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.4.0.md`. The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references.
-- `working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md` — preserves certified HARDEN-02 execution evidence and records Engineering Standards Authority Promotion, FP-001 PMR reconciliation, Identity v0.1.4 promotion and Communications dossier v0.1.0 promotion COMPLETE / CERTIFIED. Communications finalisation remains BLOCKED / STOP. Later gates remain downstream or blocked. Direct predecessor v0.5.2 is preserved byte-identically at `archive/HARDEN-02_CONTRACT_WORKING_v0.5.2.md`.
+- `working/DELIVERY_ATLAS_WORKING_v0.4.2.md` — routing-only derived Delivery Atlas successor aligned to Roadmap v1.3.0 and Open Work v1.2.60. It remains working/non-authoritative and does not semantically re-derive prior Atlas views; current Roadmap authority wins. Direct predecessor v0.4.1 is preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.4.1.md`.
+- `working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md` — routing-only status successor aligned to Roadmap v1.3.0, Open Work v1.2.60 and Atlas v0.4.2. Certified HARDEN-02 evidence and all FP-001/later-gate states are unchanged. Direct predecessor v0.5.3 is preserved byte-identically at `archive/HARDEN-02_CONTRACT_WORKING_v0.5.3.md`.
 - `working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md` — certified/current FP-001 skeleton status successor. PR #67 PMR reconciliation is COMPLETE / CERTIFIED; the normative PMR block is unchanged and representation remains unfrozen under `ARQ-IAM-013`. Communications dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT under the separate PR #81 status successor; finalisation and all later gates remain blocked or downstream. Direct predecessor v0.1.4 is preserved byte-identically at `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md`; earlier candidates remain archived.
 - `working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` — certified/current Communications dossier. PR #78 candidate certification and post-merge certification evidence are COMPLETE; the separate PR #81 status successor records v0.1.0 as CERTIFIED / CURRENT. Exact PR #78 candidate bytes remain at `archive/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`. Communications finalisation remains BLOCKED / STOP; Phase 7C, proof classification and implementation remain unauthorised.
 - `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md` — certified/current Identity dossier. It preserves the PR #67 PMR and PR #70 J.1 durable-delivery corrections and records PR #76 certification of COMM-UPD-001 and COMM-UPD-002. It selects no provider/package/storage representation/retry policy/OQ-036 option and does not authorise Phase 7C, proof classification or implementation. The exact PR #70 candidate, superseded promoted/current v0.1.3 snapshot and PR #76 candidate are separately preserved in archive.
@@ -56,7 +56,7 @@ PR #76 candidate certification and completed post-merge certification evidence a
 
 ## Delivery Atlas routing
 
-Use the [Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.4.1.md) during delivery preparation when its derived navigation helps with an approved Roadmap Feature Pack or a relevant planning question. Consulting the Atlas is not itself a gate or prerequisite. It does not override the nine current-authority documents above, change Product/Architecture/Domain/Roadmap law, authorise Phase 7 or authorise implementation.
+Use the [Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.4.2.md) during delivery preparation when its derived navigation helps with an approved Roadmap Feature Pack or a relevant planning question. Consulting the Atlas is not itself a gate or prerequisite. It does not override the nine current-authority documents above, change Product/Architecture/Domain/Roadmap law, authorise Phase 7 or authorise implementation.
 
 Do not load the whole Atlas by default. Load only the relevant sections: the Feature Pack and capability views in §§4–5, active-FP derivation contracts in §§6–12, and the routing/governance rules in §§23–25 as needed. Every material Atlas conclusion must resolve to an exact current upstream authority reference. The Atlas may point to the canonical Phase 7A Feature Pack Skeleton + preliminary Gate Manifest → Phase 7B required JIT Domain Dossiers → Phase 7C Final Feature Pack Contract sequence when relevant; that navigation adds no gate or artifact, and the Atlas creates none of those artifacts.
 
@@ -78,7 +78,7 @@ These documents are valuable evidence, but they are not default context for rout
 
 `reference/ENGINEERING_STANDARDS_v1.0.1.md` is the current certified Engineering Standards supporting authority. It remains registered in `reference_documents`, not `governing_documents`. Its sole normative source is the accepted Stage 4B Engineering-Policy Grill at `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`; the Grill remains working/non-authoritative provenance. The Stage 4A Architecture Grill remains constraint context.
 
-The promotion is COMPLETE / CERTIFIED. The exact PR #65 candidate bytes remain at `archive/ENGINEERING_STANDARDS_v1.0.0.md`; v1.0.1 preserves the EP-Q1…EP-Q5 normative body and binds the candidate, merge, tree, CI, attestations and fresh post-merge PASS review. Current programme status is in Open Work v1.2.59. PR #67 PMR reconciliation is COMPLETE / CERTIFIED. PR #76 candidate certification and post-merge certification evidence are COMPLETE / CERTIFIED; current Identity status is recorded by the separate PR #77 status successor. PR #78 candidate certification and post-merge certification evidence are COMPLETE / CERTIFIED; current Communications dossier status is recorded by the separate PR #81 status successor. Communications finalisation remains BLOCKED / STOP. Conditional dossiers remain pending explicit adjudication; Phase 7C, proof classification, Phase 8 and implementation remain blocked.
+The promotion is COMPLETE / CERTIFIED. The exact PR #65 candidate bytes remain at `archive/ENGINEERING_STANDARDS_v1.0.0.md`; v1.0.1 preserves the EP-Q1…EP-Q5 normative body and binds the candidate, merge, tree, CI, attestations and fresh post-merge PASS review. Current programme status is in Open Work v1.2.60. PR #67 PMR reconciliation is COMPLETE / CERTIFIED. PR #76 candidate certification and post-merge certification evidence are COMPLETE / CERTIFIED; current Identity status is recorded by the separate PR #77 status successor. PR #78 candidate certification and post-merge certification evidence are COMPLETE / CERTIFIED; current Communications dossier status is recorded by the separate PR #81 status successor. Communications finalisation remains BLOCKED / STOP. Conditional dossiers remain pending explicit adjudication; Phase 7C, proof classification, Phase 8 and implementation remain blocked.
 
 ## Foundation integrity evidence
 
@@ -93,6 +93,9 @@ The frozen August 2026 audit at `archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` r
 
 ## Archive
 
+- `archive/02_OPEN_WORK_v1.2.59.md` — byte-identical direct predecessor to current Open Work v1.2.60; its hash is pinned in the manifest.
+- `archive/DELIVERY_ATLAS_WORKING_v0.4.1.md` — byte-identical direct predecessor to current Atlas v0.4.2.
+- `archive/HARDEN-02_CONTRACT_WORKING_v0.5.3.md` — byte-identical direct predecessor to current HARDEN-02 v0.5.4.
 - `archive/02_OPEN_WORK_v1.2.58.md` — byte-identical direct predecessor to current Open Work v1.2.59; its hash is pinned in the manifest. Communications IN PROGRESS / CERTIFICATION PENDING is preserved as historical state.
 - `archive/02_OPEN_WORK_v1.2.57.md` — byte-identical predecessor to archived Open Work v1.2.58; its hash is pinned in the manifest.
 - `archive/02_OPEN_WORK_v1.2.56.md` — byte-identical predecessor to archived Open Work v1.2.57; its hash is pinned in the manifest.
