@@ -32,9 +32,9 @@ Key routed identifiers for this pack: `FP-007`, `DEC-190`, `OQ-014`, `OQ-017`, `
 - **Coverage:** Passes A–M; `LIVE-PT-001...154`; `LIVE-UPD-001...006`; `LIVE-GAP-001...014`; `LIVE-EV-001...006`.
 - **Role:** complete cumulative working reasoning after Pass-M acceptance; non-authoritative.
 
-Historical human-review cumulative source:
+Historical human-review cumulative source used during compression:
 
-- `deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.0.md` — SHA-256 `e12f757253dea14738cc87d9254ffb9f2e1d001c925897a16fc55dbadce2ce3d`, 83103 bytes.
+- local review copy `NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.0.md` — SHA-256 `e12f757253dea14738cc87d9254ffb9f2e1d001c925897a16fc55dbadce2ce3d`, 83103 bytes. The versioned repository discovery/register series remains the authoritative provenance for exact historical reasoning; this review copy is not treated as a competing current repository source.
 
 ## 3. Pressure-test coverage
 
