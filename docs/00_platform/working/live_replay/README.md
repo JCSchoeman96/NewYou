@@ -6,7 +6,7 @@
 - **Authority:** NONE
 - **Verified main baseline:** `086ade7b28c000de1c387acb9760e5eb08bb0413`
 - **Canonical deep source:** `deep/NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.1.md`
-- **Deep-source SHA-256:** `9cde26043b8e2bc53ee93b5eb5878efaa850fcc463ce980ca1c53b0b178a717c`
+- **Deep-source SHA-256:** `4ab3885fa0ffb239a8c8c75e85bcfa98afc0a0f2bdab19fc1ce226af5f61ed9c`
 - **Provider-evidence revalidation:** `2026-10-11`
 - **Closure:** `PASS — PARK BROAD LIVE & REPLAY PRE-JIT DISCOVERY`
 
