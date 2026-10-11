@@ -81,127 +81,125 @@ One concept has one primary compact home: Contract = durable current model; Delt
 
 ## 4. Accepted conclusion coverage — every cumulative conclusion accounted for
 
-The deep ledger contains accepted numbered conclusion series for Passes A–M. Every conclusion below maps to a compact primary home; no conclusion is discarded merely because it resembles another. Number ranges are exact within each accepted pass conclusion series.
+The deep ledger contains accepted numbered conclusion series for Passes A–M. Every conclusion below maps to a compact primary home; no conclusion is discarded merely because it resembles another.
 
 | Pass | Accepted conclusion number(s) | Compact destination | Result |
 |---|---|---|---|
 | A–D | 1, 9–10, 13 | Contract §§5,9,20–21 / Evidence Index + Contract §5 / Delta Register | PRESERVED_COMPRESSED |
-| A–D | 2 | Contract §§6–7,15 + §8 + §§9–13 + §§15–16 | PRESERVED_COMPRESSED |
-| A–D | 3, 15 | Contract §5 + §§6–8,15 / Delta Register | PRESERVED_COMPRESSED |
-| A–D | 4 | Contract §5 + §§9–13 / Delta Register | PRESERVED_COMPRESSED |
-| A–D | 5 | Contract §§6–8,9–14,19 / Delta Register | PRESERVED_COMPRESSED |
-| A–D | 6 | Contract §5 + §§6–7,15 + §18 | PRESERVED_COMPRESSED |
-| A–D | 7 | Contract §§6–8,12–16 | PRESERVED_COMPRESSED |
-| A–D | 8 | Contract §§12–14 | PRESERVED_COMPRESSED |
-| A–D | 11 | Contract §§5–16 / Evidence Index / Delta Register | PRESERVED_COMPRESSED |
-| A–D | 12, 14 | Contract §5 + §§15–16 | PRESERVED_COMPRESSED |
-| A–D | 16 | Contract §§5–7,12–15,20–21 | PRESERVED_COMPRESSED |
-| A–D | 17, 22 | Contract §§5,18,20–21 | PRESERVED_COMPRESSED |
-| A–D | 18, 20 | Contract §§5,8,20–21 | PRESERVED_COMPRESSED |
-| A–D | 19 | Contract §§6–8,15 | PRESERVED_COMPRESSED |
-| A–D | 21 | Contract §8 | PRESERVED_COMPRESSED |
-| A–D | 23 | Contract §8 + §§15–16 | PRESERVED_COMPRESSED |
-| A–D | 24 | Contract §§6–7,15 | PRESERVED_COMPRESSED |
-| A–D | 25 | Contract §§8,18 | PRESERVED_COMPRESSED |
-| A–D | 26 | Contract applicable durable clause | PRESERVED_COMPRESSED |
-| A–D | 27–29, 36, 42, 45 | Contract §§9–13,20–21 / Evidence Index | PRESERVED_COMPRESSED |
-| A–D | 30, 44 | Contract §§20–21 / Evidence Index | PRESERVED_COMPRESSED |
-| A–D | 31 | Contract §§5,9–13,20–21 | PRESERVED_COMPRESSED |
-| A–D | 32 | Contract §§5,9–13,19–21 | PRESERVED_COMPRESSED |
-| A–D | 33 | Contract §§9–16,20–21 | PRESERVED_COMPRESSED |
-| A–D | 34–35, 37–39, 43 | Contract §§9–13 | PRESERVED_COMPRESSED |
-| A–D | 40–41 | Contract §§6–7,9–15 | PRESERVED_COMPRESSED |
-| E | 46 | Contract §§9–13,19 | PRESERVED_COMPRESSED |
-| E | 47 | Contract §§9–13,18,20–21 | PRESERVED_COMPRESSED |
-| E | 48–50, 53 | Contract §§9–13 | PRESERVED_COMPRESSED |
-| E | 51 | Contract §§9–16 | PRESERVED_COMPRESSED |
-| E | 52, 54 | Contract applicable durable clause | PRESERVED_COMPRESSED |
-| F | 55 | Contract §§8–14 | PRESERVED_COMPRESSED |
-| F | 56 | Contract §§9–16 | PRESERVED_COMPRESSED |
-| F | 57 | Contract §§12–14 | PRESERVED_COMPRESSED |
-| F | 58 | Contract §§6–7,12–16 | PRESERVED_COMPRESSED |
-| F | 59 | Contract §§9–14 | PRESERVED_COMPRESSED |
-| F | 60 | Contract §§12–16,19 | PRESERVED_COMPRESSED |
-| F | 61 | Contract applicable durable clause | PRESERVED_COMPRESSED |
-| F | 62 | Contract §§9–14,20–21 | PRESERVED_COMPRESSED |
+| A–D | 2 | Contract §§6–7,15 / Delta Register + Contract §8 / Delta Register + Contract §§9–13 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| A–D | 3, 15 | Contract §5 / Delta Register + Contract §§6–7,15 / Delta Register + Contract §8 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 4 | Contract §5 / Delta Register + Contract §§9–13 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 5 | Contract §§6–7,15 / Delta Register + Contract §8 / Delta Register + Contract §§9–13 / Delta Register + Contract §§12–14 / Delta Register + Contract §19 | PRESERVED_COMPRESSED |
+| A–D | 6 | Contract §5 / Delta Register + Contract §§6–7,15 / Delta Register + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 7 | Contract §§6–7,15 / Delta Register + Contract §8 / Delta Register + Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| A–D | 8 | Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 11 | Contract §§5,9,20–21 / Evidence Index + Contract §5 / Delta Register + Contract §§6–7,15 / Delta Register + Contract §8 / Delta Register + Contract §§9–13 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| A–D | 12, 14 | Contract §5 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| A–D | 16 | Contract §§5,9,20–21 / Evidence Index + Contract §§6–7,15 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 17, 22 | Contract §§5,9,20–21 / Evidence Index + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 18, 20 | Contract §§5,9,20–21 / Evidence Index + Contract §8 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 19 | Contract §§6–7,15 / Delta Register + Contract §8 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 21 | Contract §8 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 23 | Contract §8 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| A–D | 24 | Contract §§6–7,15 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 25 | Contract §8 / Delta Register + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 26 | Contract — applicable durable clause | PRESERVED_COMPRESSED |
+| A–D | 27–29, 36, 42, 45 | Contract §§5,9,20–21 / Evidence Index + Contract §§9–13 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 30, 44 | Contract §§5,9,20–21 / Evidence Index | PRESERVED_COMPRESSED |
+| A–D | 31 | Contract §§5,9,20–21 / Evidence Index + Contract §5 / Delta Register + Contract §§9–13 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 32 | Contract §§5,9,20–21 / Evidence Index + Contract §5 / Delta Register + Contract §§9–13 / Delta Register + Contract §19 | PRESERVED_COMPRESSED |
+| A–D | 33 | Contract §§5,9,20–21 / Evidence Index + Contract §§9–13 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| A–D | 34–35, 37–39, 43 | Contract §§9–13 / Delta Register | PRESERVED_COMPRESSED |
+| A–D | 40–41 | Contract §§6–7,15 / Delta Register + Contract §§9–13 / Delta Register | PRESERVED_COMPRESSED |
+| E | 46 | Contract §§9–13 / Delta Register + Contract §19 | PRESERVED_COMPRESSED |
+| E | 47 | Contract §§5,9,20–21 / Evidence Index + Contract §§9–13 / Delta Register + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| E | 48–50, 53 | Contract §§9–13 / Delta Register | PRESERVED_COMPRESSED |
+| E | 51 | Contract §§9–13 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| E | 52, 54 | Contract — applicable durable clause | PRESERVED_COMPRESSED |
+| F | 55 | Contract §8 / Delta Register + Contract §§9–13 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| F | 56 | Contract §§9–13 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| F | 57 | Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| F | 58 | Contract §§6–7,15 / Delta Register + Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| F | 59 | Contract §§9–13 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| F | 60 | Contract §§12–14 / Delta Register + Contract §§15–16 + Contract §19 | PRESERVED_COMPRESSED |
+| F | 61 | Contract — applicable durable clause | PRESERVED_COMPRESSED |
+| F | 62 | Contract §§5,9,20–21 / Evidence Index + Contract §§9–13 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
 | F | 63 | Contract §§15–16 | PRESERVED_COMPRESSED |
-| G | 64 | Contract §§12–16,18 | PRESERVED_COMPRESSED |
-| G | 65, 75 | Contract §§9–14,20–21 | PRESERVED_COMPRESSED |
-| G | 66, 69, 72–73 | Contract §§12–14,20–21 | PRESERVED_COMPRESSED |
-| G | 67 | Contract §§12–16,20–21 | PRESERVED_COMPRESSED |
-| G | 68 | Contract §§12–14 | PRESERVED_COMPRESSED |
-| G | 70 | Contract §§12–16 | PRESERVED_COMPRESSED |
-| G | 71 | Contract §§12–14,17 | PRESERVED_COMPRESSED |
-| G | 74 | Contract §§20–24 / Evidence Index | PRESERVED_COMPRESSED |
-| H | 76 | Contract §§6–7,12–15,19 | PRESERVED_COMPRESSED |
-| H | 77 | Contract §5 | PRESERVED_COMPRESSED |
-| H | 78 | Contract §§6–7,12–16,20–21 | PRESERVED_COMPRESSED |
-| H | 79 | Contract §§6–7,12–15 | PRESERVED_COMPRESSED |
-| H | 80 | Contract §§6–8,12–14 | PRESERVED_COMPRESSED |
-| H | 81 | Contract §§8,12–14 | PRESERVED_COMPRESSED |
-| H | 82 | Contract §§12–14,19 | PRESERVED_COMPRESSED |
-| H | 83 | Contract applicable durable clause | PRESERVED_COMPRESSED |
-| H | 84 | Contract §§9–14,20–21 | PRESERVED_COMPRESSED |
-| H | 85, 87 | Contract §§12–14 | PRESERVED_COMPRESSED |
-| H | 86 | Contract §§12–16 | PRESERVED_COMPRESSED |
-| H | 88 | Contract §§6–7,12–16 | PRESERVED_COMPRESSED |
-| I | 89, 95–96, 100 | Contract §§12–16 | PRESERVED_COMPRESSED |
-| I | 90 | Contract §§9–16 | PRESERVED_COMPRESSED |
+| G | 64 | Contract §§12–14 / Delta Register + Contract §§15–16 + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| G | 65, 75 | Contract §§5,9,20–21 / Evidence Index + Contract §§9–13 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| G | 66, 69, 72–73 | Contract §§5,9,20–21 / Evidence Index + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| G | 67 | Contract §§5,9,20–21 / Evidence Index + Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| G | 68 | Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| G | 70 | Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| G | 71 | Contract §§12–14 / Delta Register + Contract §17 | PRESERVED_COMPRESSED |
+| G | 74 | Contract §§5,9,20–21 / Evidence Index + Contract §§22–24 / Delta Register | PRESERVED_COMPRESSED |
+| H | 76 | Contract §§6–7,15 / Delta Register + Contract §§12–14 / Delta Register + Contract §19 | PRESERVED_COMPRESSED |
+| H | 77 | Contract §5 / Delta Register | PRESERVED_COMPRESSED |
+| H | 78 | Contract §§5,9,20–21 / Evidence Index + Contract §§6–7,15 / Delta Register + Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| H | 79 | Contract §§6–7,15 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| H | 80 | Contract §§6–7,15 / Delta Register + Contract §8 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| H | 81 | Contract §8 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| H | 82 | Contract §§12–14 / Delta Register + Contract §19 | PRESERVED_COMPRESSED |
+| H | 83 | Contract — applicable durable clause | PRESERVED_COMPRESSED |
+| H | 84 | Contract §§5,9,20–21 / Evidence Index + Contract §§9–13 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| H | 85, 87 | Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| H | 86 | Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| H | 88 | Contract §§6–7,15 / Delta Register + Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| I | 89, 95–96, 100 | Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| I | 90 | Contract §§9–13 / Delta Register + Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
 | I | 91, 97 | Contract §§15–16 | PRESERVED_COMPRESSED |
-| I | 92, 102 | Contract §§15–16,20–21 | PRESERVED_COMPRESSED |
-| I | 93 | Contract §§12–16,18 | PRESERVED_COMPRESSED |
-| I | 94, 98 | Contract §§9–16 | PRESERVED_COMPRESSED |
-| I | 99 | Contract §§18,20–21 | PRESERVED_COMPRESSED |
-| I | 101 | Contract §§5,8,15–16,18 | PRESERVED_COMPRESSED |
-| J | 103–104 | Contract §§15–17 | PRESERVED_COMPRESSED |
-| J | 105 | Contract §§9–17 | PRESERVED_COMPRESSED |
-| J | 106 | Contract applicable durable clause | PRESERVED_COMPRESSED |
-| J | 107 | Contract §§6–7,15–18 | PRESERVED_COMPRESSED |
-| J | 108 | Contract §§15–17,20–21 | PRESERVED_COMPRESSED |
-| J | 109 | Contract §§12–16 | PRESERVED_COMPRESSED |
-| J | 110–111, 115 | Contract §§12–17 | PRESERVED_COMPRESSED |
-| J | 112 | Contract §§9–17 | PRESERVED_COMPRESSED |
-| J | 113 | Contract §§9–13,17,20–21 | PRESERVED_COMPRESSED |
+| I | 92, 102 | Contract §§5,9,20–21 / Evidence Index + Contract §§15–16 | PRESERVED_COMPRESSED |
+| I | 93 | Contract §§12–14 / Delta Register + Contract §§15–16 + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| I | 94, 98 | Contract §§9–13 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| I | 99 | Contract §§5,9,20–21 / Evidence Index + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| I | 101 | Contract §5 / Delta Register + Contract §8 / Delta Register + Contract §§15–16 + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| J | 103–104 | Contract §§15–16 + Contract §17 | PRESERVED_COMPRESSED |
+| J | 105 | Contract §§9–13 / Delta Register + Contract §§15–16 + Contract §17 | PRESERVED_COMPRESSED |
+| J | 106 | Contract — applicable durable clause | PRESERVED_COMPRESSED |
+| J | 107 | Contract §§6–7,15 / Delta Register + Contract §§15–16 + Contract §17 + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| J | 108 | Contract §§5,9,20–21 / Evidence Index + Contract §§15–16 + Contract §17 | PRESERVED_COMPRESSED |
+| J | 109 | Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| J | 110–111, 115 | Contract §§12–14 / Delta Register + Contract §§15–16 + Contract §17 | PRESERVED_COMPRESSED |
+| J | 112 | Contract §§9–13 / Delta Register + Contract §§12–14 / Delta Register + Contract §§15–16 + Contract §17 | PRESERVED_COMPRESSED |
+| J | 113 | Contract §§5,9,20–21 / Evidence Index + Contract §§9–13 / Delta Register + Contract §17 | PRESERVED_COMPRESSED |
 | J | 114, 117 | Contract §17 | PRESERVED_COMPRESSED |
-| J | 116 | Contract §§20–21 | PRESERVED_COMPRESSED |
-| J | 118–119 | Contract §§22–24 | PRESERVED_COMPRESSED |
-| K | 120 | Contract §§5–7,15–16,18 | PRESERVED_COMPRESSED |
-| K | 121–122, 135 | Contract §18 | PRESERVED_COMPRESSED |
-| K | 123 | Contract §§5–7,9–16,18 | PRESERVED_COMPRESSED |
-| K | 124 | Contract §§6–7,15,18 | PRESERVED_COMPRESSED |
-| K | 125–126, 131 | Contract §§18,20–21 | PRESERVED_COMPRESSED |
-| K | 127 | Contract §§15–16,18 | PRESERVED_COMPRESSED |
-| K | 128 | Contract §§12–16,18–19 | PRESERVED_COMPRESSED |
-| K | 129 | Contract §§9–14,18 | PRESERVED_COMPRESSED |
-| K | 130 | Contract §§18–21 | PRESERVED_COMPRESSED |
-| K | 132 | Contract §§5–7,15,18 | PRESERVED_COMPRESSED |
-| K | 133 | Contract §§9–13,18 | PRESERVED_COMPRESSED |
-| K | 134 | Contract §§12–14,18,20–21 | PRESERVED_COMPRESSED |
-| K | 136 | Contract §§18,22–24 | PRESERVED_COMPRESSED |
-| K | 137 | Contract §§22–24 | PRESERVED_COMPRESSED |
-| K | 138 | Contract applicable durable clause | PRESERVED_COMPRESSED |
-| L | 139 | Contract §§15–16,19 | PRESERVED_COMPRESSED |
+| J | 116 | Contract §§5,9,20–21 / Evidence Index | PRESERVED_COMPRESSED |
+| J | 118–119 | Contract §§22–24 / Delta Register | PRESERVED_COMPRESSED |
+| K | 120 | Contract §5 / Delta Register + Contract §§6–7,15 / Delta Register + Contract §§15–16 + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| K | 121–122, 135 | Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| K | 123 | Contract §5 / Delta Register + Contract §§6–7,15 / Delta Register + Contract §§9–13 / Delta Register + Contract §§15–16 + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| K | 124 | Contract §§6–7,15 / Delta Register + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| K | 125–126, 131 | Contract §§5,9,20–21 / Evidence Index + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| K | 127 | Contract §§15–16 + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| K | 128 | Contract §§12–14 / Delta Register + Contract §§15–16 + Contract §18 / Delta Register + Contract §19 | PRESERVED_COMPRESSED |
+| K | 129 | Contract §§9–13 / Delta Register + Contract §§12–14 / Delta Register + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| K | 130 | Contract §§5,9,20–21 / Evidence Index + Contract §18 / Delta Register + Contract §19 | PRESERVED_COMPRESSED |
+| K | 132 | Contract §5 / Delta Register + Contract §§6–7,15 / Delta Register + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| K | 133 | Contract §§9–13 / Delta Register + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| K | 134 | Contract §§5,9,20–21 / Evidence Index + Contract §§12–14 / Delta Register + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| K | 136 | Contract §18 / Delta Register + Contract §§22–24 / Delta Register | PRESERVED_COMPRESSED |
+| K | 137 | Contract §§22–24 / Delta Register | PRESERVED_COMPRESSED |
+| K | 138 | Contract — applicable durable clause | PRESERVED_COMPRESSED |
+| L | 139 | Contract §§15–16 + Contract §19 | PRESERVED_COMPRESSED |
 | L | 140, 144–145 | Contract §19 | PRESERVED_COMPRESSED |
-| L | 141 | Contract §§18–21 | PRESERVED_COMPRESSED |
-| L | 142, 147, 150, 154 | Contract applicable durable clause | PRESERVED_COMPRESSED |
-| L | 143 | Contract §§5–7,15–16,18 | PRESERVED_COMPRESSED |
-| L | 146 | Contract §§6–7,12–15 | PRESERVED_COMPRESSED |
-| L | 148–149, 151–153 | Contract §§22–24 | PRESERVED_COMPRESSED |
-| L | 155 | Contract §18 | PRESERVED_COMPRESSED |
-| L | 156 | Contract §§12–14 | PRESERVED_COMPRESSED |
-| L | 157 | Contract §§20–24 / Evidence Index | PRESERVED_COMPRESSED |
-| L | 158 | Contract §§15–16,20–24 | PRESERVED_COMPRESSED |
-| M | 1, 4, 6–8, 15, 19–20 | Contract §§20–21 / Evidence Index | PRESERVED_COMPRESSED |
-| M | 2 | Contract §§9–13,20–21 | PRESERVED_COMPRESSED |
-| M | 3, 9 | Contract §§5,9–13,20–21 | PRESERVED_COMPRESSED |
-| M | 5 | Contract §§18,20–21 | PRESERVED_COMPRESSED |
-| M | 10, 14 | Contract §§6–7,15,20–21 | PRESERVED_COMPRESSED |
-| M | 11 | Contract §§9–14,20–21 | PRESERVED_COMPRESSED |
-| M | 12 | Contract §§12–16,20–21 | PRESERVED_COMPRESSED |
-| M | 13, 16 | Contract §§12–14,20–21 | PRESERVED_COMPRESSED |
-| M | 17–18, 21 | Contract §§22–24 | PRESERVED_COMPRESSED |
-
-Coverage count: A–D `45`; E `9`; F `9`; G `12`; H `13`; I `14`; J `17`; K `19`; L `20`; M `21` = **179 accepted numbered conclusions accounted for**.
+| L | 141 | Contract §§5,9,20–21 / Evidence Index + Contract §18 / Delta Register + Contract §19 | PRESERVED_COMPRESSED |
+| L | 142, 147, 150, 154 | Contract — applicable durable clause | PRESERVED_COMPRESSED |
+| L | 143 | Contract §5 / Delta Register + Contract §§6–7,15 / Delta Register + Contract §§15–16 + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| L | 146 | Contract §§6–7,15 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| L | 148–149, 151–153 | Contract §§22–24 / Delta Register | PRESERVED_COMPRESSED |
+| L | 155 | Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| L | 156 | Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| L | 157 | Contract §§5,9,20–21 / Evidence Index + Contract §§22–24 / Delta Register | PRESERVED_COMPRESSED |
+| L | 158 | Contract §§5,9,20–21 / Evidence Index + Contract §§15–16 + Contract §§22–24 / Delta Register | PRESERVED_COMPRESSED |
+| M | 1, 4, 6–8, 15, 19–20 | Contract §§5,9,20–21 / Evidence Index | PRESERVED_COMPRESSED |
+| M | 2 | Contract §§5,9,20–21 / Evidence Index + Contract §§9–13 / Delta Register | PRESERVED_COMPRESSED |
+| M | 3, 9 | Contract §§5,9,20–21 / Evidence Index + Contract §5 / Delta Register + Contract §§9–13 / Delta Register | PRESERVED_COMPRESSED |
+| M | 5 | Contract §§5,9,20–21 / Evidence Index + Contract §18 / Delta Register | PRESERVED_COMPRESSED |
+| M | 10, 14 | Contract §§5,9,20–21 / Evidence Index + Contract §§6–7,15 / Delta Register | PRESERVED_COMPRESSED |
+| M | 11 | Contract §§5,9,20–21 / Evidence Index + Contract §§9–13 / Delta Register + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| M | 12 | Contract §§5,9,20–21 / Evidence Index + Contract §§12–14 / Delta Register + Contract §§15–16 | PRESERVED_COMPRESSED |
+| M | 13, 16 | Contract §§5,9,20–21 / Evidence Index + Contract §§12–14 / Delta Register | PRESERVED_COMPRESSED |
+| M | 17–18, 21 | Contract §§22–24 / Delta Register | PRESERVED_COMPRESSED |
 
 ## 5. Independent-review corrections
 
