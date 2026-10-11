@@ -1,16 +1,15 @@
 # Live & Replay Pre-JIT Working Pack
 
-- **Status:** FINAL COMPACT WORKING PACK / NON-AUTHORITATIVE
-- **Pack version:** `v0.1.0`
+- **Status:** FINAL COMPACT WORKING PACK / NON-AUTHORITATIVE / HARDENED v0.1.1
+- **Pack version:** `v0.1.1`
 - **Implementation:** NOT AUTHORISED
 - **Authority:** NONE
 - **Verified main baseline:** `086ade7b28c000de1c387acb9760e5eb08bb0413`
-- **Canonical deep source:** `deep/NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.1.md`
-- **Deep-source SHA-256:** `4ab3885fa0ffb239a8c8c75e85bcfa98afc0a0f2bdab19fc1ce226af5f61ed9c`
+- **Canonical deep source:** `deep/NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.2.md`
 - **Provider-evidence revalidation:** `2026-10-11`
 - **Closure:** `PASS — PARK BROAD LIVE & REPLAY PRE-JIT DISCOVERY`
 
-This directory is the compact normal-context pack for the completed broad NewYou Live & Replay Pre-JIT discovery supporting future governed `FP-007 — Governed live sessions and replay` planning.
+This directory is the hardened compact normal-context pack for completed broad NewYou Live & Replay Pre-JIT discovery supporting future governed `FP-007 — Governed live sessions and replay` planning.
 
 > **Live governed NewYou authority always wins.**
 
@@ -18,12 +17,12 @@ This pack does not amend Product Law, Architecture Law, Domain Law, Roadmap, Ope
 
 ## Read order
 
-1. `NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.0.md` — compact durable Live/Replay model.
-2. `NEWYOU_LIVE_REPLAY_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md` — unresolved consequential Product/gate/JIT routes.
-3. `NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.0.md` — PT/provider/source provenance.
-4. `NEWYOU_LIVE_REPLAY_COMPRESSION_AUDIT_WORKING_v0.1.0.md` — proof that compression preserved accepted semantics.
-5. `NEWYOU_LIVE_REPLAY_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md` — mechanical source↔compact consistency proof.
-6. `PACK_MANIFEST_v0.1.0.json` — exact pack inventory.
+1. `NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.1.md` — compact durable Live/Replay model.
+2. `NEWYOU_LIVE_REPLAY_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.1.md` — unresolved consequential Product/gate/JIT routes.
+3. `NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.1.md` — PT/provider/source provenance.
+4. `NEWYOU_LIVE_REPLAY_COMPRESSION_AUDIT_WORKING_v0.1.1.md` — semantic-preservation audit after hardening corrections.
+5. `NEWYOU_LIVE_REPLAY_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.1.md` — mechanical source↔compact consistency proof.
+6. `PACK_MANIFEST_v0.1.1.json` — exact hardened pack inventory.
 
 Normal future FP-007 planning should generally read:
 
@@ -41,17 +40,17 @@ Do not load the historical archive by default.
 
 Canonical detailed cumulative source:
 
-`deep/NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.1.md`
+`deep/NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.2.md`
 
-Accepted Pass-M status/provenance:
+Accepted Pass-M status/provenance remains:
 
 `deep/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.12.1.md`
 
-Historical discovery/register files and the prior cumulative review copy are preserved under:
+Historical discovery/register files and superseded compact-pack files are preserved under `deep/archive/`.
 
-`deep/archive/`
+The exact 83,103-byte human-review cumulative Markdown copy `NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.0.md` used during compression is a **local review source only**; it is identified by SHA-256 in the Evidence Index/manifest and is **not** claimed to exist in the repository archive.
 
-Load deep/archive only for:
+Load `deep/archive/` only for:
 
 - exact pressure-test reasoning;
 - historical supersession/refinement;
@@ -79,6 +78,19 @@ registration
 != replay consumption
 ```
 
+## Hardened preservation guarantees
+
+The v0.1.1 successor explicitly restores the compression-level semantics that were too weak in v0.1.0:
+
+- ordinary material replay correction may leave V1 current only while V1 remains safe/legal/currently eligible; safety/legal/consent-invalidated V1 stays fail-closed if successor processing fails;
+- optional reminder/marketing/convenience roles may not masquerade as mandatory product/safety notices to bypass participant controls;
+- no Live-specific Communications Resource is justified by this discovery; existing Communications ownership/seams are reused unless future governed evidence changes that conclusion;
+- long-delayed or post-idempotency-expiry ambiguous provider create must reconcile before repeating external creation; provider-key expiry never authorises blind duplicate create;
+- EV-002 explicitly retains the current Restream documentation fact that paid live streams are automatically recorded/saved, while absence of a documented disable control remains non-proof of impossibility;
+- locked Full Deletion timing remains explicit: immediate normal-access revocation → 14-day cancellation window → irreversible deletion execution → verified completion; completed irreversible deletion has no recovery/reconstruction path.
+
+These are preservation corrections only. They create no new Product rule, UPD, GAP, Domain, Feature Pack scope or implementation authority.
+
 ## Accepted coverage
 
 ```text
@@ -91,7 +103,7 @@ LIVE-UPD-007                NOT WARRANTED
 LIVE-GAP-015                NOT WARRANTED
 ```
 
-Pass M was accepted after fresh first-party provider revalidation on 2026-10-11. That acceptance does not resolve provider/privacy gates.
+Pass M was accepted after first-party provider revalidation on 2026-10-11. That acceptance does not resolve provider/privacy gates.
 
 ## Important open gates
 
