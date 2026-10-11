@@ -27,8 +27,8 @@ Key routed identifiers for this pack: `FP-007`, `DEC-190`, `OQ-014`, `OQ-017`, `
 ## 2. Canonical deep source
 
 - **Path:** `docs/00_platform/working/live_replay/deep/NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.1.md`
-- **SHA-256:** `9cde26043b8e2bc53ee93b5eb5878efaa850fcc463ce980ca1c53b0b178a717c`
-- **Bytes:** `84624`
+- **SHA-256:** `4ab3885fa0ffb239a8c8c75e85bcfa98afc0a0f2bdab19fc1ce226af5f61ed9c`
+- **Bytes:** `25162`
 - **Coverage:** Passes A–M; `LIVE-PT-001...154`; `LIVE-UPD-001...006`; `LIVE-GAP-001...014`; `LIVE-EV-001...006`.
 - **Role:** complete cumulative working reasoning after Pass-M acceptance; non-authoritative.
 
