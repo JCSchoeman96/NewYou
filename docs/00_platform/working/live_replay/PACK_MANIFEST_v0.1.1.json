@@ -1,0 +1,171 @@
+{
+  "pack_id": "NEWYOU_LIVE_REPLAY_FINAL_COMPACT_PACK",
+  "pack_version": "0.1.1",
+  "status": "PASS — PARK BROAD LIVE & REPLAY PRE-JIT DISCOVERY",
+  "authority": "NONE",
+  "implementation_authority": "NONE",
+  "supersedes_compact_pack_version": "0.1.0",
+  "hardening_scope": [
+    "restore class-dependent replay-correction failure semantics",
+    "restore Communications mandatory-class anti-abuse guard",
+    "restore no-Live-specific-Communications-Resource conclusion",
+    "restore reconcile-before-repeat ordering for ambiguous provider create",
+    "restore exact LIVE-EV-002 Restream automatic-recording evidence wording",
+    "restore locked 14-day Full Deletion cancellation window and no-recovery-after-completion rule",
+    "correct README provenance for the local v0.12.0 human-review source"
+  ],
+  "deep_source": {
+    "path": "docs/00_platform/working/live_replay/deep/NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.2.md",
+    "filename": "NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.2.md",
+    "sha256": "a57e12d8a6f5c2df52316f7cd9f732127d34c5843f51ee99bfd6e20657bfb0d9",
+    "git_blob_sha": "b1836a062a7f15863706acaf9422f01f334b5ca4",
+    "bytes": 17521,
+    "role": "canonical cumulative working semantic source; non-authoritative"
+  },
+  "accepted_status_successor": {
+    "path": "docs/00_platform/working/live_replay/deep/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.12.1.md",
+    "sha256": "cbaf7f78064ec83e76bfd0847e5ddf5d0003705223f717e764a8ae00096c3eef",
+    "git_blob_sha": "1af508764644afde22fb944123861ddbfa54887c",
+    "bytes": 10712,
+    "role": "accepted Pass-M status/provenance successor; unchanged by compression hardening"
+  },
+  "local_human_review_source": {
+    "filename": "NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.0.md",
+    "sha256": "e12f757253dea14738cc87d9254ffb9f2e1d001c925897a16fc55dbadce2ce3d",
+    "bytes": 83103,
+    "repository_archive": false,
+    "role": "exact local human-review source used during compression review; not a competing repository current source"
+  },
+  "live_baselines": {
+    "newyou_main": "086ade7b28c000de1c387acb9760e5eb08bb0413",
+    "predecessor_pack_head": "66e422e3bd18ee1cdda738f7a1c54f3ab83c0ac4",
+    "hardening_content_commit": "1d117108549979b9aff03742fc8750d7d6d2fe93",
+    "manifest_parent_head": "1d117108549979b9aff03742fc8750d7d6d2fe93",
+    "final_branch_head": "RECORDED_IN_FINAL_VERIFICATION_TO_AVOID_SELF_REFERENCE"
+  },
+  "coverage": {
+    "passes": "A...M",
+    "pressure_tests": "LIVE-PT-001...154",
+    "upstream_deltas": "LIVE-UPD-001...006",
+    "gaps": "LIVE-GAP-001...014",
+    "provider_evidence": "LIVE-EV-001...006",
+    "broad_semantic_discovery": "PARKED",
+    "pass_n": "NOT JUSTIFIED BY DEFAULT"
+  },
+  "guard_state": {
+    "LIVE-UPD-007": "NOT CREATED",
+    "LIVE-GAP-015": "NOT CREATED",
+    "OQ-020": "OPEN",
+    "OQ-021": "OPEN",
+    "FP-007": "NOT SELECTED / NOT PHASE-7 AUTHORISED",
+    "implementation": "NOT AUTHORISED"
+  },
+  "normal_read_order": [
+    "README.md",
+    "NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+    "NEWYOU_LIVE_REPLAY_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.1.md",
+    "NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.1.md",
+    "NEWYOU_LIVE_REPLAY_COMPRESSION_AUDIT_WORKING_v0.1.1.md",
+    "NEWYOU_LIVE_REPLAY_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.1.md"
+  ],
+  "files": [
+    {
+      "path": "docs/00_platform/working/live_replay/README.md",
+      "sha256": "c226230bee34b69ee7f3de45cf45452515335d5bcc51aca31045f70b7f58a3e7",
+      "git_blob_sha": "f75a50210471ee28a1ef4a7330a7dfc09e6a9ea9",
+      "bytes": 6648
+    },
+    {
+      "path": "docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+      "sha256": "c1ccc0ec9ae202c7c4f2d084a51951166df927df9679fb3cdd8acb3e11da8b56",
+      "git_blob_sha": "9e11e93768aeb8a9603909be1c08ddea7190ba4f",
+      "bytes": 18275
+    },
+    {
+      "path": "docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.1.md",
+      "sha256": "350155df2c564459012e75fd72112a9bfe65db7763ed8ed319ebb4f6e8edd3f4",
+      "git_blob_sha": "45f1c091b2049c612c54a6ca0b3e721c96c000ed",
+      "bytes": 17128
+    },
+    {
+      "path": "docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.1.md",
+      "sha256": "5ce04130f9a8d2898778cfea3e6c89b5d8e3c031b691a6030fd101eb7c0a3984",
+      "git_blob_sha": "3eeea2024c6a1921e408ea8272ff0c15593e093d",
+      "bytes": 16520
+    },
+    {
+      "path": "docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_COMPRESSION_AUDIT_WORKING_v0.1.1.md",
+      "sha256": "ea98e48863eafb86bc29420fb12b1802d67c3a368564f9b6ef37518279a8a7e6",
+      "git_blob_sha": "0243adf2172e1b964a7b5b4e67416886875c7842",
+      "bytes": 9167
+    },
+    {
+      "path": "docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.1.md",
+      "sha256": "853a067c335b22cd82cc53432a2e4f898aac05c30fd772c2439a0ea7a3b81970",
+      "git_blob_sha": "737fa4e2fbcfab46b48c9953269cc436bbc2a8cd",
+      "bytes": 6486
+    }
+  ],
+  "superseded_compact_v0.1.0_archive": [
+    {
+      "archive_path": "docs/00_platform/working/live_replay/deep/archive/compact_v0.1.0/README.md",
+      "git_blob_sha": "d059c178a753d4ca66c82e303a716f366f6b9cf4",
+      "bytes": 4973,
+      "byte_identity_proof": "same Git blob object as predecessor root file",
+      "sha256": "00ba159376f90eaf71a4b04607b5c3629a1561a823ee0ae0e088cf0599609800"
+    },
+    {
+      "archive_path": "docs/00_platform/working/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+      "git_blob_sha": "48417ce55b631b72a90a2d113acdc123a9db7621",
+      "bytes": 31608,
+      "byte_identity_proof": "same Git blob object as predecessor root file",
+      "sha256": "9c89e920b1e97a2cf5f1c86cf1511970874ac534df9970ab2296f685d2580d82"
+    },
+    {
+      "archive_path": "docs/00_platform/working/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md",
+      "git_blob_sha": "0d0c5d86c1a25281133cf47010c97406ec2676f4",
+      "bytes": 16959,
+      "byte_identity_proof": "same Git blob object as predecessor root file",
+      "sha256": "3e5377043a9704fcabcf19836d4a170970eadad151b7f9c8d533579135520e32"
+    },
+    {
+      "archive_path": "docs/00_platform/working/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.0.md",
+      "git_blob_sha": "4eded459b7bed9a548acc6385ed36aad42da2c45",
+      "bytes": 16188,
+      "byte_identity_proof": "same Git blob object as predecessor root file",
+      "sha256": "d9aaeeb1145e25f6cacf0f036b5947f4ae28781a9a59d2de5665a58e60cef4a3"
+    },
+    {
+      "archive_path": "docs/00_platform/working/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_COMPRESSION_AUDIT_WORKING_v0.1.0.md",
+      "git_blob_sha": "e654aae07b43dd5862cd8d0312da70ddbf74f95e",
+      "bytes": 20103,
+      "byte_identity_proof": "same Git blob object as predecessor root file",
+      "sha256": "242c0dd6f95ef708b09a646ee41f35c8ff84f7637dd6abec8247c420581e1d2f"
+    },
+    {
+      "archive_path": "docs/00_platform/working/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md",
+      "git_blob_sha": "1e748c87a6ac4e41789a6c16d2479c5f867a17ef",
+      "bytes": 6643,
+      "byte_identity_proof": "same Git blob object as predecessor root file",
+      "sha256": "f6eb646b942b121da9fef9c5dcf4f617af716c0350bd38017d9f54a5b6a0896f"
+    },
+    {
+      "archive_path": "docs/00_platform/working/live_replay/deep/archive/compact_v0.1.0/PACK_MANIFEST_v0.1.0.json",
+      "git_blob_sha": "644cb1bf56a875ba7f935aad6c976a0fa1f72ed6",
+      "bytes": 17434,
+      "byte_identity_proof": "same Git blob object as predecessor root file"
+    }
+  ],
+  "historical_discovery_register_archive": {
+    "path": "docs/00_platform/working/live_replay/deep/archive/",
+    "relocation_commit": "baa848e8283677b784578105fe75f12184f07685",
+    "file_count": 34,
+    "byte_identity_proof": "same Git blob SHA before and after relocation",
+    "status": "PRESERVED"
+  },
+  "provider_evidence": {
+    "revalidated_date": "2026-10-11",
+    "records": "LIVE-EV-001...006",
+    "limits": "provider documentation != Product authority != controlled empirical proof != OQ-020/OQ-021 closure"
+  }
+}
