@@ -17,34 +17,34 @@
     },
     {
       "document_id": "PLATFORM_BASELINE",
-      "canonical_filename": "00_PLATFORM_v1.7.0.md",
-      "semver": "1.7.0",
-      "repository_path": "docs/00_platform/00_PLATFORM_v1.7.0.md",
+      "canonical_filename": "00_PLATFORM_v1.8.0.md",
+      "semver": "1.8.0",
+      "repository_path": "docs/00_platform/00_PLATFORM_v1.8.0.md",
       "authority_class": "PLATFORM_PRODUCT_LAW",
-      "sha256": "5ba692e4e230c0913b74090aa034daf420be31a80afc1ed0766f9a9dc145af64",
-      "superseded_version": "1.6.0",
+      "sha256": "50e0b3fea2f07732e772d0293920d23757d832b403b0f22b61ea695653d1b62b",
+      "superseded_version": "1.7.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "5ba692e4e230c0913b74090aa034daf420be31a80afc1ed0766f9a9dc145af64"
+      "provenance_sha256": "50e0b3fea2f07732e772d0293920d23757d832b403b0f22b61ea695653d1b62b"
     },
     {
       "document_id": "DECISION_REGISTER",
-      "canonical_filename": "01_DECISIONS_v1.7.0.md",
-      "semver": "1.7.0",
-      "repository_path": "docs/00_platform/01_DECISIONS_v1.7.0.md",
+      "canonical_filename": "01_DECISIONS_v1.8.0.md",
+      "semver": "1.8.0",
+      "repository_path": "docs/00_platform/01_DECISIONS_v1.8.0.md",
       "authority_class": "DECISION_REGISTER",
-      "sha256": "934767ec98330ca78d130776720691b3d9fd55c7b6a318d22632d14c960837b8",
-      "superseded_version": "1.6.0",
+      "sha256": "a4d68657c02ac59186686a66d12108fdc53190da9c70fff0b0c67cec95015665",
+      "superseded_version": "1.7.0",
       "lifecycle": "current"
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.60.md",
-      "semver": "1.2.60",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.60.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.61.md",
+      "semver": "1.2.61",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.61.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "578e2124b2b7da75654261790af9b3075a8f61535538375a8ce2938fb8867847",
-      "superseded_version": "1.2.59",
+      "sha256": "1eea23a4a506bea87e44b1b588e380177dc17704efc5ed6902837158b4163152",
+      "superseded_version": "1.2.60",
       "lifecycle": "current"
     },
     {
@@ -73,15 +73,15 @@
     },
     {
       "document_id": "ROADMAP",
-      "canonical_filename": "05_ROADMAP_v1.2.1.md",
-      "semver": "1.2.1",
-      "repository_path": "docs/00_platform/05_ROADMAP_v1.2.1.md",
+      "canonical_filename": "05_ROADMAP_v1.2.2.md",
+      "semver": "1.2.2",
+      "repository_path": "docs/00_platform/05_ROADMAP_v1.2.2.md",
       "authority_class": "ROADMAP",
-      "sha256": "56628d92e5ff5df834c0fca59d95beaac46eb3edaf74478f0ae06e2ee159356b",
-      "superseded_version": "1.2.0",
+      "sha256": "4225fad688589d3c66733527303cbda39ef3c8bf52b78c4cc372c0736d202cdc",
+      "superseded_version": "1.2.1",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "56628d92e5ff5df834c0fca59d95beaac46eb3edaf74478f0ae06e2ee159356b"
+      "provenance_sha256": "4225fad688589d3c66733527303cbda39ef3c8bf52b78c4cc372c0736d202cdc"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",
@@ -157,6 +157,51 @@
     }
   ],
   "historical_documents": [
+    {
+      "document_id": "ROADMAP_V1_2_1",
+      "canonical_filename": "05_ROADMAP_v1.2.1.md",
+      "semver": "1.2.1",
+      "repository_path": "docs/00_platform/archive/05_ROADMAP_v1.2.1.md",
+      "authority_class": "ROADMAP_HISTORICAL",
+      "sha256": "56628d92e5ff5df834c0fca59d95beaac46eb3edaf74478f0ae06e2ee159356b",
+      "superseded_version": "1.2.2",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "56628d92e5ff5df834c0fca59d95beaac46eb3edaf74478f0ae06e2ee159356b"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_60",
+      "canonical_filename": "02_OPEN_WORK_v1.2.60.md",
+      "semver": "1.2.60",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.60.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "578e2124b2b7da75654261790af9b3075a8f61535538375a8ce2938fb8867847",
+      "superseded_version": "1.2.61",
+      "lifecycle": "historical",
+      "provenance_sha256": "578e2124b2b7da75654261790af9b3075a8f61535538375a8ce2938fb8867847"
+    },
+    {
+      "document_id": "DECISION_REGISTER_V1_7_0",
+      "canonical_filename": "01_DECISIONS_v1.7.0.md",
+      "semver": "1.7.0",
+      "repository_path": "docs/00_platform/archive/01_DECISIONS_v1.7.0.md",
+      "authority_class": "DECISION_REGISTER_HISTORICAL",
+      "sha256": "934767ec98330ca78d130776720691b3d9fd55c7b6a318d22632d14c960837b8",
+      "superseded_version": "1.8.0",
+      "lifecycle": "historical"
+    },
+    {
+      "document_id": "PLATFORM_BASELINE_V1_7_0",
+      "canonical_filename": "00_PLATFORM_v1.7.0.md",
+      "semver": "1.7.0",
+      "repository_path": "docs/00_platform/archive/00_PLATFORM_v1.7.0.md",
+      "authority_class": "PLATFORM_PRODUCT_LAW_HISTORICAL",
+      "sha256": "5ba692e4e230c0913b74090aa034daf420be31a80afc1ed0766f9a9dc145af64",
+      "superseded_version": "1.8.0",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "5ba692e4e230c0913b74090aa034daf420be31a80afc1ed0766f9a9dc145af64"
+    },
     {
       "document_id": "OPEN_WORK_V1_2_58",
       "canonical_filename": "02_OPEN_WORK_v1.2.58.md",
@@ -1037,7 +1082,7 @@
       "context_index": "docs/00_platform/README.md"
     },
     "expected_counts": {
-      "decisions": 313,
+      "decisions": 314,
       "open_questions": 40,
       "architecture_law": 332,
       "architecture_requirements": 433,
@@ -1050,7 +1095,7 @@
       "DEC": {
         "prefix": "DEC",
         "start": 1,
-        "end": 313,
+        "end": 314,
         "width": 3
       },
       "OQ": {
@@ -1182,14 +1227,14 @@
         "FRONTEND_EXPERIENCE_SYSTEM"
       ],
       "navigation_document_paths": [
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.2.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.3.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md"
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.5.md"
       ],
       "stale_open_work_v1_2_44_guard_note": "The exact 02_OPEN_WORK_v1.2.44.md stale-path pattern rejects unarchived references in active navigation documents. This is a routing guard only; it does not prove lifecycle or policy semantics.",
-      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52/v1.2.53/v1.2.54/v1.2.55, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4/v0.3.5/v0.3.6/v0.3.7, HARDEN-02 status v0.4.2/v0.4.6/v0.4.7/v0.4.8/v0.4.9, Engineering Standards candidate v1.0.0, Identity dossier v0.1.2 and FP-001 reconciliation candidates v0.1.2/v0.1.1 are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records. The immediate PR #77/Open Work v1.2.57, Atlas v0.3.9, HARDEN-02 v0.5.1 and FP-001 Skeleton v0.1.3 predecessors are also archive-qualified only. The immediate PR #81/Open Work v1.2.58, Atlas v0.4.0, HARDEN-02 v0.5.2 and FP-001 Skeleton v0.1.4 predecessors are also archive-qualified only. The OPS-UPD-004 authority candidate routes Product v1.7.0, Decision Register v1.7.0, Open Work v1.2.60 and Roadmap v1.2.1; predecessor Product v1.6.0, Decisions v1.6.0, Open Work v1.2.59, Roadmap v1.2.0 and Atlas v0.4.1 are archive-qualified only. The OPS-UPD-004 successor routes Open Work v1.2.60, Delivery Atlas v0.4.2 and HARDEN-02 v0.5.4; direct predecessors Open Work v1.2.59, Atlas v0.4.1 and HARDEN-02 v0.5.3 are archive-qualified only."
+      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52/v1.2.53/v1.2.54/v1.2.55, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4/v0.3.5/v0.3.6/v0.3.7, HARDEN-02 status v0.4.2/v0.4.6/v0.4.7/v0.4.8/v0.4.9, Engineering Standards candidate v1.0.0, Identity dossier v0.1.2 and FP-001 reconciliation candidates v0.1.2/v0.1.1 are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records. The immediate PR #77/Open Work v1.2.57, Atlas v0.3.9, HARDEN-02 v0.5.1 and FP-001 Skeleton v0.1.3 predecessors are also archive-qualified only. The immediate PR #81/Open Work v1.2.58, Atlas v0.4.0, HARDEN-02 v0.5.2 and FP-001 Skeleton v0.1.4 predecessors are also archive-qualified only. OPS-UPD-004 was completed by merged PR #112 on main 3f09bc91199e74d27645ebbb37d45c4831340952, routing current Product v1.7.0, Decisions v1.7.0, Open Work v1.2.60, Roadmap v1.2.1, Atlas v0.4.2 and HARDEN-02 v0.5.4; their immediate predecessors are archive-qualified only. The OPS-UPD-002 candidate routes Product v1.8.0, Decisions v1.8.0, Open Work v1.2.61, Roadmap v1.2.2, Atlas v0.4.3 and HARDEN-02 v0.5.5; direct predecessors Product v1.7.0, Decisions v1.7.0, Open Work v1.2.60, Roadmap v1.2.1, Atlas v0.4.2 and HARDEN-02 v0.5.4 are archive-qualified only."
     },
     "product_hardening_bundle_allocation_requirements": {
       "matrix": "BUNDLE-COMPONENT-ALLOCATION",
@@ -1229,7 +1274,7 @@
         "bundle": 549
       },
       "decision_terms": [
-        "§21R.1",
+        "\u00a721R.1",
         "versioned deterministic allocation rule",
         "selected before sale",
         "component allocations sum exactly to the accepted bundle amount",
