@@ -46,12 +46,12 @@ PREDECESSORS = {
 
 CURRENT_AUTHORITY = {
     "PROJECT_NORTH_STAR_AND_MVP": "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
-    "PLATFORM_BASELINE": "00_PLATFORM_v1.6.0.md",
-    "DECISION_REGISTER": "01_DECISIONS_v1.6.0.md",
-    "OPEN_WORK": "02_OPEN_WORK_v1.2.59.md",
+    "PLATFORM_BASELINE": "00_PLATFORM_v1.7.0.md",
+    "DECISION_REGISTER": "01_DECISIONS_v1.7.0.md",
+    "OPEN_WORK": "02_OPEN_WORK_v1.2.60.md",
     "ARCHITECTURE_SYNTHESIS": "03_ARCHITECTURE_v1.1.1.md",
     "DOMAIN_MAP": "04_DOMAIN_MAP_v1.2.0.md",
-    "ROADMAP": "05_ROADMAP_v1.2.0.md",
+    "ROADMAP": "05_ROADMAP_v1.2.1.md",
     "PLATFORM_OPERATING_MODEL": "PLATFORM_OPERATING_MODEL_v1.0.1.md",
     "FRONTEND_EXPERIENCE_SYSTEM": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
 }
@@ -580,8 +580,8 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         product = _read(DOCS / current["PLATFORM_BASELINE"])
         roadmap = _read(DOCS / current["ROADMAP"])
         open_work = _read(DOCS / current["OPEN_WORK"])
-        atlas = _read(DOCS / "working/DELIVERY_ATLAS_WORKING_v0.4.1.md")
-        harden = _read(DOCS / "working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md")
+        atlas = _read(DOCS / "working/DELIVERY_ATLAS_WORKING_v0.4.2.md")
+        harden = _read(DOCS / "working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md")
 
         _validate_north_star_current_state(north_star, self.governing["PROJECT_NORTH_STAR_AND_MVP"]["semver"])
         _validate_product_current_state(product, self.governing["PLATFORM_BASELINE"]["semver"])
@@ -595,10 +595,9 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         product_related = product.split("- **Related documents:**", 1)[1].splitlines()[0]
         self.assertIn(current["DECISION_REGISTER"], product_related)
         self.assertIn(current["PROJECT_NORTH_STAR_AND_MVP"], product_related)
-        # Product v1.6.0 is intentionally unchanged by this planning-status successor.
-        # Its contemporaneous Open Work reference remains provenance; live routing is
-        # owned by README + manifest + current Open Work and is checked below.
-        self.assertIn("02_OPEN_WORK_v1.2.51.md", product_related)
+        # Product's related Open Work reference records the source-at-publication
+        # route; live routing is owned by README + manifest + current Open Work.
+        self.assertIn("02_OPEN_WORK_v1.2.59.md", product_related)
         self.assertNotIn(current["OPEN_WORK"], product_related)
 
         atlas_sources = _section(atlas, "# 1. Authority, purpose and boundaries", "## 1.2 Purpose")
@@ -620,24 +619,24 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "OPEN_WORK", "ROADMAP",
         ):
             self.assertIn(f"`{current[document_id]}`", harden_current)
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.1.md", _section(harden, "### CURRENT DERIVED EVIDENCE", "### HISTORICAL AUTHORITY / WORKING EVIDENCE"))
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.2.md", _section(harden, "### CURRENT DERIVED EVIDENCE", "### HISTORICAL AUTHORITY / WORKING EVIDENCE"))
         open_work_header = open_work.split("---", 1)[0]
         for document_id in ("PROJECT_NORTH_STAR_AND_MVP", "PLATFORM_BASELINE", "DECISION_REGISTER", "OPEN_WORK", "ROADMAP"):
             if document_id == "OPEN_WORK":
                 continue
             self.assertIn(current[document_id], open_work_header)
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.1.md", open_work_header)
-        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md", open_work_header)
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.2.md", open_work_header)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md", open_work_header)
         active_status = _section(open_work, "# 9. Immediate Next Action", "# 10. Minimal Tools")
-        self.assertIn("CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md", active_status)
+        self.assertIn("CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md", active_status)
         for filename in (current["PROJECT_NORTH_STAR_AND_MVP"], current["PLATFORM_BASELINE"], current["OPEN_WORK"], current["ROADMAP"]):
             self.assertIn(filename, self.readme)
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.1.md", self.readme)
-        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md", self.readme)
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.2.md", self.readme)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md", self.readme)
 
         # These are labelled source-at-freeze provenance, not current routing fields.
         decision_header = _read(DOCS / current["DECISION_REGISTER"]).split("# GQ-001", 1)[0]
-        self.assertIn("02_OPEN_WORK_v1.2.51.md", decision_header)
+        self.assertIn("02_OPEN_WORK_v1.2.59.md", decision_header)
         domain = _read(DOCS / current["DOMAIN_MAP"])
         self.assertIn("Primary inputs — current semantic authority for the v1.2.0 DOL-01 amendment", domain)
         self.assertIn("Product Law `00_PLATFORM_v1.5.0.md` §21S", domain)
@@ -652,11 +651,11 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         stale_north_star_self_state = north_star.replace("MET (v1.3.0)", "MET (v1.2.4)", 1)
         with self.assertRaises(ValueError):
             _validate_north_star_current_state(stale_north_star_self_state, self.governing["PROJECT_NORTH_STAR_AND_MVP"]["semver"])
-        stale_product = product.replace("Current Product Law is v1.6.0", "Current Product Law is v1.5.1", 1)
+        stale_product = product.replace("Current Product Law is v1.7.0", "Current Product Law is v1.6.0", 1)
         with self.assertRaises(ValueError):
             _validate_product_current_state(stale_product, self.governing["PLATFORM_BASELINE"]["semver"])
         stale_roadmap_route = roadmap.replace(
-            "00_PLATFORM_v1.6.0.md", "00_PLATFORM_v1.5.1.md", 1
+            "00_PLATFORM_v1.7.0.md", "00_PLATFORM_v1.6.0.md", 1
         )
         stale_roadmap_header = stale_roadmap_route.split("## Amendment summary", 1)[0]
         stale_roadmap_match = re.search(r"(?m)^- \*\*Current Product authority:\*\* (.+)$", stale_roadmap_header)
@@ -664,11 +663,11 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             [current["PROJECT_NORTH_STAR_AND_MVP"], current["PLATFORM_BASELINE"], current["DECISION_REGISTER"]],
             re.findall(r"[A-Za-z0-9_.-]+_v\d+\.\d+\.\d+\.md", stale_roadmap_match.group(1) if stale_roadmap_match else ""),
         )
-        stale_open_work = open_work.replace("00_PLATFORM_v1.6.0.md", "00_PLATFORM_v1.5.1.md", 1)
+        stale_open_work = open_work.replace("00_PLATFORM_v1.7.0.md", "00_PLATFORM_v1.6.0.md", 1)
         self.assertNotEqual(open_work_header, stale_open_work.split("---", 1)[0])
         product_lifecycle_mirror = product.replace(
-            "Current Product Law is v1.6.0.",
-            "Current Product Law is v1.6.0. HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING.",
+            "Current Product Law is v1.7.0.",
+            "Current Product Law is v1.7.0. HARDEN-02 execution is IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING.",
             1,
         )
         with self.assertRaises(ValueError):
@@ -692,32 +691,37 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
 
     def test_roadmap_product_authority_fields_route_to_current_product_documents(self):
         roadmap = _read(DOCS / CURRENT_AUTHORITY["ROADMAP"])
+        predecessor = _read(DOCS / "archive/05_ROADMAP_v1.2.0.md")
         current_product_documents = {
             CURRENT_AUTHORITY["PROJECT_NORTH_STAR_AND_MVP"],
             CURRENT_AUTHORITY["PLATFORM_BASELINE"],
             CURRENT_AUTHORITY["DECISION_REGISTER"],
         }
         sections = _feature_pack_sections(roadmap)
+        predecessor_sections = _feature_pack_sections(predecessor)
         self.assertEqual({f"FP-{index:03d}" for index in range(1, 18)}, set(sections))
+        self.assertEqual(set(sections), set(predecessor_sections))
         for feature_pack, section in sections.items():
             with self.subTest(feature_pack=feature_pack):
                 authority = _feature_pack_field(section, "Product Authority")
+                predecessor_authority = _feature_pack_field(predecessor_sections[feature_pack], "Product Authority")
                 references = set(
                     re.findall(
                         r"(?:PROJECT_NORTH_STAR_AND_MVP|00_PLATFORM|01_DECISIONS)_v\d+\.\d+\.\d+\.md",
                         authority,
                     )
                 )
-                self.assertTrue(references <= current_product_documents, references)
+                if feature_pack == "FP-003":
+                    self.assertTrue(references <= current_product_documents, references)
+                else:
+                    self.assertEqual(predecessor_authority, authority)
 
         for stale in (
             "PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md",
-            "00_PLATFORM_v1.4.1.md",
-            "01_DECISIONS_v1.5.0.md",
+            "00_PLATFORM_v1.6.0.md",
+            "01_DECISIONS_v1.6.0.md",
         ):
-            self.assertNotIn(stale, "\n".join(
-                _feature_pack_field(section, "Product Authority") for section in sections.values()
-            ))
+            self.assertNotIn(stale, _feature_pack_field(sections["FP-003"], "Product Authority"))
 
     def test_roadmap_amendment_preserves_feature_pack_identity_outcomes_and_unamended_content(self):
         predecessor = _read(DOCS / "archive/05_ROADMAP_v1.1.5.md")
@@ -852,8 +856,8 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             self.assertNotIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.8.md", paths)
 
         graph_paths = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
-        self.assertIn("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.1.md", graph_paths)
-        self.assertIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.3.md", graph_paths)
+        self.assertIn("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.2.md", graph_paths)
+        self.assertIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md", graph_paths)
 
     def test_product_north_star_and_preexisting_decisions_are_preserved_around_pass2_amendments(self):
         old_north_star = _read(DOCS / "archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md")
@@ -898,13 +902,18 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             "",
             1,
         )
+        new_decision_body = new_decision_body.replace(
+            '## DEC-055 — Entitlement consumption\n**Status:** SUPERSEDED IN PART BY DEC-313\nHistorical DEC-055 wording: "Do not consume the entitlement until the first answer is saved. Mark it used once the attempt begins." For paid digital Assessment credits governed by Product Law §21R.6, DEC-313 supersedes this first-answer consumption meaning. Other right types remain governed by their applicable current Product authority.',
+            "## DEC-055 — Entitlement consumption\n**Status:** LOCKED\nDo not consume the entitlement until the first answer is saved. Mark it used once the attempt begins.",
+            1,
+        )
         self.assertEqual(old_decision_body.strip(), new_decision_body.strip())
         self.assertIn(
             "## DEC-051 — Methodology authority\n**Status:** SUPERSEDED IN PART BY DEC-309\nHistorical DEC-051 wording, superseded in part by DEC-309:",
             new_decisions,
         )
-        self.assertIn("- **Last updated:** 2026-09-30", new_decisions.split("# GQ-001", 1)[0])
-        for decision_number in range(305, 313):
+        self.assertIn("- **Last updated:** 2026-10-13", new_decisions.split("# GQ-001", 1)[0])
+        for decision_number in range(305, 314):
             self.assertRegex(new_decisions, rf"(?m)^## DEC-{decision_number:03d} —")
         old_decision_ids = re.findall(r"^## DEC-\d{3}", old_decisions, re.MULTILINE)
         new_decision_ids = re.findall(r"^## DEC-\d{3}", new_decisions, re.MULTILINE)
@@ -1015,7 +1024,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             self.assertNotIn(stale_filename, north_star_current_routing)
         self.assertIn("does not authorise HARDEN-02 execution, implementation or Phase 8 proof", north_star_current_routing)
         self.assertIn("MET (v1.3.0)", _section(north_star, "# 24. Document Stop Condition", "**Implementation STOP:**"))
-        self.assertIn("02_OPEN_WORK_v1.2.51.md", decisions)
+        self.assertIn("02_OPEN_WORK_v1.2.59.md", decisions)
         roadmap_header_marker = "## Amendment summary"
         self.assertEqual(1, roadmap.count(roadmap_header_marker))
         roadmap_header = roadmap.split(roadmap_header_marker, 1)[0]
@@ -1035,7 +1044,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertNotRegex(route, r"02_OPEN_WORK_v\d+\.\d+\.\d+\.md")
 
         product_stop_condition = product.split("# 24. Current Planning Stop Condition", 1)[1]
-        self.assertIn("Current Product Law is v1.6.0", product_stop_condition)
+        self.assertIn("Current Product Law is v1.7.0", product_stop_condition)
         self.assertIn("README and current Open Work own current programme routing and lifecycle status", product_stop_condition)
         for volatile_status in (
             "NEXT / AUTHORISED / NOT STARTED",
@@ -1061,22 +1070,22 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertIn("FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED", open_work)
         self.assertIn("COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0", open_work)
         current_context = _section(readme, "## Default Agent Context", "## Active Working Artifacts")
-        for filename in ("00_PLATFORM_v1.6.0.md", "01_DECISIONS_v1.6.0.md", "02_OPEN_WORK_v1.2.59.md", "04_DOMAIN_MAP_v1.2.0.md"):
+        for filename in ("00_PLATFORM_v1.7.0.md", "01_DECISIONS_v1.7.0.md", "02_OPEN_WORK_v1.2.60.md", "04_DOMAIN_MAP_v1.2.0.md"):
             self.assertIn(filename, current_context)
         for stale_name in ("00_PLATFORM_v1.5.1.md", "01_DECISIONS_v1.5.0.md", "02_OPEN_WORK_v1.2.50.md", "04_DOMAIN_MAP_v1.1.1.md"):
             self.assertNotIn(stale_name, current_context)
-        self.assertIn("ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.2.0`", readme)
-        self.assertIn("current semantic successor `05_ROADMAP_v1.2.0.md`; predecessor `archive/05_ROADMAP_v1.1.5.md`", readme)
-        self.assertIn("current semantic successor 05_ROADMAP_v1.2.0.md; predecessor archive/05_ROADMAP_v1.1.5.md", open_work)
+        self.assertIn("05_ROADMAP_v1.2.1.md", current_context)
+        self.assertIn("archive/05_ROADMAP_v1.2.0.md", readme)
+        self.assertIn("current route 05_ROADMAP_v1.2.1.md; semantic baseline v1.2.0 preserved at archive/05_ROADMAP_v1.2.0.md", open_work)
         self.assertNotRegex(readme, r"(?<!archive/)05_ROADMAP_v1\.1\.5\.md")
         self.assertNotRegex(open_work, r"(?<!archive/)05_ROADMAP_v1\.1\.5\.md")
-        self.assertEqual("1.2.59", self.governing["OPEN_WORK"]["semver"])
+        self.assertEqual("1.2.60", self.governing["OPEN_WORK"]["semver"])
 
         active_paths = [
             self.readme,
             *(_read(ROOT / entry["repository_path"]) for entry in self.governing.values()),
-            _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.1.md"),
-            _read(DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.3.md"),
+            _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.2.md"),
+            _read(DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.4.md"),
         ]
         stale_patterns = (
             re.compile(r"(?<!archive/)02_OPEN_WORK_v1\.2\.44\.md"),
@@ -1130,7 +1139,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         )
 
     def test_current_open_work_marks_the_v0_2_1_reconciliation_as_historical(self):
-        current = _read(DOCS / "02_OPEN_WORK_v1.2.59.md")
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.60.md")
         historical_heading = "## 12.7 — Historical Delivery Atlas reconciliation"
         self.assertEqual(1, current.count(historical_heading))
         if current.count(historical_heading) != 1:
@@ -1147,18 +1156,21 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             history,
         )
         self.assertIn("not the current Atlas route", history)
-        self.assertIn("Current Atlas is derived / non-authoritative at working/DELIVERY_ATLAS_WORKING_v0.4.1.md", current)
+        self.assertIn(
+            "The current Delivery Atlas is derived and non-authoritative at `working/DELIVERY_ATLAS_WORKING_v0.4.2.md`",
+            current,
+        )
 
     def test_current_open_work_atlas_lineage_distinguishes_current_predecessor_and_pinned_source(self):
-        current = _read(DOCS / "02_OPEN_WORK_v1.2.59.md")
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.60.md")
         expected = OPEN_WORK_ATLAS_CURRENT_V031_STATUS_LINE.replace(
-            "working/DELIVERY_ATLAS_WORKING_v0.3.1.md", "working/DELIVERY_ATLAS_WORKING_v0.4.1.md"
+            "working/DELIVERY_ATLAS_WORKING_v0.3.1.md", "working/DELIVERY_ATLAS_WORKING_v0.4.2.md"
         ).replace(
-            "archive/DELIVERY_ATLAS_WORKING_v0.3.0.md", "archive/DELIVERY_ATLAS_WORKING_v0.4.0.md"
+            "archive/DELIVERY_ATLAS_WORKING_v0.3.0.md", "archive/DELIVERY_ATLAS_WORKING_v0.4.1.md"
         )
         _validate_open_work_atlas_status_line(current, expected)
-        self.assertIn("current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.1.md`", expected)
-        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.0.md`", expected)
+        self.assertIn("current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.2.md`", expected)
+        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.1.md`", expected)
         self.assertIn("pinned v0.2.1 source-at-freeze artifacts remain preserved", expected)
         self.assertNotRegex(
             expected,
@@ -1171,11 +1183,11 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertEqual(_sha256(pinned_working), _sha256(pinned_archive))
 
     def test_open_work_normalizer_rejects_invalid_or_relocated_current_atlas_lineage(self):
-        current = _read(DOCS / "02_OPEN_WORK_v1.2.59.md")
+        current = _read(DOCS / "02_OPEN_WORK_v1.2.60.md")
         line = OPEN_WORK_ATLAS_CURRENT_V031_STATUS_LINE.replace(
-            "working/DELIVERY_ATLAS_WORKING_v0.3.1.md", "working/DELIVERY_ATLAS_WORKING_v0.4.1.md"
+            "working/DELIVERY_ATLAS_WORKING_v0.3.1.md", "working/DELIVERY_ATLAS_WORKING_v0.4.2.md"
         ).replace(
-            "archive/DELIVERY_ATLAS_WORKING_v0.3.0.md", "archive/DELIVERY_ATLAS_WORKING_v0.4.0.md"
+            "archive/DELIVERY_ATLAS_WORKING_v0.3.0.md", "archive/DELIVERY_ATLAS_WORKING_v0.4.1.md"
         )
         malformed = (
             current.replace(line + "\n", "", 1),
@@ -1184,12 +1196,12 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
                 "# 10. Minimal Tools", "# 10. Minimal Tools\n" + line, 1
             ),
             current.replace(
-                "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.0.md`",
+                "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.1.md`",
                 "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.9.md`",
                 1,
             ),
             current.replace(
-                "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.0.md`",
+                "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.1.md`",
                 "predecessor `archive/DELIVERY_ATLAS_WORKING_v0.2.1.md`",
                 1,
             ),

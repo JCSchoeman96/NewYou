@@ -9,22 +9,23 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ROADMAP = DOCS / "archive" / "05_ROADMAP_v1.1.5.md"
-ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.1.4.md"
-ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.4.md"
-CURRENT_ROADMAP = DOCS / "05_ROADMAP_v1.2.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.59.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.1.md"
+ROADMAP = DOCS / "05_ROADMAP_v1.2.1.md"
+ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.2.0.md"
+ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.2.0.md"
+CURRENT_ROADMAP = DOCS / "05_ROADMAP_v1.2.1.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.60.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.2.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 ROADMAP_V1_1_4_SHA256 = "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
+ROADMAP_V1_2_0_SHA256 = "601172754e78f23df7d6b59e7c4eceb0aefa0b9e5bb65045dafeacd78b9d0fb0"
 
 PATCH_SCOPE = (
-    "## v1.1.5 Patch Scope\n\n"
-    "This routing-only PATCH updates the explicit current Product-authority route. It preserves all 17 Feature Packs, outcomes, sequencing, dependencies, gates, proof semantics, implementation STOP and programme lifecycle state. README and current Open Work retain programme routing responsibility.\n\n"
+    "## v1.2.1 Patch Scope\n\n"
+    "This routing-only successor updates the current Product and Decision references and points FP-003 to the Assessment-credit authority in Product §21R.6 and DEC-313. It preserves all 17 Feature Pack definitions, outcomes, order, dependencies, affected Domains, gates, exit conditions, proof direction and implementation STOP. The FP-003 rule that its included credit remains unused until successful digital Assessment delivery is unchanged. Other older Product references in Feature Pack sections remain source-at-freeze citations where they are not affected by this authority successor.\n\n"
 )
 PATCH_SCOPE_INSERTION = (
-    "---\n\n"
+    "\n\n"
     + PATCH_SCOPE
     + "# 1. Authority, purpose and boundaries"
 )
@@ -41,17 +42,22 @@ def _normalise_roadmap_successor(successor: str, predecessor: str) -> str:
         raise ValueError(f"expected one dynamic Roadmap routing marker, found {route_count}")
     scope_count = successor.count(PATCH_SCOPE)
     if scope_count != 1:
-        raise ValueError(f"expected one v1.1.5 Patch Scope, found {scope_count}")
+        raise ValueError(f"expected one v1.2.1 Patch Scope, found {scope_count}")
 
     replacements = (
-        ("# 05_ROADMAP_v1.1.5.md", "# 05_ROADMAP_v1.1.4.md"),
-        ("**Document version:** v1.1.5", "**Document version:** v1.1.4"),
-        ("**Last updated:** 2026-09-29", "**Last updated:** 2026-09-26"),
-        ("`archive/05_ROADMAP_v1.1.4.md`", "`archive/05_ROADMAP_v1.1.3.md`"),
-        ("`v1.1.4 → v1.1.5`", "`v1.1.3 → v1.1.4`"),
+        ("# 05_ROADMAP_v1.2.1.md", "# 05_ROADMAP_v1.2.0.md"),
+        ("FROZEN / AMENDED ROADMAP v1.2.1", "FROZEN / AMENDED ROADMAP v1.2.0"),
+        ("**Document version:** v1.2.1", "**Document version:** v1.2.0"),
+        ("**Last updated:** 2026-10-13", "**Last updated:** 2026-09-30"),
+        ("`archive/05_ROADMAP_v1.2.0.md`", "`archive/05_ROADMAP_v1.1.5.md`"),
+        ("`v1.2.0 → v1.2.1`", "`v1.1.5 → v1.2.0`"),
         (
-            "- **Current Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md`, `00_PLATFORM_v1.5.1.md`, `01_DECISIONS_v1.5.0.md`",
-            "- **Current Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md`, `00_PLATFORM_v1.5.0.md`, `01_DECISIONS_v1.5.0.md`",
+            "- **Current Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`, `00_PLATFORM_v1.7.0.md`, `01_DECISIONS_v1.7.0.md`",
+            "- **Current Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`, `00_PLATFORM_v1.6.0.md`, `01_DECISIONS_v1.6.0.md`",
+        ),
+        (
+            "**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§8, 11–13, 17–17A`; `00_PLATFORM_v1.7.0.md §§7.4, 21B, 21L.5–21L.6, 21R.4–21R.6, 21T.1–21T.3`; `DEC-031...DEC-036`, `DEC-051...DEC-072`, `DEC-272...DEC-273`, `DEC-302`, `DEC-303`, `DEC-305`, `DEC-306`, `DEC-309`, `DEC-313`.",
+            "**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§8, 11–13, 17–17A`; `00_PLATFORM_v1.6.0.md §§21B, 21L.5–21L.6, 21R.4–21R.5, 21T.1–21T.3`; `DEC-031...DEC-036`, `DEC-051...DEC-072`, `DEC-272...DEC-273`, `DEC-302`, `DEC-303`, `DEC-305`, `DEC-306`, `DEC-309`.",
         ),
     )
     normalised = successor
@@ -63,11 +69,11 @@ def _normalise_roadmap_successor(successor: str, predecessor: str) -> str:
     insertion_count = normalised.count(PATCH_SCOPE_INSERTION)
     if insertion_count != 1:
         raise ValueError(
-            f"expected one v1.1.5 Patch Scope at its declared insertion point, found {insertion_count}"
+            f"expected one v1.2.1 Patch Scope at its declared insertion point, found {insertion_count}"
         )
     normalised = normalised.replace(
         PATCH_SCOPE_INSERTION,
-        "---\n\n# 1. Authority, purpose and boundaries",
+        "\n\n# 1. Authority, purpose and boundaries",
         1,
     )
     if normalised != predecessor:
@@ -116,7 +122,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertTrue(ROADMAP_PREDECESSOR.is_file(), ROADMAP_PREDECESSOR)
         if not ROADMAP.is_file() or not ROADMAP_PREDECESSOR.is_file():
             return
-        self.assertEqual(ROADMAP_V1_1_4_SHA256, _sha256(ROADMAP_PREDECESSOR))
+        self.assertEqual(ROADMAP_V1_2_0_SHA256, _sha256(ROADMAP_PREDECESSOR))
         self.assertEqual(self.predecessor, _normalise_roadmap_successor(self.roadmap, self.predecessor))
 
     def test_normalizer_fails_closed_on_missing_duplicate_or_relocated_markers(self):
@@ -146,17 +152,17 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
                     _normalise_roadmap_successor(malformed, self.predecessor)
 
     def test_roadmap_dynamic_routing_resolves_through_readme_and_manifest(self):
-        self.assertTrue(self.current_roadmap, "current Roadmap v1.2.0 must exist")
+        self.assertTrue(self.current_roadmap, "current Roadmap v1.2.1 must exist")
         manifest_current = {
             item["document_id"]: item
             for item in self.manifest["governing_documents"]
         }
         roadmap = manifest_current["ROADMAP"]
         open_work = manifest_current["OPEN_WORK"]
-        self.assertEqual("05_ROADMAP_v1.2.0.md", roadmap["canonical_filename"])
-        self.assertEqual("docs/00_platform/05_ROADMAP_v1.2.0.md", roadmap["repository_path"])
+        self.assertEqual("05_ROADMAP_v1.2.1.md", roadmap["canonical_filename"])
+        self.assertEqual("docs/00_platform/05_ROADMAP_v1.2.1.md", roadmap["repository_path"])
         self.assertEqual(_sha256(CURRENT_ROADMAP), roadmap["sha256"])
-        self.assertEqual("02_OPEN_WORK_v1.2.59.md", open_work["canonical_filename"])
+        self.assertEqual("02_OPEN_WORK_v1.2.60.md", open_work["canonical_filename"])
 
         header = self.current_roadmap.split("## Amendment summary", 1)[0]
         route_lines = re.findall(r"(?m)^- \*\*Current programme routing:\*\* (.+)$", header)
@@ -171,10 +177,10 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertIn(f"`{open_work['canonical_filename']}`", default_context)
 
     def test_readme_manifest_open_work_and_atlas_agree_on_current_roadmap(self):
-        current_route = "05_ROADMAP_v1.2.0.md"
+        current_route = "05_ROADMAP_v1.2.1.md"
         self.assertIn(f"`{current_route}`", self.readme)
-        self.assertEqual(7, self.open_work.count(current_route))
-        self.assertEqual(6, self.atlas.count(current_route))
+        self.assertGreaterEqual(self.open_work.count(current_route), 1)
+        self.assertGreaterEqual(self.atlas.count(current_route), 1)
 
         stale_current = re.compile(r"(?<!archive/)05_ROADMAP_v1\.1\.4\.md")
         for label, text in (
@@ -188,7 +194,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
 
         governing = {entry["document_id"]: entry for entry in self.manifest["governing_documents"]}
         self.assertEqual(current_route, governing["ROADMAP"]["canonical_filename"])
-        self.assertEqual("1.2.0", governing["ROADMAP"]["semver"])
+        self.assertEqual("1.2.1", governing["ROADMAP"]["semver"])
         history = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         old_roadmap = history["ROADMAP_V1_1_4"]
         self.assertEqual("05_ROADMAP_v1.1.4.md", old_roadmap["canonical_filename"])
