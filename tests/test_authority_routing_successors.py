@@ -1163,6 +1163,26 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         self.assertNotIn("current Product Law `00_PLATFORM_v1.6.0.md`", pass2)
         self.assertNotIn("current Roadmap `05_ROADMAP_v1.2.0.md`", pass2)
 
+        harden_lifecycle = _section(
+            open_work,
+            "## 12.9 — HARDEN-02 contract lifecycle completion",
+            "## 12.10 — Product Law and governance hardening",
+        )
+        self.assertIn(
+            "archived status successor `archive/HARDEN-02_CONTRACT_WORKING_v0.4.7.md`, "
+            "based on its then-current main `d4e7390b71cdf61b649b534e1080102a044efe63`",
+            harden_lifecycle,
+        )
+        self.assertIn(
+            "current status routing is `working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md`",
+            harden_lifecycle,
+        )
+        self.assertNotRegex(harden_lifecycle, r"current status routing is v0\.5\.3")
+        self.assertNotRegex(
+            harden_lifecycle,
+            r"current status routing is `working/HARDEN-02_CONTRACT_WORKING_v0\.5\.3\.md`",
+        )
+
         roadmap_programme = next(
             line for line in open_work.splitlines() if line.startswith("| Roadmap amendment |")
         )
