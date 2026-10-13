@@ -1,0 +1,106 @@
+{
+  "pack_id": "NEWYOU_LIVE_REPLAY_FINAL_COMPACT_PACK",
+  "pack_version": "0.1.0",
+  "status": "PASS — PARK BROAD LIVE & REPLAY PRE-JIT DISCOVERY",
+  "authority": "NONE",
+  "implementation_authority": "NONE",
+  "deep_source": {
+    "path": "docs/00_platform/working/live_replay/deep/NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.1.md",
+    "filename": "NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.1.md",
+    "sha256": "4ab3885fa0ffb239a8c8c75e85bcfa98afc0a0f2bdab19fc1ce226af5f61ed9c",
+    "bytes": 25162,
+    "role": "canonical cumulative working semantic source; non-authoritative"
+  },
+  "deep_status_successor": {
+    "path": "docs/00_platform/working/live_replay/deep/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.12.1.md",
+    "sha256": "cbaf7f78064ec83e76bfd0847e5ddf5d0003705223f717e764a8ae00096c3eef",
+    "bytes": 10712,
+    "role": "accepted Pass-M status/provenance successor"
+  },
+  "local_human_review_source": {
+    "filename": "NEWYOU_LIVE_REPLAY_PREJIT_CUMULATIVE_WORKING_LEDGER_v0.12.0.md",
+    "sha256": "e12f757253dea14738cc87d9254ffb9f2e1d001c925897a16fc55dbadce2ce3d",
+    "bytes": 83103,
+    "role": "exact local human-review cumulative source used during compression; not a competing repository current source"
+  },
+  "live_baselines": {
+    "newyou_main": "086ade7b28c000de1c387acb9760e5eb08bb0413",
+    "branch_head_at_prompt_recheck": "44ac878b012ba3a2754590917df963c52d296e94",
+    "historical_relocation_commit": "baa848e8283677b784578105fe75f12184f07685",
+    "manifest_parent_head": "e7bead77c59c31be9202a7bc5cd30c11453c0127",
+    "final_branch_head": "RECORDED_IN_FINAL_VERIFICATION_REPORT_TO_AVOID_SELF_REFERENCE"
+  },
+  "provider_evidence_revalidated": {
+    "date": "2026-10-11",
+    "records": "LIVE-EV-001...006",
+    "status": "ACCEPTED WORKING PROVIDER DOCUMENTATION EVIDENCE",
+    "limits": "provider documentation != Product authority != controlled empirical proof != OQ-020/OQ-021 closure"
+  },
+  "coverage": {
+    "passes": "A...M",
+    "pressure_tests": "LIVE-PT-001...154",
+    "upstream_deltas": "LIVE-UPD-001...006",
+    "gaps": "LIVE-GAP-001...014",
+    "provider_evidence": "LIVE-EV-001...006",
+    "broad_semantic_discovery": "PARKED",
+    "pass_n": "NOT JUSTIFIED BY DEFAULT"
+  },
+  "guard_state": {
+    "LIVE-UPD-007": "NOT CREATED",
+    "LIVE-GAP-015": "NOT CREATED",
+    "OQ-020": "OPEN",
+    "OQ-021": "OPEN",
+    "FP-007": "NOT SELECTED / NOT PHASE-7 AUTHORISED",
+    "implementation": "NOT AUTHORISED"
+  },
+  "normal_read_order": [
+    "README.md",
+    "NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+    "NEWYOU_LIVE_REPLAY_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md",
+    "NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.0.md"
+  ],
+  "files": [
+    {"path": "docs/00_platform/working/live_replay/README.md", "sha256": "00ba159376f90eaf71a4b04607b5c3629a1561a823ee0ae0e088cf0599609800", "bytes": 4973},
+    {"path": "docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.0.md", "sha256": "9c89e920b1e97a2cf5f1c86cf1511970874ac534df9970ab2296f685d2580d82", "bytes": 31608},
+    {"path": "docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md", "sha256": "3e5377043a9704fcabcf19836d4a170970eadad151b7f9c8d533579135520e32", "bytes": 16959},
+    {"path": "docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.0.md", "sha256": "d9aaeeb1145e25f6cacf0f036b5947f4ae28781a9a59d2de5665a58e60cef4a3", "bytes": 16188},
+    {"path": "docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_COMPRESSION_AUDIT_WORKING_v0.1.0.md", "sha256": "242c0dd6f95ef708b09a646ee41f35c8ff84f7637dd6abec8247c420581e1d2f", "bytes": 20103},
+    {"path": "docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md", "sha256": "f6eb646b942b121da9fef9c5dcf4f617af716c0350bd38017d9f54a5b6a0896f", "bytes": 6643}
+  ],
+  "historical_sources": [
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.1.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.1.0.md","role":"Pass A","git_blob_sha":"b7551c4ae975ad2478106a53ee585a97f7a43c0a","bytes":42726,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.2.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.2.0.md","role":"Pass B","git_blob_sha":"ef5b4aa538da8a9fec5dcb5e7e88c9e40ace5f53","bytes":37157,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.3.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.3.0.md","role":"Pass C","git_blob_sha":"2d02b22e0adbb754d65a2fc697fe4d62e5f34754","bytes":38903,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.4.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.4.0.md","role":"Pass D","git_blob_sha":"b40fdec497f5e873ad299dad0b002279a06d9f9d","bytes":34225,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.5.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.5.0.md","role":"Pass E","git_blob_sha":"c74cdc5c47965418a983b3556967db6e45075de9","bytes":36577,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.6.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.6.0.md","role":"Pass F","git_blob_sha":"938843dee63dfb79d86b385a562fb4e6eb712bd6","bytes":41633,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.7.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.7.0.md","role":"Pass G","git_blob_sha":"17a49bd12e9e6fde3695bee3dde4f85dd1cb4b24","bytes":38705,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.8.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.8.0.md","role":"Pass H","git_blob_sha":"b08f1c157e61d6b2980732d8d355795eeb0733bf","bytes":50616,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.9.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.9.0.md","role":"Pass I","git_blob_sha":"a858462a30a304a609069bffde1851de4f269505","bytes":43789,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.10.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.10.0.md","role":"Pass J","git_blob_sha":"0d3a12c38a28dd5483f9bf8304892bb54528128b","bytes":44195,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.11.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.11.0.md","role":"Pass K","git_blob_sha":"a0121c056824c767daf1a6ce61c13d9574384f42","bytes":62576,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.12.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.12.0.md","role":"Pass L","git_blob_sha":"ed053916bd7a632dfc7a595b7e22d868192b86bb","bytes":46805,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.13.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_DISCOVERY_WORKING_v0.13.0.md","role":"Pass M","git_blob_sha":"4602015c98ceae1c49d32048cfbc2509da79c19f","bytes":46405,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.1.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.1.0.md","role":"initial register","git_blob_sha":"c138175d9b18550505c4d1fc042d64f2d48d408a","bytes":20947,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.2.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.2.0.md","role":"Pass D proposed","git_blob_sha":"c2b3e0511b847237bc927df8c1557d4a05a44165","bytes":10371,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.2.1.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.2.1.md","role":"Pass D accepted","git_blob_sha":"e1486777b3035bdd797aa7671d6eeb1d2d6a6f51","bytes":8413,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.3.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.3.0.md","role":"Pass E proposed","git_blob_sha":"8d65b623cd7a692c64d3ba7cde0a7f55e0bfb6ca","bytes":8808,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.3.1.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.3.1.md","role":"Pass E accepted","git_blob_sha":"12085004333cee0cd1c4251a2d4e7d677760d937","bytes":9891,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.4.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.4.0.md","role":"Pass F proposed","git_blob_sha":"1c0336cde0dff8195a3436c7ab09eed89b931a86","bytes":11031,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.4.1.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.4.1.md","role":"Pass F accepted","git_blob_sha":"d85d12061a9348db22deaaa9e46a5601c9113988","bytes":8967,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.5.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.5.0.md","role":"Pass G proposed","git_blob_sha":"82f87ade12c31fc1c9aadd96be9aa0e4c48e697a","bytes":10680,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.5.1.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.5.1.md","role":"Pass G accepted","git_blob_sha":"ea1ab650abf08a5267a7d3d727235fb9177cda24","bytes":8925,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.6.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.6.0.md","role":"Pass H proposed","git_blob_sha":"ea8f26acd49c31b7246828bca96ab4c46ef8836b","bytes":10941,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.6.1.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.6.1.md","role":"Pass H accepted","git_blob_sha":"3ce77644496c01281883f6fa7805ad7dad8cddb2","bytes":10144,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.7.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.7.0.md","role":"Pass I proposed","git_blob_sha":"646846013e927091cc2799b445769201e603faeb","bytes":12549,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.7.1.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.7.1.md","role":"Pass I accepted","git_blob_sha":"1c42122e8b7a9070bd8127128ef2d1966b884458","bytes":9000,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.8.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.8.0.md","role":"Pass J proposed","git_blob_sha":"3dd5dfadbd2197f0217bd5ca3b199e9135a57b7a","bytes":11774,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.8.1.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.8.1.md","role":"Pass J accepted","git_blob_sha":"05471a1682791d5e13c536ba14434d5a68bef7ed","bytes":9954,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.9.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.9.0.md","role":"Pass K proposed","git_blob_sha":"919d42421d0b748d0c3cd75e7fe6d6c43ecfcb99","bytes":16346,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.9.1.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.9.1.md","role":"Pass K accepted","git_blob_sha":"b28840e6ee6eafff302447afa15caf5de68dac89","bytes":7218,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.10.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.10.0.md","role":"Pass L proposed","git_blob_sha":"ee675f566c0882acb2400b6b7bcfc373b9f1a00f","bytes":12353,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.10.1.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.10.1.md","role":"Pass L accepted/parked","git_blob_sha":"8c28074df9313e72b0a7aa7299449ad0e9a52657","bytes":8125,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.11.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.11.0.md","role":"independent-review correction successor","git_blob_sha":"00f867afca055f7914ca8abc6b46eccfc7e09ec2","bytes":9167,"byte_identity_proof":"same Git blob SHA before/after relocation"},
+    {"original_path":"docs/00_platform/working/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.12.0.md","archive_path":"docs/00_platform/working/live_replay/deep/archive/NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.12.0.md","role":"Pass M proposed","git_blob_sha":"7ef232addd6e97e1fa8db05e63352a96e14d3dcf","bytes":11998,"byte_identity_proof":"same Git blob SHA before/after relocation"}
+  ]
+}
