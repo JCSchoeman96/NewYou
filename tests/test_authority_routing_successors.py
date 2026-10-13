@@ -1114,6 +1114,72 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             self.assertIsNone(guard.search(archived))
         self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", _read(DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md"))
 
+    def test_readme_and_open_work_distinguish_current_routes_from_historical_states(self):
+        roadmap_summary = next(
+            line for line in self.readme.splitlines() if line.startswith("- ROADMAP AMENDMENT:")
+        )
+        self.assertIn("substantive v1.2.0 amendment preserved", roadmap_summary)
+        self.assertIn("current Roadmap routing successor `05_ROADMAP_v1.2.1.md`", roadmap_summary)
+        self.assertNotRegex(roadmap_summary, r"current Roadmap `?v1\.2\.0")
+
+        open_work_v1259 = next(
+            line for line in self.readme.splitlines() if "archive/02_OPEN_WORK_v1.2.59.md" in line
+        )
+        open_work_v1258 = next(
+            line for line in self.readme.splitlines() if "archive/02_OPEN_WORK_v1.2.58.md" in line
+        )
+        self.assertIn("Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT", open_work_v1259)
+        self.assertIn("separate PR #81 status successor", open_work_v1259)
+        self.assertIn(
+            "Communications JIT Domain Dossier v0.1.0 was IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING",
+            open_work_v1258,
+        )
+        self.assertIn("NOT CERTIFIED / NOT CURRENT", open_work_v1258)
+
+        open_work = _read(DOCS / CURRENT_AUTHORITY["OPEN_WORK"])
+        dol01 = _section(
+            open_work,
+            "## 12.11 — Approved marketing unsubscribe policy",
+            "## 12.12 — Pass 2 Product amendment and closure record",
+        )
+        self.assertIn("At the DOL-01 closure point", dol01)
+        self.assertIn("Product Law `archive/00_PLATFORM_v1.6.0.md` §21S and `DEC-304`", dol01)
+        self.assertIn("Current Product authority `00_PLATFORM_v1.7.0.md` preserves that accepted policy", dol01)
+        self.assertIn("its then-current route was v0.3.9", dol01)
+        self.assertIn("current derived route is `working/DELIVERY_ATLAS_WORKING_v0.4.2.md`", dol01)
+        self.assertNotIn("current Product Law `00_PLATFORM_v1.6.0.md`", dol01)
+        self.assertNotIn("current routing is in v0.3.9", dol01)
+
+        pass2 = _section(
+            open_work,
+            "## 12.12 — Pass 2 Product amendment and closure record",
+            "## 12.13 — PR #70 Identity durable-delivery certification and promotion",
+        )
+        self.assertIn("At the Pass 2 closure point", pass2)
+        self.assertIn("Product Law `archive/00_PLATFORM_v1.6.0.md` and `DEC-305` through `DEC-312`", pass2)
+        self.assertIn("Roadmap `archive/05_ROADMAP_v1.2.0.md`", pass2)
+        self.assertIn("Current Product `00_PLATFORM_v1.7.0.md`", pass2)
+        self.assertIn("current Roadmap routing successor `05_ROADMAP_v1.2.1.md`", pass2)
+        self.assertNotIn("current Product Law `00_PLATFORM_v1.6.0.md`", pass2)
+        self.assertNotIn("current Roadmap `05_ROADMAP_v1.2.0.md`", pass2)
+
+        roadmap_programme = next(
+            line for line in open_work.splitlines() if line.startswith("| Roadmap amendment |")
+        )
+        self.assertIn("current routing successor is `05_ROADMAP_v1.2.1.md` (reference-only)", roadmap_programme)
+        self.assertNotIn("current successor is `05_ROADMAP_v1.2.0.md`", roadmap_programme)
+
+        phase6 = _section(open_work, "## Phase 6 — COMPLETE:", "## Phase 7 —")
+        self.assertIn("THEN-CURRENT AMENDED ROADMAP", phase6)
+        self.assertIn("At that closure point, the current Roadmap was semantic successor `05_ROADMAP_v1.2.0.md`", phase6)
+        roadmap_closure = _section(
+            open_work,
+            "## 12.6 Roadmap Sequencing Grill and Roadmap amendment completion",
+            "## 12.7 — Historical Delivery Atlas reconciliation",
+        )
+        self.assertIn("At the end of the substantive amendment, Roadmap v1.2.0 was the then-current semantic successor", roadmap_closure)
+        self.assertIn("Current Roadmap routing is `05_ROADMAP_v1.2.1.md`", roadmap_closure)
+
     def test_pass2_closure_successor_records_exact_post_merge_evidence_without_stage_advance(self):
         current = _read(DOCS / "archive/02_OPEN_WORK_v1.2.52.md")
         predecessor_path = DOCS / "archive/02_OPEN_WORK_v1.2.51.md"

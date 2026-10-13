@@ -93,8 +93,8 @@ The frozen August 2026 audit at `archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` r
 
 ## Archive
 
-- `archive/02_OPEN_WORK_v1.2.59.md` — byte-identical direct predecessor to current Open Work v1.2.60; its hash is pinned in the manifest. Communications IN PROGRESS / CERTIFICATION PENDING is preserved as historical state.
-- `archive/02_OPEN_WORK_v1.2.58.md` — byte-identical predecessor to archived Open Work v1.2.59; its hash is pinned in the manifest.
+- `archive/02_OPEN_WORK_v1.2.59.md` — byte-identical direct predecessor to current Open Work v1.2.60; its hash is pinned in the manifest. Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT under the separate PR #81 status successor, with PR #78 candidate and post-merge evidence.
+- `archive/02_OPEN_WORK_v1.2.58.md` — byte-identical predecessor to archived Open Work v1.2.59; its hash is pinned in the manifest. At that predecessor state, Communications JIT Domain Dossier v0.1.0 was IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING and NOT CERTIFIED / NOT CURRENT.
 - `archive/02_OPEN_WORK_v1.2.57.md` — byte-identical predecessor to archived Open Work v1.2.58; its hash is pinned in the manifest.
 - `archive/02_OPEN_WORK_v1.2.56.md` — byte-identical predecessor to archived Open Work v1.2.57; its hash is pinned in the manifest.
 - `archive/DELIVERY_ATLAS_WORKING_v0.4.1.md` — byte-identical direct predecessor to current Atlas v0.4.2, preserved from starting main.
@@ -251,7 +251,7 @@ Engineering Standards remain supporting authority under `reference_documents`. T
 - NEXT STAGE: REMAINING REQUIRED / CONDITIONAL PHASE 7B
 - CURRENT PRODUCT LAW: `00_PLATFORM_v1.7.0.md`; DEC-299 through DEC-313 record the accepted paid-plan, reversal, consent, provenance, marketing, personalisation, pilot, economics and Assessment-credit decisions. DEC-313 supersedes DEC-055's first-answer consumption meaning for paid digital Assessment credits.
 - PASS 2 FOUNDATION EVALUATION: **CLOSED / PASS** — reviewed head `4d18ef33ed8799340d6147403ac51c61237853ca` merged through PR #62 to resulting `main` `24eeb2834d58e19e0c833f09d769118d75fc9061`; reviewed and merged trees are identical (`aa4edc210d0a98aabbbdccb5ab9d4adbdc57a296`); post-merge Foundation Integrity run `36852114112` passed (250 tests / 500 assertions); independent post-merge semantic review passed. This closure advances no downstream lifecycle stage.
-- ROADMAP AMENDMENT: COMPLETE — current Roadmap `v1.2.0`; the 17 existing Feature Pack identifiers are preserved
+- ROADMAP AMENDMENT: COMPLETE — substantive v1.2.0 amendment preserved; current Roadmap routing successor `05_ROADMAP_v1.2.1.md`; all 17 existing Feature Pack identifiers are preserved
 - DOL-01 POLICY: channel/category opt-out and purpose-level marketing withdrawal have separate participant-visible scope and sole owners; this does not close legal/expert gates or authorize implementation
 - TARGETED PRODUCT AMENDMENT STAGE 1 (GRILL): COMPLETE
 - TARGETED PRODUCT AMENDMENT STAGE 2 (PRODUCT LAW AMENDMENT): COMPLETE
