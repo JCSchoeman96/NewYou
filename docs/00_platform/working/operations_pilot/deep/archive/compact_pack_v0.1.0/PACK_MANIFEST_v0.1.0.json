@@ -1,0 +1,331 @@
+{
+  "pack_id": "NEWYOU_OPERATIONS_SUPPORT_PILOT_FINAL_COMPACT_PACK",
+  "pack_version": "0.1.0",
+  "status": "COMPACT WORKING PACK CANDIDATE / NON-AUTHORITATIVE",
+  "authority": "NONE",
+  "implementation_authority": "NONE",
+  "deep_source": {
+    "path": "docs/00_platform/working/operations_pilot/deep/NewYou_Operations_Support_Pilot_PreJIT_Working_Control_Document_v0.32.0.md",
+    "filename": "NewYou_Operations_Support_Pilot_PreJIT_Working_Control_Document_v0.32.0.md",
+    "sha256": "9d7895b6db1b9b2eb12b3c7c0ff38c16f29915ea730967e2a7c514c8c40fb518",
+    "bytes": 442866,
+    "lifecycle": "deep working evidence / complete authoring candidate"
+  },
+  "live_baselines": {
+    "newyou_main": "086ade7b28c000de1c387acb9760e5eb08bb0413",
+    "operations_branch_start": "00919a1234056ede7eb9f6d5e366e8bf22b188c0",
+    "ahead": 19,
+    "behind": 0
+  },
+  "coverage": {
+    "ops_pt": "OPS-PT-001...470",
+    "ops_upd": "OPS-UPD-001...007",
+    "ops_upd_008": "absent",
+    "ops_gap": "OPS-GAP-001...025",
+    "broad_discovery": "closed",
+    "implementation": "not_authorised"
+  },
+  "normal_read_order": [
+    "README.md",
+    "NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+    "NEWYOU_OPERATIONS_SUPPORT_PILOT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md",
+    "NEWYOU_OPERATIONS_SUPPORT_PILOT_EVIDENCE_INDEX_WORKING_v0.1.0.md"
+  ],
+  "certification_material": [
+    "NEWYOU_OPERATIONS_SUPPORT_PILOT_COMPRESSION_AUDIT_WORKING_v0.1.0.md",
+    "NEWYOU_OPERATIONS_SUPPORT_PILOT_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md",
+    "PACK_MANIFEST_v0.1.0.json"
+  ],
+  "files": [
+    {
+      "path": "docs/00_platform/working/operations_pilot/README.md",
+      "sha256": "f200f503a5bcf04fd965d8f2d1e1facacd51b28061574af3c526c47ea5b05416",
+      "bytes": 2884
+    },
+    {
+      "path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+      "sha256": "0a6283b6f0819e4cd12dbbe93169567c3b1fb61ceda93fb4bb5d72d2fdf7aa86",
+      "bytes": 18654
+    },
+    {
+      "path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md",
+      "sha256": "9ee85ffcd3344b33e3b5dbe8b2440d446976c0bee8fbfff4830318abe19f6638",
+      "bytes": 8247
+    },
+    {
+      "path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_EVIDENCE_INDEX_WORKING_v0.1.0.md",
+      "sha256": "727077d51404193eeeef0661d108c7c94561ac9da42f8772ac84309ca357f533",
+      "bytes": 15762
+    },
+    {
+      "path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_COMPRESSION_AUDIT_WORKING_v0.1.0.md",
+      "sha256": "00e022190619751131d6a3d41e8aa39b1ba7928674d40c4798ccf714f91bd885",
+      "bytes": 7275
+    },
+    {
+      "path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md",
+      "sha256": "725c1cd138449349245eac1efc2e2f271e23a555abe7949b16f004cae3effab3",
+      "bytes": 4950
+    }
+  ],
+  "historical_sources": [
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.1.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.1.0.md",
+      "bytes": 16383,
+      "git_blob_sha": "b64e1899eb045b13772bb7b4dcc2307b83793f53",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.2.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.2.0.md",
+      "bytes": 20449,
+      "git_blob_sha": "4ac119f6bfbfd1afea548c1d804061da84567e64",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.3.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.3.0.md",
+      "bytes": 27273,
+      "git_blob_sha": "70e701cdf61d799a5b773d87bfbd02fcb682bc3c",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.4.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.4.0.md",
+      "bytes": 34041,
+      "git_blob_sha": "c29b7f4ce276359f0eac4a05163d6296ee47be96",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.5.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.5.0.md",
+      "bytes": 19537,
+      "git_blob_sha": "938f7a70b7acf8b65e120ee48fb01c96e54f9abd",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.6.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.6.0.md",
+      "bytes": 26759,
+      "git_blob_sha": "88005a053343933dfbc269393f6b611828671a9e",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.7.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.7.0.md",
+      "bytes": 18715,
+      "git_blob_sha": "a40ff2560d98b144f7571d26e1293628ac8f1b42",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.8.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.8.0.md",
+      "bytes": 31218,
+      "git_blob_sha": "7a1705a574a8edc6a0850a474cac1ccfad157e27",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.9.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.9.0.md",
+      "bytes": 15751,
+      "git_blob_sha": "1af6b5ce537205b8a8e9e13fe5e6f5b08bf5cca2",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.10.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.10.0.md",
+      "bytes": 9329,
+      "git_blob_sha": "2dbfb336c0f6e840872a0d436b7be2b9360dabd6",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.11.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.11.0.md",
+      "bytes": 5967,
+      "git_blob_sha": "78f1fc79b4935855502ab91b5c44e6ca4ae4876e",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.1.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.1.0.md",
+      "bytes": 53320,
+      "git_blob_sha": "dfafa3a172f5836aa851a513adb4ecdd55accc16",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.2.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.2.0.md",
+      "bytes": 46258,
+      "git_blob_sha": "708eeacb727233472e02535b06783b9ec0b05929",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.3.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.3.0.md",
+      "bytes": 59262,
+      "git_blob_sha": "c476bbcb5e2dd8487fcae8c13155c5d3db538a86",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.4.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.4.0.md",
+      "bytes": 55667,
+      "git_blob_sha": "261d3173e77eec15dc3bc1496dbdfb3a30a0724b",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.5.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.5.0.md",
+      "bytes": 54219,
+      "git_blob_sha": "17cfc349a29c2e504336333f223c2c71ffca7dcf",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.6.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.6.0.md",
+      "bytes": 33834,
+      "git_blob_sha": "7d7faeae8849093a40aaf988bcba908e791617bb",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.7.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.7.0.md",
+      "bytes": 13999,
+      "git_blob_sha": "6853ae1aab4911191580a2773c7bcf295f4fcded",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.8.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.8.0.md",
+      "bytes": 39738,
+      "git_blob_sha": "1f1f1c6878e562e088ad45fe1832b47efe0278c5",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.9.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.9.0.md",
+      "bytes": 23394,
+      "git_blob_sha": "fd579e24a083240da23f8d71eff5a5e0fe1d1f64",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.10.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.10.0.md",
+      "bytes": 26148,
+      "git_blob_sha": "0359f24e3284b7c548b98b1354d9fb1571e44494",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.11.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.11.0.md",
+      "bytes": 24241,
+      "git_blob_sha": "3b2cfd55bd880e07cd1d0147540360c4507a74a6",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.12.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.12.0.md",
+      "bytes": 28335,
+      "git_blob_sha": "4afccfdc967180f1d0a6faa39e2d9fe1ea19e4b0",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.13.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.13.0.md",
+      "bytes": 26231,
+      "git_blob_sha": "d00c3c8730db9d521fa274713643da0ca09ce721",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.14.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.14.0.md",
+      "bytes": 14975,
+      "git_blob_sha": "3dd6465a6231e8d6207ca4f04bc9b6f513d8a5a8",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_UPSTREAM_PROMOTION_REVIEW_WORKING_v0.1.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_UPSTREAM_PROMOTION_REVIEW_WORKING_v0.1.0.md",
+      "bytes": 11231,
+      "git_blob_sha": "67369141c127a4e6ea963c687d5a5b72418f4d36",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPS_UPD_004_AUTHORITY_PROMOTION_CANDIDATE_WORKING_v0.1.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPS_UPD_004_AUTHORITY_PROMOTION_CANDIDATE_WORKING_v0.1.0.md",
+      "bytes": 17934,
+      "git_blob_sha": "9ef60834fccc19a363446aec56e6b76d00d1e802",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPS_UPD_004_AUTHORITY_PROMOTION_CANDIDATE_WORKING_v0.2.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPS_UPD_004_AUTHORITY_PROMOTION_CANDIDATE_WORKING_v0.2.0.md",
+      "bytes": 15941,
+      "git_blob_sha": "7be47d970b4c71aa0d3c9435b714a879733fca8a",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPS_UPD_004_AUTHORITY_SUCCESSOR_BUILD_WORKING_v0.1.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPS_UPD_004_AUTHORITY_SUCCESSOR_BUILD_WORKING_v0.1.0.md",
+      "bytes": 14960,
+      "git_blob_sha": "acb053188b89135791e779ddd365e9d8a428073a",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "docs/00_platform/working/operations_pilot/NEWYOU_OPS_UPD_004_AUTHORITY_SUCCESSOR_INDEPENDENT_REVIEW_WORKING_v0.1.0.md",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NEWYOU_OPS_UPD_004_AUTHORITY_SUCCESSOR_INDEPENDENT_REVIEW_WORKING_v0.1.0.md",
+      "bytes": 9785,
+      "git_blob_sha": "50a4cbf9da157a306a4bf6b9d6594895fe73a2fa",
+      "sha256": null,
+      "byte_identity_proof": "same Git blob reused; redundant SHA-256 not fabricated in connector-only session"
+    },
+    {
+      "original_path": "conversation-supplied compression provenance",
+      "archive_path": "docs/00_platform/working/operations_pilot/deep/archive/NewYou_Operations_Support_Pilot_PreJIT_Compressed_Candidate_v0.1.0.md",
+      "bytes": 26721,
+      "sha256": "1a32ba7edac94fc561bf0e76d50f6dbf698484ca5b05e0362a07e510a2249a12"
+    }
+  ],
+  "review_provenance": {
+    "v0_32_source_state": "COMPLETE AUTHORING CANDIDATE / not independently certified by source itself",
+    "post_v0_32_repository_review_artifact": null,
+    "external_compression_review": "semantic core accepted; targeted compression/provenance corrections; packaging completion requested"
+  },
+  "repository_finalisation": {
+    "status": "BLOCKED_ON_PROVENANCE_MECHANICS",
+    "branch_ref_advanced": false,
+    "semantic_core": "PASS",
+    "broad_prejit_discovery": "DO_NOT_REOPEN",
+    "blocking_semantic_gap": false
+  }
+}

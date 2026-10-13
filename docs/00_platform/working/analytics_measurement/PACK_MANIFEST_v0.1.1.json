@@ -1,0 +1,284 @@
+{
+  "pack_id": "NEWYOU_ANALYTICS_MEASUREMENT_FINAL_COMPACT_PACK",
+  "pack_version": "0.1.1",
+  "status": "PASS — v0.1.1 SEMANTIC-FIDELITY PATCH / PARK BROAD ANALYTICS & MEASUREMENT PRE-JIT DISCOVERY",
+  "implementation_authority": "NONE",
+  "authority": "NONE",
+  "deep_source": {
+    "path": "docs/00_platform/working/analytics_measurement/deep/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_UNIFIED_HANDOFF_WORKING_v0.1.2.md",
+    "filename": "NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_UNIFIED_HANDOFF_WORKING_v0.1.2.md",
+    "sha256": "a30401a94b4c93276041833a6d9220ae1a1d48d8da106c3c2f1c6c630709e49e",
+    "bytes": 37030,
+    "git_blob_sha_local": "90b3a9c91387037dd574e624c67a46c4a8479bb1",
+    "lifecycle": "canonical detailed corrected working source / deep context; v0.1.2 routing-provenance successor over v0.1.1"
+  },
+  "live_baselines": {
+    "semantic_prejit_main": "086ade7b28c000de1c387acb9760e5eb08bb0413",
+    "final_packaging_verification_main": "9608d33dc49f92f54a3541ce6a61f16cd170e2d0",
+    "pre_finalisation_branch_head": "8ed7bc679caf2071cd7059bb4579898230bfdcf7"
+  },
+  "coverage": {
+    "pressure_tests": "ANL-PT-001...ANL-PT-080",
+    "metrics": "ANL-METRIC-001...ANL-METRIC-006",
+    "gaps": "ANL-GAP-001...ANL-GAP-003",
+    "closure": "HANDOFF-READY / STOP AT JIT BOUNDARY / NO DEFAULT PASS 15"
+  },
+  "normal_read_order": [
+    "README.md",
+    "NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+    "NEWYOU_ANALYTICS_MEASUREMENT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.1.md",
+    "NEWYOU_ANALYTICS_MEASUREMENT_EVIDENCE_INDEX_WORKING_v0.1.1.md"
+  ],
+  "validation_material": [
+    "NEWYOU_ANALYTICS_MEASUREMENT_COMPRESSION_AUDIT_WORKING_v0.1.1.md",
+    "NEWYOU_ANALYTICS_MEASUREMENT_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.1.md",
+    "PACK_MANIFEST_v0.1.1.json"
+  ],
+  "files": [
+    {
+      "path": "docs/00_platform/working/analytics_measurement/README.md",
+      "sha256": "a6c98490056af09db065b670e9cba57bc16508302076c6b7dec0c948c4dde3f8",
+      "bytes": 3765,
+      "git_blob_sha_local": "9536394292c94855c811059663df414123abe52e"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+      "sha256": "a7cf03d551c99177486cf182febd0c306a22c2b93ac37b91d157d910e63a8726",
+      "bytes": 19237,
+      "git_blob_sha_local": "faa380e598b3f1ce419fb7073c641edd792f94f1"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/NEWYOU_ANALYTICS_MEASUREMENT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.1.md",
+      "sha256": "8df73bb5dfad85cdd79b7ff363513b868d758e6afb5083bd8fb94fbe9094c625",
+      "bytes": 4233,
+      "git_blob_sha_local": "6302e95909ce5e9e16a3b07226388d1a8a88a254"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/NEWYOU_ANALYTICS_MEASUREMENT_EVIDENCE_INDEX_WORKING_v0.1.1.md",
+      "sha256": "74b5790de6919418408811920e9d5da8dbbdb442db264bdbe967e698ae93d638",
+      "bytes": 14328,
+      "git_blob_sha_local": "5ae81d649fa70574835bee4c572bf4614fa825ad"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/NEWYOU_ANALYTICS_MEASUREMENT_COMPRESSION_AUDIT_WORKING_v0.1.1.md",
+      "sha256": "7bda6c1106236277b5da2f51fb41961fb480cac038eb94d938e97a53324a7a41",
+      "bytes": 6727,
+      "git_blob_sha_local": "9f302534d94ec1cf16015afef236d6fe1f9209cc"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/NEWYOU_ANALYTICS_MEASUREMENT_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.1.md",
+      "sha256": "a287a61cdaecb9ee2c4335838212444d0bd48976cf01c74b9de6de9c271e7fba",
+      "bytes": 6113,
+      "git_blob_sha_local": "7f1444490e725213bfedf39e1d4df8194d3a660d"
+    }
+  ],
+  "historical_sources": [
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DECISION_PRESSURE_TEST_LEDGER_WORKING_v0.1.0.md",
+      "git_blob_sha": "b089f3044cc155cbeb42b8d41cf8df1203a2627c",
+      "bytes": 18482,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DECISION_PRESSURE_TEST_LEDGER_WORKING_v0.2.0.md",
+      "git_blob_sha": "3a4c7ac97b80d242bce4099ceb005dfa14fdc241",
+      "bytes": 18582,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DECISION_PRESSURE_TEST_LEDGER_WORKING_v0.3.0.md",
+      "git_blob_sha": "4ff57ee363eb77cf0fd11c306eb1fe623af94fa5",
+      "bytes": 9725,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DECISION_PRESSURE_TEST_LEDGER_WORKING_v0.4.0.md",
+      "git_blob_sha": "9209e2b0b64c2c8f6c27760386a9de3aba22a314",
+      "bytes": 11902,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "05a1b62bf2fc3eb082a18bcb4fe04ba5548dfc2b37a0078eac444670e58332e4"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DECISION_PRESSURE_TEST_LEDGER_WORKING_v0.5.0.md",
+      "git_blob_sha": "b7fb800b3b9fbb443b5140ccaec75e14a5046bc7",
+      "bytes": 11284,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "31652510cc78eed9aec25e99b613a1fa5b6543849f5a488cccd922a6887f0d03"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DECISION_PRESSURE_TEST_LEDGER_WORKING_v0.6.0.md",
+      "git_blob_sha": "64a890c3e7079afd9a033153695431a5e5c3f2fd",
+      "bytes": 12135,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "95e48b2a6cad286ceccc0e2ab798304e136a35f9313696de4aad09838ac79be7"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DECISION_PRESSURE_TEST_LEDGER_WORKING_v0.7.0.md",
+      "git_blob_sha": "9cf8d63d1b162f5e319ca6164f7b430285a2970b",
+      "bytes": 11645,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "e2c7fae05b8533e0d391172a744ca48c5d0bf958abca71b6ccf8faf3c6c77ea0"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DECISION_PRESSURE_TEST_LEDGER_WORKING_v0.8.0.md",
+      "git_blob_sha": "53a347324cdddb96c19b50ebdfc6bd1cabb58547",
+      "bytes": 10687,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "305c085fd7ae8350e68e981ad4c63deb956bd953521a1f28b2f0d2cfd00994b3"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.1.0.md",
+      "git_blob_sha": "e63bf4ab99bb4db8d2088da54a561972d3fa74cf",
+      "bytes": 11551,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.2.0.md",
+      "git_blob_sha": "73a252d60b7c7fb3b7e84937306a330b83d4fc56",
+      "bytes": 28482,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.3.0.md",
+      "git_blob_sha": "73a6043720748405f1999efb0aa1fd1fbcbdebf0",
+      "bytes": 20435,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.4.0.md",
+      "git_blob_sha": "ea1d5e44115e96c023cd7405e37aaaf1b9d7313f",
+      "bytes": 11297,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.5.0.md",
+      "git_blob_sha": "03af8130ac829a060f5053f9312aab099a66ad03",
+      "bytes": 11038,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.6.0.md",
+      "git_blob_sha": "298a549cbb04168e07d12c78a014339bcae9277f",
+      "bytes": 10797,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.7.0.md",
+      "git_blob_sha": "e793421b5e343282a532c9ceb800743475910e13",
+      "bytes": 10164,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.8.0.md",
+      "git_blob_sha": "f9b8b3673ccc7d7823ecd7e25887fccbe5478817",
+      "bytes": 10619,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.9.0.md",
+      "git_blob_sha": "0bd6b9e7216454af70d49e36fbe6eb575ce9d33a",
+      "bytes": 21075,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.10.0.md",
+      "git_blob_sha": "7739091a923624459020cb089f3027a6f47a5c1f",
+      "bytes": 15067,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "c53df24e1ee40dc7cbef2600552e7c699d7cb39ea5714827d877c0e7c6181475"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.11.0.md",
+      "git_blob_sha": "549aab1e0f1247b238b8b51d4794085c31c328b6",
+      "bytes": 24354,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "6cb27cecdd0f758b93097c18b5aa830df261021fd6e3a60e808c95706273eef1"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.12.0.md",
+      "git_blob_sha": "4a3153dda7ef33b51179d78879aa3bae7f715a01",
+      "bytes": 21915,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "a6cec5e0e7b4ee46cd007ab23811a4dbe619edfa4ffd0a4d5024bda913757643"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.13.0.md",
+      "git_blob_sha": "7825419643860a882030bcf039e1121b9f3a3820",
+      "bytes": 21429,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "ee844b1ce02ee60e69196bf79645816dab3f98f610e1035f08e6b27e64f03f1b"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_DISCOVERY_WORKING_v0.14.0.md",
+      "git_blob_sha": "014ae0774b03685c69e300033dd3e447d551827f",
+      "bytes": 18067,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "4062b145c8c68c394562bc32754b10665e3434724bd6009058a95058393a68f5"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_ROADMAP_DELTA_CANDIDATE_WORKING_v0.1.0.md",
+      "git_blob_sha": "da5809369b7859e2be5d1e32c1adbe289abdcc0e",
+      "bytes": 8525,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "78f32be084826b84fa6f6b6f833d3178e19a80fa31414e1de4f541b499f4f0e3"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_ROADMAP_DELTA_CANDIDATE_WORKING_v0.2.0.md",
+      "git_blob_sha": "0b472ec2c75023ea2de513196aa691cad6a93ff1",
+      "bytes": 12018,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_ROADMAP_DELTA_CANDIDATE_WORKING_v0.3.0.md",
+      "git_blob_sha": "ce73e99e9269d935a6fdb645eb2b1c8407413b65",
+      "bytes": 13049,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_ROADMAP_PROMOTION_COLLATERAL_WORKING_v0.1.0.md",
+      "git_blob_sha": "0f178d59624167c3f717c289c8f844e8ac62a0f9",
+      "bytes": 9361,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_ROADMAP_PROMOTION_COLLATERAL_WORKING_v0.2.0.md",
+      "git_blob_sha": "43c51ab86628b00249ed411096480832240214e8",
+      "bytes": 7258,
+      "byte_identity": "same pre-compression Git blob reused"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_UNIFIED_HANDOFF_WORKING_v0.1.0.md",
+      "git_blob_sha": "b88de0672db422ef6df5180997cd528fbf7d591e",
+      "bytes": 36035,
+      "byte_identity": "same pre-compression Git blob reused",
+      "sha256": "dbb3b63406f0c479c4f863d8a187277d31fcbf009b63d4d65bccf49d43a9562c"
+    },
+    {
+      "path": "docs/00_platform/working/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_UNIFIED_HANDOFF_WORKING_v0.1.1.md",
+      "git_blob_sha": "5ae676bcbaced322006db7dcc5a391dca6be64e5",
+      "bytes": 36976,
+      "byte_identity": "byte-preserved deep predecessor",
+      "sha256": "dbcc3cd4e3b510ca9ee9419bd30a9ebad63652f3b7f35f5b4153f66b32bc4389"
+    }
+  ],
+  "compression_patch": {
+    "from": "0.1.0",
+    "to": "0.1.1",
+    "deep_source_from": "0.1.1",
+    "deep_source_to": "0.1.2",
+    "deep_semantic_change": false,
+    "restored_items": [
+      "exact durable-truth ownership detail for Plans & Nutrition, HJP and Entitlements",
+      "explicit separate price-value question",
+      "conditional-dossier materiality/adjudication rule before 7C",
+      "post-7C proof obligations: authoritative correlation/failure, no Analytics shadow authority, concurrency/retry/idempotency, metric-definition/cohort/source-version provenance, fail-closed behaviour, upstream stop on contradiction",
+      "hardening may strengthen recovery/reconciliation/observability/resilience/performance without semantic change"
+    ],
+    "packaging_fixes": [
+      "place all 29 historical artifacts under deep/archive/",
+      "move deep v0.1.1 predecessor into deep/archive/ and leave v0.1.2 as sole canonical deep source",
+      "route README supersession wording to canonical deep v0.1.2",
+      "record current main separately as final packaging verification baseline while retaining the original semantic baseline"
+    ]
+  }
+}
