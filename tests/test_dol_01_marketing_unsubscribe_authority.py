@@ -38,11 +38,11 @@ PREDECESSOR_SHA256 = {
 
 EXPECTED_CURRENT = {
     "PROJECT_NORTH_STAR_AND_MVP": ("PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md", "1.3.0"),
-    "PLATFORM_BASELINE": ("00_PLATFORM_v1.6.0.md", "1.6.0"),
-    "DECISION_REGISTER": ("01_DECISIONS_v1.6.0.md", "1.6.0"),
-    "OPEN_WORK": ("02_OPEN_WORK_v1.2.59.md", "1.2.59"),
+    "PLATFORM_BASELINE": ("00_PLATFORM_v1.7.0.md", "1.7.0"),
+    "DECISION_REGISTER": ("01_DECISIONS_v1.7.0.md", "1.7.0"),
+    "OPEN_WORK": ("02_OPEN_WORK_v1.2.60.md", "1.2.60"),
     "DOMAIN_MAP": ("04_DOMAIN_MAP_v1.2.0.md", "1.2.0"),
-    "ROADMAP": ("05_ROADMAP_v1.2.0.md", "1.2.0"),
+    "ROADMAP": ("05_ROADMAP_v1.2.1.md", "1.2.1"),
 }
 
 
@@ -201,7 +201,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
 
     def test_pass2_decisions_append_without_rewriting_dec304(self):
         identifiers = re.findall(r"^## DEC-(\d{3}) — ", self.decisions, re.MULTILINE)
-        self.assertEqual([f"{number:03d}" for number in range(1, 313)], identifiers)
+        self.assertEqual([f"{number:03d}" for number in range(1, 314)], identifiers)
         self.assertEqual(1, self.decisions.count("## DEC-304 — Marketing unsubscribe scope and consent ownership"))
         archived_decisions = _read(DOCS / "archive" / "01_DECISIONS_v1.5.0.md")
         decision = self.decisions.split("## DEC-304 —", 1)[1].split("## DEC-305 —", 1)[0]
@@ -285,13 +285,13 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             self.assertEqual(f"docs/00_platform/archive/{filename}", entry["repository_path"])
             self.assertEqual(PREDECESSOR_SHA256[filename], entry["sha256"])
 
-        self.assertEqual(312, self.manifest["integrity_rules"]["expected_counts"]["decisions"])
-        self.assertEqual(312, self.manifest["integrity_rules"]["contiguous_ranges"]["DEC"]["end"])
+        self.assertEqual(313, self.manifest["integrity_rules"]["expected_counts"]["decisions"])
+        self.assertEqual(313, self.manifest["integrity_rules"]["contiguous_ranges"]["DEC"]["end"])
         self.assertEqual(61, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
 
     def test_current_routes_are_current_and_old_paths_remain_archived(self):
-        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.1.md"
+        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.2.md"
         self.assertEqual(
             atlas_path,
             self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"][0],
@@ -330,10 +330,10 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             self.assertNotIn(stale_name, current_section)
         immediate_next_action = self.open_work.split("# 9. Immediate Next Action", 1)[1].split("```text", 1)[0]
         for current_name in (
-            "00_PLATFORM_v1.6.0.md",
-            "01_DECISIONS_v1.6.0.md",
+            "00_PLATFORM_v1.7.0.md",
+            "01_DECISIONS_v1.7.0.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "DELIVERY_ATLAS_WORKING_v0.4.1.md",
+            "DELIVERY_ATLAS_WORKING_v0.4.2.md",
         ):
             self.assertIn(current_name, immediate_next_action)
         for stale_name in (
