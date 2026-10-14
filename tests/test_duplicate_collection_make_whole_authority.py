@@ -53,6 +53,32 @@ class DuplicateCollectionMakeWholeAuthorityTests(unittest.TestCase):
         ):
             self.assertIn(required.lower(), self.reversal.lower())
 
+    def test_payer_a_for_recipient_b_keeps_make_whole_at_payment_relationship(self):
+        """Payer A funds one intended obligation for recipient B, collected twice."""
+        decision = section(
+            self.decisions,
+            "## DEC-314 — Duplicate collections, make-whole and component attribution",
+            "# Open Gates",
+        )
+        for authority in (self.reversal.lower(), decision.lower()):
+            for required in (
+                "one intended commercial obligation",
+                "multiple verified genuine collections",
+                "authoritative payer/payment relationship",
+                "owes this correction to that relationship",
+                "satisfies that claim exactly once, making the authoritative payer/payment relationship whole for the verified excess",
+                "authoritative commercial and payment truth",
+                "account holder, entitlement recipient or beneficiary",
+                "does not become the monetary claimant",
+                "provider evidence cannot redefine that claimant",
+                "at most one valid entitlement consequence",
+            ):
+                self.assertIn(required, authority)
+        self.assertIn(
+            "does not freeze any provider-specific execution mechanism",
+            decision.lower(),
+        )
+
     def test_two_deliberate_same_amount_purchases_close_together_remain_distinct(self):
         for required in (
             "two independently intended and accepted purchases remain two distinct commercial obligations",
