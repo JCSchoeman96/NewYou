@@ -14,30 +14,30 @@ DOCS = ROOT / "docs" / "00_platform"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.61.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.62.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.54.md"
 OPEN_WORK_ROUTING_SUCCESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.50.md"
 OPEN_WORK_ROUTING_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.49.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.5.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.6.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"
 CONTRACT_ROUTING_SUCCESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
 CONTRACT_ROUTING_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.3.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.4.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.6.md"
 ATLAS_ROUTING_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
 ATLAS_ROUTING_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
 
 POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
 ROADMAP = DOCS / "05_ROADMAP_v1.2.2.md"
-SKELETON = DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md"
+SKELETON = DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md"
 
 MATRIX_START = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:START -->"
 MATRIX_END = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:END -->"
 JSON_START = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
 JSON_END = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
 
-CURRENT_STAGE = "COMMUNICATIONS v0.1.0 CURRENT-STATUS PROMOTION"
-NEXT_STAGE = "REMAINING REQUIRED / CONDITIONAL PHASE 7B"
+CURRENT_STAGE = "FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION"
+NEXT_STAGE = "FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER"
 EXECUTION_STATUS = "COMPLETE / CERTIFIED"
 EXECUTION_MATRIX_STATUS = "COMPLETE_CERTIFIED"
 EXECUTION_MATRIX_EVIDENCE = "PR #59 recovery outcome PASS WITH NON-BLOCKING CORRECTIONS; I-01…I-13 and current-main revalidation PASS"
@@ -57,7 +57,8 @@ EXPECTED_DOWNSTREAM_ROUTE = [
     "CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
     "COMMUNICATIONS JIT DOMAIN DOSSIER",
     "CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION",
-    "REMAINING REQUIRED / CONDITIONAL PHASE 7B",
+    "FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER",
+    "FP-001 PHASE 7B RECONCILIATION",
     "PHASE 7C",
     "PROOF CLASSIFICATION",
     "PHASE 8 ONLY AFTER DEVELOPMENT ENTRY HARD STOP PASSES",
@@ -258,8 +259,8 @@ def _validate_contract_source_routing(text: str) -> None:
     if len(derived_rows) != 3 or any(len(row) != 2 for row in derived_rows):
         raise ValueError("current derived/source-at-freeze table has missing or unexpected rows")
     derived = {row[0].strip("`"): row[1] for row in derived_rows}
-    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.4.3.md"
-    skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md"
+    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.4.4.md"
+    skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md"
     identity_path = "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
     if set(derived) != {atlas_path, skeleton_path, identity_path}:
         raise ValueError("derived/source-at-freeze rows do not identify the current artifacts")
@@ -282,19 +283,19 @@ def _validate_contract_source_routing(text: str) -> None:
             raise ValueError("current Identity dossier does not record certified reconciliation status")
 
     readme = _read(README)
-    if "working/DELIVERY_ATLAS_WORKING_v0.4.3.md" not in readme:
-        raise ValueError("README does not route current Atlas to v0.3.9")
+    if "working/DELIVERY_ATLAS_WORKING_v0.4.4.md" not in readme:
+        raise ValueError("README does not route current Atlas to v0.4.4")
     if "The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references." not in readme:
         raise ValueError("README does not preserve Atlas v0.2.1 as source-at-freeze evidence")
     atlas_routing = _section(readme, "## Delivery Atlas routing", "## Machine-readable inventory")
-    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.4.3.md)" not in atlas_routing:
-        raise ValueError("README Delivery Atlas navigation does not target v0.3.9")
-    if "working/HARDEN-02_CONTRACT_WORKING_v0.5.5.md" not in readme:
+    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.4.4.md)" not in atlas_routing:
+        raise ValueError("README Delivery Atlas navigation does not target v0.4.4")
+    if "working/HARDEN-02_CONTRACT_WORKING_v0.5.6.md" not in readme:
         raise ValueError("README does not route the current HARDEN status successor")
     active = _active_window(_read(OPEN_WORK))
-    if "- IDENTITY & ACCESS: COMPLETE / CERTIFIED / CURRENT v0.1.4" not in active:
+    if "- IDENTITY & ACCESS: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.4" not in active:
         raise ValueError("current Identity lifecycle status is not sourced from Open Work")
-    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.5.5.md" not in active:
+    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.5.6.md" not in active:
         raise ValueError("Open Work does not route the current HARDEN status successor")
 
 
@@ -979,7 +980,9 @@ def _assert_downstream_state(state: dict[str, object]) -> None:
         "communications_finalisation": "BLOCKED / STOP",
         "phase_7c": "BLOCKED / NOT_STARTED",
         "proof_classification": "NOT FINALISED",
-        "application_implementation": "BLOCKED",
+        "application_implementation": "UNAUTHORISED / BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+        "audit_dossier": "REQUIRED / NEXT / NOT_STARTED",
+        "phase_7c_block_reason": "Audit & Evidence dossier must be COMPLETE / CERTIFIED / CURRENT and subsequent Phase 7B reconciliation must succeed",
         "store_cer": "EXCLUDED",
     }
     for key, value in expected.items():
@@ -987,10 +990,10 @@ def _assert_downstream_state(state: dict[str, object]) -> None:
             raise AssertionError(f"unexpected lifecycle state for {key}: {state.get(key)!r}")
     conditional = state.get("conditional_dossiers")
     if conditional != {
-        "privacy_consent": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-        "content_media": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-        "audit_evidence": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-        "analytics": "NOT REQUIRED",
+        "privacy_consent": "NOT_REQUIRED",
+        "content_media": "NOT_REQUIRED",
+        "audit_evidence": "REQUIRED / NEXT / NOT_STARTED",
+        "analytics": "NOT_REQUIRED",
     }:
         raise AssertionError(f"unexpected conditional-dossier state: {conditional!r}")
 
@@ -1037,6 +1040,7 @@ def _execution_state_is_valid(text: str, state: dict[str, object]) -> bool:
         "FP-001 IDENTITY v0.1.3 DURABLE-DELIVERY PATCH PROMOTION",
         "FP-001 IDENTITY v0.1.4 GOVERNANCE-CORRECTION PATCH PROMOTION",
         "FP-001 COMMUNICATIONS v0.1.0 JIT DOMAIN DOSSIER PROMOTION",
+        "FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION",
     ]:
         return False
     certification = state.get("execution_certification")
@@ -1060,10 +1064,10 @@ def _execution_state_is_valid(text: str, state: dict[str, object]) -> bool:
     if current_main.get("unit_tests") != "251 PASS" or current_main.get("fia_assertions") != 506 or current_main.get("fia_findings") != 0:
         return False
     if state.get("conditional_dossiers") != {
-        "privacy_consent": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-        "content_media": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-        "audit_evidence": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-        "analytics": "NOT REQUIRED",
+        "privacy_consent": "NOT_REQUIRED",
+        "content_media": "NOT_REQUIRED",
+        "audit_evidence": "REQUIRED / NEXT / NOT_STARTED",
+        "analytics": "NOT_REQUIRED",
     }:
         return False
     expected_route = EXPECTED_DOWNSTREAM_ROUTE
@@ -1076,18 +1080,20 @@ def _execution_state_is_valid(text: str, state: dict[str, object]) -> bool:
         "ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED",
         "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
         "IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
-        "- IDENTITY & ACCESS: COMPLETE / CERTIFIED / CURRENT v0.1.4",
-        "CONDITIONAL DOSSIERS: PRIVACY & CONSENT, CONTENT & MEDIA, AUDIT & EVIDENCE CONDITIONAL / PENDING EXPLICIT ADJUDICATION; ANALYTICS NOT REQUIRED",
-        "PHASE 7C: BLOCKED / NOT_STARTED PENDING CONDITIONAL-DOSSIER DISPOSITIONS",
+        "- IDENTITY & ACCESS: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.4",
+        "PRIVACY & CONSENT: NOT_REQUIRED",
+        "CONTENT & MEDIA: NOT_REQUIRED",
+        "AUDIT & EVIDENCE: REQUIRED / NEXT / NOT_STARTED",
+        "PHASE 7C: BLOCKED / NOT_STARTED",
         "PROOF CLASSIFICATION: NOT FINALISED",
-        "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
         "STORE / CER: EXCLUDED FROM HARDEN-02",
     )
     if any(active.count(line) != 1 for line in required_active):
         return False
     if active.count("COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0") != 1:
         return False
-    if active.count("- COMMUNICATIONS: COMPLETE / CERTIFIED / CURRENT v0.1.0") != 1:
+    if active.count("- COMMUNICATIONS: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.0") != 1:
         return False
     route_lines = [line.strip("→ ") for line in active.splitlines() if line.lstrip().startswith("→")]
     if active.count("H02-3R POST-EXECUTION ROUTE:") != 1 or route_lines != expected_route[1:]:
@@ -1104,7 +1110,7 @@ def _affirmative_prohibited_scope(text: str) -> list[str]:
         r"(?im)^\s*(?:STORE\s*/\s*CER|Store Blueprint|\bCER\b).*\b(?:IN SCOPE|REQUIRED|AUTHORISED|AUTHORIZED|COMPLETE)\b",
         r"(?im)^\s*COMMUNICATIONS(?!\s*(?:v0\.1\.0 PROMOTION:|DOSSIER:|: COMPLETE / CERTIFIED / CURRENT v0\.1\.0)).*\b(?:STARTED|AUTHORISED|AUTHORIZED)\b",
         r"(?im)^\s*COMMUNICATIONS:\s*COMPLETE(?!\s*/\s*CERTIFIED\s*/\s*CURRENT\s*v0\.1\.0)",
-        r"(?im)^\s*(?:PHASE 7C|PROOF CLASSIFICATION|PHASE 8|EXECUTABLE DEVELOPMENT|APPLICATION IMPLEMENTATION).*\b(?:COMPLETE|APPROVED|PASSED|AUTHORISED|AUTHORIZED|READY)\b",
+        r"(?im)^\s*(?:PHASE 7C|PROOF CLASSIFICATION|PHASE 8|EXECUTABLE DEVELOPMENT|APPLICATION IMPLEMENTATION)\s*:\s*(?:COMPLETE|APPROVED|PASSED|AUTHORISED|AUTHORIZED|READY)\b",
         r"(?im)^\s*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT|TB|VS|HH|PACKAGE INSTALLS?|MIGRATIONS?|PROVIDER CHANGES?)\s*:\s*(?:AUTHORISED|AUTHORIZED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE|ALLOWED)\b",
         r"(?im)\bStore repository SHA\b",
         r"(?im)\bCER proof obligation\b",
@@ -1145,7 +1151,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         self.assertRegex(contract[:2000], r"(?is)status:.*COMPLETE / CERTIFIED")
         self.assertIn("I-01", matrix["EXECUTION"]["evidence"])
         self.assertIn("I-13", matrix["EXECUTION"]["evidence"])
-        self.assertEqual("0.5.5", state.get("status_successor_version"))
+        self.assertEqual("0.5.6", state.get("status_successor_version"))
         contradictory = (
             text
             + "\nCURRENT AUTHORITY-STAGE PROGRAMME: FP-001 RECONCILIATION\n"
@@ -1160,7 +1166,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         self.assertIn("ROADMAP SEQUENCING AMENDMENT: COMPLETE", text)
         self.assertIn("current route 05_ROADMAP_v1.2.2.md", text)
         self.assertIn("PHASE 7A COMPLETE", text)
-        self.assertIn("IDENTITY & ACCESS JIT DOMAIN DOSSIER v0.1.4 COMPLETE / CERTIFIED / CURRENT", text)
+        self.assertIn("IDENTITY & ACCESS: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.4", _active_window(text))
         self.assertIn("OQ-034 ARCHITECTURE SELECTION RESOLVED", text)
         self.assertIn("TARGETED PRODUCT AMENDMENT PROGRAMME", state.get("completed_milestones", []))
         self.assertIn("FP-001 PHASE 7A", state.get("completed_milestones", []))
@@ -1497,20 +1503,21 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         conditional = state["conditional_dossiers"]
         self.assertEqual(
             {
-                "privacy_consent": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-                "content_media": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-                "audit_evidence": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
-                "analytics": "NOT REQUIRED",
+                "privacy_consent": "NOT_REQUIRED",
+                "content_media": "NOT_REQUIRED",
+                "audit_evidence": "REQUIRED / NEXT / NOT_STARTED",
+                "analytics": "NOT_REQUIRED",
             },
             conditional,
         )
         active = _active_window(text)
-        self.assertIn("CONDITIONAL DOSSIERS:", active)
-        self.assertIn("PENDING EXPLICIT ADJUDICATION", active)
-        self.assertNotRegex(active, r"(?i)CONDITIONAL DOSSIERS:.*\b(?:COMPLETE|APPROVED)\b")
+        self.assertIn("PRIVACY & CONSENT: NOT_REQUIRED", active)
+        self.assertIn("CONTENT & MEDIA: NOT_REQUIRED", active)
+        self.assertIn("AUDIT & EVIDENCE: REQUIRED / NEXT / NOT_STARTED", active)
+        self.assertNotIn("CONDITIONAL / PENDING EXPLICIT ADJUDICATION", active)
         adjudicated = text.replace(
-            '"privacy_consent": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION"',
-            '"privacy_consent": "COMPLETE / APPROVED"',
+            '"privacy_consent": "NOT_REQUIRED"',
+            '"privacy_consent": "REQUIRED"',
             1,
         )
         self.assertFalse(_execution_state_is_valid(adjudicated, _lifecycle_json(adjudicated)))
@@ -1596,13 +1603,13 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
 
     def test_i11_implementation_remains_blocked(self):
         text, state, _ = self._state_and_matrix()
-        self.assertEqual("BLOCKED", state.get("application_implementation"))
+        self.assertEqual("UNAUTHORISED / BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS", state.get("application_implementation"))
         active = _active_window(text)
-        self.assertRegex(active, r"(?m)^EXECUTABLE DEVELOPMENT:\s*BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS\s*$")
+        self.assertRegex(active, r"(?m)^EXECUTABLE DEVELOPMENT:\s*UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED\s*$")
         self.assertNotRegex(active, r"(?i)(?:TB|VS|HH|application implementation).*\b(?:AUTHORISED|AUTHORIZED|STARTED|COMPLETE)\b")
         self.assertNotIn("APPLICATION IMPLEMENTATION: AUTHORISED", text)
         implementation = text.replace(
-            '"application_implementation": "BLOCKED"',
+            '"application_implementation": "UNAUTHORISED / BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS"',
             '"application_implementation": "AUTHORISED"',
             1,
         )
@@ -1633,7 +1640,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         positions = [route_lines.index(required) for required in EXPECTED_DOWNSTREAM_ROUTE[1:]]
         self.assertEqual(sorted(positions), positions)
         self.assertEqual(1, len(_route_declarations(text, "NEXT STAGE")))
-        self.assertRegex(route_text, r"(?m)^NEXT STAGE:\s*REMAINING REQUIRED / CONDITIONAL PHASE 7B$")
+        self.assertRegex(route_text, r"(?m)^NEXT STAGE:\s*FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER$")
         json_region = _marked_region(text, JSON_START, JSON_END)
         for index, predecessor in enumerate(EXPECTED_DOWNSTREAM_ROUTE[1:], start=1):
             ending = ",\n" if index < len(EXPECTED_DOWNSTREAM_ROUTE) - 1 else "\n"
@@ -1696,9 +1703,9 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         )
         stale_mutants = (
             contract.replace("00_PLATFORM_v1.8.0.md", "00_PLATFORM_v1.7.0.md", 1),
-            contract.replace("02_OPEN_WORK_v1.2.61.md", "02_OPEN_WORK_v1.2.60.md", 1),
+            contract.replace("02_OPEN_WORK_v1.2.62.md", "02_OPEN_WORK_v1.2.60.md", 1),
             contract.replace(
-                "working/DELIVERY_ATLAS_WORKING_v0.4.3.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.4.md",
                 "working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
                 1,
             ),
@@ -1781,8 +1788,8 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         self.assertIn("110348834922", successor)
         self.assertIn("PR #60: STALE HISTORICAL CANDIDATE / SUPERSEDED BY THIS SUCCESSOR / NOT MERGED / NOT AUTHORITY", successor)
         self.assertIn("PHASE 7C: BLOCKED / NOT_STARTED", successor)
-        self.assertIn("proof classification remains not finalised", successor)
-        self.assertIn("EXECUTABLE DEVELOPMENT: BLOCKED", successor)
+        self.assertIn("proof classification remains not finalised", successor.casefold())
+        self.assertIn("EXECUTABLE DEVELOPMENT: UNAUTHORISED", successor)
 
         malformed = (
             successor.replace(JSON_START, "", 1),
@@ -1823,7 +1830,12 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
             1,
         )
         current_i05 = current_i05.replace(
-            "Phase 7C remains BLOCKED / NOT_STARTED while remaining required / conditional Phase 7B dispositions (including explicit conditional-dossier adjudication) remain unresolved. Communications dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP.",
+            "The previous Open Work v1.2.61 status left Privacy & Consent, Content & Media, and Audit & Evidence pending explicit adjudication. Open Work v1.2.62 and the bounded tracker #114 now record Privacy & Consent and Content & Media as NOT_REQUIRED, Audit & Evidence as REQUIRED / NEXT / NOT_STARTED, and Analytics as NOT_REQUIRED. This current-status route does not alter any source Domain ownership.",
+            "Privacy & Consent, Content & Media, and Audit & Evidence remain CONDITIONAL / PENDING EXPLICIT ADJUDICATION unless a later authorised task changes them. Analytics remains NOT REQUIRED.",
+            1,
+        )
+        current_i05 = current_i05.replace(
+            "Phase 7C remains BLOCKED / NOT_STARTED until the required Audit & Evidence dossier is COMPLETE / CERTIFIED / CURRENT and subsequent Phase 7B reconciliation succeeds. Communications dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP.",
             "Phase 7C remains BLOCKED / NOT_STARTED while required Communications dossier and conditional dispositions remain unresolved.",
             1,
         )
