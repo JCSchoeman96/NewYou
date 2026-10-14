@@ -10,9 +10,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 CONTRACT = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md"
-CONTRACT_CURRENT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.6.md"
+CONTRACT_CURRENT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.7.md"
 CONTRACT_STATUS_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
-CONTRACT_CURRENT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.5.5.md"
+CONTRACT_CURRENT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.5.6.md"
 CONTRACT_V0_4_1_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.1.md"
 CONTRACT_V0_3_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.3.0.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md"
@@ -458,12 +458,12 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         self.assertFalse((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.4.1.md").exists())
         self.assertFalse((DOCS / "02_OPEN_WORK_v1.2.44.md").exists())
 
-    def test_v0_5_6_updates_current_route_without_changing_contract_semantics(self):
+    def test_v0_5_7_updates_current_route_without_changing_contract_semantics(self):
         self.assertEqual(
-            "c4ab787bcea14f13b8197db0c5a4d6fce836aa9f8d26e77f718c0420d43d1a09",
+            "b7384ed3f3b159c69d9644977d4ff5d9df6fa1a0eacf453c50a08f7fb9ef6e1f",
             _sha256(CONTRACT_CURRENT_PREDECESSOR),
         )
-        self.assertIn("Plan / contract version:** `v0.5.6`", self.current_contract)
+        self.assertIn("Plan / contract version:** `v0.5.7`", self.current_contract)
         self.assertIn("original v0.4.0 semantics are certified", self.current_contract)
         self.assertIn("Execution-start baseline main SHA", self.current_contract)
         self.assertIn("HARDEN-02 execution **COMPLETE / CERTIFIED**", self.current_contract)
@@ -497,13 +497,8 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             "## 9. Stale-state / restart pressure tests",
         )
         current_i05 = current_i05.replace(
+            "The previous Open Work v1.2.61 status left Privacy & Consent, Content & Media, and Audit & Evidence pending explicit adjudication. Open Work v1.2.63 records the Phase 7B Audit dossier work start under dedicated execution tracker #116, linked to adjudication #114 and programme router #111. Privacy & Consent, Content & Media and Analytics remain NOT_REQUIRED. Audit is REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING, with candidate authoring and review next. This current-status route does not alter any source Domain ownership.",
             "The previous Open Work v1.2.61 status left Privacy & Consent, Content & Media, and Audit & Evidence pending explicit adjudication. Open Work v1.2.62 and the bounded tracker #114 now record Privacy & Consent and Content & Media as NOT_REQUIRED, Audit & Evidence as REQUIRED / NEXT / NOT_STARTED, and Analytics as NOT_REQUIRED. This current-status route does not alter any source Domain ownership.",
-            "Privacy & Consent, Content & Media, and Audit & Evidence remain CONDITIONAL / PENDING EXPLICIT ADJUDICATION unless a later authorised task changes them. Analytics remains NOT REQUIRED.",
-            1,
-        )
-        current_i05 = current_i05.replace(
-            "Phase 7C remains BLOCKED / NOT_STARTED until the required Audit & Evidence dossier is COMPLETE / CERTIFIED / CURRENT and subsequent Phase 7B reconciliation succeeds. Communications dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP.",
-            "Phase 7C remains BLOCKED / NOT_STARTED while remaining required / conditional Phase 7B dispositions (including explicit conditional-dossier adjudication) remain unresolved. Communications dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP.",
             1,
         )
         self.assertEqual(predecessor_i05, current_i05)
@@ -591,8 +586,8 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
     def test_execution_is_current_stage_and_rejects_appended_routes(self):
         historical_label = "HARDEN-02 CONTRACT RECOVERY / SOLO-MAINTAINER CERTIFICATION AMENDMENT"
         historical_next = "HARDEN-02_CONTRACT_RECOVERY_REQUIRED"
-        current_label = "FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION"
-        current_next = "FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER"
+        current_label = "FP-001 PHASE 7B AUDIT & EVIDENCE JIT DOMAIN DOSSIER WORK START"
+        current_next = "AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE"
         historical_open_work_current = _route_declaration(self.open_work, "CURRENT AUTHORITY-STAGE PROGRAMME")
         current_open_work_current = _route_declaration(self.current_open_work, "CURRENT AUTHORITY-STAGE PROGRAMME")
         readme_current = _route_declaration(self.readme, "CURRENT AUTHORITY-STAGE PROGRAMME")
@@ -929,7 +924,7 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
 
     def test_readme_open_work_and_manifest_route_the_lifecycle_successor(self):
         self.assertIn(self.current_open_work_path.name, self.readme)
-        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.6.md", self.readme)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.7.md", self.readme)
         self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md", self.readme)
         self.assertNotIn("POST-MERGE CERTIFICATION: PENDING", self.readme)
         self.assertIn("POST-MERGE CERTIFICATION: COMPLETE", self.readme)
@@ -945,11 +940,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             for section in ("governing_documents", "reference_documents")
             for entry in self.manifest[section]
         }
-        self.assertEqual("1.2.62", current["OPEN_WORK"]["semver"])
+        self.assertEqual("1.2.63", current["OPEN_WORK"]["semver"])
         self.assertEqual(self.current_open_work_path, ROOT / current["OPEN_WORK"]["repository_path"])
         self.assertEqual(_sha256(self.current_open_work_path), current["OPEN_WORK"]["sha256"])
         navigation_paths = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
-        self.assertIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.6.md", navigation_paths)
+        self.assertIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.7.md", navigation_paths)
         self.assertNotIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.4.1.md", navigation_paths)
         historical = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         self.assertEqual("historical", historical["OPEN_WORK_V1_2_47"]["lifecycle"])
@@ -974,11 +969,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         state = self.current_lifecycle_state
         self.assertEqual("COMPLETE / CERTIFIED", state["contract_status"])
         self.assertEqual("COMPLETE / CERTIFIED", state["harden_02_execution"])
-        self.assertEqual("FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION", state["current_stage"])
-        self.assertEqual("FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER", state["next_stage"])
-        self.assertEqual("0.5.6", state["status_successor_version"])
-        self.assertEqual("1.2.62", next(row for row in self.manifest["governing_documents"] if row["document_id"] == "OPEN_WORK")["semver"])
-        self.assertEqual("6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3", state["status_successor_base_sha"])
+        self.assertEqual("FP-001 PHASE 7B AUDIT & EVIDENCE JIT DOMAIN DOSSIER WORK START", state["current_stage"])
+        self.assertEqual("AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE", state["next_stage"])
+        self.assertEqual("0.5.7", state["status_successor_version"])
+        self.assertEqual("1.2.63", next(row for row in self.manifest["governing_documents"] if row["document_id"] == "OPEN_WORK")["semver"])
+        self.assertEqual("332d51f19d77430fe4e95911920fe0c87cab524a", state["status_successor_base_sha"])
         self.assertEqual("COMPLETE / CERTIFIED", _route_declaration(self.current_open_work, "HARDEN-02 EXECUTION"))
         self.assertNotIn("POST-MERGE INDEPENDENT INSPECTION AND ATTESTATION PENDING", self.current_open_work)
         self.assertNotIn("POST-MERGE CERTIFICATION: PENDING", self.readme)
@@ -1021,9 +1016,9 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         )
         self.assertEqual("NOT_REQUIRED", state["conditional_dossiers"]["privacy_consent"])
         self.assertEqual("NOT_REQUIRED", state["conditional_dossiers"]["content_media"])
-        self.assertEqual("REQUIRED / NEXT / NOT_STARTED", state["conditional_dossiers"]["audit_evidence"])
+        self.assertEqual("REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", state["conditional_dossiers"]["audit_evidence"])
         self.assertEqual("NOT_REQUIRED", state["conditional_dossiers"]["analytics"])
-        self.assertEqual("REQUIRED / NEXT / NOT_STARTED", state["audit_dossier"])
+        self.assertEqual("REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", state["audit_dossier"])
         self.assertEqual(
             "Audit & Evidence dossier must be COMPLETE / CERTIFIED / CURRENT and subsequent Phase 7B reconciliation must succeed",
             state["phase_7c_block_reason"],

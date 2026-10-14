@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-STARTING_MAIN = "6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3"
+STARTING_MAIN = "332d51f19d77430fe4e95911920fe0c87cab524a"
 MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 
@@ -36,11 +36,9 @@ def git_show(path: str) -> bytes:
 class FP001ConditionalDossierAdjudicationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.skeleton = (DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md").read_text(
-            encoding="utf-8"
-        )
-        cls.open_work = current_open_work()
-        cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        cls.skeleton = git_show("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md").decode("utf-8")
+        cls.open_work = git_show("docs/00_platform/02_OPEN_WORK_v1.2.62.md").decode("utf-8")
+        cls.readme = git_show("docs/00_platform/README.md").decode("utf-8")
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.roadmap = (DOCS / "05_ROADMAP_v1.2.2.md").read_text(encoding="utf-8")
 
@@ -163,10 +161,10 @@ class FP001ConditionalDossierAdjudicationTests(unittest.TestCase):
 
     def test_predecessors_are_archived_byte_identically_and_pinned(self) -> None:
         predecessors = {
-            "docs/00_platform/02_OPEN_WORK_v1.2.61.md": DOCS / "archive/02_OPEN_WORK_v1.2.61.md",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.3.md": DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.3.md",
-            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md": DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.5.md": DOCS / "archive/HARDEN-02_CONTRACT_WORKING_v0.5.5.md",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.61.md": DOCS / "archive/02_OPEN_WORK_v1.2.61.md",
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.3.md": DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.3.md",
+            "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md": DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md",
+            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.5.md": DOCS / "archive/HARDEN-02_CONTRACT_WORKING_v0.5.5.md",
         }
         manifest = read_manifest()
         pins = manifest["integrity_rules"]["fp001_conditional_dossier_predecessor_archives"]
