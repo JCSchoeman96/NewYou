@@ -574,6 +574,21 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
         cls.historical = {entry["document_id"]: entry for entry in cls.manifest["historical_documents"]}
         cls.readme = _read(DOCS / "README.md")
 
+    def test_readme_harden_archive_lineage_does_not_claim_historical_status_is_current(self):
+        active_working = _section(self.readme, "## Active Working Artifacts", "## Delivery Atlas routing")
+        archive = _section(self.readme, "## Archive", "## Authority Order")
+        harden_archive = "\n".join(line for line in archive.splitlines() if "HARDEN-02" in line)
+
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.6.md", active_working)
+        self.assertNotIn("current status is v0.5.5", harden_archive)
+        self.assertNotIn("active HARDEN-02 status is v0.5.1", harden_archive)
+        self.assertNotIn("current routing and execution status are in working v0.5.1", harden_archive)
+        self.assertNotIn("current v0.4.9", harden_archive)
+        self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.5.5.md", harden_archive)
+        self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.5.1.md", harden_archive)
+        self.assertIn("v0.5.5 was a later routing/status successor", harden_archive)
+        self.assertIn("v0.5.1 was a later historical status successor", harden_archive)
+
     def test_current_routing_fields_resolve_to_manifest_and_readme(self):
         current = {doc_id: entry["canonical_filename"] for doc_id, entry in self.governing.items()}
         north_star = _read(DOCS / current["PROJECT_NORTH_STAR_AND_MVP"])

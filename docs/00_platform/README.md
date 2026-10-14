@@ -211,16 +211,16 @@ The frozen August 2026 audit at `archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md` r
 - `archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md` — byte-identical predecessor to the certified/current v0.1.3 dossier.
 - `archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md` — exact PR #70 certified candidate bytes, retained with its SHA-256 pin as promotion evidence.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.1.md` — preserved pending-post-merge status snapshot.
-- `archive/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` — preserved completed-contract status snapshot; superseded for current routing and provenance by archived v0.4.3/v0.4.4 and current v0.4.9.
-- `archive/HARDEN-02_CONTRACT_WORKING_v0.4.8.md` — byte-identical predecessor to archived HARDEN-02 v0.4.9; current status is v0.5.5.
+- `archive/HARDEN-02_CONTRACT_WORKING_v0.4.2.md` — preserved completed-contract status snapshot; later historical routing and provenance records are archived at v0.4.3, v0.4.4 and v0.4.9.
+- `archive/HARDEN-02_CONTRACT_WORKING_v0.4.8.md` — byte-identical predecessor to archived HARDEN-02 v0.4.9; v0.5.5 was a later routing/status successor, and the present current route is `working/HARDEN-02_CONTRACT_WORKING_v0.5.6.md`.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.5.5.md` — byte-identical direct predecessor to current HARDEN-02 v0.5.6 routing successor.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.5.4.md` — byte-identical predecessor to archived HARDEN-02 v0.5.5 routing successor.
-- `archive/HARDEN-02_CONTRACT_WORKING_v0.4.7.md` — byte-identical predecessor to archived v0.4.8; active HARDEN-02 status is v0.5.1.
+- `archive/HARDEN-02_CONTRACT_WORKING_v0.4.7.md` — byte-identical predecessor to archived v0.4.8; v0.5.1 was a later historical status successor.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.6.md` — byte-identical predecessor to archived v0.4.7.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.4.md` — byte-identical predecessor to archived v0.4.5 routing successor.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.3.md` — byte-identical predecessor to archived routing successor v0.4.4.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.4.4.md` — byte-identical predecessor to archived routing successor v0.4.5.
-- `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — preserved certified contract semantics and pre-merge lifecycle artifact; its completed lifecycle and execution start were recorded by status successor v0.4.3, preserved at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.3.md`; current routing and execution status are in working v0.5.1.
+- `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — preserved certified contract semantics and pre-merge lifecycle artifact; its completed lifecycle and execution start were recorded by status successor v0.4.3, preserved at `archive/HARDEN-02_CONTRACT_WORKING_v0.4.3.md`; a later v0.5.1 working status snapshot recorded the then-current routing and execution status.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — preserved contract merged via PR #39; v0.3.0 lifecycle not retroactively certified.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — preserved previous contract attempt; historical evidence, not repository-verifiably certified.
 - `archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md` — preserved pre-H02-3R HARDEN-02 working governance contract.
