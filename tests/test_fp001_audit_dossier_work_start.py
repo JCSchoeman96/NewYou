@@ -44,6 +44,7 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
             for row in cls.manifest["governing_documents"]
             if row["document_id"] == "OPEN_WORK"
         )
+        cls.open_work_entry = open_work_entry
         cls.open_work_path = ROOT / open_work_entry["repository_path"]
         cls.open_work = cls.open_work_path.read_text(encoding="utf-8")
         cls.atlas_path = _navigation_path(cls.manifest, "DELIVERY_ATLAS_WORKING_")
@@ -64,6 +65,60 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
         self.assertEqual("DELIVERY_ATLAS_WORKING_v0.4.5.md", self.atlas_path.name)
         self.assertEqual("FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md", self.skeleton_path.name)
         self.assertEqual("HARDEN-02_CONTRACT_WORKING_v0.5.7.md", self.harden_path.name)
+
+    def test_open_work_manifest_lineage_registers_its_immediate_predecessor(self):
+        current = self.open_work_entry
+        self.assertEqual("1.2.63", current["semver"])
+        self.assertEqual("1.2.62", current["superseded_version"])
+
+        historical = next(
+            (
+                entry
+                for entry in self.manifest["historical_documents"]
+                if entry["document_id"] == "OPEN_WORK_V1_2_62"
+            ),
+            None,
+        )
+        self.assertIsNotNone(historical, "immediate Open Work predecessor must be registered as historical")
+        self.assertEqual("02_OPEN_WORK_v1.2.62.md", historical["canonical_filename"])
+        self.assertEqual("1.2.62", historical["semver"])
+        self.assertEqual(
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.62.md",
+            historical["repository_path"],
+        )
+        self.assertEqual("PLANNING_TRACKER_HISTORICAL", historical["authority_class"])
+        self.assertEqual("1.2.63", historical["superseded_version"])
+        self.assertEqual("historical", historical["lifecycle"])
+        self.assertEqual(
+            "d7d3e0b7beac27579ccdd5271fdf532b97941bb90f2ee5bb14bbb48c7594c143",
+            historical["sha256"],
+        )
+        self.assertEqual(historical["sha256"], historical["provenance_sha256"])
+        archive_path = ROOT / historical["repository_path"]
+        self.assertEqual(historical["sha256"], hashlib.sha256(archive_path.read_bytes()).hexdigest())
+
+    def test_immediate_predecessor_paths_are_rejected_unless_archive_qualified(self):
+        retired_predecessors = (
+            ("(?<!archive/)02_OPEN_WORK_v1\\.2\\.62\\.md", "02_OPEN_WORK_v1.2.62.md"),
+            ("(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.4\\.4\\.md", "DELIVERY_ATLAS_WORKING_v0.4.4.md"),
+            (
+                "(?<!archive/)FP-001_FEATURE_PACK_SKELETON_WORKING_v0\\.1\\.6\\.md",
+                "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md",
+            ),
+            ("(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.5\\.6\\.md", "HARDEN-02_CONTRACT_WORKING_v0.5.6.md"),
+        )
+        configured = self.manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"]
+        for pattern, filename in retired_predecessors:
+            with self.subTest(filename=filename):
+                self.assertIn(pattern, configured)
+                self.assertIsNotNone(re.search(pattern, filename))
+                self.assertIsNone(re.search(pattern, f"archive/{filename}"))
+
+        guard_note = self.manifest["integrity_rules"]["graph_rules"]["stale_predecessor_current_path_guard_note"]
+        for current in ("v1.2.63", "v0.4.5", "v0.1.7", "v0.5.7"):
+            self.assertIn(current, guard_note)
+        for predecessor in ("v1.2.62", "v0.4.4", "v0.1.6", "v0.5.6"):
+            self.assertIn(predecessor, guard_note)
 
     def test_audit_is_in_progress_and_certification_is_pending(self):
         state = self.lifecycle_state

@@ -1136,6 +1136,60 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                     report["findings"],
                 )
 
+    def test_fp001_audit_work_start_predecessors_fail_in_unqualified_active_routes(self):
+        mutations = (
+            ("02_OPEN_WORK_v1.2.63.md", "02_OPEN_WORK_v1.2.62.md"),
+            ("working/DELIVERY_ATLAS_WORKING_v0.4.5.md", "DELIVERY_ATLAS_WORKING_v0.4.4.md"),
+            (
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md",
+                "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md",
+            ),
+            (
+                "working/HARDEN-02_CONTRACT_WORKING_v0.5.7.md",
+                "HARDEN-02_CONTRACT_WORKING_v0.5.6.md",
+            ),
+        )
+        for route_path, predecessor in mutations:
+            with self.subTest(predecessor=predecessor), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                current_route = root / "docs/00_platform" / route_path
+                current_route.write_text(
+                    current_route.read_text(encoding="utf-8")
+                    + f"\nCurrent route pointer: {predecessor}\n",
+                    encoding="utf-8",
+                )
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+
+                self.assertTrue(
+                    any(finding["check"] == "active_document_graph" for finding in report["findings"]),
+                    report["findings"],
+                )
+
+    def test_fp001_pmr_allows_archive_qualified_immediate_predecessor_references(self):
+        archived_predecessors = (
+            "archive/02_OPEN_WORK_v1.2.62.md",
+            "archive/DELIVERY_ATLAS_WORKING_v0.4.4.md",
+            "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md",
+            "archive/HARDEN-02_CONTRACT_WORKING_v0.5.6.md",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            current_atlas = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.5.md"
+            current_atlas.write_text(
+                current_atlas.read_text(encoding="utf-8")
+                + "\nHistorical archive references: "
+                + ", ".join(archived_predecessors)
+                + "\n",
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("PASS", report["status"], report["findings"])
+
     def test_fp001_pmr_rejects_multiple_active_skeleton_versions(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
