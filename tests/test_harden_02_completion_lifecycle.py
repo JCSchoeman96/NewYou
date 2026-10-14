@@ -10,9 +10,9 @@ from tools.foundation_integrity_audit import _h02_lifecycle_state
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.60.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.61.md"
 README = DOCS / "README.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.4.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.5.md"
 JSON_START = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
 JSON_END = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
 JSON_BLOCK = re.compile(
@@ -100,7 +100,7 @@ class Harden02CompletionLifecycleTests(unittest.TestCase):
         end = self.open_work.index("## 12.2", start)
         row = self.open_work[start:end]
         changed_row = row.replace(
-            "`working/HARDEN-02_CONTRACT_WORKING_v0.5.4.md`",
+            "`working/HARDEN-02_CONTRACT_WORKING_v0.5.5.md`",
             "`working/HARDEN-02_CONTRACT_WORKING_v0.4.6.md`",
             1,
         )
