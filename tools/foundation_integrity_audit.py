@@ -385,7 +385,7 @@ H02_EXECUTION_STATES = {
     },
     "COMPLETE / CERTIFIED": {
         "matrix": "COMPLETE_CERTIFIED",
-        "successor_versions": ("0.4.7", "0.4.8", "0.4.9", "0.5.0", "0.5.1", "0.5.2", "0.5.3", "0.5.4", "0.5.5", "0.5.6"),
+        "successor_versions": ("0.4.7", "0.4.8", "0.4.9", "0.5.0", "0.5.1", "0.5.2", "0.5.3", "0.5.4", "0.5.5", "0.5.6", "0.5.7"),
         "current_stage": "COMMUNICATIONS v0.1.0 CURRENT-STATUS PROMOTION",
         "next_stage": "REMAINING REQUIRED / CONDITIONAL PHASE 7B",
         "readme": "HARDEN-02 EXECUTION: COMPLETE / CERTIFIED",
@@ -588,6 +588,15 @@ def _h02_lifecycle_state(
                         "programme_status": "HARDEN-02 EXECUTION COMPLETE / CERTIFIED; ENGINEERING STANDARDS AUTHORITY PROMOTION COMPLETE / CERTIFIED; FP-001 RECONCILIATION COMPLETE / CERTIFIED; IDENTITY v0.1.4 COMPLETE / CERTIFIED / CURRENT under the separate PR #77 status successor; COMMUNICATIONS JIT DOMAIN DOSSIER v0.1.0 COMPLETE / CERTIFIED / CURRENT under the separate PR #81 status successor; PRIVACY & CONSENT NOT_REQUIRED; CONTENT & MEDIA NOT_REQUIRED; AUDIT & EVIDENCE REQUIRED / NEXT / NOT_STARTED; ANALYTICS NOT_REQUIRED",
                     }
                 )
+            elif state.get("status_successor_version") == "0.5.7":
+                expected.update(
+                    {
+                        "successor_versions": ("0.5.7",),
+                        "current_stage": "FP-001 PHASE 7B AUDIT & EVIDENCE JIT DOMAIN DOSSIER WORK START",
+                        "next_stage": "AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE",
+                        "programme_status": "HARDEN-02 EXECUTION COMPLETE / CERTIFIED; ENGINEERING STANDARDS AUTHORITY PROMOTION COMPLETE / CERTIFIED; FP-001 RECONCILIATION COMPLETE / CERTIFIED; IDENTITY v0.1.4 COMPLETE / CERTIFIED / CURRENT under the separate PR #77 status successor; COMMUNICATIONS JIT DOMAIN DOSSIER v0.1.0 COMPLETE / CERTIFIED / CURRENT under the separate PR #81 status successor; PRIVACY & CONSENT NOT_REQUIRED; CONTENT & MEDIA NOT_REQUIRED; AUDIT & EVIDENCE REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING; ANALYTICS NOT_REQUIRED",
+                    }
+                )
             else:
                 expected.update(
                     {
@@ -677,10 +686,14 @@ def _h02_lifecycle_state(
                 "communications_finalisation": "BLOCKED / STOP",
                 "pr_60": "STALE HISTORICAL CANDIDATE / SUPERSEDED BY THIS SUCCESSOR / NOT MERGED / NOT AUTHORITY",
             })
-            if state.get("status_successor_version") == "0.5.6":
+            if state.get("status_successor_version") in {"0.5.6", "0.5.7"}:
                 expected_milestones.append("FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION")
                 expected_downstream.update({
-                    "audit_dossier": "REQUIRED / NEXT / NOT_STARTED",
+                    "audit_dossier": (
+                        "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
+                        if state.get("status_successor_version") == "0.5.7"
+                        else "REQUIRED / NEXT / NOT_STARTED"
+                    ),
                     "phase_7c_block_reason": "Audit & Evidence dossier must be COMPLETE / CERTIFIED / CURRENT and subsequent Phase 7B reconciliation must succeed",
                     "application_implementation": "UNAUTHORISED / BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
                 })
@@ -705,10 +718,14 @@ def _h02_lifecycle_state(
         {
             "privacy_consent": "NOT_REQUIRED",
             "content_media": "NOT_REQUIRED",
-            "audit_evidence": "REQUIRED / NEXT / NOT_STARTED",
+            "audit_evidence": (
+                "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
+                if state.get("status_successor_version") == "0.5.7"
+                else "REQUIRED / NEXT / NOT_STARTED"
+            ),
             "analytics": "NOT_REQUIRED",
         }
-        if state.get("status_successor_version") == "0.5.6"
+        if state.get("status_successor_version") in {"0.5.6", "0.5.7"}
         else {
             "privacy_consent": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
             "content_media": "CONDITIONAL / PENDING EXPLICIT ADJUDICATION",
@@ -732,7 +749,7 @@ def _h02_lifecycle_state(
         "PROOF CLASSIFICATION",
         "PHASE 8 ONLY AFTER DEVELOPMENT ENTRY HARD STOP PASSES",
     ]
-    if state.get("status_successor_version") == "0.5.6":
+    if state.get("status_successor_version") in {"0.5.6", "0.5.7"}:
         expected_route = [
             "CERTIFIED HARDEN-02 EXECUTION",
             "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
@@ -741,7 +758,11 @@ def _h02_lifecycle_state(
             "CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
             "COMMUNICATIONS JIT DOMAIN DOSSIER",
             "CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION",
-            "FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER",
+            (
+                "AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE"
+                if state.get("status_successor_version") == "0.5.7"
+                else "FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER"
+            ),
             "FP-001 PHASE 7B RECONCILIATION",
             "PHASE 7C",
             "PROOF CLASSIFICATION",
@@ -749,6 +770,13 @@ def _h02_lifecycle_state(
         ]
     if state.get("downstream_route") != expected_route:
         return False, "the governed post-execution route changed"
+    if state.get("status_successor_version") == "0.5.7":
+        if (
+            state.get("audit_dossier_execution_tracker_issue") != 116
+            or state.get("audit_dossier_candidate") != "NOT_AUTHORED / NOT_CERTIFIED / NOT_CURRENT"
+            or state.get("audit_dossier_work_start_baseline_main_sha") != "332d51f19d77430fe4e95911920fe0c87cab524a"
+        ):
+            return False, "Audit work-start tracker, baseline, or not-authored candidate state is missing"
     if execution == "IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING":
         if state.get("execution_start_baseline_main_sha") != "1c8fc94058176795d88cb82e08857e3d30c553e9":
             return False, "HARDEN execution-start baseline main SHA is missing or incorrect"
@@ -765,7 +793,9 @@ def _h02_lifecycle_state(
         if cert != H02_COMPLETE_CERTIFICATION_FACTS:
             return False, "complete execution certification evidence is incomplete or contradictory"
         expected_base_sha = (
-            "6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3"
+            "332d51f19d77430fe4e95911920fe0c87cab524a"
+            if state.get("status_successor_version") == "0.5.7"
+            else "6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3"
             if state.get("status_successor_version") == "0.5.6"
             else "3f09bc91199e74d27645ebbb37d45c4831340952"
             if state.get("status_successor_version") == "0.5.5"
@@ -816,12 +846,22 @@ def _h02_lifecycle_state(
             if promotion_status == "COMPLETE / CERTIFIED"
             else "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION"
         )
-        adjudication_current = state.get("status_successor_version") == "0.5.6"
+        adjudication_current = state.get("status_successor_version") in {"0.5.6", "0.5.7"}
+        audit_work_start_current = state.get("status_successor_version") == "0.5.7"
         conditional_active_status = (
             (
                 "- PRIVACY & CONSENT: NOT_REQUIRED",
                 "- CONTENT & MEDIA: NOT_REQUIRED",
-                "- AUDIT & EVIDENCE: REQUIRED / NEXT / NOT_STARTED",
+                "- AUDIT & EVIDENCE: " + (
+                    "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
+                    if audit_work_start_current
+                    else "REQUIRED / NEXT / NOT_STARTED"
+                ),
+                *(
+                    ("AUDIT DOSSIER CANDIDATE: NOT AUTHORED / NOT CERTIFIED / NOT CURRENT",)
+                    if audit_work_start_current
+                    else ()
+                ),
                 "- ANALYTICS: NOT_REQUIRED",
                 "PHASE 7C: BLOCKED / NOT_STARTED UNTIL AUDIT DOSSIER COMPLETE / CERTIFIED / CURRENT AND PHASE 7B RECONCILIATION SUCCEEDS",
                 "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
@@ -842,6 +882,11 @@ def _h02_lifecycle_state(
         )
         if any(active.count(line) != 1 for line in required_active):
             return False, "Open Work omits a required completion or downstream boundary"
+        if audit_work_start_current and (
+            "AUDIT DOSSIER EXECUTION TRACKER: #116" not in active
+            or "AUDIT DOSSIER WORK-START BASELINE MAIN SHA: `332d51f19d77430fe4e95911920fe0c87cab524a`" not in active
+        ):
+            return False, "Open Work omits the Audit work-start tracker or baseline"
         if active.count(communications_route) != 1 or active.count("- COMMUNICATIONS: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.0") != 1:
             return False, "Open Work Communications summary and required-dossier route disagree or are duplicated"
     else:
@@ -878,7 +923,16 @@ def _h02_lifecycle_state(
         conditional_readme = (
             "- PRIVACY & CONSENT DOSSIER: NOT_REQUIRED",
             "- CONTENT & MEDIA DOSSIER: NOT_REQUIRED",
-            "- AUDIT & EVIDENCE DOSSIER: REQUIRED / NEXT / NOT_STARTED",
+            "- AUDIT & EVIDENCE DOSSIER: " + (
+                "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
+                if audit_work_start_current
+                else "REQUIRED / NEXT / NOT_STARTED"
+            ),
+            *(
+                ("- AUDIT DOSSIER CANDIDATE: NOT_AUTHORED / NOT_CERTIFIED / NOT_CURRENT",)
+                if audit_work_start_current
+                else ()
+            ),
             "- ANALYTICS DOSSIER: NOT_REQUIRED",
             "- PHASE 7C: BLOCKED / NOT_STARTED until Audit dossier is COMPLETE / CERTIFIED / CURRENT and Phase 7B reconciliation succeeds.",
         )
@@ -904,7 +958,11 @@ def _h02_lifecycle_state(
         ),
         *conditional_readme,
         "- PROOF CLASSIFICATION: NOT FINALISED",
-        "- EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+        (
+            "- EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED"
+            if audit_work_start_current
+            else "- EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS"
+        ),
     )
     if any(readme_current.count(line) != 1 for line in required_readme):
         return False, "README current route or downstream status is missing or contradictory"
@@ -935,7 +993,7 @@ def _h02_lifecycle_state(
         if not contract:
             return False, "current HARDEN status successor is missing from lifecycle validation"
         version_header = contract.split("## 1. Objective", 1)[0]
-        expected_harden_version = "0.5.6" if adjudication_current else "0.5.5" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"
+        expected_harden_version = "0.5.7" if audit_work_start_current else "0.5.6" if adjudication_current else "0.5.5" if promotion_status == "COMPLETE / CERTIFIED" else "0.4.7"
         version_marker = "**Plan / contract version:** " + chr(96) + f"v{expected_harden_version}" + chr(96)
         if version_marker not in version_header:
             return False, "current HARDEN status successor version is missing or unsupported"
@@ -995,16 +1053,33 @@ def _h02_lifecycle_state(
             adjudication_route = (
                 "PRIVACY & CONSENT DOSSIER: NOT_REQUIRED",
                 "CONTENT & MEDIA DOSSIER: NOT_REQUIRED",
-                "AUDIT & EVIDENCE DOSSIER: REQUIRED / NEXT / NOT_STARTED",
+                "AUDIT & EVIDENCE DOSSIER: " + (
+                    "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
+                    if audit_work_start_current
+                    else "REQUIRED / NEXT / NOT_STARTED"
+                ),
+                *(
+                    ("AUDIT DOSSIER CANDIDATE: NOT AUTHORED / NOT CERTIFIED / NOT CURRENT",)
+                    if audit_work_start_current
+                    else ()
+                ),
                 "PHASE 7C: BLOCKED / NOT_STARTED UNTIL AUDIT DOSSIER COMPLETE / CERTIFIED / CURRENT AND PHASE 7B RECONCILIATION SUCCEEDS",
                 "PROOF CLASSIFICATION: NOT FINALISED",
-                "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+                (
+                    "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED"
+                    if audit_work_start_current
+                    else "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS"
+                ),
             )
             if any(value not in current_route for value in adjudication_route):
                 return False, "current HARDEN contract does not preserve the adjudicated dossier and Phase 7C block"
             communications_to_audit = (
                 "→ CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION\n"
-                "→ FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER"
+                + (
+                    "→ AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE"
+                    if audit_work_start_current
+                    else "→ FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER"
+                )
             )
             if communications_to_audit not in current_route:
                 return False, "current HARDEN contract skips the Audit dossier after Communications promotion"
@@ -1344,12 +1419,22 @@ def _engineering_standards_certified_state(
     if active_start < 0 or active_end < 0 or active_start >= active_end:
         return False, "current Open Work programme-state section is missing"
     active = open_work[active_start:active_end]
-    adjudication_current = "NEXT STAGE: FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER" in active
+    audit_work_start_current = "NEXT STAGE: AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE" in active
+    adjudication_current = audit_work_start_current or "NEXT STAGE: FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER" in active
     conditional_status = (
         (
             "- PRIVACY & CONSENT: NOT_REQUIRED",
             "- CONTENT & MEDIA: NOT_REQUIRED",
-            "- AUDIT & EVIDENCE: REQUIRED / NEXT / NOT_STARTED",
+            "- AUDIT & EVIDENCE: " + (
+                "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
+                if audit_work_start_current
+                else "REQUIRED / NEXT / NOT_STARTED"
+            ),
+            *(
+                ("AUDIT DOSSIER CANDIDATE: NOT AUTHORED / NOT CERTIFIED / NOT CURRENT",)
+                if audit_work_start_current
+                else ()
+            ),
             "- ANALYTICS: NOT_REQUIRED",
             "PHASE 7C: BLOCKED / NOT_STARTED UNTIL AUDIT DOSSIER COMPLETE / CERTIFIED / CURRENT AND PHASE 7B RECONCILIATION SUCCEEDS",
             "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
@@ -1377,7 +1462,9 @@ def _engineering_standards_certified_state(
     if active.count("- COMMUNICATIONS: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.0") != 1:
         return False, "Open Work required-dossier Communications route is missing or duplicated"
     expected_next = (
-        "NEXT STAGE: FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER"
+        "NEXT STAGE: AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE"
+        if audit_work_start_current
+        else "NEXT STAGE: FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER"
         if adjudication_current
         else "NEXT STAGE: REMAINING REQUIRED / CONDITIONAL PHASE 7B"
     )
@@ -1425,6 +1512,9 @@ def _engineering_standards_certified_state(
         "Identity v0.1.4 is COMPLETE / CERTIFIED / CURRENT under the separate PR #77 status successor",
         "PR #76 candidate certification and completed post-merge certification evidence are COMPLETE; the separate PR #77 status successor records Identity v0.1.4 as COMPLETE / CERTIFIED / CURRENT.",
         "Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT under the separate PR #81 status successor",
+        "Audit & Evidence is REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING under tracker #116"
+        if audit_work_start_current
+        else "Audit & Evidence is REQUIRED / NEXT / NOT_STARTED",
         "Phase 7C remains BLOCKED / NOT_STARTED until Audit dossier is COMPLETE / CERTIFIED / CURRENT and Phase 7B reconciliation succeeds"
         if adjudication_current
         else "Phase 7C remains blocked / not started",
@@ -1435,6 +1525,11 @@ def _engineering_standards_certified_state(
     )
     if any(harden_section.count(line) != 1 for line in required_harden_status):
         return False, "Open Work current HARDEN status section has stale promotion status or altered downstream gates"
+    if audit_work_start_current and (
+        "the candidate is not authored, certified or current" not in harden_section.casefold()
+        or "candidate authoring and review are next" not in harden_section
+    ):
+        return False, "Open Work current HARDEN status section advances the Audit dossier candidate lifecycle"
     if "Engineering Standards Authority Promotion is NEXT / AUTHORISED / NOT STARTED" in harden_section:
         return False, "Open Work current HARDEN status section retains the pre-certification Standards route"
 
@@ -1457,9 +1552,18 @@ def _engineering_standards_certified_state(
         return False, "current HARDEN successor starts or misroutes Communications"
     if "PHASE 7C: BLOCKED / NOT_STARTED" not in harden_route:
         return False, "current HARDEN successor unblocks Phase 7C"
+    if audit_work_start_current and (
+        "AUDIT & EVIDENCE DOSSIER: REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING" not in harden_route
+        or "AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE" not in harden_route
+    ):
+        return False, "current HARDEN successor omits the Audit work-start status or candidate authoring route"
     if "PROOF CLASSIFICATION: NOT FINALISED" not in harden_route:
         return False, "current HARDEN successor finalises proof classification"
-    expected_development_gate = "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS"
+    expected_development_gate = (
+        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED"
+        if audit_work_start_current
+        else "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS"
+    )
     if expected_development_gate not in harden_route:
         return False, "current HARDEN successor authorises Phase 8 or implementation"
     if "STORE / CER: EXCLUDED FROM HARDEN-02" not in harden_route:
@@ -1669,7 +1773,7 @@ def _check_product_semantics(
     readme_path = root / roots["context_index"]
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     fp001_candidates = (
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md",
+        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
     )
     fp001_path = next((path for path in fp001_candidates if path.is_file()), fp001_candidates[-1])
@@ -2778,7 +2882,7 @@ def _check_fp001_pmr_reconciliation(
     report: dict[str, Any],
 ) -> None:
     docs = root / "docs" / "00_platform"
-    skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md"
+    skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md"
     communications_dossier = docs / "working" / "FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
     communications_v010_candidate = docs / "archive" / "FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
     dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
@@ -2807,23 +2911,23 @@ def _check_fp001_pmr_reconciliation(
         current_open_work = current_entries[0]
         open_work_path = root / _relative_path(current_open_work)
         open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
-        if _relative_path(current_open_work) != "docs/00_platform/02_OPEN_WORK_v1.2.62.md":
-            issues.append("manifest Open Work route is not v1.2.62")
-        if current_open_work.get("canonical_filename") != "02_OPEN_WORK_v1.2.62.md":
+        if _relative_path(current_open_work) != "docs/00_platform/02_OPEN_WORK_v1.2.63.md":
+            issues.append("manifest Open Work route is not v1.2.63")
+        if current_open_work.get("canonical_filename") != "02_OPEN_WORK_v1.2.63.md":
             issues.append("manifest current Open Work filename is stale")
-        if current_open_work.get("semver") != "1.2.62":
+        if current_open_work.get("semver") != "1.2.63":
             issues.append("manifest current Open Work version is stale")
 
     atlas_status_lines = re.findall(r"(?m)^ATLAS RECONCILIATION: COMPLETE.*$", open_work)
     expected_atlas_status = (
-        "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.4.md`; "
-        "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.3.md`; "
+        "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.5.md`; "
+        "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.4.md`; "
         "pinned v0.2.1 source-at-freeze artifacts remain preserved; DERIVED / NON-AUTHORITATIVE; "
         "ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12"
     )
     if atlas_status_lines != [expected_atlas_status]:
         issues.append(
-            "Open Work v1.2.62 Atlas route must name archived Atlas v0.4.3 as its immediate routing predecessor"
+            "Open Work v1.2.63 Atlas route must name archived Atlas v0.4.4 as its immediate routing predecessor"
         )
 
     expected_active_skeletons = [skeleton]
@@ -2831,12 +2935,22 @@ def _check_fp001_pmr_reconciliation(
     active_skeletons = sorted((docs / "working").glob("FP-001_FEATURE_PACK_SKELETON_WORKING_v*.md"))
     active_dossiers = sorted((docs / "working").glob("FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v*.md"))
     if active_skeletons != expected_active_skeletons:
-        issues.append("exactly one active certified/current skeleton v0.1.6 is required; stale candidates or extra versions remain active")
+        issues.append("exactly one active certified/current skeleton v0.1.7 is required; stale candidates or extra versions remain active")
     if active_dossiers != expected_active_dossiers:
         issues.append("exactly one active certified/current Identity dossier v0.1.4 is required; stale candidates or extra versions remain active")
     for path, label in ((skeleton, "certified skeleton"), (dossier, "certified Identity dossier")):
         if not path.is_file():
             issues.append(f"{label} is missing")
+    active_audit_candidates = [
+        path
+        for path in docs.rglob("*.md")
+        if path.name.upper().startswith("FP-001")
+        and "AUDIT" in path.name.upper()
+        and "DOSSIER" in path.name.upper()
+        and "archive" not in path.parts
+    ]
+    if active_audit_candidates:
+        issues.append("an Audit dossier candidate exists before its separately governed authoring/review route")
 
     required_archive_hashes = {
         "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
@@ -2937,13 +3051,33 @@ def _check_fp001_pmr_reconciliation(
     if (docs / "working" / "candidates" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md").exists():
         issues.append("promoted Identity v0.1.4 remains in the candidate route")
 
+    required_work_start_archives = {
+        "docs/00_platform/archive/02_OPEN_WORK_v1.2.62.md",
+        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.4.md",
+        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.6.md",
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md",
+    }
+    work_start_archives = integrity_rules.get("fp001_audit_dossier_work_start_predecessor_archives")
+    if not isinstance(work_start_archives, dict) or set(work_start_archives) != required_work_start_archives:
+        issues.append("manifest Audit work-start predecessor archive paths are missing, substituted or unexpected")
+        work_start_archives = work_start_archives if isinstance(work_start_archives, dict) else {}
+    for relative in sorted(required_work_start_archives):
+        archive = root / relative
+        expected_hash = work_start_archives.get(relative)
+        if not archive.is_file():
+            issues.append(f"Audit work-start predecessor archive is missing: {relative}")
+        if not isinstance(expected_hash, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_hash):
+            issues.append(f"manifest Audit work-start archive hash is missing or malformed: {relative}")
+        elif archive.is_file() and sha256_file(archive) != expected_hash:
+            issues.append(f"Audit work-start predecessor bytes do not match their pinned hash: {relative}")
+
     navigation_paths = integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
     expected_navigation_paths = {
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.4.md",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.5.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.6.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.7.md",
     }
     if not isinstance(navigation_paths, list) or set(navigation_paths) != expected_navigation_paths or len(navigation_paths) != len(expected_navigation_paths):
         issues.append("manifest navigation does not route exactly the current FP-001, Atlas and HARDEN successors")
@@ -2975,7 +3109,7 @@ def _check_fp001_pmr_reconciliation(
     )
 
     if "**Lifecycle status:** " + chr(96) + "CERTIFIED / CURRENT" + chr(96) not in skeleton_text:
-        issues.append("skeleton v0.1.6 is not marked CERTIFIED / CURRENT")
+        issues.append("skeleton v0.1.7 is not marked CERTIFIED / CURRENT")
     if "RECONCILIATION CANDIDATE / NOT CERTIFIED" in skeleton_text:
         issues.append("active skeleton remains a reconciliation candidate")
     if "RECONCILIATION CANDIDATE / NOT CERTIFIED" in dossier_text:
@@ -3203,18 +3337,35 @@ def _check_fp001_pmr_reconciliation(
             "FP-001 COMMUNICATIONS v0.1.0 JIT DOMAIN DOSSIER PROMOTION",
         ],
     }
-    adjudication_current = lifecycle_state.get("status_successor_version") == "0.5.6"
+    adjudication_current = lifecycle_state.get("status_successor_version") in {"0.5.6", "0.5.7"}
+    audit_work_start_current = lifecycle_state.get("status_successor_version") == "0.5.7"
     if adjudication_current:
         expected_fp001_state.update(
             {
-                "status_successor_base_sha": "6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3",
-                "current_stage": "FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION",
-                "next_stage": "FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER",
-                "status_successor_version": "0.5.6",
+                "status_successor_base_sha": (
+                    "332d51f19d77430fe4e95911920fe0c87cab524a"
+                    if audit_work_start_current
+                    else "6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3"
+                ),
+                "current_stage": (
+                    "FP-001 PHASE 7B AUDIT & EVIDENCE JIT DOMAIN DOSSIER WORK START"
+                    if audit_work_start_current
+                    else "FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION"
+                ),
+                "next_stage": (
+                    "AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE"
+                    if audit_work_start_current
+                    else "FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER"
+                ),
+                "status_successor_version": "0.5.7" if audit_work_start_current else "0.5.6",
                 "conditional_dossiers": {
                     "privacy_consent": "NOT_REQUIRED",
                     "content_media": "NOT_REQUIRED",
-                    "audit_evidence": "REQUIRED / NEXT / NOT_STARTED",
+                    "audit_evidence": (
+                        "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
+                        if audit_work_start_current
+                        else "REQUIRED / NEXT / NOT_STARTED"
+                    ),
                     "analytics": "NOT_REQUIRED",
                 },
                 "phase_7c_block_reason": "Audit & Evidence dossier must be COMPLETE / CERTIFIED / CURRENT and subsequent Phase 7B reconciliation must succeed",
@@ -3223,7 +3374,19 @@ def _check_fp001_pmr_reconciliation(
                 + ["FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION"],
             }
         )
-        expected_fp001_state["audit_dossier"] = "REQUIRED / NEXT / NOT_STARTED"
+        expected_fp001_state["audit_dossier"] = (
+            "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
+            if audit_work_start_current
+            else "REQUIRED / NEXT / NOT_STARTED"
+        )
+        if audit_work_start_current:
+            expected_fp001_state.update(
+                {
+                    "audit_dossier_execution_tracker_issue": 116,
+                    "audit_dossier_candidate": "NOT_AUTHORED / NOT_CERTIFIED / NOT_CURRENT",
+                    "audit_dossier_work_start_baseline_main_sha": "332d51f19d77430fe4e95911920fe0c87cab524a",
+                }
+            )
     if not isinstance(lifecycle_state, dict) or any(
         lifecycle_state.get(key) != value for key, value in expected_fp001_state.items()
     ):
@@ -3534,7 +3697,9 @@ def _check_fp001_pmr_reconciliation(
     stage = stage[1].split("# 10. Minimal Tools", 1)[0] if len(stage) == 2 else ""
     next_routes = re.findall(r"(?m)^NEXT STAGE:\s*(.*?)\s*$", stage)
     expected_next_route = (
-        "FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER"
+        "AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE"
+        if audit_work_start_current
+        else "FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER"
         if adjudication_current
         else "REMAINING REQUIRED / CONDITIONAL PHASE 7B"
     )
@@ -3542,7 +3707,7 @@ def _check_fp001_pmr_reconciliation(
         issues.append("current Open Work NEXT route does not name the single remaining required Phase 7B action")
     required_stage_tokens = [
         "CURRENT AUTHORITY-STAGE PROGRAMME: " + (
-            "FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION"
+            lifecycle_state.get("current_stage")
             if adjudication_current
             else "COMMUNICATIONS v0.1.0 CURRENT-STATUS PROMOTION"
         ),
@@ -3563,7 +3728,20 @@ def _check_fp001_pmr_reconciliation(
             [
                 "- PRIVACY & CONSENT: NOT_REQUIRED",
                 "- CONTENT & MEDIA: NOT_REQUIRED",
-                "- AUDIT & EVIDENCE: REQUIRED / NEXT / NOT_STARTED",
+                "- AUDIT & EVIDENCE: " + (
+                    "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
+                    if audit_work_start_current
+                    else "REQUIRED / NEXT / NOT_STARTED"
+                ),
+                *(
+                    (
+                        "AUDIT DOSSIER CANDIDATE: NOT AUTHORED / NOT CERTIFIED / NOT CURRENT",
+                        "AUDIT DOSSIER EXECUTION TRACKER: #116",
+                        "AUDIT DOSSIER WORK-START BASELINE MAIN SHA: `332d51f19d77430fe4e95911920fe0c87cab524a`",
+                    )
+                    if audit_work_start_current
+                    else ()
+                ),
                 "- ANALYTICS: NOT_REQUIRED",
                 "PHASE 7C: BLOCKED / NOT_STARTED UNTIL AUDIT DOSSIER COMPLETE / CERTIFIED / CURRENT AND PHASE 7B RECONCILIATION SUCCEEDS",
             ]
@@ -3613,7 +3791,11 @@ def _check_fp001_pmr_reconciliation(
         issues.append("Communications dossier semantic body changed during status promotion")
 
     readme_route = (
-        "Current programme status is in Open Work v1.2.62." if adjudication_current else "Current programme status is in Open Work v1.2.61.",
+        "Current programme status is in Open Work v1.2.63."
+        if audit_work_start_current
+        else "Current programme status is in Open Work v1.2.62."
+        if adjudication_current
+        else "Current programme status is in Open Work v1.2.61.",
         "PR #67 PMR reconciliation is COMPLETE / CERTIFIED",
         "PR #76 candidate certification and completed post-merge certification evidence are COMPLETE / CERTIFIED",
         "The separate PR #77 status successor records Identity v0.1.4 as CERTIFIED / CURRENT",
@@ -3657,10 +3839,22 @@ def _check_fp001_pmr_reconciliation(
             "Open Work §12.14 does not separate PR #76 candidate/post-merge certification evidence from the PR #77 current-status successor"
         )
     readme_active_routes = (
-        "4. " + chr(96) + ("02_OPEN_WORK_v1.2.62.md" if adjudication_current else "02_OPEN_WORK_v1.2.61.md") + chr(96),
-        chr(96) + ("working/DELIVERY_ATLAS_WORKING_v0.4.4.md" if adjudication_current else "working/DELIVERY_ATLAS_WORKING_v0.4.3.md") + chr(96) + " — derived Delivery Atlas",
-        chr(96) + ("working/HARDEN-02_CONTRACT_WORKING_v0.5.6.md" if adjudication_current else "working/HARDEN-02_CONTRACT_WORKING_v0.5.5.md") + chr(96) + " — preserves certified HARDEN-02",
-        chr(96) + ("working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md" if adjudication_current else "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md") + chr(96),
+        "4. " + chr(96) + (
+            "02_OPEN_WORK_v1.2.63.md" if audit_work_start_current else
+            "02_OPEN_WORK_v1.2.62.md" if adjudication_current else "02_OPEN_WORK_v1.2.61.md"
+        ) + chr(96),
+        chr(96) + (
+            "working/DELIVERY_ATLAS_WORKING_v0.4.5.md" if audit_work_start_current else
+            "working/DELIVERY_ATLAS_WORKING_v0.4.4.md" if adjudication_current else "working/DELIVERY_ATLAS_WORKING_v0.4.3.md"
+        ) + chr(96) + " — derived Delivery Atlas",
+        chr(96) + (
+            "working/HARDEN-02_CONTRACT_WORKING_v0.5.7.md" if audit_work_start_current else
+            "working/HARDEN-02_CONTRACT_WORKING_v0.5.6.md" if adjudication_current else "working/HARDEN-02_CONTRACT_WORKING_v0.5.5.md"
+        ) + chr(96) + " — preserves certified HARDEN-02",
+        chr(96) + (
+            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md" if audit_work_start_current else
+            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.6.md" if adjudication_current else "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md"
+        ) + chr(96),
         chr(96) + "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md" + chr(96) + " — certified/current",
         chr(96) + "working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md" + chr(96),
     )
@@ -3712,7 +3906,7 @@ def _check_fp001_pmr_reconciliation(
     ):
         issues.append("Open Work retains a live Communications work-start state after promotion")
 
-    atlas_version = "0.4.4" if adjudication_current else "0.4.3"
+    atlas_version = "0.4.5" if audit_work_start_current else "0.4.4" if adjudication_current else "0.4.3"
     atlas_path = docs / "working" / f"DELIVERY_ATLAS_WORKING_v{atlas_version}.md"
     atlas = atlas_path.read_text(encoding="utf-8") if atlas_path.is_file() else ""
     atlas_header = _markdown_header_metadata(atlas, f"# Delivery Atlas working v{atlas_version}")
@@ -3725,6 +3919,7 @@ def _check_fp001_pmr_reconciliation(
         or len(atlas_predecessors) != 1
         or all_atlas_predecessors != atlas_predecessors
         or not atlas_predecessors[0].startswith(
+            "`archive/DELIVERY_ATLAS_WORKING_v0.4.4.md`" if audit_work_start_current else
             "`archive/DELIVERY_ATLAS_WORKING_v0.4.3.md`" if adjudication_current else "`archive/DELIVERY_ATLAS_WORKING_v0.4.2.md`"
         )
     ):
@@ -3735,12 +3930,18 @@ def _check_fp001_pmr_reconciliation(
         len(all_atlas_transitions) != 1
         or len(atlas_transitions) != 1
         or all_atlas_transitions != atlas_transitions
-        or not atlas_transitions[0].startswith("`v0.4.3 → v0.4.4`" if adjudication_current else "`v0.4.2 → v0.4.3`")
+        or not atlas_transitions[0].startswith(
+            "`v0.4.4 → v0.4.5`" if audit_work_start_current else
+            "`v0.4.3 → v0.4.4`" if adjudication_current else "`v0.4.2 → v0.4.3`"
+        )
     ):
         issues.append(
             "current Atlas artifact lineage has a missing, duplicate, misplaced or incorrect Atlas metadata declaration for SemVer transition"
         )
-    current_open_work_route = "docs/00_platform/02_OPEN_WORK_v1.2.62.md" if adjudication_current else "docs/00_platform/02_OPEN_WORK_v1.2.61.md"
+    current_open_work_route = (
+        "docs/00_platform/02_OPEN_WORK_v1.2.63.md" if audit_work_start_current else
+        "docs/00_platform/02_OPEN_WORK_v1.2.62.md" if adjudication_current else "docs/00_platform/02_OPEN_WORK_v1.2.61.md"
+    )
     if current_open_work_route not in atlas:
         issues.append(f"current Delivery Atlas does not point to {Path(current_open_work_route).name}")
     if (
@@ -3754,13 +3955,16 @@ def _check_fp001_pmr_reconciliation(
     ):
         issues.append("current Delivery Atlas route is stale or omits the Identity or Communications promotion")
 
-    harden_version = "0.5.6" if adjudication_current else "0.5.5"
+    harden_version = "0.5.7" if audit_work_start_current else "0.5.6" if adjudication_current else "0.5.5"
     harden_path = docs / "working" / f"HARDEN-02_CONTRACT_WORKING_v{harden_version}.md"
     harden = harden_path.read_text(encoding="utf-8") if harden_path.is_file() else ""
     harden_header = _markdown_header_metadata(harden, f"# HARDEN-02_CONTRACT_WORKING_v{harden_version}.md")
     harden_metadata_validators = {
         "Plan / contract version": lambda value: value == f"`v{harden_version}`",
-        "Current predecessor": lambda value: value.startswith("`archive/HARDEN-02_CONTRACT_WORKING_v0.5.5.md`" if adjudication_current else "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.4.md`"),
+        "Current predecessor": lambda value: value.startswith(
+            "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.6.md`" if audit_work_start_current else
+            "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.5.md`" if adjudication_current else "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.4.md`"
+        ),
         "Earlier historical status predecessor": lambda value: value.startswith(
             "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.2.md`"
         ),
@@ -3773,8 +3977,10 @@ def _check_fp001_pmr_reconciliation(
         == "`90f96ba3452c95112bf6ec4ce5bb897676adbed4`",
         "v0.5.2 status-successor base main SHA": lambda value: value
         == "`0473cd69416f72fd94f2cee24a4d02c7f4fe0992`",
-        ("v0.5.6 routing-successor base main SHA" if adjudication_current else "v0.5.5 routing-successor base main SHA"): lambda value: value
-        == ("`6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3`" if adjudication_current else "`3f09bc91199e74d27645ebbb37d45c4831340952`"),
+        ("v0.5.7 routing-successor base main SHA" if audit_work_start_current else
+         "v0.5.6 routing-successor base main SHA" if adjudication_current else "v0.5.5 routing-successor base main SHA"): lambda value: value
+        == ("`332d51f19d77430fe4e95911920fe0c87cab524a`" if audit_work_start_current else
+            "`6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3`" if adjudication_current else "`3f09bc91199e74d27645ebbb37d45c4831340952`"),
     }
     for label, valid_value in harden_metadata_validators.items():
         header_values = _metadata_values(harden_header, label)
@@ -3804,8 +4010,18 @@ def _check_fp001_pmr_reconciliation(
         issues.append(f"current HARDEN-02 v{harden_version} status header or revision log confuses certification with current-status promotion")
     harden_current = harden.split("## 21. Current execution certification and next stage", 1)
     harden_current = harden_current[1] if len(harden_current) == 2 else ""
-    if ("Open Work v1.2.62" if adjudication_current else "Open Work v1.2.61") not in harden_current or "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" not in harden_current or "IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT" not in harden_current or "IDENTITY v0.1.4 CURRENT-STATUS PROMOTION SOURCE: PR #77 STATUS SUCCESSOR; PR #76 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE" not in harden_current:
+    expected_harden_open_work = (
+        "Open Work v1.2.63" if audit_work_start_current else
+        "Open Work v1.2.62" if adjudication_current else "Open Work v1.2.61"
+    )
+    if expected_harden_open_work not in harden_current or "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" not in harden_current or "IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT" not in harden_current or "IDENTITY v0.1.4 CURRENT-STATUS PROMOTION SOURCE: PR #77 STATUS SUCCESSOR; PR #76 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE" not in harden_current:
         issues.append(f"current HARDEN-02 v{harden_version} status route is stale or omits completed Identity promotion")
+    if audit_work_start_current and (
+        "AUDIT & EVIDENCE DOSSIER: REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING" not in harden_current
+        or "AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE" not in harden_current
+        or "AUDIT DOSSIER CANDIDATE: NOT AUTHORED / NOT CERTIFIED / NOT CURRENT" not in harden_current
+    ):
+        issues.append("current HARDEN-02 route advances or omits the Audit dossier work-start state")
     if (
         "COMMUNICATIONS v0.1.0 PROMOTION: COMPLETE / CERTIFIED / CURRENT" not in harden_current
         or "COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0" not in harden_current
