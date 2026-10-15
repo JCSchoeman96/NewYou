@@ -133,7 +133,7 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
         self.assertNotIn("CURRENT", state.get("audit_dossier", ""))
         self.assertIn(f"AUDIT & EVIDENCE DOSSIER: {AUDIT_STATUS}", self.open_work)
 
-    def test_no_audit_dossier_candidate_is_created_or_current(self):
+    def test_audit_dossier_candidate_is_present_but_remains_non_current(self):
         candidates = [
             path
             for path in DOCS.rglob("*.md")
@@ -141,8 +141,14 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
             and "AUDIT" in path.name.upper()
             and "DOSSIER" in path.name.upper()
         ]
-        self.assertEqual([], candidates)
-        self.assertEqual("NOT_AUTHORED / NOT_CERTIFIED / NOT_CURRENT", self.lifecycle_state.get("audit_dossier_candidate"))
+        candidate = DOCS / "working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+        self.assertEqual([candidate], candidates)
+        self.assertTrue(candidate.is_file())
+        self.assertEqual(AUDIT_STATUS, self.lifecycle_state.get("audit_dossier"))
+        self.assertEqual(
+            "NOT_AUTHORED / NOT_CERTIFIED / NOT_CURRENT",
+            self.lifecycle_state.get("audit_dossier_candidate"),
+        )
         self.assertNotIn("CERTIFIED", self.lifecycle_state.get("audit_dossier", ""))
         self.assertNotIn("CURRENT", self.lifecycle_state.get("audit_dossier", ""))
 

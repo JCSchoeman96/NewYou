@@ -2941,16 +2941,60 @@ def _check_fp001_pmr_reconciliation(
     for path, label in ((skeleton, "certified skeleton"), (dossier, "certified Identity dossier")):
         if not path.is_file():
             issues.append(f"{label} is missing")
-    active_audit_candidates = [
+    active_audit_candidates = sorted(
         path
         for path in docs.rglob("*.md")
         if path.name.upper().startswith("FP-001")
         and "AUDIT" in path.name.upper()
         and "DOSSIER" in path.name.upper()
         and "archive" not in path.parts
-    ]
+    )
+    expected_audit_candidate = (
+        docs / "working" / "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+    )
     if active_audit_candidates:
-        issues.append("an Audit dossier candidate exists before its separately governed authoring/review route")
+        if active_audit_candidates != [expected_audit_candidate]:
+            issues.append(
+                "only the FP-001 Audit dossier v0.1.0 review candidate may exist outside the archive"
+            )
+        else:
+            candidate_text = expected_audit_candidate.read_text(encoding="utf-8")
+            header_boundary = "## 1. Baseline, purpose and scope"
+            if header_boundary not in candidate_text:
+                issues.append(
+                    "the FP-001 Audit dossier candidate is missing its expected lifecycle header boundary"
+                )
+            candidate_header = candidate_text.split(header_boundary, 1)[0]
+            required_candidate_header = (
+                "PROPOSED PATH: docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+                "PROPOSED VERSION: v0.1.0",
+                "PHASE: 7B implementation-grade planning",
+                "FEATURE PACK: FP-001",
+                "DOMAIN: AUDIT & EVIDENCE",
+                "STATUS: CANDIDATE / REVIEW-READY / NOT CERTIFIED / NOT CURRENT",
+                "NON-EXECUTABLE",
+                "NOT PHASE 7C DEVELOPMENT-ENTRY AUTHORITY",
+                "DOES NOT AMEND PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW",
+            )
+            if any(candidate_header.count(line) != 1 for line in required_candidate_header):
+                issues.append(
+                    "the FP-001 Audit dossier candidate is missing its exact non-current review lifecycle header"
+                )
+            current_manifest_paths = {
+                _relative_path(entry)
+                for entry in _all_entries(manifest)
+                if entry.get("lifecycle", "current") != "historical"
+            }
+            candidate_relative_path = (
+                "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+            )
+            if (
+                candidate_relative_path in current_manifest_paths
+                or expected_audit_candidate.name in readme
+            ):
+                issues.append(
+                    "the FP-001 Audit review candidate must remain outside current authority routing"
+                )
 
     required_archive_hashes = {
         "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",

@@ -151,6 +151,57 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             )
             self.assertEqual("PASS", check["status"], check["message"])
 
+    def test_fp001_audit_review_candidate_requires_noncurrent_lifecycle_header(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            candidate = root / (
+                "docs/00_platform/working/"
+                "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+            )
+
+            report = run_audit(root, manifest_path)
+            check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_pmr_reconciliation"
+            )
+            self.assertEqual("PASS", check["status"], check["message"])
+
+            candidate_text = candidate.read_text(encoding="utf-8")
+            candidate.write_text(
+                candidate_text.replace(
+                    "STATUS: CANDIDATE / REVIEW-READY / NOT CERTIFIED / NOT CURRENT",
+                    "STATUS: CURRENT",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            report = run_audit(root, manifest_path)
+            check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_pmr_reconciliation"
+            )
+
+            self.assertEqual("FAIL", check["status"])
+            self.assertIn("exact non-current review lifecycle header", check["message"])
+
+    def test_fp001_audit_rejects_unexpected_additional_active_dossier_candidates(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            unexpected = root / (
+                "docs/00_platform/working/"
+                "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md"
+            )
+            unexpected.write_text("unexpected second Audit candidate\n", encoding="utf-8")
+
+            report = run_audit(root, manifest_path)
+            check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_pmr_reconciliation"
+            )
+
+            self.assertEqual("FAIL", check["status"])
+            self.assertIn("only the FP-001 Audit dossier v0.1.0 review candidate", check["message"])
+
     def test_fp001_identity_v013_archives_and_durable_delivery_section_are_preserved(self):
         tick = chr(96)
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
