@@ -8,12 +8,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 BASELINE = "5f5a994e48d9458aaa6397044b3af4d72c5d5e81"
+REVIEWED_CANDIDATE_SHA = "6825a99d074cf84a4db5269dee2d57513f398411"
 CANDIDATE_RELATIVE = (
     "docs/00_platform/working/"
     "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
 )
 CANDIDATE_PATH = ROOT / CANDIDATE_RELATIVE
 AUDIT_STATUS = "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
+AUDIT_CANDIDATE_STATUS = "CANDIDATE / REVIEW-READY / NOT CERTIFIED / NOT CURRENT"
 
 PROTECTED_PATHS = (
     "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
@@ -24,10 +26,6 @@ PROTECTED_PATHS = (
     "docs/00_platform/05_ROADMAP_v1.2.2.md",
     "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
     "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
-    "docs/00_platform/README.md",
-    "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json",
-    "docs/00_platform/02_OPEN_WORK_v1.2.63.md",
-    "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md",
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
     "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
 )
@@ -80,7 +78,7 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
         cls.manifest_path = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         cls.manifest = json.loads(cls.manifest_path.read_text(encoding="utf-8"))
         cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
-        cls.open_work = (DOCS / "02_OPEN_WORK_v1.2.63.md").read_text(encoding="utf-8")
+        cls.open_work = (DOCS / "02_OPEN_WORK_v1.2.64.md").read_text(encoding="utf-8")
         state_match = re.search(
             r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
             cls.open_work,
@@ -88,7 +86,7 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
         )
         cls.lifecycle_state = json.loads(state_match.group(1)) if state_match else {}
         cls.skeleton = (
-            DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md"
+            DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
         ).read_text(encoding="utf-8")
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.roadmap = (DOCS / "05_ROADMAP_v1.2.2.md").read_text(encoding="utf-8")
@@ -108,9 +106,16 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
         ):
             self.assertIn(marker, self.candidate)
 
-        manifest_text = json.dumps(self.manifest)
-        for current_route in (manifest_text, self.readme, self.open_work, self.skeleton):
-            self.assertNotIn(CANDIDATE_RELATIVE, current_route)
+        manifest_routes = json.dumps({
+            "governing_documents": self.manifest["governing_documents"],
+            "reference_documents": self.manifest["reference_documents"],
+        })
+        self.assertNotIn(CANDIDATE_RELATIVE, manifest_routes)
+        for current_route in (self.readme, self.open_work, self.skeleton):
+            self.assertIn("FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md", current_route)
+            self.assertIn("NOT CERTIFIED / NOT CURRENT", current_route)
+        self.assertEqual(AUDIT_CANDIDATE_STATUS, self.lifecycle_state.get("audit_dossier_candidate"))
+        self.assertEqual(118, self.lifecycle_state.get("audit_dossier_candidate_pr"))
 
     def test_current_governance_status_and_downstream_stops_remain_unchanged(self):
         self.assertEqual(AUDIT_STATUS, self.lifecycle_state.get("audit_dossier"))
@@ -127,6 +132,29 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
         for path in PROTECTED_PATHS:
             with self.subTest(path=path):
                 self.assertEqual(_git_show(path), (ROOT / path).read_bytes(), path)
+
+    def test_reviewed_candidate_bytes_are_preserved_exactly(self):
+        reviewed = subprocess.run(
+            ["git", "show", f"{REVIEWED_CANDIDATE_SHA}:{CANDIDATE_RELATIVE}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        self.assertEqual(reviewed, CANDIDATE_PATH.read_bytes())
+
+    def test_status_routes_record_candidate_review_without_advancing_audit(self):
+        self.assertIn("candidate v0.1.0 is authored and review-ready in pr #118", self.readme.casefold())
+        self.assertIn(AUDIT_CANDIDATE_STATUS, self.readme)
+        self.assertIn(AUDIT_CANDIDATE_STATUS, self.skeleton)
+        self.assertIn("AUDIT DOSSIER CANDIDATE PR: #118", self.open_work)
+        self.assertIn("AUDIT DOSSIER EXECUTION TRACKER: #116", self.open_work)
+        self.assertEqual(AUDIT_STATUS, self.lifecycle_state.get("audit_dossier"))
+        self.assertEqual("BLOCKED / NOT_STARTED", self.lifecycle_state.get("phase_7c"))
+        self.assertEqual("NOT FINALISED", self.lifecycle_state.get("proof_classification"))
+        self.assertEqual(
+            "UNAUTHORISED / BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+            self.lifecycle_state.get("application_implementation"),
+        )
 
     def test_fp001_scope_keeps_six_domains_seven_capabilities_and_seventeen_packs(self):
         participation = _section(
