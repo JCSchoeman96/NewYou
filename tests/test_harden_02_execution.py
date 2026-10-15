@@ -14,30 +14,30 @@ DOCS = ROOT / "docs" / "00_platform"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.63.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.64.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.54.md"
 OPEN_WORK_ROUTING_SUCCESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.50.md"
 OPEN_WORK_ROUTING_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.49.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.7.md"
+CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.8.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"
 CONTRACT_ROUTING_SUCCESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
 CONTRACT_ROUTING_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.5.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.6.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.6.md"
 ATLAS_ROUTING_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
 ATLAS_ROUTING_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
 
 POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
 ROADMAP = DOCS / "05_ROADMAP_v1.2.2.md"
-SKELETON = DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md"
+SKELETON = DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
 
 MATRIX_START = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:START -->"
 MATRIX_END = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:END -->"
 JSON_START = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
 JSON_END = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
 
-CURRENT_STAGE = "FP-001 PHASE 7B AUDIT & EVIDENCE JIT DOMAIN DOSSIER WORK START"
-NEXT_STAGE = "AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE"
+CURRENT_STAGE = "FP-001 PHASE 7B AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE REVIEW"
+NEXT_STAGE = "FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
 EXECUTION_STATUS = "COMPLETE / CERTIFIED"
 EXECUTION_MATRIX_STATUS = "COMPLETE_CERTIFIED"
 EXECUTION_MATRIX_EVIDENCE = "PR #59 recovery outcome PASS WITH NON-BLOCKING CORRECTIONS; I-01…I-13 and current-main revalidation PASS"
@@ -57,7 +57,7 @@ EXPECTED_DOWNSTREAM_ROUTE = [
     "CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
     "COMMUNICATIONS JIT DOMAIN DOSSIER",
     "CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION",
-    "AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE",
+    "FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION",
     "FP-001 PHASE 7B RECONCILIATION",
     "PHASE 7C",
     "PROOF CLASSIFICATION",
@@ -259,8 +259,8 @@ def _validate_contract_source_routing(text: str) -> None:
     if len(derived_rows) != 3 or any(len(row) != 2 for row in derived_rows):
         raise ValueError("current derived/source-at-freeze table has missing or unexpected rows")
     derived = {row[0].strip("`"): row[1] for row in derived_rows}
-    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.4.5.md"
-    skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md"
+    atlas_path = "working/DELIVERY_ATLAS_WORKING_v0.4.6.md"
+    skeleton_path = "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
     identity_path = "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
     if set(derived) != {atlas_path, skeleton_path, identity_path}:
         raise ValueError("derived/source-at-freeze rows do not identify the current artifacts")
@@ -283,19 +283,19 @@ def _validate_contract_source_routing(text: str) -> None:
             raise ValueError("current Identity dossier does not record certified reconciliation status")
 
     readme = _read(README)
-    if "working/DELIVERY_ATLAS_WORKING_v0.4.5.md" not in readme:
+    if "working/DELIVERY_ATLAS_WORKING_v0.4.6.md" not in readme:
         raise ValueError("README does not route current Atlas to v0.4.5")
     if "The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references." not in readme:
         raise ValueError("README does not preserve Atlas v0.2.1 as source-at-freeze evidence")
     atlas_routing = _section(readme, "## Delivery Atlas routing", "## Machine-readable inventory")
-    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.4.5.md)" not in atlas_routing:
+    if "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.4.6.md)" not in atlas_routing:
         raise ValueError("README Delivery Atlas navigation does not target v0.4.5")
-    if "working/HARDEN-02_CONTRACT_WORKING_v0.5.7.md" not in readme:
+    if "working/HARDEN-02_CONTRACT_WORKING_v0.5.8.md" not in readme:
         raise ValueError("README does not route the current HARDEN status successor")
     active = _active_window(_read(OPEN_WORK))
     if "- IDENTITY & ACCESS: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.4" not in active:
         raise ValueError("current Identity lifecycle status is not sourced from Open Work")
-    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.5.7.md" not in active:
+    if "CURRENT HARDEN-02 STATUS SUCCESSOR: working/HARDEN-02_CONTRACT_WORKING_v0.5.8.md" not in active:
         raise ValueError("Open Work does not route the current HARDEN status successor")
 
 
@@ -1151,7 +1151,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         self.assertRegex(contract[:2000], r"(?is)status:.*COMPLETE / CERTIFIED")
         self.assertIn("I-01", matrix["EXECUTION"]["evidence"])
         self.assertIn("I-13", matrix["EXECUTION"]["evidence"])
-        self.assertEqual("0.5.7", state.get("status_successor_version"))
+        self.assertEqual("0.5.8", state.get("status_successor_version"))
         contradictory = (
             text
             + "\nCURRENT AUTHORITY-STAGE PROGRAMME: FP-001 RECONCILIATION\n"
@@ -1640,7 +1640,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         positions = [route_lines.index(required) for required in EXPECTED_DOWNSTREAM_ROUTE[1:]]
         self.assertEqual(sorted(positions), positions)
         self.assertEqual(1, len(_route_declarations(text, "NEXT STAGE")))
-        self.assertRegex(route_text, r"(?m)^NEXT STAGE:\s*AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE$")
+        self.assertRegex(route_text, r"(?m)^NEXT STAGE:\s*FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION$")
         json_region = _marked_region(text, JSON_START, JSON_END)
         for index, predecessor in enumerate(EXPECTED_DOWNSTREAM_ROUTE[1:], start=1):
             ending = ",\n" if index < len(EXPECTED_DOWNSTREAM_ROUTE) - 1 else "\n"
@@ -1703,9 +1703,9 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         )
         stale_mutants = (
             contract.replace("00_PLATFORM_v1.8.0.md", "00_PLATFORM_v1.7.0.md", 1),
-            contract.replace("02_OPEN_WORK_v1.2.63.md", "02_OPEN_WORK_v1.2.60.md", 1),
+            contract.replace("02_OPEN_WORK_v1.2.64.md", "02_OPEN_WORK_v1.2.60.md", 1),
             contract.replace(
-                "working/DELIVERY_ATLAS_WORKING_v0.4.5.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.6.md",
                 "working/DELIVERY_ATLAS_WORKING_v0.2.1.md",
                 1,
             ),

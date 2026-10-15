@@ -185,7 +185,7 @@ class FP001ConditionalDossierAdjudicationTests(unittest.TestCase):
         for path in authority_paths:
             self.assertEqual(git_show(path), (ROOT / path).read_bytes(), path)
 
-    def test_no_dossier_or_implementation_artifacts_were_introduced(self) -> None:
+    def test_only_authorized_audit_candidate_and_no_implementation_artifacts_were_introduced(self) -> None:
         committed = subprocess.run(
             ["git", "diff", "--name-only", f"{STARTING_MAIN}...HEAD"],
             cwd=ROOT,
@@ -204,7 +204,24 @@ class FP001ConditionalDossierAdjudicationTests(unittest.TestCase):
             or path == ".github/workflows/foundation-integrity.yml"
         )
         self.assertTrue(all(allowed(path) for path in paths), paths)
-        self.assertFalse(any("JIT_DOMAIN_DOSSIER" in path and any(domain in path for domain in ("PRIVACY", "CONTENT", "AUDIT")) for path in paths))
+        audit_dossiers = [
+            path for path in paths
+            if "JIT_DOMAIN_DOSSIER" in path and "AUDIT" in path.upper()
+        ]
+        self.assertEqual(
+            [
+                "docs/00_platform/working/"
+                "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+            ],
+            audit_dossiers,
+        )
+        self.assertFalse(
+            any(
+                "JIT_DOMAIN_DOSSIER" in path
+                and any(domain in path.upper() for domain in ("PRIVACY", "CONTENT"))
+                for path in paths
+            )
+        )
         self.assertFalse(any(path.startswith(("lib/", "config/", "priv/", "test/", "resources/", "services/", "jobs/", "routes/", "schema/", "migrations/")) for path in paths))
 
 
