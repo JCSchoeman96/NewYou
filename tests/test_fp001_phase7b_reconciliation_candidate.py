@@ -102,7 +102,7 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
         self.assertIn("not an FP-001 blocker", text)
         self.assertIn("prior PR #67 PMR reconciliation is complete", text)
 
-        open_work = (DOCS / "02_OPEN_WORK_v1.2.66.md").read_text(encoding="utf-8")
+        open_work = (DOCS / "archive/02_OPEN_WORK_v1.2.66.md").read_text(encoding="utf-8")
         state_match = re.search(
             r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
             open_work,
@@ -124,8 +124,8 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
             "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->",
             "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->",
         )
-        current_skeleton = (DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md").read_text()
-        archived_skeleton = (DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md").read_text()
+        current_skeleton = (DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md").read_text()
+        archived_skeleton = (DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md").read_text()
         for marker in pmr_markers:
             self.assertEqual(current_skeleton.count(marker), 1)
             self.assertEqual(archived_skeleton.count(marker), 1)

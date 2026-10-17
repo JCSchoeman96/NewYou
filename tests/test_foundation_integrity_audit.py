@@ -198,24 +198,25 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             )
             manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
-            skeleton_path = docs / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md"
+            skeleton_path = docs / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md"
             skeleton = skeleton_path.read_text(encoding="utf-8")
-            self.assertIn("records the Audit v0.1.0 current-status promotion under PR #119", skeleton)
+            current_audit_route = "working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+            self.assertIn(current_audit_route, skeleton)
             skeleton = skeleton.replace(
-                "records the Audit v0.1.0 current-status promotion",
-                "records the work start for the already-adjudicated required FP-001 Audit & Evidence JIT Domain Dossier",
+                current_audit_route,
+                "archive/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
                 1,
             )
             skeleton_path.write_text(skeleton, encoding="utf-8")
 
-            atlas_path = docs / "working/DELIVERY_ATLAS_WORKING_v0.4.8.md"
+            atlas_path = docs / "working/DELIVERY_ATLAS_WORKING_v0.4.9.md"
             atlas = atlas_path.read_text(encoding="utf-8")
             history_start = atlas.index("## v0.4.6 Patch Scope (historical predecessor record)")
             history_end = atlas.index("## v0.4.4 Patch Scope", history_start)
             history = atlas[history_start:history_end].replace("Open Work v1.2.64", "Open Work v1.2.65", 1)
             atlas_path.write_text(atlas[:history_start] + history + atlas[history_end:], encoding="utf-8")
 
-            harden_path = docs / "working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md"
+            harden_path = docs / "working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md"
             harden = harden_path.read_text(encoding="utf-8")
             harden_path.write_text(
                 harden.replace(
@@ -236,7 +237,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             self.assertEqual("FAIL", check["status"], check["message"])
             for defect in (
                 "manifest Audit promotion guard note must distinguish PR #119 promotion from PR #118 candidate",
-                "FP-001 Skeleton current-state prose misidentifies Audit status promotion as work start",
+                "FP-001 Skeleton current state omits the current Audit dossier route",
                 "Atlas v0.4.6 historical route must use Open Work v1.2.64",
                     "HARDEN-02 v0.5.10 provenance must preserve the v0.5.9 and v0.5.8 status-successor bases",
             ):
@@ -566,7 +567,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         collapsed_provenance = "PR #76 certification/promotion is COMPLETE / CERTIFIED / CURRENT."
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.66.md"
+            open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.67.md"
             open_work = open_work_path.read_text(encoding="utf-8")
             section_start = open_work.index("## 12.14 —")
             section_end = open_work.find("\n## ", section_start + 1)
@@ -626,35 +627,35 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         mutations = (
             (
                 "wrong direct predecessor",
-                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.7.md`",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.8.md`",
                 "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.1.md`",
             ),
             (
                 "wrong semver transition",
-                "- **SemVer transition:** `v0.4.7 → v0.4.8`",
+                "- **SemVer transition:** `v0.4.8 → v0.4.9`",
                 "- **SemVer transition:** `v0.4.2 → v0.4.3`",
             ),
             (
                 "missing predecessor metadata",
-                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.7.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain preserved at their archive paths.\n",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.8.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.\n",
                 "",
             ),
             (
                 "duplicate predecessor metadata",
-                "- **SemVer transition:** `v0.4.7 → v0.4.8`",
-                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.7.md` (duplicate)\n"
-                "- **SemVer transition:** `v0.4.7 → v0.4.8`",
+                "- **SemVer transition:** `v0.4.8 → v0.4.9`",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.8.md` (duplicate)\n"
+                "- **SemVer transition:** `v0.4.8 → v0.4.9`",
             ),
         )
         for name, anchor, replacement in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
-                atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.8.md"
-                original_open_work = (root / "docs/00_platform/02_OPEN_WORK_v1.2.66.md").read_bytes()
+                atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.9.md"
+                original_open_work = (root / "docs/00_platform/02_OPEN_WORK_v1.2.67.md").read_bytes()
                 atlas = atlas_path.read_text(encoding="utf-8")
                 self.assertIn(anchor, atlas)
                 atlas_path.write_text(atlas.replace(anchor, replacement, 1), encoding="utf-8")
-                self.assertEqual(original_open_work, (root / "docs/00_platform/02_OPEN_WORK_v1.2.66.md").read_bytes())
+                self.assertEqual(original_open_work, (root / "docs/00_platform/02_OPEN_WORK_v1.2.67.md").read_bytes())
                 refresh_manifest(root, manifest_path)
 
                 report = run_audit(root, manifest_path)
@@ -680,11 +681,11 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         for name, declaration in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
-                atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.8.md"
+                atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.9.md"
                 atlas = atlas_path.read_text(encoding="utf-8")
-                header = atlas.split("## v0.4.8 Patch Scope", 1)[0]
-                self.assertIn("- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.7.md`", header)
-                self.assertIn("- **SemVer transition:** `v0.4.7 → v0.4.8`", header)
+                header = atlas.split("## v0.4.9 Patch Scope", 1)[0]
+                self.assertIn("- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.8.md`", header)
+                self.assertIn("- **SemVer transition:** `v0.4.8 → v0.4.9`", header)
                 atlas_path.write_text(atlas + declaration, encoding="utf-8")
                 refresh_manifest(root, manifest_path)
 
@@ -700,13 +701,13 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
     def test_fp001_pmr_allows_historical_lineage_prose_without_metadata_declarations(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.8.md"
+            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.9.md"
             atlas_path.write_text(
                 atlas_path.read_text(encoding="utf-8")
                 + "\nHistorical prose: Atlas v0.3.8 preceded the direct v0.3.9 predecessor, and the current transition is v0.3.9 to v0.4.0.\n",
                 encoding="utf-8",
             )
-            harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md"
+            harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md"
             harden_path.write_text(
                 harden_path.read_text(encoding="utf-8")
                 + "\nHistorical prose: v0.4.9 came before the current v0.5.0 predecessor; the certified semantics originate in v0.4.0.\n",
@@ -722,8 +723,8 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
             self.assertEqual("PASS", promotion_check["status"], promotion_check["message"])
 
-    def test_fp001_pmr_validates_harden_v0510_successor_metadata(self):
-        predecessor = "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.9.md` — byte-identical direct predecessor\n"
+    def test_fp001_pmr_validates_harden_v0511_successor_metadata(self):
+        predecessor = "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.10.md` (direct predecessor; preserved byte-identically).\n"
         mutations = (
             (
                 "multiple current predecessors",
@@ -737,24 +738,24 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             ),
             (
                 "wrong certified successor version",
-                "this v0.5.10 successor preserves them",
+                "this v0.5.11 successor preserves them",
                 "this v0.5.4 successor preserves them",
             ),
             (
                 "missing successor base SHA",
-                "- **v0.5.10 current-status successor base main SHA:** `5d282ecca4e13b621c7f96c05c47d6fac43ec1bd`\n",
+                "- **v0.5.11 current-status successor base main SHA:** `f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3`\n",
                 "",
             ),
             (
                 "incorrect successor base SHA",
-                "- **v0.5.10 current-status successor base main SHA:** `5d282ecca4e13b621c7f96c05c47d6fac43ec1bd`",
-                "- **v0.5.10 current-status successor base main SHA:** `0000000000000000000000000000000000000000`",
+                "- **v0.5.11 current-status successor base main SHA:** `f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3`",
+                "- **v0.5.11 current-status successor base main SHA:** `0000000000000000000000000000000000000000`",
             ),
         )
         for name, anchor, replacement in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
-                harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md"
+                harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md"
                 harden = harden_path.read_text(encoding="utf-8")
                 self.assertIn(anchor, harden)
                 harden_path.write_text(harden.replace(anchor, replacement, 1), encoding="utf-8")
@@ -767,7 +768,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 )
 
                 self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-                self.assertIn("current HARDEN-02 v0.5.10 successor metadata", promotion_check["message"])
+                self.assertIn("current HARDEN-02 v0.5.11 successor metadata", promotion_check["message"])
 
     def test_fp001_pmr_rejects_harden_metadata_declarations_outside_header(self):
         declarations = (
@@ -779,15 +780,15 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 "`archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` — this v0.4.9 successor changes status",
             ),
             ("v0.5.0 status-successor base main SHA", "`0000000000000000000000000000000000000000`"),
-            ("v0.5.10 current-status successor base main SHA", "`0000000000000000000000000000000000000000`"),
+            ("v0.5.11 current-status successor base main SHA", "`0000000000000000000000000000000000000000`"),
         )
         for field, value in declarations:
             declaration = f"\n- **{field}:** {value}\n"
             with self.subTest(field=field), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
-                harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md"
+                harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md"
                 harden = harden_path.read_text(encoding="utf-8")
-                self.assertIn("- **Plan / contract version:** `v0.5.10`", harden.split("### Revision log", 1)[0])
+                self.assertIn("- **Plan / contract version:** `v0.5.11`", harden.split("### Revision log", 1)[0])
                 harden_path.write_text(harden + declaration, encoding="utf-8")
                 refresh_manifest(root, manifest_path)
 
@@ -798,7 +799,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 )
 
                 self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-                self.assertIn("HARDEN-02 v0.5.10 successor metadata declaration", promotion_check["message"])
+                self.assertIn("HARDEN-02 v0.5.11 successor metadata declaration", promotion_check["message"])
 
     def test_fp001_pmr_rejects_immediate_predecessors_left_in_working_routes(self):
         stale_routes = (
@@ -906,12 +907,12 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         metadata_documents = (
             (
                 "Atlas",
-                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.8.md",
+                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.9.md",
                 "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md` (example duplicate)",
             ),
             (
                 "HARDEN-02",
-                "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md",
+                "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md",
                 "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` (example duplicate)",
             ),
         )
@@ -936,16 +937,16 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 if expected_status == "FAIL":
                     self.assertIn("current Atlas artifact lineage", promotion_check["message"])
                     self.assertIn(
-                        "current HARDEN-02 v0.5.10 successor metadata declaration",
+                        "current HARDEN-02 v0.5.11 successor metadata declaration",
                         promotion_check["message"],
                     )
 
     def test_fp001_identity_v014_promotion_rejects_non_immediate_atlas_predecessor(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.66.md"
+            open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.67.md"
             open_work = open_work_path.read_text(encoding="utf-8")
-            current_predecessor = "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.7.md`"
+            current_predecessor = "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.8.md`"
             stale_predecessor = "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.9.md`"
             if current_predecessor in open_work:
                 open_work = open_work.replace(current_predecessor, stale_predecessor, 1)
@@ -1101,7 +1102,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 "stale Delivery Atlas Identity route",
                 lambda root: replace_once(
                     root,
-                    "working/DELIVERY_ATLAS_WORKING_v0.4.8.md",
+                    "working/DELIVERY_ATLAS_WORKING_v0.4.9.md",
                     "Identity dossier v0.1.4 is CERTIFIED / CURRENT",
                     "Identity dossier v0.1.3 is CERTIFIED / CURRENT",
                 ),
@@ -1110,9 +1111,9 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 "stale HARDEN-02 Identity route",
                 lambda root: replace_once(
                     root,
-                    "working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md",
-                    "Identity dossier v0.1.4 are COMPLETE / CERTIFIED",
-                    "Identity dossier v0.1.3 are COMPLETE / CERTIFIED",
+                    "working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md",
+                    "IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
+                    "IDENTITY v0.1.3 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
                 ),
             ),
             (
@@ -1185,7 +1186,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         for name, mutate in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
-                open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.66.md"
+                open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.67.md"
                 open_work = open_work_path.read_text(encoding="utf-8")
                 lifecycle_start = open_work.index("<!-- HARDEN_02_LIFECYCLE_STATE_START -->")
                 json_start = open_work.index("{", lifecycle_start)
@@ -1210,11 +1211,11 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
     def test_fp001_pmr_rejects_unarchived_predecessor_route_in_current_atlas(self):
         mutations = (
-            ("working/DELIVERY_ATLAS_WORKING_v0.4.8.md", "02_OPEN_WORK_v1.2.54.md"),
-            ("working/DELIVERY_ATLAS_WORKING_v0.4.8.md", "DELIVERY_ATLAS_WORKING_v0.3.6.md"),
-            ("working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md", "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"),
+            ("working/DELIVERY_ATLAS_WORKING_v0.4.9.md", "02_OPEN_WORK_v1.2.54.md"),
+            ("working/DELIVERY_ATLAS_WORKING_v0.4.9.md", "DELIVERY_ATLAS_WORKING_v0.3.6.md"),
+            ("working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md", "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"),
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.8.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.9.md",
                 "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md",
             ),
         )
@@ -1248,14 +1249,14 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
     def test_fp001_audit_work_start_predecessors_fail_in_unqualified_active_routes(self):
         mutations = (
-            ("02_OPEN_WORK_v1.2.66.md", "02_OPEN_WORK_v1.2.65.md"),
-            ("working/DELIVERY_ATLAS_WORKING_v0.4.8.md", "DELIVERY_ATLAS_WORKING_v0.4.7.md"),
+            ("02_OPEN_WORK_v1.2.67.md", "02_OPEN_WORK_v1.2.65.md"),
+            ("working/DELIVERY_ATLAS_WORKING_v0.4.9.md", "DELIVERY_ATLAS_WORKING_v0.4.7.md"),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md",
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md",
                 "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md",
                 "HARDEN-02_CONTRACT_WORKING_v0.5.9.md",
             ),
         )
@@ -1279,14 +1280,14 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
     def test_fp001_pmr_allows_archive_qualified_immediate_predecessor_references(self):
         archived_predecessors = (
-            "archive/02_OPEN_WORK_v1.2.65.md",
-            "archive/DELIVERY_ATLAS_WORKING_v0.4.7.md",
-            "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md",
-            "archive/HARDEN-02_CONTRACT_WORKING_v0.5.9.md",
+            "archive/02_OPEN_WORK_v1.2.66.md",
+            "archive/DELIVERY_ATLAS_WORKING_v0.4.8.md",
+            "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md",
+            "archive/HARDEN-02_CONTRACT_WORKING_v0.5.10.md",
         )
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            current_atlas = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.8.md"
+            current_atlas = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.9.md"
             current_atlas.write_text(
                 current_atlas.read_text(encoding="utf-8")
                 + "\nHistorical archive references: "
@@ -1304,7 +1305,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
             working = root / "docs/00_platform/working"
-            active = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md"
+            active = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md"
             duplicate = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md"
             duplicate.write_bytes(active.read_bytes())
 
@@ -1369,16 +1370,16 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             ("oq035_resolved", "skeleton", "| `OQ-035` | `BLOCKS_RELEASE_ONLY` |", "| `OQ-035` | `RESOLVED` |"),
             ("oq036_resolved", "skeleton", "| `OQ-036` | `BLOCKS_RELEASE_ONLY` |", "| `OQ-036` | `RESOLVED` |"),
             ("communications_completed", "open_work", "COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0", "COMMUNICATIONS: COMPLETE / CERTIFIED"),
-            ("reconciliation_started", "open_work", '"phase_7b_reconciliation": "IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"', '"phase_7b_reconciliation": "COMPLETE / CERTIFIED"'),
-            ("communications_route_still_downstream", "open_work", "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION", "NEXT STAGE: PHASE 7C"),
-            ("reconciliation_completed", "open_work", "PHASE 7B RECONCILIATION: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING", "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED"),
+            ("reconciliation_started", "open_work", '"phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT"', '"phase_7b_reconciliation": "IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"'),
+            ("communications_route_still_downstream", "open_work", "NEXT PHASE 7 ACTION: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT; STATUS: NOT_STARTED", "NEXT PHASE 7 ACTION: RUN FP-001 PROOF CLASSIFICATION; STATUS: NOT_STARTED"),
+            ("reconciliation_completed", "open_work", "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", "PHASE 7B RECONCILIATION: NEXT / NOT_STARTED"),
             ("communications_dossier_started", "dossier", "COMMUNICATIONS DOSSIER STARTED: NO", "COMMUNICATIONS DOSSIER STARTED: YES"),
             ("conditional_dossiers_adjudicated", "open_work", "- AUDIT & EVIDENCE: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.0", "- AUDIT & EVIDENCE: NOT_REQUIRED"),
-            ("phase_7c_unblocked", "open_work", "PHASE 7C: BLOCKED / NOT_STARTED UNTIL SUCCESSFUL PHASE 7B RECONCILIATION", "PHASE 7C: READY / NOT_BLOCKED"),
+            ("phase_7c_unblocked", "open_work", "PHASE 7C: NEXT / NOT_STARTED", "PHASE 7C: IN PROGRESS"),
             ("proof_finalised", "open_work", "PROOF CLASSIFICATION: NOT FINALISED", "PROOF CLASSIFICATION: FINAL"),
             ("phase_8_authorised", "open_work", "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED", "EXECUTABLE DEVELOPMENT: AUTHORISED"),
             ("candidate_status_promoted_without_pr67_evidence", "skeleton", "79d0540c66f0224ece0330181e61dfef8ab4b458", "0000000000000000000000000000000000000000"),
-            ("skeleton_remains_candidate", "skeleton", "**Lifecycle status:** `CERTIFIED / CURRENT`", "**Lifecycle status:** `RECONCILIATION CANDIDATE / NOT CERTIFIED`"),
+            ("skeleton_remains_candidate", "skeleton", "**Lifecycle status:** CERTIFIED / CURRENT as a Phase 7A skeleton", "**Lifecycle status:** RECONCILIATION CANDIDATE / NOT CERTIFIED as a Phase 7A skeleton"),
             ("identity_dossier_remains_candidate", "dossier", "**Status:** `CERTIFIED / CURRENT`", "**Status:** `RECONCILIATION CANDIDATE / NOT CERTIFIED`"),
             ("communication_started", "open_work", "COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0", "COMMUNICATIONS: STARTED"),
             ('second_lifecycle_stage_advanced', 'open_work', '    "FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION",\n    "FP-001 AUDIT & EVIDENCE v0.1.0 DOSSIER PROMOTION"\n  ],\n  "engineering_standards_authority_promotion"', '    "FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION",\n    "FP-001 AUDIT & EVIDENCE v0.1.0 DOSSIER PROMOTION",\n    "FP-001 PHASE 7B RECONCILIATION"\n  ],\n  "engineering_standards_authority_promotion"'),
@@ -1390,9 +1391,9 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
                 relative = {
-                    "skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md",
+                    "skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md",
                     "dossier": "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
-                    "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.66.md",
+                    "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.67.md",
                 }[target]
                 path = root / relative
                 text = path.read_text(encoding="utf-8")
@@ -1403,9 +1404,12 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 report = run_audit(root, manifest_path)
 
                 expected_check = {
-                    "reconciliation_started": "fp001_phase7b_gate_routing",
-                    "communications_route_still_downstream": "harden_02_lifecycle_state",
-                    "reconciliation_completed": "fp001_phase7b_gate_routing",
+                    "reconciliation_started": "fp001_phase7b_certification_current",
+                    "communications_route_still_downstream": "fp001_phase7b_certification_current",
+                    "reconciliation_completed": "fp001_phase7b_certification_current",
+                    "phase_7c_unblocked": "fp001_phase7b_certification_current",
+                    "proof_finalised": "fp001_phase7b_certification_current",
+                    "phase_8_authorised": "fp001_phase7b_certification_current",
                 }.get(name, "fp001_pmr_reconciliation")
                 self.assertTrue(
                     any(
@@ -1444,7 +1448,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             root, manifest_path = self._copy_production_fixture(Path(directory))
             working = root / "docs/00_platform/working"
             stale = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
-            certified = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md"
+            certified = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md"
             stale.write_bytes(certified.read_bytes())
 
             report = run_audit(root, manifest_path)
@@ -1539,26 +1543,26 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             with self.subTest(mutation=label), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
                 if label == "harden_i07_stale":
-                    path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md"
+                    path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md"
                     path.write_text(
                         path.read_text(encoding="utf-8").replace(
-                            "Audit & Evidence dossier v0.1.0 is REQUIRED / COMPLETE / CERTIFIED / CURRENT",
-                            "Audit & Evidence dossier v0.1.0 is REQUIRED / IN PROGRESS / NOT COMPLETE",
+                            "Communications and Audit & Evidence v0.1.0 remain REQUIRED / COMPLETE / CERTIFIED / CURRENT.",
+                            "Communications and Audit & Evidence v0.1.0 remain REQUIRED / IN PROGRESS / NOT COMPLETE.",
                             1,
                         ),
                         encoding="utf-8",
                     )
                 elif label == "harden_route_stale":
-                    path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md"
+                    path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md"
                     path.write_text(
                         path.read_text(encoding="utf-8").replace(
-                            "→ CERTIFIED FP-001 AUDIT & EVIDENCE v0.1.0 DOSSIER PROMOTION\n→ FP-001 PHASE 7B RECONCILIATION",
-                            "→ FP-001 PHASE 7B RECONCILIATION",
+                            "→ CERTIFIED FP-001 AUDIT & EVIDENCE v0.1.0 DOSSIER PROMOTION\n→ COMPLETED FP-001 PHASE 7B RECONCILIATION",
+                            "→ COMPLETED FP-001 PHASE 7B RECONCILIATION",
                         ),
                         encoding="utf-8",
                     )
                 else:
-                    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.66.md"
+                    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.67.md"
                     open_work_path.write_text(mutator(open_work_path.read_text(encoding="utf-8")), encoding="utf-8")
                     refresh_manifest(root, manifest_path)
 
@@ -1779,10 +1783,10 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
-        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.66.md").read_text(encoding="utf-8")
+        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.67.md").read_text(encoding="utf-8")
         current_readme = (source_docs / "README.md").read_text(encoding="utf-8")
-        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.10.md").read_text(encoding="utf-8")
-        expected = (True, "HARDEN preserves certified execution, Audit current status and the candidate-only Phase 7B stop route")
+        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.11.md").read_text(encoding="utf-8")
+        expected = (True, "HARDEN preserves its certified contract and routes completed Phase 7B to the unstarted Phase 7C contract")
         self.assertEqual(expected, _h02_lifecycle_state(candidate_open_work, current_readme, contract))
 
         incomplete = candidate_open_work.replace(
@@ -1793,11 +1797,11 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         self.assertFalse(_h02_lifecycle_state(incomplete, current_readme, contract)[0])
 
         old_route = candidate_open_work.replace(
-            "CURRENT AUTHORITY-STAGE PROGRAMME: FP-001 PHASE 7B RECONCILIATION CANDIDATE REVIEW",
+            "CURRENT AUTHORITY-STAGE PROGRAMME: FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT",
             "CURRENT AUTHORITY-STAGE PROGRAMME: HARDEN-02 EXECUTION / STRUCTURAL HARDENING",
             1,
         ).replace(
-            "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION",
+            "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT (NOT_STARTED)",
             "NEXT STAGE: HARDEN-02_EXECUTION_REQUIRED",
             1,
         )
@@ -2434,18 +2438,18 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
                 "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
             ),
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.8.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.9.md",
                 "00_PLATFORM_v1.8.0.md",
                 "00_PLATFORM_v1.5.1.md",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md",
-                "02_OPEN_WORK_v1.2.66.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md",
+                "02_OPEN_WORK_v1.2.67.md",
                 "02_OPEN_WORK_v1.2.50.md",
             ),
             (
-                "02_OPEN_WORK_v1.2.66.md",
-                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.8.md`",
+                "02_OPEN_WORK_v1.2.67.md",
+                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.9.md`",
                 "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.2.md`",
             ),
         )
