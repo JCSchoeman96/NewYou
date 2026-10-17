@@ -16,7 +16,7 @@ DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
 CURRENT_STANDARDS_RELATIVE = Path("docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md")
 ARCHIVED_CANDIDATE_RELATIVE = Path("docs/00_platform/archive/ENGINEERING_STANDARDS_v1.0.0.md")
-OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.65.md")
+OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.66.md")
 README_RELATIVE = Path("docs/00_platform/README.md")
 
 
@@ -140,11 +140,10 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def current_open_work_status_section_still_says_promotion_next(root: Path, manifest: dict) -> None:
-            path = root / OPEN_WORK_RELATIVE
-            _rewrite(
-                path,
-                "Engineering Standards Authority Promotion is COMPLETE / CERTIFIED under `reference/ENGINEERING_STANDARDS_v1.0.1.md`",
-                "Engineering Standards Authority Promotion is NEXT / AUTHORISED / NOT STARTED",
+            _rewrite_open_work(
+                root,
+                "PHASE 7B RECONCILIATION: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING",
+                "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
@@ -158,7 +157,11 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def next_token_still_names_standards(root: Path, manifest: dict) -> None:
-            _rewrite_open_work(root, "NEXT STAGE: FP-001 PHASE 7B RECONCILIATION", "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED")
+            _rewrite_open_work(
+                root,
+                "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION",
+                "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
+            )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def fp001_already_performed(root: Path, manifest: dict) -> None:
@@ -227,7 +230,11 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
                 "COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0",
                 "COMMUNICATIONS: REQUIRED / STARTED",
             )
-            _rewrite_open_work(root, "NEXT STAGE: FP-001 PHASE 7B RECONCILIATION", "NEXT STAGE: PHASE 7C")
+            _rewrite_open_work(
+                root,
+                "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION",
+                "NEXT STAGE: PHASE 7C",
+            )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         return [

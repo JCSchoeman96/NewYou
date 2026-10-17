@@ -79,13 +79,13 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
         cls.lifecycle = _lifecycle_state(cls.audit_current) if cls.audit_current else {}
         cls.manifest = json.loads((DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8"))
         cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
-        cls.open_work_path = DOCS / "02_OPEN_WORK_v1.2.65.md"
+        cls.open_work_path = DOCS / "archive/02_OPEN_WORK_v1.2.65.md"
         cls.open_work = cls.open_work_path.read_text(encoding="utf-8") if cls.open_work_path.exists() else ""
-        cls.atlas_path = DOCS / "working/DELIVERY_ATLAS_WORKING_v0.4.7.md"
+        cls.atlas_path = DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.7.md"
         cls.atlas = cls.atlas_path.read_text(encoding="utf-8") if cls.atlas_path.exists() else ""
-        cls.skeleton_path = DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md"
+        cls.skeleton_path = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md"
         cls.skeleton = cls.skeleton_path.read_text(encoding="utf-8") if cls.skeleton_path.exists() else ""
-        cls.harden_path = DOCS / "working/HARDEN-02_CONTRACT_WORKING_v0.5.9.md"
+        cls.harden_path = DOCS / "archive/HARDEN-02_CONTRACT_WORKING_v0.5.9.md"
         cls.harden = cls.harden_path.read_text(encoding="utf-8") if cls.harden_path.exists() else ""
 
     def test_certified_candidate_archive_has_the_exact_sha256(self):
@@ -164,7 +164,7 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
         self.assertNotIn("PHASE 7B RECONCILIATION: COMPLETE", self.open_work)
 
     def test_routing_successors_and_manifest_agree(self):
-        for version in ("v1.2.65", "v0.4.7", "v0.1.9", "v0.5.9", "v0.1.4", "v0.1.0"):
+        for version in ("v1.2.66", "v0.4.8", "v0.1.10", "v0.5.10", "v0.1.4", "v0.1.0"):
             with self.subTest(version=version):
                 self.assertIn(version, self.readme)
         self.assertIn("FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md", self.readme)
@@ -173,13 +173,13 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
             with self.subTest(artifact=artifact[:40]):
                 self.assertIn(audit_route, artifact)
         open_work = next(row for row in self.manifest["governing_documents"] if row["document_id"] == "OPEN_WORK")
-        self.assertEqual("1.2.65", open_work["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.65.md", open_work["repository_path"])
+        self.assertEqual("1.2.66", open_work["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.66.md", open_work["repository_path"])
         navigation = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
         for path in (
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.7.md",
-            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.9.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.8.md",
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md",
             "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
             "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
             "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
