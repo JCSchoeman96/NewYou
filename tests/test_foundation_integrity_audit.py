@@ -182,6 +182,67 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             self.assertEqual("FAIL", check["status"])
             self.assertIn("current Audit dossier lifecycle header", check["message"])
 
+    def test_fp001_audit_current_promotion_rejects_misattributed_successor_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            docs = root / "docs/00_platform"
+
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            graph_rules = manifest["integrity_rules"]["graph_rules"]
+            guard_note = graph_rules["stale_predecessor_current_path_guard_note"]
+            self.assertIn("The separate PR #119 Audit v0.1.0 current-status promotion", guard_note)
+            graph_rules["stale_predecessor_current_path_guard_note"] = guard_note.replace(
+                "The separate PR #119 Audit v0.1.0 current-status promotion",
+                "The separate PR #118 Audit v0.1.0 current-status promotion",
+                1,
+            )
+            manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+            skeleton_path = docs / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md"
+            skeleton = skeleton_path.read_text(encoding="utf-8")
+            self.assertIn("records the Audit v0.1.0 current-status promotion under PR #119", skeleton)
+            skeleton = skeleton.replace(
+                "records the Audit v0.1.0 current-status promotion",
+                "records the work start for the already-adjudicated required FP-001 Audit & Evidence JIT Domain Dossier",
+                1,
+            )
+            skeleton_path.write_text(skeleton, encoding="utf-8")
+
+            atlas_path = docs / "working/DELIVERY_ATLAS_WORKING_v0.4.7.md"
+            atlas = atlas_path.read_text(encoding="utf-8")
+            history_start = atlas.index("## v0.4.6 Patch Scope (historical predecessor record)")
+            history_end = atlas.index("## v0.4.4 Patch Scope", history_start)
+            history = atlas[history_start:history_end].replace("Open Work v1.2.64", "Open Work v1.2.65", 1)
+            atlas_path.write_text(atlas[:history_start] + history + atlas[history_end:], encoding="utf-8")
+
+            harden_path = docs / "working/HARDEN-02_CONTRACT_WORKING_v0.5.9.md"
+            harden = harden_path.read_text(encoding="utf-8")
+            harden_path.write_text(
+                harden.replace(
+                    "v0.5.8 routing-successor base main SHA:** `5f5a994e48d9458aaa6397044b3af4d72c5d5e81`",
+                    "v0.5.9 routing-successor base main SHA:** `3566f1353ef34af58773aa13c6f5bd61d2613d96`",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+            check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_audit_v010_current_promotion"
+            )
+
+            self.assertEqual("FAIL", check["status"], check["message"])
+            for defect in (
+                "manifest Audit promotion guard note must distinguish PR #119 promotion from PR #118 candidate",
+                "FP-001 Skeleton current-state prose misidentifies Audit status promotion as work start",
+                "Atlas v0.4.6 historical route must use Open Work v1.2.64",
+                "HARDEN-02 v0.5.9 provenance must preserve the v0.5.8 routing-successor base",
+            ):
+                with self.subTest(defect=defect):
+                    self.assertIn(defect, check["message"])
+
     def test_fp001_audit_rejects_unexpected_additional_active_dossier_candidates(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))

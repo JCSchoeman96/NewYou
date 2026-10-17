@@ -3269,6 +3269,15 @@ def _check_audit_v010_current_promotion(
     if len(archived_candidate_rows) != 1 or archived_candidate_rows[0].get("sha256") != expected_candidate_hash:
         issues.append("manifest must identify the exact archived PR #118 Audit candidate as historical evidence")
 
+    graph_rules = integrity_rules.get("graph_rules", {})
+    guard_note = graph_rules.get("stale_predecessor_current_path_guard_note", "") if isinstance(graph_rules, dict) else ""
+    if (
+        "The separate PR #119 Audit v0.1.0 current-status promotion" not in guard_note
+        or "The separate PR #118 Audit v0.1.0 current-status promotion" in guard_note
+        or "the exact PR #118 candidate is pinned as historical certification evidence" not in guard_note
+    ):
+        issues.append("manifest Audit promotion guard note must distinguish PR #119 promotion from PR #118 candidate")
+
     active_start = open_work.find("# 9. Immediate Next Action")
     active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
     active = open_work[active_start:active_end] if active_start >= 0 and active_end > active_start else ""
@@ -3341,6 +3350,51 @@ def _check_audit_v010_current_promotion(
             issues.append(f"{label} omits the current Audit dossier route")
         if "Audit & Evidence" not in text or "REQUIRED / COMPLETE / CERTIFIED / CURRENT" not in text:
             issues.append(f"{label} does not record the current Audit lifecycle")
+        if label == "FP-001 Skeleton current state":
+            if "records the work start for the already-adjudicated required FP-001 Audit & Evidence JIT Domain Dossier" in text:
+                issues.append("FP-001 Skeleton current-state prose misidentifies Audit status promotion as work start")
+            for required in (
+                "records the Audit v0.1.0 current-status promotion under PR #119",
+                "routes Phase 7B reconciliation as `NEXT / NOT_STARTED`",
+                "preserves accepted PMR reconciliation semantics",
+                "all seven material capability relationships",
+                "the six affected Domains",
+                "the existing stage gates",
+                "does not perform Phase 7B reconciliation",
+                "does not authorise Phase 7C",
+                "does not finalise proof classification",
+                "does not authorise Phase 8/application implementation",
+            ):
+                if required not in text:
+                    issues.append(f"FP-001 Skeleton current-status successor omits {required!r}")
+        elif label == "Delivery Atlas current state":
+            historical_start = text.find("## v0.4.6 Patch Scope (historical predecessor record)")
+            historical = text[historical_start:] if historical_start >= 0 else ""
+            if historical:
+                historical = historical.split("## v0.4.4 Patch Scope", 1)[0]
+            current_atlas = text[:historical_start] if historical_start >= 0 else text
+            if (
+                "Open Work v1.2.64" not in historical
+                or "Open Work v1.2.65" in historical
+                or "review-ready in PR #118" not in historical
+                or "NOT CERTIFIED / NOT CURRENT" not in historical
+            ):
+                issues.append("Atlas v0.4.6 historical route must use Open Work v1.2.64 and preserve candidate-review status")
+            if (
+                "Open Work v1.2.65" not in current_atlas
+                or "separate current-status promotion PR #119" not in current_atlas
+            ):
+                issues.append("Atlas v0.4.7 current route must use Open Work v1.2.65 and identify promotion PR #119")
+        elif label == "HARDEN-02 current state":
+            header = text.split("### Revision log", 1)[0]
+            if (
+                header.count("v0.5.9 current-status successor base main SHA") != 1
+                or "v0.5.9 current-status successor base main SHA:** `3566f1353ef34af58773aa13c6f5bd61d2613d96`" not in header
+                or text.count("v0.5.8 routing-successor base main SHA") != 1
+                or "v0.5.8 routing-successor base main SHA:** `5f5a994e48d9458aaa6397044b3af4d72c5d5e81`" not in header
+                or "v0.5.9 routing-successor base main SHA" in text
+            ):
+                issues.append("HARDEN-02 v0.5.9 provenance must preserve the v0.5.8 routing-successor base")
         current_status_text = text
         if label == "Delivery Atlas current state":
             current_status_text = text.split("## v0.4.7 Patch Scope", 1)[0]

@@ -28,7 +28,7 @@ DOES NOT REPLACE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 | Post-merge attestation | [PR #67 comment 5955641536](https://github.com/JCSchoeman96/NewYou/pull/67#issuecomment-5955641536) |
 | Fresh independent post-merge review | `PASS` |
 
-This successor records the work start for the already-adjudicated required FP-001 Audit & Evidence JIT Domain Dossier. It preserves accepted PMR reconciliation semantics, all seven material capability relationships, the approved affected-Domain set, and the existing stage gates. It does not authorise Phase 7C, proof classification, Phase 8 or application implementation.
+This successor records the Audit v0.1.0 current-status promotion under PR #119 and routes Phase 7B reconciliation as `NEXT / NOT_STARTED`. It preserves accepted PMR reconciliation semantics, all seven material capability relationships, the six affected Domains, and the existing stage gates. It does not perform Phase 7B reconciliation. It does not authorise Phase 7C. It does not finalise proof classification. It does not authorise Phase 8/application implementation.
 
 This is a Phase 7A discovery and preparation artifact. It is derived from the approved Roadmap outcome and current stronger authority. It does not resolve an upstream Product, Architecture, Domain or Roadmap question.
 

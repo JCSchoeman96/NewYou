@@ -23,9 +23,9 @@
 - **v0.5.4 status-successor base main SHA:** `3de114fef1961abebd3bfc9c057ef6366e14624f`
 - **v0.5.5 routing-successor base main SHA:** `3f09bc91199e74d27645ebbb37d45c4831340952`
 - **v0.5.6 routing-successor base main SHA:** `6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3`
-- **v0.5.7 routing-successor base main SHA:** `332d51f19d77430fe4e95911920fe0c87cab524a`
 - **v0.5.9 current-status successor base main SHA:** `3566f1353ef34af58773aa13c6f5bd61d2613d96`
-- **v0.5.9 routing-successor base main SHA:** `3566f1353ef34af58773aa13c6f5bd61d2613d96`
+- **v0.5.8 routing-successor base main SHA:** `5f5a994e48d9458aaa6397044b3af4d72c5d5e81`
+- **v0.5.7 routing-successor base main SHA:** `332d51f19d77430fe4e95911920fe0c87cab524a`
 - **Certified contract semantics:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.5.9 successor preserves them and records current routing
 - **Historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — merged through PR #39; v0.3.0 GitHub-identity independence mechanism not satisfied for solo-maintainer workflow; not retroactively certified
 - **Earlier historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — previous contract attempt; not certified

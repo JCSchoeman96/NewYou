@@ -189,6 +189,59 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
         self.assertIn("FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md", historical)
         self.assertNotIn("FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md", json.dumps(self.manifest["governing_documents"]))
 
+    def test_manifest_distinguishes_candidate_pr_from_current_status_promotion(self):
+        guard_note = self.manifest["integrity_rules"]["graph_rules"]["stale_predecessor_current_path_guard_note"]
+        self.assertIn("The separate PR #119 Audit v0.1.0 current-status promotion", guard_note)
+        self.assertNotIn("The separate PR #118 Audit v0.1.0 current-status promotion", guard_note)
+        self.assertIn("the exact PR #118 candidate is pinned as historical certification evidence", guard_note)
+
+    def test_current_skeleton_records_status_promotion_and_reconciliation_boundary(self):
+        self.assertIn("Audit & Evidence v0.1.0 are `REQUIRED / COMPLETE / CERTIFIED / CURRENT`", self.skeleton)
+        self.assertIn("records the Audit v0.1.0 current-status promotion", self.skeleton)
+        self.assertIn("Phase 7B reconciliation is `NEXT / NOT_STARTED`", self.skeleton)
+        self.assertNotIn("records the work start for the already-adjudicated required FP-001 Audit & Evidence JIT Domain Dossier", self.skeleton)
+        for preserved in (
+            "preserves accepted PMR reconciliation semantics",
+            "all seven material capability relationships",
+            "the six affected Domains",
+            "the existing stage gates",
+            "does not perform Phase 7B reconciliation",
+            "does not authorise Phase 7C",
+            "does not finalise proof classification",
+            "does not authorise Phase 8/application implementation",
+        ):
+            with self.subTest(preserved=preserved):
+                self.assertIn(preserved, self.skeleton)
+
+    def test_atlas_historical_candidate_review_route_uses_open_work_v1264(self):
+        historical = _section(
+            self.atlas,
+            "## v0.4.6 Patch Scope (historical predecessor record)",
+            "## v0.4.4 Patch Scope",
+        )
+        current_header = self.atlas.split("## v0.4.6 Patch Scope", 1)[0]
+        self.assertIn("Open Work v1.2.64", historical)
+        self.assertNotIn("Open Work v1.2.65", historical)
+        self.assertIn("review-ready in PR #118", historical)
+        self.assertIn("NOT CERTIFIED / NOT CURRENT", historical)
+        self.assertIn("Open Work v1.2.65", current_header)
+        self.assertIn("separate current-status promotion PR #119", current_header)
+
+    def test_harden_v059_preserves_v058_predecessor_provenance(self):
+        header = self.harden.split("### Revision log", 1)[0]
+        self.assertEqual(1, header.count("v0.5.9 current-status successor base main SHA"))
+        self.assertIn(
+            "v0.5.9 current-status successor base main SHA:** `3566f1353ef34af58773aa13c6f5bd61d2613d96`",
+            header,
+        )
+        self.assertEqual(1, header.count("v0.5.8 routing-successor base main SHA"))
+        self.assertIn(
+            "v0.5.8 routing-successor base main SHA:** `5f5a994e48d9458aaa6397044b3af4d72c5d5e81`",
+            header,
+        )
+        self.assertIn("v0.5.7 routing-successor base main SHA", header)
+        self.assertNotIn("v0.5.9 routing-successor base main SHA", self.harden)
+
     def test_current_skeleton_keeps_fp001_scope_and_dossier_dispositions(self):
         self.assertIn("REQUIRED / COMPLETE / CERTIFIED / CURRENT", self.skeleton)
         for disposition in ("Identity & Access", "Privacy & Consent", "Content & Media", "Communications", "Audit & Evidence", "Analytics"):

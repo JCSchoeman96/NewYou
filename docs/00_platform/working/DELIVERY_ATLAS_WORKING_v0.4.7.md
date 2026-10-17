@@ -19,7 +19,7 @@ This successor updates current-source routes from Open Work v1.2.65 and records 
 
 ## v0.4.6 Patch Scope (historical predecessor record)
 
-This predecessor updated current-source routes and candidate-existence status navigation from Open Work v1.2.65. Candidate v0.1.0 was authored and review-ready in PR #118, but was not yet certified or current. No Feature Pack outcome, capability relationship, Domain participation, authority, gate, delivery stage or implementation boundary changed.
+This predecessor updated current-source routes and candidate-existence status navigation from Open Work v1.2.64. Candidate v0.1.0 was authored and review-ready in PR #118, but remained NOT CERTIFIED / NOT CURRENT. No Feature Pack outcome, capability relationship, Domain participation, authority, gate, delivery stage or implementation boundary changed.
 
 
 ## v0.4.4 Patch Scope
