@@ -2134,6 +2134,22 @@ def _section_body(text: str, heading_pattern: str) -> str:
     return text[match.end() : end]
 
 
+def _markdown_h2_section(text: str, title: str) -> str | None:
+    """Return one exact ATX H2 section body, stopping at the next peer H2."""
+
+    heading = re.compile(
+        rf"(?m)^ {{0,3}}##[ \t]+{re.escape(title)}(?:[ \t]+#+)?[ \t]*\r?$"
+    )
+    matches = list(heading.finditer(text))
+    if len(matches) != 1:
+        return None
+
+    start = matches[0].end()
+    next_h2 = re.search(r"(?m)^ {0,3}##[ \t]+", text[start:])
+    end = start + next_h2.start() if next_h2 is not None else len(text)
+    return text[start:end]
+
+
 def _bundle_component_allocation_issues(
     product: str,
     decisions: str,
@@ -4190,12 +4206,11 @@ def _check_fp001_phase7b_certification_current(
 
     readme_path = docs / "README.md"
     readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
-    readme_sections = readme_text.split("## Current State", 1)
-    if len(readme_sections) != 2:
+    readme_current = _markdown_h2_section(readme_text, "Current State")
+    if readme_current is None:
         issues.append("README current state section is missing")
         readme_current = ""
     else:
-        readme_current = readme_sections[1]
         readme_routes = (
             "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT",
             "PHASE 7C: NEXT / NOT_STARTED",
@@ -4215,16 +4230,8 @@ def _check_fp001_phase7b_certification_current(
                 match = blocked_phase7c.search(sentence)
                 if match is None:
                     continue
-                preceding_label = sentence[: match.start()][-100:]
-                if re.search(
-                    r"\b(?:historical|predecessor|earlier|previous)[^.!?]{0,60}:\s*$",
-                    preceding_label,
-                    re.IGNORECASE,
-                ):
-                    continue
                 issues.append(
-                    "README current state contains a BLOCKED / NOT_STARTED Phase 7C statement "
-                    "outside an explicit historical label"
+                    "README current state contains a BLOCKED / NOT_STARTED Phase 7C statement"
                 )
                 break
     required_status = (

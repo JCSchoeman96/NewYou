@@ -9,7 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.foundation_integrity_audit import run_audit
+from tools.foundation_integrity_audit import _markdown_h2_section, run_audit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -182,8 +182,9 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
 
     def test_current_readme_does_not_project_phase7c_as_blocked(self):
         readme = (DOCS / "README.md").read_text(encoding="utf-8")
-        self.assertIn("## Current State", readme)
-        current_state = readme.split("## Current State", 1)[1]
+        current_state = _markdown_h2_section(readme, "Current State")
+        self.assertIsNotNone(current_state)
+        current_state = current_state or ""
         self.assertIn("- PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT.", current_state)
         self.assertIn("- PHASE 7C: NEXT / NOT_STARTED", current_state)
         self.assertNotRegex(

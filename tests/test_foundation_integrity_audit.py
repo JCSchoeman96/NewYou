@@ -7,7 +7,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.foundation_integrity_audit import _h02_lifecycle_state, refresh_manifest, run_audit
+from tools.foundation_integrity_audit import (
+    _h02_lifecycle_state,
+    _markdown_h2_section,
+    refresh_manifest,
+    run_audit,
+)
 
 
 SMALL_COUNTS = {
@@ -49,6 +54,31 @@ IDENTITY_LIFECYCLE_STATE = {
 
 
 class FoundationIntegrityAuditTests(unittest.TestCase):
+    def test_markdown_h2_section_keeps_h3_h4_and_stops_at_next_peer_h2(self):
+        text = """## Current State
+
+Phase 7C is NEXT / NOT_STARTED.
+
+### Current details
+
+#### Nested current details
+
+Phase 7C remains BLOCKED / NOT_STARTED.
+
+## Archive
+
+At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
+"""
+
+        current_state = _markdown_h2_section(text, "Current State")
+
+        self.assertIsNotNone(current_state)
+        self.assertIn("### Current details", current_state)
+        self.assertIn("#### Nested current details", current_state)
+        self.assertIn("Phase 7C remains BLOCKED / NOT_STARTED.", current_state)
+        self.assertNotIn("## Archive", current_state)
+        self.assertNotIn("At that predecessor state", current_state)
+
     def _ensure_identity_lifecycle_block(self, dossier_path: Path) -> str:
         dossier = dossier_path.read_text(encoding="utf-8")
         if IDENTITY_LIFECYCLE_START in dossier or IDENTITY_LIFECYCLE_END in dossier:
@@ -1791,7 +1821,9 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             readme.write_text(
                 text.replace(
                     current_route,
-                    current_route + " Phase 7C remains BLOCKED / NOT_STARTED.",
+                    current_route
+                    + "\n\n### Current state details\n\n#### Nested status detail\n\n"
+                    + "Phase 7C remains BLOCKED / NOT_STARTED.",
                     1,
                 ),
                 encoding="utf-8",
@@ -1812,7 +1844,8 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
             readme = root / "docs" / "00_platform" / "README.md"
             readme.write_text(
                 readme.read_text(encoding="utf-8")
-                + "\n\nHistorical predecessor state: Phase 7C was BLOCKED / NOT_STARTED at that stage.\n",
+                + "\n\n## Archive\n\n"
+                + "At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.\n",
                 encoding="utf-8",
             )
 
