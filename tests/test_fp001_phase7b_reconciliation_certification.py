@@ -180,6 +180,18 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             r"(?m)^\| Resulting-main run \| .*39041010709.*— PASS \|$",
         )
 
+    def test_current_readme_does_not_project_phase7c_as_blocked(self):
+        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        self.assertIn("## Current State", readme)
+        current_state = readme.split("## Current State", 1)[1]
+        self.assertIn("- PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT.", current_state)
+        self.assertIn("- PHASE 7C: NEXT / NOT_STARTED", current_state)
+        self.assertNotRegex(
+            current_state,
+            r"(?i)\bphase\s+7c\b[^\n.!?]{0,100}\b(?:remains|is|still|currently)\s+blocked\s*/\s*not\s+started\b",
+            "the current README cannot give Phase 7C both NEXT and BLOCKED status",
+        )
+
     def test_lifecycle_manifest_and_scope_are_current_and_unchanged(self):
         state = _lifecycle_state(
             (ROOT / self.entries["OPEN_WORK"]["repository_path"]).read_text(encoding="utf-8")

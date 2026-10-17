@@ -1781,6 +1781,50 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         refresh_manifest(root, manifest_path)
         return root, manifest_path
 
+    def test_phase7b_certification_rejects_stale_current_readme_but_allows_history(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            readme = root / "docs" / "00_platform" / "README.md"
+            text = readme.read_text(encoding="utf-8")
+            current_route = "- PHASE 7C: NEXT / NOT_STARTED; Phase 7C remains unstarted."
+            self.assertIn(current_route, text)
+            readme.write_text(
+                text.replace(
+                    current_route,
+                    current_route + " Phase 7C remains BLOCKED / NOT_STARTED.",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, manifest_path)
+
+            certification_check = next(
+                item
+                for item in report["checks"]
+                if item["name"] == "fp001_phase7b_certification_current"
+            )
+            self.assertEqual("FAIL", certification_check["status"])
+            self.assertIn("README current state", certification_check["message"])
+
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            readme = root / "docs" / "00_platform" / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\n\nHistorical predecessor state: Phase 7C was BLOCKED / NOT_STARTED at that stage.\n",
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, manifest_path)
+
+            certification_check = next(
+                item
+                for item in report["checks"]
+                if item["name"] == "fp001_phase7b_certification_current"
+            )
+            self.assertEqual("PASS", certification_check["status"], certification_check["message"])
+
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
         candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.67.md").read_text(encoding="utf-8")

@@ -4187,6 +4187,46 @@ def _check_fp001_phase7b_certification_current(
     current_text = current.read_text(encoding="utf-8") if current.is_file() else ""
     if not current_text:
         issues.append("current reconciliation status successor is missing")
+
+    readme_path = docs / "README.md"
+    readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme_sections = readme_text.split("## Current State", 1)
+    if len(readme_sections) != 2:
+        issues.append("README current state section is missing")
+        readme_current = ""
+    else:
+        readme_current = readme_sections[1]
+        readme_routes = (
+            "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT",
+            "PHASE 7C: NEXT / NOT_STARTED",
+            "PROOF CLASSIFICATION: NOT FINALISED",
+            "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
+        )
+        for route in readme_routes:
+            if route not in readme_current:
+                issues.append(f"README current state omits required lifecycle route {route!r}")
+
+        blocked_phase7c = re.compile(
+            r"\bphase\s+7c\b[^.!?\n]{0,100}\bblocked\b[^.!?\n]{0,40}\bnot[\s/_-]*started\b",
+            re.IGNORECASE,
+        )
+        for paragraph in re.split(r"\n\s*\n", readme_current):
+            for sentence in re.split(r"(?<=[.!?])\s+", paragraph):
+                match = blocked_phase7c.search(sentence)
+                if match is None:
+                    continue
+                preceding_label = sentence[: match.start()][-100:]
+                if re.search(
+                    r"\b(?:historical|predecessor|earlier|previous)[^.!?]{0,60}:\s*$",
+                    preceding_label,
+                    re.IGNORECASE,
+                ):
+                    continue
+                issues.append(
+                    "README current state contains a BLOCKED / NOT_STARTED Phase 7C statement "
+                    "outside an explicit historical label"
+                )
+                break
     required_status = (
         "FP-001 PHASE 7B RECONCILIATION\nCOMPLETE\nCERTIFIED\nCURRENT",
         "NON-IMPLEMENTATION",
