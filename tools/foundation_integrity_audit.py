@@ -1280,6 +1280,23 @@ def _h02_audit_v010_promotion_lifecycle_state(
             return False, f"README .5.9 current route omits {token!r}"
     current_route_start = contract.rfind("## 21. Current execution certification and next stage")
     current_route = contract[current_route_start:] if current_route_start >= 0 else ""
+    route_marker = "The current route continues:\n\n```text\n"
+    current_route_flow = current_route.split(route_marker, 1)[1] if route_marker in current_route else ""
+    required_route_flow = (
+        "CERTIFIED HARDEN-02 EXECUTION\n"
+        "→ CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION\n"
+        "→ CERTIFIED FP-001 PMR RECONCILIATION\n"
+        "→ CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION\n"
+        "→ COMMUNICATIONS JIT DOMAIN DOSSIER\n"
+        "→ CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION\n"
+        "→ CERTIFIED FP-001 AUDIT & EVIDENCE v0.1.0 DOSSIER PROMOTION\n"
+        "→ FP-001 PHASE 7B RECONCILIATION\n"
+        "→ PHASE 7C\n"
+        "→ PROOF CLASSIFICATION\n"
+        "→ PHASE 8 ONLY AFTER DEVELOPMENT ENTRY HARD STOP PASSES"
+    )
+    if required_route_flow not in current_route_flow:
+        return False, "HARDEN .5.9 Markdown route skips the Audit dossier or advances a blocked downstream stage"
     for token in (
         "AUDIT & EVIDENCE DOSSIER: REQUIRED / COMPLETE / CERTIFIED / CURRENT",
         "Phase 7B reconciliation is NEXT / NOT_STARTED",

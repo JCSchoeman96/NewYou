@@ -901,7 +901,7 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
             self.assertIn(
-                "Open Work v1.2.65 Atlas route must name archived Atlas v0.4.6 as its immediate routing predecessor",
+                "Open Work current Atlas route must name its byte-identical immediate predecessor in archive",
                 promotion_check["message"],
             )
 
@@ -1341,9 +1341,14 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
                 report = run_audit(root, manifest_path)
 
+                expected_check = (
+                    "fp001_audit_v010_current_promotion"
+                    if name == "reconciliation_completed"
+                    else "fp001_pmr_reconciliation"
+                )
                 self.assertTrue(
                     any(
-                        finding["check"] == "fp001_pmr_reconciliation"
+                        finding["check"] == expected_check
                         for finding in report["findings"]
                     ),
                     report["findings"],
@@ -1706,14 +1711,6 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
         source_root = Path(__file__).resolve().parents[1]
         fixture_docs = root / "docs" / "00_platform"
         shutil.copytree(source_root / "docs" / "00_platform", fixture_docs)
-        # Mutation fixtures exercise established integrity contracts on a
-        # coherent current state. Bind the in-progress PR token only inside
-        # each disposable fixture; the working tree receives the real number
-        # after GitHub creates the draft PR.
-        for path in fixture_docs.rglob("*.md"):
-            text = path.read_text(encoding="utf-8")
-            if "PR #<promotion-pr>" in text:
-                path.write_text(text.replace("PR #<promotion-pr>", "PR #999"), encoding="utf-8")
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         refresh_manifest(root, manifest_path)
@@ -1721,9 +1718,9 @@ class FoundationIntegrityAuditTests(unittest.TestCase):
 
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
-        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.65.md").read_text(encoding="utf-8").replace("PR #<promotion-pr>", "PR #999")
-        current_readme = (source_docs / "README.md").read_text(encoding="utf-8").replace("PR #<promotion-pr>", "PR #999")
-        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.9.md").read_text(encoding="utf-8").replace("PR #<promotion-pr>", "PR #999")
+        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.65.md").read_text(encoding="utf-8")
+        current_readme = (source_docs / "README.md").read_text(encoding="utf-8")
+        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.9.md").read_text(encoding="utf-8")
         expected = (True, "HARDEN .5.9 preserves certified execution and the Audit current-status/Phase 7B stop route")
         self.assertEqual(expected, _h02_lifecycle_state(candidate_open_work, current_readme, contract))
 

@@ -12,7 +12,7 @@ DOES NOT OVERRIDE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 
 **Artifact version:** v0.1.0 narrow status successor. The exact PR #118 candidate bytes remain at `archive/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` (SHA-256 `0b0a8fb64a3ac602ebb81a7ab957a9dd075412350c818e4c6e5f13f667f7daea`).
 
-**Status:** `CERTIFIED / CURRENT`. PR #118 candidate certification is `COMPLETE`; PR #118 post-merge certification evidence is `COMPLETE`; current-status promotion is `PR #<promotion-pr> STATUS SUCCESSOR`. PR #118 certified and merged the reviewed candidate unchanged. This separate status successor records v0.1.0 as current. Phase 7B reconciliation is `NEXT / NOT_STARTED`. Phase 7C remains `BLOCKED / NOT_STARTED` until successful Phase 7B reconciliation. Proof classification remains `NOT FINALISED`. Phase 8/application implementation remains `UNAUTHORISED`.
+**Status:** `CERTIFIED / CURRENT`. PR #118 candidate certification is `COMPLETE`; PR #118 post-merge certification evidence is `COMPLETE`; current-status promotion is `PR #119 STATUS SUCCESSOR`. PR #118 certified and merged the reviewed candidate unchanged. This separate status successor records v0.1.0 as current. Phase 7B reconciliation is `NEXT / NOT_STARTED`. Phase 7C remains `BLOCKED / NOT_STARTED` until successful Phase 7B reconciliation. Proof classification remains `NOT FINALISED`. Phase 8/application implementation remains `UNAUTHORISED`.
 
 <!-- AUDIT_EVIDENCE_V010_CURRENT_LIFECYCLE_STATE_START -->
 ```json
@@ -21,7 +21,7 @@ DOES NOT OVERRIDE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
   "audit_lifecycle": "CERTIFIED / CURRENT",
   "pr_118_candidate_certification": "COMPLETE",
   "pr_118_post_merge_certification_evidence": "COMPLETE",
-  "current_status_promotion": "PR #<promotion-pr> STATUS SUCCESSOR",
+  "current_status_promotion": "PR #119 STATUS SUCCESSOR",
   "phase_7b_reconciliation": "NEXT / NOT_STARTED",
   "phase_7c": "BLOCKED / NOT_STARTED",
   "proof_classification": "NOT FINALISED",

@@ -275,7 +275,7 @@ Engineering Standards remain supporting authority under `reference_documents`. T
 - CURRENT AUTHORITY-STAGE PROGRAMME: FP-001 AUDIT & EVIDENCE CURRENT-STATUS PROMOTION
 - AUDIT & EVIDENCE v0.1.0: REQUIRED / COMPLETE / CERTIFIED / CURRENT; PR #118 candidate certification and post-merge evidence are COMPLETE
 - CURRENT AUDIT DOSSIER ROUTE: `working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
-- AUDIT CURRENT-STATUS PROMOTION: PR #<promotion-pr> STATUS SUCCESSOR
+- AUDIT CURRENT-STATUS PROMOTION: PR #119 STATUS SUCCESSOR
 - REQUIRED FP-001 DOSSIER SET: DISPOSITION-COMPLETE; Phase 7B reconciliation has not occurred
 - NEXT STAGE: FP-001 PHASE 7B RECONCILIATION (NEXT / NOT_STARTED)
 - CURRENT PRODUCT LAW: `00_PLATFORM_v1.8.0.md`; DEC-299 through DEC-314 record the accepted paid-plan, reversal, consent, provenance, marketing, personalisation, pilot, economics, Assessment-credit and duplicate-collection/make-whole decisions. DEC-313 supersedes DEC-055's first-answer consumption meaning for paid digital Assessment credits; DEC-314 narrowly extends DEC-300.

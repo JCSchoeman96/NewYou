@@ -141,10 +141,7 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
         for key, value in expected.items():
             with self.subTest(key=key):
                 self.assertEqual(value, self.lifecycle.get(key))
-        self.assertRegex(
-            self.lifecycle.get("current_status_promotion", ""),
-            r"PR #(?:[1-9][0-9]*|<promotion-pr>) STATUS SUCCESSOR",
-        )
+        self.assertEqual("PR #119 STATUS SUCCESSOR", self.lifecycle.get("current_status_promotion"))
         self.assertIn("Phase 7C remains `BLOCKED / NOT_STARTED` until successful Phase 7B reconciliation", self.audit_current)
         self.assertIn("Proof classification remains `NOT FINALISED`", self.audit_current)
         self.assertIn("Phase 8/application implementation remains `UNAUTHORISED`", self.audit_current)
