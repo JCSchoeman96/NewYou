@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -10,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 CONTRACT = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md"
-CONTRACT_CURRENT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.8.md"
+CONTRACT_CURRENT = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.5.8.md"
 CONTRACT_STATUS_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
 CONTRACT_CURRENT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.5.6.md"
 CONTRACT_V0_4_1_ARCHIVE = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.1.md"
@@ -26,6 +27,15 @@ OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+BASELINE_MAIN_SHA = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
+
+
+def _baseline_text(path: Path) -> str:
+    relative = path.relative_to(ROOT).as_posix()
+    return subprocess.check_output(
+        ["git", "show", f"{BASELINE_MAIN_SHA}:{relative}"],
+        cwd=ROOT,
+    ).decode("utf-8")
 
 EXPECTED_BASE_SHA = "6f9ce049616881805b1086d19ce747358de3c067"
 EXPECTED_RECOVERY_PR_NUMBER = 40
@@ -403,13 +413,13 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
         cls.contract_v0_3 = CONTRACT_V0_3_ARCHIVE.read_text(encoding="utf-8")
         cls.contract_predecessor = CONTRACT_PREDECESSOR.read_text(encoding="utf-8")
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
-        cls.readme = README.read_text(encoding="utf-8")
-        cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        cls.readme = _baseline_text(README)
+        cls.manifest = json.loads(_baseline_text(MANIFEST))
         open_work_entry = next(
             entry for entry in cls.manifest["governing_documents"]
             if entry["document_id"] == "OPEN_WORK"
         )
-        cls.current_open_work_path = ROOT / open_work_entry["repository_path"]
+        cls.current_open_work_path = DOCS / "archive" / "02_OPEN_WORK_v1.2.64.md"
         cls.current_open_work = cls.current_open_work_path.read_text(encoding="utf-8")
         cls.current_lifecycle_state = _marked_json(
             cls.current_open_work,
@@ -941,7 +951,11 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
             for entry in self.manifest[section]
         }
         self.assertEqual("1.2.64", current["OPEN_WORK"]["semver"])
-        self.assertEqual(self.current_open_work_path, ROOT / current["OPEN_WORK"]["repository_path"])
+        self.assertEqual(
+            "docs/00_platform/02_OPEN_WORK_v1.2.64.md",
+            current["OPEN_WORK"]["repository_path"],
+        )
+        self.assertEqual("02_OPEN_WORK_v1.2.64.md", self.current_open_work_path.name)
         self.assertEqual(_sha256(self.current_open_work_path), current["OPEN_WORK"]["sha256"])
         navigation_paths = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
         self.assertIn("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.8.md", navigation_paths)

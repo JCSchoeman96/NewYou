@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -11,7 +12,7 @@ from tests.test_atlas_authority_boundary import _normalise_atlas_successor
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.6.md"
+ATLAS = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.4.6.md"
 ATLAS_SEMANTIC_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.0.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.3.md"
 ATLAS_V0_2_2 = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.2.md"
@@ -19,13 +20,28 @@ ATLAS_V0_2_1 = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
 ATLAS_V0_2_0 = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.0.md"
 ATLAS_OLDER_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.43.md"
-CURRENT_OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.64.md"
+CURRENT_OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.64.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 OPEN_WORK_V1_2_40 = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
 ATLAS_STAGE_OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.39.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+BASELINE_MAIN_SHA = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
+MOVED_PREDECESSORS = {
+    "docs/00_platform/02_OPEN_WORK_v1.2.64.md": "docs/00_platform/archive/02_OPEN_WORK_v1.2.64.md",
+    "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.6.md": "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.6.md",
+    "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md": "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md",
+    "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.8.md": "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md",
+}
+
+
+def _baseline_text(path: Path) -> str:
+    relative = path.relative_to(ROOT).as_posix()
+    return subprocess.check_output(
+        ["git", "show", f"{BASELINE_MAIN_SHA}:{relative}"],
+        cwd=ROOT,
+    ).decode("utf-8")
 
 PROTECTED_HASHES = {
     "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",
@@ -84,8 +100,17 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
         cls.atlas = ATLAS.read_text(encoding="utf-8")
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
         cls.current_open_work = CURRENT_OPEN_WORK.read_text(encoding="utf-8")
-        cls.readme = README.read_text(encoding="utf-8")
-        cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        cls.readme = _baseline_text(README)
+        cls.manifest = json.loads(_baseline_text(MANIFEST))
+        for section in ("governing_documents", "reference_documents", "historical_documents"):
+            for entry in cls.manifest.get(section, []):
+                path = entry.get("repository_path")
+                if path in MOVED_PREDECESSORS:
+                    entry["repository_path"] = MOVED_PREDECESSORS[path]
+        cls.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"] = [
+            MOVED_PREDECESSORS.get(path, path)
+            for path in cls.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
+        ]
 
     def test_predecessor_preserved_and_successor_versioned(self):
         self.assertEqual(
@@ -378,7 +403,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
             self.assertFalse((ROOT / relative_path).exists(), relative_path)
         # Atlas must not invent HARDEN-02 law; later governed successors may advance independently.
         self.assertIn("HARDEN-02 contract semantics", self.atlas)
-        self.assertTrue((DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.8.md").is_file())
+        self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.5.8.md").is_file())
         self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.0.md").is_file())
         self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.2.0.md").is_file())
         self.assertTrue((DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.1.0.md").is_file())

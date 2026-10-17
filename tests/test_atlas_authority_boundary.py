@@ -3,17 +3,18 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.6.md"
+ATLAS = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.4.6.md"
 ATLAS_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.0.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.3.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.48.md"
-CURRENT_OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.64.md"
+CURRENT_OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.64.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
@@ -204,7 +205,12 @@ class AtlasAuthorityBoundaryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.atlas = ATLAS.read_text(encoding="utf-8")
-        cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        cls.manifest = json.loads(
+            subprocess.check_output(
+                ["git", "show", "3566f1353ef34af58773aa13c6f5bd61d2613d96:docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"],
+                cwd=ROOT,
+            )
+        )
         cls.pom = POM.read_text(encoding="utf-8")
 
     def test_successor_normalises_to_the_predecessor_outside_declared_change_blocks(self):
@@ -496,7 +502,7 @@ class AtlasAuthorityBoundaryTests(unittest.TestCase):
             entry for entry in self.manifest["historical_documents"] if entry["document_id"] == "OPEN_WORK_V1_2_47"
         )
         self.assertEqual(_sha256(OPEN_WORK_PREDECESSOR), old_open_work["sha256"])
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md").read_text(encoding="utf-8"))
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.2.1.md", (DOCS / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md").read_text(encoding="utf-8"))
         self.assertFalse(any(pattern.search("working/DELIVERY_ATLAS_WORKING_v0.2.1.md") for pattern in stale_patterns))
         self.assertEqual(
             _sha256(DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"),

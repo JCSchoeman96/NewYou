@@ -4,6 +4,7 @@ import difflib
 import hashlib
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 from typing import Callable
@@ -14,22 +15,22 @@ DOCS = ROOT / "docs" / "00_platform"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.64.md"
+OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.64.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.54.md"
 OPEN_WORK_ROUTING_SUCCESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.50.md"
 OPEN_WORK_ROUTING_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.49.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.8.md"
+CONTRACT = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.5.8.md"
 CONTRACT_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"
 CONTRACT_ROUTING_SUCCESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.4.md"
 CONTRACT_ROUTING_PREDECESSOR = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.4.3.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.6.md"
+ATLAS = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.4.6.md"
 ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.6.md"
 ATLAS_ROUTING_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
 ATLAS_ROUTING_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
 
 POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
 ROADMAP = DOCS / "05_ROADMAP_v1.2.2.md"
-SKELETON = DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
+SKELETON = DOCS / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
 
 MATRIX_START = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:START -->"
 MATRIX_END = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:END -->"
@@ -42,6 +43,15 @@ EXECUTION_STATUS = "COMPLETE / CERTIFIED"
 EXECUTION_MATRIX_STATUS = "COMPLETE_CERTIFIED"
 EXECUTION_MATRIX_EVIDENCE = "PR #59 recovery outcome PASS WITH NON-BLOCKING CORRECTIONS; I-01…I-13 and current-main revalidation PASS"
 CONTRACT_STATUS = "COMPLETE / CERTIFIED"
+BASELINE_MAIN_SHA = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
+
+
+def _baseline_text(path: Path) -> str:
+    relative = path.relative_to(ROOT).as_posix()
+    return subprocess.check_output(
+        ["git", "show", f"{BASELINE_MAIN_SHA}:{relative}"],
+        cwd=ROOT,
+    ).decode("utf-8")
 
 EXPECTED_ARCHIVE_SHA256 = {
     OPEN_WORK_PREDECESSOR: "525a56b72ecf92da15f51f41cf14e643b4029e203a3c3cf3bdeb85833aefd5ef",
@@ -212,7 +222,7 @@ def _table_rows_in_section(text: str, start_heading: str, end_heading: str) -> l
 
 def _manifest_authority_filenames() -> dict[str, str]:
     try:
-        manifest = json.loads(_read(MANIFEST))
+        manifest = json.loads(_baseline_text(MANIFEST))
         governing = {
             entry["document_id"]: entry
             for entry in manifest["governing_documents"]
@@ -246,7 +256,7 @@ def _validate_contract_source_routing(text: str) -> None:
     if actual != expected:
         raise ValueError("CURRENT AUTHORITY rows do not match the current manifest routes")
 
-    readme_context = _section(_read(README), "## Default Agent Context", "## Active Working Artifacts")
+    readme_context = _section(_baseline_text(README), "## Default Agent Context", "## Active Working Artifacts")
     readme_paths = re.findall(r"`([^`]+\.md)`", readme_context)
     if any(filename not in readme_paths for filename in expected):
         raise ValueError("CURRENT AUTHORITY rows do not match the README current routes")
@@ -282,7 +292,7 @@ def _validate_contract_source_routing(text: str) -> None:
         if required not in identity_use:
             raise ValueError("current Identity dossier does not record certified reconciliation status")
 
-    readme = _read(README)
+    readme = _baseline_text(README)
     if "working/DELIVERY_ATLAS_WORKING_v0.4.6.md" not in readme:
         raise ValueError("README does not route current Atlas to v0.4.5")
     if "The unchanged v0.2.1 working path remains available to existing FP-001 and HARDEN-02 source-at-freeze references." not in readme:

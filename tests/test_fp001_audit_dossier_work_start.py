@@ -1,6 +1,7 @@
 import hashlib
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -40,20 +41,30 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-        open_work_entry = next(
+        current_open_work_entry = next(
             row
             for row in cls.manifest["governing_documents"]
             if row["document_id"] == "OPEN_WORK"
         )
+        open_work_entry = next(
+            row
+            for row in cls.manifest["historical_documents"]
+            if row["document_id"] == "OPEN_WORK_V1_2_64"
+        )
         cls.open_work_entry = open_work_entry
+        cls.current_open_work_entry = current_open_work_entry
         cls.open_work_path = ROOT / open_work_entry["repository_path"]
         cls.open_work = cls.open_work_path.read_text(encoding="utf-8")
-        cls.atlas_path = _navigation_path(cls.manifest, "DELIVERY_ATLAS_WORKING_")
-        cls.skeleton_path = _navigation_path(cls.manifest, "FP-001_FEATURE_PACK_SKELETON_WORKING_")
-        cls.harden_path = _navigation_path(cls.manifest, "HARDEN-02_CONTRACT_WORKING_")
+        cls.atlas_path = DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.6.md"
+        cls.skeleton_path = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
+        cls.harden_path = DOCS / "archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md"
         cls.atlas = cls.atlas_path.read_text(encoding="utf-8")
         cls.skeleton = cls.skeleton_path.read_text(encoding="utf-8")
         cls.harden = cls.harden_path.read_text(encoding="utf-8")
+        cls.readme = subprocess.check_output(
+            ["git", "show", "3566f1353ef34af58773aa13c6f5bd61d2613d96:docs/00_platform/README.md"],
+            cwd=ROOT,
+        ).decode("utf-8")
         state_match = re.search(
             r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
             cls.open_work,
@@ -61,37 +72,30 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
         )
         cls.lifecycle_state = json.loads(state_match.group(1)) if state_match else {}
 
-    def test_manifest_routes_the_new_work_start_successors(self):
+    def test_candidate_review_successors_are_preserved_as_archived_predecessors(self):
         self.assertEqual("02_OPEN_WORK_v1.2.64.md", self.open_work_path.name)
         self.assertEqual("DELIVERY_ATLAS_WORKING_v0.4.6.md", self.atlas_path.name)
         self.assertEqual("FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md", self.skeleton_path.name)
         self.assertEqual("HARDEN-02_CONTRACT_WORKING_v0.5.8.md", self.harden_path.name)
+        self.assertEqual("1.2.65", self.current_open_work_entry["semver"])
 
     def test_open_work_manifest_lineage_registers_its_immediate_predecessor(self):
-        current = self.open_work_entry
-        self.assertEqual("1.2.64", current["semver"])
-        self.assertEqual("1.2.63", current["superseded_version"])
+        current = self.current_open_work_entry
+        self.assertEqual("1.2.65", current["semver"])
+        self.assertEqual("1.2.64", current["superseded_version"])
 
-        historical = next(
-            (
-                entry
-                for entry in self.manifest["historical_documents"]
-                if entry["document_id"] == "OPEN_WORK_V1_2_63"
-            ),
-            None,
-        )
-        self.assertIsNotNone(historical, "immediate Open Work predecessor must be registered as historical")
-        self.assertEqual("02_OPEN_WORK_v1.2.63.md", historical["canonical_filename"])
-        self.assertEqual("1.2.63", historical["semver"])
+        historical = self.open_work_entry
+        self.assertEqual("02_OPEN_WORK_v1.2.64.md", historical["canonical_filename"])
+        self.assertEqual("1.2.64", historical["semver"])
         self.assertEqual(
-            "docs/00_platform/archive/02_OPEN_WORK_v1.2.63.md",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.64.md",
             historical["repository_path"],
         )
         self.assertEqual("PLANNING_TRACKER_HISTORICAL", historical["authority_class"])
-        self.assertEqual("1.2.64", historical["superseded_version"])
+        self.assertEqual("1.2.65", historical["superseded_version"])
         self.assertEqual("historical", historical["lifecycle"])
         self.assertEqual(
-            "057a44757a71e8d1108fd9fa61bdf3451ae41de2e0ed78c3ab7db8da0580e63a",
+            "1a96a3720de79432255e6ad2c947221900233b6928ef1e64150d1fa08a54a494",
             historical["sha256"],
         )
         self.assertEqual(historical["sha256"], historical["provenance_sha256"])
@@ -100,13 +104,13 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
 
     def test_immediate_predecessor_paths_are_rejected_unless_archive_qualified(self):
         retired_predecessors = (
-            ("(?<!archive/)02_OPEN_WORK_v1\\.2\\.63\\.md", "02_OPEN_WORK_v1.2.63.md"),
-            ("(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.4\\.5\\.md", "DELIVERY_ATLAS_WORKING_v0.4.5.md"),
+            ("(?<!archive/)02_OPEN_WORK_v1\\.2\\.64\\.md", "02_OPEN_WORK_v1.2.64.md"),
+            ("(?<!archive/)DELIVERY_ATLAS_WORKING_v0\\.4\\.6\\.md", "DELIVERY_ATLAS_WORKING_v0.4.6.md"),
             (
-                "(?<!archive/)FP-001_FEATURE_PACK_SKELETON_WORKING_v0\\.1\\.7\\.md",
-                "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md",
+                "(?<!archive/)FP-001_FEATURE_PACK_SKELETON_WORKING_v0\\.1\\.8\\.md",
+                "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md",
             ),
-            ("(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.5\\.7\\.md", "HARDEN-02_CONTRACT_WORKING_v0.5.7.md"),
+            ("(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\\.5\\.8\\.md", "HARDEN-02_CONTRACT_WORKING_v0.5.8.md"),
         )
         configured = self.manifest["integrity_rules"]["graph_rules"]["stale_reference_patterns"]
         for pattern, filename in retired_predecessors:
@@ -116,23 +120,21 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
                 self.assertIsNone(re.search(pattern, f"archive/{filename}"))
 
         guard_note = self.manifest["integrity_rules"]["graph_rules"]["stale_predecessor_current_path_guard_note"]
-        for current in ("v1.2.64", "v0.4.6", "v0.1.8", "v0.5.8"):
+        for current in ("v1.2.65", "v0.4.7", "v0.1.9", "v0.5.9"):
             self.assertIn(current, guard_note)
-        for predecessor in ("v1.2.63", "v0.4.5", "v0.1.7", "v0.5.7"):
+        for predecessor in ("v1.2.64", "v0.4.6", "v0.1.8", "v0.5.8"):
             self.assertIn(predecessor, guard_note)
 
     def test_status_successors_preserve_their_direct_predecessors_byte_for_byte(self):
-        import subprocess
-
         predecessors = (
-            ("docs/00_platform/02_OPEN_WORK_v1.2.63.md", "docs/00_platform/archive/02_OPEN_WORK_v1.2.63.md"),
-            ("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md", "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md"),
-            ("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.5.md", "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.5.md"),
-            ("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.7.md", "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.7.md"),
+            ("docs/00_platform/02_OPEN_WORK_v1.2.64.md", "docs/00_platform/archive/02_OPEN_WORK_v1.2.64.md"),
+            ("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md", "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"),
+            ("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.6.md", "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.6.md"),
+            ("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.8.md", "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md"),
         )
         for source, archived in predecessors:
             with self.subTest(path=archived):
-                expected = subprocess.check_output(["git", "show", f"5f5a994e48d9458aaa6397044b3af4d72c5d5e81:{source}"], cwd=ROOT)
+                expected = subprocess.check_output(["git", "show", f"3566f1353ef34af58773aa13c6f5bd61d2613d96:{source}"], cwd=ROOT)
                 self.assertEqual(expected, (ROOT / archived).read_bytes())
 
     def test_audit_is_in_progress_and_certification_is_pending(self):
@@ -150,16 +152,19 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
         self.assertIn(f"AUDIT & EVIDENCE DOSSIER: {AUDIT_STATUS}", self.open_work)
 
     def test_audit_dossier_candidate_is_present_but_remains_non_current(self):
-        candidates = [
+        active_dossiers = [
             path
             for path in DOCS.rglob("*.md")
             if path.name.startswith("FP-001")
             and "AUDIT" in path.name.upper()
             and "DOSSIER" in path.name.upper()
+            and "archive" not in path.parts
         ]
-        candidate = DOCS / "working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
-        self.assertEqual([candidate], candidates)
+        current = DOCS / "working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+        candidate = DOCS / "archive/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+        self.assertEqual([current], active_dossiers)
         self.assertTrue(candidate.is_file())
+        self.assertIn(AUDIT_CANDIDATE_STATUS, candidate.read_text(encoding="utf-8"))
         self.assertEqual(AUDIT_STATUS, self.lifecycle_state.get("audit_dossier"))
         self.assertEqual(
             AUDIT_CANDIDATE_STATUS,
@@ -212,7 +217,7 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
             "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
             harden_route,
         )
-        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        readme = self.readme
         self.assertIn(
             "- EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
             readme.split("## Current State", 1)[1],
@@ -276,7 +281,7 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
         self.assertIn("Audit & Evidence owns its own evidence truth only. Source Domains remain authoritative for their business truth", self.open_work)
         self.assertIn("Audit Pre-JIT pack is WORKING / NON-AUTHORITATIVE PRE-JIT EVIDENCE", self.open_work)
         self.assertIn("Phase 7C would otherwise have to invent the FP-001 Audit event-selection, evidence-acceptance, correlation/idempotency, minimisation, privileged-access, append-only correction/supersession and retention-category contracts", self.open_work)
-        self.assertIn("- AUDIT & EVIDENCE DOSSIER: REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", (DOCS / "README.md").read_text(encoding="utf-8"))
+        self.assertIn("- AUDIT & EVIDENCE DOSSIER: REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING", self.readme)
 
     def test_semantic_authorities_match_the_verified_main_baseline(self):
         for filename, expected_hash in SEMANTIC_AUTHORITY_SHA256.items():

@@ -1,3 +1,4 @@
+import hashlib
 import json
 import re
 import subprocess
@@ -8,12 +9,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 BASELINE = "5f5a994e48d9458aaa6397044b3af4d72c5d5e81"
-REVIEWED_CANDIDATE_SHA = "6825a99d074cf84a4db5269dee2d57513f398411"
+REVIEWED_CANDIDATE_SHA = "68df8bfb2723c6d4bb414fffae63f20ba0744a6d"
+RESULTING_MAIN = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
 CANDIDATE_RELATIVE = (
     "docs/00_platform/working/"
     "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
 )
-CANDIDATE_PATH = ROOT / CANDIDATE_RELATIVE
+CANDIDATE_ARCHIVE_RELATIVE = (
+    "docs/00_platform/archive/"
+    "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+)
+CANDIDATE_PATH = ROOT / CANDIDATE_ARCHIVE_RELATIVE
 AUDIT_STATUS = "REQUIRED / IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING"
 AUDIT_CANDIDATE_STATUS = "CANDIDATE / REVIEW-READY / NOT CERTIFIED / NOT CURRENT"
 
@@ -76,9 +82,17 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
             CANDIDATE_PATH.read_text(encoding="utf-8") if CANDIDATE_PATH.exists() else ""
         )
         cls.manifest_path = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-        cls.manifest = json.loads(cls.manifest_path.read_text(encoding="utf-8"))
-        cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
-        cls.open_work = (DOCS / "02_OPEN_WORK_v1.2.64.md").read_text(encoding="utf-8")
+        cls.manifest = json.loads(
+            subprocess.check_output(
+                ["git", "show", f"{RESULTING_MAIN}:docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"],
+                cwd=ROOT,
+            )
+        )
+        cls.readme = subprocess.check_output(
+            ["git", "show", f"{RESULTING_MAIN}:docs/00_platform/README.md"],
+            cwd=ROOT,
+        ).decode("utf-8")
+        cls.open_work = (DOCS / "archive/02_OPEN_WORK_v1.2.64.md").read_text(encoding="utf-8")
         state_match = re.search(
             r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
             cls.open_work,
@@ -86,14 +100,18 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
         )
         cls.lifecycle_state = json.loads(state_match.group(1)) if state_match else {}
         cls.skeleton = (
-            DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
+            DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
         ).read_text(encoding="utf-8")
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.roadmap = (DOCS / "05_ROADMAP_v1.2.2.md").read_text(encoding="utf-8")
 
-    def test_candidate_is_present_at_the_review_path(self):
+    def test_candidate_is_preserved_at_the_certification_archive_path(self):
         self.assertTrue(CANDIDATE_PATH.is_file(), CANDIDATE_RELATIVE)
         self.assertIn("PROPOSED VERSION: v0.1.0", self.candidate)
+        self.assertEqual(
+            "0b0a8fb64a3ac602ebb81a7ab957a9dd075412350c818e4c6e5f13f667f7daea",
+            hashlib.sha256(CANDIDATE_PATH.read_bytes()).hexdigest(),
+        )
 
     def test_candidate_lifecycle_does_not_claim_currentness_or_execution_authority(self):
         for marker in (

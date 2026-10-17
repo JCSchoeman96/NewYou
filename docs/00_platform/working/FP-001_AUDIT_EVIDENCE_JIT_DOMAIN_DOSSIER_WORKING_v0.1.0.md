@@ -1,20 +1,51 @@
 # FP-001 Audit & Evidence JIT Domain Dossier
 
 ```text
-PROPOSED PATH: docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md
-PROPOSED VERSION: v0.1.0
-PHASE: 7B implementation-grade planning
+PHASE 7B JIT DOMAIN DOSSIER
 FEATURE PACK: FP-001
 DOMAIN: AUDIT & EVIDENCE
-STATUS: CANDIDATE / REVIEW-READY / NOT CERTIFIED / NOT CURRENT
+IMPLEMENTATION-GRADE PLANNING LAW
 NON-EXECUTABLE
 NOT PHASE 7C DEVELOPMENT-ENTRY AUTHORITY
-DOES NOT AMEND PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
+DOES NOT OVERRIDE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 ```
 
-**Artifact version:** v0.1.0
+**Artifact version:** v0.1.0 narrow status successor. The exact PR #118 candidate bytes remain at `archive/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` (SHA-256 `0b0a8fb64a3ac602ebb81a7ab957a9dd075412350c818e4c6e5f13f667f7daea`).
 
-**Status:** Candidate for independent exact-head review and certification. This file does not become current because it exists or merges. Certification, unchanged merge, resulting-main verification and a separate current-status promotion remain distinct lifecycle steps.
+**Status:** `CERTIFIED / CURRENT`. PR #118 candidate certification is `COMPLETE`; PR #118 post-merge certification evidence is `COMPLETE`; current-status promotion is `PR #119 STATUS SUCCESSOR`. PR #118 certified and merged the reviewed candidate unchanged. This separate status successor records v0.1.0 as current. Phase 7B reconciliation is `NEXT / NOT_STARTED`. Phase 7C remains `BLOCKED / NOT_STARTED` until successful Phase 7B reconciliation. Proof classification remains `NOT FINALISED`. Phase 8/application implementation remains `UNAUTHORISED`.
+
+<!-- AUDIT_EVIDENCE_V010_CURRENT_LIFECYCLE_STATE_START -->
+```json
+{
+  "artifact_version": "v0.1.0",
+  "audit_lifecycle": "CERTIFIED / CURRENT",
+  "pr_118_candidate_certification": "COMPLETE",
+  "pr_118_post_merge_certification_evidence": "COMPLETE",
+  "current_status_promotion": "PR #119 STATUS SUCCESSOR",
+  "phase_7b_reconciliation": "NEXT / NOT_STARTED",
+  "phase_7c": "BLOCKED / NOT_STARTED",
+  "proof_classification": "NOT FINALISED",
+  "phase_8_application_implementation": "UNAUTHORISED"
+}
+```
+<!-- AUDIT_EVIDENCE_V010_CURRENT_LIFECYCLE_STATE_END -->
+
+The unchanged semantic body from section 1 onward preserves the exact PR #118 candidate, including source-at-certification references. Current routing comes from the README, manifest and current Open Work successor.
+
+### Inherited PR #118 certification evidence
+
+| Evidence | Result |
+|---|---|
+| PR #118 | [Merged](https://github.com/JCSchoeman96/NewYou/pull/118) |
+| Certified candidate head | `68df8bfb2723c6d4bb414fffae63f20ba0744a6d` |
+| PR #118 merge base | `5f5a994e48d9458aaa6397044b3af4d72c5d5e81` |
+| Candidate / resulting-main tree | `acd04f523997a0ae8a7ae3edbbfb9280bd4de1ca` |
+| Resulting main | `3566f1353ef34af58773aa13c6f5bd61d2613d96` |
+| Exact-head Foundation Integrity | [Run 38698409603](https://github.com/JCSchoeman96/NewYou/actions/runs/38698409603), SUCCESS |
+| Resulting-main Foundation Integrity | [Run 38704942507](https://github.com/JCSchoeman96/NewYou/actions/runs/38704942507), SUCCESS |
+| Independent exact-head review | PASS |
+| Candidate/resulting-main tree identity | PASS |
+| Exact certified candidate archive SHA-256 | `0b0a8fb64a3ac602ebb81a7ab957a9dd075412350c818e4c6e5f13f667f7daea` |
 
 ## 1. Baseline, purpose and scope
 

@@ -210,6 +210,8 @@ class FP001ConditionalDossierAdjudicationTests(unittest.TestCase):
         ]
         self.assertEqual(
             [
+                "docs/00_platform/archive/"
+                "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
                 "docs/00_platform/working/"
                 "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
             ],
