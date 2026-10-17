@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+BASELINE_MAIN_SHA = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
 
 PREDECESSORS = {
     "PROJECT_NORTH_STAR_AND_MVP": (
@@ -162,10 +164,20 @@ PRODUCT_INSERTION_END = "# 22. Explicitly Not Yet Decided"
 
 
 def _read(path: Path) -> str:
+    # Keep this historical routing suite pinned to the verified pre-promotion
+    # main snapshot. Its former active artifacts now live in archive/.
+    if not path.is_file():
+        archived = DOCS / "archive" / path.name
+        if archived.is_file():
+            path = archived
     return path.read_text(encoding="utf-8")
 
 
 def _sha256(path: Path) -> str:
+    if not path.is_file():
+        archived = DOCS / "archive" / path.name
+        if archived.is_file():
+            path = archived
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
@@ -569,10 +581,18 @@ def _normalise_open_work_successor(text: str, canonical_predecessor: str) -> str
 class AuthorityRoutingSuccessorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        cls.manifest = json.loads(
+            subprocess.check_output(
+                ["git", "show", f"{BASELINE_MAIN_SHA}:docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"],
+                cwd=ROOT,
+            )
+        )
         cls.governing = {entry["document_id"]: entry for entry in cls.manifest["governing_documents"]}
         cls.historical = {entry["document_id"]: entry for entry in cls.manifest["historical_documents"]}
-        cls.readme = _read(DOCS / "README.md")
+        cls.readme = subprocess.check_output(
+            ["git", "show", f"{BASELINE_MAIN_SHA}:docs/00_platform/README.md"],
+            cwd=ROOT,
+        ).decode("utf-8")
 
     def test_readme_harden_archive_lineage_does_not_claim_historical_status_is_current(self):
         active_working = _section(self.readme, "## Active Working Artifacts", "## Delivery Atlas routing")

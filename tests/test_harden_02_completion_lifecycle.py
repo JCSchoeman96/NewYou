@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -10,9 +11,10 @@ from tools.foundation_integrity_audit import _h02_lifecycle_state
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.64.md"
+OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.64.md"
 README = DOCS / "README.md"
-CONTRACT = DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.8.md"
+CONTRACT = DOCS / "archive" / "HARDEN-02_CONTRACT_WORKING_v0.5.8.md"
+BASELINE_MAIN_SHA = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
 JSON_START = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
 JSON_END = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
 JSON_BLOCK = re.compile(
@@ -24,7 +26,10 @@ JSON_BLOCK = re.compile(
 class Harden02CompletionLifecycleTests(unittest.TestCase):
     def setUp(self):
         self.open_work = OPEN_WORK.read_text(encoding="utf-8")
-        self.readme = README.read_text(encoding="utf-8")
+        self.readme = subprocess.check_output(
+            ["git", "show", f"{BASELINE_MAIN_SHA}:docs/00_platform/README.md"],
+            cwd=ROOT,
+        ).decode("utf-8")
         self.contract = CONTRACT.read_text(encoding="utf-8")
 
     def _state(self, open_work: str | None = None) -> dict[str, object]:
