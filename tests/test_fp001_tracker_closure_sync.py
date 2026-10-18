@@ -47,7 +47,10 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             state["phase_7b_reconciliation_execution_tracker_state"],
         )
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state["phase_7b_reconciliation"])
-        self.assertEqual("NEXT / NOT_STARTED", state["phase_7c"])
+        self.assertEqual(
+            "IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING",
+            state["phase_7c"],
+        )
         self.assertEqual("NOT FINALISED", state["proof_classification"])
         self.assertIn("UNAUTHORISED", state["application_implementation"])
 
@@ -102,11 +105,13 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("PASS", state["phase_7b_reconciliation_certification"]["pr_122_status_successor"]["resulting_main_result"])
         self.assertEqual(406, int(state["phase_7b_reconciliation_certification"]["pr_122_status_successor"]["resulting_main_tests"].split()[0]))
         self.assertEqual(0, state["phase_7b_reconciliation_certification"]["pr_122_status_successor"]["resulting_main_foundation_integrity"]["findings"])
-        self.assertFalse(list((DOCS / "working").glob("FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v*.md")))
+        candidate_path = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
+        self.assertTrue(candidate_path.is_file())
+        self.assertIn("CANDIDATE / NOT CERTIFIED / NOT CURRENT", candidate_path.read_text(encoding="utf-8"))
 
     def test_historical_open_predecessor_text_remains_valid(self):
         manifest_path = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-        open_work = (DOCS / "02_OPEN_WORK_v1.2.68.md").read_text(encoding="utf-8")
+        open_work = (DOCS / "archive/02_OPEN_WORK_v1.2.68.md").read_text(encoding="utf-8")
         historical_start = open_work.index("## 12.24 —")
         historical_end = open_work.index("## 12.25 —", historical_start)
         historical = open_work[historical_start:historical_end]
@@ -169,17 +174,17 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
     def test_current_derived_routes_reject_open_tracker_projection(self):
         cases = (
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.10.md",
-                "records tracker #120 as CLOSED / COMPLETED",
-                "records tracker #120 as OPEN",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.11.md",
+                "preserves #120 as CLOSED / COMPLETED historical evidence",
+                "preserves #120 as OPEN historical evidence",
             ),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.12.md",
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.13.md",
                 "under completed tracker #120 (CLOSED / COMPLETED)",
                 "under open tracker #120 (CLOSED / COMPLETED)",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.5.12.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.5.13.md",
                 "RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED",
                 "RECONCILIATION EXECUTION TRACKER: #120 OPEN",
             ),
@@ -200,10 +205,10 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
 
     def test_retired_predecessor_guards_allow_only_archive_qualified_paths(self):
         retired = (
-            "02_OPEN_WORK_v1.2.67.md",
-            "DELIVERY_ATLAS_WORKING_v0.4.9.md",
-            "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md",
-            "HARDEN-02_CONTRACT_WORKING_v0.5.11.md",
+            "02_OPEN_WORK_v1.2.68.md",
+            "DELIVERY_ATLAS_WORKING_v0.4.10.md",
+            "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.12.md",
+            "HARDEN-02_CONTRACT_WORKING_v0.5.12.md",
         )
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_fixture(directory)

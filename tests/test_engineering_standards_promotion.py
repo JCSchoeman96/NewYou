@@ -16,7 +16,7 @@ DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
 CURRENT_STANDARDS_RELATIVE = Path("docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md")
 ARCHIVED_CANDIDATE_RELATIVE = Path("docs/00_platform/archive/ENGINEERING_STANDARDS_v1.0.0.md")
-OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.68.md")
+OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.69.md")
 README_RELATIVE = Path("docs/00_platform/README.md")
 
 
@@ -159,7 +159,7 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
         def next_token_still_names_standards(root: Path, manifest: dict) -> None:
             _rewrite_open_work(
                 root,
-                "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT (NOT_STARTED)",
+                "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD REVIEW OF THE PHASE 7C CONTRACT CANDIDATE",
                 "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
@@ -180,8 +180,12 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
-        def phase_7c_unblocked(root: Path, manifest: dict) -> None:
-            _rewrite_open_work(root, "PHASE 7C: NEXT / NOT_STARTED", "PHASE 7C: IN PROGRESS / STARTED")
+        def phase_7c_completed_prematurely(root: Path, manifest: dict) -> None:
+            _rewrite_open_work(
+                root,
+                "PHASE 7C: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING",
+                "PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
+            )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def proof_finalised(root: Path, manifest: dict) -> None:
@@ -232,7 +236,7 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             )
             _rewrite_open_work(
                 root,
-                "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT (NOT_STARTED)",
+                "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD REVIEW OF THE PHASE 7C CONTRACT CANDIDATE",
                 "NEXT STAGE: PHASE 7C",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
@@ -254,7 +258,7 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             ("NEXT token remains Standards promotion", next_token_still_names_standards),
             ("FP-001 reconciliation already performed", fp001_already_performed),
             ("Communications started", communications_started),
-            ("Phase 7C unblocked", phase_7c_unblocked),
+            ("Phase 7C completed before certification", phase_7c_completed_prematurely),
             ("proof classification finalised", proof_finalised),
             ("Phase 8 implementation authorised", implementation_authorised),
             ("Store/CER included", store_cer_included),
