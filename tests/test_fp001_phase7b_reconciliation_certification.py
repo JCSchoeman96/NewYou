@@ -213,14 +213,25 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertEqual("PASS", certification.get("post_merge_independent_review"))
 
         current_open_work = self.entries["OPEN_WORK"]
-        self.assertEqual("02_OPEN_WORK_v1.2.67.md", current_open_work["canonical_filename"])
-        self.assertEqual("1.2.67", current_open_work["semver"])
+        self.assertEqual("02_OPEN_WORK_v1.2.68.md", current_open_work["canonical_filename"])
+        self.assertEqual("1.2.68", current_open_work["semver"])
         self.assertEqual(
-            "docs/00_platform/02_OPEN_WORK_v1.2.67.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.68.md",
             current_open_work["repository_path"],
         )
-        self.assertEqual("1.2.66", current_open_work["superseded_version"])
+        self.assertEqual("1.2.67", current_open_work["superseded_version"])
         self.assertEqual("current", current_open_work["lifecycle"])
+
+        direct_predecessor = self.entries.get("OPEN_WORK_V1_2_67", {})
+        self.assertEqual("02_OPEN_WORK_v1.2.67.md", direct_predecessor.get("canonical_filename"))
+        self.assertEqual("1.2.67", direct_predecessor.get("semver"))
+        self.assertEqual(
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.67.md",
+            direct_predecessor.get("repository_path"),
+        )
+        self.assertEqual("1.2.68", direct_predecessor.get("superseded_version"))
+        self.assertEqual("historical", direct_predecessor.get("lifecycle"))
+        self.assertEqual(direct_predecessor.get("sha256"), direct_predecessor.get("provenance_sha256"))
 
         predecessor = self.entries.get("OPEN_WORK_V1_2_66", {})
         self.assertEqual("02_OPEN_WORK_v1.2.66.md", predecessor.get("canonical_filename"))
