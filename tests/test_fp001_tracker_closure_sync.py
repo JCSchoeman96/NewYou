@@ -48,9 +48,12 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         )
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state["phase_7b_reconciliation"])
         self.assertEqual(
-            "IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING",
+            "COMPLETE / CERTIFIED / CURRENT",
             state["phase_7c"],
         )
+        self.assertEqual("ARCHITECTURAL PROOF CLASSIFICATION", state["next_stage"])
+        self.assertEqual("OPEN", state["phase_7c_execution_tracker_state"])
+        self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         self.assertEqual("NOT FINALISED", state["proof_classification"])
         self.assertIn("UNAUTHORISED", state["application_implementation"])
 
@@ -105,9 +108,11 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("PASS", state["phase_7b_reconciliation_certification"]["pr_122_status_successor"]["resulting_main_result"])
         self.assertEqual(406, int(state["phase_7b_reconciliation_certification"]["pr_122_status_successor"]["resulting_main_tests"].split()[0]))
         self.assertEqual(0, state["phase_7b_reconciliation_certification"]["pr_122_status_successor"]["resulting_main_foundation_integrity"]["findings"])
-        candidate_path = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
+        candidate_path = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
         self.assertTrue(candidate_path.is_file())
         self.assertIn("CANDIDATE / NOT CERTIFIED / NOT CURRENT", candidate_path.read_text(encoding="utf-8"))
+        current_contract = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
+        self.assertIn("COMPLETE / CERTIFIED / CURRENT", current_contract.read_text(encoding="utf-8"))
 
     def test_historical_open_predecessor_text_remains_valid(self):
         manifest_path = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
@@ -174,19 +179,46 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
     def test_current_derived_routes_reject_open_tracker_projection(self):
         cases = (
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.11.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.12.md",
                 "preserves #120 as CLOSED / COMPLETED historical evidence",
                 "preserves #120 as OPEN historical evidence",
             ),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.13.md",
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
                 "under completed tracker #120 (CLOSED / COMPLETED)",
                 "under open tracker #120 (CLOSED / COMPLETED)",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.5.13.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
                 "RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED",
                 "RECONCILIATION EXECUTION TRACKER: #120 OPEN",
+            ),
+        )
+        for relative_path, anchor, replacement in cases:
+            with self.subTest(path=relative_path), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_fixture(directory)
+                path = root / "docs/00_platform" / relative_path
+                current = path.read_text(encoding="utf-8")
+                self.assertIn(anchor, current)
+                path.write_text(current.replace(anchor, replacement, 1), encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+
+                report = run_audit(root, manifest_path)
+
+                self.assertEqual("FAIL", report["status"])
+                self.assertTrue(report["findings"], report["findings"])
+
+    def test_current_derived_routes_keep_programme_router_open(self):
+        cases = (
+            (
+                "working/DELIVERY_ATLAS_WORKING_v0.4.12.md",
+                "Programme router #111 remains OPEN",
+                "Programme router #111 is CLOSED",
+            ),
+            (
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
+                "Programme router #111 remains OPEN",
+                "Programme router #111 is CLOSED",
             ),
         )
         for relative_path, anchor, replacement in cases:
