@@ -10,32 +10,32 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-BASE_MAIN = "cfc63a7a77299cd59c98d88b57a88bb5b4ac29e5"
+BASE_MAIN = "69bef7bb2782cbff00a48505504ebd2686eb53d9"
 CANDIDATE_HEAD = "bb7bc67fd2d9aa49ed9a6e7f49f09fc5eba5d6a5"
 CANDIDATE_TREE = "8e5fc724b4c4f4a6a196d41e3beafc8e1384c2bf"
 CANDIDATE_ARCHIVE_SHA256 = "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19"
 CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 CURRENT_CONTRACT = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.70.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.71.md"
 PROMOTION_START = "<!-- FP001_PHASE7C_CURRENT_STATUS_START -->"
 PROMOTION_END = "<!-- FP001_PHASE7C_CURRENT_STATUS_END -->"
 
 PREDECESSORS = (
     (
-        "docs/00_platform/02_OPEN_WORK_v1.2.69.md",
-        "docs/00_platform/archive/02_OPEN_WORK_v1.2.69.md",
+        "docs/00_platform/02_OPEN_WORK_v1.2.70.md",
+        "docs/00_platform/archive/02_OPEN_WORK_v1.2.70.md",
     ),
     (
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.11.md",
-        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.11.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.12.md",
+        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.12.md",
     ),
     (
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.13.md",
-        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.13.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
     ),
     (
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.13.md",
-        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.13.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
+        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
     ),
 )
 
@@ -120,33 +120,53 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
     def test_promotion_record_binds_exact_head_merge_tree_runs_and_review(self):
         expected = {
             "artifact_version": "v0.1.0",
+            "promotion_state": "CURRENT / VERIFIED AFTER PR #126 RESULTING-MAIN PASS",
             "candidate_pr": 125,
             "approved_candidate_head_sha": CANDIDATE_HEAD,
-            "reviewed_head_sha": CANDIDATE_HEAD,
+            "pr125_reviewed_head_sha": CANDIDATE_HEAD,
             "candidate_tree_sha": CANDIDATE_TREE,
+            "pr125_merge_sha": "cfc63a7a77299cd59c98d88b57a88bb5b4ac29e5",
+            "pr125_merge_second_parent_sha": CANDIDATE_HEAD,
+            "pr125_merge_tree_sha": CANDIDATE_TREE,
+            "pr125_resulting_main_sha": "cfc63a7a77299cd59c98d88b57a88bb5b4ac29e5",
+            "pr125_resulting_main_tree_sha": CANDIDATE_TREE,
+            "pr125_candidate_resulting_main_tree_identity": "PASS",
+            "independent_exact_head_review": "PASS",
+            "pr125_exact_head_fia_run": 39121794222,
+            "pr125_exact_head_fia_status": "completed",
+            "pr125_exact_head_fia_conclusion": "success",
+            "pr125_exact_head_fia_tests": 443,
+            "pr125_exact_head_fia_assertions": 698,
+            "pr125_exact_head_fia_findings": 0,
+            "pr125_resulting_main_fia_run": 39126317950,
+            "pr125_resulting_main_fia_status": "completed",
+            "pr125_resulting_main_fia_conclusion": "success",
+            "pr125_resulting_main_fia_tests": 443,
+            "pr125_resulting_main_fia_assertions": 698,
+            "pr125_resulting_main_fia_findings": 0,
+            "pr126_base_sha": "cfc63a7a77299cd59c98d88b57a88bb5b4ac29e5",
+            "pr126_reviewed_head_sha": "e7d5d3908bedf1a75c6627448c3ed0c067b076f8",
+            "pr126_merge_sha": BASE_MAIN,
+            "pr126_reviewed_head_tree_sha": "f5586314db6c3addab6482e866b8d781faba75bc",
+            "pr126_merge_tree_sha": "f5586314db6c3addab6482e866b8d781faba75bc",
+            "pr126_merge_head_tree_sha": "f5586314db6c3addab6482e866b8d781faba75bc",
+            "pr126_head_merge_tree_identity": "PASS",
+            "pr126_exact_head_fia_run": 39141076412,
+            "pr126_exact_head_fia_status": "completed",
+            "pr126_exact_head_fia_conclusion": "success",
             "resulting_main_sha": BASE_MAIN,
-            "resulting_main_tree_sha": CANDIDATE_TREE,
-            "merge_sha": BASE_MAIN,
-            "merge_second_parent_sha": CANDIDATE_HEAD,
-            "merge_tree_sha": CANDIDATE_TREE,
-            "candidate_resulting_main_tree_identity": "PASS",
-            "exact_head_fia_run": 39121794222,
-            "exact_head_fia_status": "completed",
-            "exact_head_fia_conclusion": "success",
-            "exact_head_fia_tests": 443,
-            "exact_head_fia_assertions": 698,
-            "exact_head_fia_findings": 0,
-            "resulting_main_fia_run": 39126317950,
+            "resulting_main_tree_sha": "f5586314db6c3addab6482e866b8d781faba75bc",
+            "resulting_main_fia_run": 39143147487,
             "resulting_main_fia_status": "completed",
             "resulting_main_fia_conclusion": "success",
-            "resulting_main_fia_tests": 443,
-            "resulting_main_fia_assertions": 698,
+            "resulting_main_fia_tests": 455,
+            "resulting_main_fia_assertions": 728,
             "resulting_main_fia_findings": 0,
+            "fresh_resulting_main_verification": "PASS",
             "candidate_archive_path": "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
             "candidate_archive_sha256": CANDIDATE_ARCHIVE_SHA256,
-            "independent_exact_head_review": "PASS",
             "phase_7c_execution_tracker_issue": 124,
-            "phase_7c_execution_tracker_state": "OPEN",
+            "phase_7c_execution_tracker_state": "CLOSED / COMPLETED",
             "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
             "phase_7b_tracker_issue": 120,
             "phase_7b_tracker_state": "CLOSED / COMPLETED",
@@ -172,7 +192,7 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", self.open_work_state.get("phase_7c"))
         self.assertEqual("ARCHITECTURAL PROOF CLASSIFICATION", self.open_work_state.get("next_stage"))
         self.assertEqual(124, self.open_work_state.get("phase_7c_execution_tracker_issue"))
-        self.assertEqual("OPEN", self.open_work_state.get("phase_7c_execution_tracker_state"))
+        self.assertEqual("CLOSED / COMPLETED", self.open_work_state.get("phase_7c_execution_tracker_state"))
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", self.open_work_state.get("phase_7b_reconciliation"))
         self.assertEqual("CLOSED / COMPLETED", self.open_work_state.get("phase_7b_reconciliation_execution_tracker_state"))
         self.assertEqual("OPEN", self.open_work_state.get("programme_router_issue_111_state"))
@@ -185,21 +205,22 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
         self.assertIn("Phase 8", self.open_work)
         self.assertIn("every other Development Entry Hard Stop condition pass", self.open_work)
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", self.open_work)
+        self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", self.open_work)
         self.assertIn("PROOF CLASSIFICATION: NOT FINALISED", self.open_work)
         self.assertIn("PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED", self.open_work)
 
     def test_readme_and_manifest_route_current_lower_level_artifacts_without_new_root_authority(self):
         for path in (
             "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
-            "working/DELIVERY_ATLAS_WORKING_v0.4.12.md",
-            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
-            "working/HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
-            "02_OPEN_WORK_v1.2.70.md",
+            "working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
+            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
+            "working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
+            "02_OPEN_WORK_v1.2.71.md",
         ):
             with self.subTest(path=path):
                 self.assertIn(path, self.readme)
-        self.assertIn("Phase 7C: COMPLETE / CERTIFIED / CURRENT", self.readme)
-        self.assertIn("Phase 7C contract v0.1.0: COMPLETE / CERTIFIED / CURRENT", self.readme)
+        self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", self.readme)
+        self.assertIn("FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT", self.readme)
         self.assertIn("Phase 8/application implementation remains UNAUTHORISED", self.readme)
 
         authorities = self.manifest["governing_documents"] + self.manifest["reference_documents"]

@@ -52,7 +52,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             state["phase_7c"],
         )
         self.assertEqual("ARCHITECTURAL PROOF CLASSIFICATION", state["next_stage"])
-        self.assertEqual("OPEN", state["phase_7c_execution_tracker_state"])
+        self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         self.assertEqual("NOT FINALISED", state["proof_classification"])
         self.assertIn("UNAUTHORISED", state["application_implementation"])
@@ -179,17 +179,17 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
     def test_current_derived_routes_reject_open_tracker_projection(self):
         cases = (
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.12.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
                 "preserves #120 as CLOSED / COMPLETED historical evidence",
                 "preserves #120 as OPEN historical evidence",
             ),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
                 "under completed tracker #120 (CLOSED / COMPLETED)",
                 "under open tracker #120 (CLOSED / COMPLETED)",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
                 "RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED",
                 "RECONCILIATION EXECUTION TRACKER: #120 OPEN",
             ),
@@ -211,12 +211,12 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
     def test_current_derived_routes_keep_programme_router_open(self):
         cases = (
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.12.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
                 "Programme router #111 remains OPEN",
                 "Programme router #111 is CLOSED",
             ),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
                 "Programme router #111 remains OPEN",
                 "Programme router #111 is CLOSED",
             ),
@@ -237,10 +237,10 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
 
     def test_retired_predecessor_guards_allow_only_archive_qualified_paths(self):
         retired = (
-            "02_OPEN_WORK_v1.2.68.md",
-            "DELIVERY_ATLAS_WORKING_v0.4.10.md",
-            "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.12.md",
-            "HARDEN-02_CONTRACT_WORKING_v0.5.12.md",
+            "02_OPEN_WORK_v1.2.70.md",
+            "DELIVERY_ATLAS_WORKING_v0.4.12.md",
+            "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
+            "HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
         )
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_fixture(directory)

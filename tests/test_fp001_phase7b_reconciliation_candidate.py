@@ -124,7 +124,7 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
             "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->",
             "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->",
         )
-        current_skeleton = (DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md").read_text()
+        current_skeleton = (DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md").read_text()
         archived_skeleton = (DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md").read_text()
         for marker in pmr_markers:
             self.assertEqual(current_skeleton.count(marker), 1)

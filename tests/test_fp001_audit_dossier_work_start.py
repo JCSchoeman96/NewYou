@@ -77,12 +77,12 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
         self.assertEqual("DELIVERY_ATLAS_WORKING_v0.4.6.md", self.atlas_path.name)
         self.assertEqual("FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md", self.skeleton_path.name)
         self.assertEqual("HARDEN-02_CONTRACT_WORKING_v0.5.8.md", self.harden_path.name)
-        self.assertEqual("1.2.70", self.current_open_work_entry["semver"])
+        self.assertEqual("1.2.71", self.current_open_work_entry["semver"])
 
     def test_open_work_manifest_lineage_registers_its_immediate_predecessor(self):
         current = self.current_open_work_entry
-        self.assertEqual("1.2.70", current["semver"])
-        self.assertEqual("1.2.69", current["superseded_version"])
+        self.assertEqual("1.2.71", current["semver"])
+        self.assertEqual("1.2.70", current["superseded_version"])
 
         historical = self.open_work_entry
         self.assertEqual("02_OPEN_WORK_v1.2.64.md", historical["canonical_filename"])

@@ -506,17 +506,24 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
                 self.assertTrue(path.is_file(), relative)
                 self.assertEqual(expected_hash, hashlib.sha256(path.read_bytes()).hexdigest())
 
-    def test_openwork_and_readme_route_the_candidate_without_closing_its_tracker(self):
-        state = _phase7c_state()
+    def test_current_readme_and_open_work_route_tracker_124_as_closed(self):
+        current_open_work = (DOCS / "02_OPEN_WORK_v1.2.71.md").read_text(encoding="utf-8")
+        state_match = re.search(
+            r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
+            current_open_work,
+            re.DOTALL,
+        )
+        self.assertIsNotNone(state_match)
+        state = json.loads(state_match.group(1))
         self.assertEqual(124, state["phase_7c_execution_tracker_issue"])
-        self.assertEqual("OPEN", state["phase_7c_execution_tracker_state"])
+        self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
         self.assertEqual("CLOSED / COMPLETED", state["phase_7b_reconciliation_execution_tracker_state"])
         self.assertEqual(120, state["phase_7b_reconciliation_execution_tracker_issue"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         readme = (DOCS / "README.md").read_text(encoding="utf-8")
-        self.assertIn("Phase 7C: COMPLETE / CERTIFIED / CURRENT after the separate status successor merges", readme)
-        self.assertIn("NEXT STAGE: ARCHITECTURAL PROOF CLASSIFICATION", readme)
-        self.assertIn("PHASE 7C TRACKER #124: OPEN through promotion merge and resulting-main verification", readme)
+        self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", readme)
+        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: NEXT / NOT PERFORMED", readme)
+        self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", readme)
         self.assertIn("PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", readme)
 
 
