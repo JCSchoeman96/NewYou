@@ -9,10 +9,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-CONTRACT_PATH = DOCS / "working" / "FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
+CONTRACT_PATH = DOCS / "archive" / "FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 RECONCILIATION_PATH = DOCS / "working" / "FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
 RECONCILIATION_ARCHIVE = DOCS / "archive" / "FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
-OPEN_WORK_PATH = DOCS / "02_OPEN_WORK_v1.2.69.md"
+OPEN_WORK_PATH = DOCS / "archive" / "02_OPEN_WORK_v1.2.69.md"
 
 EXPECTED_DOMAINS = [
     "Identity & Access",
@@ -92,7 +92,7 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         else:
             cls.contract = ""
 
-    def test_candidate_exists_at_exact_working_path(self):
+    def test_candidate_is_preserved_at_its_exact_archive_path(self):
         self.assertTrue(CONTRACT_PATH.is_file(), str(CONTRACT_PATH))
 
     def test_candidate_header_keeps_noncurrent_lifecycle_boundary(self):
@@ -485,9 +485,18 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         self.assertNotIn(candidate_path, {entry["repository_path"] for entry in entries})
         rules = manifest["integrity_rules"]["graph_rules"]
         self.assertIn(candidate_path, rules["navigation_document_paths"])
+        candidate_archive = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
+        self.assertEqual(
+            candidate_archive,
+            manifest["integrity_rules"]["fp001_phase7c_final_contract_candidate"]["path"],
+        )
         self.assertEqual(
             candidate_path,
-            manifest["integrity_rules"]["fp001_phase7c_final_contract_candidate"]["path"],
+            manifest["integrity_rules"]["fp001_phase7c_final_contract_candidate"]["current_contract_path"],
+        )
+        self.assertIn(
+            candidate_archive,
+            {entry["repository_path"] for entry in manifest["historical_documents"]},
         )
 
     def test_direct_routing_predecessors_are_archived_with_pinned_bytes(self):
@@ -505,7 +514,9 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         self.assertEqual(120, state["phase_7b_reconciliation_execution_tracker_issue"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         readme = (DOCS / "README.md").read_text(encoding="utf-8")
-        self.assertIn("PHASE 7C: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING", readme)
+        self.assertIn("Phase 7C: COMPLETE / CERTIFIED / CURRENT after the separate status successor merges", readme)
+        self.assertIn("NEXT STAGE: ARCHITECTURAL PROOF CLASSIFICATION", readme)
+        self.assertIn("PHASE 7C TRACKER #124: OPEN through promotion merge and resulting-main verification", readme)
         self.assertIn("PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", readme)
 
 

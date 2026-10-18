@@ -187,11 +187,14 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         current_state = current_state or ""
         self.assertIn("- PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT.", current_state)
         self.assertIn(
-            "- PHASE 7C: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING",
+            "- Phase 7C: COMPLETE / CERTIFIED / CURRENT after the separate status successor merges",
             current_state,
         )
-        self.assertIn("- PHASE 7C TRACKER #124: OPEN", current_state)
-        self.assertIn("CANDIDATE / NOT CERTIFIED / NOT CURRENT", current_state)
+        self.assertIn("- PHASE 7C TRACKER #124: OPEN through promotion merge and resulting-main verification", current_state)
+        self.assertIn("Phase 7C contract v0.1.0: COMPLETE / CERTIFIED / CURRENT after the separate status successor merges", current_state)
+        self.assertIn("NEXT STAGE: ARCHITECTURAL PROOF CLASSIFICATION", current_state)
+        self.assertIn("PROOF CLASSIFICATION: NOT FINALISED", current_state)
+        self.assertIn("Phase 8/application implementation remains UNAUTHORISED", current_state)
         self.assertNotRegex(
             current_state,
             r"(?i)\bphase\s+7c\b[^\n.!?]{0,100}\b(?:remains|is|still|currently)\s+blocked\s*/\s*not\s+started\b",
@@ -203,10 +206,8 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             (ROOT / self.entries["OPEN_WORK"]["repository_path"]).read_text(encoding="utf-8")
         )
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state.get("phase_7b_reconciliation"))
-        self.assertEqual(
-            "IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING",
-            state.get("phase_7c"),
-        )
+        self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state.get("phase_7c"))
+        self.assertEqual("ARCHITECTURAL PROOF CLASSIFICATION", state.get("next_stage"))
         self.assertEqual("NOT FINALISED", state.get("proof_classification"))
         self.assertTrue(state.get("application_implementation", "").startswith("UNAUTHORISED"))
         self.assertEqual(
@@ -219,26 +220,33 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertEqual(MERGE_TREE_SHA, certification.get("candidate_resulting_main_tree"))
         self.assertEqual(POST_MERGE_ATTESTATION_URL, certification.get("post_merge_attestation_url"))
         self.assertEqual("PASS", certification.get("post_merge_independent_review"))
+        phase7c_contract = state.get("phase_7c_final_feature_pack_contract", {})
+        self.assertEqual("COMPLETE / CERTIFIED / CURRENT", phase7c_contract.get("lifecycle"))
+        self.assertEqual("bb7bc67fd2d9aa49ed9a6e7f49f09fc5eba5d6a5", phase7c_contract.get("candidate_head_sha"))
+        self.assertEqual("cfc63a7a77299cd59c98d88b57a88bb5b4ac29e5", phase7c_contract.get("merge_sha"))
+        self.assertEqual("NOT FINALISED", phase7c_contract.get("proof_classification"))
+        self.assertEqual("UNAUTHORISED", phase7c_contract.get("phase8"))
 
         current_open_work = self.entries["OPEN_WORK"]
-        self.assertEqual("02_OPEN_WORK_v1.2.69.md", current_open_work["canonical_filename"])
-        self.assertEqual("1.2.69", current_open_work["semver"])
+        self.assertEqual("02_OPEN_WORK_v1.2.70.md", current_open_work["canonical_filename"])
+        self.assertEqual("1.2.70", current_open_work["semver"])
         self.assertEqual(
-            "docs/00_platform/02_OPEN_WORK_v1.2.69.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.70.md",
             current_open_work["repository_path"],
         )
-        self.assertEqual("1.2.68", current_open_work["superseded_version"])
+        self.assertEqual("1.2.69", current_open_work["superseded_version"])
         self.assertEqual("current", current_open_work["lifecycle"])
 
-        direct_predecessor = self.entries.get("OPEN_WORK_V1_2_68", {})
-        self.assertEqual("02_OPEN_WORK_v1.2.68.md", direct_predecessor.get("canonical_filename"))
-        self.assertEqual("1.2.68", direct_predecessor.get("semver"))
+        direct_predecessor = self.entries.get("OPEN_WORK_V1_2_69", {})
+        self.assertEqual("02_OPEN_WORK_v1.2.69.md", direct_predecessor.get("canonical_filename"))
+        self.assertEqual("1.2.69", direct_predecessor.get("semver"))
         self.assertEqual(
-            "docs/00_platform/archive/02_OPEN_WORK_v1.2.68.md",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.69.md",
             direct_predecessor.get("repository_path"),
         )
-        self.assertEqual("1.2.69", direct_predecessor.get("superseded_version"))
+        self.assertEqual("1.2.70", direct_predecessor.get("superseded_version"))
         self.assertEqual("historical", direct_predecessor.get("lifecycle"))
+        self.assertEqual("fea721b924defc93365b17fbe67086c4a8681061896bc6ea15fbaf29917c1c0f", direct_predecessor.get("sha256"))
         self.assertEqual(direct_predecessor.get("sha256"), direct_predecessor.get("provenance_sha256"))
 
         predecessor = self.entries.get("OPEN_WORK_V1_2_66", {})
