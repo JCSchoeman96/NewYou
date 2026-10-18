@@ -49,6 +49,8 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
         for document_id, expected in rules["baseline_authority_versions"].items():
             if document_id == "OPEN_WORK":
                 entry = all_entries["OPEN_WORK_V1_2_65"]
+            elif document_id == "ROADMAP":
+                entry = all_entries["ROADMAP_V1_2_2"]
             else:
                 entry = all_entries[document_id]
             self.assertEqual(entry["semver"], expected["version"], document_id)
@@ -124,7 +126,7 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
             "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->",
             "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->",
         )
-        current_skeleton = (DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md").read_text()
+        current_skeleton = (DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md").read_text()
         archived_skeleton = (DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md").read_text()
         for marker in pmr_markers:
             self.assertEqual(current_skeleton.count(marker), 1)

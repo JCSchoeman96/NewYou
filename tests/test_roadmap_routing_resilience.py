@@ -9,26 +9,26 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ROADMAP = DOCS / "05_ROADMAP_v1.2.2.md"
-ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.2.1.md"
-ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.2.1.md"
-CURRENT_ROADMAP = DOCS / "05_ROADMAP_v1.2.2.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.71.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.13.md"
+ROADMAP = DOCS / "05_ROADMAP_v1.2.3.md"
+ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.2.2.md"
+ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.2.2.md"
+CURRENT_ROADMAP = DOCS / "05_ROADMAP_v1.2.3.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.72.md"
+ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.14.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 ROADMAP_V1_1_4_SHA256 = "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
 ROADMAP_V1_2_0_SHA256 = "601172754e78f23df7d6b59e7c4eceb0aefa0b9e5bb65045dafeacd78b9d0fb0"
-ROADMAP_V1_2_1_SHA256 = "56628d92e5ff5df834c0fca59d95beaac46eb3edaf74478f0ae06e2ee159356b"
+ROADMAP_V1_2_2_SHA256 = "4225fad688589d3c66733527303cbda39ef3c8bf52b78c4cc372c0736d202cdc"
 
 PATCH_SCOPE = (
-    "## v1.2.2 Patch Scope\n\n"
-    "This routing-only successor points current Product and Decision references to v1.8.0 and routes FP-002 to the narrow duplicate-collection and component-attribution rules in §21R.2 and DEC-314. It preserves all 17 Feature Pack definitions, outcomes, order, dependencies, affected Domains, gates, exit conditions, proof direction and implementation STOP. It does not change Architecture, Domain ownership, North Star semantics or sequencing.\n\n"
+    "## v1.2.3 Patch Scope\n\n"
+    "This PATCH corrects proof-classification lifecycle timing and ownership, aligning Roadmap with the governed sequence of Phase 7C, the separate architectural proof classification gate, then Phase 8 executable proof. It preserves all 17 Feature Packs, their outcomes, order, dependencies, affected Domains, gates, exit conditions and anticipated proof directions. It does not select FP-001 proof classification, create a Tracer Bullet, authorise Phase 8 or authorise application implementation.\n\n"
 )
 PATCH_SCOPE_INSERTION = (
     "\n\n"
     + PATCH_SCOPE
-    + "## v1.2.1 Patch Scope"
+    + "## v1.2.2 Patch Scope"
 )
 
 
@@ -43,26 +43,30 @@ def _normalise_roadmap_successor(successor: str, predecessor: str) -> str:
         raise ValueError(f"expected one dynamic Roadmap routing marker, found {route_count}")
     scope_count = successor.count(PATCH_SCOPE)
     if scope_count != 1:
-        raise ValueError(f"expected one v1.2.2 Patch Scope, found {scope_count}")
+        raise ValueError(f"expected one v1.2.3 Patch Scope, found {scope_count}")
 
     replacements = (
-        ("# 05_ROADMAP_v1.2.2.md", "# 05_ROADMAP_v1.2.1.md"),
-        ("FROZEN / AMENDED ROADMAP v1.2.2", "FROZEN / AMENDED ROADMAP v1.2.1"),
-        ("**Document version:** v1.2.2", "**Document version:** v1.2.1"),
-        ("**Last updated:** 2026-10-13", "**Last updated:** 2026-10-13"),
-        ("`archive/05_ROADMAP_v1.2.1.md`", "`archive/05_ROADMAP_v1.2.0.md`"),
-        ("`v1.2.1 → v1.2.2`", "`v1.2.0 → v1.2.1`"),
+        ("# 05_ROADMAP_v1.2.3.md", "# 05_ROADMAP_v1.2.2.md"),
+        ("FROZEN / AMENDED ROADMAP v1.2.3", "FROZEN / AMENDED ROADMAP v1.2.2"),
+        ("**Document version:** v1.2.3", "**Document version:** v1.2.2"),
+        ("**Last updated:** 2026-10-18", "**Last updated:** 2026-10-13"),
+        ("`archive/05_ROADMAP_v1.2.2.md`", "`archive/05_ROADMAP_v1.2.1.md`"),
+        ("`v1.2.2 → v1.2.3`", "`v1.2.1 → v1.2.2`"),
         (
-            "- **Current Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`, `00_PLATFORM_v1.8.0.md`, `01_DECISIONS_v1.8.0.md`",
-            "- **Current Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`, `00_PLATFORM_v1.7.0.md`, `01_DECISIONS_v1.7.0.md`",
+            "Anticipated proof labels are provisional. An anticipated Roadmap proof label is not a proof classification. Phase 7C and the Final Feature Pack Contract freeze the architectural proof requirement and applicable proof obligations. The separate architectural proof classification gate runs after Phase 7C and before Phase 8 executable proof. The gate selects either `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`. This classification is a Development Entry Hard Stop requirement and does not itself prove the architecture. Phase 8 remains the first executable architectural-proof stage.",
+            "Anticipated proof labels are deliberately provisional. Phase 7 Final Feature Pack Contracts own the final `REUSE_EXISTING_PROOF` / `NEW_TRACER_BULLET` decision.",
         ),
         (
-            "**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§11–13`; `00_PLATFORM_v1.8.0.md §§21L.4–21L.6, 21L.13–21L.18, 21R.1–21R.2, 21R.5`; `DEC-029...DEC-050`, `DEC-258`, `DEC-268...DEC-285`, `DEC-292`, `DEC-299`, `DEC-300`, `DEC-303`, `DEC-314`.",
-            "**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§11–13`; `00_PLATFORM_v1.6.0.md §§21L.4–21L.6, 21L.13–21L.18, 21R.1–21R.2, 21R.5`; `DEC-029...DEC-050`, `DEC-258`, `DEC-268...DEC-285`, `DEC-292`, `DEC-299`, `DEC-300`, `DEC-303`.",
+            "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET`. This direction is provisional. Phase 7C freezes the architectural proof requirement and applicable obligations. The separate architectural proof classification gate after Phase 7C and before Phase 8 selects the final proof vehicle.",
+            "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET` — the first real authentication/session/recovery path materially exercises the accepted identity boundary; Phase 7 decides whether one proof can cover the complete path.",
         ),
         (
-            "**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§8, 11–13, 17–17A`; `00_PLATFORM_v1.8.0.md §§7.4, 21B, 21L.5–21L.6, 21R.4–21R.6, 21T.1–21T.3`; `DEC-031...DEC-036`, `DEC-051...DEC-072`, `DEC-272...DEC-273`, `DEC-302`, `DEC-303`, `DEC-305`, `DEC-306`, `DEC-309`, `DEC-313`.",
-            "**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§8, 11–13, 17–17A`; `00_PLATFORM_v1.7.0.md §§7.4, 21B, 21L.5–21L.6, 21R.4–21R.6, 21T.1–21T.3`; `DEC-031...DEC-036`, `DEC-051...DEC-072`, `DEC-272...DEC-273`, `DEC-302`, `DEC-303`, `DEC-305`, `DEC-306`, `DEC-309`, `DEC-313`.",
+            "No Tracer Bullet is created by this Roadmap. Final proof classification occurs at the separate architectural proof classification gate after Phase 7C and before Phase 8.",
+            "No Tracer Bullet is created by this Roadmap. Final proof classification belongs to Phase 7.",
+        ),
+        (
+            "- freeze the architectural proof requirement and applicable obligations; leave the `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` choice to the separate architectural proof classification gate after Phase 7C and before Phase 8;",
+            "- make the final proof choice `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`;",
         ),
     )
     normalised = successor
@@ -74,11 +78,11 @@ def _normalise_roadmap_successor(successor: str, predecessor: str) -> str:
     insertion_count = normalised.count(PATCH_SCOPE_INSERTION)
     if insertion_count != 1:
         raise ValueError(
-            f"expected one v1.2.2 Patch Scope at its declared insertion point, found {insertion_count}"
+        f"expected one v1.2.3 Patch Scope at its declared insertion point, found {insertion_count}"
         )
     normalised = normalised.replace(
         PATCH_SCOPE_INSERTION,
-        "\n\n## v1.2.1 Patch Scope",
+        "\n\n## v1.2.2 Patch Scope",
         1,
     )
     if normalised != predecessor:
@@ -127,7 +131,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertTrue(ROADMAP_PREDECESSOR.is_file(), ROADMAP_PREDECESSOR)
         if not ROADMAP.is_file() or not ROADMAP_PREDECESSOR.is_file():
             return
-        self.assertEqual(ROADMAP_V1_2_1_SHA256, _sha256(ROADMAP_PREDECESSOR))
+        self.assertEqual(ROADMAP_V1_2_2_SHA256, _sha256(ROADMAP_PREDECESSOR))
         self.assertEqual(self.predecessor, _normalise_roadmap_successor(self.roadmap, self.predecessor))
 
     def test_normalizer_fails_closed_on_missing_duplicate_or_relocated_markers(self):
@@ -157,17 +161,17 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
                     _normalise_roadmap_successor(malformed, self.predecessor)
 
     def test_roadmap_dynamic_routing_resolves_through_readme_and_manifest(self):
-        self.assertTrue(self.current_roadmap, "current Roadmap v1.2.2 must exist")
+        self.assertTrue(self.current_roadmap, "current Roadmap v1.2.3 must exist")
         manifest_current = {
             item["document_id"]: item
             for item in self.manifest["governing_documents"]
         }
         roadmap = manifest_current["ROADMAP"]
         open_work = manifest_current["OPEN_WORK"]
-        self.assertEqual("05_ROADMAP_v1.2.2.md", roadmap["canonical_filename"])
-        self.assertEqual("docs/00_platform/05_ROADMAP_v1.2.2.md", roadmap["repository_path"])
+        self.assertEqual("05_ROADMAP_v1.2.3.md", roadmap["canonical_filename"])
+        self.assertEqual("docs/00_platform/05_ROADMAP_v1.2.3.md", roadmap["repository_path"])
         self.assertEqual(_sha256(CURRENT_ROADMAP), roadmap["sha256"])
-        self.assertEqual("02_OPEN_WORK_v1.2.71.md", open_work["canonical_filename"])
+        self.assertEqual("02_OPEN_WORK_v1.2.72.md", open_work["canonical_filename"])
 
         header = self.current_roadmap.split("## Amendment summary", 1)[0]
         route_lines = re.findall(r"(?m)^- \*\*Current programme routing:\*\* (.+)$", header)
@@ -182,7 +186,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertIn(f"`{open_work['canonical_filename']}`", default_context)
 
     def test_readme_manifest_open_work_and_atlas_agree_on_current_roadmap(self):
-        current_route = "05_ROADMAP_v1.2.2.md"
+        current_route = "05_ROADMAP_v1.2.3.md"
         self.assertIn(f"`{current_route}`", self.readme)
         self.assertGreaterEqual(self.open_work.count(current_route), 1)
         self.assertGreaterEqual(self.atlas.count(current_route), 1)
@@ -199,8 +203,13 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
 
         governing = {entry["document_id"]: entry for entry in self.manifest["governing_documents"]}
         self.assertEqual(current_route, governing["ROADMAP"]["canonical_filename"])
-        self.assertEqual("1.2.2", governing["ROADMAP"]["semver"])
+        self.assertEqual("1.2.3", governing["ROADMAP"]["semver"])
         history = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
+        predecessor_roadmap = history["ROADMAP_V1_2_2"]
+        self.assertEqual("05_ROADMAP_v1.2.2.md", predecessor_roadmap["canonical_filename"])
+        self.assertEqual("docs/00_platform/archive/05_ROADMAP_v1.2.2.md", predecessor_roadmap["repository_path"])
+        self.assertEqual("1.2.3", predecessor_roadmap["superseded_version"])
+        self.assertEqual(ROADMAP_V1_2_2_SHA256, predecessor_roadmap["sha256"])
         old_roadmap = history["ROADMAP_V1_1_4"]
         self.assertEqual("05_ROADMAP_v1.1.4.md", old_roadmap["canonical_filename"])
         self.assertEqual(
@@ -225,23 +234,43 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertEqual(expected, list(new_packs))
         self.assertNotIn("FP-018", self.current_roadmap)
 
-    def test_all_feature_pack_sections_and_section_21_are_exactly_preserved(self):
+    def test_feature_pack_outcomes_and_unrelated_section_21_content_are_preserved(self):
         self.assertTrue(CURRENT_ROADMAP.is_file(), CURRENT_ROADMAP)
         self.assertTrue(ROADMAP.is_file(), ROADMAP)
+        old_packs = _feature_pack_sections(self.predecessor)
+        new_packs = _feature_pack_sections(self.current_roadmap)
+        self.assertEqual(old_packs.keys(), new_packs.keys())
+        for pack_id in old_packs:
+            if pack_id == "FP-001":
+                expected_fp001 = old_packs[pack_id].replace(
+                    "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET` — the first real authentication/session/recovery path materially exercises the accepted identity boundary; Phase 7 decides whether one proof can cover the complete path.",
+                    "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET`. This direction is provisional. Phase 7C freezes the architectural proof requirement and applicable obligations. The separate architectural proof classification gate after Phase 7C and before Phase 8 selects the final proof vehicle.",
+                    1,
+                )
+                self.assertEqual(expected_fp001, new_packs[pack_id], pack_id)
+            else:
+                self.assertEqual(old_packs[pack_id], new_packs[pack_id], pack_id)
         for heading, next_heading in (("# 21. Phase 7 handoff", ""),):
             current = _section_bytes(CURRENT_ROADMAP, heading, next_heading)
-            predecessor = _section_bytes(ROADMAP, heading, next_heading)
-            self.assertEqual(predecessor, current, heading)
+            predecessor = _section_bytes(ROADMAP_PREDECESSOR, heading, next_heading)
             self.assertEqual(
-                "611abef74ce306eba824f44241189413c6be0c305c922166f3a338cc7f019b83",
-                hashlib.sha256(current).hexdigest(),
+                predecessor,
+                current.replace(
+                    b"- freeze the architectural proof requirement and applicable obligations; leave the `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` choice to the separate architectural proof classification gate after Phase 7C and before Phase 8;",
+                    b"- make the final proof choice `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`;",
+                    1,
+                ),
+                heading,
             )
 
     def test_patch_scope_is_narrow_and_stage_neutral(self):
         self.assertIn(PATCH_SCOPE.strip(), self.roadmap)
-        scope = self.roadmap.split("## v1.1.5 Patch Scope\n\n", 1)[1].split("\n\n", 1)[0]
-        self.assertIn("routing-only PATCH", scope)
+        scope = self.roadmap.split("## v1.2.3 Patch Scope\n\n", 1)[1].split("\n\n", 1)[0]
+        self.assertIn("corrects proof-classification lifecycle timing and ownership", scope)
         self.assertIn("preserves all 17 Feature Packs", scope)
+        self.assertIn("does not select FP-001 proof classification", scope)
+        self.assertIn("create a Tracer Bullet", scope)
+        self.assertIn("authorise Phase 8", scope)
 
     def test_pass2_gates_and_stage_neutrality_are_carried_into_current_roadmap(self):
         fp003 = _feature_pack_sections(self.current_roadmap)["FP-003"]
@@ -257,6 +286,88 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertIn("practitioner", fp012.lower())
         self.assertIn("does not authorize Feature Pack preparation, Phase 7C, Architectural Proof, Phase 8 or implementation", self.current_roadmap)
         self.assertIn("Feature Pack count remains **17**", self.current_roadmap)
+
+    def test_phase7c_freezes_proof_obligations_and_routes_classification_before_phase8(self):
+        successor = DOCS / "05_ROADMAP_v1.2.3.md"
+        roadmap = successor.read_text(encoding="utf-8") if successor.is_file() else ""
+        self.assertTrue(successor.is_file(), "Roadmap v1.2.3 must be current")
+
+        self.assertIn(
+            "Phase 7C and the Final Feature Pack Contract freeze the architectural proof requirement and applicable proof obligations.",
+            roadmap,
+        )
+        self.assertIn(
+            "The separate architectural proof classification gate runs after Phase 7C and before Phase 8 executable proof.",
+            roadmap,
+        )
+        self.assertIn(
+            "This classification is a Development Entry Hard Stop requirement and does not itself prove the architecture.",
+            roadmap,
+        )
+        self.assertIn("Phase 8 remains the first executable architectural-proof stage.", roadmap)
+        self.assertIn("An anticipated Roadmap proof label is not a proof classification.", roadmap)
+        self.assertNotIn(
+            "Phase 7 Final Feature Pack Contracts own the final `REUSE_EXISTING_PROOF` / `NEW_TRACER_BULLET` decision.",
+            roadmap,
+        )
+        self.assertNotIn(
+            "Phase 7 decides whether one proof can cover the complete path.",
+            roadmap,
+        )
+        self.assertNotIn("make the final proof choice", roadmap)
+        self.assertIn(
+            "leave the `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` choice to the separate architectural proof classification gate after Phase 7C and before Phase 8",
+            roadmap,
+        )
+
+        fp001 = re.search(
+            r"(?ms)^## FP-001 — .*?(?=^## FP-002 — )",
+            roadmap,
+        )
+        self.assertIsNotNone(fp001, "current FP-001 Roadmap section must exist")
+        if fp001:
+            self.assertIn("`PROBABLY_NEW_TRACER_BULLET`", fp001.group(0))
+            self.assertNotRegex(
+                fp001.group(0),
+                r"(?m)^\*\*Anticipated Architectural Proof:\*\* `(?:REUSE_EXISTING_PROOF|NEW_TRACER_BULLET)`",
+            )
+            self.assertNotIn("Phase 7 decides", fp001.group(0))
+
+    def test_current_atlas_routes_the_separate_post_7c_classification_gate(self):
+        self.assertIn(
+            "Phase 7C resolves blocking gates and produces the Final Feature Pack Contract, which owns development-entry scope and freezes the architectural proof requirement and applicable proof obligations.",
+            self.atlas,
+        )
+        self.assertIn(
+            "After Phase 7C and before Phase 8 executable proof, the separate architectural proof classification gate selects `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`.",
+            self.atlas,
+        )
+        self.assertIn(
+            "This classification is a Development Entry Hard Stop requirement and does not itself prove the architecture.",
+            self.atlas,
+        )
+        self.assertIn(
+            "Phase 8 remains the first executable architectural-proof stage.",
+            self.atlas,
+        )
+        for outdated_claim in (
+            "The approved contract records `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`",
+            "The Feature Pack contract must still decide `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`",
+            "The later Feature Pack contract owns the decision between `REUSE_EXISTING_PROOF` and `NEW_TRACER_BULLET`",
+            "The affected Feature Pack later decides whether its requirement is `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`",
+        ):
+            self.assertNotIn(outdated_claim, self.atlas)
+
+    def test_roadmap_v1_2_2_is_preserved_byte_identically_in_archive(self):
+        archived = DOCS / "archive" / "05_ROADMAP_v1.2.2.md"
+        working_predecessor = DOCS / "05_ROADMAP_v1.2.2.md"
+        self.assertTrue(archived.is_file(), "Roadmap v1.2.2 must be archived")
+        self.assertFalse(working_predecessor.exists(), "Roadmap v1.2.2 must leave the current path")
+        if archived.is_file():
+            self.assertEqual(
+                "4225fad688589d3c66733527303cbda39ef3c8bf52b78c4cc372c0736d202cdc",
+                hashlib.sha256(archived.read_bytes()).hexdigest(),
+            )
 
 
 if __name__ == "__main__":

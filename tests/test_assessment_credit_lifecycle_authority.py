@@ -223,7 +223,13 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
             old_packs["FP-003"],
             new_packs["FP-003"].replace("00_PLATFORM_v1.8.0.md", "00_PLATFORM_v1.7.0.md", 1),
         )
-        for pack_id in old_packs.keys() - {"FP-002", "FP-003"}:
+        expected_fp001 = old_packs["FP-001"].replace(
+            "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET` — the first real authentication/session/recovery path materially exercises the accepted identity boundary; Phase 7 decides whether one proof can cover the complete path.",
+            "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET`. This direction is provisional. Phase 7C freezes the architectural proof requirement and applicable obligations. The separate architectural proof classification gate after Phase 7C and before Phase 8 selects the final proof vehicle.",
+            1,
+        )
+        self.assertEqual(expected_fp001, new_packs["FP-001"])
+        for pack_id in old_packs.keys() - {"FP-001", "FP-002", "FP-003"}:
             self.assertEqual(old_packs[pack_id], new_packs[pack_id], pack_id)
         self.assertIn("remains unused until successful digital Assessment delivery", self.roadmap)
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])

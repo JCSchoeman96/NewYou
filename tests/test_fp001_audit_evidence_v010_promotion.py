@@ -41,7 +41,7 @@ PROTECTED_PATHS = (
     "docs/00_platform/01_DECISIONS_v1.8.0.md",
     "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
     "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
-    "docs/00_platform/05_ROADMAP_v1.2.2.md",
+    "docs/00_platform/archive/05_ROADMAP_v1.2.2.md",
     "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
     "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
@@ -164,7 +164,7 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
         self.assertNotIn("PHASE 7B RECONCILIATION: COMPLETE", self.open_work)
 
     def test_routing_successors_and_manifest_agree(self):
-        for version in ("v1.2.71", "v0.4.13", "v0.1.15", "v0.5.15", "v0.1.4", "v0.1.0"):
+        for version in ("v1.2.72", "v0.4.14", "v0.1.16", "v0.5.16", "v0.1.4", "v0.1.0"):
             with self.subTest(version=version):
                 self.assertIn(version, self.readme)
         self.assertIn("FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md", self.readme)
@@ -173,13 +173,13 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
             with self.subTest(artifact=artifact[:40]):
                 self.assertIn(audit_route, artifact)
         open_work = next(row for row in self.manifest["governing_documents"] if row["document_id"] == "OPEN_WORK")
-        self.assertEqual("1.2.71", open_work["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.71.md", open_work["repository_path"])
+        self.assertEqual("1.2.72", open_work["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.72.md", open_work["repository_path"])
         navigation = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
         for path in (
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
-            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
             "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
             "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
             "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
@@ -266,7 +266,12 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
     def test_no_upstream_authority_or_application_source_changed(self):
         for path in PROTECTED_PATHS:
             with self.subTest(path=path):
-                self.assertEqual(_git_show(BASE_MAIN, path), (ROOT / path).read_bytes())
+                baseline_path = (
+                    "docs/00_platform/05_ROADMAP_v1.2.2.md"
+                    if path == "docs/00_platform/archive/05_ROADMAP_v1.2.2.md"
+                    else path
+                )
+                self.assertEqual(_git_show(BASE_MAIN, baseline_path), (ROOT / path).read_bytes())
         changed = subprocess.run(
             ["git", "diff", "--name-only", BASE_MAIN],
             cwd=ROOT,

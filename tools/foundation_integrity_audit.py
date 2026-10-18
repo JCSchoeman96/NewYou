@@ -581,7 +581,7 @@ def _h02_lifecycle_state(
         return False, "HARDEN lifecycle JSON must be an object"
     if any(state.get(key) != value for key, value in H02_PR40_LIFECYCLE_FACTS.items()):
         return False, "prior PR #40 certification facts or certified contract lifecycle changed"
-    if state.get("status_successor_version") in {"0.5.9", "0.5.10", "0.5.11", "0.5.12", "0.5.13", "0.5.14", "0.5.15"}:
+    if state.get("status_successor_version") in {"0.5.9", "0.5.10", "0.5.11", "0.5.12", "0.5.13", "0.5.14", "0.5.15", "0.5.16"}:
         return _h02_audit_v010_promotion_lifecycle_state(state, active, readme, contract)
 
     execution = state.get("harden_02_execution")
@@ -1305,8 +1305,8 @@ def _h02_phase7c_current_status_lifecycle_state(
     """Validate the current Phase 7C closure route and downstream gates."""
 
     expected = {
-        "status_successor_version": "0.5.15",
-        "status_successor_base_sha": "69bef7bb2782cbff00a48505504ebd2686eb53d9",
+        "status_successor_version": "0.5.16",
+        "status_successor_base_sha": "5b56d4070b422bf969667e84faae973522b52414",
         "current_stage": "FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT",
         "next_stage": "ARCHITECTURAL PROOF CLASSIFICATION",
         "harden_02_execution": "COMPLETE / CERTIFIED",
@@ -1324,9 +1324,9 @@ def _h02_phase7c_current_status_lifecycle_state(
         "programme_router_issue_111_state": "OPEN",
         "proof_classification": "NOT FINALISED",
         "application_implementation": "UNAUTHORISED / BLOCKED UNTIL PROOF CLASSIFICATION AND ALL DEVELOPMENT ENTRY HARD STOP CONDITIONS PASS",
-        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
-        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
-        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
         "audit_dossier_execution_tracker_issue": 116,
         "audit_dossier_candidate_pr": 118,
         "audit_dossier_work_start_baseline_main_sha": "332d51f19d77430fe4e95911920fe0c87cab524a",
@@ -1334,7 +1334,7 @@ def _h02_phase7c_current_status_lifecycle_state(
         "audit_certified_candidate_sha256": "0b0a8fb64a3ac602ebb81a7ab957a9dd075412350c818e4c6e5f13f667f7daea",
     }
     if any(state.get(key) != value for key, value in expected.items()):
-        return False, "HARDEN .5.15 current state omits certification evidence or advances a protected gate"
+        return False, "HARDEN .5.16 current state omits certification evidence or advances a protected gate"
     if state.get("conditional_dossiers") != {
         "privacy_consent": "NOT_REQUIRED",
         "content_media": "NOT_REQUIRED",
@@ -1367,7 +1367,7 @@ def _h02_phase7c_current_status_lifecycle_state(
         "phase8": "UNAUTHORISED",
     }
     if not isinstance(phase7c, dict) or any(phase7c.get(key) != value for key, value in expected_phase7c.items()):
-        return False, "HARDEN .5.15 current state omits resulting-main provenance or advances a protected gate"
+        return False, "HARDEN .5.16 current state omits resulting-main provenance or advances a protected gate"
     if state.get("completed_milestones", [])[-1:] != [
         "PR #126 resulting-main verification and Phase 7C tracker #124 closure COMPLETE"
     ]:
@@ -1383,7 +1383,7 @@ def _h02_phase7c_current_status_lifecycle_state(
         "PROOF CLASSIFICATION: NOT FINALISED",
         "PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED",
     ]:
-        return False, "HARDEN .5.15 downstream route skips tracker closure or advances a later gate"
+        return False, "HARDEN .5.16 downstream route skips tracker closure or advances a later gate"
 
     active_summary = active.split("<!-- HARDEN_02_LIFECYCLE_STATE_START -->", 1)[0]
     active_lines = (
@@ -1398,7 +1398,7 @@ def _h02_phase7c_current_status_lifecycle_state(
         "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
     )
     if any(len(re.findall(r"(?m)^" + re.escape(line) + r"\s*$", active_summary)) != 1 for line in active_lines):
-        return False, "Open Work .5.15 active route omits or duplicates a lifecycle boundary"
+        return False, "Open Work .5.16 active route omits or duplicates a lifecycle boundary"
     if "PROGRAMME ROUTER #111: OPEN" not in active_summary:
         return False, "Open Work .5.15 changes programme router #111 state"
     if re.search(r"(?im)^.*PROOF CLASSIFICATION\s*:\s*(?:FINAL|FINALI[ZS]ED|REUSE_EXISTING_PROOF|NEW_TRACER_BULLET).*$", active_summary):
@@ -1433,7 +1433,7 @@ def _h02_phase7c_current_status_lifecycle_state(
         "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
     )
     if not route or any(line not in route for line in route_lines):
-        return False, "HARDEN .5.15 current route omits certification evidence or a downstream stop"
+        return False, "HARDEN .5.16 current route omits certification evidence or a downstream stop"
     return True, "Phase 7C closure is current; proof classification and Phase 8 remain gated"
 
 def _h02_audit_v010_promotion_lifecycle_state(
@@ -1444,7 +1444,7 @@ def _h02_audit_v010_promotion_lifecycle_state(
 ) -> tuple[bool, str]:
     """Validate the current Audit promotion and Phase 7B candidate routing."""
     current_successor_version = state.get("status_successor_version")
-    if current_successor_version == "0.5.15":
+    if current_successor_version in {"0.5.15", "0.5.16"}:
         return _h02_phase7c_current_status_lifecycle_state(state, active, readme, contract)
     if current_successor_version == "0.5.13":
         return _h02_phase7c_candidate_lifecycle_state(state, active, readme, contract)
@@ -2678,7 +2678,7 @@ def _check_product_semantics(
     readme_path = root / roots["context_index"]
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     fp001_candidates = (
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
+        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.13.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.12.md",
@@ -4411,11 +4411,17 @@ def _check_fp001_phase7b_candidate(
     }
     for document_id, expected in baseline_authorities.items():
         if document_id == "OPEN_WORK":
+            historical_id = "OPEN_WORK_V1_2_65"
+        elif document_id == "ROADMAP":
+            historical_id = "ROADMAP_V1_2_2"
+        else:
+            historical_id = None
+        if historical_id is not None:
             entry = next(
                 (
                     item
                     for item in _all_entries(manifest)
-                    if item.get("document_id") == "OPEN_WORK_V1_2_65"
+                    if item.get("document_id") == historical_id
                     and item.get("lifecycle") == "historical"
                 ),
                 None,
@@ -4454,7 +4460,6 @@ def _check_fp001_phase7b_candidate(
     manifest_authority_hashes = {
         _relative_path(entry): entry.get("sha256")
         for entry in _all_entries(manifest)
-        if entry.get("lifecycle", "current") != "historical"
     }
     for relative, expected_hash in rules.get("baseline_current_document_sha256", {}).items():
         if manifest_authority_hashes.get(relative) != expected_hash:
@@ -4487,7 +4492,7 @@ def _check_fp001_phase7b_candidate(
     if "PMR" not in candidate_text or "prior PR #67 PMR reconciliation is complete" not in candidate_text:
         baseline_issues.append("candidate does not preserve the completed PMR reconciliation")
 
-    skeleton_path = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md"
+    skeleton_path = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md"
     skeleton_archive = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md"
     pmr_start = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->"
     pmr_end = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->"
@@ -4577,7 +4582,7 @@ def _check_fp001_phase7b_candidate(
         "Phase 7B and Phase 7C certification routes are preserved; proof classification and Phase 8 remain gated"
         if not route_issues
         else "; ".join(route_issues),
-        path="docs/00_platform/02_OPEN_WORK_v1.2.71.md",
+        path="docs/00_platform/02_OPEN_WORK_v1.2.72.md",
     )
 
 
@@ -5004,6 +5009,11 @@ def _check_fp001_phase7c_candidate(
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.12.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
         "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
+        "docs/00_platform/02_OPEN_WORK_v1.2.71.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
+        "docs/00_platform/05_ROADMAP_v1.2.2.md",
     ]
     if graph_rules.get("retired_current_predecessor_paths") != expected_retired:
         route_issues.append("manifest does not pin the retired current-predecessor paths")
@@ -5011,11 +5021,11 @@ def _check_fp001_phase7c_candidate(
         if (root / relative).exists():
             route_issues.append(f"unarchived retired predecessor remains at a current path: {relative}")
     expected_current_paths = {
-        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
-        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
-        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
     }
-    open_work_path = docs / "02_OPEN_WORK_v1.2.71.md"
+    open_work_path = docs / "02_OPEN_WORK_v1.2.72.md"
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
     state_match = re.search(
         r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
@@ -5037,8 +5047,8 @@ def _check_fp001_phase7c_candidate(
     readme_path = docs / "README.md"
     readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     current_state = _markdown_h2_section(readme_text, "Current State") or ""
-    if "02_OPEN_WORK_v1.2.71.md" not in readme_text:
-        route_issues.append("README does not route Open Work v1.2.71")
+    if "02_OPEN_WORK_v1.2.72.md" not in readme_text:
+        route_issues.append("README does not route Open Work v1.2.72")
     for path in expected_current_paths.values():
         if Path(path).name not in readme_text:
             route_issues.append(f"README does not route current successor {path}")
@@ -5128,6 +5138,204 @@ def _fp001_protected_historical_evidence_issues(
     return issues
 
 
+def _check_roadmap_proof_classification_lifecycle(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    """Keep the Roadmap's proof-classification boundary separate from Phase 7C."""
+
+    rule = integrity_rules.get("roadmap_proof_classification_lifecycle", {})
+    expected_rule = {
+        "base_sha": "5b56d4070b422bf969667e84faae973522b52414",
+        "roadmap_current_path": "docs/00_platform/05_ROADMAP_v1.2.3.md",
+        "roadmap_current_sha256": "044b5c6308d59253cb0e5ae86d53e13611fb84dec04135b1175880d7881593c2",
+        "roadmap_predecessor_archive_path": "docs/00_platform/archive/05_ROADMAP_v1.2.2.md",
+        "roadmap_predecessor_archive_sha256": "4225fad688589d3c66733527303cbda39ef3c8bf52b78c4cc372c0736d202cdc",
+        "phase7c_contract_path": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
+        "phase7c_contract_sha256": "cab9ac6a8c74ef86ec65c90af0f12f8f13e8998ac55a24ee33d35656dc52fdc5",
+        "current_routes": {
+            "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.72.md",
+            "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+            "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+            "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
+        },
+        "protected_upstream_authority_sha256": {
+            "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md": "249f5985ff1e8971e1ac4437e4bbebd5a3db9254ab25a2238e135cb7a7ae5f4b",
+            "docs/00_platform/00_PLATFORM_v1.8.0.md": "cb93abfee9a6337a7f2a23c16f35413b8b2ea84608974fcf5a0033822578905e",
+            "docs/00_platform/01_DECISIONS_v1.8.0.md": "123d3a622f89c22e364df565b87117c22244378c5c51b10d621597909b569140",
+            "docs/00_platform/03_ARCHITECTURE_v1.1.1.md": "342d02a7946f99aca9e6683647fc3a2505901b3d0cc2d13c21d807442025f0b3",
+            "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md": "e09e14ee0a773c5855257c48685cf3a75d413c983a98d22a56b42af57dc2c078",
+            "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md": "26ff1e7a7e40945e501793c2bfb2ede9c01ae03f7949383ae724e3b031fa4faa",
+        },
+        "prohibited_application_paths": ["mix.exs", "lib", "src", "app", "apps", "priv", "migrations", "assets"],
+    }
+    issues: list[str] = []
+    if not isinstance(rule, dict) or rule != expected_rule:
+        issues.append("manifest does not pin the Roadmap successor, certified contract, upstream authorities and current routes")
+
+    roadmap_path = str(expected_rule["roadmap_current_path"])
+    roadmap_file = root / roadmap_path
+    roadmap = roadmap_file.read_text(encoding="utf-8") if roadmap_file.is_file() else ""
+    if not roadmap_file.is_file() or sha256_file(roadmap_file) != expected_rule["roadmap_current_sha256"]:
+        issues.append("current Roadmap v1.2.3 is missing or its pinned bytes changed")
+    predecessor_path = root / str(expected_rule["roadmap_predecessor_archive_path"])
+    if not predecessor_path.is_file() or sha256_file(predecessor_path) != expected_rule["roadmap_predecessor_archive_sha256"]:
+        issues.append("archived Roadmap v1.2.2 is missing or its immutable bytes changed")
+    current_roadmap_entry = next(
+        (entry for entry in manifest.get("governing_documents", []) if entry.get("document_id") == "ROADMAP"),
+        None,
+    )
+    if (
+        not isinstance(current_roadmap_entry, dict)
+        or _relative_path(current_roadmap_entry) != roadmap_path
+        or current_roadmap_entry.get("semver") != "1.2.3"
+        or current_roadmap_entry.get("superseded_version") != "1.2.2"
+    ):
+        issues.append("manifest does not route Roadmap v1.2.3 as the current successor")
+    archived_roadmap_entry = next(
+        (entry for entry in _all_entries(manifest) if entry.get("document_id") == "ROADMAP_V1_2_2"),
+        None,
+    )
+    if (
+        not isinstance(archived_roadmap_entry, dict)
+        or _relative_path(archived_roadmap_entry) != str(expected_rule["roadmap_predecessor_archive_path"])
+        or archived_roadmap_entry.get("sha256") != expected_rule["roadmap_predecessor_archive_sha256"]
+        or archived_roadmap_entry.get("lifecycle") != "historical"
+    ):
+        issues.append("manifest does not preserve Roadmap v1.2.2 as immutable historical authority")
+
+    required_roadmap_statements = (
+        "Anticipated proof labels are provisional.",
+        "Phase 7C and the Final Feature Pack Contract freeze the architectural proof requirement and applicable proof obligations.",
+        "The separate architectural proof classification gate runs after Phase 7C and before Phase 8 executable proof.",
+        "The gate selects either `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`.",
+        "This classification is a Development Entry Hard Stop requirement and does not itself prove the architecture.",
+        "Phase 8 remains the first executable architectural-proof stage.",
+        "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET`. This direction is provisional.",
+    )
+    for statement in required_roadmap_statements:
+        if statement not in roadmap:
+            issues.append(f"current Roadmap omits the proof-classification lifecycle requirement: {statement}")
+    if re.search(
+        r"(?i)Phase\s+7\s+Final\s+Feature\s+Pack\s+Contracts?\s+own\s+the\s+final\s+`?REUSE_EXISTING_PROOF`?\s*/\s*`?NEW_TRACER_BULLET`?\s+decision",
+        roadmap,
+    ):
+        issues.append("Roadmap assigns final proof-vehicle classification to the Phase 7 contract")
+    fp001 = roadmap.split("## FP-001 —", 1)[1].split("## FP-002 —", 1)[0] if "## FP-001 —" in roadmap and "## FP-002 —" in roadmap else ""
+    if "Phase 7 decides whether one proof can cover the complete path" in fp001:
+        issues.append("FP-001 again says Phase 7 decides the final proof vehicle")
+    if "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET`" not in fp001:
+        issues.append("FP-001 anticipated proof direction is missing or has been promoted away from PROBABLY_NEW_TRACER_BULLET")
+    if re.search(r"(?is)FP-001.{0,180}(?:proof classification|final proof vehicle)\s*(?:is|:|=)\s*`?(?:REUSE_EXISTING_PROOF|NEW_TRACER_BULLET)", fp001):
+        issues.append("FP-001 current Roadmap anticipation has become a final proof classification")
+
+    route_docs: dict[str, str] = {}
+    for key, relative in expected_rule["current_routes"].items():
+        path = root / relative
+        if not path.is_file():
+            issues.append(f"current route {key!r} is missing: {relative}")
+            route_docs[key] = ""
+        else:
+            route_docs[key] = path.read_text(encoding="utf-8")
+    atlas = route_docs.get("delivery_atlas", "")
+    required_atlas_statements = (
+        "Phase 7C resolves blocking gates and produces the Final Feature Pack Contract, which owns development-entry scope and freezes the architectural proof requirement and applicable proof obligations.",
+        "After Phase 7C and before Phase 8 executable proof, the separate architectural proof classification gate selects `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`.",
+        "This classification is a Development Entry Hard Stop requirement and does not itself prove the architecture.",
+        "Phase 8 remains the first executable architectural-proof stage.",
+        "5. **Architectural proof classification.** After Phase 7C and before Phase 8, the separate classification gate selects `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` against the frozen proof requirement and obligations.",
+    )
+    for statement in required_atlas_statements:
+        if statement not in atlas:
+            issues.append(f"current Delivery Atlas omits the post-7C proof-classification boundary: {statement}")
+    prohibited_atlas_statements = (
+        "The approved contract records `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`",
+        "The Feature Pack contract must still decide `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`",
+        "The later Feature Pack contract owns the decision between `REUSE_EXISTING_PROOF` and `NEW_TRACER_BULLET`",
+        "The affected Feature Pack later decides whether its requirement is `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`",
+    )
+    if any(statement in atlas for statement in prohibited_atlas_statements):
+        issues.append("current Delivery Atlas assigns proof classification to the Phase 7C contract")
+    contract_path = root / str(expected_rule["phase7c_contract_path"])
+    contract = contract_path.read_text(encoding="utf-8") if contract_path.is_file() else ""
+    if not contract_path.is_file() or sha256_file(contract_path) != expected_rule["phase7c_contract_sha256"]:
+        issues.append("certified/current FP-001 Final Feature Pack Contract bytes changed")
+    for relative, digest in expected_rule["protected_upstream_authority_sha256"].items():
+        path = root / relative
+        if not path.is_file() or sha256_file(path) != digest:
+            issues.append(f"upstream Product, Architecture or Domain authority changed: {relative}")
+
+    readme_path = root / "docs/00_platform/README.md"
+    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    if (
+        "05_ROADMAP_v1.2.3.md" not in readme
+        or "05_ROADMAP_v1.2.2.md" in (_markdown_h2_section(readme, "Current Authorities") or "")
+        or "05_ROADMAP_v1.2.2.md" in (_markdown_h2_section(readme, "Core Documents") or "")
+    ):
+        issues.append("README current authority route is stale or omits Roadmap v1.2.3")
+    for key, text in route_docs.items():
+        if key != "open_work" and "05_ROADMAP_v1.2.3.md" not in text and "v1.2.3" not in text:
+            issues.append(f"current {key} route does not identify Roadmap v1.2.3")
+
+    current_state_sections = [
+        _markdown_h2_section(readme, "Current State") or "",
+        route_docs.get("open_work", "").split("# 10. Minimal Tools", 1)[0],
+        contract.split("## 22. Certification and current-status promotion record", 1)[-1],
+    ]
+    for key in ("delivery_atlas", "fp001_skeleton", "harden_02"):
+        current_state_sections.append(route_docs.get(key, "").split("\n## ", 1)[0])
+    for text in current_state_sections:
+        if re.search(r"(?im)^\s*PROOF CLASSIFICATION\s*:\s*(?:FINAL|FINALI[ZS]ED|CERTIFIED|REUSE_EXISTING_PROOF|NEW_TRACER_BULLET)\b", text):
+            issues.append("current FP-001 state selects or finalises proof classification")
+        if re.search(r"(?im)^\s*(?:PHASE 8(?:\s*/\s*APPLICATION IMPLEMENTATION)?|APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE)", text):
+            issues.append("current FP-001 state authorises Phase 8 or application implementation")
+    active = current_state_sections[1]
+    for token in (
+        "PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
+        "FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT",
+        "PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED",
+        "PROGRAMME ROUTER #111: OPEN",
+        "ARCHITECTURAL PROOF CLASSIFICATION: NEXT / NOT PERFORMED",
+        "PROOF CLASSIFICATION: NOT FINALISED",
+        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
+    ):
+        if token not in active:
+            issues.append(f"current Open Work route omits protected lifecycle state {token!r}")
+    if re.search(r"(?im)^.*#124[^\n]{0,120}\bOPEN\b.*$", active):
+        issues.append("issue #124 is reopened in the current Open Work route")
+    if re.search(r"(?im)^\s*PROGRAMME ROUTER #111\s*:\s*CLOSED\b.*$", active):
+        issues.append("programme router #111 is closed in the current Open Work route")
+
+    proof_state = "\n".join(current_state_sections)
+    if not re.search(r"(?i)no `?REUSE_EXISTING_PROOF`? or `?NEW_TRACER_BULLET`? (?:choice|selection) has been made", proof_state):
+        issues.append("current FP-001 state does not explicitly defer both proof-vehicle choices")
+    if not re.search(r"(?i)no tracer bullet or proof artifact exists", proof_state):
+        issues.append("current FP-001 state does not confirm that no Tracer Bullet or proof artifact exists")
+    if re.search(r"\bTB-\d{3,}\b", proof_state):
+        issues.append("a Tracer Bullet identifier has been introduced into current FP-001 state")
+    working_root = root / "docs/00_platform/working"
+    if working_root.is_dir():
+        for path in working_root.rglob("*"):
+            if path.is_file() and re.search(r"(?:TRACER_BULLET|ARCHITECTURAL_PROOF)(?:[-_\.]|$)", path.name, re.IGNORECASE):
+                issues.append(f"a Tracer Bullet or architectural-proof artifact path exists: {path.relative_to(root)}")
+                break
+    for relative in expected_rule["prohibited_application_paths"]:
+        if (root / relative).exists():
+            issues.append(f"application implementation path was introduced: {relative}")
+
+    _record_check(
+        report,
+        "roadmap_proof_classification_lifecycle",
+        not issues,
+        "Roadmap assigns final proof classification to the separate post-7C / pre-Phase-8 gate; FP-001 remains unclassified and downstream execution remains unauthorised"
+        if not issues
+        else "; ".join(issues),
+        path=roadmap_path,
+    )
+
+
 def _check_fp001_phase7c_current_promotion(
     root: Path,
     manifest: dict[str, Any],
@@ -5137,26 +5345,26 @@ def _check_fp001_phase7c_current_promotion(
     """Pin the closed Phase 7C tracker route and its hosted provenance."""
 
     current_paths = {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.71.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.72.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
     }
     predecessor_archives = {
-        "docs/00_platform/archive/02_OPEN_WORK_v1.2.70.md": "8bab1131c28e8b95991a23e9230e57204876baf59a2b50b3244c426a5d178e20",
-        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.12.md": "12066819fca570084b823dd9adc0e1fb700989251b174faafce879897e04c2cf",
-        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md": "564533ea65b6f647c3be28c4a9d3c6fddc934861e0ba8e641cee0c406f40c316",
-        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.14.md": "56413e2e39b940d4ecb900a4eb43f35b55f39ca01be9dd482dcc8aa4c4bbbc76",
+        "docs/00_platform/archive/02_OPEN_WORK_v1.2.71.md": "cd3dade665959843e3d629c981c5554b13e91d5c48931df7fe65b0dc90dab982",
+        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.13.md": "f314ae4c241792b40d66ca78f0ecc7b1adf5833aba7fab86b0991c5f9f8aca25",
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md": "1e807c6092914394fdb194ae45eac5fd2f76d433acd5dbed785d7d1aed1b2a91",
+        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.15.md": "446ab6b48424fdcd8656b29ebea6a6f6199740b7fada54507ec2073410a6efd0",
     }
     candidate_archive_path = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
     candidate_archive_sha256 = "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19"
     protected_current_artifacts = {
         # Updated after each status-only document reaches its final bytes.
-        "docs/00_platform/02_OPEN_WORK_v1.2.71.md": "cd3dade665959843e3d629c981c5554b13e91d5c48931df7fe65b0dc90dab982",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.13.md": "f314ae4c241792b40d66ca78f0ecc7b1adf5833aba7fab86b0991c5f9f8aca25",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md": "1e807c6092914394fdb194ae45eac5fd2f76d433acd5dbed785d7d1aed1b2a91",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md": "446ab6b48424fdcd8656b29ebea6a6f6199740b7fada54507ec2073410a6efd0",
+        "docs/00_platform/02_OPEN_WORK_v1.2.72.md": "ea515aff852cdf4e74714793ac3d390d6291a37903f0a1c15e887cdb9f44da5e",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md": "a12ea6f734ad192a5b735bda8018cac3db7fc37d662f75643eb9758310414894",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md": "8bc2b7c61d6feba1c61ea5233677dd8b7344d0704426d8d113e8e5f2b2395f6e",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md": "dc7777455cfaa72fe01382e1635e22799a152f39e9c0d0811ca0dcabefa16e0c",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "cab9ac6a8c74ef86ec65c90af0f12f8f13e8998ac55a24ee33d35656dc52fdc5",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md": "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "cc664c1e5d148c1a8f30f2a8d769645646162ff029494a2187e0a65775c27c83",
@@ -5164,7 +5372,7 @@ def _check_fp001_phase7c_current_promotion(
         "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md": "d6fb70a9a19286263404d191a60447158c1ccf8097c8be35465def37046169c6",
     }
     expected_rule = {
-        "status_successor_base_sha": "69bef7bb2782cbff00a48505504ebd2686eb53d9",
+        "status_successor_base_sha": "5b56d4070b422bf969667e84faae973522b52414",
         "candidate_pr": 125,
         "approved_candidate_head_sha": "bb7bc67fd2d9aa49ed9a6e7f49f09fc5eba5d6a5",
         "pr125_reviewed_head_sha": "bb7bc67fd2d9aa49ed9a6e7f49f09fc5eba5d6a5",
@@ -5236,7 +5444,9 @@ def _check_fp001_phase7c_current_promotion(
         if not archive.is_file() or sha256_file(archive) != expected_hash:
             issues.append(f"direct predecessor archive is missing or changed: {relative}")
         retired_path = relative.replace("/archive/", "/working/")
-        if retired_path.endswith("02_OPEN_WORK_v1.2.70.md"):
+        if retired_path.endswith("02_OPEN_WORK_v1.2.71.md"):
+            retired_path = "docs/00_platform/02_OPEN_WORK_v1.2.71.md"
+        elif retired_path.endswith("02_OPEN_WORK_v1.2.70.md"):
             retired_path = "docs/00_platform/02_OPEN_WORK_v1.2.70.md"
         if (root / retired_path).exists():
             issues.append(f"direct predecessor remains at its retired working path: {retired_path}")
@@ -5262,10 +5472,10 @@ def _check_fp001_phase7c_current_promotion(
         issues.append("manifest does not preserve PR #125 candidate bytes as pinned historical evidence")
 
     predecessor_entries = {
-        "docs/00_platform/archive/02_OPEN_WORK_v1.2.70.md": ("OPEN_WORK_V1_2_70", "1.2.70", "1.2.71"),
-        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.12.md": ("DELIVERY_ATLAS_V0_4_12", "0.4.12", "0.4.13"),
-        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md": ("FP001_SKELETON_V0_1_14", "0.1.14", "0.1.15"),
-        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.14.md": ("HARDEN_02_V0_5_14", "0.5.14", "0.5.15"),
+        "docs/00_platform/archive/02_OPEN_WORK_v1.2.71.md": ("OPEN_WORK_V1_2_71", "1.2.71", "1.2.72"),
+        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.13.md": ("DELIVERY_ATLAS_V0_4_13", "0.4.13", "0.4.14"),
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md": ("FP001_SKELETON_V0_1_15", "0.1.15", "0.1.16"),
+        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.15.md": ("HARDEN_02_V0_5_15", "0.5.15", "0.5.16"),
     }
     for archived_path, digest in predecessor_archives.items():
         document_id, version, successor_version = predecessor_entries[archived_path]
@@ -5297,7 +5507,9 @@ def _check_fp001_phase7c_current_promotion(
             issues.append(f"manifest navigation omits current status route {relative}")
     for archived_path in predecessor_archives:
         retired_path = archived_path.replace("/archive/", "/working/")
-        if retired_path.endswith("02_OPEN_WORK_v1.2.70.md"):
+        if retired_path.endswith("02_OPEN_WORK_v1.2.71.md"):
+            retired_path = "docs/00_platform/02_OPEN_WORK_v1.2.71.md"
+        elif retired_path.endswith("02_OPEN_WORK_v1.2.70.md"):
             retired_path = "docs/00_platform/02_OPEN_WORK_v1.2.70.md"
         if retired_path in navigation:
             issues.append(f"manifest navigation still routes archived predecessor {retired_path}")
@@ -5305,10 +5517,10 @@ def _check_fp001_phase7c_current_promotion(
     if (
         not isinstance(open_work_entry, dict)
         or _relative_path(open_work_entry) != current_paths["open_work"]
-        or open_work_entry.get("semver") != "1.2.71"
-        or open_work_entry.get("superseded_version") != "1.2.70"
+        or open_work_entry.get("semver") != "1.2.72"
+        or open_work_entry.get("superseded_version") != "1.2.71"
     ):
-        issues.append("manifest governing Open Work lineage is not v1.2.70 → v1.2.71")
+        issues.append("manifest governing Open Work lineage is not v1.2.71 → v1.2.72")
 
     contract_path = current_paths["final_feature_pack_contract"]
     current_authorities = [
@@ -5441,8 +5653,8 @@ def _check_fp001_phase7c_current_promotion(
     except (json.JSONDecodeError, TypeError, ValueError):
         state = {}
     expected_state = {
-        "status_successor_version": "0.5.15",
-        "status_successor_base_sha": "69bef7bb2782cbff00a48505504ebd2686eb53d9",
+        "status_successor_version": "0.5.16",
+        "status_successor_base_sha": "5b56d4070b422bf969667e84faae973522b52414",
         "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
         "next_stage": "ARCHITECTURAL PROOF CLASSIFICATION",
         "phase_7c_execution_tracker_issue": 124,
@@ -5452,9 +5664,9 @@ def _check_fp001_phase7c_current_promotion(
         "programme_router_issue_111_state": "OPEN",
         "proof_classification": "NOT FINALISED",
         "application_implementation": "UNAUTHORISED / BLOCKED UNTIL PROOF CLASSIFICATION AND ALL DEVELOPMENT ENTRY HARD STOP CONDITIONS PASS",
-        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
-        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
-        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
     }
     if any(state.get(key) != value for key, value in expected_state.items()):
         issues.append("Open Work current lifecycle state is missing or contradicts the closed-tracker route")
@@ -5534,7 +5746,7 @@ def _check_fp001_phase7c_current_promotion(
     current_route_sections = [("README current state", current_state), ("README active artifacts", active_artifacts), ("Open Work", active_route)]
     route_sections = {
         "delivery_atlas": "## 26.20 Phase 7C tracker closure routing",
-        "fp001_skeleton": "## v0.1.15 current-route status",
+        "fp001_skeleton": "## v0.1.16 current-route status",
         "harden_02": "## 24. FP-001 Phase 7C tracker closure",
     }
     for key, heading in route_sections.items():
@@ -5572,7 +5784,7 @@ def _check_fp001_phase7c_current_promotion(
             issues.append(f"current {key} route projects issue #124 as OPEN")
 
     skeleton = root / current_paths["fp001_skeleton"]
-    predecessor_skeleton = root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md"
+    predecessor_skeleton = root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md"
     pmr_start = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->"
     pmr_end = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->"
     def marked_pmr(path: Path) -> str:
@@ -5941,15 +6153,15 @@ def _check_fp001_phase7b_certification_current(
     }
     if state.get("phase_7b_reconciliation_candidate") != expected_candidate_state:
         issues.append("Open Work does not separate the immutable candidate from its current status successor")
-    if state.get("current_delivery_atlas") != "working/DELIVERY_ATLAS_WORKING_v0.4.13.md" or state.get("current_fp001_skeleton") != "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md" or state.get("current_harden_02") != "working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md":
+    if state.get("current_delivery_atlas") != "working/DELIVERY_ATLAS_WORKING_v0.4.14.md" or state.get("current_fp001_skeleton") != "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md" or state.get("current_harden_02") != "working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md":
         issues.append("Open Work current Atlas, Skeleton or HARDEN successor route is stale")
     if (
         not isinstance(open_work_entry, dict)
-        or _relative_path(open_work_entry) != "docs/00_platform/02_OPEN_WORK_v1.2.71.md"
-        or open_work_entry.get("semver") != "1.2.71"
-        or open_work_entry.get("superseded_version") != "1.2.70"
+        or _relative_path(open_work_entry) != "docs/00_platform/02_OPEN_WORK_v1.2.72.md"
+        or open_work_entry.get("semver") != "1.2.72"
+        or open_work_entry.get("superseded_version") != "1.2.71"
     ):
-        issues.append("Open Work current manifest lineage is not v1.2.70 → v1.2.71")
+        issues.append("Open Work current manifest lineage is not v1.2.71 → v1.2.72")
     predecessor = next(
         (entry for entry in _all_entries(manifest) if entry.get("document_id") == "OPEN_WORK_V1_2_67"),
         None,
@@ -6029,10 +6241,10 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         return ["manifest Phase 7C promotion or Phase 7B baseline rules are missing"]
     current_paths = promotion.get("current_paths", {})
     expected_current_paths = {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.71.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.72.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
     }
     if current_paths != expected_current_paths:
@@ -6059,10 +6271,10 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
 
     issues.extend(_fp001_protected_historical_evidence_issues(root, promotion, integrity_rules))
     predecessor_hashes = {
-        "docs/00_platform/archive/02_OPEN_WORK_v1.2.70.md": "8bab1131c28e8b95991a23e9230e57204876baf59a2b50b3244c426a5d178e20",
-        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.12.md": "12066819fca570084b823dd9adc0e1fb700989251b174faafce879897e04c2cf",
-        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md": "564533ea65b6f647c3be28c4a9d3c6fddc934861e0ba8e641cee0c406f40c316",
-        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.14.md": "56413e2e39b940d4ecb900a4eb43f35b55f39ca01be9dd482dcc8aa4c4bbbc76",
+        "docs/00_platform/archive/02_OPEN_WORK_v1.2.71.md": "cd3dade665959843e3d629c981c5554b13e91d5c48931df7fe65b0dc90dab982",
+        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.13.md": "f314ae4c241792b40d66ca78f0ecc7b1adf5833aba7fab86b0991c5f9f8aca25",
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md": "1e807c6092914394fdb194ae45eac5fd2f76d433acd5dbed785d7d1aed1b2a91",
+        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.15.md": "446ab6b48424fdcd8656b29ebea6a6f6199740b7fada54507ec2073410a6efd0",
     }
     if promotion.get("predecessor_archives_sha256") != predecessor_hashes:
         issues.append("manifest does not hash-pin the direct Phase 7C tracker-closure predecessors")
@@ -6071,7 +6283,9 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         if not archive.is_file() or sha256_file(archive) != digest:
             issues.append(f"direct Phase 7C predecessor archive is missing or changed: {archived_path}")
         retired = archived_path.replace("/archive/", "/working/")
-        if retired.endswith("02_OPEN_WORK_v1.2.70.md"):
+        if retired.endswith("02_OPEN_WORK_v1.2.71.md"):
+            retired = "docs/00_platform/02_OPEN_WORK_v1.2.71.md"
+        elif retired.endswith("02_OPEN_WORK_v1.2.70.md"):
             retired = "docs/00_platform/02_OPEN_WORK_v1.2.70.md"
         if (root / retired).exists():
             issues.append(f"direct Phase 7C predecessor remains at a retired working path: {retired}")
@@ -6083,7 +6297,7 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         issues.append("immutable PR #125 candidate evidence or its pinned SHA-256 changed")
 
     current_skeleton = current_documents["fp001_skeleton"]
-    predecessor_skeleton = root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md"
+    predecessor_skeleton = root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md"
     marker_start = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->"
     marker_end = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->"
     def marked_pmr(path: Path) -> str:
@@ -6147,7 +6361,7 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         if "archive" not in path.parts
     )
     if active_skeletons != [current_skeleton]:
-        issues.append("exactly one active certified/current FP-001 skeleton v0.1.15 is required; stale candidates or extra versions remain active")
+        issues.append("exactly one active certified/current FP-001 skeleton v0.1.16 is required; stale candidates or extra versions remain active")
 
     active_audit_dossiers = sorted(
         path
@@ -6191,14 +6405,14 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
     except (json.JSONDecodeError, TypeError, ValueError):
         state = {}
     required_state = {
-        "status_successor_version": "0.5.15",
-        "status_successor_base_sha": "69bef7bb2782cbff00a48505504ebd2686eb53d9",
+        "status_successor_version": "0.5.16",
+        "status_successor_base_sha": "5b56d4070b422bf969667e84faae973522b52414",
         "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7c_execution_tracker_state": "CLOSED / COMPLETED",
-        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
-        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
-        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
         "programme_router_issue_111_state": "OPEN",
         "proof_classification": "NOT FINALISED",
         "application_implementation": "UNAUTHORISED / BLOCKED UNTIL PROOF CLASSIFICATION AND ALL DEVELOPMENT ENTRY HARD STOP CONDITIONS PASS",
@@ -6206,8 +6420,8 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
     if any(state.get(key) != value for key, value in required_state.items()):
         issues.append("Open Work current lifecycle state is missing or contradicts the closed-tracker route")
     expected_atlas_status = (
-        "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.13.md`; "
-        "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.12.md`; "
+        "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.14.md`; "
+        "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.13.md`; "
         "pinned v0.2.1 source-at-freeze artifacts remain preserved; DERIVED / NON-AUTHORITATIVE; "
         "ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this successor does not create ATLAS-12"
     )
@@ -6263,12 +6477,12 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         issues.append("manifest Audit promotion guard note must distinguish PR #119 promotion from PR #118 candidate")
 
     atlas = current_documents["delivery_atlas"].read_text(encoding="utf-8") if current_documents["delivery_atlas"].is_file() else ""
-    if "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.12.md`" not in atlas or "- **SemVer transition:** `v0.4.12 → v0.4.13`" not in atlas:
+    if "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.13.md`" not in atlas or "- **SemVer transition:** `v0.4.13 → v0.4.14`" not in atlas:
         issues.append("current Atlas artifact lineage or status-successor metadata is wrong")
     harden = current_documents["harden_02"].read_text(encoding="utf-8") if current_documents["harden_02"].is_file() else ""
     header = harden.split("### Revision log", 1)[0]
-    if "- **Plan / contract version:** `v0.5.15`" not in header or "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.14.md`" not in header or "- **v0.5.15 current-status successor base main SHA:** `69bef7bb2782cbff00a48505504ebd2686eb53d9`" not in header:
-        issues.append("current HARDEN-02 v0.5.15 successor metadata declaration is missing or incorrect")
+    if "- **Plan / contract version:** `v0.5.16`" not in header or "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.15.md`" not in header or "- **v0.5.16 routing successor base main SHA:** `5b56d4070b422bf969667e84faae973522b52414`" not in header:
+        issues.append("current HARDEN-02 v0.5.16 successor metadata declaration is missing or incorrect")
     if "after this status successor merges" in active.casefold() or "OPEN through promotion merge" in active:
         issues.append("current Open Work route retains stale pre-closure wording")
     return issues
@@ -6284,7 +6498,7 @@ def _check_fp001_pmr_reconciliation(
         entry for entry in _all_entries(manifest)
         if entry.get("document_id") == "OPEN_WORK" and entry.get("lifecycle", "current") != "historical"
     ]
-    if len(current_open_work_entries) == 1 and current_open_work_entries[0].get("semver") == "1.2.71":
+    if len(current_open_work_entries) == 1 and current_open_work_entries[0].get("semver") == "1.2.72":
         promotion_issues = _check_fp001_pmr_reconciliation_after_phase7c_promotion(root, manifest, integrity_rules)
         _record_check(
             report,
@@ -6293,7 +6507,7 @@ def _check_fp001_pmr_reconciliation(
             "the certified PMR block, dossier baselines and Phase 7B scope remain intact through the Phase 7C status successor"
             if not promotion_issues
             else "; ".join(promotion_issues),
-            path="docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
+            path="docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
         )
         return
 
@@ -8194,6 +8408,7 @@ def run_audit(
         )
     if _production_mode(expected_counts):
         _check_production_graph(root, manifest, integrity_rules, report)
+        _check_roadmap_proof_classification_lifecycle(root, manifest, integrity_rules, report)
         _check_product_semantics(root, entries, integrity_rules, report)
         _check_fp001_pmr_reconciliation(root, manifest, integrity_rules, report)
         _check_fp001_phase7b_candidate(root, manifest, integrity_rules, report)

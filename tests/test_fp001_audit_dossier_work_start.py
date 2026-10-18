@@ -19,7 +19,7 @@ SEMANTIC_AUTHORITY_SHA256 = {
     "01_DECISIONS_v1.8.0.md": "123d3a622f89c22e364df565b87117c22244378c5c51b10d621597909b569140",
     "03_ARCHITECTURE_v1.1.1.md": "342d02a7946f99aca9e6683647fc3a2505901b3d0cc2d13c21d807442025f0b3",
     "04_DOMAIN_MAP_v1.2.0.md": "e09e14ee0a773c5855257c48685cf3a75d413c983a98d22a56b42af57dc2c078",
-    "05_ROADMAP_v1.2.2.md": "4225fad688589d3c66733527303cbda39ef3c8bf52b78c4cc372c0736d202cdc",
+    "archive/05_ROADMAP_v1.2.2.md": "4225fad688589d3c66733527303cbda39ef3c8bf52b78c4cc372c0736d202cdc",
     "PLATFORM_OPERATING_MODEL_v1.0.1.md": "7cb725adcdb796ba112d39c4be6fd09c90026b49e772b61f0867db62828b9d12",
     "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md": "58c733e8e0cc73c72b102b623cb756b60cbadb084f8cc710051be42d0877fdb4",
 }
@@ -77,12 +77,12 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
         self.assertEqual("DELIVERY_ATLAS_WORKING_v0.4.6.md", self.atlas_path.name)
         self.assertEqual("FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md", self.skeleton_path.name)
         self.assertEqual("HARDEN-02_CONTRACT_WORKING_v0.5.8.md", self.harden_path.name)
-        self.assertEqual("1.2.71", self.current_open_work_entry["semver"])
+        self.assertEqual("1.2.72", self.current_open_work_entry["semver"])
 
     def test_open_work_manifest_lineage_registers_its_immediate_predecessor(self):
         current = self.current_open_work_entry
-        self.assertEqual("1.2.71", current["semver"])
-        self.assertEqual("1.2.70", current["superseded_version"])
+        self.assertEqual("1.2.72", current["semver"])
+        self.assertEqual("1.2.71", current["superseded_version"])
 
         historical = self.open_work_entry
         self.assertEqual("02_OPEN_WORK_v1.2.64.md", historical["canonical_filename"])
