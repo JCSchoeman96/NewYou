@@ -1,9 +1,10 @@
 # FP-001 Phase 7B cross-Domain reconciliation
 
 ```text
-FP-001 PHASE 7B RECONCILIATION CANDIDATE
-NOT CERTIFIED
-NOT CURRENT
+FP-001 PHASE 7B RECONCILIATION
+COMPLETE
+CERTIFIED
+CURRENT
 NON-IMPLEMENTATION
 NOT PHASE 7C
 NOT DEVELOPMENT-ENTRY AUTHORITY
@@ -15,9 +16,9 @@ NOT DEVELOPMENT-ENTRY AUTHORITY
 
 **Baseline:** `main@5d282ecca4e13b621c7f96c05c47d6fac43ec1bd`, tree `5f7710b33eaba2055dcae1eca68abc731c94cc50`.
 
-**Candidate result:** `PASS / READY FOR INDEPENDENT REVIEW`.
+**PR #121 candidate result:** `PASS / READY FOR INDEPENDENT REVIEW`.
 
-**Lifecycle:** `IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING`. This candidate is `NOT CERTIFIED / NOT CURRENT`. It does not record Phase 7B as complete.
+**Lifecycle:** `COMPLETE / CERTIFIED / CURRENT`. This status-only successor certifies and routes the exact PR #121 candidate preserved at `archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md`. The reconciliation remains v0.1.0; its semantic body is unchanged.
 
 This is a semantic and governance reconciliation of the selected FP-001 scope. It determines whether Phase 7C can state the approved outcome using current authority and the complete, certified, current required dossiers. It does not amend Product, Architecture, Domain or Roadmap authority. It does not create a Domain, capability, Feature Pack or shared-write owner. It does not begin Phase 7C, proof classification, Phase 8 or application implementation.
 
@@ -184,7 +185,7 @@ Provider selection is not Product Law. Proof questions do not become semantic an
 
 ## 8. Candidate result and certification boundary
 
-**Result:** `PASS / READY FOR INDEPENDENT REVIEW`.
+**PR #121 candidate result:** `PASS / READY FOR INDEPENDENT REVIEW`.
 
 **Material seam count:** 15 Domain pairings examined. Twelve are exercised as FP-001 contract relationships. Three are explicitly `OUT_OF_SCOPE_FOR_FP001`: routine Content & Media ↔ Audit publication evidence, Communications delivery analytics, and direct Audit-to-Analytics evidence flow.
 
@@ -195,12 +196,46 @@ BLOCKING_AUTHORITY_GAP: NONE
 BLOCKING_DOSSIER_CONTRADICTION: NONE
 ```
 
-This result does not certify the candidate or complete Phase 7B. The exact candidate head must receive fresh independent review. Any proposed change after that review requires another exact-head review. Certification requires unchanged merge and resulting-main verification, followed by a separate reconciliation status successor.
+The independent exact-head review approved the candidate unchanged. PR #121 merged that exact candidate, and the resulting-main workflow passed. The archived file is the immutable reviewed candidate. This working file is its v0.1.0 certification/current-status successor. The status change does not reconsider the reconciliation or alter its substantive body.
+
+## 9. Certification evidence and current route
+
+| Evidence | Result |
+|---|---|
+| PR #121 candidate head | `b6f82218026f3372ccacc96ffdbb37430e8e503f` |
+| Pre-candidate main | `5d282ecca4e13b621c7f96c05c47d6fac43ec1bd` |
+| Resulting main and PR #121 merge | `f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3` |
+| Candidate/resulting-main tree | `98e553d45006136277e4b2aa629c97c31f7742e2` |
+| Archived candidate path | `archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md` |
+| Archived candidate SHA-256 | `274306e73e2450806516a5b76ca96f1a768af7824ba823cca6c9371c58e65401` |
+| Exact-head run | [39035622705](https://github.com/JCSchoeman96/NewYou/actions/runs/39035622705) — PASS |
+| Resulting-main run | [39041010709](https://github.com/JCSchoeman96/NewYou/actions/runs/39041010709) — PASS |
+| Exact-head tests | 397 PASS |
+| Resulting-main tests | 397 PASS |
+| Exact-head Foundation Integrity | 646 assertions / PASS / 0 findings |
+| Resulting-main Foundation Integrity | 646 assertions / PASS / 0 findings |
+| Pre-merge independent attestation | [PR #121 comment 6235094794](https://github.com/JCSchoeman96/NewYou/pull/121#issuecomment-6235094794) |
+| Post-merge independent attestation | [PR #121 comment 6235345322](https://github.com/JCSchoeman96/NewYou/pull/121#issuecomment-6235345322) |
+| Fresh independent post-merge review | PASS; reviewer inspected and revalidated repository-hosted evidence and did not claim to have executed CI personally |
+
+Fresh independent post-merge review: PASS.
+
+PR #121 merged unchanged: candidate head `b6f82218026f3372ccacc96ffdbb37430e8e503f` is merge parent 2; pre-candidate main `5d282ecca4e13b621c7f96c05c47d6fac43ec1bd` is merge parent 1. The merge tree equals the independently approved candidate tree.
 
 ```text
-PHASE 7B RECONCILIATION: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING
-RECONCILIATION CANDIDATE: NOT CERTIFIED / NOT CURRENT
-PHASE 7C: BLOCKED / NOT_STARTED
+PHASE 7A: COMPLETE
+IDENTITY & ACCESS v0.1.4: REQUIRED / COMPLETE / CERTIFIED / CURRENT
+COMMUNICATIONS v0.1.0: REQUIRED / COMPLETE / CERTIFIED / CURRENT
+AUDIT & EVIDENCE v0.1.0: REQUIRED / COMPLETE / CERTIFIED / CURRENT
+PRIVACY & CONSENT: NOT_REQUIRED
+CONTENT & MEDIA: NOT_REQUIRED
+ANALYTICS: NOT_REQUIRED
+REQUIRED DOSSIER SET: DISPOSITION-COMPLETE
+PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT
+RECONCILIATION v0.1.0: CERTIFIED / CURRENT
+PHASE 7C: NEXT / NOT_STARTED
 PROOF CLASSIFICATION: NOT FINALISED
 PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED
 ```
+
+This successor changes only lifecycle, certification provenance and current routing. It introduces no Domain, capability, Feature Pack, shared-write owner, proof result, implementation decision or downstream conclusion. The six affected Domains, seven material capability relationships, all 15 pairings, ownership boundaries, request and evidence boundaries, failure/retry consequences, minimisation rules, pressure cases and downstream OQ routes remain as recorded above.

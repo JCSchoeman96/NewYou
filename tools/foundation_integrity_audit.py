@@ -571,7 +571,7 @@ def _h02_lifecycle_state(
         return False, "HARDEN lifecycle JSON must be an object"
     if any(state.get(key) != value for key, value in H02_PR40_LIFECYCLE_FACTS.items()):
         return False, "prior PR #40 certification facts or certified contract lifecycle changed"
-    if state.get("status_successor_version") in {"0.5.9", "0.5.10"}:
+    if state.get("status_successor_version") in {"0.5.9", "0.5.10", "0.5.11"}:
         return _h02_audit_v010_promotion_lifecycle_state(state, active, readme, contract)
 
     execution = state.get("harden_02_execution")
@@ -1154,6 +1154,149 @@ def _h02_audit_v010_promotion_lifecycle_state(
     contract: str,
 ) -> tuple[bool, str]:
     """Validate the current Audit promotion and Phase 7B candidate routing."""
+    if state.get("status_successor_version") == "0.5.11":
+        expected = {
+            "status_successor_version": "0.5.11",
+            "status_successor_base_sha": "f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3",
+            "current_stage": "FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT",
+            "next_stage": "AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT",
+            "harden_02_execution": "COMPLETE / CERTIFIED",
+            "harden_02_scope": "PHASE-7 GOVERNANCE / STRUCTURAL HARDENING ONLY",
+            "store_cer": "EXCLUDED",
+            "audit_dossier": "REQUIRED / COMPLETE / CERTIFIED / CURRENT",
+            "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
+            "phase_7c": "NEXT / NOT_STARTED",
+            "proof_classification": "NOT FINALISED",
+            "application_implementation": "UNAUTHORISED / BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+            "pr_38": "STALE / BLOCKED / NOT AUTHORITY",
+            "engineering_standards_authority_promotion": "COMPLETE / CERTIFIED",
+            "fp001_reconciliation": "COMPLETE / CERTIFIED",
+            "communications_dossier": "CERTIFIED / CURRENT v0.1.0",
+            "communications_dossier_promotion": "COMPLETE / CERTIFIED / CURRENT",
+            "communications": "COMPLETE / CERTIFIED / CURRENT v0.1.0",
+            "communications_finalisation": "BLOCKED / STOP",
+            "identity_dossier": "CERTIFIED / CURRENT v0.1.4",
+            "identity_dossier_promotion": "COMPLETE / CERTIFIED / CURRENT",
+            "audit_dossier_execution_tracker_issue": 116,
+            "audit_dossier_candidate_pr": 118,
+            "audit_dossier_work_start_baseline_main_sha": "332d51f19d77430fe4e95911920fe0c87cab524a",
+            "phase_7b_reconciliation_execution_tracker_issue": 120,
+            "phase_7b_reconciliation_baseline_main_sha": "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
+            "audit_current_status_promotion": "PR #119 STATUS SUCCESSOR",
+            "audit_certified_candidate_sha256": "0b0a8fb64a3ac602ebb81a7ab957a9dd075412350c818e4c6e5f13f667f7daea",
+            "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.9.md",
+            "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md",
+            "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md",
+        }
+        if any(state.get(key) != value for key, value in expected.items()):
+            return False, "HARDEN .5.11 current state omits certification or misstates a protected gate"
+        expected_conditionals = {
+            "privacy_consent": "NOT_REQUIRED",
+            "content_media": "NOT_REQUIRED",
+            "audit_evidence": "REQUIRED / COMPLETE / CERTIFIED / CURRENT",
+            "analytics": "NOT_REQUIRED",
+        }
+        if state.get("conditional_dossiers") != expected_conditionals:
+            return False, "HARDEN .5.11 conditional dossier dispositions changed"
+        expected_milestones = [
+            "TARGETED PRODUCT AMENDMENT PROGRAMME",
+            "FP-001 PHASE 7A",
+            "IDENTITY & ACCESS JIT DOMAIN DOSSIER",
+            "HARDEN-02 EXECUTION",
+            "ENGINEERING STANDARDS AUTHORITY PROMOTION",
+            "FP-001 PMR RECONCILIATION",
+            "FP-001 IDENTITY v0.1.3 DURABLE-DELIVERY PATCH PROMOTION",
+            "FP-001 IDENTITY v0.1.4 GOVERNANCE-CORRECTION PATCH PROMOTION",
+            "FP-001 COMMUNICATIONS v0.1.0 JIT DOMAIN DOSSIER PROMOTION",
+            "FP-001 PHASE 7A/7B CONDITIONAL-DOSSIER ADJUDICATION",
+            "FP-001 AUDIT & EVIDENCE v0.1.0 DOSSIER PROMOTION",
+        ]
+        if state.get("completed_milestones") != expected_milestones:
+            return False, "HARDEN .5.11 completed milestones are missing or advance an unapproved stage"
+        if state.get("execution_certification") != H02_COMPLETE_CERTIFICATION_FACTS:
+            return False, "HARDEN .5.11 lost its certified execution lifecycle evidence"
+        if state.get("phase_7b_reconciliation_candidate") != {
+            "path": "docs/00_platform/archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md",
+            "current_status_successor_path": "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md",
+            "version": "0.1.0",
+            "result": "PASS / READY FOR INDEPENDENT REVIEW",
+            "lifecycle": "CERTIFIED / CURRENT",
+            "certification": "COMPLETE; EXACT CANDIDATE MERGED UNCHANGED; RESULTING-MAIN VERIFIED",
+            "tracker_issue": 120,
+        }:
+            return False, "HARDEN .5.11 does not distinguish the immutable candidate from its current successor"
+        if state.get("downstream_route") != [
+            "CERTIFIED HARDEN-02 EXECUTION",
+            "ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
+            "CERTIFIED ENGINEERING STANDARDS AUTHORITY PROMOTION",
+            "FP001_RECONCILIATION_REQUIRED",
+            "CERTIFIED FP-001 IDENTITY v0.1.4 PATCH PROMOTION",
+            "COMMUNICATIONS JIT DOMAIN DOSSIER",
+            "CERTIFIED FP-001 COMMUNICATIONS v0.1.0 DOSSIER PROMOTION",
+            "CERTIFIED FP-001 AUDIT & EVIDENCE v0.1.0 DOSSIER PROMOTION",
+            "FP-001 PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT",
+            "PHASE 7C FINAL FEATURE PACK CONTRACT: NEXT / NOT_STARTED",
+            "PROOF CLASSIFICATION",
+            "PHASE 8 ONLY AFTER DEVELOPMENT ENTRY HARD STOP PASSES",
+        ]:
+            return False, "HARDEN .5.11 downstream route starts Phase 7C, proof or Phase 8 early"
+
+        active_checks = (
+            "CURRENT AUTHORITY-STAGE PROGRAMME: FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT",
+            "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT",
+            "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT",
+            "PHASE 7C: NEXT / NOT_STARTED",
+            "PROOF CLASSIFICATION: NOT FINALISED",
+            "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
+            "AUDIT & EVIDENCE DOSSIER: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.0",
+            "APPROVED AFFECTED DOMAINS: IDENTITY & ACCESS; PRIVACY & CONSENT; CONTENT & MEDIA; COMMUNICATIONS; AUDIT & EVIDENCE; ANALYTICS",
+            "MATERIAL CAPABILITY RELATIONSHIPS: CAP-001, CAP-002, CAP-003, CAP-005, CAP-006, CAP-017, CAP-028 (seven; unchanged)",
+        )
+        if any(
+            active.count(token) != 1
+            for token in active_checks
+            if token != "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT"
+        ) or active.count("PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT") < 1:
+            return False, "Open Work .5.11 active route omits the certified Phase 7B or downstream gate state"
+        if re.search(r"(?im)^.*PHASE 7B RECONCILIATION\s*:\s*(?:IN PROGRESS|NEXT / NOT_STARTED|STARTED).*$", active):
+            return False, "Open Work .5.11 leaves completed Phase 7B reconciliation unverified"
+        if re.search(r"(?im)^.*PHASE 7C\s*:\s*(?:BLOCKED|IN PROGRESS|COMPLETE|CERTIFIED|AUTHORI[ZS]ED).*$", active):
+            return False, "Open Work .5.11 starts or incorrectly blocks Phase 7C"
+        if re.search(r"(?im)^.*PROOF CLASSIFICATION\s*:\s*(?:FINAL|FINALI[ZS]ED|CERTIFIED).*$", active):
+            return False, "Open Work .5.11 finalises proof classification"
+        if re.search(r"(?im)^.*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$", active):
+            return False, "Open Work .5.11 authorises Phase 8 or application implementation"
+
+        readme_current = readme.split("## Current State", 1)[-1]
+        readme_checks = (
+            *(token for token in active_checks if not token.startswith(("APPROVED AFFECTED DOMAINS:", "MATERIAL CAPABILITY RELATIONSHIPS:"))),
+            "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT; STATUS: NOT_STARTED",
+            "HARDEN-02 CURRENT STATUS: `working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md`",
+        )
+        if any(token not in readme_current for token in readme_checks) or "Current programme status is in Open Work v1.2.67." not in readme:
+            return False, "README current route omits the Phase 7B certification or current successor routes"
+        section_start = contract.find("## 21. Current execution certification and next stage")
+        section_end = contract.find("## 22.", section_start + 1)
+        section = contract[section_start:section_end] if section_start >= 0 and section_end > section_start else ""
+        route_checks = (
+            "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT",
+            "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT; STATUS: NOT_STARTED",
+            "PHASE 7C: NEXT / NOT_STARTED",
+            "PROOF CLASSIFICATION: NOT FINALISED",
+            "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
+            "→ CERTIFIED FP-001 AUDIT & EVIDENCE v0.1.0 DOSSIER PROMOTION\n→ COMPLETED FP-001 PHASE 7B RECONCILIATION",
+            "→ COMPLETED FP-001 PHASE 7B RECONCILIATION",
+            "→ AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT (NEXT / NOT_STARTED)",
+        )
+        if not section or any(token not in section for token in route_checks):
+            return False, "HARDEN .5.11 current route is missing its final certified lifecycle or NEXT-only Phase 7C boundary"
+        if "PHASE 7C: BLOCKED / NOT_STARTED" in section or "PHASE 7B RECONCILIATION CANDIDATE CERTIFICATION" in section:
+            return False, "HARDEN .5.11 current section retains a superseded candidate route"
+        current_route_start = contract.find("## 23. FP-001 Phase 7B reconciliation current route")
+        if current_route_start < 0 or "NEXT: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT\nSTATUS: NOT_STARTED" not in contract[current_route_start:]:
+            return False, "HARDEN .5.11 current reconciliation route is missing"
+        return True, "HARDEN preserves its certified contract and routes completed Phase 7B to the unstarted Phase 7C contract"
+
     reconciliation_candidate_current = state.get("status_successor_version") == "0.5.10"
     expected = {
         "status_successor_version": "0.5.10" if reconciliation_candidate_current else "0.5.9",
@@ -1664,11 +1807,22 @@ def _engineering_standards_certified_state(
         "PHASE 7B RECONCILIATION: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"
         in active
     )
-    audit_promotion_current = reconciliation_candidate_current or "NEXT STAGE: FP-001 PHASE 7B RECONCILIATION" in active
+    reconciliation_certified_current = "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT" in active
+    audit_promotion_current = reconciliation_certified_current or reconciliation_candidate_current or "NEXT STAGE: FP-001 PHASE 7B RECONCILIATION" in active
     audit_candidate_review_current = reconciliation_candidate_current or audit_promotion_current or "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION" in active
     audit_work_start_current = audit_promotion_current or audit_candidate_review_current or "NEXT STAGE: AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE" in active
     adjudication_current = audit_work_start_current or "NEXT STAGE: FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER" in active
     conditional_status = (
+        (
+            "- PRIVACY & CONSENT: NOT_REQUIRED",
+            "- CONTENT & MEDIA: NOT_REQUIRED",
+            "- AUDIT & EVIDENCE: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.0",
+            "- ANALYTICS: NOT_REQUIRED",
+            "PHASE 7C: NEXT / NOT_STARTED",
+            "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
+        )
+        if reconciliation_certified_current
+        else
         (
             "- PRIVACY & CONSENT: NOT_REQUIRED",
             "- CONTENT & MEDIA: NOT_REQUIRED",
@@ -1727,6 +1881,9 @@ def _engineering_standards_certified_state(
     if active.count("- COMMUNICATIONS: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.0") != 1:
         return False, "Open Work required-dossier Communications route is missing or duplicated"
     expected_next = (
+        "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT"
+        if reconciliation_certified_current
+        else
         "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
         if reconciliation_candidate_current
         else "NEXT STAGE: FP-001 PHASE 7B RECONCILIATION"
@@ -1765,8 +1922,10 @@ def _engineering_standards_certified_state(
         active,
     ):
         return False, "Communications has advanced before FP-001 reconciliation"
-    if re.search(r"(?im)^.*PHASE 7C\s*:\s*(?:NEXT|UNBLOCKED|COMPLETE|AUTHORI[ZS]ED).*$", active):
+    if not reconciliation_certified_current and re.search(r"(?im)^.*PHASE 7C\s*:\s*(?:NEXT|UNBLOCKED|COMPLETE|AUTHORI[ZS]ED).*$", active):
         return False, "Phase 7C has been unblocked prematurely"
+    if reconciliation_certified_current and "PHASE 7C: NEXT / NOT_STARTED" not in active:
+        return False, "Open Work does not route Phase 7C as the next unstarted stage"
     if re.search(r"(?im)^.*PROOF CLASSIFICATION\s*:\s*FINALI[ZS]ED.*$", active):
         return False, "proof classification has been finalised prematurely"
     if re.search(r"(?im)^.*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$", active):
@@ -1780,6 +1939,20 @@ def _engineering_standards_certified_state(
         return False, "Open Work current HARDEN lifecycle status section is missing or malformed"
     harden_section = open_work[harden_section_start:harden_section_end]
     required_harden_status = (
+        (
+            "Historical execution and Engineering Standards Authority Promotion remain COMPLETE / CERTIFIED.",
+            "FP-001 PMR reconciliation is COMPLETE / CERTIFIED under PR #67.",
+            "Identity v0.1.4 is COMPLETE / CERTIFIED / CURRENT under PR #77",
+            "Communications v0.1.0 is COMPLETE / CERTIFIED / CURRENT under PR #81",
+            "Audit & Evidence v0.1.0 is REQUIRED / COMPLETE / CERTIFIED / CURRENT following PR #119.",
+            "At the v1.2.65 predecessor point the dossier set was disposition-complete and Phase 7B reconciliation was NEXT / NOT_STARTED.",
+            "At the v1.2.66 candidate point, Phase 7B was in progress and awaiting certification; that historical state is recorded in §12.23.",
+            "The current v1.2.67 route records Phase 7B as COMPLETE / CERTIFIED / CURRENT and Phase 7C as NEXT / NOT_STARTED.",
+            "Proof classification remains NOT FINALISED",
+            "Phase 8/application implementation remains UNAUTHORISED",
+        )
+        if reconciliation_certified_current
+        else
         (
             "Historical execution and Engineering Standards Authority Promotion remain COMPLETE / CERTIFIED.",
             "FP-001 PMR reconciliation is COMPLETE / CERTIFIED under PR #67.",
@@ -1820,6 +1993,9 @@ def _engineering_standards_certified_state(
     if audit_work_start_current:
         lifecycle_phrase = (
             "Audit & Evidence v0.1.0 is REQUIRED / COMPLETE / CERTIFIED / CURRENT following PR #119"
+            if reconciliation_certified_current
+            else
+            "Audit & Evidence v0.1.0 is REQUIRED / COMPLETE / CERTIFIED / CURRENT following PR #119"
             if reconciliation_candidate_current
             else "PR #118 candidate certification and post-merge evidence are COMPLETE; Audit & Evidence v0.1.0 is REQUIRED / COMPLETE / CERTIFIED / CURRENT"
             if audit_promotion_current
@@ -1828,6 +2004,9 @@ def _engineering_standards_certified_state(
             else "the candidate is not authored, certified or current"
         )
         next_phrase = (
+            "The current v1.2.67 route records Phase 7B as COMPLETE / CERTIFIED / CURRENT and Phase 7C as NEXT / NOT_STARTED"
+            if reconciliation_certified_current
+            else
             "current v1.2.66 candidate state is recorded in §12.23"
             if reconciliation_candidate_current
             else "Phase 7B reconciliation is NEXT / NOT_STARTED"
@@ -1848,7 +2027,11 @@ def _engineering_standards_certified_state(
         return False, "current HARDEN successor has no current route section"
     harden_route = harden[harden_route_start:]
     required_harden_route = (
-        "Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.4 are COMPLETE / CERTIFIED",
+        (
+            "HARDEN-02 execution, Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.4 remain COMPLETE / CERTIFIED."
+            if reconciliation_certified_current
+            else "Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.4 are COMPLETE / CERTIFIED"
+        ),
         "IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
         "IDENTITY v0.1.4 CURRENT-STATUS PROMOTION SOURCE: PR #77 STATUS SUCCESSOR; PR #76 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE",
         "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED",
@@ -1858,17 +2041,28 @@ def _engineering_standards_certified_state(
         return False, "current HARDEN successor does not route the certified promotion to FP-001"
     if "COMMUNICATIONS: REQUIRED / NOT_STARTED / DOWNSTREAM AFTER FP-001 RECONCILIATION" in harden_route:
         return False, "current HARDEN successor starts or misroutes Communications"
-    if "PHASE 7C: BLOCKED / NOT_STARTED" not in harden_route:
+    if reconciliation_certified_current:
+        if (
+            "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT" not in harden_route
+            or "PHASE 7C: NEXT / NOT_STARTED" not in harden_route
+            or "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT; STATUS: NOT_STARTED" not in harden_route
+        ):
+            return False, "current HARDEN successor omits the completed Phase 7B or next-unstarted Phase 7C route"
+    elif "PHASE 7C: BLOCKED / NOT_STARTED" not in harden_route:
         return False, "current HARDEN successor unblocks Phase 7C"
     if audit_promotion_current and (
         "AUDIT & EVIDENCE DOSSIER: REQUIRED / COMPLETE / CERTIFIED / CURRENT" not in harden_route
         or (
-            "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
+            "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT; STATUS: NOT_STARTED"
+            if reconciliation_certified_current
+            else "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
             if reconciliation_candidate_current
             else "NEXT STAGE: FP-001 PHASE 7B RECONCILIATION"
         ) not in harden_route
         or (
-            "PHASE 7B RECONCILIATION: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"
+            "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT"
+            if reconciliation_certified_current
+            else "PHASE 7B RECONCILIATION: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"
             if reconciliation_candidate_current
             else "PHASE 7B RECONCILIATION: NEXT / NOT_STARTED"
         ) not in harden_route
@@ -1895,7 +2089,9 @@ def _engineering_standards_certified_state(
         return False, "current HARDEN successor includes Store/CER"
 
     return True, (
-        "certified Engineering Standards, FP-001 reconciliation and Identity promotion route NEXT to the Audit & Evidence JIT Domain Dossier"
+        "certified Phase 7B reconciliation routes NEXT to the unstarted Phase 7C Final Feature Pack Contract"
+        if reconciliation_certified_current
+        else "certified Engineering Standards, FP-001 reconciliation and Identity promotion route NEXT to the Audit & Evidence JIT Domain Dossier"
         if adjudication_current
         else "certified Engineering Standards, FP-001 reconciliation and Identity promotion route NEXT to the Communications JIT Domain Dossier"
     )
@@ -1936,6 +2132,22 @@ def _section_body(text: str, heading_pattern: str) -> str:
     next_heading = re.search(r"^## ", text[match.end() :], re.MULTILINE)
     end = match.end() + next_heading.start() if next_heading is not None else len(text)
     return text[match.end() : end]
+
+
+def _markdown_h2_section(text: str, title: str) -> str | None:
+    """Return one exact ATX H2 section body, stopping at the next peer H2."""
+
+    heading = re.compile(
+        rf"(?m)^ {{0,3}}##[ \t]+{re.escape(title)}(?:[ \t]+#+)?[ \t]*\r?$"
+    )
+    matches = list(heading.finditer(text))
+    if len(matches) != 1:
+        return None
+
+    start = matches[0].end()
+    next_h2 = re.search(r"(?m)^ {0,3}##[ \t]+", text[start:])
+    end = start + next_h2.start() if next_h2 is not None else len(text)
+    return text[start:end]
 
 
 def _bundle_component_allocation_issues(
@@ -2098,6 +2310,7 @@ def _check_product_semantics(
     readme_path = root / roots["context_index"]
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     fp001_candidates = (
+        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md",
@@ -3228,6 +3441,16 @@ def _check_audit_v010_current_promotion(
         "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md": "bf7e75f74267957cb4f9da6851ce0c0d9b56fee8aa806009b86efe6fb2c0192d",
     }
     issues: list[str] = []
+    open_state_match = re.search(
+        r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
+        open_work,
+        re.DOTALL,
+    )
+    try:
+        current_open_state = json.loads(open_state_match.group(1), object_pairs_hook=_reject_duplicate_json_keys) if open_state_match else {}
+    except (json.JSONDecodeError, TypeError, ValueError):
+        current_open_state = {}
+    reconciliation_certified_current = current_open_state.get("status_successor_version") == "0.5.11"
 
     configured_archives = integrity_rules.get("audit_v010_promotion_archives")
     if not isinstance(configured_archives, dict) or configured_archives != expected_archives:
@@ -3282,11 +3505,16 @@ def _check_audit_v010_current_promotion(
         "audit_lifecycle": "CERTIFIED / CURRENT",
         "pr_118_candidate_certification": "COMPLETE",
         "pr_118_post_merge_certification_evidence": "COMPLETE",
-        "phase_7b_reconciliation": "NEXT / NOT_STARTED",
-        "phase_7c": "BLOCKED / NOT_STARTED",
         "proof_classification": "NOT FINALISED",
         "phase_8_application_implementation": "UNAUTHORISED",
     }
+    if not reconciliation_certified_current:
+        expected_lifecycle.update(
+            {
+                "phase_7b_reconciliation": "NEXT / NOT_STARTED",
+                "phase_7c": "BLOCKED / NOT_STARTED",
+            }
+        )
     for key, value in expected_lifecycle.items():
         if lifecycle.get(key) != value:
             issues.append(f"Audit lifecycle value {key!r} is missing or contradictory")
@@ -3353,10 +3581,7 @@ def _check_audit_v010_current_promotion(
     active_start = open_work.find("# 9. Immediate Next Action")
     active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
     active = open_work[active_start:active_end] if active_start >= 0 and active_end > active_start else ""
-    reconciliation_candidate_current = (
-        "PHASE 7B RECONCILIATION: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"
-        in active
-    )
+    reconciliation_candidate_current = current_open_state.get("status_successor_version") == "0.5.10"
     open_work_state_match = re.search(
         r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
         open_work,
@@ -3370,33 +3595,42 @@ def _check_audit_v010_current_promotion(
         except (json.JSONDecodeError, TypeError, ValueError):
             pass
     expected_open_state = {
-        "status_successor_version": "0.5.10" if reconciliation_candidate_current else "0.5.9",
+        "status_successor_version": "0.5.11" if reconciliation_certified_current else "0.5.10" if reconciliation_candidate_current else "0.5.9",
         "status_successor_base_sha": (
-            "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd"
+            "f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3"
+            if reconciliation_certified_current
+            else "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd"
             if reconciliation_candidate_current
             else "3566f1353ef34af58773aa13c6f5bd61d2613d96"
         ),
         "current_stage": (
-            "FP-001 PHASE 7B RECONCILIATION CANDIDATE REVIEW"
+            "FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT"
+            if reconciliation_certified_current
+            else "FP-001 PHASE 7B RECONCILIATION CANDIDATE REVIEW"
             if reconciliation_candidate_current
             else "FP-001 AUDIT & EVIDENCE DOSSIER CURRENT-STATUS PROMOTION"
         ),
         "next_stage": (
-            "FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
+            "AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT"
+            if reconciliation_certified_current
+            else "FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
             if reconciliation_candidate_current
             else "FP-001 PHASE 7B RECONCILIATION"
         ),
         "audit_dossier": "REQUIRED / COMPLETE / CERTIFIED / CURRENT",
         "phase_7b_reconciliation": (
-            "IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"
+            "COMPLETE / CERTIFIED / CURRENT"
+            if reconciliation_certified_current
+            else "IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"
             if reconciliation_candidate_current
             else "NEXT / NOT_STARTED"
         ),
-        "phase_7c": "BLOCKED / NOT_STARTED",
-        "phase_7c_block_reason": "Successful Phase 7B reconciliation is required; Audit dossier authorship and current status are complete",
+        "phase_7c": "NEXT / NOT_STARTED" if reconciliation_certified_current else "BLOCKED / NOT_STARTED",
         "proof_classification": "NOT FINALISED",
         "application_implementation": "UNAUTHORISED / BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
     }
+    if not reconciliation_certified_current:
+        expected_open_state["phase_7c_block_reason"] = "Successful Phase 7B reconciliation is required; Audit dossier authorship and current status are complete"
     for key, value in expected_open_state.items():
         if open_work_state.get(key) != value:
             issues.append(f"Open Work lifecycle value {key!r} is missing or contradictory")
@@ -3415,35 +3649,48 @@ def _check_audit_v010_current_promotion(
         "CONTENT & MEDIA: NOT_REQUIRED",
         "ANALYTICS: NOT_REQUIRED",
         (
-            "PHASE 7B RECONCILIATION: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"
+            "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT"
+            if reconciliation_certified_current
+            else "PHASE 7B RECONCILIATION: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"
             if reconciliation_candidate_current
             else "PHASE 7B RECONCILIATION: NEXT / NOT_STARTED"
         ),
         (
-            "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
+            "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT (NOT_STARTED)"
+            if reconciliation_certified_current
+            else "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
             if reconciliation_candidate_current
             else "NEXT STAGE: FP-001 PHASE 7B RECONCILIATION"
         ),
-        "PHASE 7C: BLOCKED / NOT_STARTED UNTIL SUCCESSFUL PHASE 7B RECONCILIATION",
+        "PHASE 7C: NEXT / NOT_STARTED" if reconciliation_certified_current else "PHASE 7C: BLOCKED / NOT_STARTED UNTIL SUCCESSFUL PHASE 7B RECONCILIATION",
         "PROOF CLASSIFICATION: NOT FINALISED",
         "EXECUTABLE DEVELOPMENT: UNAUTHORISED",
     ):
         if status not in active:
             issues.append(f"Open Work active route omits {status!r}")
-    if re.search(r"(?im)^.*PHASE 7B RECONCILIATION\s*:\s*(?:COMPLETE|CERTIFIED|STARTED).*$", active):
-        issues.append("Open Work falsely claims Phase 7B reconciliation has started or completed")
-    if re.search(r"(?im)^.*PHASE 7C\s*:\s*(?:NEXT|READY|UNBLOCKED|COMPLETE|CERTIFIED|AUTHORI[ZS]ED).*$", active):
-        issues.append("Open Work prematurely starts or unblocks Phase 7C")
+    if reconciliation_certified_current:
+        if re.search(r"(?im)^.*PHASE 7B RECONCILIATION\s*:\s*(?:IN PROGRESS|NEXT / NOT_STARTED|STARTED).*$", active):
+            issues.append("Open Work leaves completed Phase 7B reconciliation unverified")
+        if re.search(r"(?im)^.*PHASE 7C\s*:\s*(?:BLOCKED|IN PROGRESS|READY|UNBLOCKED|COMPLETE|CERTIFIED|AUTHORI[ZS]ED).*$", active):
+            issues.append("Open Work blocks or starts Phase 7C instead of routing it as NEXT / NOT_STARTED")
+    else:
+        if re.search(r"(?im)^.*PHASE 7B RECONCILIATION\s*:\s*(?:COMPLETE|CERTIFIED|STARTED).*$", active):
+            issues.append("Open Work falsely claims Phase 7B reconciliation has started or completed")
+        if re.search(r"(?im)^.*PHASE 7C\s*:\s*(?:NEXT|READY|UNBLOCKED|COMPLETE|CERTIFIED|AUTHORI[ZS]ED).*$", active):
+            issues.append("Open Work prematurely starts or unblocks Phase 7C")
     if re.search(r"(?im)^.*PROOF CLASSIFICATION\s*:\s*(?:FINAL|FINALI[ZS]ED|CERTIFIED).*$", active):
         issues.append("Open Work prematurely finalises proof classification")
     if re.search(r"(?im)^.*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$", active):
         issues.append("Open Work prematurely authorises Phase 8 or application implementation")
 
+    atlas_current_path = docs / ("working/DELIVERY_ATLAS_WORKING_v0.4.9.md" if reconciliation_certified_current else "working/DELIVERY_ATLAS_WORKING_v0.4.8.md")
+    skeleton_current_path = docs / ("working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md" if reconciliation_certified_current else "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md")
+    harden_current_path = docs / ("working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md" if reconciliation_certified_current else "working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md")
     current_surfaces = (
         ("README current state", readme.split("## Current State", 1)[-1]),
-        ("Delivery Atlas current state", (docs / "working/DELIVERY_ATLAS_WORKING_v0.4.8.md").read_text(encoding="utf-8") if (docs / "working/DELIVERY_ATLAS_WORKING_v0.4.8.md").is_file() else ""),
-        ("FP-001 Skeleton current state", (docs / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md").read_text(encoding="utf-8") if (docs / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md").is_file() else ""),
-        ("HARDEN-02 current state", (docs / "working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md").read_text(encoding="utf-8") if (docs / "working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md").is_file() else ""),
+        ("Delivery Atlas current state", atlas_current_path.read_text(encoding="utf-8") if atlas_current_path.is_file() else ""),
+        ("FP-001 Skeleton current state", skeleton_current_path.read_text(encoding="utf-8") if skeleton_current_path.is_file() else ""),
+        ("HARDEN-02 current state", harden_current_path.read_text(encoding="utf-8") if harden_current_path.is_file() else ""),
     )
     for label, text in current_surfaces:
         if current_relative.removeprefix("docs/00_platform/") not in text:
@@ -3454,9 +3701,15 @@ def _check_audit_v010_current_promotion(
             if "records the work start for the already-adjudicated required FP-001 Audit & Evidence JIT Domain Dossier" in text:
                 issues.append("FP-001 Skeleton current-state prose misidentifies Audit status promotion as work start")
             for required in (
-                "records the Audit v0.1.0 current-status promotion under PR #119",
                 (
-                    "Phase 7B reconciliation is `IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING`"
+                    "Audit & Evidence v0.1.0 remain REQUIRED / COMPLETE / CERTIFIED / CURRENT"
+                    if reconciliation_certified_current
+                    else "records the Audit v0.1.0 current-status promotion under PR #119"
+                ),
+                (
+                    "Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under tracker #120"
+                    if reconciliation_certified_current
+                    else "Phase 7B reconciliation is `IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING`"
                     if reconciliation_candidate_current
                     else "routes Phase 7B reconciliation as `NEXT / NOT_STARTED`"
                 ),
@@ -3464,7 +3717,7 @@ def _check_audit_v010_current_promotion(
                 "all seven material capability relationships",
                 "the six affected Domains",
                 "the existing stage gates",
-                "does not perform Phase 7B reconciliation",
+                *(() if reconciliation_certified_current else ("does not perform Phase 7B reconciliation",)),
                 "does not authorise Phase 7C",
                 "does not finalise proof classification",
                 "does not authorise Phase 8/application implementation",
@@ -3485,8 +3738,12 @@ def _check_audit_v010_current_promotion(
             ):
                 issues.append("Atlas v0.4.6 historical route must use Open Work v1.2.64 and preserve candidate-review status")
             if (
-                ("Open Work v1.2.66" if reconciliation_candidate_current else "Open Work v1.2.65") not in current_atlas
-                or "separate current-status promotion PR #119" not in current_atlas
+                ("Open Work v1.2.67" if reconciliation_certified_current else "Open Work v1.2.66" if reconciliation_candidate_current else "Open Work v1.2.65") not in current_atlas
+                or (
+                    "Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT" not in current_atlas
+                    if reconciliation_certified_current
+                    else "separate current-status promotion PR #119" not in current_atlas
+                )
                 or (
                     reconciliation_candidate_current
                     and "candidate v0.1.0 is open for independent review under tracker #120" not in current_atlas.casefold()
@@ -3498,6 +3755,13 @@ def _check_audit_v010_current_promotion(
             if (
                 header.count("v0.5.10 current-status successor base main SHA") != 1
                 or "v0.5.10 current-status successor base main SHA:** `5d282ecca4e13b621c7f96c05c47d6fac43ec1bd`" not in header
+                or (
+                    reconciliation_certified_current
+                    and (
+                        header.count("v0.5.11 current-status successor base main SHA") != 1
+                        or "v0.5.11 current-status successor base main SHA:** `f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3`" not in header
+                    )
+                )
                 or text.count("v0.5.8 routing-successor base main SHA") != 1
                 or "v0.5.8 routing-successor base main SHA:** `5f5a994e48d9458aaa6397044b3af4d72c5d5e81`" not in header
                 or text.count("v0.5.9 current-status successor base main SHA") != 1
@@ -3519,11 +3783,13 @@ def _check_audit_v010_current_promotion(
     readme_current = readme.split("## Current State", 1)[-1]
     for required in (
         (
-            "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
+            "NEXT STAGE: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT; STATUS: NOT_STARTED"
+            if reconciliation_certified_current
+            else "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
             if reconciliation_candidate_current
             else "NEXT STAGE: FP-001 PHASE 7B RECONCILIATION"
         ),
-        "PHASE 7C: BLOCKED / NOT_STARTED",
+        "PHASE 7C: NEXT / NOT_STARTED" if reconciliation_certified_current else "PHASE 7C: BLOCKED / NOT_STARTED",
         "PROOF CLASSIFICATION: NOT FINALISED",
         "EXECUTABLE DEVELOPMENT: UNAUTHORISED",
     ):
@@ -3635,7 +3901,7 @@ def _check_fp001_phase7b_candidate(
     integrity_rules: dict[str, Any],
     report: dict[str, Any],
 ) -> None:
-    """Fail closed around the in-progress FP-001 Phase 7B candidate lifecycle."""
+    """Fail closed around the immutable, pre-certification FP-001 candidate."""
 
     docs = root / "docs" / "00_platform"
     rules = integrity_rules.get("fp001_phase7b_reconciliation_candidate", {})
@@ -3651,7 +3917,7 @@ def _check_fp001_phase7b_candidate(
 
     lifecycle_issues: list[str] = []
     expected_candidate_route = {
-        "path": "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md",
+        "path": "docs/00_platform/archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md",
         "version": "0.1.0",
         "baseline_main_sha": "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
         "tracker_issue": 120,
@@ -3785,8 +4051,8 @@ def _check_fp001_phase7b_candidate(
     if "PMR" not in candidate_text or "prior PR #67 PMR reconciliation is complete" not in candidate_text:
         baseline_issues.append("candidate does not preserve the completed PMR reconciliation")
 
-    skeleton_path = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md"
-    skeleton_archive = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md"
+    skeleton_path = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md"
+    skeleton_archive = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md"
     pmr_start = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->"
     pmr_end = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->"
     def marked_block(text: str, start: str, end: str) -> str:
@@ -3826,10 +4092,10 @@ def _check_fp001_phase7b_candidate(
     except (json.JSONDecodeError, TypeError, ValueError):
         open_work_state = {}
     expected_state = {
-        "phase_7b_reconciliation": "IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING",
+        "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7b_reconciliation_execution_tracker_issue": 120,
         "phase_7b_reconciliation_baseline_main_sha": "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
-        "phase_7c": "BLOCKED / NOT_STARTED",
+        "phase_7c": "NEXT / NOT_STARTED",
         "proof_classification": "NOT FINALISED",
         "application_implementation": "UNAUTHORISED / BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
     }
@@ -3837,8 +4103,14 @@ def _check_fp001_phase7b_candidate(
         if open_work_state.get(key) != expected:
             route_issues.append(f"current Open Work lifecycle state {key!r} is missing or contradictory")
     candidate_state = open_work_state.get("phase_7b_reconciliation_candidate", {})
-    if not isinstance(candidate_state, dict) or candidate_state.get("lifecycle") != "NOT CERTIFIED / NOT CURRENT":
-        route_issues.append("current Open Work falsely certifies or omits the Phase 7B candidate")
+    if (
+        not isinstance(candidate_state, dict)
+        or candidate_state.get("lifecycle") != "CERTIFIED / CURRENT"
+        or candidate_state.get("path") != "docs/00_platform/archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
+        or candidate_state.get("current_status_successor_path")
+        != "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
+    ):
+        route_issues.append("current Open Work omits the certified archive and current status successor routes")
     if open_work_state.get("conditional_dossiers") != {
         "privacy_consent": "NOT_REQUIRED",
         "content_media": "NOT_REQUIRED",
@@ -3847,9 +4119,9 @@ def _check_fp001_phase7b_candidate(
     }:
         route_issues.append("current Open Work changes Privacy, Content & Media, Audit or Analytics disposition")
     for token in (
-        "PHASE 7B RECONCILIATION: IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING",
-        "RECONCILIATION CANDIDATE: NOT CERTIFIED / NOT CURRENT",
-        "PHASE 7C: BLOCKED / NOT_STARTED",
+        "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT",
+        "RECONCILIATION v0.1.0: CERTIFIED / CURRENT",
+        "PHASE 7C: NEXT / NOT_STARTED",
         "PROOF CLASSIFICATION: NOT FINALISED",
         "EXECUTABLE DEVELOPMENT: UNAUTHORISED",
     ):
@@ -3859,10 +4131,299 @@ def _check_fp001_phase7b_candidate(
         report,
         "fp001_phase7b_gate_routing",
         not route_issues,
-        "Phase 7B remains candidate-only and all downstream gates remain closed"
+        "Phase 7B certification is current; Phase 7C is the next unstarted stage and downstream gates remain closed"
         if not route_issues
         else "; ".join(route_issues),
-        path="docs/00_platform/02_OPEN_WORK_v1.2.66.md",
+        path="docs/00_platform/02_OPEN_WORK_v1.2.67.md",
+    )
+
+
+def _check_fp001_phase7b_certification_current(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    """Pin the exact reviewed candidate and fail closed on the certified current route."""
+
+    docs = root / "docs" / "00_platform"
+    candidate_path = "docs/00_platform/archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
+    current_path = "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
+    candidate = root / candidate_path
+    current = root / current_path
+    expected_hash = "274306e73e2450806516a5b76ca96f1a768af7824ba823cca6c9371c58e65401"
+    archives = integrity_rules.get("fp001_phase7b_reconciliation_certification_archives", {})
+    archive_issues: list[str] = []
+    required_archives = {
+        candidate_path: expected_hash,
+        "docs/00_platform/archive/02_OPEN_WORK_v1.2.66.md": "96a61dd94098f3c9fbb4ba1a6c683e9a3484b62ee15306d8dd5d884ad84f2133",
+        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.8.md": "e92f94d390cbf58173231daaedea00a0fac2a6d67fb69a0a7f6edab0e487af4e",
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md": "5d1332286bd8c9d7e86838f91b22edbf2e72afca1d8fb59edd28103e165c019b",
+        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.10.md": "dad16d39906afede052e3cc94bb4c39568a1fe14215bb0b7b52e0e234b106f42",
+    }
+    if not isinstance(archives, dict) or archives != required_archives:
+        archive_issues.append("manifest archive-integrity bundle does not pin exactly the candidate and four immediate predecessors")
+    for relative, digest in required_archives.items():
+        path = root / relative
+        if not path.is_file():
+            archive_issues.append(f"required Phase 7B certification archive is missing: {relative}")
+        elif sha256_file(path) != digest:
+            archive_issues.append(f"Phase 7B certification archive hash drifted: {relative}")
+    candidate_rule = integrity_rules.get("fp001_phase7b_reconciliation_candidate", {})
+    if not isinstance(candidate_rule, dict) or candidate_rule.get("path") != candidate_path:
+        archive_issues.append("manifest candidate path no longer identifies the immutable archive")
+    historical_candidate = next(
+        (
+            entry
+            for entry in _all_entries(manifest)
+            if entry.get("document_id") == "FP001_PHASE_7B_RECONCILIATION_PR_121_CANDIDATE"
+        ),
+        None,
+    )
+    if (
+        not isinstance(historical_candidate, dict)
+        or _relative_path(historical_candidate) != candidate_path
+        or historical_candidate.get("sha256") != expected_hash
+        or historical_candidate.get("provenance_sha256") != expected_hash
+        or historical_candidate.get("lifecycle") != "historical"
+    ):
+        archive_issues.append("manifest historical PR #121 candidate evidence is missing or contradictory")
+    _record_check(
+        report,
+        "fp001_phase7b_certification_archive_integrity",
+        not archive_issues,
+        "immutable PR #121 candidate and all four direct predecessors match their pinned bytes"
+        if not archive_issues
+        else "; ".join(archive_issues),
+        path=candidate_path,
+    )
+
+    issues: list[str] = []
+    candidate_text = candidate.read_text(encoding="utf-8") if candidate.is_file() else ""
+    current_text = current.read_text(encoding="utf-8") if current.is_file() else ""
+    if not current_text:
+        issues.append("current reconciliation status successor is missing")
+
+    readme_path = docs / "README.md"
+    readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme_current = _markdown_h2_section(readme_text, "Current State")
+    if readme_current is None:
+        issues.append("README current state section is missing")
+        readme_current = ""
+    else:
+        readme_routes = (
+            "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT",
+            "PHASE 7C: NEXT / NOT_STARTED",
+            "PROOF CLASSIFICATION: NOT FINALISED",
+            "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
+        )
+        for route in readme_routes:
+            if route not in readme_current:
+                issues.append(f"README current state omits required lifecycle route {route!r}")
+
+        blocked_phase7c = re.compile(
+            r"\bphase\s+7c\b[^.!?\n]{0,100}\bblocked\b[^.!?\n]{0,40}\bnot[\s/_-]*started\b",
+            re.IGNORECASE,
+        )
+        for paragraph in re.split(r"\n\s*\n", readme_current):
+            for sentence in re.split(r"(?<=[.!?])\s+", paragraph):
+                match = blocked_phase7c.search(sentence)
+                if match is None:
+                    continue
+                issues.append(
+                    "README current state contains a BLOCKED / NOT_STARTED Phase 7C statement"
+                )
+                break
+    required_status = (
+        "FP-001 PHASE 7B RECONCILIATION\nCOMPLETE\nCERTIFIED\nCURRENT",
+        "NON-IMPLEMENTATION",
+        "NOT PHASE 7C",
+        "NOT DEVELOPMENT-ENTRY AUTHORITY",
+        "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT",
+        "RECONCILIATION v0.1.0: CERTIFIED / CURRENT",
+        "PHASE 7C: NEXT / NOT_STARTED",
+        "PROOF CLASSIFICATION: NOT FINALISED",
+        "PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED",
+        "Fresh independent post-merge review: PASS",
+        "reviewer inspected and revalidated repository-hosted evidence",
+        "did not claim to have executed CI personally",
+    )
+    for token in required_status:
+        if token not in current_text:
+            issues.append(f"current reconciliation successor omits required lifecycle/evidence token: {token}")
+    for token in (
+        "b6f82218026f3372ccacc96ffdbb37430e8e503f",
+        "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
+        "f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3",
+        "98e553d45006136277e4b2aa629c97c31f7742e2",
+        expected_hash,
+        "39035622705",
+        "39041010709",
+        "6235094794",
+        "6235345322",
+    ):
+        if token not in current_text:
+            issues.append(f"current reconciliation successor omits certification evidence {token}")
+    section_start = "## 3. Reconciliation method and terms"
+    section_end = "## 8. Candidate result and certification boundary"
+    if not candidate_text or not current_text or section_start not in candidate_text or section_start not in current_text or section_end not in candidate_text or section_end not in current_text:
+        issues.append("immutable candidate or current successor is missing substantive reconciliation sections")
+    else:
+        candidate_body = candidate_text.split(section_start, 1)[1].split(section_end, 1)[0]
+        current_body = current_text.split(section_start, 1)[1].split(section_end, 1)[0]
+        if candidate_body != current_body:
+            issues.append("current successor changes the exact reviewed substantive reconciliation body")
+    if _fp001_phase7b_candidate_text_issues(candidate_text, candidate_rule if isinstance(candidate_rule, dict) else {}):
+        issues.append("archived candidate no longer passes the 15-pair seam matrix and zero-blocker checks")
+    if current_text.count("BLOCKING_AUTHORITY_GAP: NONE") != 1 or current_text.count("BLOCKING_DOSSIER_CONTRADICTION: NONE") != 1:
+        issues.append("current reconciliation does not preserve both zero-blocker conclusions exactly once")
+
+    open_work_entry = next(
+        (
+            entry
+            for entry in _all_entries(manifest)
+            if entry.get("document_id") == "OPEN_WORK" and entry.get("lifecycle", "current") != "historical"
+        ),
+        None,
+    )
+    open_work_path = root / _relative_path(open_work_entry) if open_work_entry else None
+    open_work = open_work_path.read_text(encoding="utf-8") if open_work_path and open_work_path.is_file() else ""
+    match = re.search(
+        r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
+        open_work,
+        re.DOTALL,
+    )
+    try:
+        state = json.loads(match.group(1), object_pairs_hook=_reject_duplicate_json_keys) if match else {}
+    except (json.JSONDecodeError, TypeError, ValueError):
+        state = {}
+    certification = state.get("phase_7b_reconciliation_certification", {})
+    exact_certification = {
+        "pr_121_url": "https://github.com/JCSchoeman96/NewYou/pull/121",
+        "candidate_head": "b6f82218026f3372ccacc96ffdbb37430e8e503f",
+        "pre_candidate_main": "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
+        "resulting_main": "f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3",
+        "merge_parents": [
+            "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
+            "b6f82218026f3372ccacc96ffdbb37430e8e503f",
+        ],
+        "candidate_resulting_main_tree": "98e553d45006136277e4b2aa629c97c31f7742e2",
+        "archived_candidate_path": candidate_path,
+        "archived_candidate_sha256": expected_hash,
+        "exact_head_run": "39035622705",
+        "exact_head_result": "PASS",
+        "resulting_main_run": "39041010709",
+        "resulting_main_result": "PASS",
+        "exact_head_tests": "397 PASS",
+        "resulting_main_tests": "397 PASS",
+        "exact_head_foundation_integrity": {"assertions": 646, "result": "PASS", "findings": 0},
+        "resulting_main_foundation_integrity": {"assertions": 646, "result": "PASS", "findings": 0},
+        "pre_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/121#issuecomment-6235094794",
+        "post_merge_attestation_url": "https://github.com/JCSchoeman96/NewYou/pull/121#issuecomment-6235345322",
+        "post_merge_independent_review": "PASS",
+        "reviewer": "ChatGPT / GPT-5.6 Sol",
+        "poster": "JCSchoeman96",
+        "reviewer_revalidated_repository_hosted_evidence": True,
+        "reviewer_executed_ci_personally": False,
+        "issue_120_state_while_status_successor_pr_unmerged": "OPEN",
+        "issue_120_closure": "Closes #120 on status-successor PR merge only",
+    }
+    if certification != exact_certification:
+        issues.append("current Open Work is missing or contradicts exact PR #121 post-merge certification evidence")
+    expected_state = {
+        "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
+        "phase_7c": "NEXT / NOT_STARTED",
+        "proof_classification": "NOT FINALISED",
+        "application_implementation": "UNAUTHORISED / BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+        "phase_7b_reconciliation_execution_tracker_issue": 120,
+        "phase_7b_reconciliation_baseline_main_sha": "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
+        "conditional_dossiers": {
+            "privacy_consent": "NOT_REQUIRED",
+            "content_media": "NOT_REQUIRED",
+            "audit_evidence": "REQUIRED / COMPLETE / CERTIFIED / CURRENT",
+            "analytics": "NOT_REQUIRED",
+        },
+    }
+    for key, expected in expected_state.items():
+        if state.get(key) != expected:
+            issues.append(f"current Open Work lifecycle state {key!r} is missing or contradictory")
+    expected_candidate_state = {
+        "path": candidate_path,
+        "current_status_successor_path": current_path,
+        "version": "0.1.0",
+        "result": "PASS / READY FOR INDEPENDENT REVIEW",
+        "lifecycle": "CERTIFIED / CURRENT",
+        "certification": "COMPLETE; EXACT CANDIDATE MERGED UNCHANGED; RESULTING-MAIN VERIFIED",
+        "tracker_issue": 120,
+    }
+    if state.get("phase_7b_reconciliation_candidate") != expected_candidate_state:
+        issues.append("Open Work does not separate the immutable candidate from its current status successor")
+    if state.get("current_delivery_atlas") != "working/DELIVERY_ATLAS_WORKING_v0.4.9.md" or state.get("current_fp001_skeleton") != "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md" or state.get("current_harden_02") != "working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md":
+        issues.append("Open Work current Atlas, Skeleton or HARDEN successor route is stale")
+    if (
+        not isinstance(open_work_entry, dict)
+        or _relative_path(open_work_entry) != "docs/00_platform/02_OPEN_WORK_v1.2.67.md"
+        or open_work_entry.get("semver") != "1.2.67"
+        or open_work_entry.get("superseded_version") != "1.2.66"
+    ):
+        issues.append("Open Work current manifest lineage is not v1.2.66 → v1.2.67")
+    predecessor = next(
+        (entry for entry in _all_entries(manifest) if entry.get("document_id") == "OPEN_WORK_V1_2_66"),
+        None,
+    )
+    predecessor_hash = required_archives["docs/00_platform/archive/02_OPEN_WORK_v1.2.66.md"]
+    if (
+        not isinstance(predecessor, dict)
+        or _relative_path(predecessor) != "docs/00_platform/archive/02_OPEN_WORK_v1.2.66.md"
+        or predecessor.get("semver") != "1.2.66"
+        or predecessor.get("authority_class") != "PLANNING_TRACKER_HISTORICAL"
+        or predecessor.get("superseded_version") != "1.2.67"
+        or predecessor.get("lifecycle") != "historical"
+        or predecessor.get("sha256") != predecessor_hash
+        or predecessor.get("provenance_sha256") != predecessor_hash
+    ):
+        issues.append("historical Open Work v1.2.66 manifest lineage or archive hash is invalid")
+    if "PHASE 7C: NEXT / NOT_STARTED" not in open_work or "PROOF CLASSIFICATION: NOT FINALISED" not in open_work or "EXECUTABLE DEVELOPMENT: UNAUTHORISED" not in open_work:
+        issues.append("current Open Work route advances Phase 7C, proof classification or implementation")
+    active_start = open_work.find("# 9. Immediate Next Action")
+    active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
+    active = open_work[active_start:active_end] if active_start >= 0 and active_end > active_start else ""
+    required_active_routes = (
+        "RECONCILIATION v0.1.0: CERTIFIED / CURRENT",
+        "NEXT PHASE 7 ACTION: AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT; STATUS: NOT_STARTED",
+        "PHASE 7C: NEXT / NOT_STARTED",
+        "PROOF CLASSIFICATION: NOT FINALISED",
+        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
+    )
+    for route in required_active_routes:
+        if active.count(route) != 1:
+            issues.append(f"current Open Work active route omits or duplicates {route!r}")
+    if len(re.findall(r"(?m)^PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT\s*$", active)) != 1:
+        issues.append("current Open Work active route omits or duplicates the completed Phase 7B reconciliation status")
+    if re.search(r"(?im)^PHASE 7B RECONCILIATION\s*:\s*(?:IN PROGRESS|NEXT / NOT_STARTED|STARTED).*$", active):
+        issues.append("current Open Work active route leaves completed Phase 7B incomplete")
+    for route, expected_count in (
+        ("PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", 2),
+        ("PHASE 7C: NEXT / NOT_STARTED", 2),
+        ("PROOF CLASSIFICATION: NOT FINALISED", 2),
+        ("EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED", 1),
+    ):
+        if len(re.findall(r"(?m)^" + re.escape(route) + r"\s*$", open_work)) != expected_count:
+            issues.append(f"current Open Work summary route omits, duplicates or contradicts {route!r}")
+    if re.search(r"(?im)^.*PHASE 7C\s*:\s*(?:IN PROGRESS|READY|UNBLOCKED|COMPLETE|CERTIFIED|AUTHORI[ZS]ED).*$", active):
+        issues.append("current Open Work active route starts Phase 7C")
+    if re.search(r"(?im)^.*PROOF CLASSIFICATION\s*:\s*(?:FINAL|FINALI[ZS]ED|CERTIFIED).*$", active):
+        issues.append("current Open Work active route finalises proof classification")
+    if re.search(r"(?im)^.*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$", active):
+        issues.append("current Open Work active route authorises Phase 8 or application implementation")
+    _record_check(
+        report,
+        "fp001_phase7b_certification_current",
+        not issues,
+        "exact PR #121 candidate evidence, certified Phase 7B current status and closed downstream gates are preserved"
+        if not issues
+        else "; ".join(issues),
+        path=current_path,
     )
 
 
@@ -3873,7 +4434,7 @@ def _check_fp001_pmr_reconciliation(
     report: dict[str, Any],
 ) -> None:
     docs = root / "docs" / "00_platform"
-    skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md"
+    skeleton = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md"
     communications_dossier = docs / "working" / "FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
     communications_v010_candidate = docs / "archive" / "FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
     dossier = docs / "working" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
@@ -3897,6 +4458,7 @@ def _check_fp001_pmr_reconciliation(
     ]
     audit_promotion_current = False
     reconciliation_candidate_current = False
+    reconciliation_certified_current = False
     if len(current_entries) != 1:
         issues.append("manifest must identify exactly one current Open Work route")
         open_work = ""
@@ -3905,9 +4467,13 @@ def _check_fp001_pmr_reconciliation(
         open_work_path = root / _relative_path(current_open_work)
         open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
         current_open_work_version = current_open_work.get("semver")
-        audit_promotion_current = current_open_work_version in {"1.2.65", "1.2.66"}
+        audit_promotion_current = current_open_work_version in {"1.2.65", "1.2.66", "1.2.67"}
         reconciliation_candidate_current = current_open_work_version == "1.2.66"
+        reconciliation_certified_current = current_open_work_version == "1.2.67"
         expected_open_work_path = (
+            "docs/00_platform/02_OPEN_WORK_v1.2.67.md"
+            if reconciliation_certified_current
+            else
             "docs/00_platform/02_OPEN_WORK_v1.2.66.md"
             if reconciliation_candidate_current
             else "docs/00_platform/02_OPEN_WORK_v1.2.65.md"
@@ -3919,14 +4485,14 @@ def _check_fp001_pmr_reconciliation(
             issues.append(f"manifest Open Work route is not {expected_open_work_filename}")
         if current_open_work.get("canonical_filename") != expected_open_work_filename:
             issues.append("manifest current Open Work filename is stale")
-        if current_open_work_version not in {"1.2.64", "1.2.65", "1.2.66"}:
+        if current_open_work_version not in {"1.2.64", "1.2.65", "1.2.66", "1.2.67"}:
             issues.append("manifest current Open Work version is stale")
     atlas_status_lines = re.findall(r"(?m)^ATLAS RECONCILIATION: COMPLETE.*$", open_work)
     expected_atlas_status = (
-        f"ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.{'4.8' if reconciliation_candidate_current else '4.7' if audit_promotion_current else '4.6'}.md`; "
-        f"immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.{'4.7' if reconciliation_candidate_current else '4.6' if audit_promotion_current else '4.5'}.md`; "
+        f"ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.{'4.9' if reconciliation_certified_current else '4.8' if reconciliation_candidate_current else '4.7' if audit_promotion_current else '4.6'}.md`; "
+        f"immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.{'4.8' if reconciliation_certified_current else '4.7' if reconciliation_candidate_current else '4.6' if audit_promotion_current else '4.5'}.md`; "
         "pinned v0.2.1 source-at-freeze artifacts remain preserved; DERIVED / NON-AUTHORITATIVE; "
-        "ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this recovery does not create ATLAS-12"
+        "ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this successor does not create ATLAS-12"
     )
     if atlas_status_lines != [expected_atlas_status]:
         issues.append(
@@ -4126,20 +4692,40 @@ def _check_fp001_pmr_reconciliation(
 
     navigation_paths = integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
     expected_navigation_paths = {
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.8.md" if reconciliation_candidate_current else "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.7.md" if audit_promotion_current else "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.6.md",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md" if reconciliation_candidate_current else "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md" if audit_promotion_current else "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.9.md" if reconciliation_certified_current else "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.8.md" if reconciliation_candidate_current else "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.7.md" if audit_promotion_current else "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.6.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md" if reconciliation_certified_current else "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md" if reconciliation_candidate_current else "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md" if audit_promotion_current else "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md" if reconciliation_candidate_current else "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.9.md" if audit_promotion_current else "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.8.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md" if reconciliation_certified_current else "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md" if reconciliation_candidate_current else "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.9.md" if audit_promotion_current else "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.8.md",
     }
+    if reconciliation_certified_current:
+        expected_navigation_paths.add(
+            "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
+        )
     if audit_promotion_current:
         expected_navigation_paths.add(
             "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
+        )
+    if reconciliation_certified_current:
+        expected_navigation_paths.add(
+            "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
         )
     if not isinstance(navigation_paths, list) or set(navigation_paths) != expected_navigation_paths or len(navigation_paths) != len(expected_navigation_paths):
         issues.append("manifest navigation does not route exactly the current FP-001, Atlas and HARDEN successors")
 
     retired_working_predecessors = (
+        (
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.8.md",
+            "immediate Atlas predecessor remains in the working route",
+        ),
+        (
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md",
+            "immediate Skeleton predecessor remains in the working route",
+        ),
+        (
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md",
+            "immediate HARDEN-02 predecessor remains in the working route",
+        ),
         (
             "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.6.md",
             "immediate Atlas predecessor remains in the working route",
@@ -4166,6 +4752,8 @@ def _check_fp001_pmr_reconciliation(
             issues.append(issue)
 
     skeleton_text = skeleton.read_text(encoding="utf-8") if skeleton.is_file() else ""
+    reconciliation_path = docs / "working" / "FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
+    reconciliation_text = reconciliation_path.read_text(encoding="utf-8") if reconciliation_path.is_file() else ""
     dossier_text = dossier.read_text(encoding="utf-8") if dossier.is_file() else ""
     skeleton_candidate_text = skeleton_candidate.read_text(encoding="utf-8") if skeleton_candidate.is_file() else ""
     dossier_candidate_text = dossier_candidate.read_text(encoding="utf-8") if dossier_candidate.is_file() else ""
@@ -4177,7 +4765,7 @@ def _check_fp001_pmr_reconciliation(
         communications_v010_candidate.read_text(encoding="utf-8") if communications_v010_candidate.is_file() else ""
     )
 
-    if "**Lifecycle status:** " + chr(96) + "CERTIFIED / CURRENT" + chr(96) not in skeleton_text:
+    if not re.search(r"(?m)^\*\*Lifecycle status:\*\*\s+(?:`CERTIFIED / CURRENT`|CERTIFIED / CURRENT)\b", skeleton_text):
         issues.append("current FP-001 skeleton is not marked CERTIFIED / CURRENT")
     if "RECONCILIATION CANDIDATE / NOT CERTIFIED" in skeleton_text:
         issues.append("active skeleton remains a reconciliation candidate")
@@ -4407,10 +4995,11 @@ def _check_fp001_pmr_reconciliation(
         ],
     }
     reconciliation_candidate_current = lifecycle_state.get("status_successor_version") == "0.5.10"
-    audit_promotion_current = lifecycle_state.get("status_successor_version") in {"0.5.9", "0.5.10"}
-    adjudication_current = lifecycle_state.get("status_successor_version") in {"0.5.6", "0.5.7", "0.5.8", "0.5.9", "0.5.10"}
-    audit_work_start_current = lifecycle_state.get("status_successor_version") in {"0.5.7", "0.5.8", "0.5.9", "0.5.10"}
-    audit_candidate_review_current = lifecycle_state.get("status_successor_version") in {"0.5.8", "0.5.9", "0.5.10"}
+    reconciliation_certified_current = lifecycle_state.get("status_successor_version") == "0.5.11"
+    audit_promotion_current = lifecycle_state.get("status_successor_version") in {"0.5.9", "0.5.10", "0.5.11"}
+    adjudication_current = lifecycle_state.get("status_successor_version") in {"0.5.6", "0.5.7", "0.5.8", "0.5.9", "0.5.10", "0.5.11"}
+    audit_work_start_current = lifecycle_state.get("status_successor_version") in {"0.5.7", "0.5.8", "0.5.9", "0.5.10", "0.5.11"}
+    audit_candidate_review_current = lifecycle_state.get("status_successor_version") in {"0.5.8", "0.5.9", "0.5.10", "0.5.11"}
     if adjudication_current:
         expected_fp001_state.update(
             {
@@ -4539,6 +5128,35 @@ def _check_fp001_pmr_reconciliation(
                 str(lifecycle_state.get("audit_current_status_promotion", "")),
             ):
                 issues.append("current Open Work does not bind Audit status promotion to an actual PR number")
+    if reconciliation_certified_current:
+        expected_fp001_state.update(
+            {
+                "status_successor_base_sha": "f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3",
+                "current_stage": "FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT",
+                "next_stage": "AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT",
+                "status_successor_version": "0.5.11",
+                "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
+                "phase_7c": "NEXT / NOT_STARTED",
+                "application_implementation": "UNAUTHORISED / BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS",
+                "phase_7b_reconciliation_execution_tracker_issue": 120,
+                "phase_7b_reconciliation_baseline_main_sha": "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
+                "phase_7b_reconciliation_candidate": {
+                    "path": "docs/00_platform/archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md",
+                    "current_status_successor_path": "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md",
+                    "version": "0.1.0",
+                    "result": "PASS / READY FOR INDEPENDENT REVIEW",
+                    "lifecycle": "CERTIFIED / CURRENT",
+                    "certification": "COMPLETE; EXACT CANDIDATE MERGED UNCHANGED; RESULTING-MAIN VERIFIED",
+                    "tracker_issue": 120,
+                },
+                "audit_current_status_promotion": "PR #119 STATUS SUCCESSOR",
+                "audit_certified_candidate_sha256": "0b0a8fb64a3ac602ebb81a7ab957a9dd075412350c818e4c6e5f13f667f7daea",
+                "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.9.md",
+                "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md",
+                "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md",
+            }
+        )
+        expected_fp001_state.pop("phase_7c_block_reason", None)
     if not isinstance(lifecycle_state, dict) or any(
         lifecycle_state.get(key) != value for key, value in expected_fp001_state.items()
     ):
@@ -4849,6 +5467,9 @@ def _check_fp001_pmr_reconciliation(
     stage = stage[1].split("# 10. Minimal Tools", 1)[0] if len(stage) == 2 else ""
     next_routes = re.findall(r"(?m)^NEXT STAGE:\s*(.*?)\s*$", stage)
     expected_next_route = (
+        "AUTHOR FP-001 PHASE 7C FINAL FEATURE PACK CONTRACT (NOT_STARTED)"
+        if reconciliation_certified_current
+        else
         "FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION"
         if reconciliation_candidate_current
         else "FP-001 PHASE 7B RECONCILIATION"
@@ -4883,6 +5504,15 @@ def _check_fp001_pmr_reconciliation(
         "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
         "STORE / CER: EXCLUDED FROM HARDEN-02",
     ]
+    if reconciliation_certified_current:
+        required_stage_tokens.extend(
+            [
+                "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT",
+                "RECONCILIATION v0.1.0: CERTIFIED / CURRENT",
+                "PHASE 7C: NEXT / NOT_STARTED",
+                "RECONCILIATION v0.1.0: CERTIFIED / CURRENT — `working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md`; immutable candidate: `archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md`",
+            ]
+        )
     if reconciliation_candidate_current:
         required_stage_tokens.extend(
             [
@@ -4922,7 +5552,9 @@ def _check_fp001_pmr_reconciliation(
                     else ()
                 ),
                 "- ANALYTICS: NOT_REQUIRED",
-                "PHASE 7C: BLOCKED / NOT_STARTED UNTIL SUCCESSFUL PHASE 7B RECONCILIATION"
+                "PHASE 7C: NEXT / NOT_STARTED"
+                if reconciliation_certified_current
+                else "PHASE 7C: BLOCKED / NOT_STARTED UNTIL SUCCESSFUL PHASE 7B RECONCILIATION"
                 if audit_promotion_current
                 else "PHASE 7C: BLOCKED / NOT_STARTED UNTIL AUDIT DOSSIER COMPLETE / CERTIFIED / CURRENT AND PHASE 7B RECONCILIATION SUCCEEDS",
             ]
@@ -4951,6 +5583,8 @@ def _check_fp001_pmr_reconciliation(
         ("Store/CER", r"(?im)^.*STORE\s*/\s*CER\s*:\s*(?:INCLUDED|REQUIRED|AUTHORI[ZS]ED|COMPLETE).*$"),
     )
     for label, pattern in forbidden_advancement:
+        if label == "Phase 7C" and reconciliation_certified_current:
+            continue
         if re.search(pattern, stage):
             issues.append(f"{label} advanced during the FP-001 status successor")
     if "FP001_RECONCILIATION_REQUIRED: REQUIRED / NEXT / NOT PERFORMED" in stage:
@@ -4972,7 +5606,9 @@ def _check_fp001_pmr_reconciliation(
         issues.append("Communications dossier semantic body changed during status promotion")
 
     readme_route = (
-        "Current programme status is in Open Work v1.2.66."
+        "Current programme status is in Open Work v1.2.67."
+        if reconciliation_certified_current
+        else "Current programme status is in Open Work v1.2.66."
         if reconciliation_candidate_current
         else "Current programme status is in Open Work v1.2.65."
         if audit_promotion_current
@@ -5027,6 +5663,7 @@ def _check_fp001_pmr_reconciliation(
         )
     readme_active_routes = (
         "4. " + chr(96) + (
+            "02_OPEN_WORK_v1.2.67.md" if reconciliation_certified_current else
             "02_OPEN_WORK_v1.2.66.md" if reconciliation_candidate_current else
             "02_OPEN_WORK_v1.2.65.md" if audit_promotion_current else
             "02_OPEN_WORK_v1.2.64.md" if audit_candidate_review_current else
@@ -5034,6 +5671,7 @@ def _check_fp001_pmr_reconciliation(
             "02_OPEN_WORK_v1.2.62.md" if adjudication_current else "02_OPEN_WORK_v1.2.61.md"
         ) + chr(96),
         chr(96) + (
+            "working/DELIVERY_ATLAS_WORKING_v0.4.9.md" if reconciliation_certified_current else
             "working/DELIVERY_ATLAS_WORKING_v0.4.8.md" if reconciliation_candidate_current else
             "working/DELIVERY_ATLAS_WORKING_v0.4.7.md" if audit_promotion_current else
             "working/DELIVERY_ATLAS_WORKING_v0.4.6.md" if audit_candidate_review_current else
@@ -5041,6 +5679,7 @@ def _check_fp001_pmr_reconciliation(
             "working/DELIVERY_ATLAS_WORKING_v0.4.4.md" if adjudication_current else "working/DELIVERY_ATLAS_WORKING_v0.4.3.md"
         ) + chr(96) + " — derived Delivery Atlas",
         chr(96) + (
+            "working/HARDEN-02_CONTRACT_WORKING_v0.5.11.md" if reconciliation_certified_current else
             "working/HARDEN-02_CONTRACT_WORKING_v0.5.10.md" if reconciliation_candidate_current else
             "working/HARDEN-02_CONTRACT_WORKING_v0.5.9.md" if audit_promotion_current else
             "working/HARDEN-02_CONTRACT_WORKING_v0.5.8.md" if audit_candidate_review_current else
@@ -5048,6 +5687,7 @@ def _check_fp001_pmr_reconciliation(
             "working/HARDEN-02_CONTRACT_WORKING_v0.5.6.md" if adjudication_current else "working/HARDEN-02_CONTRACT_WORKING_v0.5.5.md"
         ) + chr(96) + " — preserves certified HARDEN-02",
         chr(96) + (
+            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.11.md" if reconciliation_certified_current else
             "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md" if reconciliation_candidate_current else
             "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md" if audit_promotion_current else
             "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md" if audit_candidate_review_current else
@@ -5106,7 +5746,7 @@ def _check_fp001_pmr_reconciliation(
     ):
         issues.append("Open Work retains a live Communications work-start state after promotion")
 
-    atlas_version = "0.4.8" if reconciliation_candidate_current else "0.4.7" if audit_promotion_current else "0.4.6" if audit_candidate_review_current else "0.4.5" if audit_work_start_current else "0.4.4" if adjudication_current else "0.4.3"
+    atlas_version = "0.4.9" if reconciliation_certified_current else "0.4.8" if reconciliation_candidate_current else "0.4.7" if audit_promotion_current else "0.4.6" if audit_candidate_review_current else "0.4.5" if audit_work_start_current else "0.4.4" if adjudication_current else "0.4.3"
     atlas_path = docs / "working" / f"DELIVERY_ATLAS_WORKING_v{atlas_version}.md"
     atlas = atlas_path.read_text(encoding="utf-8") if atlas_path.is_file() else ""
     atlas_header = _markdown_header_metadata(atlas, f"# Delivery Atlas working v{atlas_version}")
@@ -5119,7 +5759,7 @@ def _check_fp001_pmr_reconciliation(
         or len(atlas_predecessors) != 1
         or all_atlas_predecessors != atlas_predecessors
         or not atlas_predecessors[0].startswith(
-            ("`archive/DELIVERY_ATLAS_WORKING_v0.4.7.md`" if reconciliation_candidate_current else "`archive/DELIVERY_ATLAS_WORKING_v0.4.6.md`" if audit_promotion_current else "`archive/DELIVERY_ATLAS_WORKING_v0.4.5.md`" if audit_candidate_review_current else "`archive/DELIVERY_ATLAS_WORKING_v0.4.4.md`") if audit_work_start_current else
+            ("`archive/DELIVERY_ATLAS_WORKING_v0.4.8.md`" if reconciliation_certified_current else "`archive/DELIVERY_ATLAS_WORKING_v0.4.7.md`" if reconciliation_candidate_current else "`archive/DELIVERY_ATLAS_WORKING_v0.4.6.md`" if audit_promotion_current else "`archive/DELIVERY_ATLAS_WORKING_v0.4.5.md`" if audit_candidate_review_current else "`archive/DELIVERY_ATLAS_WORKING_v0.4.4.md`") if audit_work_start_current else
             "`archive/DELIVERY_ATLAS_WORKING_v0.4.3.md`" if adjudication_current else "`archive/DELIVERY_ATLAS_WORKING_v0.4.2.md`"
         )
     ):
@@ -5131,7 +5771,7 @@ def _check_fp001_pmr_reconciliation(
         or len(atlas_transitions) != 1
         or all_atlas_transitions != atlas_transitions
         or not atlas_transitions[0].startswith(
-            ("`v0.4.7 → v0.4.8`" if reconciliation_candidate_current else "`v0.4.6 → v0.4.7`" if audit_promotion_current else "`v0.4.5 → v0.4.6`" if audit_candidate_review_current else "`v0.4.4 → v0.4.5`") if audit_work_start_current else
+            ("`v0.4.8 → v0.4.9`" if reconciliation_certified_current else "`v0.4.7 → v0.4.8`" if reconciliation_candidate_current else "`v0.4.6 → v0.4.7`" if audit_promotion_current else "`v0.4.5 → v0.4.6`" if audit_candidate_review_current else "`v0.4.4 → v0.4.5`") if audit_work_start_current else
             "`v0.4.3 → v0.4.4`" if adjudication_current else "`v0.4.2 → v0.4.3`"
         )
     ):
@@ -5139,6 +5779,7 @@ def _check_fp001_pmr_reconciliation(
             "current Atlas artifact lineage has a missing, duplicate, misplaced or incorrect Atlas metadata declaration for SemVer transition"
         )
     current_open_work_route = (
+        "docs/00_platform/02_OPEN_WORK_v1.2.67.md" if reconciliation_certified_current else
         "docs/00_platform/02_OPEN_WORK_v1.2.66.md" if reconciliation_candidate_current else
         "docs/00_platform/02_OPEN_WORK_v1.2.65.md" if audit_promotion_current else
         "docs/00_platform/02_OPEN_WORK_v1.2.64.md" if audit_candidate_review_current else
@@ -5167,14 +5808,14 @@ def _check_fp001_pmr_reconciliation(
     ):
         issues.append("current Delivery Atlas route is stale or omits the Identity or Communications promotion")
 
-    harden_version = "0.5.10" if reconciliation_candidate_current else "0.5.9" if audit_promotion_current else "0.5.8" if audit_candidate_review_current else "0.5.7" if audit_work_start_current else "0.5.6" if adjudication_current else "0.5.5"
+    harden_version = "0.5.11" if reconciliation_certified_current else "0.5.10" if reconciliation_candidate_current else "0.5.9" if audit_promotion_current else "0.5.8" if audit_candidate_review_current else "0.5.7" if audit_work_start_current else "0.5.6" if adjudication_current else "0.5.5"
     harden_path = docs / "working" / f"HARDEN-02_CONTRACT_WORKING_v{harden_version}.md"
     harden = harden_path.read_text(encoding="utf-8") if harden_path.is_file() else ""
     harden_header = _markdown_header_metadata(harden, f"# HARDEN-02_CONTRACT_WORKING_v{harden_version}.md")
     harden_metadata_validators = {
         "Plan / contract version": lambda value: value == f"`v{harden_version}`",
         "Current predecessor": lambda value: value.startswith(
-            ("`archive/HARDEN-02_CONTRACT_WORKING_v0.5.9.md`" if reconciliation_candidate_current else "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md`" if audit_promotion_current else "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.7.md`" if audit_candidate_review_current else "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.6.md`") if audit_work_start_current else
+            ("`archive/HARDEN-02_CONTRACT_WORKING_v0.5.10.md`" if reconciliation_certified_current else "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.9.md`" if reconciliation_candidate_current else "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md`" if audit_promotion_current else "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.7.md`" if audit_candidate_review_current else "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.6.md`") if audit_work_start_current else
             "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.5.md`" if adjudication_current else "`archive/HARDEN-02_CONTRACT_WORKING_v0.5.4.md`"
         ),
         "Earlier historical status predecessor": lambda value: value.startswith(
@@ -5189,10 +5830,10 @@ def _check_fp001_pmr_reconciliation(
         == "`90f96ba3452c95112bf6ec4ce5bb897676adbed4`",
         "v0.5.2 status-successor base main SHA": lambda value: value
         == "`0473cd69416f72fd94f2cee24a4d02c7f4fe0992`",
-        ("v0.5.10 current-status successor base main SHA" if reconciliation_candidate_current else "v0.5.9 current-status successor base main SHA" if audit_promotion_current else "v0.5.8 routing-successor base main SHA" if audit_candidate_review_current else
+        ("v0.5.11 current-status successor base main SHA" if reconciliation_certified_current else "v0.5.10 current-status successor base main SHA" if reconciliation_candidate_current else "v0.5.9 current-status successor base main SHA" if audit_promotion_current else "v0.5.8 routing-successor base main SHA" if audit_candidate_review_current else
          "v0.5.7 routing-successor base main SHA" if audit_work_start_current else
          "v0.5.6 routing-successor base main SHA" if adjudication_current else "v0.5.5 routing-successor base main SHA"): lambda value: value
-        == ("`5d282ecca4e13b621c7f96c05c47d6fac43ec1bd`" if reconciliation_candidate_current else "`3566f1353ef34af58773aa13c6f5bd61d2613d96`" if audit_promotion_current else "`5f5a994e48d9458aaa6397044b3af4d72c5d5e81`" if audit_candidate_review_current else
+        == ("`f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3`" if reconciliation_certified_current else "`5d282ecca4e13b621c7f96c05c47d6fac43ec1bd`" if reconciliation_candidate_current else "`3566f1353ef34af58773aa13c6f5bd61d2613d96`" if audit_promotion_current else "`5f5a994e48d9458aaa6397044b3af4d72c5d5e81`" if audit_candidate_review_current else
             "`332d51f19d77430fe4e95911920fe0c87cab524a`" if audit_work_start_current else
             "`6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3`" if adjudication_current else "`3f09bc91199e74d27645ebbb37d45c4831340952`"),
     }
@@ -5225,6 +5866,7 @@ def _check_fp001_pmr_reconciliation(
     harden_current = harden.split("## 21. Current execution certification and next stage", 1)
     harden_current = harden_current[1] if len(harden_current) == 2 else ""
     expected_harden_open_work = (
+        "Open Work v1.2.67" if reconciliation_certified_current else
         "Open Work v1.2.66" if reconciliation_candidate_current else
         "Open Work v1.2.65" if audit_promotion_current else
         "Open Work v1.2.64" if audit_candidate_review_current else
@@ -5234,9 +5876,11 @@ def _check_fp001_pmr_reconciliation(
     if expected_harden_open_work not in harden_current or "FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED" not in harden_current or "IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT" not in harden_current or "IDENTITY v0.1.4 CURRENT-STATUS PROMOTION SOURCE: PR #77 STATUS SUCCESSOR; PR #76 CANDIDATE AND POST-MERGE CERTIFICATION EVIDENCE: COMPLETE" not in harden_current:
         issues.append(f"current HARDEN-02 v{harden_version} status route is stale or omits completed Identity promotion")
     if audit_promotion_current and (
-        "Audit & Evidence dossier v0.1.0 is REQUIRED / COMPLETE / CERTIFIED / CURRENT" not in harden_current
+        "AUDIT & EVIDENCE DOSSIER: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.0" not in harden_current
         or (
-            "Phase 7B reconciliation is IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"
+            "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT"
+            if reconciliation_certified_current
+            else "Phase 7B reconciliation is IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING"
             if reconciliation_candidate_current
             else "Phase 7B reconciliation is NEXT / NOT_STARTED"
         ) not in harden_current
@@ -5259,7 +5903,11 @@ def _check_fp001_pmr_reconciliation(
         "COMMUNICATIONS v0.1.0 PROMOTION: COMPLETE / CERTIFIED / CURRENT" not in harden_current
         or "COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0" not in harden_current
         or "COMMUNICATIONS FINALISATION: BLOCKED / STOP" not in harden_current
-        or "PHASE 7C: BLOCKED / NOT_STARTED" not in harden_current
+        or (
+            "PHASE 7C: NEXT / NOT_STARTED" not in harden_current
+            if reconciliation_certified_current
+            else "PHASE 7C: BLOCKED / NOT_STARTED" not in harden_current
+        )
         or "Identity dossier v0.1.3 are COMPLETE / CERTIFIED" in harden_current
     ):
         issues.append("current HARDEN-02 route does not record Communications promotion or advances a later gate")
@@ -5284,6 +5932,10 @@ def _check_fp001_pmr_reconciliation(
         issues.append("current HARDEN-02 §20 still denies Communications dossier promotion that is now recorded as complete")
 
     stale_predecessor_routes = (
+        ("Open Work v1.2.66", r"(?<!archive/)02_OPEN_WORK_v1\.2\.66\.md"),
+        ("Delivery Atlas v0.4.8", r"(?<!archive/)DELIVERY_ATLAS_WORKING_v0\.4\.8\.md"),
+        ("FP-001 skeleton v0.1.10", r"(?<!archive/)FP-001_FEATURE_PACK_SKELETON_WORKING_v0\.1\.10\.md"),
+        ("HARDEN-02 v0.5.10", r"(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\.5\.10\.md"),
         ("Open Work v1.2.59", r"(?<!archive/)02_OPEN_WORK_v1\.2\.58\.md"),
         ("Delivery Atlas v0.4.0", r"(?<!archive/)DELIVERY_ATLAS_WORKING_v0\.4\.0\.md"),
         ("HARDEN-02 v0.5.2", r"(?<!archive/)HARDEN-02_CONTRACT_WORKING_v0\.5\.2\.md"),
@@ -5316,6 +5968,7 @@ def _check_fp001_pmr_reconciliation(
         ("Identity dossier", dossier_text),
         ("Delivery Atlas", atlas),
         ("HARDEN-02 current route", harden_current),
+        ("Phase 7B reconciliation current route", reconciliation_text),
     )
     for predecessor, stale_pattern in stale_predecessor_routes:
         if stale_pattern not in configured_stale_patterns:
@@ -5612,6 +6265,7 @@ def run_audit(
         _check_product_semantics(root, entries, integrity_rules, report)
         _check_fp001_pmr_reconciliation(root, manifest, integrity_rules, report)
         _check_fp001_phase7b_candidate(root, manifest, integrity_rules, report)
+        _check_fp001_phase7b_certification_current(root, manifest, integrity_rules, report)
     else:
         _record_check(report, "fixture_graph_scope", True, "fixture graph checks use explicit reduced expectations")
 
