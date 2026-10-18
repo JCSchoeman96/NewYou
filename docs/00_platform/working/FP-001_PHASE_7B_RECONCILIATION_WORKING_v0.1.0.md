@@ -12,7 +12,7 @@ NOT DEVELOPMENT-ENTRY AUTHORITY
 
 **Artifact version:** v0.1.0.
 
-**Execution tracker:** issue [#120](https://github.com/JCSchoeman96/NewYou/issues/120), open; linked to #111, completed #114 and completed #116.
+**Execution tracker:** issue [#120](https://github.com/JCSchoeman96/NewYou/issues/120), CLOSED / COMPLETED; it records the Phase 7B execution/control history and remains linked to #111, completed #114 and completed #116.
 
 **Baseline:** `main@5d282ecca4e13b621c7f96c05c47d6fac43ec1bd`, tree `5f7710b33eaba2055dcae1eca68abc731c94cc50`.
 
@@ -199,6 +199,9 @@ BLOCKING_DOSSIER_CONTRADICTION: NONE
 The independent exact-head review approved the candidate unchanged. PR #121 merged that exact candidate, and the resulting-main workflow passed. The archived file is the immutable reviewed candidate. This working file is its v0.1.0 certification/current-status successor. The status change does not reconsider the reconciliation or alter its substantive body.
 
 ## 9. Certification evidence and current route
+
+PR #122 supplied the current-status successor merge after PR #121 certified the reconciliation candidate. PR #122 reviewed head `5f0747b766b76df24d764f88774cf73315e61c01` merged unchanged as resulting main `3f4c9bf564b2b011e96171b8664428423eeba558`, tree `c7a505dbf05e707f1bf256394f59f27cc537d8ce`, with parents `f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3` and `5f0747b766b76df24d764f88774cf73315e61c01`. Issue #120 is CLOSED / COMPLETED. This updates status and provenance only; reconciliation v0.1.0 and its semantic body remain unchanged.
+
 
 | Evidence | Result |
 |---|---|
