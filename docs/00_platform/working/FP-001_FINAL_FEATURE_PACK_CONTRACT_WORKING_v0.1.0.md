@@ -249,7 +249,84 @@ evidence truth = Audit owned
 
 Analytics remains a consumer of approved derived information only. It cannot grant access, prove identity, verify an email, allocate a PMR, establish consent, publish content, determine delivery truth, or create Audit truth. It has no command path to a source Domain and no direct Audit evidence feed under FP-001. No `CAP-027` relationship is introduced.
 
-## P. Acceptance and exit criteria
+## P. Architectural proof requirement
+
+This contract freezes the claims that Phase 8 proof must exercise. The proof vehicle and final proof classification remain NOT FINALISED. Before executable proof begins, the later gate must select either `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` under Open Work §§7C-8 and OQ-034. No choice is made here.
+
+The proof must use the selected Identity architecture and the real authorised path. It must cover the Ash policy/application action, source-Domain ownership, durable state, the required transaction and concurrency boundaries, durable async consequences, restricted Audit evidence, and current session authority. It must show that delivery, browser state, Analytics projection, or Audit evidence cannot impersonate source-Domain truth.
+
+The required proof obligations are:
+
+- registration-to-verification-to-login, including duplicate or reordered requests, replay, and expiry;
+- recovery, revocation, primary-email change, and PMR assignment or reconciliation under competing or repeated requests;
+- session authority after restart or reconnect, including current policy and revocation checks;
+- non-enumerating abuse under registration, login, recovery, and support pressure;
+- consent changes during protected actions, with Privacy authority re-read at the required boundary;
+- provider ambiguity or delivery backlog without guessed verification, recovery, or access success; and
+- restricted Audit evidence that records the accepted source consequence without secrets, excess payload, or a second business truth.
+
+`FLOW-01` is supporting evidence. Its `PASS_WITH_DOWNSTREAM_GATES` result does not close these executable obligations. If the later gate selects `REUSE_EXISTING_PROOF`, it must show that existing evidence exercises this same architecture and all applicable obligations. If it selects `NEW_TRACER_BULLET`, the tracer must prove a materially unproven architectural claim through the real path. It may reduce breadth but cannot bypass architecture, policy, persistence, Domain boundaries, idempotency, async, or Audit requirements.
+
+A failed proof stops vertical expansion. Correct an architecture or Domain-law defect through its owner before proceeding.
+
+PROOF CLASSIFICATION: NOT FINALISED
+
+No proof vehicle is selected. No TB ID or proof artifact is created. Phase 8 remains UNAUTHORISED. The source basis is Open Work v1.2.69 §§7C-8, Skeleton v0.1.13 §§10.7, 15-16, Identity dossier v0.1.4 §V, Communications dossier v0.1.0 §19, and the certified Phase 7B reconciliation.
+
+## Q. Vertical Slice map
+
+This is an outcome-level planning map. Its labels are not authorized VS IDs, approved tasks, or implementation modules. Together, the slices cover the FP-001 outcome in section B.
+
+1. **Public entry to verified individual Account.** Cover Afrikaans and English entry, governed safety and product understanding, the 18+ gate, required terms/privacy acceptance, individual Account creation, one canonical PMR, and email verification. The path includes approved Content, Identity-owned Account and PMR truth, Communications-owned delivery evidence, Privacy purpose boundaries, Audit evidence, and derived-only Analytics.
+2. **Sign-in and protected access.** Cover current credential and session authority, actor and policy checks, current grants, revocation, step-up where required, and the boundary that keeps unfinished product spaces closed. Restart, reconnect, stale views, duplicate actions, and current consent or privacy state remain part of the acceptance path.
+3. **Account recovery and primary-email change.** Cover purpose-bound proof, current Identity authority, session and credential consequences, safe denial, current Communications eligibility, delivery ambiguity, retry, expiry, supersession, revocation, and competing participant or support actions.
+4. **Controlled support/admin and duplicate reconciliation.** Cover bounded account-access support, scoped privileged review, conflict handling, one canonical Account and active PMR after reconciliation, permanent non-reuse of retired PMRs, and restricted evidence for each accepted action.
+
+Every later slice task must cover the applicable interface/LiveView behaviour, authorised action, actor/policy and field-policy enforcement, Domain invariants, durable state, async consequences, PubSub observation, Audit and observability, concurrency/idempotency, required database constraints/indexes, safe cache invalidation, automated tests, and acceptance criteria. The later task must also record exact scope, authoritative references, affected files/resources/actions/data, security/privacy and performance obligations, applicable STOP conditions, and its own acceptance evidence as required by Open Work §9.
+
+This map does not split a slice into pages, screens, tables, or resource modules. No VS IDs, TOONs, executable tasks, or Phase 8 authority are created. Source basis: Open Work v1.2.69 §9, Skeleton v0.1.13 §§5-7, and the certified Phase 7B seam map.
+
+## R. Horizontal hardening requirements
+
+Horizontal hardening strengthens already-correct capabilities after the relevant vertical behaviour has passed its own correctness, privacy, and security checks. It must use evidence from measurements, failure tests, security review, pilot operation, or explicit release gates. It must not compensate for missing slice correctness. Do not create hardening work merely because a technology exists.
+
+The applicable cross-cutting obligations are:
+
+- **Security/privacy.** Recheck least privilege, current actor and field policies, non-enumeration, purpose and consent boundaries, data minimisation, locale/content eligibility, safe error handling, secret redaction, and restricted operational and Audit access.
+- **Concurrency/idempotency.** Exercise duplicate, replayed, reordered, and competing registration, verification, recovery, primary-email change, support, reconciliation, and PMR allocation or merge actions. A retry returns or reconciles the committed consequence without creating another logical effect.
+- **Async recovery.** Test durable intent, duplicate-safe execution, honest pending/failure state, provider backlog or failure, crash/restart recovery, and current eligibility rechecks. Delivery never becomes Identity verification or recovery truth.
+- **Evidence.** Check E1 admission, selected E2 durability and materialisation, and E3 restricted access/correction paths. Restricted Audit evidence remains minimal, source-correlated, and separate from source-Domain state. Telemetry failure cannot change business authority.
+- **Resilience.** Test process/node restart, reconnect and multi-node reconstruction, provider failure, backlog or queue saturation, restore/reconciliation, and degraded telemetry. A failed dependency can reduce visibility or availability but cannot fabricate Account, verification, access, consent, PMR, delivery, or Audit truth.
+
+Hardening work remains evidence-led. Applicable examples from Open Work §10 include load and stress tests, queue saturation, provider failure, failover/restore, security review, telemetry strengthening, and multi-node stress. No HH ID, implementation task, mechanism, or release result is assigned here. Source basis: Open Work v1.2.69 §10, Skeleton v0.1.13 §§11, 15, Identity dossier v0.1.4 §§P, V, Communications dossier v0.1.0 §§16, 19, and Audit dossier v0.1.0 §§11, 15.
+
+## S. Performance envelope
+
+The envelope carries forward the pressure areas already recorded in Skeleton v0.1.13 §11 and the certified dossiers. It sets no new numeric target, deployment topology, queue, cache, worker, provider, or database configuration.
+
+- **Password hashing and authentication bursts.** The certified Identity dossier selects Argon2id with benchmarked bounded cost. Registration, login, and recovery bursts must preserve credential protection, bounded resource use, non-enumerating outcomes, and recoverable admission. Identity dossier §P retains its existing p90 ≤100ms target for suitable hot interactions, excluding password hashing and provider latency, with no scans plus burst and multi-node tests. That dossier-scoped target does not create a new FP-001-wide latency threshold.
+- **Abuse and rate pressure.** Layered controls must preserve privacy, non-enumeration, and multi-node correctness. Thresholds, escalation, and false-positive recovery remain under OQ-035.
+- **Verification delivery backlog.** Verification intent cannot be lost, resend must be duplicate-safe, and participant state must report pending or failure honestly. Backlog age and recovery behaviour need later evidence. Delivery backlog cannot establish verification truth. Provider/channel policy and exact retry behavior remain under OQ-036.
+- **Session reconstruction after restart or reconnect.** Current session, role, grant, and revocation authority must reconstruct without relying on local presentation state or a cache that bypasses revocation.
+- **PMR allocation and merge.** Measure allocation and reconciliation under collision, concurrency, retry, duplicate merge, and permanent non-reuse conditions. Preserve one canonical active PMR. Its representation remains unresolved under `ARQ-IAM-013`.
+- **Bounded collections and state.** Keep active session/device lists, message intent and attempt work, evidence queries, recovery/support views, and operational metrics bounded or paginated under the existing contracts. Bound memory, query, backlog, retry, and cardinality growth without dropping required evidence or changing truth.
+- **Cross-cutting failure load.** Measure throughput, latency, resource pressure, lock/pool contention, retry volume, and recovery behaviour for representative bursts, provider outage/backlog, restart/reconnect, and multi-node activity. OQ-039 still requires an implementation-grade performance/scaling map when an affected action reaches a later implementation boundary.
+
+No new numeric thresholds are added beyond the cited Identity dossier target. In particular, this contract does not set new hash costs, abuse limits, queue/backlog limits, throughput targets, RPO/RTO values, or collection sizes. A later authority or implementation proof must define each value where required. Source basis: Skeleton v0.1.13 §11, Identity dossier v0.1.4 §§P-Q and V, Communications dossier v0.1.0 §16, and Open Work v1.2.69 §§7B, 7C, 10-11.
+
+## T. Future extension hooks
+
+FP-001 preserves the owner-mediated Domain seams already recorded in the certified Phase 7B reconciliation. Each later feature must keep source authority with its owning Domain. The contract adds no new Domain, capability, Feature Pack, or shared-write owner.
+
+- Identity remains the Account, session, verification, recovery, and PMR authority. Social login, passkeys, public/external bearer clients, native clients, generic tenancy, and operator-work capabilities remain future-only.
+- Privacy & Consent retains purpose, retention, hold, deletion, and lawful-disposition authority. Full CAP-004 export/deletion fulfillment and reusable data-rights orchestration remain outside FP-001 and on their existing OQ-030/OQ-031/OQ-032 routes.
+- Communications keeps MessageIntent, DeliveryAttempt, provider evidence, and delivery truth separate from Identity truth. `OQ-036` still owns provider, channel, failover, and retry policy. No vendor, provider API, or future channel is selected.
+- Content & Media retains approval and version ownership. Analytics remains derived-only and cannot become a source of identity, consent, content, delivery, or Audit truth.
+- Commercial work, purchase/payment/entitlement, health intake, personalised plans, programme/community/live-session work, and FP-002 outcomes remain separately scoped. FP-001 does not add support for those spaces.
+
+These hooks keep approved seams available for later governed work. They do not authorise the deferred capabilities. A later scope change must return through the applicable authority, Domain owner, OQ, and Feature Pack gate. Source basis: Identity dossier v0.1.4 §§F, T, Y; Communications dossier v0.1.0 §§16, 18-19; Audit dossier v0.1.0 §§1-3, 11; and Phase 7B reconciliation §§2, 4.
+
+## U. Acceptance and exit criteria
 
 Each criterion is an implementation-independent observable result. A later proof must show the result and prohibited consequence without treating this contract as proof execution.
 
@@ -273,7 +350,7 @@ Each criterion is an implementation-independent observable result. A later proof
 
 Phase 7C exit for this candidate means only that the contract is authored and ready for fresh independent exact-head review. Certification, current-status promotion, proof classification, and Phase 8 entry are separate later gates.
 
-## Q. Downstream gates
+## V. Downstream gates
 
 - **OQ-029:** Privacy/legal authority owns the exact retention schedule and legal exceptions. No exact duration is required or invented here. If any contract clause requires a numeric or exact retention duration required by legal authority but absent from current authority, STOP and route the missing authority before claiming the contract complete.
 - **OQ-030 / OQ-031 / OQ-032:** External processor deletion, deletion-safe restore, and export/deletion orchestration remain on their later export/deletion routes. FP-001 does not activate full reusable data-rights orchestration.
@@ -286,7 +363,7 @@ Phase 7C exit for this candidate means only that the contract is authored and re
 
 Exact public copy, content inventory, provider choice, channel choice, retry schedule, deployment representation, and technical performance tuning are configuration or implementation proof where current authority already fixes the business meaning. Their later selection does not create an authority blocker. Missing consequential semantics remain a STOP, not configuration.
 
-## R. STOP conditions
+## W. STOP conditions
 
 Stop and route before treating this contract as complete if authoring or review discovers any of the following:
 

@@ -2719,7 +2719,42 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             replace_in_candidate(
                 sentence,
                 "Retention questions remain on their applicable downstream authority routes.",
-                section="## Q. Downstream gates",
+                section="## V. Downstream gates",
+            )(root)
+
+        def remove_architectural_proof_obligation(root: Path) -> None:
+            replace_in_candidate(
+                "registration-to-verification-to-login",
+                "registration-to-login",
+                section="## P. Architectural proof requirement",
+            )(root)
+
+        def remove_vertical_slice_outcome(root: Path) -> None:
+            replace_in_candidate(
+                "Public entry to verified individual Account",
+                "Public entry",
+                section="## Q. Vertical Slice map",
+            )(root)
+
+        def remove_hardening_obligation(root: Path) -> None:
+            replace_in_candidate(
+                "Concurrency/idempotency",
+                "concurrency only",
+                section="## R. Horizontal hardening requirements",
+            )(root)
+
+        def remove_performance_pressure(root: Path) -> None:
+            replace_in_candidate(
+                "OQ-035",
+                "threshold decision pending",
+                section="## S. Performance envelope",
+            )(root)
+
+        def remove_extension_boundary(root: Path) -> None:
+            replace_in_candidate(
+                "Social login",
+                "optional identity extension",
+                section="## T. Future extension hooks",
             )(root)
 
         def alter_reconciliation_archive(root: Path) -> None:
@@ -2777,6 +2812,11 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             ),
             ("Phase 7B prerequisite regression", phase7b_prerequisite_regression, "fp001_phase7c_candidate_lifecycle"),
             ("OQ-029 STOP removal", remove_oq029_stop, "fp001_phase7c_candidate_downstream_gates"),
+            ("architectural proof obligation removal", remove_architectural_proof_obligation, "fp001_phase7c_candidate_delivery_dimensions"),
+            ("Vertical Slice outcome removal", remove_vertical_slice_outcome, "fp001_phase7c_candidate_delivery_dimensions"),
+            ("horizontal-hardening obligation removal", remove_hardening_obligation, "fp001_phase7c_candidate_delivery_dimensions"),
+            ("performance pressure removal", remove_performance_pressure, "fp001_phase7c_candidate_delivery_dimensions"),
+            ("future extension boundary removal", remove_extension_boundary, "fp001_phase7c_candidate_delivery_dimensions"),
             ("immutable reconciliation mutation", alter_reconciliation_archive, "fp001_phase7c_candidate_immutable_inputs"),
             ("retired current-path reintroduction", reintroduce_retired_current_paths, "fp001_phase7c_candidate_current_routes"),
         )

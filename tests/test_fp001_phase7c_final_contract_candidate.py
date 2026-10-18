@@ -220,15 +220,153 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         ):
             self.assertIn(required, self.contract)
 
+    def test_architectural_proof_obligations_are_frozen_without_classification(self):
+        section = _section(
+            self.contract,
+            "## P. Architectural proof requirement",
+            "## Q. Vertical Slice map",
+        )
+        for requirement in (
+            "REUSE_EXISTING_PROOF",
+            "NEW_TRACER_BULLET",
+            "PROOF CLASSIFICATION: NOT FINALISED",
+            "registration-to-verification-to-login",
+            "duplicate or reordered requests",
+            "session authority after restart or reconnect",
+            "non-enumerating abuse",
+            "consent changes during protected actions",
+            "provider ambiguity",
+            "restricted Audit evidence",
+            "FLOW-01",
+            "No TB ID or proof artifact is created",
+            "A failed proof stops vertical expansion",
+            "Correct an architecture or Domain-law defect through its owner",
+        ):
+            with self.subTest(requirement=requirement):
+                self.assertIn(requirement.casefold(), section.casefold())
+
+    def test_vertical_slice_map_covers_the_complete_outcome_and_required_layers(self):
+        section = _section(
+            self.contract,
+            "## Q. Vertical Slice map",
+            "## R. Horizontal hardening requirements",
+        )
+        for outcome in (
+            "Outcome-level planning map",
+            "not authorized VS IDs",
+            "Public entry to verified individual Account",
+            "Afrikaans and English",
+            "18+",
+            "canonical PMR",
+            "email verification",
+            "Sign-in and protected access",
+            "session authority",
+            "unfinished product spaces",
+            "Account recovery and primary-email change",
+            "Controlled support/admin and duplicate reconciliation",
+        ):
+            with self.subTest(outcome=outcome):
+                self.assertIn(outcome.casefold(), section.casefold())
+        for layer in (
+            "interface/LiveView",
+            "authorised action",
+            "actor/policy",
+            "domain invariants",
+            "durable state",
+            "async consequences",
+            "PubSub",
+            "Audit",
+            "observability",
+            "concurrency/idempotency",
+            "database constraints/indexes",
+            "cache invalidation",
+            "automated tests",
+            "acceptance criteria",
+        ):
+            with self.subTest(layer=layer):
+                self.assertIn(layer.casefold(), section.casefold())
+        self.assertNotIn("page-by-page", section.casefold())
+        self.assertNotIn("resource-by-resource", section.casefold())
+
+    def test_horizontal_hardening_obligations_are_evidence_led_and_cross_cutting(self):
+        section = _section(
+            self.contract,
+            "## R. Horizontal hardening requirements",
+            "## S. Performance envelope",
+        )
+        for requirement in (
+            "already-correct capabilities",
+            "measurements",
+            "failure tests",
+            "security review",
+            "pilot operation",
+            "release gates",
+            "security/privacy",
+            "concurrency/idempotency",
+            "async recovery",
+            "provider backlog or failure",
+            "restricted Audit evidence",
+            "process/node restart",
+            "multi-node",
+            "telemetry failure",
+            "Do not create hardening work merely because a technology exists",
+        ):
+            with self.subTest(requirement=requirement):
+                self.assertIn(requirement.casefold(), section.casefold())
+
+    def test_performance_envelope_carries_source_pressures_without_new_thresholds(self):
+        section = _section(
+            self.contract,
+            "## S. Performance envelope",
+            "## T. Future extension hooks",
+        )
+        for requirement in (
+            "Argon2id",
+            "p90 ≤100ms",
+            "excluding password hashing and provider latency",
+            "registration, login, and recovery bursts",
+            "verification delivery backlog",
+            "abuse and rate pressure",
+            "session reconstruction after restart or reconnect",
+            "PMR allocation and merge",
+            "bounded collections",
+            "OQ-035",
+            "OQ-039",
+            "No new numeric thresholds are added",
+        ):
+            with self.subTest(requirement=requirement):
+                self.assertIn(requirement.casefold(), section.casefold())
+
+    def test_future_extension_hooks_preserve_seams_and_exclude_deferred_work(self):
+        section = _section(
+            self.contract,
+            "## T. Future extension hooks",
+            "## U. Acceptance and exit criteria",
+        )
+        for hook in (
+            "owner-mediated Domain seams",
+            "OQ-036",
+            "social login",
+            "passkeys",
+            "full CAP-004 export/deletion",
+            "commercial work",
+            "native clients",
+            "generic tenancy",
+            "FP-002",
+            "adds no new Domain, capability, Feature Pack, or shared-write owner",
+        ):
+            with self.subTest(hook=hook):
+                self.assertIn(hook.casefold(), section.casefold())
+
     def test_oq029_retention_duration_is_fail_closed(self):
-        section = _section(self.contract, "## Q. Downstream gates", "## R. STOP conditions")
+        section = _section(self.contract, "## V. Downstream gates", "## W. STOP conditions")
         self.assertIn("OQ-029", section)
         self.assertIn("exact retention duration", section)
         self.assertIn("STOP", section)
         self.assertIn("route", section.lower())
 
     def test_downstream_open_questions_keep_their_governed_routes(self):
-        section = _section(self.contract, "## Q. Downstream gates", "## R. STOP conditions")
+        section = _section(self.contract, "## V. Downstream gates", "## W. STOP conditions")
         expectations = (
             ("OQ-030", "OQ-031", "OQ-032", "later export/deletion"),
             ("OQ-034", "resolved", "executable proof", "Phase 8"),
@@ -312,7 +450,7 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
     def test_privacy_content_and_analytics_boundaries_are_explicit(self):
         privacy = _section(self.contract, "## M. Privacy and minimisation contract", "## N. Content and bilingual contract")
         content = _section(self.contract, "## N. Content and bilingual contract", "## O. Analytics boundary")
-        analytics = _section(self.contract, "## O. Analytics boundary", "## P. Acceptance and exit criteria")
+        analytics = _section(self.contract, "## O. Analytics boundary", "## P. Architectural proof requirement")
         for token in ("purpose-bound", "consent", "terms/privacy acceptance", "exact retention periods", "OQ-029", "does not invent a duration", "exact retention duration"):
             self.assertIn(token.casefold(), privacy.casefold())
         for token in ("Afrikaans", "English", "approved", "locale provenance", "machine translation", "withdrawn", "superseded"):
@@ -321,7 +459,7 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
             self.assertIn(token.casefold(), analytics.casefold())
 
     def test_acceptance_criteria_are_observable_and_traced(self):
-        section = _section(self.contract, "## P. Acceptance and exit criteria", "## Q. Downstream gates")
+        section = _section(self.contract, "## U. Acceptance and exit criteria", "## V. Downstream gates")
         rows = [line for line in section.splitlines() if line.startswith("| AC-")]
         self.assertGreaterEqual(len(rows), 8)
         self.assertEqual(len(rows), len({row.split("|")[1].strip() for row in rows}))
@@ -333,7 +471,7 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
             self.assertTrue(any(anchor in cells[3] for anchor in ("Roadmap", "Product", "Decision", "Architecture", "Domain", "Dossier", "S-")), row)
 
     def test_configuration_is_not_misclassified_as_missing_product_meaning(self):
-        section = _section(self.contract, "## Q. Downstream gates", "## R. STOP conditions")
+        section = _section(self.contract, "## V. Downstream gates", "## W. STOP conditions")
         self.assertIn("configuration", section.lower())
         self.assertIn("exact public copy", section.casefold())
         self.assertIn("provider choice", section)

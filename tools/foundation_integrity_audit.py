@@ -4674,6 +4674,137 @@ def _check_fp001_phase7c_candidate(
         candidate_path,
     )
 
+    delivery_dimensions = (
+        (
+            "architectural proof requirement",
+            "## P. Architectural proof requirement",
+            "## Q. Vertical Slice map",
+            (
+                "reuse_existing_proof",
+                "new_tracer_bullet",
+                "proof classification: not finalised",
+                "registration-to-verification-to-login",
+                "duplicate or reordered requests",
+                "session authority after restart or reconnect",
+                "non-enumerating abuse",
+                "consent changes during protected actions",
+                "provider ambiguity",
+                "restricted audit evidence",
+                "flow-01",
+                "no tb id or proof artifact is created",
+                "a failed proof stops vertical expansion",
+                "correct an architecture or domain-law defect through its owner",
+            ),
+        ),
+        (
+            "Vertical Slice map",
+            "## Q. Vertical Slice map",
+            "## R. Horizontal hardening requirements",
+            (
+                "outcome-level planning map",
+                "not authorized vs ids",
+                "public entry to verified individual account",
+                "sign-in and protected access",
+                "account recovery and primary-email change",
+                "controlled support/admin and duplicate reconciliation",
+                "interface/liveview",
+                "authorised action",
+                "actor/policy",
+                "domain invariants",
+                "durable state",
+                "async consequences",
+                "pubsub",
+                "audit",
+                "observability",
+                "concurrency/idempotency",
+                "database constraints/indexes",
+                "cache invalidation",
+                "automated tests",
+                "acceptance criteria",
+                "no vs ids, toons, executable tasks",
+            ),
+        ),
+        (
+            "horizontal hardening requirements",
+            "## R. Horizontal hardening requirements",
+            "## S. Performance envelope",
+            (
+                "already-correct capabilities",
+                "measurements",
+                "failure tests",
+                "security review",
+                "pilot operation",
+                "release gates",
+                "security/privacy",
+                "concurrency/idempotency",
+                "async recovery",
+                "provider backlog or failure",
+                "restricted audit evidence",
+                "process/node restart",
+                "multi-node",
+                "telemetry failure",
+                "do not create hardening work merely because a technology exists",
+                "no hh id",
+            ),
+        ),
+        (
+            "performance envelope",
+            "## S. Performance envelope",
+            "## T. Future extension hooks",
+            (
+                "argon2id",
+                "p90 ≤100ms",
+                "excluding password hashing and provider latency",
+                "registration, login, and recovery bursts",
+                "verification delivery backlog",
+                "abuse and rate pressure",
+                "session reconstruction after restart or reconnect",
+                "pmr allocation and merge",
+                "bounded collections",
+                "oq-035",
+                "oq-039",
+                "no new numeric thresholds are added",
+            ),
+        ),
+        (
+            "future extension hooks",
+            "## T. Future extension hooks",
+            "## U. Acceptance and exit criteria",
+            (
+                "owner-mediated domain seams",
+                "oq-036",
+                "social login",
+                "passkeys",
+                "full cap-004 export/deletion",
+                "commercial work",
+                "native clients",
+                "generic tenancy",
+                "fp-002",
+                "adds no new domain, capability, feature pack, or shared-write owner",
+                "remain future-only",
+            ),
+        ),
+    )
+    dimension_issues: list[str] = []
+    for label, heading, next_heading, required_markers in delivery_dimensions:
+        start = candidate.find(heading)
+        end = candidate.find(next_heading, start + len(heading)) if start >= 0 else -1
+        if start < 0 or end < 0:
+            dimension_issues.append(f"candidate {label} section is missing or out of order")
+            continue
+        section = candidate[start:end].casefold()
+        missing = [marker for marker in required_markers if marker.casefold() not in section]
+        if missing:
+            dimension_issues.append(
+                f"candidate {label} contract is incomplete; missing {', '.join(missing)}"
+            )
+    check(
+        "fp001_phase7c_candidate_delivery_dimensions",
+        dimension_issues,
+        "proof obligations, outcome-level slices, evidence-led hardening, sourced performance pressures, and bounded extension hooks are explicit",
+        candidate_path,
+    )
+
     evidence_issues: list[str] = []
     archive_rel = expected_rule["reconciliation_archive_path"]
     archive = root / archive_rel
@@ -4705,7 +4836,7 @@ def _check_fp001_phase7c_candidate(
 
     gate_issues: list[str] = []
     try:
-        oq029 = candidate.split("## Q. Downstream gates", 1)[1].split("## R. STOP conditions", 1)[0]
+        oq029 = candidate.split("## V. Downstream gates", 1)[1].split("## W. STOP conditions", 1)[0]
     except IndexError:
         oq029 = ""
         gate_issues.append("candidate downstream-gate section is missing")
