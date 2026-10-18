@@ -187,14 +187,14 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         current_state = current_state or ""
         self.assertIn("- PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT.", current_state)
         self.assertIn(
-            "- Phase 7C: COMPLETE / CERTIFIED / CURRENT after the separate status successor merges",
+            "- PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
             current_state,
         )
-        self.assertIn("- PHASE 7C TRACKER #124: OPEN through promotion merge and resulting-main verification", current_state)
-        self.assertIn("Phase 7C contract v0.1.0: COMPLETE / CERTIFIED / CURRENT after the separate status successor merges", current_state)
-        self.assertIn("NEXT STAGE: ARCHITECTURAL PROOF CLASSIFICATION", current_state)
+        self.assertIn("- PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", current_state)
+        self.assertIn("FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT", current_state)
+        self.assertIn("NEXT GOVERNANCE ACTION: ARCHITECTURAL PROOF CLASSIFICATION", current_state)
         self.assertIn("PROOF CLASSIFICATION: NOT FINALISED", current_state)
-        self.assertIn("Phase 8/application implementation remains UNAUTHORISED", current_state)
+        self.assertIn("- PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED", current_state)
         self.assertNotRegex(
             current_state,
             r"(?i)\bphase\s+7c\b[^\n.!?]{0,100}\b(?:remains|is|still|currently)\s+blocked\s*/\s*not\s+started\b",
@@ -228,14 +228,21 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertEqual("UNAUTHORISED", phase7c_contract.get("phase8"))
 
         current_open_work = self.entries["OPEN_WORK"]
-        self.assertEqual("02_OPEN_WORK_v1.2.70.md", current_open_work["canonical_filename"])
-        self.assertEqual("1.2.70", current_open_work["semver"])
+        self.assertEqual("02_OPEN_WORK_v1.2.71.md", current_open_work["canonical_filename"])
+        self.assertEqual("1.2.71", current_open_work["semver"])
         self.assertEqual(
-            "docs/00_platform/02_OPEN_WORK_v1.2.70.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.71.md",
             current_open_work["repository_path"],
         )
-        self.assertEqual("1.2.69", current_open_work["superseded_version"])
+        self.assertEqual("1.2.70", current_open_work["superseded_version"])
         self.assertEqual("current", current_open_work["lifecycle"])
+
+        immediate_predecessor = self.entries.get("OPEN_WORK_V1_2_70", {})
+        self.assertEqual("02_OPEN_WORK_v1.2.70.md", immediate_predecessor.get("canonical_filename"))
+        self.assertEqual("1.2.70", immediate_predecessor.get("semver"))
+        self.assertEqual("docs/00_platform/archive/02_OPEN_WORK_v1.2.70.md", immediate_predecessor.get("repository_path"))
+        self.assertEqual("1.2.71", immediate_predecessor.get("superseded_version"))
+        self.assertEqual("historical", immediate_predecessor.get("lifecycle"))
 
         direct_predecessor = self.entries.get("OPEN_WORK_V1_2_69", {})
         self.assertEqual("02_OPEN_WORK_v1.2.69.md", direct_predecessor.get("canonical_filename"))
@@ -303,46 +310,49 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
                 self.assertEqual(archive_bytes, _git_show(BASELINE_MAIN_SHA, source))
 
     def test_foundation_integrity_rejects_unarchived_predecessors_and_allows_archives(self):
-        names = [Path(archive).name for archive in ARCHIVE_PREDECESSORS]
+        names = [
+            "02_OPEN_WORK_v1.2.70.md",
+            "DELIVERY_ATLAS_WORKING_v0.4.12.md",
+            "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
+            "HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
+        ]
         readme_path = DOCS / "README.md"
         original_readme = readme_path.read_text(encoding="utf-8")
+        current_start = original_readme.index("## Current State")
+        current_end = original_readme.find("\n## ", current_start + 1)
+        current_end = current_end if current_end >= 0 else len(original_readme)
+        current = original_readme[current_start:current_end]
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             fixture_docs = root / "docs" / "00_platform"
             shutil.copytree(DOCS, fixture_docs)
             fixture_readme = fixture_docs / "README.md"
             fixture_readme.write_text(
-                original_readme + "\nUnarchived routes: " + ", ".join(names) + "\n",
+                original_readme[:current_end]
+                + "\nUnarchived routes: " + ", ".join(names) + "\n"
+                + original_readme[current_end:],
                 encoding="utf-8",
             )
             rejected = run_audit(root, fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
-            graph_check = next(item for item in rejected["checks"] if item["name"] == "fp001_pmr_reconciliation")
-            self.assertEqual("FAIL", graph_check["status"], graph_check["message"])
-            expected_diagnostics = {
-                "02_OPEN_WORK_v1.2.66.md": "unarchived Open Work v1.2.66",
-                "DELIVERY_ATLAS_WORKING_v0.4.8.md": "unarchived Delivery Atlas v0.4.8",
-                "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md": "unarchived FP-001 skeleton v0.1.10",
-                "HARDEN-02_CONTRACT_WORKING_v0.5.10.md": "unarchived HARDEN-02 v0.5.10",
-            }
+            route_check = next(item for item in rejected["checks"] if item["name"] == "fp001_phase7c_final_contract_current_promotion")
+            self.assertEqual("FAIL", route_check["status"], route_check["message"])
             for name in names:
-                self.assertIn(expected_diagnostics[name], graph_check["message"])
+                self.assertIn(name, route_check["message"])
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             fixture_docs = root / "docs" / "00_platform"
             shutil.copytree(DOCS, fixture_docs)
             fixture_readme = fixture_docs / "README.md"
-            qualified = [f"archive/{name}" for name in names]
             fixture_readme.write_text(
-                fixture_readme.read_text(encoding="utf-8")
-                + "\nHistorical archives: "
-                + ", ".join(qualified)
-                + "\n",
+                original_readme[:current_end]
+                + "\nHistorical archives: " + ", ".join(f"archive/{name}" for name in names) + "\n"
+                + original_readme[current_end:],
                 encoding="utf-8",
             )
             accepted = run_audit(root, fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
-            graph_check = next(item for item in accepted["checks"] if item["name"] == "fp001_pmr_reconciliation")
-            self.assertEqual("PASS", graph_check["status"], graph_check["message"])
+            route_check = next(item for item in accepted["checks"] if item["name"] == "fp001_phase7c_final_contract_current_promotion")
+            self.assertEqual("PASS", route_check["status"], route_check["message"])
 
     def test_successor_does_not_change_upstream_authority_or_application_source(self):
         tracked_changed = subprocess.run(
