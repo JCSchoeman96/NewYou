@@ -51,10 +51,14 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             "COMPLETE / CERTIFIED / CURRENT",
             state["phase_7c"],
         )
-        self.assertEqual("ARCHITECTURAL PROOF CLASSIFICATION", state["next_stage"])
+        self.assertEqual("DEVELOPMENT ENTRY HARD STOP EVALUATION", state["next_stage"])
         self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
-        self.assertEqual("NOT FINALISED", state["proof_classification"])
+        self.assertEqual("NEW_TRACER_BULLET", state["proof_classification"])
+        self.assertEqual("NOT SELECTED", state["reuse_existing_proof"])
+        self.assertEqual("NONE / NOT CREATED", state["tracer_bullet_id"])
+        self.assertEqual("NOT STARTED", state["architectural_proof_execution"])
+        self.assertEqual("SATISFIED", state["development_entry_hard_stop_condition_9"])
         self.assertIn("UNAUTHORISED", state["application_implementation"])
 
     def test_current_route_and_immutable_candidate_semantics_are_preserved(self):
@@ -179,17 +183,17 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
     def test_current_derived_routes_reject_open_tracker_projection(self):
         cases = (
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
                 "preserves #120 as CLOSED / COMPLETED historical evidence",
                 "preserves #120 as OPEN historical evidence",
             ),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
                 "under completed tracker #120 (CLOSED / COMPLETED)",
                 "under open tracker #120 (CLOSED / COMPLETED)",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
                 "RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED",
                 "RECONCILIATION EXECUTION TRACKER: #120 OPEN",
             ),
@@ -211,12 +215,12 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
     def test_current_derived_routes_keep_programme_router_open(self):
         cases = (
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
                 "Programme router #111 remains OPEN",
                 "Programme router #111 is CLOSED",
             ),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
                 "Programme router #111 remains OPEN",
                 "Programme router #111 is CLOSED",
             ),

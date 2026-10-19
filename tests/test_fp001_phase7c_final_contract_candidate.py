@@ -507,7 +507,7 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
                 self.assertEqual(expected_hash, hashlib.sha256(path.read_bytes()).hexdigest())
 
     def test_current_readme_and_open_work_route_tracker_124_as_closed(self):
-        current_open_work = (DOCS / "02_OPEN_WORK_v1.2.72.md").read_text(encoding="utf-8")
+        current_open_work = (DOCS / "02_OPEN_WORK_v1.2.73.md").read_text(encoding="utf-8")
         state_match = re.search(
             r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
             current_open_work,
@@ -522,7 +522,9 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         readme = (DOCS / "README.md").read_text(encoding="utf-8")
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", readme)
-        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: NEXT / NOT PERFORMED", readme)
+        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", readme)
+        self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", readme)
+        self.assertIn("NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION", readme)
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", readme)
         self.assertIn("PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", readme)
 

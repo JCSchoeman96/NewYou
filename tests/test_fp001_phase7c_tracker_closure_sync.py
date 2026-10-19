@@ -14,7 +14,7 @@ from tools.foundation_integrity_audit import refresh_manifest, run_audit
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-BASE_MAIN = "5b56d4070b422bf969667e84faae973522b52414"
+BASE_MAIN = "24a9ad925ee1ab6d75ddb44bae6df0b4f3d09bca"
 PR126_MAIN = "69bef7bb2782cbff00a48505504ebd2686eb53d9"
 REVIEWED_HEAD = "e7d5d3908bedf1a75c6627448c3ed0c067b076f8"
 MERGE_TREE = "f5586314db6c3addab6482e866b8d781faba75bc"
@@ -23,13 +23,13 @@ CANDIDATE_ARCHIVE_SHA256 = "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3eb
 PROMOTION_RULE = "fp001_phase7c_final_contract_current_promotion"
 
 PREDECESSORS = (
-    ("docs/00_platform/02_OPEN_WORK_v1.2.71.md", "docs/00_platform/archive/02_OPEN_WORK_v1.2.71.md"),
-    ("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.13.md", "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.13.md"),
+    ("docs/00_platform/02_OPEN_WORK_v1.2.72.md", "docs/00_platform/archive/02_OPEN_WORK_v1.2.72.md"),
+    ("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md", "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.14.md"),
     (
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
-        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
     ),
-    ("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md", "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.15.md"),
+    ("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md", "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.16.md"),
 )
 
 
@@ -68,20 +68,20 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
             "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
             "contract_lifecycle": "COMPLETE / CERTIFIED / CURRENT",
             "programme_router_state": "OPEN",
-            "proof_classification": "NOT FINALISED",
+            "proof_classification": "NEW_TRACER_BULLET",
             "phase8": "UNAUTHORISED",
             "application_implementation": "UNAUTHORISED",
-            "next_governance_action": "ARCHITECTURAL PROOF CLASSIFICATION",
+            "next_governance_action": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
         }
         for key, value in expected.items():
             with self.subTest(key=key):
                 self.assertEqual(value, rule.get(key))
 
         current_paths = rule["current_paths"]
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.72.md", current_paths["open_work"])
-        self.assertEqual("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md", current_paths["delivery_atlas"])
-        self.assertEqual("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md", current_paths["fp001_skeleton"])
-        self.assertEqual("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md", current_paths["harden_02"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.73.md", current_paths["open_work"])
+        self.assertEqual("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md", current_paths["delivery_atlas"])
+        self.assertEqual("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md", current_paths["fp001_skeleton"])
+        self.assertEqual("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md", current_paths["harden_02"])
 
         open_work = (ROOT / current_paths["open_work"]).read_text(encoding="utf-8")
         state = _marked_json(open_work, "<!-- HARDEN_02_LIFECYCLE_STATE_START -->", "<!-- HARDEN_02_LIFECYCLE_STATE_END -->")
@@ -89,7 +89,11 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state["phase_7c"])
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state["phase_7c_final_feature_pack_contract"]["lifecycle"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
-        self.assertEqual("NOT FINALISED", state["proof_classification"])
+        self.assertEqual("NEW_TRACER_BULLET", state["proof_classification"])
+        self.assertEqual("NOT SELECTED", state["reuse_existing_proof"])
+        self.assertEqual("NONE / NOT CREATED", state["tracer_bullet_id"])
+        self.assertEqual("NOT STARTED", state["architectural_proof_execution"])
+        self.assertEqual("DEVELOPMENT ENTRY HARD STOP EVALUATION", state["next_stage"])
         self.assertTrue(state["application_implementation"].startswith("UNAUTHORISED"))
 
     def test_current_routes_project_closed_tracker_and_keep_downstream_gates_closed(self):
@@ -99,36 +103,44 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         current_state = readme.split("## Current State", 1)[1].split("\n## ", 1)[0]
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", current_state)
         self.assertIn("PROGRAMME ROUTER #111: OPEN", current_state)
-        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: NEXT / NOT PERFORMED", current_state)
-        self.assertIn("PROOF CLASSIFICATION: NOT FINALISED", current_state)
+        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)
+        self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_state)
+        self.assertIn("REUSE_EXISTING_PROOF: NOT SELECTED", current_state)
+        self.assertIn("TRACER BULLET ID: NONE / NOT CREATED", current_state)
+        self.assertIn("ARCHITECTURAL PROOF EXECUTION: NOT STARTED", current_state)
+        self.assertIn("DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED", current_state)
+        self.assertIn("REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8", current_state)
         self.assertIn("PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED", current_state)
-        self.assertNotRegex(current_state, r"(?i)#124[^\n]{0,100}\bOPEN\b")
-        self.assertNotRegex(current_state, r"(?i)PROOF CLASSIFICATION:\s*(?:REUSE_EXISTING_PROOF|NEW_TRACER_BULLET|FINAL|FINALISED)")
+        self.assertNotRegex(current_state, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
+        self.assertNotRegex(current_state, r"(?i)REUSE_EXISTING_PROOF:\s*SELECTED")
+        self.assertNotRegex(current_state, r"\bTB-\d{3,}\b")
 
         open_work = (ROOT / paths["open_work"]).read_text(encoding="utf-8")
         active = open_work.split("# 9. Immediate Next Action", 1)[1].split("# 10. Minimal Tools", 1)[0]
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", active)
         self.assertIn("PROGRAMME ROUTER #111: OPEN", active)
-        self.assertIn("NEXT GOVERNANCE ACTION: ARCHITECTURAL PROOF CLASSIFICATION", active)
-        self.assertNotRegex(active, r"(?i)#124[^\n]{0,100}\bOPEN\b")
+        self.assertIn("NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION", active)
+        self.assertNotRegex(active, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
 
         for key, route_heading in (
-            ("delivery_atlas", "## 26.20 Phase 7C tracker closure routing"),
-            ("fp001_skeleton", "## v0.1.16 current-route status"),
-            ("harden_02", "## 24. FP-001 Phase 7C tracker closure"),
+            ("delivery_atlas", "## 26.21 FP-001 architectural proof classification current route"),
+            ("fp001_skeleton", "## v0.1.17 current-route status"),
+            ("harden_02", "## 21. Current execution certification and next stage"),
         ):
             content = (ROOT / paths[key]).read_text(encoding="utf-8")
             self.assertIn(route_heading, content)
             route = content.split(route_heading, 1)[1].split("\n## ", 1)[0]
             if key == "delivery_atlas":
                 route = route.split("\n- v0.4.12 — historical", 1)[0]
-            elif key == "harden_02":
-                route = route.split("\n- v0.5.13 —", 1)[0]
             self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", route)
-            self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: NEXT / NOT PERFORMED", route)
-            self.assertIn("PROOF CLASSIFICATION: NOT FINALISED", route)
-            self.assertIn("PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED", route)
-            self.assertNotRegex(route, r"(?i)#124[^\n]{0,100}\bOPEN\b")
+            self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", route)
+            self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", route)
+            self.assertIn("REUSE_EXISTING_PROOF: NOT SELECTED", route)
+            self.assertIn("TRACER BULLET ID: NONE / NOT CREATED", route)
+            self.assertIn("ARCHITECTURAL PROOF EXECUTION: NOT STARTED", route)
+            self.assertIn("DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED", route)
+            self.assertIn("PHASE 8: UNAUTHORISED", route)
+            self.assertNotRegex(route, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
 
     def test_foundation_integrity_rejects_open_tracker_projection(self):
         with tempfile.TemporaryDirectory() as directory:

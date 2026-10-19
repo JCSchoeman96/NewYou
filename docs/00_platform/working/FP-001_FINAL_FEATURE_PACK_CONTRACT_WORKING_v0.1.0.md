@@ -18,10 +18,20 @@ PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT
 PHASE 7C: COMPLETE / CERTIFIED / CURRENT
 FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT
 PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED
-NEXT GOVERNANCE ACTION: ARCHITECTURAL PROOF CLASSIFICATION
-ARCHITECTURAL PROOF CLASSIFICATION: NEXT / NOT PERFORMED
-PROOF CLASSIFICATION: NOT FINALISED
+PROGRAMME ROUTER #111: OPEN
+ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED
+PROOF CLASSIFICATION: NEW_TRACER_BULLET
+ARCHITECTURAL PROOF REQUIREMENT / SELECTED PROOF VEHICLE: NEW_TRACER_BULLET
+REUSE_EXISTING_PROOF: NOT SELECTED
+TRACER BULLET: REQUIRED / NOT YET DEFINED
+TRACER BULLET ID: NONE / NOT CREATED
+ARCHITECTURAL PROOF EXECUTION: NOT STARTED
+DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED
+REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8
+PHASE 8: UNAUTHORISED
+APPLICATION IMPLEMENTATION: UNAUTHORISED
 PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED
+NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION
 ```
 
 ## A. Identity and provenance
@@ -349,7 +359,7 @@ Each criterion is an implementation-independent observable result. A later proof
 | AC-14 | Analytics receives only approved derived facts and cannot issue any Identity, Privacy, Content, Communications, or Audit command. | Analytics cannot grant access, prove identity, allocate PMR, create consent, publish content, determine delivery, or create Audit truth. | Product Law §§21I.16, 21J.24; Domain Map §§6.1-6.2, 6.7, 6.15, 6.17-6.18; S-05, S-09, S-12. |
 | AC-15 | An unverified or newly created Account cannot access unfinished FP-001-excluded product spaces. | Account creation, verification, PMR possession, or support access cannot create purchase, entitlement, assessment, health, plan, programme, community, live-session, or event authority. | Roadmap §6 FP-001; Skeleton §§5-7; Identity dossier §§H, T; S-01, S-05. |
 
-Phase 7C contract delivery is COMPLETE / CERTIFIED / CURRENT under this separate status successor. Architectural proof classification, proof execution, Phase 8 entry and application implementation remain downstream gates.
+Phase 7C contract delivery is COMPLETE / CERTIFIED / CURRENT under this separate status successor. The separate downstream classification status is COMPLETE / FINALISED as NEW_TRACER_BULLET; proof execution, Phase 8 entry and application implementation remain gated.
 
 ## V. Downstream gates
 
@@ -381,6 +391,8 @@ Record the exact seam and route it to the existing authority or gate. Create an 
 
 ## Certification and current-status promotion record
 
+Historical PR #126 status snapshot: the following record describes the current route immediately after Phase 7C closure and before the separate post-Phase-7C classification. The current downstream lifecycle status is reflected in the status summary above, this artifact’s status metadata, and the closing status note; this contract is not the classification authority or event.
+
 ```text
 PHASE 7A: COMPLETE
 REQUIRED JIT DOSSIERS: DISPOSITION-COMPLETE
@@ -397,14 +409,13 @@ The exact PR #125 candidate bytes are preserved at `archive/FP-001_FINAL_FEATURE
 
 PR #126 [merged](https://github.com/JCSchoeman96/NewYou/pull/126) reviewed head `e7d5d3908bedf1a75c6627448c3ed0c067b076f8` as `69bef7bb2782cbff00a48505504ebd2686eb53d9`. The reviewed head and merge have identical tree `f5586314db6c3addab6482e866b8d781faba75bc`. Exact-head Foundation Integrity run [39141076412](https://github.com/JCSchoeman96/NewYou/actions/runs/39141076412) completed successfully. Resulting-main run [39143147487](https://github.com/JCSchoeman96/NewYou/actions/runs/39143147487) completed successfully on the merge SHA with 455 tests, 728 Foundation Integrity assertions and 0 findings. Fresh resulting-main verification: PASS.
 
-Issue #124 is CLOSED / COMPLETED. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. The next governance action is ARCHITECTURAL PROOF CLASSIFICATION (NEXT / NOT PERFORMED). Proof classification remains NOT FINALISED. Phase 8/application implementation remains UNAUTHORISED. Programme router #111 remains OPEN.
+At the pre-classification PR #126 snapshot, issue #124 was CLOSED / COMPLETED, Phase 7C and Final Feature Pack Contract v0.1.0 were COMPLETE / CERTIFIED / CURRENT, proof classification remained NOT FINALISED, and Phase 8/application implementation remained UNAUTHORISED. Programme router #111 remained OPEN.
 
 
-The next governance action is **ARCHITECTURAL PROOF CLASSIFICATION** (NEXT / NOT PERFORMED). This record does not perform the classification, select `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`, create a Tracer Bullet ID or proof artifact, or authorise Phase 8/application implementation. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Proof classification remains NOT FINALISED. Phase 8 remains blocked until proof classification and every other Development Entry Hard Stop condition pass.
+At the pre-classification snapshot, the next governance action was Architectural Proof Classification. That snapshot did not select a proof vehicle, create a Tracer Bullet ID or proof artifact, or authorise Phase 8/application implementation. Issue #124 was already CLOSED / COMPLETED. The downstream current status is recorded separately below and keeps Phase 8 blocked until every other Development Entry Hard Stop condition passes.
 
 <!-- FP001_PHASE7C_CURRENT_STATUS_START -->
 ```json
-
 {
   "artifact_version": "v0.1.0",
   "promotion_state": "CURRENT / VERIFIED AFTER PR #126 RESULTING-MAIN PASS",
@@ -461,11 +472,23 @@ The next governance action is **ARCHITECTURAL PROOF CLASSIFICATION** (NEXT / NOT
   "phase_7b_tracker_state": "CLOSED / COMPLETED",
   "programme_router_issue": 111,
   "programme_router_state": "OPEN",
-  "proof_classification": "NOT FINALISED",
+  "proof_classification": "NEW_TRACER_BULLET",
   "phase8": "UNAUTHORISED",
   "application_implementation": "UNAUTHORISED",
-  "next_governance_action": "ARCHITECTURAL PROOF CLASSIFICATION"
+  "next_governance_action": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
+  "architectural_proof_classification_status": "COMPLETE / FINALISED",
+  "architectural_proof_requirement": "NEW_TRACER_BULLET",
+  "selected_proof_vehicle": "NEW_TRACER_BULLET",
+  "reuse_existing_proof": "NOT SELECTED",
+  "tracer_bullet": "REQUIRED / NOT YET DEFINED",
+  "tracer_bullet_id": "NONE / NOT CREATED",
+  "architectural_proof_execution": "NOT STARTED",
+  "development_entry_hard_stop_condition_9": "SATISFIED",
+  "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
+  "classification_authority_event": "SEPARATE OPEN WORK POST-PHASE-7C STATUS DECISION"
 }
-
 ```
 <!-- FP001_PHASE7C_CURRENT_STATUS_END -->
+
+
+The classification status above is a downstream lifecycle reflection only. Open Work v1.2.73 records the separate classification authority/event. This contract does not select the proof vehicle or create a Tracer Bullet.

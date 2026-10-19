@@ -15,7 +15,7 @@ from tools.foundation_integrity_audit import (
 ROOT = Path(__file__).resolve().parents[1]
 PROMOTION_RULE = "fp001_phase7c_final_contract_current_promotion"
 CONTRACT_REL = "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK_REL = "docs/00_platform/02_OPEN_WORK_v1.2.72.md"
+OPEN_WORK_REL = "docs/00_platform/02_OPEN_WORK_v1.2.73.md"
 README_REL = "docs/00_platform/README.md"
 ARCHIVE_REL = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 
@@ -126,11 +126,18 @@ class FP001Phase7CCurrentPromotionAuditTests(unittest.TestCase):
             ("programme router #111 closes", lambda r, m: self._mutate_open_state(r, "programme_router_issue_111_state", "CLOSED")),
             ("proof classification finalises", lambda r, m: self._mutate_open_state(r, "proof_classification", "FINALISED")),
             ("REUSE_EXISTING_PROOF selected early", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "PROOF CLASSIFICATION: REUSE_EXISTING_PROOF")),
-            ("NEW_TRACER_BULLET selected early", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "PROOF CLASSIFICATION: NEW_TRACER_BULLET")),
+            ("both proof options selected", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "REUSE_EXISTING_PROOF: SELECTED")),
+            ("classification selects reuse", lambda r, m: self._mutate_open_state(r, "proof_classification", "REUSE_EXISTING_PROOF")),
+            ("classification remains not finalised", lambda r, m: self._mutate_open_state(r, "architectural_proof_classification_status", "NOT FINALISED")),
+            ("FLOW-01 is represented as executable proof", lambda r, m: (r / OPEN_WORK_REL).write_text((r / OPEN_WORK_REL).read_text(encoding="utf-8").replace("FLOW-01` is supporting evidence only", "FLOW-01` satisfies executable proof", 1), encoding="utf-8")),
+            ("Tracer Bullet identifier is invented", lambda r, m: self._mutate_open_state(r, "tracer_bullet_id", "TB-001")),
+            ("proof execution is represented as complete", lambda r, m: self._mutate_open_state(r, "architectural_proof_execution", "COMPLETE")),
+            ("application implementation becomes authorised", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "APPLICATION IMPLEMENTATION: AUTHORISED")),
+            ("classification is represented as executable proof", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "PROOF CLASSIFICATION: EXECUTABLE PROOF: COMPLETE")),
             ("Phase 8 becomes authorised", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "PHASE 8 / APPLICATION IMPLEMENTATION: AUTHORISED")),
             ("certified contract semantics drift", lambda r, m: (r / CONTRACT_REL).write_text((r / CONTRACT_REL).read_text(encoding="utf-8").replace("create an individual 18+ account", "create an individual account", 1), encoding="utf-8")),
             ("immutable PR #125 candidate archive changes", lambda r, m: (r / ARCHIVE_REL).write_bytes((r / ARCHIVE_REL).read_bytes() + b"\nchanged\n")),
-            ("direct predecessor archive changes", lambda r, m: (r / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.13.md").write_bytes((r / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.13.md").read_bytes() + b"\nchanged\n")),
+            ("direct predecessor archive changes", lambda r, m: (r / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.14.md").write_bytes((r / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.14.md").read_bytes() + b"\nchanged\n")),
             ("current route projects #124 open", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "PHASE 7C TRACKER #124: OPEN THROUGH RESULTING-MAIN VERIFICATION")),
             ("current route retains transition wording", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "CURRENT CONTRACT AFTER THIS STATUS SUCCESSOR MERGES")),
         )
@@ -140,6 +147,19 @@ class FP001Phase7CCurrentPromotionAuditTests(unittest.TestCase):
                 mutate(root, manifest)
                 check = self._promotion_check(root, manifest)
                 self.assertEqual("FAIL", check["status"], check["message"])
+
+    def test_foundation_integrity_rejects_a_created_tracer_bullet_or_proof_artifact(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest = self._copy_fixture(Path(directory))
+            artifact = root / "docs/00_platform/working/FP001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md"
+            artifact.write_text("Candidate Tracer Bullet contract.\n", encoding="utf-8")
+            manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+            report = run_audit(root, manifest_path)
+            check = next(item for item in report["checks"] if item["name"] == "roadmap_proof_classification_lifecycle")
+            self.assertEqual("FAIL", check["status"], check["message"])
+            self.assertIn("Tracer Bullet or architectural-proof artifact exists", check["message"])
 
     def test_status_record_rejects_tree_or_count_provenance_drift(self):
         mutations = (

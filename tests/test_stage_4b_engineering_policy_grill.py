@@ -183,7 +183,10 @@ class Stage4BEngineeringPolicyGrillIntegrityTests(unittest.TestCase):
         self.assertIn("ARCHITECTURE GRILL: COMPLETE", self.readme)
         self.assertIn("ENGINEERING-POLICY GRILL: COMPLETE", self.readme)
         self.assertIn("ARCHITECTURE AMENDMENT: COMPLETE", self.readme)
-        self.assertIn("EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED", self.readme)
+        self.assertIn(
+            "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION",
+            self.readme,
+        )
         self.assertIn("TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md", self.readme)
         self.assertIn('"semver": "1.2.37"', self.manifest)
         self.assertNotIn("TARGETED_ENGINEERING_POLICY_GRILL", self.manifest)
