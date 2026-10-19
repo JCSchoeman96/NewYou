@@ -5516,8 +5516,15 @@ def _check_roadmap_proof_classification_lifecycle(
     current_contract_path = str(expected_fixed["phase7c_contract_path"])
     current_contract_file = root / current_contract_path
     contract = current_contract_file.read_text(encoding="utf-8") if current_contract_file.is_file() else ""
-    if not current_contract_file.is_file() or route_hashes.get(current_contract_path) != sha256_file(current_contract_file):
-        issues.append("current Final Feature Pack Contract status route is missing or its manifest hash changed")
+    actual_contract_sha256 = sha256_file(current_contract_file) if current_contract_file.is_file() else None
+    phase7c_contract_sha256 = rule.get("phase7c_contract_sha256") if isinstance(rule, dict) else None
+    route_contract_sha256 = route_hashes.get(current_contract_path) if isinstance(route_hashes, dict) else None
+    if (
+        actual_contract_sha256 is None
+        or phase7c_contract_sha256 != actual_contract_sha256
+        or route_contract_sha256 != actual_contract_sha256
+    ):
+        issues.append("current Final Feature Pack Contract manifest SHA-256 pins disagree with actual bytes")
     for relative, digest in expected_upstream.items():
         path = root / relative
         if not path.is_file() or sha256_file(path) != digest:
@@ -5709,7 +5716,7 @@ def _check_fp001_phase7c_current_promotion(
         "docs/00_platform/02_OPEN_WORK_v1.2.73.md": "86b8a0b9d181ad6551b5174d3856a1d700209d583970dcc90a7aaa4b72ef8577",
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md": "a5b7e2d94b29e077adb6d85605f2cbbbf139dff4983711ee73bfedce2b9bba26",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md": "99c72571ef4243e6d765c4d5dd4b0e5b3dce73d993662916d8bed839ebd2ad55",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md": "05d8ac7f56c2d7f49dd591b4343b3c8d7f38cebc42384b6ece44953d272f137b",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md": "a80c6870a6b86dc4e871d0357a11edc877379085b846a348e750ab037741e1d7",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "26e33c6eed2fb10e04c658dd7ed397cb844f5e3ff397c5d52f995d990c8ea22f",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md": "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "cc664c1e5d148c1a8f30f2a8d769645646162ff029494a2187e0a65775c27c83",

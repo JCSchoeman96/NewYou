@@ -16,6 +16,8 @@ CLASSIFICATION_BRANCH = "governance/fp001-architectural-proof-classification"
 OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.73.md"
 CONTRACT = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 CONTRACT_ARCHIVE = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
+HARDEN_02 = DOCS / "working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md"
+MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 PREDECESSORS = (
     (
         "docs/00_platform/02_OPEN_WORK_v1.2.72.md",
@@ -55,6 +57,15 @@ def _contract_section(text: str, label: str) -> str:
     if start_match is None:
         return ""
     end_match = re.search(r"(?m)^## ", text[start_match.end():])
+    end = start_match.end() + end_match.start() if end_match else len(text)
+    return text[start_match.start():end]
+
+
+def _numbered_section(text: str, number: int) -> str:
+    start_match = re.search(rf"(?m)^## {number}\. ", text)
+    if start_match is None:
+        return ""
+    end_match = re.search(r"(?m)^## \d+\. ", text[start_match.end():])
     end = start_match.end() + end_match.start() if end_match else len(text)
     return text[start_match.start():end]
 
@@ -158,6 +169,45 @@ class FP001ArchitecturalProofClassificationTests(unittest.TestCase):
             "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19",
             hashlib.sha256(CONTRACT_ARCHIVE.read_bytes()).hexdigest(),
         )
+
+    def test_final_contract_hash_pins_match_each_other_and_current_bytes(self):
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        rule = manifest["integrity_rules"]["roadmap_proof_classification_lifecycle"]
+        contract_path = rule["phase7c_contract_path"]
+        actual_sha256 = hashlib.sha256(CONTRACT.read_bytes()).hexdigest()
+
+        self.assertEqual(actual_sha256, rule["phase7c_contract_sha256"])
+        self.assertEqual(actual_sha256, rule["current_route_sha256"][contract_path])
+
+    def test_harden_02_current_sections_route_the_completed_classification(self):
+        text = HARDEN_02.read_text(encoding="utf-8")
+        sections = {
+            "18": _numbered_section(text, 18),
+            "23": _numbered_section(text, 23),
+        }
+        stale_route = re.compile(
+            r"(?is)(?:proof classification|architectural proof classification)"
+            r"[^\n.]{0,120}(?:NOT FINALISED|NEXT\s*/\s*NOT PERFORMED|next and remains unperformed)"
+        )
+        required_current_state = (
+            "ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED",
+            "NEW_TRACER_BULLET",
+            "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
+            "PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED",
+        )
+
+        for number, section in sections.items():
+            with self.subTest(section=number):
+                self.assertTrue(section, f"HARDEN-02 §{number} must exist")
+                self.assertNotRegex(section, stale_route)
+                for token in required_current_state:
+                    with self.subTest(token=token):
+                        self.assertIn(token, section)
+
+        self.assertIn("REUSE_EXISTING_PROOF: NOT SELECTED", sections["18"])
+        self.assertIn("ARCHITECTURAL PROOF EXECUTION: NOT STARTED", sections["18"])
+        self.assertIn("CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9", sections["18"])
+        self.assertIn("until every other applicable condition passes", sections["18"].lower())
 
     def test_certified_contract_semantic_sections_match_the_immutable_candidate(self):
         current = CONTRACT.read_text(encoding="utf-8")

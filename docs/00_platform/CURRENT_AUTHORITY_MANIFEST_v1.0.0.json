@@ -2112,7 +2112,7 @@
         "docs/00_platform/02_OPEN_WORK_v1.2.73.md": "86b8a0b9d181ad6551b5174d3856a1d700209d583970dcc90a7aaa4b72ef8577",
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md": "a5b7e2d94b29e077adb6d85605f2cbbbf139dff4983711ee73bfedce2b9bba26",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md": "99c72571ef4243e6d765c4d5dd4b0e5b3dce73d993662916d8bed839ebd2ad55",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md": "05d8ac7f56c2d7f49dd591b4343b3c8d7f38cebc42384b6ece44953d272f137b",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md": "a80c6870a6b86dc4e871d0357a11edc877379085b846a348e750ab037741e1d7",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "26e33c6eed2fb10e04c658dd7ed397cb844f5e3ff397c5d52f995d990c8ea22f"
       },
       "protected_historical_evidence_sha256": {
@@ -2161,7 +2161,7 @@
       "roadmap_predecessor_archive_path": "docs/00_platform/archive/05_ROADMAP_v1.2.2.md",
       "roadmap_predecessor_archive_sha256": "4225fad688589d3c66733527303cbda39ef3c8bf52b78c4cc372c0736d202cdc",
       "phase7c_contract_path": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
-      "phase7c_contract_sha256": "bb401cf409b3e2b406f0dde0a878068ddc1f13c9772c0e51b4e8ad172ad86f36",
+      "phase7c_contract_sha256": "26e33c6eed2fb10e04c658dd7ed397cb844f5e3ff397c5d52f995d990c8ea22f",
       "current_routes": {
         "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.73.md",
         "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
@@ -2218,7 +2218,7 @@
         "docs/00_platform/02_OPEN_WORK_v1.2.73.md": "86b8a0b9d181ad6551b5174d3856a1d700209d583970dcc90a7aaa4b72ef8577",
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md": "a5b7e2d94b29e077adb6d85605f2cbbbf139dff4983711ee73bfedce2b9bba26",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md": "99c72571ef4243e6d765c4d5dd4b0e5b3dce73d993662916d8bed839ebd2ad55",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md": "05d8ac7f56c2d7f49dd591b4343b3c8d7f38cebc42384b6ece44953d272f137b",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md": "a80c6870a6b86dc4e871d0357a11edc877379085b846a348e750ab037741e1d7",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "26e33c6eed2fb10e04c658dd7ed397cb844f5e3ff397c5d52f995d990c8ea22f"
       }
     }

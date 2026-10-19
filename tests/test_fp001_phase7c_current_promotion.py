@@ -220,7 +220,9 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
         self.assertIn("every other applicable Development Entry Hard Stop condition is independently evaluated and satisfied", self.open_work)
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", self.open_work)
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", self.open_work)
-        self.assertIn("PROOF CLASSIFICATION: NOT FINALISED", self.open_work)
+        current_lifecycle = self.open_work.split("# 9. Immediate Next Action", 1)[1].split("# 10. Minimal Tools", 1)[0]
+        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_lifecycle)
+        self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_lifecycle)
         self.assertIn("PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED", self.open_work)
 
     def test_readme_and_manifest_route_current_lower_level_artifacts_without_new_root_authority(self):

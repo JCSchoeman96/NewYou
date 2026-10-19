@@ -634,7 +634,18 @@ After independently certified Engineering Standards Authority Promotion, the nex
 NEXT = FP001_RECONCILIATION_REQUIRED
 ```
 
-The current FP-001 Phase-7B route has completed conditional-dossier adjudication and all required dossier dispositions. Privacy & Consent, Content & Media and Analytics are NOT_REQUIRED. Identity, Communications and Audit & Evidence v0.1.0 are COMPLETE / CERTIFIED / CURRENT. The required dossier set is disposition-complete. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under completed tracker #120 (CLOSED / COMPLETED). Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Proof classification is NOT FINALISED; architectural proof classification is the next governance action. Phase 8/application implementation is UNAUTHORISED. The completed H02-3R route remains:
+The current FP-001 Phase-7B route has completed conditional-dossier adjudication and all required dossier dispositions. Privacy & Consent, Content & Media and Analytics are NOT_REQUIRED. Identity, Communications and Audit & Evidence v0.1.0 are COMPLETE / CERTIFIED / CURRENT. The required dossier set is disposition-complete. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under completed tracker #120 (CLOSED / COMPLETED). Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Current downstream lifecycle status:
+
+```text
+ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED AS NEW_TRACER_BULLET
+REUSE_EXISTING_PROOF: NOT SELECTED
+ARCHITECTURAL PROOF EXECUTION: NOT STARTED
+NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION
+CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9
+PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED UNTIL EVERY OTHER APPLICABLE CONDITION PASSES
+```
+
+The completed H02-3R route remains:
 
 ```text
 CERTIFIED HARDEN-02 EXECUTION
@@ -647,8 +658,9 @@ CERTIFIED HARDEN-02 EXECUTION
 → CERTIFIED FP-001 AUDIT & EVIDENCE v0.1.0 DOSSIER PROMOTION
 → COMPLETED FP-001 PHASE 7B RECONCILIATION
 → PHASE 7C FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT
-→ ARCHITECTURAL PROOF CLASSIFICATION (NEXT; NOT PERFORMED)
-→ PHASE 8 ONLY AFTER PROOF CLASSIFICATION AND DEVELOPMENT ENTRY HARD STOP PASS
+→ ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED AS NEW_TRACER_BULLET
+→ DEVELOPMENT ENTRY HARD STOP EVALUATION: NEXT
+→ PHASE 8 ONLY AFTER EVERY APPLICABLE DEVELOPMENT ENTRY HARD STOP CONDITION PASSES
 ```
 
 This route does not authorise work on a downstream stage early. The separately certified Engineering Standards Authority Promotion preceded FP-001 reconciliation. Communications and Audit dossier promotions are complete. Successful Phase 7B reconciliation must precede Phase 7C; proof classification follows Phase 7C; Phase 8 remains gated by the Development Entry Hard Stop.
@@ -764,15 +776,23 @@ This historical v0.5.10 status successor recorded no reconciliation completion a
 
 The PR #121 candidate merged unchanged, resulting-main CI passed, and fresh independent post-merge review accepted the repository-hosted evidence. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT. The exact Phase 7B candidate bytes remain preserved at archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md. Issue #120 is CLOSED / COMPLETED under the PR #122 status-successor merge; the execution history remains recorded.
 
-The required dossier set remains disposition-complete. Identity & Access, Communications and Audit & Evidence remain REQUIRED / COMPLETE / CERTIFIED / CURRENT. Privacy & Consent, Content & Media and Analytics remain NOT_REQUIRED. The six affected Domains and seven material capability relationships remain unchanged. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Architectural proof classification is next and remains unperformed.
+The required dossier set remains disposition-complete. Identity & Access, Communications and Audit & Evidence remain REQUIRED / COMPLETE / CERTIFIED / CURRENT. Privacy & Consent, Content & Media and Analytics remain NOT_REQUIRED. The six affected Domains and seven material capability relationships remain unchanged. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Architectural proof classification is COMPLETE / FINALISED as NEW_TRACER_BULLET.
 
 PHASE 7C: COMPLETE / CERTIFIED / CURRENT
 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT
 PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED
 RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED (HISTORICAL); #111 remains the open programme router
-NEXT: DEVELOPMENT ENTRY HARD STOP EVALUATION
+NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION
 
-Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. This classification satisfies only Development Entry Hard Stop condition 9. Phase 8/application implementation remains UNAUTHORISED until every other applicable condition is independently evaluated and satisfied. This status route does not change Product, Architecture, Domain or Roadmap authority, define a Tracer Bullet or start proof execution.
+```text
+ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED AS NEW_TRACER_BULLET
+REUSE_EXISTING_PROOF: NOT SELECTED
+ARCHITECTURAL PROOF EXECUTION: NOT STARTED
+CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9
+PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED UNTIL EVERY OTHER APPLICABLE CONDITION IS INDEPENDENTLY EVALUATED AND SATISFIED
+```
+
+This status route does not change Product, Architecture, Domain or Roadmap authority, define a Tracer Bullet or start proof execution.
 
 
 

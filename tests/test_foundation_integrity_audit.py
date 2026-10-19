@@ -1860,6 +1860,28 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             if lifecycle_check is not None:
                 self.assertEqual("PASS", lifecycle_check["status"], lifecycle_check["message"])
 
+    def test_roadmap_proof_classification_final_contract_hash_pins_fail_closed(self):
+        for pin in ("phase7c_contract_sha256", "current_route_sha256"):
+            with self.subTest(pin=pin), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                rule = manifest["integrity_rules"]["roadmap_proof_classification_lifecycle"]
+                if pin == "phase7c_contract_sha256":
+                    rule[pin] = "0" * 64
+                else:
+                    contract_path = rule["phase7c_contract_path"]
+                    rule[pin][contract_path] = "0" * 64
+                manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+                report = run_audit(root, manifest_path)
+
+                lifecycle_check = next(
+                    item for item in report["checks"]
+                    if item["name"] == "roadmap_proof_classification_lifecycle"
+                )
+                self.assertEqual("FAIL", lifecycle_check["status"], lifecycle_check["message"])
+                self.assertIn("manifest SHA-256 pins disagree with actual bytes", lifecycle_check["message"])
+
     def test_roadmap_proof_classification_lifecycle_fails_closed_on_scope_regressions(self):
         mutations = (
             (
