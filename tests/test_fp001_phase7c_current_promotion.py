@@ -18,7 +18,7 @@ CANDIDATE_TREE = "8e5fc724b4c4f4a6a196d41e3beafc8e1384c2bf"
 CANDIDATE_ARCHIVE_SHA256 = "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19"
 CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 CURRENT_CONTRACT = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.73.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.74.md"
 PROMOTION_START = "<!-- FP001_PHASE7C_CURRENT_STATUS_START -->"
 PROMOTION_END = "<!-- FP001_PHASE7C_CURRENT_STATUS_END -->"
 
@@ -181,10 +181,11 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
             "tracer_bullet_id": "NONE / NOT CREATED",
             "architectural_proof_execution": "NOT STARTED",
             "development_entry_hard_stop_condition_9": "SATISFIED",
-            "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-            "phase8": "UNAUTHORISED",
-            "application_implementation": "UNAUTHORISED",
-            "next_governance_action": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
+            "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+            "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+            "phase8": "AUTHORISED",
+            "application_implementation": "AUTHORISED",
+            "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         }
         for key, value in expected.items():
             with self.subTest(key=key):
@@ -199,45 +200,47 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
 
     def test_open_work_routes_to_development_entry_hard_stop_and_keeps_all_stops(self):
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", self.open_work_state.get("phase_7c"))
-        self.assertEqual("DEVELOPMENT ENTRY HARD STOP EVALUATION", self.open_work_state.get("next_stage"))
+        self.assertEqual("NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION", self.open_work_state.get("next_stage"))
         self.assertEqual(124, self.open_work_state.get("phase_7c_execution_tracker_issue"))
         self.assertEqual("CLOSED / COMPLETED", self.open_work_state.get("phase_7c_execution_tracker_state"))
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", self.open_work_state.get("phase_7b_reconciliation"))
         self.assertEqual("CLOSED / COMPLETED", self.open_work_state.get("phase_7b_reconciliation_execution_tracker_state"))
         self.assertEqual("OPEN", self.open_work_state.get("programme_router_issue_111_state"))
         self.assertEqual("NEW_TRACER_BULLET", self.open_work_state.get("proof_classification"))
-        self.assertIn("UNAUTHORISED", self.open_work_state.get("application_implementation", ""))
+        self.assertEqual("AUTHORISED", self.open_work_state.get("application_implementation"))
+        self.assertEqual("AUTHORISED", self.open_work_state.get("phase8"))
         contract_state = self.open_work_state.get("phase_7c_final_feature_pack_contract", {})
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", contract_state.get("lifecycle"))
         self.assertEqual("NEW_TRACER_BULLET", contract_state.get("proof_classification"))
         self.assertEqual("NOT SELECTED", self.open_work_state.get("reuse_existing_proof"))
         self.assertEqual("NONE / NOT CREATED", self.open_work_state.get("tracer_bullet_id"))
         self.assertEqual("NOT STARTED", self.open_work_state.get("architectural_proof_execution"))
-        self.assertEqual("SATISFIED", self.open_work_state.get("development_entry_hard_stop_condition_9"))
-        self.assertEqual("NOT EVALUATED / MUST PASS BEFORE PHASE 8", self.open_work_state.get("remaining_development_entry_hard_stop_conditions"))
-        self.assertEqual("UNAUTHORISED", contract_state.get("phase8"))
-        self.assertIn("Phase 8", self.open_work)
-        self.assertIn("every other applicable Development Entry Hard Stop condition is independently evaluated and satisfied", self.open_work)
+        self.assertEqual("PASS / ALL 10 CONDITIONS SATISFIED", self.open_work_state.get("development_entry_hard_stop_status"))
+        self.assertEqual("SATISFIED", self.open_work_state.get("development_entry_hard_stop_conditions_1_through_10"))
+        self.assertEqual("AUTHORISED", contract_state.get("phase8"))
+        self.assertIn("bounded Phase 8", self.open_work)
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", self.open_work)
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", self.open_work)
         current_lifecycle = self.open_work.split("# 9. Immediate Next Action", 1)[1].split("# 10. Minimal Tools", 1)[0]
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_lifecycle)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_lifecycle)
-        self.assertIn("PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED", self.open_work)
+        self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", self.open_work)
 
     def test_readme_and_manifest_route_current_lower_level_artifacts_without_new_root_authority(self):
         for path in (
             "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
-            "working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
-            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
-            "working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
-            "02_OPEN_WORK_v1.2.73.md",
+            "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+            "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
+            "02_OPEN_WORK_v1.2.74.md",
         ):
             with self.subTest(path=path):
                 self.assertIn(path, self.readme)
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", self.readme)
         self.assertIn("FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT", self.readme)
-        self.assertIn("Phase 8/application implementation remains UNAUTHORISED", self.readme)
+        self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", self.readme)
+        historical = self.readme.split("## Historical status evidence", 1)[1]
+        self.assertIn("Phase 8 and executable implementation remain UNAUTHORISED", historical)
 
         authorities = self.manifest["governing_documents"] + self.manifest["reference_documents"]
         self.assertNotIn(

@@ -583,6 +583,8 @@ def _h02_lifecycle_state(
         return False, "HARDEN lifecycle JSON must be an object"
     if any(state.get(key) != value for key, value in H02_PR40_LIFECYCLE_FACTS.items()):
         return False, "prior PR #40 certification facts or certified contract lifecycle changed"
+    if state.get("status_successor_version") == "1.2.74":
+        return _h02_fp001_hard_stop_lifecycle_state(state, active, readme, contract)
     if state.get("status_successor_version") == "1.2.73":
         return _h02_fp001_classification_lifecycle_state(state, active, readme, contract)
     if state.get("status_successor_version") in {"0.5.9", "0.5.10", "0.5.11", "0.5.12", "0.5.13", "0.5.14", "0.5.15", "0.5.16"}:
@@ -1629,6 +1631,62 @@ def _h02_fp001_classification_lifecycle_state(
         return False, "Current HARDEN-02 status introduces a Tracer Bullet identifier"
     return True, "classification satisfies only condition 9; Development Entry Hard Stop evaluation remains next and Phase 8 stays unauthorised"
 
+
+def _h02_fp001_hard_stop_lifecycle_state(
+    state: dict[str, Any],
+    active: str,
+    readme: str,
+    contract: str,
+) -> tuple[bool, str]:
+    """Validate Development Entry Hard Stop PASS and bounded Phase 8 authorisation."""
+
+    expected = {
+        "status_successor_version": "1.2.74",
+        "status_successor_base_sha": "675a8c50ac53a995a48e4d262df42065f8ccd412",
+        "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
+        "next_stage": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        "phase8": "AUTHORISED",
+        "application_implementation": "AUTHORISED",
+        "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+        "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+        "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
+        "architectural_proof_classification_status": "COMPLETE / FINALISED",
+        "proof_classification": "NEW_TRACER_BULLET",
+        "reuse_existing_proof": "NOT SELECTED",
+        "tracer_bullet_id": "NONE / NOT CREATED",
+        "architectural_proof_execution": "NOT STARTED",
+        "programme_router_issue_111_state": "OPEN",
+        "phase_7c_execution_tracker_state": "CLOSED / COMPLETED",
+    }
+    if any(state.get(key) != value for key, value in expected.items()):
+        return False, "FP-001 hard-stop state is incomplete, reverts authorisation, or changes proof classification"
+    active_summary = active.split("<!-- HARDEN_02_LIFECYCLE_STATE_START -->", 1)[0]
+    for token in (
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        "TRACER BULLET ID: NONE / NOT CREATED",
+        "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
+    ):
+        if token not in active_summary:
+            return False, f"Open Work active route omits hard-stop state {token!r}"
+    if re.search(r"\bTB-\d{3,}\b", active_summary):
+        return False, "Open Work introduces a Tracer Bullet identifier"
+    current_state = _markdown_h2_section(readme, "Current State") or ""
+    for token in (
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+    ):
+        if token not in current_state:
+            return False, "README current state does not mirror the hard-stop promotion"
+    return True, "Development Entry Hard Stop PASS authorises bounded Phase 8 Architectural Proof only"
+
+
 def _h02_audit_v010_promotion_lifecycle_state(
     state: dict[str, Any],
     active: str,
@@ -2318,6 +2376,7 @@ def _engineering_standards_certified_state(
         "ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED" in active
         and "PROOF CLASSIFICATION: NEW_TRACER_BULLET" in active
     )
+    hard_stop_current = "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED" in active
     audit_promotion_current = reconciliation_certified_current or reconciliation_candidate_current or "NEXT STAGE: FP-001 PHASE 7B RECONCILIATION" in active
     audit_candidate_review_current = reconciliation_candidate_current or audit_promotion_current or "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION" in active
     audit_work_start_current = audit_promotion_current or audit_candidate_review_current or "NEXT STAGE: AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE" in active
@@ -2339,12 +2398,25 @@ def _engineering_standards_certified_state(
                     "PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
                     "FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT",
                     "PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED",
+                    *(
+                        (
+                            "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+                            "DEVELOPMENT ENTRY HARD STOP CONDITIONS 1–10: SATISFIED",
+                            "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+                            "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+                            "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+                        )
+                        if hard_stop_current
+                        else ()
+                    ),
                 )
                 if phase7c_status_current
                 else ("PHASE 7C: NEXT / NOT_STARTED",)
             ),
             (
-                "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION"
+                "EXECUTABLE DEVELOPMENT: AUTHORISED ONLY FOR BOUNDED PHASE 8 ARCHITECTURAL PROOF / NEW_TRACER_BULLET; PHASE 9 VERTICAL SLICES AND BROAD FP-001 IMPLEMENTATION REMAIN UNAUTHORISED"
+                if hard_stop_current
+                else "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION"
                 if classification_current
                 else "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED"
             ),
@@ -2410,7 +2482,9 @@ def _engineering_standards_certified_state(
     if active.count("- COMMUNICATIONS: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.0") != 1:
         return False, "Open Work required-dossier Communications route is missing or duplicated"
     expected_next = (
-        "NEXT STAGE: DEVELOPMENT ENTRY HARD STOP EVALUATION"
+        "NEXT STAGE: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION"
+        if hard_stop_current
+        else "NEXT STAGE: DEVELOPMENT ENTRY HARD STOP EVALUATION"
         if classification_current
         else "NEXT STAGE: ARCHITECTURAL PROOF CLASSIFICATION"
         if phase7c_status_current
@@ -2469,7 +2543,10 @@ def _engineering_standards_certified_state(
         return False, "Open Work current route omits the Phase 7C candidate-only lifecycle or review stop"
     if not classification_current and re.search(r"(?im)^.*PROOF CLASSIFICATION\s*:\s*FINALI[ZS]ED.*$", active):
         return False, "proof classification has been finalised prematurely"
-    if re.search(r"(?im)^.*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$", active):
+    if not hard_stop_current and re.search(
+        r"(?im)^.*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$",
+        active,
+    ):
         return False, "Phase 8 or application implementation has been authorised prematurely"
     if re.search(r"(?im)^.*STORE\s*/\s*CER\s*:\s*IN SCOPE.*$", active):
         return False, "Store/CER has been included in scope"
@@ -2596,7 +2673,15 @@ def _engineering_standards_certified_state(
         return False, "current HARDEN successor starts or misroutes Communications"
     if reconciliation_certified_current:
         required_phase_route = ["PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT"]
-        if classification_current:
+        if hard_stop_current:
+            required_phase_route.extend((
+                "PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
+                "FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT",
+                "NEXT STAGE: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+                "PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED",
+                "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+            ))
+        elif classification_current:
             required_phase_route.extend((
                 "PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
                 "FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT",
@@ -2628,7 +2713,9 @@ def _engineering_standards_certified_state(
     if audit_promotion_current and (
         "AUDIT & EVIDENCE DOSSIER: REQUIRED / COMPLETE / CERTIFIED / CURRENT" not in harden_route
         or (
-            "NEXT STAGE: DEVELOPMENT ENTRY HARD STOP EVALUATION"
+            "NEXT STAGE: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION"
+            if hard_stop_current
+            else "NEXT STAGE: DEVELOPMENT ENTRY HARD STOP EVALUATION"
             if classification_current
             else "NEXT STAGE: ARCHITECTURAL PROOF CLASSIFICATION"
             if phase7c_status_current
@@ -2657,36 +2744,44 @@ def _engineering_standards_certified_state(
         ) not in harden_route
     ):
         return False, "current HARDEN successor omits the Audit work-start status or candidate authoring route"
-    if classification_current:
+    if classification_current or hard_stop_current:
         required_classification_route = (
             "PROOF CLASSIFICATION: NEW_TRACER_BULLET",
             "REUSE_EXISTING_PROOF: NOT SELECTED",
             "TRACER BULLET ID: NONE / NOT CREATED",
             "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
-            "REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8",
+            *(
+                (
+                    "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+                    "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+                    "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+                )
+                if hard_stop_current
+                else ("REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8",)
+            ),
         )
         if any(value not in harden_route for value in required_classification_route):
             return False, "current HARDEN successor omits the selected proof vehicle or its fail-closed downstream gates"
     elif "PROOF CLASSIFICATION: NOT FINALISED" not in harden_route:
         return False, "current HARDEN successor finalises proof classification"
     expected_development_gate = (
-        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE DEVELOPMENT ENTRY HARD STOP CONDITIONS REQUIRE INDEPENDENT EVALUATION"
+        "EXECUTABLE DEVELOPMENT: AUTHORISED ONLY FOR BOUNDED PHASE 8 ARCHITECTURAL PROOF / NEW_TRACER_BULLET; PHASE 9 VERTICAL SLICES AND BROAD FP-001 IMPLEMENTATION REMAIN UNAUTHORISED"
+        if hard_stop_current
+        else "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE DEVELOPMENT ENTRY HARD STOP CONDITIONS REQUIRE INDEPENDENT EVALUATION"
         if classification_current
-        else
-        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED"
+        else "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED"
         if audit_work_start_current
         else "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS"
     )
-    if classification_current:
-        if expected_development_gate not in harden_route:
-            return False, "current HARDEN successor authorises Phase 8 or implementation"
-    elif expected_development_gate not in harden_route:
+    if expected_development_gate not in harden_route:
         return False, "current HARDEN successor authorises Phase 8 or implementation"
     if "STORE / CER: EXCLUDED FROM HARDEN-02" not in harden_route:
         return False, "current HARDEN successor includes Store/CER"
 
     return True, (
-        "Phase 7C and the Final Feature Pack Contract remain complete, certified and current; classification is finalised as NEW_TRACER_BULLET and Development Entry Hard Stop evaluation is next"
+        "Development Entry Hard Stop is PASS; bounded Phase 8 Architectural Proof is authorised and NEW_TRACER_BULLET proof contract/task definition is next"
+        if hard_stop_current
+        else "Phase 7C and the Final Feature Pack Contract remain complete, certified and current; classification is finalised as NEW_TRACER_BULLET and Development Entry Hard Stop evaluation is next"
         if classification_current
         else
         "Phase 7C and the Final Feature Pack Contract remain complete, certified and current after PR #126 resulting-main verification; proof classification is next and Phase 8 remains unauthorised"
@@ -2914,7 +3009,7 @@ def _check_product_semantics(
     readme_path = root / roots["context_index"]
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     fp001_candidates = (
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
+        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.13.md",
@@ -4729,7 +4824,7 @@ def _check_fp001_phase7b_candidate(
     if "PMR" not in candidate_text or "prior PR #67 PMR reconciliation is complete" not in candidate_text:
         baseline_issues.append("candidate does not preserve the completed PMR reconciliation")
 
-    skeleton_path = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md"
+    skeleton_path = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md"
     skeleton_archive = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md"
     pmr_start = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->"
     pmr_end = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->"
@@ -4784,10 +4879,12 @@ def _check_fp001_phase7b_candidate(
         "tracer_bullet": "REQUIRED / NOT YET DEFINED",
         "tracer_bullet_id": "NONE / NOT CREATED",
         "architectural_proof_execution": "NOT STARTED",
-        "development_entry_hard_stop_condition_9": "SATISFIED",
-        "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "application_implementation": "UNAUTHORISED / BLOCKED UNTIL ALL DEVELOPMENT ENTRY HARD STOP CONDITIONS PASS",
-        "next_stage": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
+        "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+        "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+        "application_implementation": "AUTHORISED",
+        "phase8": "AUTHORISED",
+        "next_stage": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
     }
     for key, expected in expected_state.items():
         if open_work_state.get(key) != expected:
@@ -4814,7 +4911,7 @@ def _check_fp001_phase7b_candidate(
         "PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
         "PHASE 7C FINAL FEATURE PACK CONTRACT: `working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md`; v0.1.0 COMPLETE / CERTIFIED / CURRENT",
         "PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED",
-        "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
+        "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         "ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED",
         "PROOF CLASSIFICATION: NEW_TRACER_BULLET",
         "ARCHITECTURAL PROOF REQUIREMENT / SELECTED PROOF VEHICLE: NEW_TRACER_BULLET",
@@ -4822,11 +4919,10 @@ def _check_fp001_phase7b_candidate(
         "TRACER BULLET: REQUIRED / NOT YET DEFINED",
         "TRACER BULLET ID: NONE / NOT CREATED",
         "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
-        "DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED",
-        "REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "PHASE 8: UNAUTHORISED",
-        "APPLICATION IMPLEMENTATION: UNAUTHORISED",
-        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION",
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "EXECUTABLE DEVELOPMENT: AUTHORISED ONLY FOR BOUNDED PHASE 8 ARCHITECTURAL PROOF / NEW_TRACER_BULLET",
     ):
         if token not in open_work_text:
             route_issues.append(f"current Open Work omits fail-closed gate state {token!r}")
@@ -4834,10 +4930,10 @@ def _check_fp001_phase7b_candidate(
         report,
         "fp001_phase7b_gate_routing",
         not route_issues,
-        "Phase 7B and Phase 7C certification routes remain current; classification satisfies only condition 9 and Phase 8 remains gated"
+        "Phase 7B and Phase 7C certification routes remain current; Development Entry Hard Stop PASS authorises bounded Phase 8 only"
         if not route_issues
         else "; ".join(route_issues),
-        path="docs/00_platform/02_OPEN_WORK_v1.2.73.md",
+        path="docs/00_platform/02_OPEN_WORK_v1.2.74.md",
     )
 
 
@@ -5273,6 +5369,10 @@ def _check_fp001_phase7c_candidate(
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
         "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
+        "docs/00_platform/02_OPEN_WORK_v1.2.73.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
     ]
     if graph_rules.get("retired_current_predecessor_paths") != expected_retired:
         route_issues.append("manifest does not pin the retired current-predecessor paths")
@@ -5280,11 +5380,11 @@ def _check_fp001_phase7c_candidate(
         if (root / relative).exists():
             route_issues.append(f"unarchived retired predecessor remains at a current path: {relative}")
     expected_current_paths = {
-        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
-        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
-        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
     }
-    open_work_path = docs / "02_OPEN_WORK_v1.2.73.md"
+    open_work_path = docs / "02_OPEN_WORK_v1.2.74.md"
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
     state_match = re.search(
         r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
@@ -5306,8 +5406,8 @@ def _check_fp001_phase7c_candidate(
     readme_path = docs / "README.md"
     readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     current_state = _markdown_h2_section(readme_text, "Current State") or ""
-    if "02_OPEN_WORK_v1.2.73.md" not in readme_text:
-        route_issues.append("README does not route Open Work v1.2.73")
+    if "02_OPEN_WORK_v1.2.74.md" not in readme_text:
+        route_issues.append("README does not route Open Work v1.2.74")
     for path in expected_current_paths.values():
         if Path(path).name not in readme_text:
             route_issues.append(f"README does not route current successor {path}")
@@ -5409,10 +5509,10 @@ def _check_roadmap_proof_classification_lifecycle(
     issues: list[str] = []
     base_sha = "24a9ad925ee1ab6d75ddb44bae6df0b4f3d09bca"
     expected_routes = {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.73.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.74.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
     }
     expected_upstream = {
         "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md": "249f5985ff1e8971e1ac4437e4bbebd5a3db9254ab25a2238e135cb7a7ae5f4b",
@@ -5427,6 +5527,10 @@ def _check_roadmap_proof_classification_lifecycle(
         "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.14.md": "a12ea6f734ad192a5b735bda8018cac3db7fc37d662f75643eb9758310414894",
         "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md": "8bc2b7c61d6feba1c61ea5233677dd8b7344d0704426d8d113e8e5f2b2395f6e",
         "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.16.md": "75b6e739b82a63fe85bb7d2e20f862883bd3e60cb00b2fcce72e7f92849c5cea",
+        "docs/00_platform/archive/02_OPEN_WORK_v1.2.73.md": "86b8a0b9d181ad6551b5174d3856a1d700209d583970dcc90a7aaa4b72ef8577",
+        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.15.md": "a5b7e2d94b29e077adb6d85605f2cbbbf139dff4983711ee73bfedce2b9bba26",
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md": "99c72571ef4243e6d765c4d5dd4b0e5b3dce73d993662916d8bed839ebd2ad55",
+        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.17.md": "a80c6870a6b86dc4e871d0357a11edc877379085b846a348e750ab037741e1d7",
     }
     expected_jit = {
         "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "aa6c4a52518225a2d5bbe86734410e5e9e330e29613b1c1e150174e2e3a12046",
@@ -5572,9 +5676,6 @@ def _check_roadmap_proof_classification_lifecycle(
         "TRACER BULLET: REQUIRED / NOT YET DEFINED",
         "TRACER BULLET ID: NONE / NOT CREATED",
         "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
-        "PHASE 8: UNAUTHORISED",
-        "APPLICATION IMPLEMENTATION: UNAUTHORISED",
-        "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
     )
     full_status_sections = {
         key: current_sections[key]
@@ -5588,7 +5689,15 @@ def _check_roadmap_proof_classification_lifecycle(
             issues.append(f"{key} still reports current proof classification as not finalised")
         if re.search(r"(?im)^\s*REUSE_EXISTING_PROOF\s*:\s*SELECTED\b", text):
             issues.append(f"{key} selects REUSE_EXISTING_PROOF")
-        if re.search(r"(?im)^\s*(?:PHASE 8(?:\s*/\s*APPLICATION IMPLEMENTATION)?|APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE)", text):
+        if key == "Open Work active route":
+            if re.search(r"(?im)^\s*PHASE 8\s*:\s*AUTHORI[ZS]ED\s*$", text):
+                issues.append(f"{key} authorises Phase 8 without bounded architectural-proof scope")
+            if re.search(r"(?im)^\s*APPLICATION IMPLEMENTATION\s*:\s*AUTHORI[ZS]ED\s*$", text):
+                issues.append(f"{key} authorises application implementation without bounded Phase 8 scope")
+        elif key == "Final Contract status":
+            if re.search(r"(?im)^\s*PHASE 8\s*:\s*AUTHORI[ZS]ED", text) and "ARCHITECTURAL PROOF ONLY" not in text:
+                issues.append(f"{key} authorises Phase 8 without bounded architectural-proof scope")
+        elif re.search(r"(?im)^\s*(?:PHASE 8(?:\s*/\s*APPLICATION IMPLEMENTATION)?|APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE)", text):
             issues.append(f"{key} authorises Phase 8 or application implementation")
         if re.search(r"(?i)(?:proof|classification)[^\n]{0,100}(?:EXECUTABLE PROOF|PROOF EXECUTION)\s*:\s*(?:COMPLETE|PASS)", text):
             issues.append(f"{key} represents classification as executable proof completion")
@@ -5613,46 +5722,12 @@ def _check_roadmap_proof_classification_lifecycle(
     classification_record = route_docs["open_work"].split("## 12.29 — FP-001 post-Phase-7C architectural proof classification", 1)[-1]
     if "FLOW-01" not in classification_record or "supporting evidence only" not in classification_record or "PASS_WITH_DOWNSTREAM_GATES" not in classification_record:
         issues.append("current Open Work does not keep FLOW-01 supporting-only and its downstream obligations open")
-    if "Classification satisfies only Development Entry Hard Stop condition 9" not in active:
-        issues.append("current Open Work does not limit classification to Development Entry Hard Stop condition 9")
-    if any(
-        value.strip() != "NEW_TRACER_BULLET"
-        for value in re.findall(r"(?im)^[ \t]*PROOF CLASSIFICATION[ \t]*:[ \t]*([^\r\n]+)", active)
-    ):
-        issues.append("Open Work active route contains a proof classification other than NEW_TRACER_BULLET")
-    if "every other applicable Development Entry Hard Stop condition is independently evaluated and satisfied" not in active:
-        issues.append("current Open Work omits the fail-closed remaining Development Entry Hard Stop")
     if "OQ-035" not in active or "OQ-036" not in active:
         issues.append("current Open Work omits the unresolved downstream expert/provider gates")
     if re.search(r"(?im)^.*#124[^\n]{0,120}\bOPEN\b.*$", active):
         issues.append("issue #124 is reopened in the current Open Work route")
     if re.search(r"(?im)^\s*PROGRAMME ROUTER #111\s*:\s*CLOSED\b.*$", active):
         issues.append("programme router #111 is closed in the current Open Work route")
-
-    # Repository contents and governed authorization determine this rule, not branch metadata.
-    application_source_prohibited = not isinstance(rule, dict) or any(
-        rule.get(key) != "AUTHORISED"
-        for key in ("phase8", "application_implementation")
-    )
-    if application_source_prohibited:
-        application_source_paths: list[str] = []
-        for directory, child_directories, filenames in os.walk(root):
-            child_directories[:] = [name for name in child_directories if name != ".git"]
-            relative_directory = Path(directory).relative_to(root)
-            for filename in filenames:
-                relative_path = relative_directory / filename
-                path_parts = set(relative_path.parts)
-                if (
-                    filename == "mix.exs"
-                    or filename.endswith((".ex", ".exs"))
-                    or path_parts & {"lib", "src", "app", "apps", "priv", "migrations", "assets"}
-                ):
-                    application_source_paths.append(relative_path.as_posix())
-        if application_source_paths:
-            issues.append(
-                "classification candidate introduces executable application/bootstrap source paths: "
-                + ", ".join(sorted(application_source_paths))
-            )
 
     atlas = route_docs["delivery_atlas"]
     for statement in (
@@ -5675,10 +5750,222 @@ def _check_roadmap_proof_classification_lifecycle(
         report,
         "roadmap_proof_classification_lifecycle",
         not issues,
-        "FP-001 is classified as NEW_TRACER_BULLET at the separate post-7C gate; condition 9 alone is satisfied and Phase 8 remains unauthorised"
+        "FP-001 remains classified as NEW_TRACER_BULLET at the separate post-7C gate with classification invariants preserved"
         if not issues
         else "; ".join(issues),
         path=roadmap_path,
+    )
+
+
+
+def _check_fp001_development_entry_hard_stop_lifecycle(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    """Pin Development Entry Hard Stop PASS and bounded Phase 8 authorisation."""
+
+    rule = integrity_rules.get("fp001_development_entry_hard_stop_lifecycle", {})
+    issues: list[str] = []
+    base_sha = "675a8c50ac53a995a48e4d262df42065f8ccd412"
+    promoted_open_work = root / "docs/00_platform/02_OPEN_WORK_v1.2.74.md"
+    if not promoted_open_work.is_file():
+        _record_check(
+            report,
+            "fp001_development_entry_hard_stop_lifecycle",
+            True,
+            "hard-stop promotion routes are not present in this tree",
+        )
+        return
+    expected_routes = {
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.74.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
+    }
+    expected_predecessors = {
+        "docs/00_platform/archive/02_OPEN_WORK_v1.2.73.md": "86b8a0b9d181ad6551b5174d3856a1d700209d583970dcc90a7aaa4b72ef8577",
+        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.15.md": "a5b7e2d94b29e077adb6d85605f2cbbbf139dff4983711ee73bfedce2b9bba26",
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md": "99c72571ef4243e6d765c4d5dd4b0e5b3dce73d993662916d8bed839ebd2ad55",
+        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.17.md": "a80c6870a6b86dc4e871d0357a11edc877379085b846a348e750ab037741e1d7",
+    }
+    expected_fixed = {
+        "base_sha": base_sha,
+        "hard_stop_evaluation_baseline_sha": base_sha,
+        "current_routes": expected_routes,
+        "phase7c_contract_path": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
+        "phase7c_contract_sha256": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
+        "pr125_candidate_archive_path": "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
+        "pr125_candidate_archive_sha256": "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19",
+        "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+        "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+        "architectural_proof_classification_status": "COMPLETE / FINALISED",
+        "architectural_proof_requirement": "NEW_TRACER_BULLET",
+        "selected_proof_vehicle": "NEW_TRACER_BULLET",
+        "reuse_existing_proof": "NOT SELECTED",
+        "tracer_bullet": "REQUIRED / NOT YET DEFINED",
+        "tracer_bullet_id": "NONE / NOT CREATED",
+        "architectural_proof_execution": "NOT STARTED",
+        "phase8": "AUTHORISED",
+        "application_implementation": "AUTHORISED",
+        "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
+        "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        "predecessor_archives_sha256": expected_predecessors,
+        "authorization_scope_note": "APPLICATION IMPLEMENTATION AUTHORISED only for bounded Phase 8 Architectural Proof / NEW_TRACER_BULLET",
+        "synthetic_authorization_fixture_relative_path": "tests/fixtures/fp001_phase8_authorization_probe/.authorization_probe",
+    }
+    if not isinstance(rule, dict):
+        issues.append("manifest hard-stop lifecycle rule is missing")
+        rule = {}
+    for key, value in expected_fixed.items():
+        if key == "predecessor_archives_sha256":
+            if rule.get(key) != value:
+                issues.append("manifest hard-stop predecessor archives are wrong")
+        elif rule.get(key) != value:
+            issues.append(f"manifest hard-stop lifecycle field {key!r} is wrong")
+
+    route_hashes = rule.get("current_route_sha256", {}) if isinstance(rule, dict) else {}
+    contract_path = str(expected_fixed["phase7c_contract_path"])
+    expected_route_hash_keys = {*expected_routes.values(), contract_path}
+    if not isinstance(route_hashes, dict) or set(route_hashes) != expected_route_hash_keys:
+        issues.append("manifest hard-stop current-route hash map is incomplete")
+
+    route_docs: dict[str, str] = {}
+    for key, relative in expected_routes.items():
+        path = root / relative
+        if not path.is_file():
+            issues.append(f"hard-stop current route {key!r} is missing: {relative}")
+            route_docs[key] = ""
+            continue
+        route_docs[key] = path.read_text(encoding="utf-8")
+        if isinstance(route_hashes, dict) and route_hashes.get(relative) != sha256_file(path):
+            issues.append(f"manifest hard-stop route hash differs: {relative}")
+
+    contract_file = root / contract_path
+    contract = contract_file.read_text(encoding="utf-8") if contract_file.is_file() else ""
+    if not contract_file.is_file() or sha256_file(contract_file) != expected_fixed["phase7c_contract_sha256"]:
+        issues.append("hard-stop Final Contract bytes disagree with manifest pin")
+    if "The proof vehicle and final proof classification remain NOT FINALISED." not in contract:
+        issues.append("Final Contract §P freeze-time NOT FINALISED semantics were altered")
+
+    for relative, digest in expected_predecessors.items():
+        path = root / relative
+        if not path.is_file() or sha256_file(path) != digest:
+            issues.append(f"hard-stop direct predecessor archive is missing or changed: {relative}")
+        retired_current = relative.replace("/archive/", "/")
+        if (root / retired_current).exists():
+            issues.append(f"hard-stop predecessor remains at retired current path: {retired_current}")
+
+    open_work = route_docs.get("open_work", "")
+    state_match = re.search(
+        r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
+        open_work,
+        re.DOTALL,
+    )
+    try:
+        state = json.loads(state_match.group(1), object_pairs_hook=_reject_duplicate_json_keys) if state_match else {}
+    except (json.JSONDecodeError, TypeError, ValueError):
+        state = {}
+    required_state = {
+        "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+        "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+        "phase8": "AUTHORISED",
+        "application_implementation": "AUTHORISED",
+        "architectural_proof_classification_status": "COMPLETE / FINALISED",
+        "reuse_existing_proof": "NOT SELECTED",
+        "tracer_bullet_id": "NONE / NOT CREATED",
+        "architectural_proof_execution": "NOT STARTED",
+        "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+    }
+    for key, value in required_state.items():
+        if state.get(key) != value:
+            issues.append(f"Open Work lifecycle state missing hard-stop field {key!r}")
+
+    active_start = open_work.find("# 9. Immediate Next Action")
+    active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
+    active = open_work[active_start:active_end] if active_start >= 0 and active_end > active_start else ""
+    required_active = (
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        "TRACER BULLET ID: NONE / NOT CREATED",
+        "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
+    )
+    for token in required_active:
+        if token not in active:
+            issues.append(f"Open Work active route omits hard-stop state {token!r}")
+    if "OQ-035" not in active or "OQ-036" not in active:
+        issues.append("Open Work active route omits release-only OQ-035/OQ-036 gates")
+    if re.search(r"\bTB-\d{3,}\b", active):
+        issues.append("Open Work active route introduces a Tracer Bullet identifier")
+
+    readme_path = root / "docs/00_platform/README.md"
+    if readme_path.is_file():
+        readme = readme_path.read_text(encoding="utf-8")
+        current_state = _markdown_h2_section(readme, "Current State") or ""
+        for token in required_active[:4]:
+            if token not in current_state:
+                issues.append(f"README current state omits hard-stop state {token!r}")
+    else:
+        issues.append("README is missing for hard-stop promotion coherence")
+
+    probe_rel = str(expected_fixed["synthetic_authorization_fixture_relative_path"])
+    probe = root / probe_rel
+    if not probe.is_file() and readme_path.is_file():
+        issues.append("synthetic authorization probe fixture is missing")
+
+    authorised = (
+        isinstance(rule, dict)
+        and rule.get("phase8") == "AUTHORISED"
+        and rule.get("application_implementation") == "AUTHORISED"
+        and state.get("phase8") == "AUTHORISED"
+        and state.get("application_implementation") == "AUTHORISED"
+        and state.get("development_entry_hard_stop_status") == "PASS / ALL 10 CONDITIONS SATISFIED"
+    )
+    if not authorised:
+        issues.append("governed hard-stop authorisation state is incomplete or inconsistent")
+
+    application_source_paths: list[str] = []
+    probe_parts = set(Path(probe_rel).parts)
+    for directory, child_directories, filenames in os.walk(root):
+        child_directories[:] = [name for name in child_directories if name != ".git"]
+        relative_directory = Path(directory).relative_to(root)
+        if probe_parts & set(relative_directory.parts):
+            continue
+        for filename in filenames:
+            relative_path = relative_directory / filename
+            path_parts = set(relative_path.parts)
+            if (
+                filename == "mix.exs"
+                or filename.endswith((".ex", ".exs"))
+                or path_parts & {"lib", "src", "app", "apps", "priv", "migrations", "assets"}
+            ):
+                application_source_paths.append(relative_path.as_posix())
+    if application_source_paths:
+        issues.append(
+            "hard-stop promotion introduces executable application/bootstrap source outside the authorization probe: "
+            + ", ".join(sorted(application_source_paths))
+        )
+
+    open_work_entry = next((entry for entry in manifest.get("governing_documents", []) if entry.get("document_id") == "OPEN_WORK"), None)
+    if (
+        not isinstance(open_work_entry, dict)
+        or _relative_path(open_work_entry) != expected_routes["open_work"]
+        or open_work_entry.get("semver") != "1.2.74"
+        or open_work_entry.get("superseded_version") != "1.2.73"
+    ):
+        issues.append("manifest Open Work lineage is not v1.2.73 → v1.2.74")
+
+    _record_check(
+        report,
+        "fp001_development_entry_hard_stop_lifecycle",
+        not issues,
+        "FP-001 Development Entry Hard Stop is PASS; Phase 8 Architectural Proof is authorised within bounded scope"
+        if not issues
+        else "; ".join(issues),
+        path=expected_routes["open_work"],
     )
 
 
@@ -5690,7 +5977,7 @@ def _check_platform_readme_router_consistency(
 
     issues: list[str] = []
     readme_path = root / "docs" / "00_platform" / "README.md"
-    open_work_path = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.73.md"
+    open_work_path = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.74.md"
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
 
@@ -5705,7 +5992,7 @@ def _check_platform_readme_router_consistency(
             issues.append(message)
 
     atlas_routing = _markdown_h2_section(readme, "Delivery Atlas routing") or ""
-    if "working/DELIVERY_ATLAS_WORKING_v0.4.15.md" not in atlas_routing:
+    if "working/DELIVERY_ATLAS_WORKING_v0.4.16.md" not in atlas_routing:
         issues.append("README Delivery Atlas routing section does not route v0.4.15")
     if re.search(r"\(working/DELIVERY_ATLAS_WORKING_v0\.4\.14\.md\)", atlas_routing):
         issues.append("README Delivery Atlas routing section still links working v0.4.14")
@@ -5728,7 +6015,9 @@ def _check_platform_readme_router_consistency(
     for token in (
         "ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED",
         "PROOF CLASSIFICATION: NEW_TRACER_BULLET",
-        "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
     ):
         if token not in current_state:
             issues.append(f"README Current State omits {token!r}")
@@ -5737,7 +6026,7 @@ def _check_platform_readme_router_consistency(
         report,
         "platform_readme_router_consistency",
         not issues,
-        "README current routing agrees with Open Work NEW_TRACER_BULLET classification and Delivery Atlas v0.4.15"
+        "README current routing agrees with Open Work hard-stop PASS and Delivery Atlas v0.4.16"
         if not issues
         else "; ".join(issues),
         path="docs/00_platform/README.md",
@@ -5753,10 +6042,10 @@ def _check_fp001_phase7c_current_promotion(
     """Pin the closed Phase 7C tracker route and its hosted provenance."""
 
     current_paths = {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.73.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.74.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
     }
     predecessor_archives = {
@@ -5768,11 +6057,11 @@ def _check_fp001_phase7c_current_promotion(
     candidate_archive_path = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
     candidate_archive_sha256 = "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19"
     protected_current_artifacts = {
-        "docs/00_platform/02_OPEN_WORK_v1.2.73.md": "86b8a0b9d181ad6551b5174d3856a1d700209d583970dcc90a7aaa4b72ef8577",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md": "a5b7e2d94b29e077adb6d85605f2cbbbf139dff4983711ee73bfedce2b9bba26",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md": "99c72571ef4243e6d765c4d5dd4b0e5b3dce73d993662916d8bed839ebd2ad55",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md": "a80c6870a6b86dc4e871d0357a11edc877379085b846a348e750ab037741e1d7",
-        "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "26e33c6eed2fb10e04c658dd7ed397cb844f5e3ff397c5d52f995d990c8ea22f",
+        "docs/00_platform/02_OPEN_WORK_v1.2.74.md": "0872b5566f38a6c9cff53dbf7a236c0ba5b74308053aeb91796a45a3e9d9f852",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "1d5728af2f63f322972ba0ee030ae03eae0c00f411908fd964a11ad3af130ed7",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "edf3edcdcd442287d49838d7c6301bf1bee89b36790c1ea7aced16dbdfdcce2f",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "e19575876293b42f6fa2473f3f7050c1388bc5b13d43278e29f5d07ecd1e6f07",
+        "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md": "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "cc664c1e5d148c1a8f30f2a8d769645646162ff029494a2187e0a65775c27c83",
         "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "aa6c4a52518225a2d5bbe86734410e5e9e330e29613b1c1e150174e2e3a12046",
@@ -5841,13 +6130,19 @@ def _check_fp001_phase7c_current_promotion(
         "tracer_bullet": "REQUIRED / NOT YET DEFINED",
         "tracer_bullet_id": "NONE / NOT CREATED",
         "architectural_proof_execution": "NOT STARTED",
-        "phase8": "UNAUTHORISED",
-        "application_implementation": "UNAUTHORISED",
-        "development_entry_hard_stop_condition_9": "SATISFIED",
-        "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "next_governance_action": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
+        "phase8": "AUTHORISED",
+        "application_implementation": "AUTHORISED",
+        "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+        "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+        "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         "current_paths": current_paths,
-        "predecessor_archives_sha256": predecessor_archives,
+        "predecessor_archives_sha256": {
+            **predecessor_archives,
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.73.md": "86b8a0b9d181ad6551b5174d3856a1d700209d583970dcc90a7aaa4b72ef8577",
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.15.md": "a5b7e2d94b29e077adb6d85605f2cbbbf139dff4983711ee73bfedce2b9bba26",
+            "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md": "99c72571ef4243e6d765c4d5dd4b0e5b3dce73d993662916d8bed839ebd2ad55",
+            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.17.md": "a80c6870a6b86dc4e871d0357a11edc877379085b846a348e750ab037741e1d7",
+        },
         "protected_current_artifacts_sha256": protected_current_artifacts,
     }
     rule = integrity_rules.get("fp001_phase7c_final_contract_current_promotion", {})
@@ -5937,10 +6232,10 @@ def _check_fp001_phase7c_current_promotion(
     if (
         not isinstance(open_work_entry, dict)
         or _relative_path(open_work_entry) != current_paths["open_work"]
-        or open_work_entry.get("semver") != "1.2.73"
-        or open_work_entry.get("superseded_version") != "1.2.72"
+        or open_work_entry.get("semver") != "1.2.74"
+        or open_work_entry.get("superseded_version") != "1.2.73"
     ):
-        issues.append("manifest governing Open Work lineage is not v1.2.72 → v1.2.73")
+        issues.append("manifest governing Open Work lineage is not v1.2.73 → v1.2.74")
 
     contract_path = current_paths["final_feature_pack_contract"]
     current_authorities = [
@@ -6025,11 +6320,12 @@ def _check_fp001_phase7c_current_promotion(
         "tracer_bullet_id": "NONE / NOT CREATED",
         "architectural_proof_execution": "NOT STARTED",
         "classification_authority_event": "SEPARATE OPEN WORK POST-PHASE-7C STATUS DECISION",
-        "phase8": "UNAUTHORISED",
-        "application_implementation": "UNAUTHORISED",
+        "phase8": "AUTHORISED",
+        "application_implementation": "AUTHORISED",
         "development_entry_hard_stop_condition_9": "SATISFIED",
-        "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "next_governance_action": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
+        "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+        "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+        "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
     }
     if promotion != expected_promotion:
         issues.append("working contract status record is missing, altered or contains a premature lifecycle decision")
@@ -6054,10 +6350,11 @@ def _check_fp001_phase7c_current_promotion(
         "REUSE_EXISTING_PROOF: NOT SELECTED",
         "TRACER BULLET ID: NONE / NOT CREATED",
         "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
-        "DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED",
-        "REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
-        "PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED",
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "DEVELOPMENT ENTRY HARD STOP CONDITIONS 1–10: SATISFIED",
+        "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
     ):
         if token not in status_summary:
             issues.append(f"working contract lifecycle summary omits or contradicts {token!r}")
@@ -6090,18 +6387,19 @@ def _check_fp001_phase7c_current_promotion(
     except (json.JSONDecodeError, TypeError, ValueError):
         state = {}
     expected_state = {
-        "status_successor_version": "1.2.73",
-        "status_successor_base_sha": "24a9ad925ee1ab6d75ddb44bae6df0b4f3d09bca",
+        "status_successor_version": "1.2.74",
+        "status_successor_base_sha": "675a8c50ac53a995a48e4d262df42065f8ccd412",
         "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
-        "current_stage": "FP-001 DEVELOPMENT ENTRY HARD STOP EVALUATION",
-        "next_stage": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
+        "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
+        "next_stage": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         "phase_7c_execution_tracker_issue": 124,
         "phase_7c_execution_tracker_state": "CLOSED / COMPLETED",
         "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
         "programme_router_issue_111_state": "OPEN",
         "proof_classification": "NEW_TRACER_BULLET",
-        "application_implementation": "UNAUTHORISED / BLOCKED UNTIL ALL DEVELOPMENT ENTRY HARD STOP CONDITIONS PASS",
+        "application_implementation": "AUTHORISED",
+        "phase8": "AUTHORISED",
         "architectural_proof_classification_status": "COMPLETE / FINALISED",
         "architectural_proof_requirement": "NEW_TRACER_BULLET",
         "selected_proof_vehicle": "NEW_TRACER_BULLET",
@@ -6109,12 +6407,12 @@ def _check_fp001_phase7c_current_promotion(
         "tracer_bullet": "REQUIRED / NOT YET DEFINED",
         "tracer_bullet_id": "NONE / NOT CREATED",
         "architectural_proof_execution": "NOT STARTED",
-        "development_entry_hard_stop_condition_9": "SATISFIED",
-        "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "next_governance_action": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
-        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
-        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
-        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
+        "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+        "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+        "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
     }
     if any(state.get(key) != value for key, value in expected_state.items()):
         issues.append("Open Work current lifecycle state is missing or contradicts the closed-tracker route")
@@ -6128,7 +6426,7 @@ def _check_fp001_phase7c_current_promotion(
         or contract_state.get("reuse_existing_proof") != "NOT SELECTED"
         or contract_state.get("tracer_bullet_id") != "NONE / NOT CREATED"
         or contract_state.get("architectural_proof_execution") != "NOT STARTED"
-        or contract_state.get("phase8") != "UNAUTHORISED"
+        or contract_state.get("phase8") != ("AUTHORISED" if "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED" in open_work else "UNAUTHORISED")
         or contract_state.get("candidate_archive_sha256") != candidate_archive_sha256
         or contract_state.get("resulting_main_fia_run") != 39143147487
         or contract_state.get("resulting_main_fia_tests") != 455
@@ -6140,6 +6438,7 @@ def _check_fp001_phase7c_current_promotion(
     active_start = open_work.find("# 9. Immediate Next Action")
     active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
     active_route = open_work[active_start:active_end] if active_start >= 0 and active_end > active_start else ""
+    hard_stop_promoted = "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED" in open_work
     for token in (
         "PHASE 7A: COMPLETE",
         "REQUIRED JIT DOSSIER SET: DISPOSITION-COMPLETE",
@@ -6150,17 +6449,29 @@ def _check_fp001_phase7c_current_promotion(
         "#120 CLOSED / COMPLETED",
         "PROGRAMME ROUTER #111: OPEN",
         "ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED",
-        "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
-        "PROOF CLASSIFICATION: NEW_TRACER_BULLET",
+        *(
+            (
+                "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+                "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+                "DEVELOPMENT ENTRY HARD STOP CONDITIONS 1–10: SATISFIED",
+                "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+                "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+                "EXECUTABLE DEVELOPMENT: AUTHORISED ONLY FOR BOUNDED PHASE 8 ARCHITECTURAL PROOF / NEW_TRACER_BULLET; PHASE 9 VERTICAL SLICES AND BROAD FP-001 IMPLEMENTATION REMAIN UNAUTHORISED",
+            )
+            if hard_stop_promoted
+            else (
+                "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
+                "DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED",
+                "REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8",
+                "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION",
+            )
+        ),
         "PROOF CLASSIFICATION: NEW_TRACER_BULLET",
         "ARCHITECTURAL PROOF REQUIREMENT / SELECTED PROOF VEHICLE: NEW_TRACER_BULLET",
         "REUSE_EXISTING_PROOF: NOT SELECTED",
         "TRACER BULLET: REQUIRED / NOT YET DEFINED",
         "TRACER BULLET ID: NONE / NOT CREATED",
         "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
-        "DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED",
-        "REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION",
         "39143147487",
         "455 TESTS / 728 ASSERTIONS / 0 FINDINGS",
     ):
@@ -6172,8 +6483,10 @@ def _check_fp001_phase7c_current_promotion(
         issues.append("Open Work does not record its selected proof vehicle")
     if re.search(r"(?im)^\s*REUSE_EXISTING_PROOF\s*:\s*SELECTED\b", active_route):
         issues.append("Open Work selects REUSE_EXISTING_PROOF")
-    if re.search(r"(?im)^.*(?:PHASE 8|APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$", active_route):
-        issues.append("Open Work authorises Phase 8 or application implementation")
+    if re.search(r"(?im)^\s*PHASE 8\s*:\s*AUTHORI[ZS]ED\s*$", active_route):
+        issues.append("Open Work authorises Phase 8 without bounded architectural-proof scope")
+    if re.search(r"(?im)^\s*APPLICATION IMPLEMENTATION\s*:\s*AUTHORI[ZS]ED\s*$", active_route):
+        issues.append("Open Work authorises application implementation without bounded Phase 8 scope")
 
     readme_path = root / "docs/00_platform/README.md"
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
@@ -6192,10 +6505,9 @@ def _check_fp001_phase7c_current_promotion(
         "REUSE_EXISTING_PROOF: NOT SELECTED",
         "TRACER BULLET ID: NONE / NOT CREATED",
         "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
-        "DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED",
-        "REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
-        "PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED",
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
         "39143147487",
         "455 tests / 728 FIA assertions / 0 findings",
     ):
@@ -6210,14 +6522,17 @@ def _check_fp001_phase7c_current_promotion(
         issues.append("README current state does not record the selected proof vehicle")
     if re.search(r"(?im)^\s*REUSE_EXISTING_PROOF\s*:\s*SELECTED\b", current_state):
         issues.append("README current state selects REUSE_EXISTING_PROOF")
-    if re.search(r"(?im)^.*(?:PHASE 8|APPLICATION IMPLEMENTATION)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$", current_state):
-        issues.append("README current state authorises Phase 8 or application implementation")
+    if (
+        re.search(r"(?im)^\s*PHASE 8\s*:\s*AUTHORI[ZS]ED\s*$", current_state)
+        or re.search(r"(?im)^\s*APPLICATION IMPLEMENTATION\s*:\s*AUTHORI[ZS]ED\s*$", current_state)
+    ):
+        issues.append("README current state authorises Phase 8 or application implementation without bounded scope")
 
     active_artifacts = _markdown_h2_section(readme, "Active Working Artifacts") or ""
     current_route_sections = [("README current state", current_state), ("README active artifacts", active_artifacts), ("Open Work", active_route)]
     route_sections = {
-        "delivery_atlas": "## 26.21 FP-001 architectural proof classification current route",
-        "fp001_skeleton": "## v0.1.17 current-route status",
+        "delivery_atlas": "## 26.22 FP-001 Development Entry Hard Stop PASS current route",
+        "fp001_skeleton": "## v0.1.18",
         "harden_02": "## 25. FP-001 architectural proof classification current status",
     }
     for key, heading in route_sections.items():
@@ -6249,7 +6564,10 @@ def _check_fp001_phase7c_current_promotion(
             issues.append(f"current {key} omits the next governance action")
         if "ARCHITECTURAL PROOF REQUIREMENT / SELECTED PROOF VEHICLE: NEW_TRACER_BULLET" not in text:
             issues.append(f"current {key} omits the selected proof classification")
-        if "PHASE 8: UNAUTHORISED" not in text or "APPLICATION IMPLEMENTATION: UNAUTHORISED" not in text:
+        if hard_stop_promoted:
+            if "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)" not in text or "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)" not in text:
+                issues.append(f"current {key} omits bounded Phase 8 authorisation")
+        elif "PHASE 8: UNAUTHORISED" not in text or "APPLICATION IMPLEMENTATION: UNAUTHORISED" not in text:
             issues.append(f"current {key} authorises or omits the Phase 8 gate")
         if re.search(r"(?im)^.*#124[^\n]{0,120}\bOPEN\b.*$", text.split("\n## ", 1)[0]):
             issues.append(f"current {key} route projects issue #124 as OPEN")
@@ -6396,6 +6714,22 @@ def _check_fp001_phase7b_certification_current(
     if not current_text:
         issues.append("current reconciliation status successor is missing")
 
+    open_work_entry_early = next(
+        (
+            entry
+            for entry in _all_entries(manifest)
+            if entry.get("document_id") == "OPEN_WORK" and entry.get("lifecycle", "current") != "historical"
+        ),
+        None,
+    )
+    open_work_path_early = root / _relative_path(open_work_entry_early) if open_work_entry_early else None
+    open_work = (
+        open_work_path_early.read_text(encoding="utf-8")
+        if open_work_path_early and open_work_path_early.is_file()
+        else ""
+    )
+    hard_stop_promoted = "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED" in open_work
+
     readme_path = docs / "README.md"
     readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     readme_current = _markdown_h2_section(readme_text, "Current State")
@@ -6409,7 +6743,15 @@ def _check_fp001_phase7b_certification_current(
             "FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT",
             "PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED",
             "PROOF CLASSIFICATION: NEW_TRACER_BULLET",
-            "PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED",
+            *(
+                (
+                    "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+                    "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+                    "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+                )
+                if hard_stop_promoted
+                else ("PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED",)
+            ),
         )
         for route in readme_routes:
             if route not in readme_current:
@@ -6563,29 +6905,63 @@ def _check_fp001_phase7b_certification_current(
     }
     if certification != exact_certification:
         issues.append("current Open Work is missing or contradicts exact PR #121 post-merge certification evidence")
-    expected_state = {
-        "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
-        "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
-        "phase_7c_execution_tracker_issue": 124,
-        "phase_7c_execution_tracker_state": "CLOSED / COMPLETED",
-        "programme_router_issue_111_state": "OPEN",
-        "next_stage": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
-        "proof_classification": "NEW_TRACER_BULLET",
-        "architectural_proof_classification_status": "COMPLETE / FINALISED",
-        "selected_proof_vehicle": "NEW_TRACER_BULLET",
-        "development_entry_hard_stop_condition_9": "SATISFIED",
-        "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "application_implementation": "UNAUTHORISED / BLOCKED UNTIL ALL DEVELOPMENT ENTRY HARD STOP CONDITIONS PASS",
-        "phase_7b_reconciliation_execution_tracker_issue": 120,
-        "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
-        "phase_7b_reconciliation_baseline_main_sha": "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
-        "conditional_dossiers": {
-            "privacy_consent": "NOT_REQUIRED",
-            "content_media": "NOT_REQUIRED",
-            "audit_evidence": "REQUIRED / COMPLETE / CERTIFIED / CURRENT",
-            "analytics": "NOT_REQUIRED",
-        },
-    }
+    expected_state = (
+        {
+            "status_successor_version": "1.2.74",
+            "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
+            "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
+            "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
+            "phase_7c_execution_tracker_issue": 124,
+            "phase_7c_execution_tracker_state": "CLOSED / COMPLETED",
+            "programme_router_issue_111_state": "OPEN",
+            "next_stage": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+            "proof_classification": "NEW_TRACER_BULLET",
+            "architectural_proof_classification_status": "COMPLETE / FINALISED",
+            "selected_proof_vehicle": "NEW_TRACER_BULLET",
+            "reuse_existing_proof": "NOT SELECTED",
+            "tracer_bullet": "REQUIRED / NOT YET DEFINED",
+            "tracer_bullet_id": "NONE / NOT CREATED",
+            "architectural_proof_execution": "NOT STARTED",
+            "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+            "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+            "application_implementation": "AUTHORISED",
+            "phase8": "AUTHORISED",
+            "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+            "phase_7b_reconciliation_execution_tracker_issue": 120,
+            "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
+            "phase_7b_reconciliation_baseline_main_sha": "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
+            "conditional_dossiers": {
+                "privacy_consent": "NOT_REQUIRED",
+                "content_media": "NOT_REQUIRED",
+                "audit_evidence": "REQUIRED / COMPLETE / CERTIFIED / CURRENT",
+                "analytics": "NOT_REQUIRED",
+            },
+        }
+        if hard_stop_promoted
+        else {
+            "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
+            "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
+            "phase_7c_execution_tracker_issue": 124,
+            "phase_7c_execution_tracker_state": "CLOSED / COMPLETED",
+            "programme_router_issue_111_state": "OPEN",
+            "next_stage": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
+            "proof_classification": "NEW_TRACER_BULLET",
+            "architectural_proof_classification_status": "COMPLETE / FINALISED",
+            "selected_proof_vehicle": "NEW_TRACER_BULLET",
+            "development_entry_hard_stop_condition_9": "SATISFIED",
+            "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
+            "application_implementation": "UNAUTHORISED / BLOCKED UNTIL ALL DEVELOPMENT ENTRY HARD STOP CONDITIONS PASS",
+            "phase_7b_reconciliation_execution_tracker_issue": 120,
+            "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
+            "phase_7b_reconciliation_baseline_main_sha": "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd",
+            "conditional_dossiers": {
+                "privacy_consent": "NOT_REQUIRED",
+                "content_media": "NOT_REQUIRED",
+                "audit_evidence": "REQUIRED / COMPLETE / CERTIFIED / CURRENT",
+                "analytics": "NOT_REQUIRED",
+            },
+        }
+    )
     for key, expected in expected_state.items():
         if state.get(key) != expected:
             issues.append(f"current Open Work lifecycle state {key!r} is missing or contradictory")
@@ -6613,7 +6989,7 @@ def _check_fp001_phase7b_certification_current(
             "fresh_resulting_main_verification": "PASS",
             "tracker_124_state": "CLOSED / COMPLETED",
             "proof_classification": "NEW_TRACER_BULLET",
-            "phase8": "UNAUTHORISED",
+            "phase8": "AUTHORISED" if hard_stop_promoted else "UNAUTHORISED",
         }.items()
     ):
         issues.append("current Open Work Phase 7C contract provenance is missing or contradictory")
@@ -6628,15 +7004,15 @@ def _check_fp001_phase7b_certification_current(
     }
     if state.get("phase_7b_reconciliation_candidate") != expected_candidate_state:
         issues.append("Open Work does not separate the immutable candidate from its current status successor")
-    if state.get("current_delivery_atlas") != "working/DELIVERY_ATLAS_WORKING_v0.4.15.md" or state.get("current_fp001_skeleton") != "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md" or state.get("current_harden_02") != "working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md":
+    if state.get("current_delivery_atlas") != "working/DELIVERY_ATLAS_WORKING_v0.4.16.md" or state.get("current_fp001_skeleton") != "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md" or state.get("current_harden_02") != "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md":
         issues.append("Open Work current Atlas, Skeleton or HARDEN successor route is stale")
     if (
         not isinstance(open_work_entry, dict)
-        or _relative_path(open_work_entry) != "docs/00_platform/02_OPEN_WORK_v1.2.73.md"
-        or open_work_entry.get("semver") != "1.2.73"
-        or open_work_entry.get("superseded_version") != "1.2.72"
+        or _relative_path(open_work_entry) != "docs/00_platform/02_OPEN_WORK_v1.2.74.md"
+        or open_work_entry.get("semver") != "1.2.74"
+        or open_work_entry.get("superseded_version") != "1.2.73"
     ):
-        issues.append("Open Work current manifest lineage is not v1.2.72 → v1.2.73")
+        issues.append("Open Work current manifest lineage is not v1.2.73 → v1.2.74")
     predecessor = next(
         (entry for entry in _all_entries(manifest) if entry.get("document_id") == "OPEN_WORK_V1_2_67"),
         None,
@@ -6653,7 +7029,10 @@ def _check_fp001_phase7b_certification_current(
         or predecessor.get("provenance_sha256") != predecessor_hash
     ):
         issues.append("historical Open Work v1.2.67 manifest lineage or archive hash is invalid")
-    if "PHASE 7C: COMPLETE / CERTIFIED / CURRENT" not in open_work or "EXECUTABLE DEVELOPMENT: UNAUTHORISED" not in open_work:
+    if hard_stop_promoted:
+        if "PHASE 7C: COMPLETE / CERTIFIED / CURRENT" not in open_work or "EXECUTABLE DEVELOPMENT: AUTHORISED ONLY FOR BOUNDED PHASE 8 ARCHITECTURAL PROOF / NEW_TRACER_BULLET" not in open_work:
+            issues.append("current Open Work route loses Phase 7C completion or bounded Phase 8 authorisation")
+    elif "PHASE 7C: COMPLETE / CERTIFIED / CURRENT" not in open_work or "EXECUTABLE DEVELOPMENT: UNAUTHORISED" not in open_work:
         issues.append("current Open Work route loses Phase 7C completion or implementation stop")
     active_start = open_work.find("# 9. Immediate Next Action")
     active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
@@ -6662,12 +7041,22 @@ def _check_fp001_phase7b_certification_current(
     required_active_routes = (
         "RECONCILIATION v0.1.0: CERTIFIED / CURRENT",
         "RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED",
-        "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
+        *(
+            (
+                "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+                "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+                "EXECUTABLE DEVELOPMENT: AUTHORISED ONLY FOR BOUNDED PHASE 8 ARCHITECTURAL PROOF / NEW_TRACER_BULLET; PHASE 9 VERTICAL SLICES AND BROAD FP-001 IMPLEMENTATION REMAIN UNAUTHORISED",
+            )
+            if hard_stop_promoted
+            else (
+                "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
+                "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION",
+            )
+        ),
         "PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
         "PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED",
         "PHASE 7C FINAL FEATURE PACK CONTRACT: `working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md`; v0.1.0 COMPLETE / CERTIFIED / CURRENT",
         "PROOF CLASSIFICATION: NEW_TRACER_BULLET",
-        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION",
     )
     for route in required_active_routes:
         if active_summary.count(route) != 1:
@@ -6681,7 +7070,15 @@ def _check_fp001_phase7b_certification_current(
     for route in (
         "PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT",
         "PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
-        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION",
+        *(
+            (
+                "EXECUTABLE DEVELOPMENT: AUTHORISED ONLY FOR BOUNDED PHASE 8 ARCHITECTURAL PROOF / NEW_TRACER_BULLET; PHASE 9 VERTICAL SLICES AND BROAD FP-001 IMPLEMENTATION REMAIN UNAUTHORISED",
+            )
+            if hard_stop_promoted
+            else (
+                "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION",
+            )
+        ),
     ):
         if len(re.findall(r"(?m)^" + re.escape(route) + r"\s*$", active_summary)) != 1:
             issues.append(f"current Open Work active route omits or duplicates {route!r}")
@@ -6689,7 +7086,10 @@ def _check_fp001_phase7b_certification_current(
         issues.append("current Open Work active route authorises Phase 7C")
     if "ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED" not in active or "PROOF CLASSIFICATION: NEW_TRACER_BULLET" not in active:
         issues.append("current Open Work active route does not carry the finalised selected proof classification")
-    if re.search(r"(?im)^.*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$", active):
+    if not hard_stop_promoted and re.search(
+        r"(?im)^.*(?:APPLICATION IMPLEMENTATION|EXECUTABLE DEVELOPMENT)\s*:\s*(?:AUTHORI[ZS]ED|ENABLED|APPROVED|STARTED|IN PROGRESS|COMPLETE).*$",
+        active,
+    ):
         issues.append("current Open Work active route authorises Phase 8 or application implementation")
     _record_check(
         report,
@@ -6716,10 +7116,10 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         return ["manifest Phase 7C promotion or Phase 7B baseline rules are missing"]
     current_paths = promotion.get("current_paths", {})
     expected_current_paths = {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.73.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.74.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
     }
     if current_paths != expected_current_paths:
@@ -6745,14 +7145,10 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
             issues.append(f"protected current Phase 7C artifact is missing or changed: {relative}")
 
     issues.extend(_fp001_protected_historical_evidence_issues(root, promotion, integrity_rules))
-    predecessor_hashes = {
-        "docs/00_platform/archive/02_OPEN_WORK_v1.2.72.md": "ea515aff852cdf4e74714793ac3d390d6291a37903f0a1c15e887cdb9f44da5e",
-        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.14.md": "a12ea6f734ad192a5b735bda8018cac3db7fc37d662f75643eb9758310414894",
-        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md": "8bc2b7c61d6feba1c61ea5233677dd8b7344d0704426d8d113e8e5f2b2395f6e",
-        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.16.md": "75b6e739b82a63fe85bb7d2e20f862883bd3e60cb00b2fcce72e7f92849c5cea",
-    }
-    if promotion.get("predecessor_archives_sha256") != predecessor_hashes:
-        issues.append("manifest does not hash-pin the direct Phase 7C tracker-closure predecessors")
+    predecessor_hashes = promotion.get("predecessor_archives_sha256", {})
+    if not isinstance(predecessor_hashes, dict) or not predecessor_hashes:
+        issues.append("manifest does not hash-pin Phase 7C / hard-stop predecessor archives")
+        predecessor_hashes = {}
     for archived_path, digest in predecessor_hashes.items():
         archive = root / archived_path
         if not archive.is_file() or sha256_file(archive) != digest:
@@ -6838,7 +7234,7 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         if "archive" not in path.parts
     )
     if active_skeletons != [current_skeleton]:
-        issues.append("exactly one active certified/current FP-001 skeleton v0.1.17 is required; stale candidates or extra versions remain active")
+        issues.append("exactly one active certified/current FP-001 skeleton v0.1.18 is required; stale candidates or extra versions remain active")
 
     active_audit_dossiers = sorted(
         path
@@ -6882,14 +7278,14 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
     except (json.JSONDecodeError, TypeError, ValueError):
         state = {}
     required_state = {
-        "status_successor_version": "1.2.73",
-        "status_successor_base_sha": "24a9ad925ee1ab6d75ddb44bae6df0b4f3d09bca",
+        "status_successor_version": "1.2.74",
+        "status_successor_base_sha": "675a8c50ac53a995a48e4d262df42065f8ccd412",
         "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7c_execution_tracker_state": "CLOSED / COMPLETED",
-        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
-        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
-        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
         "programme_router_issue_111_state": "OPEN",
         "proof_classification": "NEW_TRACER_BULLET",
         "architectural_proof_classification_status": "COMPLETE / FINALISED",
@@ -6899,16 +7295,17 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         "tracer_bullet": "REQUIRED / NOT YET DEFINED",
         "tracer_bullet_id": "NONE / NOT CREATED",
         "architectural_proof_execution": "NOT STARTED",
-        "development_entry_hard_stop_condition_9": "SATISFIED",
-        "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "next_stage": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
-        "application_implementation": "UNAUTHORISED / BLOCKED UNTIL ALL DEVELOPMENT ENTRY HARD STOP CONDITIONS PASS",
+        "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+        "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+        "next_stage": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        "application_implementation": "AUTHORISED",
+        "phase8": "AUTHORISED",
     }
     if any(state.get(key) != value for key, value in required_state.items()):
         issues.append("Open Work current lifecycle state is missing or contradicts the closed-tracker route")
     expected_atlas_status = (
-        "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.15.md`; "
-        "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.14.md`; "
+        "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.16.md`; "
+        "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.15.md`; "
         "pinned v0.2.1 source-at-freeze artifacts remain preserved; DERIVED / NON-AUTHORITATIVE; "
         "ATLAS-12 NOT_STARTED; this reconciliation is not ATLAS-12 and this successor does not create ATLAS-12"
     )
@@ -6932,9 +7329,9 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         "TRACER BULLET: REQUIRED / NOT YET DEFINED",
         "TRACER BULLET ID: NONE / NOT CREATED",
         "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
-        "DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED",
-        "REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8",
-        "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION",
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "EXECUTABLE DEVELOPMENT: AUTHORISED ONLY FOR BOUNDED PHASE 8 ARCHITECTURAL PROOF / NEW_TRACER_BULLET",
     )
     for token in required_active:
         if token not in active:
@@ -6948,6 +7345,7 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
     readme = root / "docs/00_platform/README.md"
     readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""
     readme_current = _markdown_h2_section(readme_text, "Current State") or ""
+    hard_stop_readme = "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED" in readme_current
     for token in (
         "PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
         "FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT",
@@ -6955,8 +7353,17 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         "PROGRAMME ROUTER #111: OPEN",
         "ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED",
         "PROOF CLASSIFICATION: NEW_TRACER_BULLET",
-        "PHASE 8: UNAUTHORISED",
-        "APPLICATION IMPLEMENTATION: UNAUTHORISED",
+        *(
+            (
+                "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+                "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+            )
+            if hard_stop_readme
+            else (
+                "PHASE 8: UNAUTHORISED",
+                "APPLICATION IMPLEMENTATION: UNAUTHORISED",
+            )
+        ),
     ):
         if token not in readme_current:
             issues.append(f"README current state omits {token!r}")
@@ -6972,12 +7379,20 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         issues.append("manifest Audit promotion guard note must distinguish PR #119 promotion from PR #118 candidate")
 
     atlas = current_documents["delivery_atlas"].read_text(encoding="utf-8") if current_documents["delivery_atlas"].is_file() else ""
-    if "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.14.md`" not in atlas or "- **SemVer transition:** `v0.4.14 → v0.4.15`" not in atlas:
-        issues.append("current Atlas artifact lineage or status-successor metadata is wrong")
-    harden = current_documents["harden_02"].read_text(encoding="utf-8") if current_documents["harden_02"].is_file() else ""
-    header = harden.split("### Revision log", 1)[0]
-    if "- **Plan / contract version:** `v0.5.17`" not in header or "- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.16.md`" not in header or "- **v0.5.17 status successor base main SHA:** `24a9ad925ee1ab6d75ddb44bae6df0b4f3d09bca`" not in header:
-        issues.append("current HARDEN-02 v0.5.17 successor metadata declaration is missing or incorrect")
+    if hard_stop_readme:
+        if "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.15.md`" not in atlas or "- **SemVer transition:** `v0.4.15 → v0.4.16`" not in atlas:
+            issues.append("current Atlas artifact lineage or status-successor metadata is wrong")
+        harden = current_documents["harden_02"].read_text(encoding="utf-8") if current_documents["harden_02"].is_file() else ""
+        header = harden.split("### Revision log", 1)[0]
+        if "- **Plan / contract version:** `v0.5.18`" not in header or "- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.17.md`" not in header or "- **v0.5.18 status successor base main SHA:** `675a8c50ac53a995a48e4d262df42065f8ccd412`" not in header:
+            issues.append("current HARDEN-02 v0.5.18 successor metadata declaration is missing or incorrect")
+    else:
+        if "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.14.md`" not in atlas or "- **SemVer transition:** `v0.4.14 → v0.4.15`" not in atlas:
+            issues.append("current Atlas artifact lineage or status-successor metadata is wrong")
+        harden = current_documents["harden_02"].read_text(encoding="utf-8") if current_documents["harden_02"].is_file() else ""
+        header = harden.split("### Revision log", 1)[0]
+        if "- **Plan / contract version:** `v0.5.17`" not in header or "- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.16.md`" not in header or "- **v0.5.17 status successor base main SHA:** `24a9ad925ee1ab6d75ddb44bae6df0b4f3d09bca`" not in header:
+            issues.append("current HARDEN-02 v0.5.18 successor metadata declaration is missing or incorrect")
     if "after this status successor merges" in active.casefold() or "OPEN through promotion merge" in active:
         issues.append("current Open Work route retains stale pre-closure wording")
     return issues
@@ -6993,16 +7408,16 @@ def _check_fp001_pmr_reconciliation(
         entry for entry in _all_entries(manifest)
         if entry.get("document_id") == "OPEN_WORK" and entry.get("lifecycle", "current") != "historical"
     ]
-    if len(current_open_work_entries) == 1 and current_open_work_entries[0].get("semver") == "1.2.73":
+    if len(current_open_work_entries) == 1 and current_open_work_entries[0].get("semver") in {"1.2.73", "1.2.74"}:
         promotion_issues = _check_fp001_pmr_reconciliation_after_phase7c_promotion(root, manifest, integrity_rules)
         _record_check(
             report,
             "fp001_pmr_reconciliation",
             not promotion_issues,
-            "the certified PMR block, dossier baselines and Phase 7B scope remain intact through the post-Phase-7C classification status successor"
+            "the certified PMR block, dossier baselines and Phase 7B scope remain intact through the FP-001 status successors"
             if not promotion_issues
             else "; ".join(promotion_issues),
-            path="docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
+            path="docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
         )
         return
 
@@ -8817,6 +9232,7 @@ def _check_production_graph(
             "EXECUTABLE DEVELOPMENT: BLOCKED UNTIL PHASE 8 ENTRY CONDITIONS PASS" in readiness_text
             or "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED" in readiness_text
             or "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION" in readiness_text
+            or "EXECUTABLE DEVELOPMENT: AUTHORISED ONLY FOR BOUNDED PHASE 8 ARCHITECTURAL PROOF / NEW_TRACER_BULLET" in readiness_text
         )
         and (legacy_next or stage_3a1_started or stage_3a1_complete)
     )
@@ -8909,6 +9325,7 @@ def run_audit(
     if _production_mode(expected_counts):
         _check_production_graph(root, manifest, integrity_rules, report)
         _check_roadmap_proof_classification_lifecycle(root, manifest, integrity_rules, report)
+        _check_fp001_development_entry_hard_stop_lifecycle(root, manifest, integrity_rules, report)
         _check_product_semantics(root, entries, integrity_rules, report)
         _check_fp001_pmr_reconciliation(root, manifest, integrity_rules, report)
         _check_fp001_phase7b_candidate(root, manifest, integrity_rules, report)
