@@ -5682,6 +5682,68 @@ def _check_roadmap_proof_classification_lifecycle(
     )
 
 
+def _check_platform_readme_router_consistency(
+    root: Path,
+    report: dict[str, Any],
+) -> None:
+    """Fail closed when README current routing prose drifts from Open Work classification status."""
+
+    issues: list[str] = []
+    readme_path = root / "docs" / "00_platform" / "README.md"
+    open_work_path = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.73.md"
+    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
+
+    current_prose = readme.split("## Historical status evidence", 1)[0] if "## Historical status evidence" in readme else readme
+    stale_patterns = (
+        (r"(?i)proof classification (?:is|remains) not finalised", "README current prose claims proof classification is not finalised"),
+        (r"(?i)architectural proof classification is next", "README current prose treats architectural proof classification as next/unperformed"),
+        (r"(?i)architectural proof classification.*remains unperformed", "README current prose treats architectural proof classification as unperformed"),
+    )
+    for pattern, message in stale_patterns:
+        if re.search(pattern, current_prose):
+            issues.append(message)
+
+    atlas_routing = _markdown_h2_section(readme, "Delivery Atlas routing") or ""
+    if "working/DELIVERY_ATLAS_WORKING_v0.4.15.md" not in atlas_routing:
+        issues.append("README Delivery Atlas routing section does not route v0.4.15")
+    if re.search(r"\(working/DELIVERY_ATLAS_WORKING_v0\.4\.14\.md\)", atlas_routing):
+        issues.append("README Delivery Atlas routing section still links working v0.4.14")
+
+    state_match = re.search(
+        r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
+        open_work,
+        re.DOTALL,
+    )
+    try:
+        state = json.loads(state_match.group(1), object_pairs_hook=_reject_duplicate_json_keys) if state_match else {}
+    except (json.JSONDecodeError, TypeError, ValueError):
+        state = {}
+    if state.get("proof_classification") != "NEW_TRACER_BULLET":
+        issues.append("Open Work lifecycle state does not record NEW_TRACER_BULLET")
+    if state.get("architectural_proof_classification_status") != "COMPLETE / FINALISED":
+        issues.append("Open Work lifecycle state does not record COMPLETE / FINALISED classification")
+
+    current_state = _markdown_h2_section(readme, "Current State") or ""
+    for token in (
+        "ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED",
+        "PROOF CLASSIFICATION: NEW_TRACER_BULLET",
+        "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
+    ):
+        if token not in current_state:
+            issues.append(f"README Current State omits {token!r}")
+
+    _record_check(
+        report,
+        "platform_readme_router_consistency",
+        not issues,
+        "README current routing agrees with Open Work NEW_TRACER_BULLET classification and Delivery Atlas v0.4.15"
+        if not issues
+        else "; ".join(issues),
+        path="docs/00_platform/README.md",
+    )
+
+
 def _check_fp001_phase7c_current_promotion(
     root: Path,
     manifest: dict[str, Any],
@@ -8853,6 +8915,7 @@ def run_audit(
         _check_fp001_phase7b_certification_current(root, manifest, integrity_rules, report)
         _check_fp001_phase7c_candidate(root, manifest, integrity_rules, report)
         _check_fp001_phase7c_current_promotion(root, manifest, integrity_rules, report)
+        _check_platform_readme_router_consistency(root, report)
     else:
         _record_check(report, "fixture_graph_scope", True, "fixture graph checks use explicit reduced expectations")
 
