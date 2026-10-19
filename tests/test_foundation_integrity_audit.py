@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from tools.foundation_integrity_audit import (
     _h02_lifecycle_state,
@@ -1881,6 +1884,33 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 )
                 self.assertEqual("FAIL", lifecycle_check["status"], lifecycle_check["message"])
                 self.assertIn("manifest SHA-256 pins disagree with actual bytes", lifecycle_check["message"])
+
+    def test_application_source_guard_fails_closed_on_detached_head_without_head_ref(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            (root / "mix.exs").write_text("# application source\n", encoding="utf-8")
+
+            real_run = subprocess.run
+
+            def run_with_detached_head(args, *positional, **kwargs):
+                if args == ["git", "branch", "--show-current"]:
+                    return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+                return real_run(args, *positional, **kwargs)
+
+            with patch.dict(os.environ):
+                os.environ.pop("GITHUB_HEAD_REF", None)
+                with patch("tools.foundation_integrity_audit.subprocess.run", side_effect=run_with_detached_head):
+                    report = run_audit(root, manifest_path)
+
+            lifecycle_check = next(
+                item for item in report["checks"]
+                if item["name"] == "roadmap_proof_classification_lifecycle"
+            )
+            self.assertEqual("FAIL", lifecycle_check["status"], lifecycle_check["message"])
+            self.assertIn(
+                "classification candidate introduces executable application/bootstrap source paths: mix.exs",
+                lifecycle_check["message"],
+            )
 
     def test_roadmap_proof_classification_lifecycle_fails_closed_on_scope_regressions(self):
         mutations = (

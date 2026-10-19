@@ -5629,19 +5629,12 @@ def _check_roadmap_proof_classification_lifecycle(
     if re.search(r"(?im)^\s*PROGRAMME ROUTER #111\s*:\s*CLOSED\b.*$", active):
         issues.append("programme router #111 is closed in the current Open Work route")
 
-    candidate_branch = str(expected_fixed["classification_candidate_branch"])
-    try:
-        repository_root = Path(__file__).resolve().parents[1]
-        current_branch = subprocess.run(
-            ["git", "branch", "--show-current"],
-            cwd=repository_root,
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.strip()
-    except (OSError, subprocess.CalledProcessError):
-        current_branch = ""
-    if os.environ.get("GITHUB_HEAD_REF") == candidate_branch or current_branch == candidate_branch:
+    # Repository contents and governed authorization determine this rule, not branch metadata.
+    application_source_prohibited = not isinstance(rule, dict) or any(
+        rule.get(key) != "AUTHORISED"
+        for key in ("phase8", "application_implementation")
+    )
+    if application_source_prohibited:
         application_source_paths: list[str] = []
         for directory, child_directories, filenames in os.walk(root):
             child_directories[:] = [name for name in child_directories if name != ".git"]

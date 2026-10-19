@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import re
 import subprocess
 import unittest
@@ -12,7 +11,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 BASE_SHA = "24a9ad925ee1ab6d75ddb44bae6df0b4f3d09bca"
-CLASSIFICATION_BRANCH = "governance/fp001-architectural-proof-classification"
 OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.73.md"
 CONTRACT = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 CONTRACT_ARCHIVE = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
@@ -253,18 +251,7 @@ class FP001ArchitecturalProofClassificationTests(unittest.TestCase):
         self.assertEqual([], executable)
         self.assertEqual({".github", "docs", "tests", "tools", ".gitignore"}, {Path(path).parts[0] for path in paths})
 
-    @unittest.skipUnless(
-        os.getenv("GITHUB_HEAD_REF", "") == CLASSIFICATION_BRANCH
-        or subprocess.run(
-            ["git", "branch", "--show-current"],
-            cwd=ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.strip() == CLASSIFICATION_BRANCH,
-        "candidate-only changed-path guard runs only for the classification PR",
-    )
-    def test_classification_pr_does_not_add_executable_application_source(self):
+    def test_current_classification_scope_has_no_executable_application_source(self):
         changed = subprocess.run(
             ["git", "diff", "--name-only", BASE_SHA],
             cwd=ROOT,
