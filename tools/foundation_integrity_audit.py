@@ -5364,7 +5364,7 @@ def _check_fp001_phase7c_current_promotion(
         "docs/00_platform/02_OPEN_WORK_v1.2.72.md": "ea515aff852cdf4e74714793ac3d390d6291a37903f0a1c15e887cdb9f44da5e",
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md": "a12ea6f734ad192a5b735bda8018cac3db7fc37d662f75643eb9758310414894",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md": "8bc2b7c61d6feba1c61ea5233677dd8b7344d0704426d8d113e8e5f2b2395f6e",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md": "dc7777455cfaa72fe01382e1635e22799a152f39e9c0d0811ca0dcabefa16e0c",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md": "75b6e739b82a63fe85bb7d2e20f862883bd3e60cb00b2fcce72e7f92849c5cea",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "cab9ac6a8c74ef86ec65c90af0f12f8f13e8998ac55a24ee33d35656dc52fdc5",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md": "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "cc664c1e5d148c1a8f30f2a8d769645646162ff029494a2187e0a65775c27c83",

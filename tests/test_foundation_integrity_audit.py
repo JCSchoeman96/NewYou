@@ -777,7 +777,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             ),
             (
                 "wrong certified successor version",
-                "this v0.5.15 successor preserves them",
+                "this v0.5.16 successor preserves them",
                 "this v0.5.5 successor preserves them",
             ),
             (

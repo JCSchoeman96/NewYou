@@ -33,7 +33,7 @@
 - **v0.5.11 current-status successor base main SHA:** `f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3`
 - **v0.5.8 routing-successor base main SHA:** `5f5a994e48d9458aaa6397044b3af4d72c5d5e81`
 - **v0.5.7 routing-successor base main SHA:** `332d51f19d77430fe4e95911920fe0c87cab524a`
-- **Certified contract semantics:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.5.15 successor preserves them and records current routing
+- **Certified contract semantics:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.5.16 successor preserves them and records current routing
 - **Historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — merged through PR #39; v0.3.0 GitHub-identity independence mechanism not satisfied for solo-maintainer workflow; not retroactively certified
 - **Earlier historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — previous contract attempt; not certified
 - **Accepted human scope decisions:** `H02-1`, `H02-2`, `H02-3` (2026-09-09), `H02-3R` (2026-09-23; routing refinement)
