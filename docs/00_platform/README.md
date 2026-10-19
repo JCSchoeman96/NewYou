@@ -9,7 +9,7 @@ For foundation/default planning and delivery-preparation work, read **only** the
 1. `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`
 2. `00_PLATFORM_v1.8.0.md`
 3. `01_DECISIONS_v1.8.0.md`
-4. `02_OPEN_WORK_v1.2.72.md`
+4. `02_OPEN_WORK_v1.2.73.md`
 5. `03_ARCHITECTURE_v1.1.1.md`
 6. `04_DOMAIN_MAP_v1.2.0.md`
 7. `05_ROADMAP_v1.2.3.md`
@@ -36,11 +36,11 @@ The frozen Frontend Experience System is current authority for affected frontend
 `working/` contains active, derived planning artifacts. These files are not current authority, deep-reference evidence or historical archive, and they are outside the manifest's governing/reference document records. The manifest may list a derived path under graph rules for integrity scanning without elevating it to authority. Read working artifacts only when a task explicitly concerns them; they must not override the nine current-authority documents. They remain working until an explicit freeze review and governance decision.
 
 - `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` — cumulative experience decision register; remains working/non-authoritative provenance.
-- `working/DELIVERY_ATLAS_WORKING_v0.4.14.md` — derived Delivery Atlas navigation. Content & Media is Supporting in the current FP-001 view; Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under completed tracker #120 (CLOSED / COMPLETED). Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after PR #126 resulting-main verification. Proof classification remains NOT FINALISED; architectural proof classification is the next governance action, and Phase 8/application implementation remains UNAUTHORISED. This remains non-authoritative. Direct predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.13.md` is archived byte-identically.
-- `working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md` — preserves certified HARDEN-02 contract and execution evidence. Routes Phase 7B reconciliation as COMPLETE / CERTIFIED / CURRENT under historical tracker #120 (CLOSED / COMPLETED), and Phase 7C and Final Feature Pack Contract v0.1.0 as COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after PR #126 resulting-main verification. Proof classification remains NOT FINALISED; Phase 8/application implementation remains UNAUTHORISED. Direct predecessor `archive/HARDEN-02_CONTRACT_WORKING_v0.5.15.md` is archived byte-identically.
-- `working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md` — current FP-001 Phase 7A skeleton/status view. PR #67 PMR reconciliation remains COMPLETE / CERTIFIED with its normative block unchanged. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under historical tracker #120 (CLOSED / COMPLETED). Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after PR #126 resulting-main verification. Proof classification remains NOT FINALISED; Phase 8/application implementation remains UNAUTHORISED. Direct predecessor `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md` is archived byte-identically.
+- `working/DELIVERY_ATLAS_WORKING_v0.4.15.md` — derived Delivery Atlas navigation. Phase 7B reconciliation v0.1.0, Phase 7C and Final Feature Pack Contract v0.1.0 remain COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED, and programme router #111 remains OPEN. Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. The Tracer Bullet is required but not yet defined, has no ID, and proof execution has not started. Phase 8 and application implementation remain UNAUTHORISED until every other applicable Development Entry Hard Stop condition is satisfied. Direct predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.14.md` is archived byte-identically.
+- `working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md` — preserves certified HARDEN-02 contract and execution evidence. Routes Phase 7B reconciliation, Phase 7C and Final Feature Pack Contract v0.1.0 as COMPLETE / CERTIFIED / CURRENT. Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET; Phase 8 and application implementation remain UNAUTHORISED pending every other applicable Development Entry Hard Stop condition. Direct predecessor `archive/HARDEN-02_CONTRACT_WORKING_v0.5.16.md` is archived byte-identically.
+- `working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md` — current FP-001 Phase 7A skeleton/status view. It preserves the PR #67 PMR reconciliation block and the completed Phase 7B/7C routes. Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. The Tracer Bullet is required but not defined, has no ID, and proof execution has not started. Phase 8 and application implementation remain UNAUTHORISED. Direct predecessor `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md` is archived byte-identically.
 - `working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` — Audit & Evidence v0.1.0 is REQUIRED / COMPLETE / CERTIFIED / CURRENT under the separate current-status promotion. PR #118 candidate certification and post-merge evidence are COMPLETE. It remains a working contract, not Product/Architecture governing-root authority. The exact PR #118 candidate bytes are preserved as historical certification evidence at `archive/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`.
-- `working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md` — Final Feature Pack Contract v0.1.0; COMPLETE / CERTIFIED / CURRENT. It remains a lower-level working contract, not a new governing-root authority. Proof classification remains NOT FINALISED and Phase 8/application implementation remains UNAUTHORISED.
+- `working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md` — Final Feature Pack Contract v0.1.0; COMPLETE / CERTIFIED / CURRENT. Its §P freeze-time requirement and proof obligations are unchanged. It reflects the separate classification status as NEW_TRACER_BULLET but is not the classification authority or event. The Tracer Bullet is required but not yet defined; proof execution has not started; Phase 8/application implementation remains UNAUTHORISED.
 - `working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md` — current status successor for the Phase 7B cross-Domain reconciliation, based on `main@5d282ecca4e13b621c7f96c05c47d6fac43ec1bd`. PR #122 supplied the status-successor merge; issue #120 is CLOSED / COMPLETED. Phase 7B is COMPLETE / CERTIFIED / CURRENT; the exact merged candidate bytes are immutable at `archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md`. Completed tracker #120 records the Phase 7B execution history and links #111, #114 and #116. This artifact is not Product Law, Architecture Law, a new Domain authority layer, Phase 7C, proof classification or implementation authority.
 - `working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` — certified/current Communications dossier. PR #78 candidate certification and post-merge certification evidence are COMPLETE; the separate PR #81 status successor records v0.1.0 as CERTIFIED / CURRENT. Exact PR #78 candidate bytes remain at `archive/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`. Communications finalisation remains BLOCKED / STOP; Phase 7C, proof classification and implementation remain unauthorised.
 - `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md` — certified/current Identity dossier. It preserves the PR #67 PMR and PR #70 J.1 durable-delivery corrections and records PR #76 certification of COMM-UPD-001 and COMM-UPD-002. It selects no provider/package/storage representation/retry policy/OQ-036 option and does not authorise Phase 7C, proof classification or implementation. The exact PR #70 candidate, superseded promoted/current v0.1.3 snapshot and PR #76 candidate are separately preserved in archive.
@@ -292,18 +292,28 @@ Engineering Standards remain supporting authority under `reference_documents`. T
 - PHASE 7C: COMPLETE / CERTIFIED / CURRENT
 - FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT
 - PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED
-- NEXT GOVERNANCE ACTION: ARCHITECTURAL PROOF CLASSIFICATION
-- ARCHITECTURAL PROOF CLASSIFICATION: NEXT / NOT PERFORMED
+- NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION
+- ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED
 - PROGRAMME ROUTER #111: OPEN
-- PROOF CLASSIFICATION: NOT FINALISED; no `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` selection has been made; no Tracer Bullet or proof artifact exists
+- PROOF CLASSIFICATION: NEW_TRACER_BULLET
+- ARCHITECTURAL PROOF REQUIREMENT / SELECTED PROOF VEHICLE: NEW_TRACER_BULLET
+- REUSE_EXISTING_PROOF: NOT SELECTED
+- TRACER BULLET: REQUIRED / NOT YET DEFINED
+- TRACER BULLET ID: NONE / NOT CREATED
+- ARCHITECTURAL PROOF EXECUTION: NOT STARTED
+- DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED
+- REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8
+- PHASE 8: UNAUTHORISED
+- APPLICATION IMPLEMENTATION: UNAUTHORISED
 - PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED
+- EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION
 - PR #125 candidate archive SHA-256: `c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19`
 - PR #126 reviewed head `e7d5d3908bedf1a75c6627448c3ed0c067b076f8` merged as `69bef7bb2782cbff00a48505504ebd2686eb53d9`; reviewed-head and merge tree `f5586314db6c3addab6482e866b8d781faba75bc` are identical
 - PR #126 exact-head run 39141076412: completed / success. Resulting-main run 39143147487: completed / success / PASS on exact SHA `69bef7bb2782cbff00a48505504ebd2686eb53d9`; 455 tests / 728 FIA assertions / 0 findings
 - PR #125 exact-head run 39121794222 and resulting-main run 39126317950: 443 tests, 698 Foundation Integrity assertions, 0 findings each
 - FP-001 AUDIT DOSSIER EXECUTION TRACKER: [#116](https://github.com/JCSchoeman96/NewYou/issues/116), linked to adjudication #114 and programme router #111
 - AUDIT CERTIFIED CANDIDATE: PR #118 reviewed head `68df8bfb2723c6d4bb414fffae63f20ba0744a6d`; exact archive SHA-256 `0b0a8fb64a3ac602ebb81a7ab957a9dd075412350c818e4c6e5f13f667f7daea`
-- CURRENT FP-001 ROUTE: Phase 7C and contract v0.1.0 COMPLETE / CERTIFIED / CURRENT; architectural proof classification is next
+- CURRENT FP-001 ROUTE: post-Phase-7C Architectural Proof Classification is complete; Development Entry Hard Stop evaluation is next
 - RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED; completed tracker records Phase 7B execution history; #111 remains OPEN as the programme router
 - AUDIT & EVIDENCE v0.1.0: REQUIRED / COMPLETE / CERTIFIED / CURRENT; PR #118 candidate certification and post-merge evidence are COMPLETE
 - CURRENT AUDIT DOSSIER ROUTE: `working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
@@ -328,18 +338,18 @@ Engineering Standards remain supporting authority under `reference_documents`. T
 - DOMAIN PRESSURE TEST: COMPLETE
 - DOMAIN AMENDMENT: COMPLETE — current Domain Law `v1.2.0` (semantic successor to archived v1.1.1); 20 Domains; Domain 19 Research & Feedback; Domain 20 Voting & Balloting
 - ROADMAP SEQUENCING GRILL: COMPLETE
-- ROADMAP SEQUENCING AMENDMENT: COMPLETE — semantic Roadmap v1.2.0 remains unchanged; current routing successor `05_ROADMAP_v1.2.3.md` preserves all 17 Feature Packs and current outcomes. The separate architectural proof classification gate remains after Phase 7C and before Phase 8; FP-001 proof classification remains NOT FINALISED; Phase 8/application implementation remains UNAUTHORISED.
+- ROADMAP SEQUENCING AMENDMENT: COMPLETE — semantic Roadmap v1.2.0 remains unchanged; current routing successor `05_ROADMAP_v1.2.3.md` preserves all 17 Feature Packs and current outcomes. The separate post-Phase-7C architectural proof classification is COMPLETE / FINALISED as NEW_TRACER_BULLET; Phase 8/application implementation remain UNAUTHORISED pending every other applicable Development Entry Hard Stop condition.
 - OPS-UPD-004 AUTHORITY SUCCESSOR: completed by merged PR #112 at resulting `main` SHA `3f09bc91199e74d27645ebbb37d45c4831340952`; issue #99 is closed. Assessment-credit promotion is closed. Issue #89 remains separate and is not wholesale resolved by PR #112.
 - ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED — current supporting authority `reference/ENGINEERING_STANDARDS_v1.0.1.md`; PR #65 candidate lifecycle evidence is bound in the artifact; v1.0.0 candidate bytes are preserved in `archive/`
 - OPS-UPD-002 / issue #98: COMPLETE through merged PR #113; resulting `main` SHA `6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3`; #98 is closed. This does not resolve #94, #97 or #100.
-- ATLAS RECONCILIATION: COMPLETE — current routing successor `working/DELIVERY_ATLAS_WORKING_v0.4.14.md` (derived / non-authoritative; ATLAS-12 remains NOT_STARTED)
+- ATLAS RECONCILIATION: COMPLETE — current routing successor `working/DELIVERY_ATLAS_WORKING_v0.4.15.md` (derived / non-authoritative; ATLAS-12 remains NOT_STARTED)
 - HARDEN-02 v0.4.0 CONTRACT LIFECYCLE: COMPLETE / CERTIFIED
 - PRE-MERGE CERTIFICATION: COMPLETE — [PR #40 record](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5827553565)
 - EXACT-HEAD FOUNDATION INTEGRITY: PASS — [run 36091130615](https://github.com/JCSchoeman96/NewYou/actions/runs/36091130615)
 - CERTIFIED-HEAD MERGE: COMPLETE / UNCHANGED — certified head `cb710860f4db65ce4ef2f2ad50a4d4a967c0b9f4` merged as `352f304139b9d4f8ee3ba205cde9e34d0ad8437f`
 - RESULTING-MAIN FOUNDATION INTEGRITY: PASS — [run 36101210535](https://github.com/JCSchoeman96/NewYou/actions/runs/36101210535)
 - POST-MERGE CERTIFICATION: COMPLETE — fresh independent review PASS and durable attestation COMPLETE at [PR #40 record](https://github.com/JCSchoeman96/NewYou/pull/40#issuecomment-5830618876)
-- HARDEN-02 CURRENT STATUS: `working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md` records current Open Work and FP-001 routes; v0.4.0 semantics and prior execution evidence are unchanged.
+- HARDEN-02 CURRENT STATUS: `working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md` records current Open Work and FP-001 routes; v0.4.0 semantics and prior execution evidence are unchanged.
 - HARDEN-02 EXECUTION: COMPLETE / CERTIFIED
 - PR #38: STALE / BLOCKED / NOT AUTHORITY
 - FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED
@@ -351,7 +361,7 @@ Engineering Standards remain supporting authority under `reference_documents`. T
 - FP-001 PHASE 7A: COMPLETE
 - IDENTITY & ACCESS JIT DOMAIN DOSSIER v0.1.4: COMPLETE / CERTIFIED / CURRENT
 - OQ-034 ARCHITECTURE SELECTION: RESOLVED
-- OQ-034 EXECUTABLE AUTHENTICATION PROOF: PHASE 8 OBLIGATION / INCOMPLETE; proof classification NOT FINALISED
+- OQ-034 EXECUTABLE AUTHENTICATION PROOF: PHASE 8 OBLIGATION / INCOMPLETE; classification does not complete proof
 - OQ-035: SECURITY / OPERATIONS REVIEW; UNRESOLVED; RELEASE-ONLY SCOPE
 - OQ-036: VENDOR / OPERATIONS REVIEW; UNRESOLVED; RELEASE-ONLY SCOPE
 - PRIVACY & CONSENT DOSSIER: NOT_REQUIRED
@@ -363,8 +373,8 @@ Engineering Standards remain supporting authority under `reference_documents`. T
 - MATERIAL CAPABILITY RELATIONSHIPS: CAP-001, CAP-002, CAP-003, CAP-005, CAP-006, CAP-017, CAP-028 (seven; unchanged)
 - PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT.
 - PHASE 7C: COMPLETE / CERTIFIED / CURRENT; Final Feature Pack Contract v0.1.0: COMPLETE / CERTIFIED / CURRENT; tracker Issue #124: CLOSED / COMPLETED after PR #126 resulting-main verification.
-- PROOF CLASSIFICATION: NOT FINALISED
-- EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED
+- PROOF CLASSIFICATION: NEW_TRACER_BULLET; architectural proof execution NOT STARTED
+- EXECUTABLE DEVELOPMENT: UNAUTHORISED; classification satisfies only Development Entry Hard Stop condition 9; all other applicable conditions require independent evaluation
 - DELIVERY ATLAS WORKING BASELINE: ATLAS-01 THROUGH ATLAS-11 COMPLETE AT CURRENT SCOPE; ATLAS RECONCILIATION COMPLETE; ATLAS-12 NOT_STARTED (not this reconciliation); DERIVED / NON-AUTHORITATIVE
 
 ## Historical status evidence

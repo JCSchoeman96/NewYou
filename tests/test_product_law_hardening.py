@@ -54,11 +54,11 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
-        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.14.md").read_text(encoding="utf-8")
-        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.16.md").read_text(
+        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.15.md").read_text(encoding="utf-8")
+        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.17.md").read_text(
             encoding="utf-8"
         )
-        cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md").read_text(
+        cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md").read_text(
             encoding="utf-8"
         )
         cls.integrity_rules = json.loads(MANIFEST.read_text(encoding="utf-8"))["integrity_rules"]
@@ -216,6 +216,9 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertIn("POST-MERGE CERTIFICATION: COMPLETE", self.readme)
         self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.readme)
         self.assertIn("ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED", self.readme)
+        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", self.readme)
+        self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", self.readme)
+        self.assertIn("Phase 8 and application implementation remain UNAUTHORISED", self.readme)
         self.assertNotIn("PENDING INDEPENDENT PRE-MERGE CERTIFICATION", self.readme)
         self.assertIn("352f304139b9d4f8ee3ba205cde9e34d0ad8437f", self.harden02)
         self.assertIn("36101210535", self.harden02)
@@ -338,7 +341,7 @@ class ProductLawHardeningTests(unittest.TestCase):
             "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
             "00_PLATFORM_v1.8.0.md",
             "01_DECISIONS_v1.8.0.md",
-            "02_OPEN_WORK_v1.2.72.md",
+            "02_OPEN_WORK_v1.2.73.md",
             "04_DOMAIN_MAP_v1.2.0.md",
             "05_ROADMAP_v1.2.3.md",
         ):
@@ -458,14 +461,14 @@ class ProductLawHardeningTests(unittest.TestCase):
             "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
             "docs/00_platform/00_PLATFORM_v1.8.0.md",
             "docs/00_platform/01_DECISIONS_v1.8.0.md",
-            "docs/00_platform/02_OPEN_WORK_v1.2.72.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.73.md",
             "docs/00_platform/05_ROADMAP_v1.2.3.md",
             "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
             "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
             "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
             "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
             "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
             "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
             "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
@@ -596,9 +599,12 @@ class ProductLawHardeningTests(unittest.TestCase):
         )
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", self.open_work)
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", self.open_work)
-        self.assertIn("proof classification remains not finalised", self.open_work.casefold())
-        self.assertIn("EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED", self.open_work)
-        self.assertIn('"proof_classification": "NOT FINALISED"', self.open_work)
+        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", self.open_work)
+        self.assertIn('"proof_classification": "NEW_TRACER_BULLET"', self.open_work)
+        self.assertIn(
+            "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9",
+            self.open_work,
+        )
 
     def test_pass2_review_corrections_are_locked_without_resolving_methodology_or_future_products(self):
         product_sections = self.product.split("# 17. Data Ownership and Control", 1)[1].split("# 18.", 1)[0]
@@ -671,7 +677,7 @@ class ProductLawHardeningTests(unittest.TestCase):
             "03_ARCHITECTURE_v1.1.1.md",
             "04_DOMAIN_MAP_v1.2.0.md",
             "05_ROADMAP_v1.2.3.md",
-            "02_OPEN_WORK_v1.2.72.md",
+            "02_OPEN_WORK_v1.2.73.md",
             "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
         )
         source_table = self.atlas.split("## 1.2 Purpose", 1)[0]

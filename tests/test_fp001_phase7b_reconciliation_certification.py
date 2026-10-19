@@ -185,15 +185,16 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         current_state = _markdown_h2_section(readme, "Current State")
         self.assertIsNotNone(current_state)
         current_state = current_state or ""
-        self.assertIn("- PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT.", current_state)
+        self.assertIn("- PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", current_state)
         self.assertIn(
             "- PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
             current_state,
         )
         self.assertIn("- PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", current_state)
         self.assertIn("FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT", current_state)
-        self.assertIn("NEXT GOVERNANCE ACTION: ARCHITECTURAL PROOF CLASSIFICATION", current_state)
-        self.assertIn("PROOF CLASSIFICATION: NOT FINALISED", current_state)
+        self.assertIn("NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION", current_state)
+        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)
+        self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_state)
         self.assertIn("- PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED", current_state)
         self.assertNotRegex(
             current_state,
@@ -207,8 +208,8 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         )
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state.get("phase_7b_reconciliation"))
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state.get("phase_7c"))
-        self.assertEqual("ARCHITECTURAL PROOF CLASSIFICATION", state.get("next_stage"))
-        self.assertEqual("NOT FINALISED", state.get("proof_classification"))
+        self.assertEqual("DEVELOPMENT ENTRY HARD STOP EVALUATION", state.get("next_stage"))
+        self.assertEqual("NEW_TRACER_BULLET", state.get("proof_classification"))
         self.assertTrue(state.get("application_implementation", "").startswith("UNAUTHORISED"))
         self.assertEqual(
             "CERTIFIED / CURRENT",
@@ -224,24 +225,24 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", phase7c_contract.get("lifecycle"))
         self.assertEqual("bb7bc67fd2d9aa49ed9a6e7f49f09fc5eba5d6a5", phase7c_contract.get("candidate_head_sha"))
         self.assertEqual("cfc63a7a77299cd59c98d88b57a88bb5b4ac29e5", phase7c_contract.get("merge_sha"))
-        self.assertEqual("NOT FINALISED", phase7c_contract.get("proof_classification"))
+        self.assertEqual("NEW_TRACER_BULLET", phase7c_contract.get("proof_classification"))
         self.assertEqual("UNAUTHORISED", phase7c_contract.get("phase8"))
 
         current_open_work = self.entries["OPEN_WORK"]
-        self.assertEqual("02_OPEN_WORK_v1.2.72.md", current_open_work["canonical_filename"])
-        self.assertEqual("1.2.72", current_open_work["semver"])
+        self.assertEqual("02_OPEN_WORK_v1.2.73.md", current_open_work["canonical_filename"])
+        self.assertEqual("1.2.73", current_open_work["semver"])
         self.assertEqual(
-            "docs/00_platform/02_OPEN_WORK_v1.2.72.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.73.md",
             current_open_work["repository_path"],
         )
-        self.assertEqual("1.2.71", current_open_work["superseded_version"])
+        self.assertEqual("1.2.72", current_open_work["superseded_version"])
         self.assertEqual("current", current_open_work["lifecycle"])
 
-        immediate_predecessor = self.entries.get("OPEN_WORK_V1_2_71", {})
-        self.assertEqual("02_OPEN_WORK_v1.2.71.md", immediate_predecessor.get("canonical_filename"))
-        self.assertEqual("1.2.71", immediate_predecessor.get("semver"))
-        self.assertEqual("docs/00_platform/archive/02_OPEN_WORK_v1.2.71.md", immediate_predecessor.get("repository_path"))
-        self.assertEqual("1.2.72", immediate_predecessor.get("superseded_version"))
+        immediate_predecessor = self.entries.get("OPEN_WORK_V1_2_72", {})
+        self.assertEqual("02_OPEN_WORK_v1.2.72.md", immediate_predecessor.get("canonical_filename"))
+        self.assertEqual("1.2.72", immediate_predecessor.get("semver"))
+        self.assertEqual("docs/00_platform/archive/02_OPEN_WORK_v1.2.72.md", immediate_predecessor.get("repository_path"))
+        self.assertEqual("1.2.73", immediate_predecessor.get("superseded_version"))
         self.assertEqual("historical", immediate_predecessor.get("lifecycle"))
 
         direct_predecessor = self.entries.get("OPEN_WORK_V1_2_69", {})

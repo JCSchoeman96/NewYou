@@ -173,13 +173,13 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
             with self.subTest(artifact=artifact[:40]):
                 self.assertIn(audit_route, artifact)
         open_work = next(row for row in self.manifest["governing_documents"] if row["document_id"] == "OPEN_WORK")
-        self.assertEqual("1.2.72", open_work["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.72.md", open_work["repository_path"])
+        self.assertEqual("1.2.73", open_work["semver"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.73.md", open_work["repository_path"])
         navigation = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
         for path in (
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
-            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md",
             "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
             "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
             "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",

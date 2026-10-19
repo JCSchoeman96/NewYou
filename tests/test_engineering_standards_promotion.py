@@ -16,7 +16,7 @@ DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
 CURRENT_STANDARDS_RELATIVE = Path("docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md")
 ARCHIVED_CANDIDATE_RELATIVE = Path("docs/00_platform/archive/ENGINEERING_STANDARDS_v1.0.0.md")
-OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.72.md")
+OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.73.md")
 README_RELATIVE = Path("docs/00_platform/README.md")
 
 
@@ -159,7 +159,7 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
         def next_token_still_names_standards(root: Path, manifest: dict) -> None:
             _rewrite_open_work(
                 root,
-                "NEXT STAGE: ARCHITECTURAL PROOF CLASSIFICATION",
+                "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
                 "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
@@ -189,13 +189,13 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def proof_finalised(root: Path, manifest: dict) -> None:
-            _rewrite_open_work(root, "PROOF CLASSIFICATION: NOT FINALISED", "PROOF CLASSIFICATION: FINALISED")
+            _rewrite_open_work(root, "PROOF CLASSIFICATION: NEW_TRACER_BULLET", "PROOF CLASSIFICATION: NOT FINALISED")
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
 
         def implementation_authorised(root: Path, manifest: dict) -> None:
             _rewrite_open_work(
                 root,
-                "EXECUTABLE DEVELOPMENT: UNAUTHORISED; PHASE 8 ENTRY CONDITIONS HAVE NOT PASSED",
+                "EXECUTABLE DEVELOPMENT: UNAUTHORISED; CLASSIFICATION SATISFIES ONLY DEVELOPMENT ENTRY HARD STOP CONDITION 9; ALL OTHER APPLICABLE CONDITIONS REQUIRE INDEPENDENT EVALUATION",
                 "EXECUTABLE DEVELOPMENT: AUTHORISED",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
@@ -236,7 +236,7 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             )
             _rewrite_open_work(
                 root,
-                "NEXT STAGE: ARCHITECTURAL PROOF CLASSIFICATION",
+                "NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION",
                 "NEXT STAGE: PHASE 8 IMPLEMENTATION",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
@@ -259,7 +259,7 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             ("FP-001 reconciliation already performed", fp001_already_performed),
             ("Communications started", communications_started),
             ("Phase 7C current status regresses to candidate", phase_7c_completed_prematurely),
-            ("proof classification finalised", proof_finalised),
+            ("proof classification regresses after finalisation", proof_finalised),
             ("Phase 8 implementation authorised", implementation_authorised),
             ("Store/CER included", store_cer_included),
             ("stale candidate-only README route", readme_candidate_only),
