@@ -29,7 +29,7 @@ PROTECTED_PATHS = (
     "docs/00_platform/01_DECISIONS_v1.8.0.md",
     "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
     "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
-    "docs/00_platform/05_ROADMAP_v1.2.2.md",
+    "docs/00_platform/archive/05_ROADMAP_v1.2.2.md",
     "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
     "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
@@ -103,7 +103,7 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
             DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
         ).read_text(encoding="utf-8")
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
-        cls.roadmap = (DOCS / "05_ROADMAP_v1.2.2.md").read_text(encoding="utf-8")
+        cls.roadmap = (DOCS / "archive/05_ROADMAP_v1.2.2.md").read_text(encoding="utf-8")
 
     def test_candidate_is_preserved_at_the_certification_archive_path(self):
         self.assertTrue(CANDIDATE_PATH.is_file(), CANDIDATE_RELATIVE)
@@ -149,7 +149,12 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
     def test_governing_and_current_fp001_sources_match_the_verified_baseline(self):
         for path in PROTECTED_PATHS:
             with self.subTest(path=path):
-                self.assertEqual(_git_show(path), (ROOT / path).read_bytes(), path)
+                baseline_path = (
+                    "docs/00_platform/05_ROADMAP_v1.2.2.md"
+                    if path == "docs/00_platform/archive/05_ROADMAP_v1.2.2.md"
+                    else path
+                )
+                self.assertEqual(_git_show(baseline_path), (ROOT / path).read_bytes(), path)
 
     def test_reviewed_candidate_bytes_are_preserved_exactly(self):
         reviewed = subprocess.run(

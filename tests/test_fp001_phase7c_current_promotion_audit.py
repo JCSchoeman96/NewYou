@@ -15,7 +15,7 @@ from tools.foundation_integrity_audit import (
 ROOT = Path(__file__).resolve().parents[1]
 PROMOTION_RULE = "fp001_phase7c_final_contract_current_promotion"
 CONTRACT_REL = "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK_REL = "docs/00_platform/02_OPEN_WORK_v1.2.71.md"
+OPEN_WORK_REL = "docs/00_platform/02_OPEN_WORK_v1.2.72.md"
 README_REL = "docs/00_platform/README.md"
 ARCHIVE_REL = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 
@@ -130,7 +130,7 @@ class FP001Phase7CCurrentPromotionAuditTests(unittest.TestCase):
             ("Phase 8 becomes authorised", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "PHASE 8 / APPLICATION IMPLEMENTATION: AUTHORISED")),
             ("certified contract semantics drift", lambda r, m: (r / CONTRACT_REL).write_text((r / CONTRACT_REL).read_text(encoding="utf-8").replace("create an individual 18+ account", "create an individual account", 1), encoding="utf-8")),
             ("immutable PR #125 candidate archive changes", lambda r, m: (r / ARCHIVE_REL).write_bytes((r / ARCHIVE_REL).read_bytes() + b"\nchanged\n")),
-            ("direct predecessor archive changes", lambda r, m: (r / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.12.md").write_bytes((r / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.12.md").read_bytes() + b"\nchanged\n")),
+            ("direct predecessor archive changes", lambda r, m: (r / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.13.md").write_bytes((r / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.13.md").read_bytes() + b"\nchanged\n")),
             ("current route projects #124 open", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "PHASE 7C TRACKER #124: OPEN THROUGH RESULTING-MAIN VERIFICATION")),
             ("current route retains transition wording", lambda r, m: self._append_to_current_route(r / OPEN_WORK_REL, "CURRENT CONTRACT AFTER THIS STATUS SUCCESSOR MERGES")),
         )

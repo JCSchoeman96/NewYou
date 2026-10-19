@@ -228,20 +228,20 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertEqual("UNAUTHORISED", phase7c_contract.get("phase8"))
 
         current_open_work = self.entries["OPEN_WORK"]
-        self.assertEqual("02_OPEN_WORK_v1.2.71.md", current_open_work["canonical_filename"])
-        self.assertEqual("1.2.71", current_open_work["semver"])
+        self.assertEqual("02_OPEN_WORK_v1.2.72.md", current_open_work["canonical_filename"])
+        self.assertEqual("1.2.72", current_open_work["semver"])
         self.assertEqual(
-            "docs/00_platform/02_OPEN_WORK_v1.2.71.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.72.md",
             current_open_work["repository_path"],
         )
-        self.assertEqual("1.2.70", current_open_work["superseded_version"])
+        self.assertEqual("1.2.71", current_open_work["superseded_version"])
         self.assertEqual("current", current_open_work["lifecycle"])
 
-        immediate_predecessor = self.entries.get("OPEN_WORK_V1_2_70", {})
-        self.assertEqual("02_OPEN_WORK_v1.2.70.md", immediate_predecessor.get("canonical_filename"))
-        self.assertEqual("1.2.70", immediate_predecessor.get("semver"))
-        self.assertEqual("docs/00_platform/archive/02_OPEN_WORK_v1.2.70.md", immediate_predecessor.get("repository_path"))
-        self.assertEqual("1.2.71", immediate_predecessor.get("superseded_version"))
+        immediate_predecessor = self.entries.get("OPEN_WORK_V1_2_71", {})
+        self.assertEqual("02_OPEN_WORK_v1.2.71.md", immediate_predecessor.get("canonical_filename"))
+        self.assertEqual("1.2.71", immediate_predecessor.get("semver"))
+        self.assertEqual("docs/00_platform/archive/02_OPEN_WORK_v1.2.71.md", immediate_predecessor.get("repository_path"))
+        self.assertEqual("1.2.72", immediate_predecessor.get("superseded_version"))
         self.assertEqual("historical", immediate_predecessor.get("lifecycle"))
 
         direct_predecessor = self.entries.get("OPEN_WORK_V1_2_69", {})
@@ -376,7 +376,6 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             "docs/00_platform/01_DECISIONS_",
             "docs/00_platform/03_ARCHITECTURE_",
             "docs/00_platform/04_DOMAIN_MAP_",
-            "docs/00_platform/05_ROADMAP_",
             "app/",
             "assets/",
             "lib/",

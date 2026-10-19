@@ -11,31 +11,32 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 BASE_MAIN = "69bef7bb2782cbff00a48505504ebd2686eb53d9"
+ROUTING_BASE_SHA = "5b56d4070b422bf969667e84faae973522b52414"
 CANDIDATE_HEAD = "bb7bc67fd2d9aa49ed9a6e7f49f09fc5eba5d6a5"
 CANDIDATE_TREE = "8e5fc724b4c4f4a6a196d41e3beafc8e1384c2bf"
 CANDIDATE_ARCHIVE_SHA256 = "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19"
 CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 CURRENT_CONTRACT = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.71.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.72.md"
 PROMOTION_START = "<!-- FP001_PHASE7C_CURRENT_STATUS_START -->"
 PROMOTION_END = "<!-- FP001_PHASE7C_CURRENT_STATUS_END -->"
 
 PREDECESSORS = (
     (
-        "docs/00_platform/02_OPEN_WORK_v1.2.70.md",
-        "docs/00_platform/archive/02_OPEN_WORK_v1.2.70.md",
+        "docs/00_platform/02_OPEN_WORK_v1.2.71.md",
+        "docs/00_platform/archive/02_OPEN_WORK_v1.2.71.md",
     ),
     (
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.12.md",
-        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.12.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
+        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.13.md",
     ),
     (
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
-        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
     ),
     (
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
-        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
+        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
     ),
 )
 
@@ -45,8 +46,7 @@ PROTECTED_PATHS = (
     "docs/00_platform/01_DECISIONS_v1.8.0.md",
     "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
     "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
-    "docs/00_platform/05_ROADMAP_v1.2.2.md",
-    "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
+        "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
     "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
     "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
     "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
@@ -212,10 +212,10 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
     def test_readme_and_manifest_route_current_lower_level_artifacts_without_new_root_authority(self):
         for path in (
             "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
-            "working/DELIVERY_ATLAS_WORKING_v0.4.13.md",
-            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.15.md",
-            "working/HARDEN-02_CONTRACT_WORKING_v0.5.15.md",
-            "02_OPEN_WORK_v1.2.71.md",
+            "working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
+            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
+            "working/HARDEN-02_CONTRACT_WORKING_v0.5.16.md",
+            "02_OPEN_WORK_v1.2.72.md",
         ):
             with self.subTest(path=path):
                 self.assertIn(path, self.readme)
@@ -243,7 +243,7 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
         pinned = rule["predecessor_archives_sha256"]
         for source, archived in PREDECESSORS:
             with self.subTest(archived=archived):
-                source_bytes = _git_show(BASE_MAIN, source)
+                source_bytes = _git_show(ROUTING_BASE_SHA, source)
                 archived_bytes = (ROOT / archived).read_bytes()
                 self.assertEqual(source_bytes, archived_bytes)
                 self.assertEqual(hashlib.sha256(archived_bytes).hexdigest(), pinned.get(archived))

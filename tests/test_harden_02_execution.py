@@ -29,7 +29,7 @@ ATLAS_ROUTING_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
 ATLAS_ROUTING_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
 
 POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
-ROADMAP = DOCS / "05_ROADMAP_v1.2.2.md"
+ROADMAP = DOCS / "05_ROADMAP_v1.2.3.md"
 SKELETON = DOCS / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
 
 MATRIX_START = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:START -->"
@@ -567,7 +567,9 @@ def _roadmap_phase7_handoff_requirements(text: str) -> list[int]:
         (
             "final proof vehicle choice",
             re.compile(
-                r"make the final proof choice reuse_existing_proof or new_tracer_bullet[.;]?"
+                r"freeze the architectural proof requirement and applicable obligations; "
+                r"leave the reuse_existing_proof or new_tracer_bullet choice to the separate "
+                r"architectural proof classification gate after phase 7c and before phase 8[.;]?"
             ),
         ),
         (
@@ -592,7 +594,9 @@ def _roadmap_phase7_handoff_requirements(text: str) -> list[int]:
             r"\bperform implementation[- ]grade oq-039 mapping only for affected domains/actions\b"
         ),
         re.compile(
-            r"\bmake the final proof choice reuse_existing_proof or new_tracer_bullet\b"
+            r"(?=.*\bfreeze the architectural proof requirement and applicable obligations\b)"
+            r"(?=.*\bleave the reuse_existing_proof or new_tracer_bullet choice\b)"
+            r"(?=.*\bseparate architectural proof classification gate after phase 7c and before phase 8\b)"
         ),
         re.compile(
             r"(?=.*\bstop if\b)(?=.*\btask\b)(?=.*\binvent\b)"
@@ -1282,7 +1286,7 @@ class Harden02ExecutionInvariantTests(unittest.TestCase):
         required_jit = "create only the JIT Domain Dossiers required by the selected pack"
         oq034 = "use the resolved `OQ-034` architecture selection"
         oq039 = "perform implementation-grade `OQ-039` mapping only for affected domains/actions"
-        proof_choice = "make the final proof choice `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`"
+        proof_choice = "freeze the architectural proof requirement and applicable obligations"
         stop_condition = "stop if a task would need to invent product policy"
 
         fenced_nonsemantic_duplicate = (
