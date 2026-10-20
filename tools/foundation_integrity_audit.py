@@ -6132,7 +6132,7 @@ def _check_fp001_phase7c_current_promotion(
         "docs/00_platform/02_OPEN_WORK_v1.2.74.md": "0872b5566f38a6c9cff53dbf7a236c0ba5b74308053aeb91796a45a3e9d9f852",
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "9636c1ed2a12f156ebeb31004e0d3823f7e2824b55d9e7107646d8178f5eab32",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "9401dc20a362115534dbb2ce16262c032debbe8dcb8e3d2fd5d9c87a1c1c836b",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "47f2c24021ccad186af3f0c1e11bc101d090d03742b3b5f36242b6025e9635fa",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "4de81f097562def5dcba983031bee1052a34193f6c14ec6b2cfa81b6e8f79e58",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md": "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "cc664c1e5d148c1a8f30f2a8d769645646162ff029494a2187e0a65775c27c83",
@@ -7458,6 +7458,24 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         header = harden.split("### Revision log", 1)[0]
         if "- **Plan / contract version:** `v0.5.18`" not in header or "- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.17.md`" not in header or "- **v0.5.18 status successor base main SHA:** `675a8c50ac53a995a48e4d262df42065f8ccd412`" not in header:
             issues.append("current HARDEN-02 v0.5.18 successor metadata declaration is missing or incorrect")
+        predecessor_fields = re.findall(
+            r"(?im)^-\s*\*\*(?:current|direct|immediate) predecessor:\*\*\s*`([^`]+)`",
+            header,
+        )
+        if predecessor_fields != ["archive/HARDEN-02_CONTRACT_WORKING_v0.5.17.md"]:
+            issues.append("current HARDEN-02 v0.5.18 must identify only v0.5.17 as its direct predecessor")
+        try:
+            section_20 = harden.split("## 20. Contract-stage STOP", 1)[1].split("## 21.", 1)[0]
+        except IndexError:
+            section_20 = ""
+        required_section_20_authority = (
+            "No application implementation is authorised by HARDEN-02 itself.",
+            "Current Open Work v1.2.74 separately records application implementation as AUTHORISED only inside the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage.",
+        )
+        if any(statement not in section_20 for statement in required_section_20_authority) or re.search(
+            r"(?i)\bNo application implementation is authorised\.(?:\s|$)", section_20
+        ):
+            issues.append("current HARDEN-02 section 20 must scope its implementation boundary to HARDEN-02 and Open Work")
     else:
         if "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.14.md`" not in atlas or "- **SemVer transition:** `v0.4.14 → v0.4.15`" not in atlas:
             issues.append("current Atlas artifact lineage or status-successor metadata is wrong")

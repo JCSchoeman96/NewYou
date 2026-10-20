@@ -788,6 +788,11 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 predecessor + "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.1.md`\n",
             ),
             (
+                "stale v0.5.15 current predecessor",
+                predecessor,
+                predecessor + "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.15.md` (direct predecessor; preserved byte-identically).\n",
+            ),
+            (
                 "wrong current predecessor",
                 predecessor,
                 "- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.1.md` — wrong direct predecessor\n",
@@ -826,8 +831,35 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
                 self.assertTrue(
                     "current HARDEN-02 v0.5.18 successor metadata" in promotion_check["message"]
+                    or "current HARDEN-02 v0.5.18 must identify only v0.5.17 as its direct predecessor" in promotion_check["message"]
                     or "protected current Phase 7C artifact is missing or changed" in promotion_check["message"]
                 )
+
+    def test_fp001_pmr_rejects_unqualified_current_harden_section_20_stop(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md"
+            harden = harden_path.read_text(encoding="utf-8")
+            current_statement = (
+                "No application implementation is authorised by HARDEN-02 itself. "
+                "Current Open Work v1.2.74 separately records application implementation as AUTHORISED only inside "
+                "the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage."
+            )
+            self.assertIn(current_statement, harden)
+            harden_path.write_text(
+                harden.replace(current_statement, "No application implementation is authorised.", 1),
+                encoding="utf-8",
+            )
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+            promotion_check = next(
+                check for check in report["checks"]
+                if check["name"] == "fp001_pmr_reconciliation"
+            )
+
+            self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+            self.assertIn("current HARDEN-02 section 20 must scope its implementation boundary", promotion_check["message"])
 
     def test_fp001_pmr_rejects_harden_metadata_declarations_outside_header(self):
         declarations = (

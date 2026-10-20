@@ -18,7 +18,6 @@
 - **Current phase route:** Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under historical tracker #120 (CLOSED / COMPLETED). Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Development Entry Hard Stop evaluation is PASS. Phase 8 Architectural Proof is AUTHORISED; application implementation is AUTHORISED only inside that bounded proof stage; Phase 9 Vertical Slices remain NOT STARTED / NOT AUTHORISED. Next governance action is NEW_TRACER_BULLET proof contract/task definition. This is status and routing only.
 - **Historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` — preserved byte-identically as an earlier current-status snapshot
 - **Earlier historical status predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.2.md` — byte-identical prior current-status snapshot
-- **Current predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.15.md` (direct predecessor; preserved byte-identically).
 - **v0.4.7 status-successor base main SHA:** `d4e7390b71cdf61b649b534e1080102a044efe63`
 - **v0.4.8 status-successor base main SHA:** `596d9560aa2b3b3cb941560b01bdc6c8ba7c525a`
 - **v0.5.0 status-successor base main SHA:** `df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb`
@@ -37,7 +36,7 @@
 - **Historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — merged through PR #39; v0.3.0 GitHub-identity independence mechanism not satisfied for solo-maintainer workflow; not retroactively certified
 - **Earlier historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — previous contract attempt; not certified
 - **Accepted human scope decisions:** `H02-1`, `H02-2`, `H02-3` (2026-09-09), `H02-3R` (2026-09-23; routing refinement)
-- **Last updated:** 2026-10-18
+- **Last updated:** 2026-10-20
 
 ### Revision log
 
@@ -685,7 +684,7 @@ Historical H02-3 evidence remains historically true for the earlier programme st
 
 ## 20. Contract-stage STOP
 
-This artifact records the HARDEN-02 contract lifecycle status only. HARDEN-02 is not authority for Product, Architecture, Domain or Roadmap law, Engineering Standards promotion, FP-001 reconciliation, Communications or implementation. No application implementation is authorised.
+This artifact records the HARDEN-02 contract lifecycle status only. HARDEN-02 is not authority for Product, Architecture, Domain or Roadmap law, Engineering Standards promotion, FP-001 reconciliation, Communications or implementation. No application implementation is authorised by HARDEN-02 itself. Current Open Work v1.2.74 separately records application implementation as AUTHORISED only inside the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage.
 
 This status-sync artifact itself does not execute HARDEN-02. The original v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED on its recorded evidence. Do not reopen it or describe its evidence as missing without new contradictory repository evidence that challenges a recorded lifecycle requirement. If such evidence appears, STOP and resolve it through the applicable governed review. This status successor does not alter the certified v0.4.0 semantics.
 

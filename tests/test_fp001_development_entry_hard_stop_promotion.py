@@ -429,6 +429,26 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             section_18,
         )
 
+    def test_harden_current_predecessor_and_section_20_authority_are_unambiguous(self):
+        text = HARDEN.read_text(encoding="utf-8")
+        header = text.split("### Revision log", 1)[0]
+        section_20 = _md_section(text, "## 20. Contract-stage STOP")
+
+        self.assertIn(
+            "- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.17.md`",
+            header,
+        )
+        self.assertNotRegex(
+            header,
+            r"(?im)^-\s*\*\*(?:current|direct|immediate) predecessor:\*\*[^\n]*v0\.5\.15\.md",
+        )
+        self.assertIn("No application implementation is authorised by HARDEN-02 itself.", section_20)
+        self.assertIn(
+            "Current Open Work v1.2.74 separately records application implementation as AUTHORISED only inside the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage.",
+            section_20,
+        )
+        self.assertNotRegex(section_20, r"(?i)\bNo application implementation is authorised\.(?:\s|$)")
+
     def test_harden_historical_pre_classification_record_is_preserved(self):
         text = HARDEN.read_text(encoding="utf-8")
         historical = _between(text, "## 24. FP-001 Phase 7C tracker closure", "## 25. FP-001 architectural proof classification current status")
