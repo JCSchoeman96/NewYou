@@ -211,26 +211,36 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
 
     def test_unauthorised_state_rejects_identical_synthetic_source(self):
         scenarios = {
-            "manifest_rule_unauthorised": "rule",
-            "open_work_state_unauthorised": "state",
-            "both_unauthorised": "both",
+            "manifest_rule_phase8_unauthorised": ("rule", {"phase8": "UNAUTHORISED"}),
+            "manifest_rule_application_unauthorised": (
+                "rule",
+                {"application_implementation": "UNAUTHORISED"},
+            ),
+            "open_work_phase8_unauthorised": ("state", {"phase8": "UNAUTHORISED"}),
+            "open_work_application_unauthorised": (
+                "state",
+                {"application_implementation": "UNAUTHORISED"},
+            ),
+            "both_unauthorised": (
+                "both",
+                {"phase8": "UNAUTHORISED", "application_implementation": "UNAUTHORISED"},
+            ),
         }
-        for label, mode in scenarios.items():
+        for label, (mode, updates) in scenarios.items():
             with self.subTest(scenario=label), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
                 manifest = self._synthetic_repo(root)
                 if mode in ("rule", "both"):
                     data = json.loads(manifest.read_text(encoding="utf-8"))
                     rule = data["integrity_rules"]["fp001_development_entry_hard_stop_lifecycle"]
-                    rule["phase8"] = "UNAUTHORISED"
-                    rule["application_implementation"] = "UNAUTHORISED"
+                    rule.update(updates)
                     manifest.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
                 if mode in ("state", "both"):
                     _rewrite_marked_json(
                         root / "docs/00_platform/02_OPEN_WORK_v1.2.74.md",
                         "<!-- HARDEN_02_LIFECYCLE_STATE_START -->",
                         "<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
-                        {"phase8": "UNAUTHORISED", "application_implementation": "UNAUTHORISED"},
+                        updates,
                     )
                 refresh_manifest(root, manifest)
                 report = run_audit(root, manifest)
@@ -239,6 +249,41 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
                 self.assertIn(SOURCE_FAILURE, check["message"], label)
                 self.assertIn("mix.exs", check["message"], label)
                 self.assertIn("lib/newyou/synthetic_probe.ex", check["message"], label)
+
+    def test_foundation_integrity_rejects_stale_current_atlas_jit_boundary(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._synthetic_repo(root)
+            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md"
+            atlas = atlas_path.read_text(encoding="utf-8")
+            current = (
+                "Development Entry Hard Stop is PASS / ALL 10 CONDITIONS SATISFIED. "
+                "Phase 8 Architectural Proof is AUTHORISED, and application implementation is AUTHORISED "
+                "only inside that bounded NEW_TRACER_BULLET proof."
+            )
+            stale = (
+                "Classification satisfies only Development Entry Hard Stop condition 9; remaining conditions "
+                "are not evaluated. Phase 8/application implementation remains UNAUTHORISED pending every "
+                "other applicable Development Entry Hard Stop condition."
+            )
+            self.assertIn(current, atlas)
+            atlas_path.write_text(atlas.replace(current, stale, 1), encoding="utf-8")
+            refresh_manifest(root, manifest)
+            manifest_data = json.loads(manifest.read_text(encoding="utf-8"))
+            hard_stop_rule = manifest_data["integrity_rules"]["fp001_development_entry_hard_stop_lifecycle"]
+            for relative in (
+                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+                "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+                "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
+            ):
+                hard_stop_rule["current_route_sha256"][relative] = hashlib.sha256(
+                    (root / relative).read_bytes()
+                ).hexdigest()
+            manifest.write_text(json.dumps(manifest_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            report = run_audit(root, manifest)
+            check = _hard_stop_check(report)
+            self.assertEqual("FAIL", check["status"], check["message"])
+            self.assertIn("Atlas FP-001 JIT boundary projects the pre-hard-stop state", check["message"])
 
     def test_pr_scope_base_to_candidate_adds_no_application_source(self):
         """Scope record for PR #131 only: the promotion itself adds no executable application source."""
@@ -288,6 +333,8 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
             "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
             "TRACER BULLET ID: NONE / NOT CREATED",
+            "TRACER BULLET: REQUIRED / NOT YET DEFINED",
+            "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
         ):
             self.assertIn(token, current_v0118)
         self.assertIn("Phase 9", current_body)
@@ -342,10 +389,24 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         text = ATLAS.read_text(encoding="utf-8")
         header = text.split("## v0.4.16 Patch Scope", 1)[0]
         current = _md_section(text, "## 26.22 FP-001 Development Entry Hard Stop PASS current route")
+        jit_boundary = _between(text, "**JIT Boundary:**", "\n### CAP-002")
         self.assertEqual([], _pre_hard_stop_hits(header))
         self.assertEqual([], _pre_hard_stop_hits(current))
         self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", current)
+        for token in (
+            "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+            "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+            "TRACER BULLET: REQUIRED / NOT YET DEFINED",
+            "TRACER BULLET ID: NONE / NOT CREATED",
+            "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
+            "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+            "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+        ):
+            self.assertIn(token, current)
         self.assertNotIn("UNAUTHORISED", current)
+        self.assertEqual([], _pre_hard_stop_hits(jit_boundary))
+        self.assertIn("Development Entry Hard Stop", jit_boundary)
+        self.assertIn("Phase 8 Architectural Proof is AUTHORISED", jit_boundary)
         # Historical records keep their freeze-time state.
         self.assertIn("UNAUTHORISED", _md_section(text, "## 26.20 Phase 7C tracker closure routing"))
         self.assertIn("UNAUTHORISED", _md_section(text, "## 26.21 FP-001 architectural proof classification route (historical predecessor)"))
@@ -363,6 +424,10 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         self.assertIn("HARDEN-02 itself confers no implementation authority", i07)
         self.assertIn("current Open Work v1.2.74 separately records bounded Phase 8 authorisation", i07)
         self.assertNotIn("satisfies only Development Entry Hard Stop condition 9", i07)
+        self.assertIn(
+            "Before the Development Entry Hard Stop passed, Phase 8 was gated by that condition. All ten conditions have now passed, and current Open Work v1.2.74 records bounded Phase 8 authorisation.",
+            section_18,
+        )
 
     def test_harden_historical_pre_classification_record_is_preserved(self):
         text = HARDEN.read_text(encoding="utf-8")

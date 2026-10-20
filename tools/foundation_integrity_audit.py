@@ -5930,6 +5930,77 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
     else:
         issues.append("README is missing for hard-stop promotion coherence")
 
+    atlas = route_docs.get("delivery_atlas", "")
+    atlas_jit_start = atlas.find("**JIT Boundary:**")
+    atlas_jit_end = atlas.find("\n### CAP-002", atlas_jit_start + 1)
+    if atlas_jit_start < 0 or atlas_jit_end < 0:
+        issues.append("Atlas FP-001 JIT boundary is missing or malformed")
+    else:
+        atlas_jit_boundary = atlas[atlas_jit_start:atlas_jit_end]
+        if any(
+            phrase in atlas_jit_boundary
+            for phrase in (
+                "Classification satisfies only Development Entry Hard Stop condition 9",
+                "remaining conditions are not evaluated",
+                "Phase 8/application implementation remains UNAUTHORISED",
+                "Development Entry Hard Stop evaluation is next",
+            )
+        ):
+            issues.append("Atlas FP-001 JIT boundary projects the pre-hard-stop state")
+        atlas_jit_required = (
+            "Development Entry Hard Stop is PASS / ALL 10 CONDITIONS SATISFIED",
+            "Phase 8 Architectural Proof is AUTHORISED",
+            "application implementation is AUTHORISED only inside that bounded NEW_TRACER_BULLET proof",
+            "Tracer Bullet is REQUIRED / NOT YET DEFINED with no ID",
+            "proof execution is NOT STARTED",
+            "NEW_TRACER_BULLET proof contract/task definition",
+            "Current Open Work v1.2.74 records this authority",
+        )
+        for token in atlas_jit_required:
+            if token not in atlas_jit_boundary:
+                issues.append(f"Atlas FP-001 JIT boundary omits current state {token!r}")
+
+    skeleton = route_docs.get("fp001_skeleton", "")
+    skeleton_current = _markdown_h2_section(skeleton, "v0.1.18 current-route status") or ""
+    skeleton_current_required = (
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "ARCHITECTURAL PROOF EXECUTION: NOT STARTED",
+        "TRACER BULLET: REQUIRED / NOT YET DEFINED",
+        "TRACER BULLET ID: NONE / NOT CREATED",
+        "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+        "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+    )
+    for token in skeleton_current_required:
+        if token not in skeleton_current:
+            issues.append(f"Skeleton v0.1.18 current route omits state {token!r}")
+
+    harden = route_docs.get("harden_02", "")
+    harden_current_sections = {
+        "§18": _markdown_h2_section(harden, "18. Downstream consequence") or "",
+        "§23": _markdown_h2_section(harden, "23. FP-001 Phase 7B reconciliation current route") or "",
+    }
+    harden_current_required = (
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
+    )
+    for section_name, section in harden_current_sections.items():
+        for token in harden_current_required:
+            if token not in section:
+                issues.append(f"HARDEN-02 {section_name} current route omits state {token!r}")
+        if any(
+            phrase in section
+            for phrase in (
+                "satisfies only Development Entry Hard Stop condition 9",
+                "Phase 8/application implementation remains UNAUTHORISED",
+                "Development Entry Hard Stop evaluation remains next",
+            )
+        ):
+            issues.append(f"HARDEN-02 {section_name} current route projects the pre-hard-stop state")
+
     # Authorisation is derived only from repository-governed lifecycle state.
     application_authorised = (
         isinstance(rule, dict)
@@ -6059,9 +6130,9 @@ def _check_fp001_phase7c_current_promotion(
     candidate_archive_sha256 = "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19"
     protected_current_artifacts = {
         "docs/00_platform/02_OPEN_WORK_v1.2.74.md": "0872b5566f38a6c9cff53dbf7a236c0ba5b74308053aeb91796a45a3e9d9f852",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "db63a795f3208b618fad4a090e3c8e14d20207d6b4e55c47cfba0c48432668df",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "c5110c614989ff19667eff397663cd0221f2d7286a6c1a3d1e00bd2bd26f3358",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "68ee4fdcdfcc014ba91109767a955640ab64780da1f0e957e5221c846c051305",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "9636c1ed2a12f156ebeb31004e0d3823f7e2824b55d9e7107646d8178f5eab32",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "9401dc20a362115534dbb2ce16262c032debbe8dcb8e3d2fd5d9c87a1c1c836b",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "47f2c24021ccad186af3f0c1e11bc101d090d03742b3b5f36242b6025e9635fa",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md": "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "cc664c1e5d148c1a8f30f2a8d769645646162ff029494a2187e0a65775c27c83",

@@ -664,7 +664,7 @@ CERTIFIED HARDEN-02 EXECUTION
 → NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION: NEXT
 ```
 
-This route does not authorise work on a downstream stage early. The separately certified Engineering Standards Authority Promotion preceded FP-001 reconciliation. Communications and Audit dossier promotions are complete. Successful Phase 7B reconciliation must precede Phase 7C; proof classification follows Phase 7C; Phase 8 remains gated by the Development Entry Hard Stop.
+This route does not authorise work on a downstream stage early. The separately certified Engineering Standards Authority Promotion preceded FP-001 reconciliation. Communications and Audit dossier promotions are complete. Successful Phase 7B reconciliation must precede Phase 7C, and proof classification follows Phase 7C. Before the Development Entry Hard Stop passed, Phase 8 was gated by that condition. All ten conditions have now passed, and current Open Work v1.2.74 records bounded Phase 8 authorisation.
 
 Historical H02-3 evidence remains historically true for the earlier programme state. Accepted H02-3R refines only the immediate post-HARDEN-02 route by inserting the Engineering Standards supporting-authority promotion stage before FP-001 reconciliation.
 
