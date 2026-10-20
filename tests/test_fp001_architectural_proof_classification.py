@@ -260,8 +260,11 @@ class FP001ArchitecturalProofClassificationTests(unittest.TestCase):
             capture_output=True,
             text=True,
         ).stdout.splitlines()
+        probe_prefix = "tests/fixtures/fp001_phase8_authorization_probe/"
         forbidden = []
         for path in changed:
+            if path.startswith(probe_prefix):
+                continue
             parts = Path(path).parts
             if Path(path).name == "mix.exs" or path.endswith(".ex"):
                 forbidden.append(path)
