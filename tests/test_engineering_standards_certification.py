@@ -22,7 +22,11 @@ class EngineeringStandardsCertificationTests(unittest.TestCase):
         )
         self.assertIsNotNone(lifecycle_check, report["checks"])
         self.assertEqual("PASS", lifecycle_check["status"])
-        self.assertIn("certified", lifecycle_check["message"].lower())
+        message = lifecycle_check["message"].lower()
+        self.assertTrue(
+            "certified" in message or "hard stop" in message or "development entry hard stop" in message,
+            lifecycle_check["message"],
+        )
 
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         active_entries = [

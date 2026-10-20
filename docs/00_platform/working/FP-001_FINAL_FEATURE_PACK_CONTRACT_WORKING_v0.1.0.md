@@ -26,12 +26,12 @@ REUSE_EXISTING_PROOF: NOT SELECTED
 TRACER BULLET: REQUIRED / NOT YET DEFINED
 TRACER BULLET ID: NONE / NOT CREATED
 ARCHITECTURAL PROOF EXECUTION: NOT STARTED
-DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED
-REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8
-PHASE 8: UNAUTHORISED
-APPLICATION IMPLEMENTATION: UNAUTHORISED
-PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED
-NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION
+DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED
+DEVELOPMENT ENTRY HARD STOP CONDITIONS 1–10: SATISFIED
+PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)
+APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)
+PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
+NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION
 ```
 
 ## A. Identity and provenance
@@ -473,9 +473,11 @@ At the pre-classification snapshot, the next governance action was Architectural
   "programme_router_issue": 111,
   "programme_router_state": "OPEN",
   "proof_classification": "NEW_TRACER_BULLET",
-  "phase8": "UNAUTHORISED",
-  "application_implementation": "UNAUTHORISED",
-  "next_governance_action": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
+  "phase8": "AUTHORISED",
+  "application_implementation": "AUTHORISED",
+  "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+  "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+  "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
   "architectural_proof_classification_status": "COMPLETE / FINALISED",
   "architectural_proof_requirement": "NEW_TRACER_BULLET",
   "selected_proof_vehicle": "NEW_TRACER_BULLET",
@@ -484,11 +486,10 @@ At the pre-classification snapshot, the next governance action was Architectural
   "tracer_bullet_id": "NONE / NOT CREATED",
   "architectural_proof_execution": "NOT STARTED",
   "development_entry_hard_stop_condition_9": "SATISFIED",
-  "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
   "classification_authority_event": "SEPARATE OPEN WORK POST-PHASE-7C STATUS DECISION"
 }
 ```
 <!-- FP001_PHASE7C_CURRENT_STATUS_END -->
 
 
-The classification status above is a downstream lifecycle reflection only. Open Work v1.2.73 records the separate classification authority/event. This contract does not select the proof vehicle or create a Tracer Bullet.
+The classification status above is a downstream lifecycle reflection only. Open Work v1.2.74 records the separate Development Entry Hard Stop evaluation and Phase 8 authorisation boundary. This contract does not select the proof vehicle or create a Tracer Bullet.

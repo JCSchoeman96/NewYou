@@ -11,10 +11,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 BASE_SHA = "24a9ad925ee1ab6d75ddb44bae6df0b4f3d09bca"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.73.md"
+OPEN_WORK_CLASSIFICATION = DOCS / "archive/02_OPEN_WORK_v1.2.73.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.74.md"
 CONTRACT = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 CONTRACT_ARCHIVE = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
-HARDEN_02 = DOCS / "working/HARDEN-02_CONTRACT_WORKING_v0.5.17.md"
+HARDEN_02_CLASSIFICATION = DOCS / "archive/HARDEN-02_CONTRACT_WORKING_v0.5.17.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 PREDECESSORS = (
     (
@@ -70,10 +71,10 @@ def _numbered_section(text: str, number: int) -> str:
 
 class FP001ArchitecturalProofClassificationTests(unittest.TestCase):
     def test_current_route_finishes_classification_and_keeps_phase8_unauthorised(self):
-        self.assertTrue(OPEN_WORK.is_file(), "Open Work v1.2.73 must be the current successor")
-        if not OPEN_WORK.is_file():
+        self.assertTrue(OPEN_WORK_CLASSIFICATION.is_file(), "Open Work v1.2.73 archive must preserve the classification-era route")
+        if not OPEN_WORK_CLASSIFICATION.is_file():
             return
-        text = OPEN_WORK.read_text(encoding="utf-8")
+        text = OPEN_WORK_CLASSIFICATION.read_text(encoding="utf-8")
         state = _marked_json(
             text,
             "<!-- HARDEN_02_LIFECYCLE_STATE_START -->",
@@ -131,7 +132,7 @@ class FP001ArchitecturalProofClassificationTests(unittest.TestCase):
         self.assertNotRegex(active, r"\bTB-\d{3,}\b")
 
     def test_classification_rationale_uses_contract_and_historical_baseline_evidence(self):
-        self.assertTrue(OPEN_WORK.is_file(), "Open Work v1.2.73 must contain the classification record")
+        self.assertTrue(OPEN_WORK.is_file(), "Open Work v1.2.74 must contain the classification record")
         if not OPEN_WORK.is_file():
             return
         text = OPEN_WORK.read_text(encoding="utf-8")
@@ -162,7 +163,7 @@ class FP001ArchitecturalProofClassificationTests(unittest.TestCase):
         self.assertIn("If the later gate selects `REUSE_EXISTING_PROOF`, it must show that existing evidence exercises this same architecture and all applicable obligations.", proof_section)
         self.assertIn("If it selects `NEW_TRACER_BULLET`, the tracer must prove a materially unproven architectural claim through the real path.", proof_section)
         self.assertIn("ARCHITECTURAL PROOF REQUIREMENT / SELECTED PROOF VEHICLE: NEW_TRACER_BULLET", text.split("## A. Identity and provenance", 1)[0])
-        self.assertIn("The classification status above is a downstream lifecycle reflection only. Open Work v1.2.73 records the separate classification authority/event.", text)
+        self.assertIn("Open Work v1.2.74 records the separate Development Entry Hard Stop evaluation", text)
         self.assertEqual(
             "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19",
             hashlib.sha256(CONTRACT_ARCHIVE.read_bytes()).hexdigest(),
@@ -178,7 +179,7 @@ class FP001ArchitecturalProofClassificationTests(unittest.TestCase):
         self.assertEqual(actual_sha256, rule["current_route_sha256"][contract_path])
 
     def test_harden_02_current_sections_route_the_completed_classification(self):
-        text = HARDEN_02.read_text(encoding="utf-8")
+        text = HARDEN_02_CLASSIFICATION.read_text(encoding="utf-8")
         sections = {
             "18": _numbered_section(text, 18),
             "23": _numbered_section(text, 23),
@@ -250,23 +251,6 @@ class FP001ArchitecturalProofClassificationTests(unittest.TestCase):
         ]
         self.assertEqual([], executable)
         self.assertEqual({".github", "docs", "tests", "tools", ".gitignore"}, {Path(path).parts[0] for path in paths})
-
-    def test_current_classification_scope_has_no_executable_application_source(self):
-        changed = subprocess.run(
-            ["git", "diff", "--name-only", BASE_SHA],
-            cwd=ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.splitlines()
-        forbidden = []
-        for path in changed:
-            parts = Path(path).parts
-            if Path(path).name == "mix.exs" or path.endswith(".ex"):
-                forbidden.append(path)
-            elif any(part in {"lib", "src", "app", "apps", "priv", "migrations", "assets"} for part in parts):
-                forbidden.append(path)
-        self.assertEqual([], forbidden)
 
 
 if __name__ == "__main__":

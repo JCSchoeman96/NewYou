@@ -13,7 +13,7 @@ from tools.foundation_integrity_audit import refresh_manifest, run_audit
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 README = DOCS / "README.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.73.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.74.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 STALE_PATTERNS = (
@@ -46,7 +46,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         cls.open_work_state = _open_work_lifecycle_state(OPEN_WORK.read_text(encoding="utf-8"))
 
     def test_delivery_atlas_routing_points_at_current_successor(self) -> None:
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.15.md", self.atlas_routing)
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.16.md", self.atlas_routing)
         self.assertNotRegex(self.atlas_routing, r"\(working/DELIVERY_ATLAS_WORKING_v0\.4\.14\.md\)")
 
     def test_current_prose_agrees_with_open_work_classification(self) -> None:
@@ -54,7 +54,8 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         self.assertEqual("COMPLETE / FINALISED", self.open_work_state.get("architectural_proof_classification_status"))
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", self.current_state)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", self.current_state)
-        self.assertIn("NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION", self.current_state)
+        self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", self.current_state)
+        self.assertIn("NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION", self.current_state)
 
     def test_current_prose_cannot_regress_to_stale_classification_routing(self) -> None:
         for pattern in STALE_PATTERNS:
@@ -74,7 +75,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             prose = _current_readme_prose(text)
             atlas = prose.split("## Delivery Atlas routing", 1)[1].split("\n## ", 1)[0]
             stale_atlas = atlas.replace(
-                "working/DELIVERY_ATLAS_WORKING_v0.4.15.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
                 "working/DELIVERY_ATLAS_WORKING_v0.4.14.md",
                 1,
             )

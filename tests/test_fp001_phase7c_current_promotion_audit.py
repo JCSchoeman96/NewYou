@@ -15,7 +15,7 @@ from tools.foundation_integrity_audit import (
 ROOT = Path(__file__).resolve().parents[1]
 PROMOTION_RULE = "fp001_phase7c_final_contract_current_promotion"
 CONTRACT_REL = "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK_REL = "docs/00_platform/02_OPEN_WORK_v1.2.73.md"
+OPEN_WORK_REL = "docs/00_platform/02_OPEN_WORK_v1.2.74.md"
 README_REL = "docs/00_platform/README.md"
 ARCHIVE_REL = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 
