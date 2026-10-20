@@ -18,7 +18,7 @@ CANDIDATE_TREE = "8e5fc724b4c4f4a6a196d41e3beafc8e1384c2bf"
 CANDIDATE_ARCHIVE_SHA256 = "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19"
 CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 CURRENT_CONTRACT = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.74.md"
+OPEN_WORK = DOCS / "archive/02_OPEN_WORK_v1.2.74.md"
 PROMOTION_START = "<!-- FP001_PHASE7C_CURRENT_STATUS_START -->"
 PROMOTION_END = "<!-- FP001_PHASE7C_CURRENT_STATUS_END -->"
 
@@ -229,10 +229,10 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
     def test_readme_and_manifest_route_current_lower_level_artifacts_without_new_root_authority(self):
         for path in (
             "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
-            "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
-            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
-            "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
-            "02_OPEN_WORK_v1.2.74.md",
+            "working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
+            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md",
+            "working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md",
+            "02_OPEN_WORK_v1.2.75.md",
         ):
             with self.subTest(path=path):
                 self.assertIn(path, self.readme)
