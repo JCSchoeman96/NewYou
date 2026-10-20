@@ -51,12 +51,12 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             "COMPLETE / CERTIFIED / CURRENT",
             state["phase_7c"],
         )
-        self.assertEqual("NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION", state["next_stage"])
+        self.assertEqual("TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", state["next_stage"])
         self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         self.assertEqual("NEW_TRACER_BULLET", state["proof_classification"])
         self.assertEqual("NOT SELECTED", state["reuse_existing_proof"])
-        self.assertEqual("NONE / NOT CREATED", state["tracer_bullet_id"])
+        self.assertEqual("TB-001", state["tracer_bullet_id"])
         self.assertEqual("NOT STARTED", state["architectural_proof_execution"])
         self.assertEqual("PASS / ALL 10 CONDITIONS SATISFIED", state["development_entry_hard_stop_status"])
         self.assertEqual("SATISFIED", state["development_entry_hard_stop_conditions_1_through_10"])
@@ -134,13 +134,13 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         cases = (
             (
                 "Current State",
-                "- RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED",
-                "- RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED; formerly open tracker #120",
+                "PHASE 7B EXECUTION/CONTROL TRACKER #120: CLOSED / COMPLETED",
+                "PHASE 7B EXECUTION/CONTROL TRACKER #120: OPEN",
             ),
             (
-                "Active Working Artifacts",
-                "under completed tracker #120 (CLOSED / COMPLETED)",
-                "under open tracker #120 (CLOSED / COMPLETED)",
+                "Current State",
+                "TRACER BULLET ID: TB-001",
+                "TRACER BULLET ID: NONE / NOT CREATED",
             ),
         )
         for section_name, anchor, replacement in cases:
@@ -163,7 +163,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
 
                 self.assertEqual("FAIL", report["status"])
                 self.assertTrue(
-                    any(finding["check"] == "fp001_phase7b_certification_current" for finding in report["findings"]),
+                    any(finding["check"] == "platform_readme_router_consistency" for finding in report["findings"]),
                     report["findings"],
                 )
 
@@ -185,17 +185,17 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
     def test_current_derived_routes_reject_open_tracker_projection(self):
         cases = (
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
                 "preserves #120 as CLOSED / COMPLETED historical evidence",
                 "preserves #120 as OPEN historical evidence",
             ),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
                 "under completed tracker #120 (CLOSED / COMPLETED)",
                 "under open tracker #120 (CLOSED / COMPLETED)",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
                 "RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED",
                 "RECONCILIATION EXECUTION TRACKER: #120 OPEN",
             ),
@@ -217,12 +217,12 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
     def test_current_derived_routes_keep_programme_router_open(self):
         cases = (
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
                 "Programme router #111 remains OPEN",
                 "Programme router #111 is CLOSED",
             ),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
                 "Programme router #111 remains OPEN",
                 "Programme router #111 is CLOSED",
             ),
@@ -243,10 +243,10 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
 
     def test_retired_predecessor_guards_allow_only_archive_qualified_paths(self):
         retired = (
-            "02_OPEN_WORK_v1.2.70.md",
-            "DELIVERY_ATLAS_WORKING_v0.4.12.md",
-            "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
-            "HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
+            "02_OPEN_WORK_v1.2.74.md",
+            "DELIVERY_ATLAS_WORKING_v0.4.16.md",
+            "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+            "HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
         )
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_fixture(directory)
@@ -282,7 +282,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         return root, manifest_path
 
-    def test_foundation_integrity_rejects_open_current_tracker_state(self):
+    def test_foundation_integrity_rejects_unassigned_current_tracer_bullet(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             fixture_docs = root / "docs" / "00_platform"
@@ -295,8 +295,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             payload_start = open_work.index("{", start)
             payload_end = open_work.index("\n```", payload_start)
             state = json.loads(open_work[payload_start:payload_end])
-            state["phase_7b_reconciliation_execution_tracker_issue"] = 120
-            state["phase_7b_reconciliation_execution_tracker_state"] = "OPEN"
+            state["tracer_bullet_id"] = "NONE / NOT CREATED"
             open_work_path.write_text(
                 open_work[:payload_start]
                 + json.dumps(state, indent=2)
@@ -310,7 +309,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             self.assertEqual("FAIL", report["status"])
             self.assertTrue(
                 any(
-                    finding["check"] == "fp001_phase7b_certification_current"
+                    finding["check"] == "fp001_phase8_proof_contract_lifecycle"
                     for finding in report["findings"]
                 ),
                 report["findings"],

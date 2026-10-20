@@ -40,7 +40,7 @@ EXPECTED_CURRENT = {
     "PROJECT_NORTH_STAR_AND_MVP": ("PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md", "1.3.0"),
     "PLATFORM_BASELINE": ("00_PLATFORM_v1.8.0.md", "1.8.0"),
     "DECISION_REGISTER": ("01_DECISIONS_v1.8.0.md", "1.8.0"),
-    "OPEN_WORK": ("02_OPEN_WORK_v1.2.74.md", "1.2.74"),
+    "OPEN_WORK": ("02_OPEN_WORK_v1.2.77.md", "1.2.77"),
     "DOMAIN_MAP": ("04_DOMAIN_MAP_v1.2.0.md", "1.2.0"),
     "ROADMAP": ("05_ROADMAP_v1.2.3.md", "1.2.3"),
 }
@@ -297,7 +297,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
 
     def test_current_routes_are_current_and_old_paths_remain_archived(self):
-        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md"
+        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
         self.assertEqual(
             atlas_path,
             self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"][0],
@@ -339,7 +339,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             "00_PLATFORM_v1.8.0.md",
             "01_DECISIONS_v1.8.0.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "DELIVERY_ATLAS_WORKING_v0.4.16.md",
+            "DELIVERY_ATLAS_WORKING_v0.4.19.md",
         ):
             self.assertIn(current_name, immediate_next_action)
         for stale_name in (
@@ -407,10 +407,10 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertIn("ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED", self.open_work)
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", self.open_work)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", self.open_work)
-        self.assertIn("TRACER BULLET ID: NONE / NOT CREATED", self.open_work)
+        self.assertIn("TRACER BULLET ID: TB-001", self.open_work)
         self.assertIn("ARCHITECTURAL PROOF EXECUTION: NOT STARTED", self.open_work)
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", self.open_work)
-        self.assertIn("NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION", self.open_work)
+        self.assertIn("NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", self.open_work)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", self.open_work)
         self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", self.open_work)
         self.assertIn(

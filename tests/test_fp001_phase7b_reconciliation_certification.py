@@ -192,7 +192,7 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         )
         self.assertIn("- PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", current_state)
         self.assertIn("FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT", current_state)
-        self.assertIn("NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION", current_state)
+        self.assertIn("NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", current_state)
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", current_state)
@@ -209,7 +209,7 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         )
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state.get("phase_7b_reconciliation"))
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state.get("phase_7c"))
-        self.assertEqual("NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION", state.get("next_stage"))
+        self.assertEqual("TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", state.get("next_stage"))
         self.assertEqual("NEW_TRACER_BULLET", state.get("proof_classification"))
         self.assertEqual("AUTHORISED", state.get("application_implementation"))
         self.assertEqual("AUTHORISED", state.get("phase8"))
@@ -231,20 +231,25 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertEqual("AUTHORISED", phase7c_contract.get("phase8"))
 
         current_open_work = self.entries["OPEN_WORK"]
-        self.assertEqual("02_OPEN_WORK_v1.2.74.md", current_open_work["canonical_filename"])
-        self.assertEqual("1.2.74", current_open_work["semver"])
+        self.assertEqual("02_OPEN_WORK_v1.2.77.md", current_open_work["canonical_filename"])
+        self.assertEqual("1.2.77", current_open_work["semver"])
         self.assertEqual(
-            "docs/00_platform/02_OPEN_WORK_v1.2.74.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
             current_open_work["repository_path"],
         )
-        self.assertEqual("1.2.73", current_open_work["superseded_version"])
+        self.assertEqual("1.2.76", current_open_work["superseded_version"])
         self.assertEqual("current", current_open_work["lifecycle"])
 
-        immediate_predecessor = self.entries.get("OPEN_WORK_V1_2_73", {})
-        self.assertEqual("02_OPEN_WORK_v1.2.73.md", immediate_predecessor.get("canonical_filename"))
-        self.assertEqual("1.2.73", immediate_predecessor.get("semver"))
-        self.assertEqual("docs/00_platform/archive/02_OPEN_WORK_v1.2.73.md", immediate_predecessor.get("repository_path"))
-        self.assertEqual("1.2.72", immediate_predecessor.get("superseded_version"))
+        direct_predecessor = self.entries.get("OPEN_WORK_V1_2_75", {})
+        self.assertEqual("archive/02_OPEN_WORK_v1.2.75.md", direct_predecessor.get("repository_path", "").removeprefix("docs/00_platform/"))
+        self.assertEqual("1.2.76", direct_predecessor.get("superseded_version"))
+        self.assertEqual("historical", direct_predecessor.get("lifecycle"))
+
+        immediate_predecessor = self.entries.get("OPEN_WORK_V1_2_74", {})
+        self.assertEqual("02_OPEN_WORK_v1.2.74.md", immediate_predecessor.get("canonical_filename"))
+        self.assertEqual("1.2.74", immediate_predecessor.get("semver"))
+        self.assertEqual("docs/00_platform/archive/02_OPEN_WORK_v1.2.74.md", immediate_predecessor.get("repository_path"))
+        self.assertEqual("1.2.75", immediate_predecessor.get("superseded_version"))
         self.assertEqual("historical", immediate_predecessor.get("lifecycle"))
 
         direct_predecessor = self.entries.get("OPEN_WORK_V1_2_69", {})
@@ -314,10 +319,10 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
 
     def test_foundation_integrity_rejects_unarchived_predecessors_and_allows_archives(self):
         names = [
-            "02_OPEN_WORK_v1.2.70.md",
-            "DELIVERY_ATLAS_WORKING_v0.4.12.md",
-            "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
-            "HARDEN-02_CONTRACT_WORKING_v0.5.14.md",
+            "02_OPEN_WORK_v1.2.74.md",
+            "DELIVERY_ATLAS_WORKING_v0.4.16.md",
+            "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+            "HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
         ]
         readme_path = DOCS / "README.md"
         original_readme = readme_path.read_text(encoding="utf-8")
@@ -337,7 +342,7 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
                 encoding="utf-8",
             )
             rejected = run_audit(root, fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
-            route_check = next(item for item in rejected["checks"] if item["name"] == "fp001_phase7c_final_contract_current_promotion")
+            route_check = next(item for item in rejected["checks"] if item["name"] == "fp001_phase8_proof_contract_lifecycle")
             self.assertEqual("FAIL", route_check["status"], route_check["message"])
             for name in names:
                 self.assertIn(name, route_check["message"])
@@ -354,7 +359,7 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
                 encoding="utf-8",
             )
             accepted = run_audit(root, fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
-            route_check = next(item for item in accepted["checks"] if item["name"] == "fp001_phase7c_final_contract_current_promotion")
+            route_check = next(item for item in accepted["checks"] if item["name"] == "fp001_phase8_proof_contract_lifecycle")
             self.assertEqual("PASS", route_check["status"], route_check["message"])
 
     def test_successor_does_not_change_upstream_authority_or_application_source(self):

@@ -77,11 +77,18 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
             with self.subTest(key=key):
                 self.assertEqual(value, rule.get(key))
 
+        historical_open_work = next(
+            entry for entry in manifest["historical_documents"]
+            if entry.get("repository_path") == "docs/00_platform/archive/02_OPEN_WORK_v1.2.74.md"
+        )
+        self.assertEqual("1.2.75", historical_open_work["superseded_version"])
+        self.assertEqual("historical", historical_open_work["lifecycle"])
+
         current_paths = rule["current_paths"]
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.74.md", current_paths["open_work"])
-        self.assertEqual("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md", current_paths["delivery_atlas"])
-        self.assertEqual("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md", current_paths["fp001_skeleton"])
-        self.assertEqual("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md", current_paths["harden_02"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.77.md", current_paths["open_work"])
+        self.assertEqual("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md", current_paths["delivery_atlas"])
+        self.assertEqual("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md", current_paths["fp001_skeleton"])
+        self.assertEqual("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md", current_paths["harden_02"])
 
         open_work = (ROOT / current_paths["open_work"]).read_text(encoding="utf-8")
         state = _marked_json(open_work, "<!-- HARDEN_02_LIFECYCLE_STATE_START -->", "<!-- HARDEN_02_LIFECYCLE_STATE_END -->")
@@ -91,9 +98,9 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         self.assertEqual("NEW_TRACER_BULLET", state["proof_classification"])
         self.assertEqual("NOT SELECTED", state["reuse_existing_proof"])
-        self.assertEqual("NONE / NOT CREATED", state["tracer_bullet_id"])
+        self.assertEqual("TB-001", state["tracer_bullet_id"])
         self.assertEqual("NOT STARTED", state["architectural_proof_execution"])
-        self.assertEqual("NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION", state["next_stage"])
+        self.assertEqual("TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", state["next_stage"])
         self.assertEqual("AUTHORISED", state["application_implementation"])
         self.assertEqual("AUTHORISED", state["phase8"])
 
@@ -107,40 +114,53 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_state)
         self.assertIn("REUSE_EXISTING_PROOF: NOT SELECTED", current_state)
-        self.assertIn("TRACER BULLET ID: NONE / NOT CREATED", current_state)
-        self.assertIn("ARCHITECTURAL PROOF EXECUTION: NOT STARTED", current_state)
+        self.assertIn("TRACER BULLET ID: TB-001", current_state)
+        self.assertIn("PROOF EXECUTION: NOT STARTED", current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", current_state)
         self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", current_state)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", current_state)
         self.assertNotRegex(current_state, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
         self.assertNotRegex(current_state, r"(?i)REUSE_EXISTING_PROOF:\s*SELECTED")
-        self.assertNotRegex(current_state, r"\bTB-\d{3,}\b")
+        self.assertNotRegex(current_state, r"\bTB-(?!001\b)\d{3,}\b")
 
         open_work = (ROOT / paths["open_work"]).read_text(encoding="utf-8")
         active = open_work.split("# 9. Immediate Next Action", 1)[1].split("# 10. Minimal Tools", 1)[0]
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", active)
         self.assertIn("PROGRAMME ROUTER #111: OPEN", active)
-        self.assertIn("NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION", active)
+        self.assertIn("NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", active)
         self.assertNotRegex(active, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
 
-        for key, route_heading in (
-            ("delivery_atlas", "## 26.22 FP-001 Development Entry Hard Stop PASS current route"),
-            ("fp001_skeleton", "## v0.1.18 current-route status"),
-            ("harden_02", "## 21. Current execution certification and next stage"),
+        for key, route_heading, classification, candidate_lifecycle in (
+            (
+                "delivery_atlas",
+                "## 26.24 FP-001 Phase 8 TB-001 successor candidate route (current)",
+                "FP-001 Architectural Proof Classification remains COMPLETE / FINALISED as NEW_TRACER_BULLET",
+                "identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
+            ),
+            (
+                "fp001_skeleton",
+                "## v0.1.21 — TB-001 proof-contract successor candidate route (current)",
+                None,
+                "identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
+            ),
+            (
+                "harden_02",
+                "## v0.5.21 — FP-001 TB-001 proof-contract successor candidate route (current)",
+                None,
+                "TB-001 is CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
+            ),
         ):
             content = (ROOT / paths[key]).read_text(encoding="utf-8")
             self.assertIn(route_heading, content)
             route = content.split(route_heading, 1)[1].split("\n## ", 1)[0]
-            if key == "delivery_atlas":
-                route = route.split("\n- v0.4.12 — historical", 1)[0]
-            self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", route)
-            self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", route)
-            self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", route)
-            self.assertIn("REUSE_EXISTING_PROOF: NOT SELECTED", route)
-            self.assertIn("TRACER BULLET ID: NONE / NOT CREATED", route)
-            self.assertIn("ARCHITECTURAL PROOF EXECUTION: NOT STARTED", route)
-            self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", route)
-            self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", route)
+            if classification is not None:
+                self.assertIn(classification, route)
+            self.assertIn(candidate_lifecycle, route)
+            self.assertIn("PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS", route)
+            self.assertIn("PROOF EXECUTION: NOT STARTED", route)
+            self.assertIn("PROOF RESULT: NOT STARTED", route)
+            self.assertIn("PROOF CERTIFICATION: NOT STARTED", route)
+            self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", route)
             self.assertNotRegex(route, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
 
     def test_foundation_integrity_rejects_open_tracker_projection(self):
@@ -164,7 +184,7 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
             refresh_manifest(root, manifest_path)
 
             report = run_audit(root, manifest_path)
-            check = next(item for item in report["checks"] if item["name"] == PROMOTION_RULE)
+            check = next(item for item in report["checks"] if item["name"] == "fp001_phase8_proof_contract_lifecycle")
             self.assertEqual("FAIL", check["status"], check["message"])
 
     def test_candidate_archive_and_direct_predecessor_archives_are_immutable(self):
