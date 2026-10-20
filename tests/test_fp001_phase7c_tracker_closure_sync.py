@@ -124,7 +124,7 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertNotRegex(active, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
 
         for key, route_heading in (
-            ("delivery_atlas", "## 26.21 FP-001 architectural proof classification current route"),
+            ("delivery_atlas", "## 26.22 FP-001 Development Entry Hard Stop PASS current route"),
             ("fp001_skeleton", "## v0.1.18 current-route status"),
             ("harden_02", "## 21. Current execution certification and next stage"),
         ):

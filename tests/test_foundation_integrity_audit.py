@@ -1810,9 +1810,6 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         source_root = Path(__file__).resolve().parents[1]
         fixture_docs = root / "docs" / "00_platform"
         shutil.copytree(source_root / "docs" / "00_platform", fixture_docs)
-        probe_src = source_root / "tests" / "fixtures" / "fp001_phase8_authorization_probe"
-        if probe_src.is_dir():
-            shutil.copytree(probe_src, root / probe_src.relative_to(source_root))
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         refresh_manifest(root, manifest_path)
@@ -1905,10 +1902,12 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 self.assertEqual("FAIL", lifecycle_check["status"], lifecycle_check["message"])
                 self.assertIn("manifest SHA-256 pins disagree with actual bytes", lifecycle_check["message"])
 
-    def test_application_source_guard_fails_closed_on_detached_head_without_head_ref(self):
+    def test_application_source_permission_is_independent_of_branch_and_head_ref(self):
+        """Authorisation comes from governed state only: detached HEAD / missing GITHUB_HEAD_REF cannot change it."""
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
             (root / "mix.exs").write_text("# application source\n", encoding="utf-8")
+            refresh_manifest(root, manifest_path)
 
             real_run = subprocess.run
 
@@ -1926,8 +1925,8 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 item for item in report["checks"]
                 if item["name"] == "fp001_development_entry_hard_stop_lifecycle"
             )
-            self.assertEqual("FAIL", hard_stop_check["status"], hard_stop_check["message"])
-            self.assertIn("mix.exs", hard_stop_check["message"])
+            self.assertEqual("PASS", hard_stop_check["status"], hard_stop_check["message"])
+            self.assertNotIn("application implementation is not authorised", hard_stop_check["message"])
 
     def test_roadmap_proof_classification_lifecycle_fails_closed_on_scope_regressions(self):
         mutations = (
@@ -2102,12 +2101,13 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
             report = run_audit(root, manifest_path)
 
+            # Authorised governed state permits application source; unauthorised rejection is covered in
+            # tests/test_fp001_development_entry_hard_stop_promotion.py.
             hard_stop_check = next(
                 item for item in report["checks"]
                 if item["name"] == "fp001_development_entry_hard_stop_lifecycle"
             )
-            self.assertEqual("FAIL", hard_stop_check["status"], hard_stop_check["message"])
-            self.assertIn("mix.exs", hard_stop_check["message"])
+            self.assertEqual("PASS", hard_stop_check["status"], hard_stop_check["message"])
 
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
@@ -2870,9 +2870,6 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         source_root = Path(__file__).resolve().parents[1]
         fixture_docs = root / "docs" / "00_platform"
         shutil.copytree(source_root / "docs" / "00_platform", fixture_docs)
-        probe_src = source_root / "tests" / "fixtures" / "fp001_phase8_authorization_probe"
-        if probe_src.is_dir():
-            shutil.copytree(probe_src, root / probe_src.relative_to(source_root))
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         refresh_manifest(root, manifest_path)
         return fixture_docs, manifest_path

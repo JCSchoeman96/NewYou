@@ -252,26 +252,6 @@ class FP001ArchitecturalProofClassificationTests(unittest.TestCase):
         self.assertEqual([], executable)
         self.assertEqual({".github", "docs", "tests", "tools", ".gitignore"}, {Path(path).parts[0] for path in paths})
 
-    def test_current_classification_scope_has_no_executable_application_source(self):
-        changed = subprocess.run(
-            ["git", "diff", "--name-only", BASE_SHA],
-            cwd=ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.splitlines()
-        probe_prefix = "tests/fixtures/fp001_phase8_authorization_probe/"
-        forbidden = []
-        for path in changed:
-            if path.startswith(probe_prefix):
-                continue
-            parts = Path(path).parts
-            if Path(path).name == "mix.exs" or path.endswith(".ex"):
-                forbidden.append(path)
-            elif any(part in {"lib", "src", "app", "apps", "priv", "migrations", "assets"} for part in parts):
-                forbidden.append(path)
-        self.assertEqual([], forbidden)
-
 
 if __name__ == "__main__":
     unittest.main()

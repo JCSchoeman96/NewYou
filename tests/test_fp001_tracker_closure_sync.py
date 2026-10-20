@@ -279,9 +279,6 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         root = Path(directory)
         fixture_docs = root / "docs" / "00_platform"
         shutil.copytree(DOCS, fixture_docs)
-        probe_src = ROOT / "tests" / "fixtures" / "fp001_phase8_authorization_probe"
-        if probe_src.is_dir():
-            shutil.copytree(probe_src, root / probe_src.relative_to(ROOT))
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         return root, manifest_path
 

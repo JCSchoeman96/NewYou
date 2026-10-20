@@ -2131,9 +2131,9 @@
         "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md": "d6fb70a9a19286263404d191a60447158c1ccf8097c8be35465def37046169c6",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
         "docs/00_platform/02_OPEN_WORK_v1.2.74.md": "0872b5566f38a6c9cff53dbf7a236c0ba5b74308053aeb91796a45a3e9d9f852",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "1d5728af2f63f322972ba0ee030ae03eae0c00f411908fd964a11ad3af130ed7",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "edf3edcdcd442287d49838d7c6301bf1bee89b36790c1ea7aced16dbdfdcce2f",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "e19575876293b42f6fa2473f3f7050c1388bc5b13d43278e29f5d07ecd1e6f07"
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "db63a795f3208b618fad4a090e3c8e14d20207d6b4e55c47cfba0c48432668df",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "c5110c614989ff19667eff397663cd0221f2d7286a6c1a3d1e00bd2bd26f3358",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "68ee4fdcdfcc014ba91109767a955640ab64780da1f0e957e5221c846c051305"
       },
       "protected_historical_evidence_sha256": {
         "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md": "7038f1634677f129ba44230b1f104198a7ab3b4a33e68af5e8cffd5bb87b06dd",
@@ -2240,9 +2240,9 @@
       },
       "current_route_sha256": {
         "docs/00_platform/02_OPEN_WORK_v1.2.74.md": "0872b5566f38a6c9cff53dbf7a236c0ba5b74308053aeb91796a45a3e9d9f852",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "1d5728af2f63f322972ba0ee030ae03eae0c00f411908fd964a11ad3af130ed7",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "edf3edcdcd442287d49838d7c6301bf1bee89b36790c1ea7aced16dbdfdcce2f",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "e19575876293b42f6fa2473f3f7050c1388bc5b13d43278e29f5d07ecd1e6f07",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "db63a795f3208b618fad4a090e3c8e14d20207d6b4e55c47cfba0c48432668df",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "c5110c614989ff19667eff397663cd0221f2d7286a6c1a3d1e00bd2bd26f3358",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "68ee4fdcdfcc014ba91109767a955640ab64780da1f0e957e5221c846c051305",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2"
       }
     },
@@ -2280,13 +2280,12 @@
       },
       "current_route_sha256": {
         "docs/00_platform/02_OPEN_WORK_v1.2.74.md": "0872b5566f38a6c9cff53dbf7a236c0ba5b74308053aeb91796a45a3e9d9f852",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "1d5728af2f63f322972ba0ee030ae03eae0c00f411908fd964a11ad3af130ed7",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "edf3edcdcd442287d49838d7c6301bf1bee89b36790c1ea7aced16dbdfdcce2f",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "e19575876293b42f6fa2473f3f7050c1388bc5b13d43278e29f5d07ecd1e6f07",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "db63a795f3208b618fad4a090e3c8e14d20207d6b4e55c47cfba0c48432668df",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "c5110c614989ff19667eff397663cd0221f2d7286a6c1a3d1e00bd2bd26f3358",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "68ee4fdcdfcc014ba91109767a955640ab64780da1f0e957e5221c846c051305",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2"
       },
-      "authorization_scope_note": "APPLICATION IMPLEMENTATION AUTHORISED only for bounded Phase 8 Architectural Proof / NEW_TRACER_BULLET",
-      "synthetic_authorization_fixture_relative_path": "tests/fixtures/fp001_phase8_authorization_probe/.authorization_probe"
+      "authorization_scope_note": "APPLICATION IMPLEMENTATION AUTHORISED only for bounded Phase 8 Architectural Proof / NEW_TRACER_BULLET"
     }
   }
 }

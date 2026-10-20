@@ -8,15 +8,19 @@
 - **Purpose:** Keep medium-resolution delivery navigation aligned with current Product, Architecture, Domain and Roadmap authority after the completed targeted amendment programme, and preserve the just-in-time routing required to prepare an active outcome safely.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
 - **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.15.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.
-- **SemVer transition:** `v0.4.15 → v0.4.16` (PATCH: reflects the completed post-Phase-7C classification and routes the next action to Development Entry Hard Stop evaluation; Atlas authority and delivery content are unchanged).
+- **SemVer transition:** `v0.4.15 → v0.4.16` (PATCH: records the FP-001 Development Entry Hard Stop PASS and the bounded Phase 8 authorisation and routes the next action to NEW_TRACER_BULLET proof contract/task definition; Atlas authority and delivery content are unchanged).
 - **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This v0.4.16 successor routes current sources through Open Work v1.2.74 and Roadmap v1.2.3 and preserves #120 as CLOSED / COMPLETED historical evidence. Programme router #111 remains OPEN. Phase 7B reconciliation v0.1.0, Phase 7C and Final Feature Pack Contract v0.1.0 remain COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED. The separate Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. Reuse is NOT SELECTED. The Tracer Bullet is required but not yet defined, has no ID, and proof execution has not started. Development Entry Hard Stop evaluation is PASS. Phase 8 Architectural Proof is AUTHORISED; application implementation is AUTHORISED only inside that bounded proof stage. The six affected Domains and seven material capability relationships remain unchanged. This is derived status routing only.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
-- **Patch scope:** PATCH / current-status routing after the separate FP-001 Architectural Proof Classification only; Atlas authority, Feature Pack content and delivery semantics are unchanged.
+- **Patch scope:** PATCH / current-status routing after the FP-001 Development Entry Hard Stop PASS and bounded Phase 8 authorisation only; Atlas authority, Feature Pack content and delivery semantics are unchanged.
 
+
+## v0.4.16 Patch Scope
+
+This status-only successor archives v0.4.15 byte-identically and records the FP-001 Development Entry Hard Stop PASS / ALL 10 CONDITIONS SATISFIED. It authorises bounded Phase 8 Architectural Proof only (application implementation AUTHORISED only inside that proof stage). Architectural Proof Classification remains COMPLETE / FINALISED as NEW_TRACER_BULLET; the Tracer Bullet is REQUIRED / NOT YET DEFINED with no ID; proof execution is NOT STARTED; Phase 9 remains NOT AUTHORISED; and the next governance action is NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION. This changes no Atlas authority, Domain participation or capability relationship.
 
 ## v0.4.9 Patch Scope
 
-This status-only successor archives v0.4.15 byte-identically. It records Phase 7B reconciliation, Phase 7C and Final Feature Pack Contract v0.1.0 as COMPLETE / CERTIFIED / CURRENT. The separate post-Phase-7C classification is COMPLETE / FINALISED as NEW_TRACER_BULLET; proof execution has not started. The next governance action is NEW_TRACER_BULLET proof contract/task definition. Phase 8 and application implementation remain UNAUTHORISED until every other applicable condition is independently evaluated and satisfied. This changes no Atlas authority, Domain participation or capability relationship.
+This status-only successor archives v0.4.14 byte-identically. It records Phase 7B reconciliation, Phase 7C and Final Feature Pack Contract v0.1.0 as COMPLETE / CERTIFIED / CURRENT. The separate post-Phase-7C classification is COMPLETE / FINALISED as NEW_TRACER_BULLET; proof execution has not started. The next governance action is Development Entry Hard Stop evaluation. Phase 8 and application implementation remain UNAUTHORISED until every other applicable condition is independently evaluated and satisfied. This changes no Atlas authority, Domain participation or capability relationship.
 
 ## v0.4.8 Patch Scope (historical predecessor record)
 
@@ -5278,15 +5282,14 @@ REUSE_EXISTING_PROOF: NOT SELECTED
 TRACER BULLET: REQUIRED / NOT YET DEFINED
 TRACER BULLET ID: NONE / NOT CREATED
 ARCHITECTURAL PROOF EXECUTION: NOT STARTED
-PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)
-APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)
+PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED
 
 - v0.4.12 — historical PATCH certification/current-status routing from resulting main `cfc63a7a77299cd59c98d88b57a88bb5b4ac29e5`. Routes Open Work v1.2.70 and records the completed PR #125 candidate/resulting-main lifecycle, while preserving proof classification as NOT FINALISED, Phase 8 as UNAUTHORISED, and the #124 tracker as OPEN through promotion verification. Derived navigation only; no Atlas or delivery semantics change.
 
 - v0.4.13 — PATCH Phase 7C tracker-closure status and provenance after PR #126 resulting-main verification. Current Open Work is v1.2.71. The six affected Domains, seven material capability relationships and Atlas semantics are unchanged.
 
 
-## 26.21 FP-001 architectural proof classification current route
+## 26.21 FP-001 architectural proof classification route (historical predecessor)
 
 Phase 7A is COMPLETE. The required JIT dossier set is DISPOSITION-COMPLETE. Phase 7B reconciliation, Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED, and programme router #111 remains OPEN.
 PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED
@@ -5298,18 +5301,23 @@ REUSE_EXISTING_PROOF: NOT SELECTED
 TRACER BULLET: REQUIRED / NOT YET DEFINED
 TRACER BULLET ID: NONE / NOT CREATED
 ARCHITECTURAL PROOF EXECUTION: NOT STARTED
-DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED
-DEVELOPMENT ENTRY HARD STOP CONDITIONS 1–10: SATISFIED
-PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)
-APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)
-PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
-NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION
+DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED
+REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8
+PHASE 8: UNAUTHORISED
+APPLICATION IMPLEMENTATION: UNAUTHORISED
+NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION
 
-Development Entry Hard Stop evaluation independently satisfied all ten conditions. Phase 8 Architectural Proof is AUTHORISED only inside the bounded NEW_TRACER_BULLET stage. OQ-035, OQ-036 and other expert, provider, release-only and future gates retain their current status. This Atlas is navigation only and is not the hard-stop authority or event.
+Classification satisfies only Development Entry Hard Stop condition 9. Phase 8 and application implementation remain UNAUTHORISED until all other applicable conditions are independently evaluated and satisfied. OQ-035, OQ-036 and other expert, provider, release-only and future gates retain their current status. This Atlas is navigation only and is not the classification authority or event.
 
 ## 26.22 FP-001 Development Entry Hard Stop PASS current route
 
-Development Entry Hard Stop: PASS / ALL 10 CONDITIONS SATISFIED.
+PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED
+PROGRAMME ROUTER #111: OPEN
+ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED
+PROOF CLASSIFICATION: NEW_TRACER_BULLET
+ARCHITECTURAL PROOF REQUIREMENT / SELECTED PROOF VEHICLE: NEW_TRACER_BULLET
+REUSE_EXISTING_PROOF: NOT SELECTED
+DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED
 PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)
 APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)
 PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
@@ -5317,3 +5325,5 @@ NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION
 TRACER BULLET: REQUIRED / NOT YET DEFINED
 TRACER BULLET ID: NONE / NOT CREATED
 ARCHITECTURAL PROOF EXECUTION: NOT STARTED
+
+Development Entry Hard Stop evaluation independently satisfied all ten conditions. This Atlas is derived navigation only, remains DERIVED / NON-AUTHORITATIVE, and DOES NOT AUTHORISE IMPLEMENTATION; the bounded Phase 8 authorisation is recorded in current Open Work v1.2.74. OQ-035, OQ-036 and other expert, provider, release-only and future gates retain their current status.

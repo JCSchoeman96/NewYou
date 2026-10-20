@@ -5758,6 +5758,26 @@ def _check_roadmap_proof_classification_lifecycle(
 
 
 
+APPLICATION_SOURCE_DIRECTORY_NAMES = frozenset({"lib", "src", "app", "apps", "priv", "migrations", "assets"})
+
+
+def _executable_application_source_paths(root: Path) -> list[str]:
+    """Return executable/bootstrap source paths present in the tree (authorisation is decided by the caller)."""
+    found: list[str] = []
+    for directory, child_directories, filenames in os.walk(root):
+        child_directories[:] = [name for name in child_directories if name != ".git"]
+        relative_directory = Path(directory).relative_to(root)
+        for filename in filenames:
+            relative_path = relative_directory / filename
+            if (
+                filename == "mix.exs"
+                or filename.endswith((".ex", ".exs"))
+                or set(relative_path.parts) & APPLICATION_SOURCE_DIRECTORY_NAMES
+            ):
+                found.append(relative_path.as_posix())
+    return sorted(found)
+
+
 def _check_fp001_development_entry_hard_stop_lifecycle(
     root: Path,
     manifest: dict[str, Any],
@@ -5813,7 +5833,6 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
         "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         "predecessor_archives_sha256": expected_predecessors,
         "authorization_scope_note": "APPLICATION IMPLEMENTATION AUTHORISED only for bounded Phase 8 Architectural Proof / NEW_TRACER_BULLET",
-        "synthetic_authorization_fixture_relative_path": "tests/fixtures/fp001_phase8_authorization_probe/.authorization_probe",
     }
     if not isinstance(rule, dict):
         issues.append("manifest hard-stop lifecycle rule is missing")
@@ -5911,12 +5930,8 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
     else:
         issues.append("README is missing for hard-stop promotion coherence")
 
-    probe_rel = str(expected_fixed["synthetic_authorization_fixture_relative_path"])
-    probe = root / probe_rel
-    if not probe.is_file() and readme_path.is_file():
-        issues.append("synthetic authorization probe fixture is missing")
-
-    authorised = (
+    # Authorisation is derived only from repository-governed lifecycle state.
+    application_authorised = (
         isinstance(rule, dict)
         and rule.get("phase8") == "AUTHORISED"
         and rule.get("application_implementation") == "AUTHORISED"
@@ -5924,29 +5939,15 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
         and state.get("application_implementation") == "AUTHORISED"
         and state.get("development_entry_hard_stop_status") == "PASS / ALL 10 CONDITIONS SATISFIED"
     )
-    if not authorised:
+    if not application_authorised:
         issues.append("governed hard-stop authorisation state is incomplete or inconsistent")
 
-    application_source_paths: list[str] = []
-    probe_parts = set(Path(probe_rel).parts)
-    for directory, child_directories, filenames in os.walk(root):
-        child_directories[:] = [name for name in child_directories if name != ".git"]
-        relative_directory = Path(directory).relative_to(root)
-        if probe_parts & set(relative_directory.parts):
-            continue
-        for filename in filenames:
-            relative_path = relative_directory / filename
-            path_parts = set(relative_path.parts)
-            if (
-                filename == "mix.exs"
-                or filename.endswith((".ex", ".exs"))
-                or path_parts & {"lib", "src", "app", "apps", "priv", "migrations", "assets"}
-            ):
-                application_source_paths.append(relative_path.as_posix())
-    if application_source_paths:
+    # Long-lived guard: executable source is permitted only when governed state authorises it.
+    application_source_paths = _executable_application_source_paths(root)
+    if application_source_paths and not application_authorised:
         issues.append(
-            "hard-stop promotion introduces executable application/bootstrap source outside the authorization probe: "
-            + ", ".join(sorted(application_source_paths))
+            "executable application/bootstrap source present while application implementation is not authorised: "
+            + ", ".join(application_source_paths)
         )
 
     open_work_entry = next((entry for entry in manifest.get("governing_documents", []) if entry.get("document_id") == "OPEN_WORK"), None)
@@ -6058,9 +6059,9 @@ def _check_fp001_phase7c_current_promotion(
     candidate_archive_sha256 = "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19"
     protected_current_artifacts = {
         "docs/00_platform/02_OPEN_WORK_v1.2.74.md": "0872b5566f38a6c9cff53dbf7a236c0ba5b74308053aeb91796a45a3e9d9f852",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "1d5728af2f63f322972ba0ee030ae03eae0c00f411908fd964a11ad3af130ed7",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "edf3edcdcd442287d49838d7c6301bf1bee89b36790c1ea7aced16dbdfdcce2f",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "e19575876293b42f6fa2473f3f7050c1388bc5b13d43278e29f5d07ecd1e6f07",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md": "db63a795f3208b618fad4a090e3c8e14d20207d6b4e55c47cfba0c48432668df",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "c5110c614989ff19667eff397663cd0221f2d7286a6c1a3d1e00bd2bd26f3358",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "68ee4fdcdfcc014ba91109767a955640ab64780da1f0e957e5221c846c051305",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md": "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "cc664c1e5d148c1a8f30f2a8d769645646162ff029494a2187e0a65775c27c83",
