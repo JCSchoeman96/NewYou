@@ -231,25 +231,25 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertEqual("AUTHORISED", phase7c_contract.get("phase8"))
 
         current_open_work = self.entries["OPEN_WORK"]
-        self.assertEqual("02_OPEN_WORK_v1.2.75.md", current_open_work["canonical_filename"])
-        self.assertEqual("1.2.75", current_open_work["semver"])
+        self.assertEqual("02_OPEN_WORK_v1.2.77.md", current_open_work["canonical_filename"])
+        self.assertEqual("1.2.77", current_open_work["semver"])
         self.assertEqual(
-            "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
             current_open_work["repository_path"],
         )
-        self.assertEqual("1.2.74", current_open_work["superseded_version"])
+        self.assertEqual("1.2.76", current_open_work["superseded_version"])
         self.assertEqual("current", current_open_work["lifecycle"])
 
-        direct_predecessor = self.entries.get("OPEN_WORK_V1_2_74", {})
-        self.assertEqual("archive/02_OPEN_WORK_v1.2.74.md", direct_predecessor.get("repository_path", "").removeprefix("docs/00_platform/"))
-        self.assertEqual("1.2.75", direct_predecessor.get("superseded_version"))
+        direct_predecessor = self.entries.get("OPEN_WORK_V1_2_75", {})
+        self.assertEqual("archive/02_OPEN_WORK_v1.2.75.md", direct_predecessor.get("repository_path", "").removeprefix("docs/00_platform/"))
+        self.assertEqual("1.2.76", direct_predecessor.get("superseded_version"))
         self.assertEqual("historical", direct_predecessor.get("lifecycle"))
 
-        immediate_predecessor = self.entries.get("OPEN_WORK_V1_2_73", {})
-        self.assertEqual("02_OPEN_WORK_v1.2.73.md", immediate_predecessor.get("canonical_filename"))
-        self.assertEqual("1.2.73", immediate_predecessor.get("semver"))
-        self.assertEqual("docs/00_platform/archive/02_OPEN_WORK_v1.2.73.md", immediate_predecessor.get("repository_path"))
-        self.assertEqual("1.2.72", immediate_predecessor.get("superseded_version"))
+        immediate_predecessor = self.entries.get("OPEN_WORK_V1_2_74", {})
+        self.assertEqual("02_OPEN_WORK_v1.2.74.md", immediate_predecessor.get("canonical_filename"))
+        self.assertEqual("1.2.74", immediate_predecessor.get("semver"))
+        self.assertEqual("docs/00_platform/archive/02_OPEN_WORK_v1.2.74.md", immediate_predecessor.get("repository_path"))
+        self.assertEqual("1.2.75", immediate_predecessor.get("superseded_version"))
         self.assertEqual("historical", immediate_predecessor.get("lifecycle"))
 
         direct_predecessor = self.entries.get("OPEN_WORK_V1_2_69", {})

@@ -15,8 +15,8 @@ from tools.foundation_integrity_audit import (
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
-CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md"
-OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.75.md"
+CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
 
 
 class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
@@ -110,10 +110,102 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertTrue(any("Audit E2 scenario row omits approved proof detail" in issue for issue in issues))
         self.assertTrue(any("Non-enumeration / current Privacy re-read scenario row omits approved proof detail 'support pressure'" in issue for issue in issues))
 
+    def test_content_check_requires_locked_mechanism_foundation_and_machine_evidence(self):
+        text = CONTRACT.read_text(encoding="utf-8")
+        required_phrases = (
+            "`MessageIntent.dispatch_disposition` uses `ash_state_machine`",
+            "for `open`, `held`, `reconciliation_required` and `closed`",
+            "Account's orthogonal state dimensions remain outside this machine",
+            "`DeliveryAttempt` admission, invocation, provider observation and reconciliation conclusion remain separate dimensions outside that machine",
+            "## 7.2 Locked Phase-8 implementation foundation",
+            "`PROJECT_KEY=new_you`",
+            "`new_you_dev` / `new_you_dev`",
+            "`new_you_test` / `new_you_test`",
+            "## 7.3 Locked verification foundation",
+            "`mix check.deep`",
+            "machine-readable evidence suitable for CI/certification",
+            "exact Git SHA",
+            "relevant runtime and dependency versions",
+            "PASS/FAIL for every mandatory proof family",
+            "failing invariant/cut-point where applicable",
+            "6. Current Open Work",
+            "7. Approved FP-001 planning contracts",
+            "8. This proof contract",
+            "9. Proof evidence produced under it",
+            "10. Implementation",
+        )
+        for phrase in required_phrases:
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase.casefold(), text.casefold())
+
+        weakened_contracts = (
+            text.replace(
+                "uses `ash_state_machine`",
+                "uses an implementation-selected mechanism",
+                1,
+            ),
+            text.replace("`4220–4239`", "`4200–4219`", 1),
+            text.replace("`new_you_test` / `new_you_test`", "`test_db` / `test_db`", 1),
+            text.replace("UsageRules in skills-only mode", "UsageRules in unrestricted mode", 1),
+            text.replace(
+                "Supported framework/package installation and structural changes are Igniter-first.",
+                "Supported framework/package installation and structural changes are manual-first.",
+                1,
+            ),
+            text.replace(
+                "Tidewave is mandatory DEV-only agent tooling",
+                "Tidewave is mandatory development and production agent tooling",
+                1,
+            ),
+            text.replace("HexDocs MCP is deferred initially", "HexDocs MCP is enabled initially", 1),
+            text.replace("`mix check.deep`", "`mix check`", 1),
+            text.replace(
+                "emits concise machine-readable evidence suitable for CI/certification",
+                "emits a human-readable summary suitable for CI/certification",
+                1,
+            ),
+            text.replace("exact Git SHA", "branch name", 1),
+            text.replace("relevant runtime and dependency versions", "runtime details", 1),
+            text.replace("PASS/FAIL for every mandatory proof family", "overall result", 1),
+            text.replace("failing invariant/cut-point where applicable", "failure note", 1),
+            text.replace(
+                "for `open`, `held`, `reconciliation_required` and `closed`",
+                "for `open` and `closed`",
+                1,
+            ),
+            text.replace(
+                "remain separate dimensions outside that machine",
+                "remain separate dimensions",
+                1,
+            ),
+            text.replace(
+                "HexDocs MCP is deferred initially and added only on demonstrated need. Ash AI dev MCP is deferred; do not add `ash_ai` solely for another MCP endpoint. Direct Sourceror is deferred unless a genuine low-level AST/source-transformation requirement appears; transitive use through Igniter is acceptable.",
+                "HexDocs MCP, Ash AI dev MCP and direct Sourceror are deferred initially.",
+                1,
+            ),
+            text.replace(
+                "Credo uses a curated high-signal configuration; selected correctness/maintainability findings become blocking after a clean baseline, while subjective/noisy style remains advisory unless promoted. Sobelow begins from the Phoenix application baseline; materially applicable findings block unless explicitly reviewed or suppressed with rationale. Dialyxir/Dialyzer belongs in the slower deep gate, not the tight edit/test loop, and becomes required in PR CI after a clean approved baseline.",
+                "Credo is curated. Sobelow and Dialyxir/Dialyzer run in the slower deep gate.",
+                1,
+            ),
+            text.replace(
+                "6. Current Open Work.\n7. Approved FP-001 planning contracts listed below.\n8. This proof contract.\n9. Proof evidence produced under it.\n10. Implementation.",
+                "6. Approved FP-001 planning contracts listed below.\n7. Current Open Work.\n8. This proof contract.\n9. Proof evidence produced under it.\n10. Implementation.",
+                1,
+            ),
+        )
+        for index, weakened in enumerate(weakened_contracts):
+            with self.subTest(weakened_contract=index):
+                self.assertTrue(
+                    _fp001_phase8_proof_contract_content_issues(weakened),
+                    "Foundation Integrity accepted a contract with a locked decision removed",
+                )
+
     def test_open_work_routes_to_review_without_advancing_proof_or_phase9(self):
         self.assertTrue(OPEN_WORK.is_file(), "the Open Work status successor is missing")
         text = OPEN_WORK.read_text(encoding="utf-8")
-        self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md", text)
+        self.assertIn('"status_successor_version": "1.2.77"', text)
+        self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", text)
         self.assertIn("TB-001", text)
         self.assertIn("PROOF EXECUTION: NOT STARTED", text)
         self.assertIn("PROOF CERTIFICATION: NOT STARTED", text)
@@ -126,7 +218,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             shutil.copytree(ROOT / "docs", root / "docs")
             readme = root / "docs/00_platform/README.md"
             text = readme.read_text(encoding="utf-8")
-            current = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md"
+            current = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
             stale = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.0.9.md"
             self.assertIn(current, text)
             readme.write_text(text.replace(current, stale, 1), encoding="utf-8")

@@ -106,8 +106,8 @@ def _fp001_phase8_candidate_route_is_current(manifest: dict[str, Any]) -> bool:
     entry = _active_open_work_entry(manifest)
     return (
         entry is not None
-        and entry.get("semver") == "1.2.75"
-        and _relative_path(entry) == "docs/00_platform/02_OPEN_WORK_v1.2.75.md"
+        and entry.get("semver") == "1.2.77"
+        and _relative_path(entry) == "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
     )
 
 
@@ -604,7 +604,7 @@ def _h02_lifecycle_state(
         return False, "prior PR #40 certification facts or certified contract lifecycle changed"
     if state.get("status_successor_version") == "1.2.74":
         return _h02_fp001_hard_stop_lifecycle_state(state, active, readme, contract)
-    if state.get("status_successor_version") == "1.2.75":
+    if state.get("status_successor_version") == "1.2.77":
         return _h02_fp001_phase8_contract_candidate_lifecycle_state(state, active, readme, contract)
     if state.get("status_successor_version") == "1.2.73":
         return _h02_fp001_classification_lifecycle_state(state, active, readme, contract)
@@ -1717,7 +1717,7 @@ def _h02_fp001_phase8_contract_candidate_lifecycle_state(
     """Validate the first governed Phase 8 proof-contract candidate state."""
 
     expected = {
-        "status_successor_version": "1.2.75",
+        "status_successor_version": "1.2.77",
         "status_successor_base_sha": "0972864ef7f4638c96198e19a13977e0151e9726",
         "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
         "next_stage": "TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION",
@@ -1732,13 +1732,13 @@ def _h02_fp001_phase8_contract_candidate_lifecycle_state(
         "architectural_proof_execution": "NOT STARTED",
         "proof_result": "NOT STARTED",
         "proof_certification": "NOT STARTED",
-        "proof_contract_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md",
+        "proof_contract_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
         "proof_contract_lifecycle": "CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         "next_governance_action": "TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION",
-        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
-        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md",
-        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
     }
     if any(state.get(key) != value for key, value in expected.items()):
         return False, "FP-001 TB-001 candidate state is incomplete or advances proof execution"
@@ -1772,7 +1772,7 @@ def _h02_fp001_phase8_contract_candidate_lifecycle_state(
     ):
         if token not in current_state:
             return False, "README current state does not mirror the TB-001 review lifecycle"
-    route = _markdown_h2_section(contract, "v0.5.19 — FP-001 TB-001 proof-contract candidate route (current)") or ""
+    route = _markdown_h2_section(contract, "v0.5.21 — FP-001 TB-001 proof-contract successor candidate route (current)") or ""
     if any(token not in route for token in (
         "CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
         "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
@@ -3116,7 +3116,7 @@ def _check_product_semantics(
     readme_path = root / roots["context_index"]
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     fp001_candidates = (
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md",
+        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
         root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
@@ -4932,7 +4932,7 @@ def _check_fp001_phase7b_candidate(
     if "PMR" not in candidate_text or "prior PR #67 PMR reconciliation is complete" not in candidate_text:
         baseline_issues.append("candidate does not preserve the completed PMR reconciliation")
 
-    skeleton_path = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md"
+    skeleton_path = docs / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md"
     skeleton_archive = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md"
     pmr_start = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->"
     pmr_end = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->"
@@ -4973,9 +4973,9 @@ def _check_fp001_phase7b_candidate(
     except (json.JSONDecodeError, TypeError, ValueError):
         open_work_state = {}
     status_version = open_work_state.get("status_successor_version")
-    phase8_contract_candidate = status_version == "1.2.75"
+    phase8_contract_candidate = status_version == "1.2.77"
     expected_state = {
-        "status_successor_version": status_version if status_version in {"1.2.74", "1.2.75"} else "1.2.75",
+        "status_successor_version": status_version if status_version in {"1.2.74", "1.2.77"} else "1.2.77",
         "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7b_reconciliation_execution_tracker_issue": 120,
         "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
@@ -5002,7 +5002,7 @@ def _check_fp001_phase7b_candidate(
             "proof_design": "FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
             "proof_result": "NOT STARTED",
             "proof_certification": "NOT STARTED",
-            "proof_contract_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md",
+            "proof_contract_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
             "proof_contract_lifecycle": "CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
             "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         })
@@ -5053,7 +5053,7 @@ def _check_fp001_phase7b_candidate(
         "Phase 7B and Phase 7C certification routes remain current; Development Entry Hard Stop PASS authorises bounded Phase 8 only"
         if not route_issues
         else "; ".join(route_issues),
-        path="docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+        path="docs/00_platform/02_OPEN_WORK_v1.2.77.md",
     )
 
 
@@ -5497,7 +5497,7 @@ def _check_fp001_phase7c_candidate(
     phase8_candidate_current = any(
         entry.get("document_id") == "OPEN_WORK"
         and entry.get("lifecycle", "current") != "historical"
-        and entry.get("semver") == "1.2.75"
+        and entry.get("semver") == "1.2.77"
         for entry in _all_entries(manifest)
     )
     if phase8_candidate_current:
@@ -5506,6 +5506,16 @@ def _check_fp001_phase7c_candidate(
             "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
             "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
             "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md",
+            "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md",
+            "docs/00_platform/02_OPEN_WORK_v1.2.76.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.18.md",
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.20.md",
+            "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md",
         ))
     if graph_rules.get("retired_current_predecessor_paths") != expected_retired:
         route_issues.append("manifest does not pin the retired current-predecessor paths")
@@ -5513,11 +5523,11 @@ def _check_fp001_phase7c_candidate(
         if (root / relative).exists():
             route_issues.append(f"unarchived retired predecessor remains at a current path: {relative}")
     expected_current_paths = {
-        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.17.md" if phase8_candidate_current else "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
-        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md" if phase8_candidate_current else "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
-        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md" if phase8_candidate_current else "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.19.md" if phase8_candidate_current else "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md" if phase8_candidate_current else "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md" if phase8_candidate_current else "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
     }
-    open_work_version = "1.2.75" if phase8_candidate_current else "1.2.74"
+    open_work_version = "1.2.77" if phase8_candidate_current else "1.2.74"
     open_work_path = docs / f"02_OPEN_WORK_v{open_work_version}.md"
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
     state_match = re.search(
@@ -5643,10 +5653,10 @@ def _check_roadmap_proof_classification_lifecycle(
     issues: list[str] = []
     base_sha = "24a9ad925ee1ab6d75ddb44bae6df0b4f3d09bca"
     expected_routes = {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
     }
     expected_upstream = {
         "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md": "249f5985ff1e8971e1ac4437e4bbebd5a3db9254ab25a2238e135cb7a7ae5f4b",
@@ -5706,7 +5716,7 @@ def _check_roadmap_proof_classification_lifecycle(
         "remaining_development_entry_hard_stop_conditions": "NOT EVALUATED / MUST PASS BEFORE PHASE 8",
         "next_governance_action": "DEVELOPMENT ENTRY HARD STOP EVALUATION",
         "protected_required_jit_dossier_sha256": expected_jit,
-        "candidate_contract_path": "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md",
+        "candidate_contract_path": "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
     }
     if not isinstance(rule, dict) or any(rule.get(key) != value for key, value in expected_fixed.items()):
         issues.append("manifest does not pin the classification baseline, authority, selected vehicle and historical lifecycle")
@@ -5776,7 +5786,11 @@ def _check_roadmap_proof_classification_lifecycle(
         for path in platform_docs_root.rglob("*"):
             if not path.is_file() or not re.search(r"(?:TRACER_BULLET|ARCHITECTURAL_PROOF)(?:[-_\.]|$)", path.name, re.IGNORECASE):
                 continue
-            if path.relative_to(root).as_posix() == candidate_path:
+            if path.relative_to(root).as_posix() in {
+                candidate_path,
+                "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md",
+                "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md",
+            }:
                 continue
             issues.append(f"Tracer Bullet or architectural-proof artifact exists: {path.relative_to(root)}")
             break
@@ -6065,11 +6079,11 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
     open_work_entry = next((entry for entry in manifest.get("governing_documents", []) if entry.get("document_id") == "OPEN_WORK"), None)
     if (
         not isinstance(open_work_entry, dict)
-        or _relative_path(open_work_entry) != "docs/00_platform/02_OPEN_WORK_v1.2.75.md"
-        or open_work_entry.get("semver") != "1.2.75"
-        or open_work_entry.get("superseded_version") != "1.2.74"
+        or _relative_path(open_work_entry) != "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
+        or open_work_entry.get("semver") != "1.2.77"
+        or open_work_entry.get("superseded_version") != "1.2.76"
     ):
-        issues.append("manifest Open Work lineage is not v1.2.74 → v1.2.75")
+        issues.append("manifest Open Work lineage is not v1.2.76 → v1.2.77")
 
     _record_check(
         report,
@@ -6078,7 +6092,7 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
         "FP-001 Development Entry Hard Stop is PASS; Phase 8 Architectural Proof is authorised within bounded scope"
         if not issues
         else "; ".join(issues),
-        path="docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+        path="docs/00_platform/02_OPEN_WORK_v1.2.77.md",
     )
 
 
@@ -6086,6 +6100,31 @@ def _fp001_phase8_proof_contract_content_issues(text: str) -> list[str]:
     """Check the frozen Phase 8 design and complete proof-task boundary."""
 
     folded = text.casefold()
+    authority_marker = "## 1. Authority and provenance"
+    if authority_marker not in text:
+        issues = ["TB-001 contract omits the ordered authority hierarchy"]
+        authority = ""
+    else:
+        authority = text.split(authority_marker, 1)[1].split("\n## ", 1)[0].casefold()
+        hierarchy = (
+            "1. product law:",
+            "2. architecture law and current synthesis:",
+            "3. domain law:",
+            "4. roadmap:",
+            "5. supporting operating, frontend and engineering contracts:",
+            "6. current open work.",
+            "7. approved fp-001 planning contracts listed below.",
+            "8. this proof contract.",
+            "9. proof evidence produced under it.",
+            "10. implementation.",
+        )
+        hierarchy_positions = [authority.find(item) for item in hierarchy]
+        issues = []
+        if any(position < 0 for position in hierarchy_positions) or hierarchy_positions != sorted(hierarchy_positions):
+            issues.append(
+                "TB-001 authority hierarchy must place current Open Work, approved FP-001 contracts, the proof contract, proof evidence and implementation in order"
+            )
+
     decision_sources = {
         "Q1–Q6": "e8215515-4a76-4dde-b809-ab4f17932dd9",
         "Q7–Q11": "e84a1ae5-8517-46c1-bb33-01d3fcc8b950",
@@ -6106,11 +6145,10 @@ def _fp001_phase8_proof_contract_content_issues(text: str) -> list[str]:
     }
     traceability_marker = "## Decision traceability"
     if traceability_marker not in text:
-        issues = ["TB-001 contract omits the Q1–Q90 decision traceability section"]
+        issues.append("TB-001 contract omits the Q1–Q90 decision traceability section")
         traceability = ""
     else:
         traceability = text.split(traceability_marker, 1)[1].split("\n## ", 1)[0]
-        issues = []
     for question_range, comment_id in decision_sources.items():
         row = next(
             (
@@ -6175,12 +6213,87 @@ def _fp001_phase8_proof_contract_content_issues(text: str) -> list[str]:
         "no implementation paths or proof command are assigned in this candidate because the repository has no phoenix/ash scaffold or mix task to inspect",
         "redis remains part of the accepted shared dev-core environment decision, but no phase 8 application/proof component will use it absent a concrete requirement",
         "registration uses one authoritative postgresql acceptance boundary: account, pmr, verification token, required communications messageintent, selected audit evidenceobligation and initial durable scheduling commit together or are absent together",
+        "`ash_state_machine` is used selectively for genuine single-dimension lifecycles only",
+        "`messageintent.dispatch_disposition` uses `ash_state_machine` for `open`, `held`, `reconciliation_required` and `closed`",
+        "account's orthogonal state dimensions remain outside this machine",
+        "`deliveryattempt` admission, invocation, provider observation and reconciliation conclusion remain separate dimensions outside that machine",
+        "exits non-zero on invariant failure and emits concise machine-readable evidence suitable for ci/certification",
+        "records the exact git sha, relevant runtime and dependency versions, pass/fail for every mandatory proof family, and the failing invariant/cut-point where applicable",
+        "the exact mix command name remains unfrozen until the scaffold establishes the supported entrypoint",
     )
     issues.extend(
         f"TB-001 contract omits approved proof-design clause {clause!r}"
         for clause in required_clauses
         if clause not in folded
     )
+
+    foundation_sections = {}
+    for key, heading in (
+        ("implementation", "## 7.2 Locked Phase-8 implementation foundation"),
+        ("verification", "## 7.3 Locked verification foundation"),
+    ):
+        if heading not in text:
+            issues.append(f"TB-001 contract omits the {key} foundation section")
+            foundation_sections[key] = ""
+        else:
+            foundation_sections[key] = text.split(heading, 1)[1].split("\n## ", 1)[0].casefold()
+
+    foundation_clauses = {
+        "implementation": (
+            "ports `4220–4239`",
+            "primary phoenix port is `4220`",
+            "worktrees use deterministic ports `4221–4239`",
+            "startup fails closed if an assigned port is occupied",
+            "`project_key=new_you`",
+            "shared workstation `dev-core` owns `shared_local` postgresql",
+            "repository connects to `dev-core` but never starts, stops, recreates, deletes or otherwise lifecycle-manages it",
+            "`new_you_dev` / `new_you_dev`",
+            "dev uses postgresql role/database `new_you_dev` / `new_you_dev` with `nocreatedb`",
+            "`new_you_test` / `new_you_test`",
+            "dev and test use isolated databases",
+            "test `createdb` is disabled initially",
+            "redis is not used for fp-001 phase 8 absent a demonstrated concrete requirement",
+            "root `agents.md` newyou-controlled",
+            "`.agents/skills/project-implementation/skill.md`",
+            "`.agents/skills/code-change-verification/skill.md`",
+            "usagerules in skills-only mode",
+            "framework skills progressively when relevant",
+            "installation and structural changes are igniter-first",
+            "tidewave is mandatory dev-only agent tooling",
+            "agent tooling at the direct deterministic endpoint `http://127.0.0.1:4220/tidewave/mcp`",
+            "hexdocs mcp is deferred initially",
+            "ash ai dev mcp is deferred",
+            "direct sourceror is deferred",
+            "added only on demonstrated need",
+            "do not add `ash_ai` solely for another mcp endpoint",
+            "unless a genuine low-level ast/source-transformation requirement appears",
+            "transitive use through igniter is acceptable",
+            "recheck current stable versions immediately before installation or pinning",
+        ),
+        "verification": (
+            "`mix check` is the canonical fast check",
+            "`mix check.deep` is the separate slower deep check",
+            "cheap, repeatable, blocking checks and the ordinary test suite run fail-fast",
+            "credo uses a curated high-signal configuration",
+            "selected correctness/maintainability findings become blocking after a clean baseline",
+            "subjective/noisy style remains advisory unless promoted",
+            "sobelow begins from the phoenix application baseline",
+            "materially applicable findings block unless explicitly reviewed or suppressed with rationale",
+            "dialyxir/dialyzer belongs in the slower deep gate",
+            "not the tight edit/test loop",
+            "becomes required in pr ci after a clean approved baseline",
+            "required ci runs the fast `mix check` gate before `mix check.deep`",
+            "local hooks are optional convenience only, never correctness authority",
+            "dedicated deterministic proof command/workflow separate from routine ci",
+        ),
+    }
+    for section, clauses in foundation_clauses.items():
+        body = foundation_sections[section]
+        issues.extend(
+            f"TB-001 {section} foundation omits locked clause {clause!r}"
+            for clause in clauses
+            if clause not in body
+        )
 
     expected_resources = {
         "Identity": ["Account", "Identity-owned Token", "Session", "DeviceAssurance", "IdentityGrant", "RecoveryCase", "ReconciliationCase"],
@@ -6272,24 +6385,24 @@ def _check_fp001_phase8_proof_contract_lifecycle(
     rule_name = "fp001_phase8_proof_contract_lifecycle"
     rule = integrity_rules.get(rule_name, {})
     issues: list[str] = []
-    candidate_path = "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md"
-    candidate_rel = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md"
+    candidate_path = "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+    candidate_rel = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
     current_routes = {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
     }
     expected_fixed = {
         "candidate_path": candidate_path,
         "candidate_relative_path": candidate_rel,
-        "candidate_version": "0.1.0",
+        "candidate_version": "0.1.2",
         "candidate_lifecycle": "CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
         "tracer_bullet_id": "TB-001",
         "id_allocation_authority": "Open Work v1.2.74 §§7, 9 and 12.30: Phase 8 uses TB-nnn for materially unproven paths; the prior promotion deferred the identifier and routed contract/task definition next. WELL-2 is that definition stage; Atlas lifecycle does not allocate IDs.",
         "candidate_base_main_sha": "0972864ef7f4638c96198e19a13977e0151e9726",
-        "candidate_sha256": "a33c8f7df067c123109a817bf54c08e3fb649449cf32f2b8294fee12ad601103",
+        "candidate_sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
         "proof_design": "FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
         "proof_execution": "NOT STARTED",
         "proof_result": "NOT STARTED",
@@ -6298,18 +6411,28 @@ def _check_fp001_phase8_proof_contract_lifecycle(
         "phase8_execution_gate": "WAITING FOR CONTRACT APPROVAL AND A SEPARATE EXECUTION START",
         "current_routes": current_routes,
         "current_route_sha256": {
-            "docs/00_platform/02_OPEN_WORK_v1.2.75.md": "ed8bb8c7ec30ace154c3eff3e4c90f851879dc4b9819f7f23a35cf81b0856045",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md": "84d189e7589a29d2fa47978939d47bcadc6420048e7925eed4d1b7b8c7ef9c3c",
-            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md": "6595a04af2415aa89954c1f281907622a4dc58c613901fae2f084c6be8bfe835",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md": "252c8ae8a74eea94f499d5a68d57323ba7810c8566ba1b27e47b4654dbc590bb",
+            "docs/00_platform/02_OPEN_WORK_v1.2.77.md": "083afb593ef2e073b1f3d2964637a35dd91004a7d28c2d501814ba35a767db48",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md": "f128e80165510e0934dd3076408b736a6cca88707226df199265715dc3f39922",
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md": "f744d32468d93eab25f3ac88c4d30ef981087ce22b4b75675f9ded38b3916c3b",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md": "1549525632055bb8a44b905e9bac32a32901f84e17b0358579751d3ad6458096",
             "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
-            "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md": "a33c8f7df067c123109a817bf54c08e3fb649449cf32f2b8294fee12ad601103",
+            "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
         },
         "predecessor_archives_sha256": {
             "docs/00_platform/archive/02_OPEN_WORK_v1.2.74.md": "0872b5566f38a6c9cff53dbf7a236c0ba5b74308053aeb91796a45a3e9d9f852",
             "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.16.md": "9636c1ed2a12f156ebeb31004e0d3823f7e2824b55d9e7107646d8178f5eab32",
             "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md": "9401dc20a362115534dbb2ce16262c032debbe8dcb8e3d2fd5d9c87a1c1c836b",
             "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.18.md": "4de81f097562def5dcba983031bee1052a34193f6c14ec6b2cfa81b6e8f79e58",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.75.md": "ed8bb8c7ec30ace154c3eff3e4c90f851879dc4b9819f7f23a35cf81b0856045",
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.17.md": "84d189e7589a29d2fa47978939d47bcadc6420048e7925eed4d1b7b8c7ef9c3c",
+            "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md": "6595a04af2415aa89954c1f281907622a4dc58c613901fae2f084c6be8bfe835",
+            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.19.md": "252c8ae8a74eea94f499d5a68d57323ba7810c8566ba1b27e47b4654dbc590bb",
+            "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md": "a33c8f7df067c123109a817bf54c08e3fb649449cf32f2b8294fee12ad601103",
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.76.md": "34defce057e0663fb325edb5cf5ed69b97720cb6abd78016864978c8adfe2bb3",
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.18.md": "e1c440dc0dab6a0faa3e1179de75dfe07b3c5c391c8ef0a84d14b4a6d99f302b",
+            "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md": "d3fd678e8eef6ac43109f294ed811587e323d3d2ff555459eb47e9c8324087f1",
+            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.20.md": "d36133b08b496dd6c000c1e96ff5e78a352c4376e784efd2b3cab9838c710f31",
+            "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md": "817137641e33d9d74350e7f74a05778b3a80c0ea34e1e125dce905467c8974d2",
         },
         "frozen_source_sha256": {
             "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md": "249f5985ff1e8971e1ac4437e4bbebd5a3db9254ab25a2238e135cb7a7ae5f4b",
@@ -6390,8 +6513,8 @@ def _check_fp001_phase8_proof_contract_lifecycle(
 
     manifest_open_work = next((entry for entry in manifest.get("governing_documents", []) if entry.get("document_id") == "OPEN_WORK"), None)
     if (not isinstance(manifest_open_work, dict) or _relative_path(manifest_open_work) != current_routes["open_work"]
-            or manifest_open_work.get("semver") != "1.2.75" or manifest_open_work.get("superseded_version") != "1.2.74"):
-        issues.append("manifest does not route Open Work v1.2.75 as the planning-state successor")
+            or manifest_open_work.get("semver") != "1.2.77" or manifest_open_work.get("superseded_version") != "1.2.76"):
+        issues.append("manifest does not route Open Work v1.2.77 as the planning-state successor")
 
     current_state_match = re.search(
         r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
@@ -6511,9 +6634,9 @@ def _check_fp001_phase8_proof_contract_lifecycle(
         issues.append("Open Work does not route TB-001 for review")
 
     route_sections = {
-        "delivery_atlas": ("## 26.23 FP-001 Phase 8 TB-001 candidate route", "## 26.24"),
-        "fp001_skeleton": ("## v0.1.19 — TB-001 proof-contract candidate route (current)", None),
-        "harden_02": ("## v0.5.19 — FP-001 TB-001 proof-contract candidate route (current)", None),
+        "delivery_atlas": ("## 26.25 FP-001 Phase 8 TB-001 successor candidate route (current)", None),
+        "fp001_skeleton": ("## v0.1.21 — TB-001 proof-contract successor candidate route (current)", None),
+        "harden_02": ("## v0.5.21 — FP-001 TB-001 proof-contract successor candidate route (current)", None),
     }
     for key, (heading, end_heading) in route_sections.items():
         text = (root / current_routes[key]).read_text(encoding="utf-8") if (root / current_routes[key]).is_file() else ""
@@ -6569,7 +6692,7 @@ def _check_platform_readme_router_consistency(
 
     issues: list[str] = []
     readme_path = root / "docs" / "00_platform" / "README.md"
-    open_work_path = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.75.md"
+    open_work_path = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.77.md"
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
 
@@ -6584,9 +6707,9 @@ def _check_platform_readme_router_consistency(
             issues.append(message)
 
     atlas_routing = _markdown_h2_section(readme, "Delivery Atlas routing") or ""
-    if "working/DELIVERY_ATLAS_WORKING_v0.4.17.md" not in atlas_routing:
-        issues.append("README Delivery Atlas routing section does not route v0.4.17")
-    if re.search(r"\(working/DELIVERY_ATLAS_WORKING_v0\.4\.(?:15|16)\.md\)", atlas_routing):
+    if "working/DELIVERY_ATLAS_WORKING_v0.4.19.md" not in atlas_routing:
+        issues.append("README Delivery Atlas routing section does not route v0.4.19")
+    if re.search(r"\(working/DELIVERY_ATLAS_WORKING_v0\.4\.(?:15|16|17)\.md\)", atlas_routing):
         issues.append("README Delivery Atlas routing section still links a retired predecessor")
 
     state_match = re.search(
@@ -6645,10 +6768,10 @@ def _check_fp001_phase7c_current_promotion(
 
     phase8_candidate_current = _fp001_phase8_candidate_route_is_current(manifest)
     current_paths = {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.75.md" if phase8_candidate_current else "docs/00_platform/02_OPEN_WORK_v1.2.74.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md" if phase8_candidate_current else "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md" if phase8_candidate_current else "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md" if phase8_candidate_current else "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.77.md" if phase8_candidate_current else "docs/00_platform/02_OPEN_WORK_v1.2.74.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md" if phase8_candidate_current else "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md" if phase8_candidate_current else "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md" if phase8_candidate_current else "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
     }
     predecessor_archives = {
@@ -6740,7 +6863,7 @@ def _check_fp001_phase7c_current_promotion(
         "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         **({
             "classification_status": "COMPLETE / FINALISED",
-            "current_route_status_successor_version": "1.2.75 / 0.4.17 / 0.1.19 / 0.5.19",
+            "current_route_status_successor_version": "1.2.77 / 0.4.19 / 0.1.21 / 0.5.21",
         } if phase8_candidate_current else {}),
         "current_paths": current_paths,
         "predecessor_archives_sha256": {
@@ -7811,7 +7934,7 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
             if not path.is_file() or sha256_file(path) != digest:
                 issues.append(f"certified Phase 7B source changed from the proof-contract baseline: {relative}")
 
-        skeleton = root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md"
+        skeleton = root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md"
         predecessor_skeleton = root / previous_routes["fp001_skeleton"]
         marker_start = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->"
         marker_end = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->"
@@ -7838,11 +7961,11 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
             if "archive" not in path.parts
         )
         if active_skeletons != [skeleton]:
-            issues.append("exactly one current FP-001 skeleton v0.1.19 is required")
+            issues.append("exactly one current FP-001 skeleton v0.1.21 is required")
 
-        current_open_work = root / "docs/00_platform/02_OPEN_WORK_v1.2.75.md"
+        current_open_work = root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
         open_work = current_open_work.read_text(encoding="utf-8") if current_open_work.is_file() else ""
-        if "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md" not in open_work:
+        if "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md" not in open_work:
             issues.append("current Open Work does not route the TB-001 proof-contract candidate")
         for token in (
             "PROOF EXECUTION: NOT STARTED",
@@ -8221,7 +8344,7 @@ def _check_fp001_pmr_reconciliation(
         entry for entry in _all_entries(manifest)
         if entry.get("document_id") == "OPEN_WORK" and entry.get("lifecycle", "current") != "historical"
     ]
-    if len(current_open_work_entries) == 1 and current_open_work_entries[0].get("semver") in {"1.2.73", "1.2.74", "1.2.75"}:
+    if len(current_open_work_entries) == 1 and current_open_work_entries[0].get("semver") in {"1.2.73", "1.2.74", "1.2.77"}:
         promotion_issues = _check_fp001_pmr_reconciliation_after_phase7c_promotion(root, manifest, integrity_rules)
         _record_check(
             report,
@@ -8231,8 +8354,8 @@ def _check_fp001_pmr_reconciliation(
             if not promotion_issues
             else "; ".join(promotion_issues),
             path=(
-                "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md"
-                if current_open_work_entries[0].get("semver") == "1.2.75"
+                "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md"
+                if current_open_work_entries[0].get("semver") == "1.2.77"
                 else "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md"
             ),
         )

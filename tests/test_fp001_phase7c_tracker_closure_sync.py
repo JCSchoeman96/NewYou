@@ -77,11 +77,18 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
             with self.subTest(key=key):
                 self.assertEqual(value, rule.get(key))
 
+        historical_open_work = next(
+            entry for entry in manifest["historical_documents"]
+            if entry.get("repository_path") == "docs/00_platform/archive/02_OPEN_WORK_v1.2.74.md"
+        )
+        self.assertEqual("1.2.75", historical_open_work["superseded_version"])
+        self.assertEqual("historical", historical_open_work["lifecycle"])
+
         current_paths = rule["current_paths"]
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.75.md", current_paths["open_work"])
-        self.assertEqual("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md", current_paths["delivery_atlas"])
-        self.assertEqual("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md", current_paths["fp001_skeleton"])
-        self.assertEqual("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md", current_paths["harden_02"])
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.77.md", current_paths["open_work"])
+        self.assertEqual("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md", current_paths["delivery_atlas"])
+        self.assertEqual("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md", current_paths["fp001_skeleton"])
+        self.assertEqual("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md", current_paths["harden_02"])
 
         open_work = (ROOT / current_paths["open_work"]).read_text(encoding="utf-8")
         state = _marked_json(open_work, "<!-- HARDEN_02_LIFECYCLE_STATE_START -->", "<!-- HARDEN_02_LIFECYCLE_STATE_END -->")
@@ -126,19 +133,19 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         for key, route_heading, classification, candidate_lifecycle in (
             (
                 "delivery_atlas",
-                "## 26.23 FP-001 Phase 8 TB-001 candidate route",
+                "## 26.24 FP-001 Phase 8 TB-001 successor candidate route (current)",
                 "FP-001 Architectural Proof Classification remains COMPLETE / FINALISED as NEW_TRACER_BULLET",
                 "identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
             ),
             (
                 "fp001_skeleton",
-                "## v0.1.19 — TB-001 proof-contract candidate route (current)",
+                "## v0.1.21 — TB-001 proof-contract successor candidate route (current)",
                 None,
                 "identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
             ),
             (
                 "harden_02",
-                "## v0.5.19 — FP-001 TB-001 proof-contract candidate route (current)",
+                "## v0.5.21 — FP-001 TB-001 proof-contract successor candidate route (current)",
                 None,
                 "TB-001 is CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
             ),

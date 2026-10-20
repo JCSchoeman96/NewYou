@@ -15,15 +15,19 @@ from tools.foundation_integrity_audit import refresh_manifest, run_audit
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 BASE_SHA = "675a8c50ac53a995a48e4d262df42065f8ccd412"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.75.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.77.md"
 CONTRACT = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 CONTRACT_ARCHIVE = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
-ATLAS = DOCS / "working/DELIVERY_ATLAS_WORKING_v0.4.17.md"
+ATLAS = DOCS / "working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
 ATLAS_V416_ARCHIVE = DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.16.md"
-SKELETON = DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md"
+ATLAS_V417_ARCHIVE = DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.17.md"
+SKELETON = DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md"
 SKELETON_V117_ARCHIVE = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md"
 SKELETON_V118_ARCHIVE = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md"
-HARDEN = DOCS / "working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md"
+SKELETON_V119_ARCHIVE = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md"
+SKELETON_V120_ARCHIVE = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md"
+ATLAS_V418_ARCHIVE = DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.18.md"
+HARDEN = DOCS / "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 HARD_STOP_CHECK = "fp001_development_entry_hard_stop_lifecycle"
 SOURCE_FAILURE = "executable application/bootstrap source present while application implementation is not authorised"
@@ -171,8 +175,8 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         self.assertEqual("AUTHORISED", rule["application_implementation"])
         self.assertNotIn("synthetic_authorization_fixture_relative_path", rule)
         open_work_entry = next(e for e in manifest["governing_documents"] if e["document_id"] == "OPEN_WORK")
-        self.assertEqual("1.2.75", open_work_entry["semver"])
-        self.assertEqual("1.2.74", open_work_entry["superseded_version"])
+        self.assertEqual("1.2.77", open_work_entry["semver"])
+        self.assertEqual("1.2.76", open_work_entry["superseded_version"])
 
     def test_foundation_integrity_rejects_reverted_hard_stop_state(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -180,7 +184,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             shutil.copytree(DOCS, root / "docs" / "00_platform")
             shutil.copytree(ROOT / "tests", root / "tests", ignore=shutil.ignore_patterns("__pycache__"))
             shutil.copytree(ROOT / "tools", root / "tools", ignore=shutil.ignore_patterns("__pycache__"))
-            open_work = root / "docs/00_platform/02_OPEN_WORK_v1.2.75.md"
+            open_work = root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
             text = open_work.read_text(encoding="utf-8")
             open_work.write_text(
                 text.replace("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", "DEVELOPMENT ENTRY HARD STOP: FAIL", 1),
@@ -245,7 +249,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
                     manifest.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
                 if mode in ("state", "both"):
                     _rewrite_marked_json(
-                        root / "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+                        root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
                         "<!-- HARDEN_02_LIFECYCLE_STATE_START -->",
                         "<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
                         updates,
@@ -263,7 +267,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             manifest = self._synthetic_repo(root)
-            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md"
+            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
             atlas = atlas_path.read_text(encoding="utf-8")
             current = (
                 "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. "
@@ -279,9 +283,9 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             manifest_data = json.loads(manifest.read_text(encoding="utf-8"))
             hard_stop_rule = manifest_data["integrity_rules"]["fp001_development_entry_hard_stop_lifecycle"]
             for relative in (
-                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
-                "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md",
-                "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md",
+                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+                "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+                "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
             ):
                 hard_stop_rule["current_route_sha256"][relative] = hashlib.sha256(
                     (root / relative).read_bytes()
@@ -318,24 +322,23 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
     # ------------------------------------------------------------------
     # Section-aware current versus historical status
     # ------------------------------------------------------------------
-    def test_skeleton_direct_predecessor_is_v0_1_18(self):
+    def test_skeleton_direct_predecessor_is_v0_1_20(self):
         text = SKELETON.read_text(encoding="utf-8")
-        self.assertIn("**Artifact version:** v0.1.19", text)
+        self.assertIn("**Artifact version:** v0.1.21", text)
         self.assertIn(
-            "Direct predecessor v0.1.18 is preserved byte-identically at archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md.",
+            "Direct predecessor v0.1.20 is preserved byte-identically at archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md.",
             text,
         )
-        self.assertNotIn("Direct predecessor v0.1.17", text)
-        self.assertEqual(
-            "9401dc20a362115534dbb2ce16262c032debbe8dcb8e3d2fd5d9c87a1c1c836b",
-            hashlib.sha256(SKELETON_V118_ARCHIVE.read_bytes()).hexdigest(),
-        )
+        self.assertNotIn("Direct predecessor v0.1.18", text)
+        rule = json.loads(MANIFEST.read_text(encoding="utf-8"))["integrity_rules"]["fp001_phase8_proof_contract_lifecycle"]
+        expected = rule["predecessor_archives_sha256"]["docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md"]
+        self.assertEqual(expected, hashlib.sha256(SKELETON_V120_ARCHIVE.read_bytes()).hexdigest())
 
     def test_skeleton_current_status_is_pass_bounded_and_not_pre_hard_stop(self):
         text = SKELETON.read_text(encoding="utf-8")
         current_body = text.split("## v0.1.13 current-route status (historical predecessor)", 1)[0]
         self.assertEqual([], _pre_hard_stop_hits(current_body))
-        current_v0118 = _md_section(text, "## v0.1.19 — TB-001 proof-contract candidate route (current)")
+        current_v0118 = _md_section(text, "## v0.1.21 — TB-001 proof-contract successor candidate route (current)")
         for token in (
             "identifier TB-001",
             "CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
@@ -349,7 +352,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             self.assertIn(token, current_v0118)
         self.assertIn("Phase 9", current_body)
         self.assertIn("confers no Phase 8 authority", current_body)
-        self.assertIn("Open Work v1.2.75", current_body)
+        self.assertIn("Open Work v1.2.77", current_body)
         self.assertIn("NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", current_body)
 
     def test_skeleton_historical_sections_match_archived_v0_1_17(self):
@@ -370,16 +373,19 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         )
         self.assertIn("PHASE 8: UNAUTHORISED", v117)
 
-    def test_atlas_transition_v0_4_16_to_v0_4_17(self):
+    def test_atlas_transition_v0_4_18_to_v0_4_19(self):
         text = ATLAS.read_text(encoding="utf-8")
-        self.assertIn("# Delivery Atlas working v0.4.17", text)
-        self.assertIn("`v0.4.16 → v0.4.17`", text)
-        self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.4.16.md", text)
-        self.assertIn("TB-001 proof contract", text)
+        self.assertIn("# Delivery Atlas working v0.4.19", text)
+        self.assertIn("`v0.4.18 → v0.4.19`", text)
+        self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.4.18.md", text)
+        self.assertIn("TB-001 proof-contract successor", text)
         self.assertNotIn("routes the next action to Development Entry Hard Stop evaluation", text.split("## v0.4.16 Patch Scope", 1)[0])
         self.assertIn("DOES NOT AUTHORISE IMPLEMENTATION", text)
         self.assertIn("DERIVED", text)
         self.assertIn("NON-AUTHORITATIVE", text)
+        prior_route = ATLAS_V417_ARCHIVE.read_text(encoding="utf-8")
+        self.assertIn("`v0.4.16 → v0.4.17`", prior_route)
+        self.assertIn("TB-001 proof contract", prior_route)
         self.assertEqual(
             "9636c1ed2a12f156ebeb31004e0d3823f7e2824b55d9e7107646d8178f5eab32",
             hashlib.sha256(ATLAS_V416_ARCHIVE.read_bytes()).hexdigest(),
@@ -398,7 +404,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
     def test_atlas_current_status_has_no_contradictory_authorisation(self):
         text = ATLAS.read_text(encoding="utf-8")
         header = text.split("## v0.4.16 Patch Scope", 1)[0]
-        current = _md_section(text, "## 26.23 FP-001 Phase 8 TB-001 candidate route")
+        current = _md_section(text, "## 26.25 FP-001 Phase 8 TB-001 successor candidate route (current)")
         jit_boundary = _between(text, "**JIT Boundary:**", "\n### CAP-002")
         self.assertEqual([], _pre_hard_stop_hits(header))
         self.assertEqual([], _pre_hard_stop_hits(current))
@@ -433,10 +439,10 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", section_18)
         self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", section_23)
         self.assertIn("HARDEN-02 itself confers no implementation authority", i07)
-        self.assertIn("current Open Work v1.2.75 separately records bounded Phase 8 authorisation", i07)
+        self.assertIn("current Open Work v1.2.77 separately records bounded Phase 8 authorisation", i07)
         self.assertNotIn("satisfies only Development Entry Hard Stop condition 9", i07)
         self.assertIn(
-            "Current Open Work v1.2.75 routes TB-001 for contract review; proof execution waits for approval of the task contract.",
+            "Current Open Work v1.2.77 routes TB-001 for contract review; proof execution waits for approval of the task contract.",
             section_18,
         )
 
@@ -446,7 +452,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         section_20 = _md_section(text, "## 20. Contract-stage STOP")
 
         self.assertIn(
-            "- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.18.md`",
+            "- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.20.md`",
             header,
         )
         self.assertNotRegex(
@@ -455,7 +461,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         )
         self.assertIn("No application implementation is authorised by HARDEN-02 itself.", section_20)
         self.assertIn(
-            "Current Open Work v1.2.75 separately records application implementation as AUTHORISED only inside the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage.",
+            "Current Open Work v1.2.77 separately records application implementation as AUTHORISED only inside the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage.",
             section_20,
         )
         self.assertNotRegex(section_20, r"(?i)\bNo application implementation is authorised\.(?:\s|$)")

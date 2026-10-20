@@ -246,7 +246,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             )
             manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
-            skeleton_path = docs / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md"
+            skeleton_path = docs / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md"
             skeleton = skeleton_path.read_text(encoding="utf-8")
             current_audit_route = "working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
             self.assertIn(current_audit_route, skeleton)
@@ -257,14 +257,14 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             )
             skeleton_path.write_text(skeleton, encoding="utf-8")
 
-            atlas_path = docs / "working/DELIVERY_ATLAS_WORKING_v0.4.17.md"
+            atlas_path = docs / "working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
             atlas = atlas_path.read_text(encoding="utf-8")
             history_start = atlas.index("## v0.4.6 Patch Scope (historical predecessor record)")
             history_end = atlas.index("## v0.4.4 Patch Scope", history_start)
             history = atlas[history_start:history_end].replace("Open Work v1.2.64", "Open Work v1.2.65", 1)
             atlas_path.write_text(atlas[:history_start] + history + atlas[history_end:], encoding="utf-8")
 
-            harden_path = docs / "working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md"
+            harden_path = docs / "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
             harden = harden_path.read_text(encoding="utf-8")
             harden_path.write_text(
                 harden.replace(
@@ -609,7 +609,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         collapsed_provenance = "PR #76 certification/promotion is COMPLETE / CERTIFIED / CURRENT."
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.75.md"
+            open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
             open_work = open_work_path.read_text(encoding="utf-8")
             section_start = open_work.index("## 12.14 —")
             section_end = open_work.find("\n## ", section_start + 1)
@@ -669,37 +669,37 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         mutations = (
             (
                 "wrong direct predecessor",
-                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.16.md`",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.18.md`",
                 "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.1.md`",
             ),
             (
                 "wrong semver transition",
-                "- **SemVer transition:** `v0.4.16 → v0.4.17`",
+                "- **SemVer transition:** `v0.4.18 → v0.4.19`",
                 "- **SemVer transition:** `v0.4.2 → v0.4.3`",
             ),
             (
                 "missing predecessor metadata",
-                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.16.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.\n",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.18.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.\n",
                 "",
             ),
             (
                 "duplicate predecessor metadata",
-                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.16.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.\n"
-                "- **SemVer transition:** `v0.4.16 → v0.4.17`",
-                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.16.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.\n"
-                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.16.md` (duplicate)\n"
-                "- **SemVer transition:** `v0.4.16 → v0.4.17`",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.18.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.\n"
+                "- **SemVer transition:** `v0.4.18 → v0.4.19`",
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.18.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.\n"
+                "- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.18.md` (duplicate)\n"
+                "- **SemVer transition:** `v0.4.18 → v0.4.19`",
             ),
         )
         for name, anchor, replacement in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
-                atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md"
-                original_open_work = (root / "docs/00_platform/02_OPEN_WORK_v1.2.75.md").read_bytes()
+                atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
+                original_open_work = (root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md").read_bytes()
                 atlas = atlas_path.read_text(encoding="utf-8")
                 self.assertIn(anchor, atlas)
                 atlas_path.write_text(atlas.replace(anchor, replacement, 1), encoding="utf-8")
-                self.assertEqual(original_open_work, (root / "docs/00_platform/02_OPEN_WORK_v1.2.75.md").read_bytes())
+                self.assertEqual(original_open_work, (root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md").read_bytes())
                 refresh_manifest(root, manifest_path)
 
                 report = run_audit(root, manifest_path)
@@ -725,11 +725,11 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         for name, declaration in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
-                atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md"
+                atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
                 atlas = atlas_path.read_text(encoding="utf-8")
                 header = atlas.split("## v0.4.10 Patch Scope", 1)[0]
-                self.assertIn("- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.16.md`", header)
-                self.assertIn("- **SemVer transition:** `v0.4.16 → v0.4.17`", header)
+                self.assertIn("- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.18.md`", header)
+                self.assertIn("- **SemVer transition:** `v0.4.18 → v0.4.19`", header)
                 atlas_path.write_text(atlas + declaration, encoding="utf-8")
                 refresh_manifest(root, manifest_path)
 
@@ -745,13 +745,13 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
     def test_fp001_phase8_rejects_unreviewed_current_route_text(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md"
+            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
             atlas_path.write_text(
                 atlas_path.read_text(encoding="utf-8")
                 + "\nHistorical prose: Atlas v0.3.8 preceded the direct v0.3.9 predecessor, and the current transition is v0.3.9 to v0.4.0.\n",
                 encoding="utf-8",
             )
-            harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md"
+            harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
             harden_path.write_text(
                 harden_path.read_text(encoding="utf-8")
                 + "\nHistorical prose: v0.4.9 came before the current v0.5.0 predecessor; the certified semantics originate in v0.4.0.\n",
@@ -768,8 +768,8 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
             self.assertIn("manifest Phase 8 route hash differs", promotion_check["message"])
 
-    def test_fp001_pmr_validates_harden_v0519_successor_metadata(self):
-        predecessor = "- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.18.md` (preserved byte-identically)\n"
+    def test_fp001_pmr_validates_harden_v0520_successor_metadata(self):
+        predecessor = "- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.20.md` (preserved byte-identically)\n"
         mutations = (
             (
                 "multiple current predecessors",
@@ -793,19 +793,19 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             ),
             (
                 "missing successor base SHA",
-                "- **v0.5.19 routing successor base main SHA:** `0972864ef7f4638c96198e19a13977e0151e9726`\n",
+                "- **v0.5.21 routing successor base main SHA:** `0972864ef7f4638c96198e19a13977e0151e9726`\n",
                 "",
             ),
             (
                 "incorrect successor base SHA",
-                "- **v0.5.19 routing successor base main SHA:** `0972864ef7f4638c96198e19a13977e0151e9726`",
+                "- **v0.5.21 routing successor base main SHA:** `0972864ef7f4638c96198e19a13977e0151e9726`",
                 "- **v0.5.18 status successor base main SHA:** `0000000000000000000000000000000000000000`",
             ),
         )
         for name, anchor, replacement in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
-                harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md"
+                harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
                 harden = harden_path.read_text(encoding="utf-8")
                 self.assertIn(anchor, harden)
                 harden_path.write_text(harden.replace(anchor, replacement, 1), encoding="utf-8")
@@ -823,11 +823,11 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
     def test_fp001_pmr_rejects_unqualified_current_harden_section_20_stop(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md"
+            harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
             harden = harden_path.read_text(encoding="utf-8")
             current_statement = (
                 "No application implementation is authorised by HARDEN-02 itself. "
-                "Current Open Work v1.2.75 separately records application implementation as AUTHORISED only inside "
+                "Current Open Work v1.2.77 separately records application implementation as AUTHORISED only inside "
                 "the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage."
             )
             self.assertIn(current_statement, harden)
@@ -862,9 +862,9 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             declaration = f"\n- **{field}:** {value}\n"
             with self.subTest(field=field), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
-                harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md"
+                harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
                 harden = harden_path.read_text(encoding="utf-8")
-                self.assertIn("- **Plan / contract version:** `v0.5.19`", harden.split("### Revision log", 1)[0])
+                self.assertIn("- **Plan / contract version:** `v0.5.21`", harden.split("### Revision log", 1)[0])
                 harden_path.write_text(harden + declaration, encoding="utf-8")
                 refresh_manifest(root, manifest_path)
 
@@ -915,8 +915,8 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
     def test_fp001_pmr_current_status_successor_artifacts_are_byte_pinned(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md"
-            harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md"
+            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
+            harden_path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
             atlas_path.write_text(
                 atlas_path.read_text(encoding="utf-8")
                 + "\n- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md` (unreviewed declaration)\n",
@@ -941,9 +941,9 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
     def test_fp001_identity_v014_promotion_rejects_non_immediate_atlas_predecessor(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.75.md"
+            open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
             open_work = open_work_path.read_text(encoding="utf-8")
-            current_predecessor = "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.16.md`"
+            current_predecessor = "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.18.md`"
             stale_predecessor = "immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.3.9.md`"
             if current_predecessor in open_work:
                 open_work = open_work.replace(current_predecessor, stale_predecessor, 1)
@@ -1096,7 +1096,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 "stale Delivery Atlas Identity route",
                 lambda root: replace_once(
                     root,
-                    "working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
+                    "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
                     "Identity dossier v0.1.4 is CERTIFIED / CURRENT",
                     "Identity dossier v0.1.3 is CERTIFIED / CURRENT",
                 ),
@@ -1105,7 +1105,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 "stale HARDEN-02 Identity route",
                 lambda root: replace_once(
                     root,
-                    "working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md",
+                    "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
                     "IDENTITY v0.1.4 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
                     "IDENTITY v0.1.3 PROMOTION: COMPLETE / CERTIFIED / CURRENT",
                 ),
@@ -1201,7 +1201,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         for name, mutate in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
-                open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.75.md"
+                open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
                 open_work = open_work_path.read_text(encoding="utf-8")
                 lifecycle_start = open_work.index("<!-- HARDEN_02_LIFECYCLE_STATE_START -->")
                 json_start = open_work.index("{", lifecycle_start)
@@ -1227,11 +1227,11 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_pmr_rejects_unarchived_predecessor_route_in_current_atlas(self):
         mutations = (
-            ("working/DELIVERY_ATLAS_WORKING_v0.4.17.md", "02_OPEN_WORK_v1.2.54.md"),
-            ("working/DELIVERY_ATLAS_WORKING_v0.4.17.md", "DELIVERY_ATLAS_WORKING_v0.3.6.md"),
-            ("working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md", "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"),
+            ("working/DELIVERY_ATLAS_WORKING_v0.4.19.md", "02_OPEN_WORK_v1.2.54.md"),
+            ("working/DELIVERY_ATLAS_WORKING_v0.4.19.md", "DELIVERY_ATLAS_WORKING_v0.3.6.md"),
+            ("working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md", "HARDEN-02_CONTRACT_WORKING_v0.4.8.md"),
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
                 "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md",
             ),
         )
@@ -1265,14 +1265,14 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_audit_work_start_predecessors_fail_in_unqualified_active_routes(self):
         mutations = (
-            ("02_OPEN_WORK_v1.2.75.md", "02_OPEN_WORK_v1.2.65.md"),
-            ("working/DELIVERY_ATLAS_WORKING_v0.4.17.md", "DELIVERY_ATLAS_WORKING_v0.4.7.md"),
+            ("02_OPEN_WORK_v1.2.77.md", "02_OPEN_WORK_v1.2.65.md"),
+            ("working/DELIVERY_ATLAS_WORKING_v0.4.19.md", "DELIVERY_ATLAS_WORKING_v0.4.7.md"),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md",
+                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
                 "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
                 "HARDEN-02_CONTRACT_WORKING_v0.5.9.md",
             ),
         )
@@ -1303,7 +1303,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            current_atlas = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md"
+            current_atlas = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
             current_atlas.write_text(
                 current_atlas.read_text(encoding="utf-8")
                 + "\nHistorical archive references: "
@@ -1353,7 +1353,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
             working = root / "docs/00_platform/working"
-            active = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md"
+            active = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md"
             duplicate = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md"
             duplicate.write_bytes(active.read_bytes())
 
@@ -1444,9 +1444,9 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
                 relative = {
-                    "skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md",
+                    "skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
                     "dossier": "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
-                    "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+                    "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
                 }[target]
                 path = root / relative
                 text = path.read_text(encoding="utf-8")
@@ -1513,7 +1513,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             root, manifest_path = self._copy_production_fixture(Path(directory))
             working = root / "docs/00_platform/working"
             stale = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
-            certified = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md"
+            certified = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md"
             stale.write_bytes(certified.read_bytes())
 
             report = run_audit(root, manifest_path)
@@ -1609,7 +1609,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             with self.subTest(mutation=label), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_production_fixture(Path(directory))
                 if label == "harden_i07_stale":
-                    path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md"
+                    path = root / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
                     path.write_text(
                         path.read_text(encoding="utf-8").replace(
                             "Audit & Evidence v0.1.0 REQUIRED / COMPLETE / CERTIFIED / CURRENT",
@@ -1620,7 +1620,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                     )
                     refresh_manifest(root, manifest_path)
                 elif label == "harden_route_stale":
-                    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.75.md"
+                    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
                     open_work = open_work_path.read_text(encoding="utf-8")
                     current_action = "NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION"
                     self.assertIn(current_action, open_work)
@@ -1630,7 +1630,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                     )
                     refresh_manifest(root, manifest_path)
                 else:
-                    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.75.md"
+                    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
                     open_work_path.write_text(mutator(open_work_path.read_text(encoding="utf-8")), encoding="utf-8")
                     refresh_manifest(root, manifest_path)
 
@@ -1987,14 +1987,14 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             ),
             (
                 "atlas_contract_owns_choice",
-                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
+                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
                 "After Phase 7C and before Phase 8 executable proof, the separate architectural proof classification gate selects `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`.",
                 "Phase 7C selects `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` before Phase 8 executable proof.",
                 "Delivery Atlas no longer preserves the separate post-7C classification boundary",
             ),
             (
                 "atlas_classification_boundary_removed",
-                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
+                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
                 "After Phase 7C and before Phase 8 executable proof, the separate architectural proof classification gate selects `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`.",
                 "Phase 7C selects `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` before Phase 8 executable proof.",
                 "Delivery Atlas no longer preserves the separate post-7C classification boundary",
@@ -2008,42 +2008,42 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             ),
             (
                 "current_selection",
-                "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+                "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
                 "REUSE_EXISTING_PROOF: NOT SELECTED",
                 "REUSE_EXISTING_PROOF: SELECTED",
                 "Open Work active route selects REUSE_EXISTING_PROOF",
             ),
             (
                 "current_reuse_selection",
-                "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+                "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
                 "REUSE_EXISTING_PROOF: NOT SELECTED",
                 "REUSE_EXISTING_PROOF: SELECTED",
                 "Open Work active route selects REUSE_EXISTING_PROOF",
             ),
             (
                 "tracer_bullet_id",
-                "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+                "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
                 "TRACER BULLET ID: TB-001",
                 "TRACER BULLET ID: TB-002",
                 "Open Work active route assigns a different Tracer Bullet identifier",
             ),
             (
                 "phase8_authorised",
-                "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+                "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
                 "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
                 "PHASE 8: AUTHORISED",
                 "Open Work active route authorises Phase 8 without bounded architectural-proof scope",
             ),
             (
                 "issue_124_reopened",
-                "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+                "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
                 "PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED",
                 "PHASE 7C EXECUTION/CONTROL TRACKER #124: OPEN / IN PROGRESS",
                 "issue #124 is reopened in the current Open Work route",
             ),
             (
                 "issue_111_closed",
-                "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+                "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
                 "PROGRAMME ROUTER #111: OPEN",
                 "PROGRAMME ROUTER #111: CLOSED / COMPLETED",
                 "Open Work active route omits current classification state 'PROGRAMME ROUTER #111: OPEN'",
@@ -2082,7 +2082,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 root, manifest_path = self._copy_production_fixture(Path(directory))
                 target = root / relative
                 text = target.read_text(encoding="utf-8")
-                if relative == "docs/00_platform/02_OPEN_WORK_v1.2.75.md":
+                if relative == "docs/00_platform/02_OPEN_WORK_v1.2.77.md":
                     active_start = text.index("# 9. Immediate Next Action")
                     active_end = text.index("# 10. Minimal Tools", active_start + 1)
                     active = text[active_start:active_end]
@@ -2101,8 +2101,8 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 expected_check = (
                     "fp001_phase8_proof_contract_lifecycle"
                     if relative in {
-                        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
-                        "docs/00_platform/02_OPEN_WORK_v1.2.75.md",
+                        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+                        "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
                     }
                     else "roadmap_proof_classification_lifecycle"
                 )
@@ -2165,9 +2165,9 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
-        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.75.md").read_text(encoding="utf-8")
+        candidate_open_work = (source_docs / "02_OPEN_WORK_v1.2.77.md").read_text(encoding="utf-8")
         current_readme = (source_docs / "README.md").read_text(encoding="utf-8")
-        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.19.md").read_text(encoding="utf-8")
+        contract = (source_docs / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.21.md").read_text(encoding="utf-8")
         expected = (True, "TB-001 remains a review candidate; proof execution and Phase 9 remain unstarted")
         self.assertEqual(expected, _h02_lifecycle_state(candidate_open_work, current_readme, contract))
 
@@ -2831,18 +2831,18 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
             ),
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
+                "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
                 "00_PLATFORM_v1.8.0.md",
                 "00_PLATFORM_v1.5.1.md",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md",
-                "02_OPEN_WORK_v1.2.75.md",
+                "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+                "02_OPEN_WORK_v1.2.77.md",
                 "02_OPEN_WORK_v1.2.50.md",
             ),
             (
-                "02_OPEN_WORK_v1.2.75.md",
-                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.17.md`",
+                "02_OPEN_WORK_v1.2.77.md",
+                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.4.19.md`",
                 "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.2.md`",
             ),
         )
@@ -2870,7 +2870,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 report = run_audit(root, manifest_path)
 
                 expected_checks = {"current_authority_route_resolution"}
-                if relative == "working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md":
+                if relative == "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md":
                     expected_checks.add("fp001_pmr_reconciliation")
                 self.assertTrue(
                     any(
@@ -2935,7 +2935,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         state_changes: dict | None = None,
         route_replacements: tuple[tuple[str, str], ...] = (),
     ) -> None:
-        path = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.75.md"
+        path = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.77.md"
         text = path.read_text(encoding="utf-8")
         if state_changes:
             pattern = re.compile(

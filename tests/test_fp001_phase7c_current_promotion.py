@@ -229,10 +229,10 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
     def test_readme_and_manifest_route_current_lower_level_artifacts_without_new_root_authority(self):
         for path in (
             "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
-            "working/DELIVERY_ATLAS_WORKING_v0.4.17.md",
-            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md",
-            "working/HARDEN-02_CONTRACT_WORKING_v0.5.19.md",
-            "02_OPEN_WORK_v1.2.75.md",
+            "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+            "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+            "02_OPEN_WORK_v1.2.77.md",
         ):
             with self.subTest(path=path):
                 self.assertIn(path, self.readme)

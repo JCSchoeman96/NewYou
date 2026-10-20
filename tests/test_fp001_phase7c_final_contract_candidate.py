@@ -507,7 +507,7 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
                 self.assertEqual(expected_hash, hashlib.sha256(path.read_bytes()).hexdigest())
 
     def test_current_readme_and_open_work_route_tracker_124_as_closed(self):
-        current_open_work = (DOCS / "02_OPEN_WORK_v1.2.75.md").read_text(encoding="utf-8")
+        current_open_work = (DOCS / "02_OPEN_WORK_v1.2.77.md").read_text(encoding="utf-8")
         state_match = re.search(
             r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
             current_open_work,
