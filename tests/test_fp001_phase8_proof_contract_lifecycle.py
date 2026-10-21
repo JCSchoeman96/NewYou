@@ -257,6 +257,26 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
         self.assertIn("TB-001 CONTRACT CANDIDATE REVIEW", text)
 
+    def test_current_harden_route_uses_approved_tb001_successor_and_preserves_predecessors(self):
+        atlas = (ROOT / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md").read_text(encoding="utf-8")
+        skeleton = (ROOT / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md").read_text(encoding="utf-8")
+        harden = (ROOT / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md").read_text(encoding="utf-8")
+        harden_phase7b_route = harden.split("## 23. FP-001 Phase 7B reconciliation current route", 1)[1].split("## 24.", 1)[0]
+        self.assertIn("TRACER BULLET: REQUIRED / DEFINED", harden_phase7b_route)
+        self.assertIn("TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS", harden_phase7b_route)
+        self.assertIn("TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", harden_phase7b_route)
+        self.assertIn("NEXT GOVERNANCE ACTION: WELL-38", harden_phase7b_route)
+        self.assertIn("Open Work v1.2.78", harden_phase7b_route)
+        self.assertNotIn("CANDIDATE / REVIEW PENDING", harden_phase7b_route)
+
+        open_work_history = OPEN_WORK.read_text(encoding="utf-8")
+        self.assertIn("## 12.32 — TB-001 proof-contract v0.1.1 correction and route successor (historical predecessor)", open_work_history)
+        self.assertIn("## 12.33 — TB-001 proof-contract v0.1.2 correction and route successor (historical predecessor)", open_work_history)
+        self.assertIn("## 12.34 — TB-001 contract review and current-status promotion", open_work_history)
+        self.assertIn("## 26.24 FP-001 Phase 8 TB-001 successor candidate route (historical predecessor)", atlas)
+        self.assertIn("## v0.1.20 — TB-001 proof-contract successor candidate route (historical predecessor)", skeleton)
+        self.assertIn("## v0.5.20 — FP-001 TB-001 proof-contract successor candidate route (historical predecessor)", harden)
+
     def test_foundation_integrity_rejects_a_stale_readme_active_candidate_route(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

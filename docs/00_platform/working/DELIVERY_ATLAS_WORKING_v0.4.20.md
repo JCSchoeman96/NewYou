@@ -5333,7 +5333,7 @@ Development Entry Hard Stop evaluation independently satisfied all ten condition
 
 At the Open Work v1.2.75 predecessor state, FP-001 Architectural Proof Classification was COMPLETE / FINALISED as NEW_TRACER_BULLET. The proof contract was `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`, identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. This Atlas remains derived navigation and does not authorize implementation. Current Open Work was v1.2.75. The contract predecessor is preserved at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`.
 
-## 26.24 FP-001 Phase 8 TB-001 successor candidate route (current)
+## 26.24 FP-001 Phase 8 TB-001 successor candidate route (historical predecessor)
 
 FP-001 Architectural Proof Classification remains COMPLETE / FINALISED as NEW_TRACER_BULLET. The proof contract is `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md`, identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. The next governance action is TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. This Atlas remains derived navigation and does not authorize implementation. Current Open Work is v1.2.76.
 

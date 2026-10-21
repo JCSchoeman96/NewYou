@@ -692,7 +692,7 @@ Historical H02-3 evidence remains historically true for the earlier programme st
 
 ## 20. Contract-stage STOP
 
-This artifact records the HARDEN-02 contract lifecycle status only. HARDEN-02 is not authority for Product, Architecture, Domain or Roadmap law, Engineering Standards promotion, FP-001 reconciliation, Communications or implementation. No application implementation is authorised by HARDEN-02 itself. Current Open Work v1.2.77 separately records application implementation as AUTHORISED only inside the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage.
+This artifact records the HARDEN-02 contract lifecycle status only. HARDEN-02 is not authority for Product, Architecture, Domain or Roadmap law, Engineering Standards promotion, FP-001 reconciliation, Communications or implementation. No application implementation is authorised by HARDEN-02 itself. Current Open Work v1.2.78 separately records application implementation as AUTHORISED only inside the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage.
 
 This status-sync artifact itself does not execute HARDEN-02. The original v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED on its recorded evidence. Do not reopen it or describe its evidence as missing without new contradictory repository evidence that challenges a recorded lifecycle requirement. If such evidence appears, STOP and resolve it through the applicable governed review. This status successor does not alter the certified v0.4.0 semantics.
 
@@ -791,14 +791,16 @@ PHASE 7C: COMPLETE / CERTIFIED / CURRENT
 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT
 PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED
 RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED (HISTORICAL); #111 remains the open programme router
-NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
+NEXT GOVERNANCE ACTION: WELL-38 — Transition Foundation Integrity to implementation-era CI
 
 ```text
 ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED AS NEW_TRACER_BULLET
 REUSE_EXISTING_PROOF: NOT SELECTED
-TRACER BULLET: REQUIRED / DEFINED AS REVIEW CANDIDATE
+TRACER BULLET: REQUIRED / DEFINED
 TRACER BULLET ID: TB-001
 PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS
+TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS
+TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION
 ARCHITECTURAL PROOF EXECUTION: NOT STARTED
 PROOF RESULT: NOT STARTED
 PROOF CERTIFICATION: NOT STARTED
@@ -809,7 +811,7 @@ PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
 PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
 ```
 
-TB-001 is CANDIDATE / REVIEW PENDING / NOT CERTIFIED. Proof execution, result and certification are NOT STARTED; Phase 9 remains NOT STARTED / NOT AUTHORISED. This status route does not change Product, Architecture, Domain or Roadmap authority or start proof execution. HARDEN-02 itself confers no implementation authority; current Open Work v1.2.77 routes candidate review and the bounded Phase 8 authorisation.
+TB-001 contract/design review is COMPLETE / PASS and the contract is CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. Proof execution, result and certification remain NOT STARTED; Phase 9 remains NOT STARTED / NOT AUTHORISED. This status route does not change Product, Architecture, Domain or Roadmap authority or start proof execution. HARDEN-02 itself confers no implementation authority; current Open Work v1.2.78 records the approved bounded Phase 8 route and the next governance action, WELL-38.
 
 
 
@@ -856,7 +858,7 @@ Development Entry Hard Stop evaluation independently satisfied all ten condition
 
 Open Work v1.2.75 routed the Phase 8 NEW_TRACER_BULLET candidate contract at `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`. TB-001 was CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. The next governance action was TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. This HARDEN-02 status successor changes no frozen HARDEN-02 semantics and grants no Phase 9 authority. Its direct predecessor v0.5.18 is archived byte-identically. The contract predecessor is preserved at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`.
 
-## v0.5.20 — FP-001 TB-001 proof-contract successor candidate route (current)
+## v0.5.20 — FP-001 TB-001 proof-contract successor candidate route (historical predecessor)
 
 Open Work v1.2.76 routes the Phase 8 NEW_TRACER_BULLET successor contract at `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md`; its v0.1.0 predecessor is archived byte-identically. TB-001 is CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. The next governance action is TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. This HARDEN-02 status successor changes no frozen HARDEN-02 semantics and grants no Phase 9 authority.
 

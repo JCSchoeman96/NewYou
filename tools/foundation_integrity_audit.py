@@ -6640,10 +6640,10 @@ def _check_fp001_phase8_proof_contract_lifecycle(
         "current_contract_sha256": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4",
         "current_routes": current_routes,
         "current_route_sha256": {
-            "docs/00_platform/02_OPEN_WORK_v1.2.78.md": "91b9a4e6ed033e82924d45ec8a295e92d9799412a1d5f0ebf97c7b5b542d7147",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md": "51bb82e9f59281b555a2c26393d88bd2b190a571c0b7a72770aaddf1e2a8e6d7",
-            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": "14e7b99c1d53a4e64b8d8a16c515eb61059af8b65e2b3486dce62fe88d4cadfb",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": "623c0f69be75bd03a4b1e63f7c24588d80590e072c861ea63d387350d1153742",
+            "docs/00_platform/02_OPEN_WORK_v1.2.78.md": "7ab24ce13ba37306c78cd795f3bb308c75a8d6627aa5ea8780bd2b162f013770",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md": "961aff33d733fbde63c47dc1993c7d34a91130cfcfdab84394121889ddee0721",
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": "4b15a9e29164841bbfe3ad153d4ddc9b7770a404f03bc5c6484ce5669a158539",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": "b4e4e1c90d73275626889acbfec8f04c880456de8596e8b79424365de304d80f",
             "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
             "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4",
         },
@@ -6905,7 +6905,7 @@ def _check_fp001_phase8_proof_contract_lifecycle(
     if re.search(r"(?im)^\s*PHASE 9(?: / VERTICAL SLICES)?\s*:\s*(?:AUTHORI[ZS]ED|STARTED|IN PROGRESS|COMPLETE)", text):
         issues.append("TB-001 candidate authorises Phase 9 / Vertical Slices")
     if _executable_application_source_paths(root):
-        issues.append("application implementation source exists before TB-001 contract approval and execution start")
+        issues.append("application implementation source exists before a separate TB-001 proof execution start")
 
     _record_check(
         report,
