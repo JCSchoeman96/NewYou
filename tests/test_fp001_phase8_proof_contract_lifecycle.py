@@ -223,6 +223,29 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("PROOF CERTIFICATION: NOT STARTED", text)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
         self.assertIn("NEXT GOVERNANCE ACTION: WELL-38 — Transition Foundation Integrity to implementation-era CI", text)
+        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.19.md`", text)
+
+    def test_current_status_summaries_route_the_approved_contract_and_status_successors(self):
+        contract = CONTRACT.read_text(encoding="utf-8")
+        lifecycle = contract.split("## 12. Lifecycle state", 1)[1].split("## 13.", 1)[0]
+        self.assertIn("TRACER BULLET: REQUIRED / DEFINED", lifecycle)
+        self.assertNotIn("DEFINED AS REVIEW CANDIDATE", lifecycle)
+        self.assertIn("Open Work v1.2.78, Delivery Atlas v0.4.20, FP-001 Skeleton v0.1.22 and HARDEN-02 v0.5.22", contract)
+
+        readme = (ROOT / "docs/00_platform/README.md").read_text(encoding="utf-8")
+        active_status = next(line for line in readme.splitlines() if line.startswith("PR #76 candidate certification and completed post-merge certification evidence"))
+        self.assertIn("contract/design review is COMPLETE / PASS", active_status)
+        self.assertIn("CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", active_status)
+        self.assertIn("The next governance action is WELL-38", active_status)
+        self.assertIn("[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.4.20.md)", readme)
+
+        atlas = (ROOT / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md").read_text(encoding="utf-8")
+        skeleton = (ROOT / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md").read_text(encoding="utf-8")
+        harden = (ROOT / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md").read_text(encoding="utf-8")
+        self.assertIn("Planning tracker | `docs/00_platform/02_OPEN_WORK_v1.2.78.md`", atlas)
+        self.assertIn("`docs/00_platform/02_OPEN_WORK_v1.2.78.md §9`", skeleton)
+        self.assertIn("`02_OPEN_WORK_v1.2.78.md` | Programme routing", harden)
+        self.assertIn("`working/DELIVERY_ATLAS_WORKING_v0.4.20.md` | Current derived", harden)
 
     def test_archived_open_work_preserves_the_review_candidate_status(self):
         self.assertTrue(HISTORICAL_OPEN_WORK.is_file(), "the historical Open Work status snapshot is missing")

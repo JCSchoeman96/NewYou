@@ -66,7 +66,7 @@ The following WELL-1 INTERNAL comments identify the accepted Q1–Q90 source bat
 | Q71–Q80 | `d55613cf-8026-44e3-8f90-0d7bf687231d` | §§7–10: real browser spine plus fault probes, production business path, deterministic cuts, genuine concurrency, restart/reconnect and proof separated from production completeness. |
 | Q81–Q90 | `b45e180f-180a-4126-b043-3f7d555517aa` | §§8–12: nine mandatory families, all-or-nothing exit, BLOCKED / STOP, no weighted pass, and the separate human review gate before proof execution. |
 
-At the declared base main SHA, the route entering WELL-2 was Open Work v1.2.74, Delivery Atlas v0.4.16, FP-001 Skeleton v0.1.18 and HARDEN-02 v0.5.18. Those route records remain preserved byte-identically in the archive. The first candidate route versions v1.2.75 / v0.4.17 / v0.1.19 / v0.5.19 and the v1.2.76 / v0.4.18 / v0.1.20 / v0.5.20 direct predecessors are also preserved byte-identically. The current successor route is Open Work v1.2.77, Delivery Atlas v0.4.19, FP-001 Skeleton v0.1.21 and HARDEN-02 v0.5.21. This candidate changes no frozen Phase 7C contract or higher authority.
+At the declared base main SHA, the route entering WELL-2 was Open Work v1.2.74, Delivery Atlas v0.4.16, FP-001 Skeleton v0.1.18 and HARDEN-02 v0.5.18. Those route records remain preserved byte-identically in the archive. The first candidate route versions v1.2.75 / v0.4.17 / v0.1.19 / v0.5.19 and the v1.2.76 / v0.4.18 / v0.1.20 / v0.5.20 direct predecessors are also preserved byte-identically. The reviewed contract route was Open Work v1.2.77, Delivery Atlas v0.4.19, FP-001 Skeleton v0.1.21 and HARDEN-02 v0.5.21; those direct predecessors remain preserved byte-identically. The current status successor routes Open Work v1.2.78, Delivery Atlas v0.4.20, FP-001 Skeleton v0.1.22 and HARDEN-02 v0.5.22. This status successor changes no frozen Phase 7C contract or higher authority.
 
 ## 2. Outcome and proof claim
 
@@ -210,7 +210,7 @@ The governing Open Work, Atlas, Skeleton and HARDEN-02 documents use their estab
 
 ```text
 PROOF CLASSIFICATION: COMPLETE / FINALISED — NEW_TRACER_BULLET
-TRACER BULLET: REQUIRED / DEFINED AS REVIEW CANDIDATE
+TRACER BULLET: REQUIRED / DEFINED
 TRACER BULLET ID: TB-001
 CONTRACT: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION
 PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS
@@ -220,7 +220,6 @@ PROOF CERTIFICATION: NOT STARTED
 PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY); CONTRACT APPROVED; EXECUTION WAITS FOR A SEPARATE START
 PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
 ```
-
 
 ## 13. Contract review and current-status promotion record
 

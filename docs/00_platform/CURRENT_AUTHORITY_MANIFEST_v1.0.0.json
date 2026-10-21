@@ -103,7 +103,7 @@
       "semver": "1.2.78",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.78.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "a870e425ad3c8d1618adfc1d58d6670c05f5f7674642f567f668b36a0b0b6872",
+      "sha256": "91b9a4e6ed033e82924d45ec8a295e92d9799412a1d5f0ebf97c7b5b542d7147",
       "superseded_version": "1.2.77",
       "lifecycle": "current"
     }
@@ -2486,10 +2486,10 @@
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md": "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f"
       },
       "current_route_sha256": {
-        "docs/00_platform/02_OPEN_WORK_v1.2.78.md": "a870e425ad3c8d1618adfc1d58d6670c05f5f7674642f567f668b36a0b0b6872",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md": "d47b457e365f94b8b674a2a4066f81caf01d5e5921ee1ea2026c6c69f884528b",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": "f29c27a0515a562cf97f7f37fb28c582f9069d66eb9feaa86fee5dfd332a27db",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": "09e15aade93ad9614ae9e8f656a63699a2a042d50d60421a7544f9debc20fd62",
+        "docs/00_platform/02_OPEN_WORK_v1.2.78.md": "91b9a4e6ed033e82924d45ec8a295e92d9799412a1d5f0ebf97c7b5b542d7147",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md": "51bb82e9f59281b555a2c26393d88bd2b190a571c0b7a72770aaddf1e2a8e6d7",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": "14e7b99c1d53a4e64b8d8a16c515eb61059af8b65e2b3486dce62fe88d4cadfb",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": "623c0f69be75bd03a4b1e63f7c24588d80590e072c861ea63d387350d1153742",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2"
       },
       "candidate_contract_path": "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
@@ -2557,12 +2557,12 @@
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
       },
       "current_route_sha256": {
-        "docs/00_platform/02_OPEN_WORK_v1.2.78.md": "a870e425ad3c8d1618adfc1d58d6670c05f5f7674642f567f668b36a0b0b6872",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md": "d47b457e365f94b8b674a2a4066f81caf01d5e5921ee1ea2026c6c69f884528b",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": "f29c27a0515a562cf97f7f37fb28c582f9069d66eb9feaa86fee5dfd332a27db",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": "09e15aade93ad9614ae9e8f656a63699a2a042d50d60421a7544f9debc20fd62",
+        "docs/00_platform/02_OPEN_WORK_v1.2.78.md": "91b9a4e6ed033e82924d45ec8a295e92d9799412a1d5f0ebf97c7b5b542d7147",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md": "51bb82e9f59281b555a2c26393d88bd2b190a571c0b7a72770aaddf1e2a8e6d7",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": "14e7b99c1d53a4e64b8d8a16c515eb61059af8b65e2b3486dce62fe88d4cadfb",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": "623c0f69be75bd03a4b1e63f7c24588d80590e072c861ea63d387350d1153742",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
-        "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "2015acaac8f8aecbeeb654c21cc378f231df1c857d18a8eb9cc2eb1ca33dd239"
+        "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4"
       },
       "candidate_sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
       "predecessor_archives_sha256": {
@@ -2608,7 +2608,7 @@
       "resulting_main_ci_run": 39487861172,
       "reviewed_candidate_archive_path": "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
       "reviewed_candidate_archive_sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
-      "current_contract_sha256": "2015acaac8f8aecbeeb654c21cc378f231df1c857d18a8eb9cc2eb1ca33dd239"
+      "current_contract_sha256": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4"
     }
   }
 }

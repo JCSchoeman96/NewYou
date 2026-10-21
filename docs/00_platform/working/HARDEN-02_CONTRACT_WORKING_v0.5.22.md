@@ -85,7 +85,7 @@ HARDEN-02 exists to prove and harden Phase-7 delivery-pipeline governance integr
 | `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md` | MVP / Phase 7–8 boundary context |
 | `00_PLATFORM_v1.8.0.md` | Product Law; not amended by HARDEN-02 |
 | `01_DECISIONS_v1.8.0.md` | Decision / OQ register; HARDEN-02 is not an OQ |
-| `02_OPEN_WORK_v1.2.77.md` | Programme routing, FP-001 Phase 7B/7C disposition, completed proof classification, Development Entry Hard Stop and TB-001 review route |
+| `02_OPEN_WORK_v1.2.78.md` | Programme routing, FP-001 Phase 7B/7C disposition, completed proof classification, Development Entry Hard Stop and approved TB-001 contract route |
 | `03_ARCHITECTURE_v1.1.1.md` | Architecture synthesis; unchanged |
 | `04_DOMAIN_MAP_v1.2.0.md` | Domain Law including PMR ownership and `FP001_RECONCILIATION_REQUIRED` consequence |
 | `05_ROADMAP_v1.2.3.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |
@@ -96,8 +96,8 @@ HARDEN-02 exists to prove and harden Phase-7 delivery-pipeline governance integr
 
 | Source | Use |
 |---|---|
-| `working/DELIVERY_ATLAS_WORKING_v0.4.19.md` | Current derived, non-authoritative Phase-7 / proof / HH lifecycle navigation only; pinned `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` remains source-at-freeze evidence, not current navigation; does not create HARDEN-02 law |
-| `working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md` | Current FP-001 Phase 7A/7B/7C and post-Phase-7C classification status; preserves PR #67 reconciliation, PMR block and representation boundary |
+| `working/DELIVERY_ATLAS_WORKING_v0.4.20.md` | Current derived, non-authoritative Phase-7 / proof / HH lifecycle navigation only; pinned `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` remains source-at-freeze evidence, not current navigation; does not create HARDEN-02 law |
+| `working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md` | Current FP-001 Phase 7A/7B/7C and post-Phase-7C classification status; preserves PR #67 reconciliation, PMR block and representation boundary |
 | `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md` | Current certified/current Identity & Access dossier; preserves the PR #67 reconciliation block, records PR #70 durable-delivery certification, and leaves PMR representation unfrozen |
 
 ### HISTORICAL AUTHORITY / WORKING EVIDENCE
@@ -238,7 +238,7 @@ The previous Open Work v1.2.61 status left Privacy & Consent, Content & Media, a
 
 ### I-07 — Phase 7C readiness fail-closed
 
-The Phase 7C candidate could not become certified/current from its candidate review alone. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT under tracker #124 (CLOSED / COMPLETED) after PR #126 resulting-main verification. The separate post-Phase-7C Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. Development Entry Hard Stop evaluation is PASS / ALL 10 CONDITIONS SATISFIED as recorded in current Open Work v1.2.77. HARDEN-02 itself confers no implementation authority; current Open Work v1.2.77 separately records bounded Phase 8 authorisation. The sequencing rule that Phase 8 follows every applicable Development Entry Hard Stop condition is a generic historical rule and is now satisfied.
+The Phase 7C candidate could not become certified/current from its candidate review alone. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT under tracker #124 (CLOSED / COMPLETED) after PR #126 resulting-main verification. The separate post-Phase-7C Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. Development Entry Hard Stop evaluation is PASS / ALL 10 CONDITIONS SATISFIED as recorded in current Open Work v1.2.78. HARDEN-02 itself confers no implementation authority; current Open Work v1.2.78 separately records bounded Phase 8 authorisation and the approved TB-001 contract route. The sequencing rule that Phase 8 follows every applicable Development Entry Hard Stop condition is a generic historical rule and is now satisfied.
 
 ### I-08 — Proof classification timing
 
@@ -640,13 +640,13 @@ The current FP-001 Phase-7B route has completed conditional-dossier adjudication
 ```text
 ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED AS NEW_TRACER_BULLET
 REUSE_EXISTING_PROOF: NOT SELECTED
-TRACER BULLET: REQUIRED / DEFINED AS REVIEW CANDIDATE
+TRACER BULLET: REQUIRED / DEFINED
 TRACER BULLET ID: TB-001
 PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS
 ARCHITECTURAL PROOF EXECUTION: NOT STARTED
 PROOF RESULT: NOT STARTED
 PROOF CERTIFICATION: NOT STARTED
-NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
+NEXT GOVERNANCE ACTION: WELL-38 — Transition Foundation Integrity to implementation-era CI
 DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED
 PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)
 APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)
@@ -668,10 +668,10 @@ CERTIFIED HARDEN-02 EXECUTION
 → PHASE 7C FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT
 → ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED AS NEW_TRACER_BULLET
 → DEVELOPMENT ENTRY HARD STOP EVALUATION: PASS / ALL 10 CONDITIONS SATISFIED
-→ TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION: NEXT
+→ WELL-38 — Transition Foundation Integrity to implementation-era CI: NEXT
 ```
 
-This route does not authorise work on a downstream stage early. The separately certified Engineering Standards Authority Promotion preceded FP-001 reconciliation. Communications and Audit dossier promotions are complete. Successful Phase 7B reconciliation must precede Phase 7C, and proof classification follows Phase 7C. The Development Entry Hard Stop has passed. Current Open Work v1.2.77 routes TB-001 for contract review; proof execution waits for approval of the task contract.
+This route does not authorise work on a downstream stage early. The separately certified Engineering Standards Authority Promotion preceded FP-001 reconciliation. Communications and Audit dossier promotions are complete. Successful Phase 7B reconciliation must precede Phase 7C, and proof classification follows Phase 7C. The Development Entry Hard Stop has passed. Current Open Work v1.2.78 records TB-001 contract/design review as COMPLETE / PASS and the contract as CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION; proof execution waits for a separate start.
 
 Historical H02-3 evidence remains historically true for the earlier programme state. Accepted H02-3R refines only the immediate post-HARDEN-02 route by inserting the Engineering Standards supporting-authority promotion stage before FP-001 reconciliation.
 
