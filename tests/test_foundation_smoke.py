@@ -292,6 +292,8 @@ class FoundationSmokeTests(unittest.TestCase):
         self.assertIn("needs: [route, foundation-smoke, foundation-full]", workflow)
         smoke_job = workflow.split("  foundation-smoke:\n", 1)[1].split("\n  foundation-full:", 1)[0]
         self.assertNotRegex(smoke_job, r"(?m)^    if:")
+        self.assertIn("fetch-depth: 1", smoke_job)
+        self.assertNotIn("fetch-depth: 0", smoke_job)
 
 
 if __name__ == "__main__":
