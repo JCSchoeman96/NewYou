@@ -170,6 +170,47 @@ def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[
         else f"README current working routes do not match manifest routes: {missing_or_stale_manifest_routes}",
     )
 
+    atlas_section = ""
+    if "## Delivery Atlas routing" in readme:
+        atlas_section = readme.split("## Delivery Atlas routing", 1)[1]
+        atlas_section = re.split(r"(?m)^##\s+", atlas_section, maxsplit=1)[0]
+    atlas_links = re.findall(r"\[Delivery Atlas\]\(([^)\s]+)\)", atlas_section)
+    atlas_manifest_routes = [
+        Path(str(route))
+        for route in integrity_rules["graph_rules"].get("navigation_document_paths", [])
+        if Path(str(route)).name.startswith("DELIVERY_ATLAS_WORKING_")
+    ]
+    expected_atlas_links = [
+        route.relative_to("docs/00_platform").as_posix()
+        for route in atlas_manifest_routes
+        if route.is_relative_to("docs/00_platform/working")
+    ]
+    atlas_targets_resolve = True
+    for link in atlas_links:
+        route = Path(link)
+        target = (root / "docs/00_platform" / route).resolve()
+        atlas_targets_resolve = atlas_targets_resolve and (
+            not route.is_absolute()
+            and ".." not in route.parts
+            and "archive" not in route.parts
+            and target.is_relative_to(root)
+            and target.is_file()
+        )
+    atlas_route_ok = (
+        len(expected_atlas_links) == 1
+        and atlas_links == expected_atlas_links
+        and atlas_targets_resolve
+    )
+    _record_check(
+        report,
+        "smoke_delivery_atlas_route",
+        atlas_route_ok,
+        "README Delivery Atlas link resolves to the manifest current route"
+        if atlas_route_ok
+        else f"README Delivery Atlas link does not resolve to the single current manifest route: links={atlas_links}, expected={expected_atlas_links}, targets_resolve={atlas_targets_resolve}",
+        path="docs/00_platform/README.md",
+    )
+
     working_routes_valid = bool(working_routes)
     for relative in working_routes:
         route = Path("docs/00_platform") / relative

@@ -1715,7 +1715,14 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 elif label == "harden_route_stale":
                     open_work_path = _current_open_work_path(root)
                     open_work = open_work_path.read_text(encoding="utf-8")
-                    current_action = "NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION"
+                    lifecycle_match = re.search(
+                        r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
+                        open_work,
+                        re.DOTALL,
+                    )
+                    self.assertIsNotNone(lifecycle_match)
+                    lifecycle_state = json.loads(lifecycle_match.group(1))
+                    current_action = f"NEXT GOVERNANCE ACTION: {lifecycle_state['next_governance_action']}"
                     self.assertIn(current_action, open_work)
                     open_work_path.write_text(
                         open_work.replace(current_action, "NEXT GOVERNANCE ACTION: TRACER BULLET IMPLEMENTATION", 1),

@@ -71,6 +71,31 @@ class FoundationSmokeTests(unittest.TestCase):
             self.assertEqual("FAIL", report["status"])
             self.assertTrue(any("OPEN_WORK" in finding["message"] or "current route" in finding["message"] for finding in report["findings"]))
 
+    def test_smoke_rejects_stale_delivery_atlas_navigation_link(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._fixture(directory)
+            readme_path = root / "docs/00_platform/README.md"
+            readme = readme_path.read_text(encoding="utf-8")
+            current_route = current_working_relative_path(root, "DELIVERY_ATLAS_WORKING_").removeprefix(
+                "docs/00_platform/"
+            )
+            section = readme.split("## Delivery Atlas routing", 1)[1].split("\n## ", 1)[0]
+            current_link = f"[Delivery Atlas]({current_route})"
+            self.assertIn(current_link, section)
+            stale_link = "[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v9.9.9.md)"
+            readme_path.write_text(readme.replace(current_link, stale_link, 1), encoding="utf-8")
+
+            report = run_smoke_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    check["name"] == "smoke_delivery_atlas_route" and check["status"] == "FAIL"
+                    for check in report["checks"]
+                ),
+                report["checks"],
+            )
+
     def test_smoke_accepts_a_successor_with_archived_predecessor(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._fixture(directory)
@@ -206,6 +231,33 @@ class FoundationSmokeTests(unittest.TestCase):
             governance_sha = git("rev-parse", "HEAD")
             governance_decision = classify_event("pull_request", app_sha, governance_sha, str(root))
             self.assertTrue(governance_decision["foundation_full"])
+
+    def test_renamed_governance_artifact_into_application_path_routes_full(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+
+            def git(*args):
+                return subprocess.run(
+                    ["git", *args], cwd=root, check=True, capture_output=True, text=True
+                ).stdout.strip()
+
+            git("init", "--quiet")
+            git("config", "user.email", "foundation-smoke@example.invalid")
+            git("config", "user.name", "Foundation Smoke Test")
+            (root / "docs").mkdir()
+            (root / "docs/authority.md").write_text("governance evidence\n", encoding="utf-8")
+            git("add", ".")
+            git("commit", "--quiet", "-m", "baseline")
+            base_sha = git("rev-parse", "HEAD")
+
+            (root / "lib").mkdir()
+            git("mv", "docs/authority.md", "lib/authority.ex")
+            git("commit", "--quiet", "-m", "move evidence into application tree")
+            head_sha = git("rev-parse", "HEAD")
+
+            decision = classify_event("pull_request", base_sha, head_sha, str(root))
+
+            self.assertTrue(decision["foundation_full"])
 
     def test_application_only_paths_do_not_trigger_foundation_full(self):
         decision = classify_changed_paths(

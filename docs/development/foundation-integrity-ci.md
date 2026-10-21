@@ -50,7 +50,9 @@ All other paths, including Python tests under `tests/`, require Foundation
 Full. If route calculation fails, the workflow selects Full. The
 `foundation-integrity` aggregation job keeps the existing required check
 context **Foundation Integrity**: Smoke must pass, and Full must either pass or
-be skipped by the route decision.
+be skipped by the route decision. Git rename detection is disabled for path
+classification, so both the source and destination count; moving a governance
+artifact into an application root still selects Full.
 
 This ticket does not create an Elixir project or run Mix commands. The
 application path classification is the routing boundary for later governed
@@ -102,14 +104,14 @@ Ran 521 tests in 874.634s
 OK
 
 python3 -m unittest discover -s tests -p 'test_foundation_smoke.py' -v
-Ran 11 tests in 0.302s
+Ran 13 tests
 OK
 
 python3 tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
 PASS — 900 assertions, 0 findings
 
 python3 -m tools.foundation_integrity_smoke --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
-PASS — 45 assertions, 0 findings
+PASS — 46 assertions, 0 findings
 
 git diff --check HEAD
 PASS

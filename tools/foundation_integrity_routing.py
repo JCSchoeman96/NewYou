@@ -39,7 +39,7 @@ def classify_changed_paths(paths: list[str]) -> dict[str, bool]:
 def _changed_paths(event_name: str, base_sha: str, head_sha: str, cwd: str) -> list[str]:
     separator = "..." if event_name == "pull_request" else ".."
     result = subprocess.run(
-        ["git", "diff", "--name-only", f"{base_sha}{separator}{head_sha}"],
+        ["git", "diff", "--no-renames", "--name-only", f"{base_sha}{separator}{head_sha}"],
         cwd=cwd,
         capture_output=True,
         text=True,
