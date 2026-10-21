@@ -71,6 +71,36 @@ class FoundationSmokeTests(unittest.TestCase):
             self.assertEqual("FAIL", report["status"])
             self.assertTrue(any("OPEN_WORK" in finding["message"] or "current route" in finding["message"] for finding in report["findings"]))
 
+    def test_smoke_rejects_active_unmanifested_working_route_into_archive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._fixture(directory)
+            readme_path = root / "docs/00_platform/README.md"
+            readme = readme_path.read_text(encoding="utf-8")
+            section = readme.split("## Active Working Artifacts", 1)[1].split("\n## ", 1)[0]
+            active_routes = re.findall(r"(?m)^-\s+`([^`\s]+\.md)`", section)
+            current_route = next(
+                route
+                for route in active_routes
+                if Path(route).name.startswith("EXPERIENCE_DECISIONS_WORKING_")
+            )
+            self.assertTrue(current_route.startswith("working/"), current_route)
+            archived_route = f"archive/{Path(current_route).name}"
+            readme_path.write_text(
+                readme.replace(f"`{current_route}`", f"`{archived_route}`", 1),
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    check["name"] == "smoke_current_working_path" and check["status"] == "FAIL"
+                    for check in report["checks"]
+                ),
+                report["checks"],
+            )
+
     def test_smoke_rejects_stale_delivery_atlas_navigation_link(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._fixture(directory)
@@ -308,6 +338,11 @@ class FoundationSmokeTests(unittest.TestCase):
     def test_unknown_paths_fail_closed_to_foundation_full(self):
         decision = classify_changed_paths(["new-governance-surface/authority.md"])
         self.assertTrue(decision["foundation_full"])
+
+    def test_literal_backslash_filename_does_not_become_application_path(self):
+        decision = classify_changed_paths([r"lib\authority.md"])
+        self.assertTrue(decision["foundation_full"])
+        self.assertFalse(decision["application_changes"])
 
     def test_manual_dispatch_selects_full_lane(self):
         decision = classify_event("workflow_dispatch", "", "", str(ROOT))

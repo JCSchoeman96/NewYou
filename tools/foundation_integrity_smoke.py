@@ -45,7 +45,7 @@ def _active_working_routes(readme: str) -> list[str]:
         return []
     section = readme.split(marker, 1)[1]
     section = re.split(r"(?m)^##\s+", section, maxsplit=1)[0]
-    return re.findall(r"`(working/[^`\s]+\.md)`", section)
+    return re.findall(r"(?m)^\s*[-*]\s+`([^`\s]+\.md)`", section)
 
 
 def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[str, Any]:
@@ -213,10 +213,15 @@ def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[
 
     working_routes_valid = bool(working_routes)
     for relative in working_routes:
-        route = Path("docs/00_platform") / relative
+        working_relative = Path(relative)
+        route = Path("docs/00_platform") / working_relative
         target = (root / route).resolve()
         valid = (
-            "archive" not in route.parts
+            not working_relative.is_absolute()
+            and bool(working_relative.parts)
+            and working_relative.parts[0] == "working"
+            and ".." not in working_relative.parts
+            and "archive" not in working_relative.parts
             and target.is_relative_to(root)
             and target.is_file()
         )

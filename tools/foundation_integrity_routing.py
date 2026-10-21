@@ -17,8 +17,10 @@ APPLICATION_ROOTS = {"apps", "assets", "config", "lib", "priv", "test"}
 def is_application_path(path: str) -> bool:
     """Return True only for paths reserved for governed application work."""
 
-    normalized = path.replace("\\", "/").removeprefix("./").strip("/")
+    normalized = path.removeprefix("./")
     parts = PurePosixPath(normalized).parts
+    if not normalized or normalized.startswith("/") or ".." in parts:
+        return False
     return normalized in APPLICATION_FILES or bool(parts and parts[0] in APPLICATION_ROOTS)
 
 
