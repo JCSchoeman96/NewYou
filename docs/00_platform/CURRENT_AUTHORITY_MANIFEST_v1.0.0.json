@@ -99,12 +99,12 @@
     },
     {
       "document_id": "OPEN_WORK",
-      "canonical_filename": "02_OPEN_WORK_v1.2.77.md",
-      "semver": "1.2.77",
-      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
+      "canonical_filename": "02_OPEN_WORK_v1.2.78.md",
+      "semver": "1.2.78",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.78.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "083afb593ef2e073b1f3d2964637a35dd91004a7d28c2d501814ba35a767db48",
-      "superseded_version": "1.2.76",
+      "sha256": "a870e425ad3c8d1618adfc1d58d6670c05f5f7674642f567f668b36a0b0b6872",
+      "superseded_version": "1.2.77",
       "lifecycle": "current"
     }
   ],
@@ -1618,6 +1618,66 @@
       "lifecycle": "historical",
       "graph_policy": "frozen_provenance",
       "provenance_sha256": "817137641e33d9d74350e7f74a05778b3a80c0ea34e1e125dce905467c8974d2"
+    },
+    {
+      "document_id": "OPEN_WORK_V1_2_77",
+      "canonical_filename": "02_OPEN_WORK_v1.2.77.md",
+      "semver": "1.2.77",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.77.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "083afb593ef2e073b1f3d2964637a35dd91004a7d28c2d501814ba35a767db48",
+      "superseded_version": "1.2.78",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "083afb593ef2e073b1f3d2964637a35dd91004a7d28c2d501814ba35a767db48"
+    },
+    {
+      "document_id": "DELIVERY_ATLAS_V0_4_19",
+      "canonical_filename": "DELIVERY_ATLAS_WORKING_v0.4.19.md",
+      "semver": "0.4.19",
+      "repository_path": "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+      "authority_class": "DELIVERY_ATLAS_HISTORICAL",
+      "sha256": "f128e80165510e0934dd3076408b736a6cca88707226df199265715dc3f39922",
+      "superseded_version": "0.4.20",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "f128e80165510e0934dd3076408b736a6cca88707226df199265715dc3f39922"
+    },
+    {
+      "document_id": "FP001_SKELETON_V0_1_21",
+      "canonical_filename": "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+      "semver": "0.1.21",
+      "repository_path": "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+      "authority_class": "FP001_SKELETON_HISTORICAL",
+      "sha256": "f744d32468d93eab25f3ac88c4d30ef981087ce22b4b75675f9ded38b3916c3b",
+      "superseded_version": "0.1.22",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "f744d32468d93eab25f3ac88c4d30ef981087ce22b4b75675f9ded38b3916c3b"
+    },
+    {
+      "document_id": "HARDEN_02_V0_5_21",
+      "canonical_filename": "HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+      "semver": "0.5.21",
+      "repository_path": "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+      "authority_class": "HARDEN_02_HISTORICAL",
+      "sha256": "1549525632055bb8a44b905e9bac32a32901f84e17b0358579751d3ad6458096",
+      "superseded_version": "0.5.22",
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "1549525632055bb8a44b905e9bac32a32901f84e17b0358579751d3ad6458096"
+    },
+    {
+      "document_id": "FP001_PHASE8_PROOF_CONTRACT_V0_1_2_REVIEWED_CANDIDATE",
+      "canonical_filename": "FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
+      "semver": "0.1.2",
+      "repository_path": "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
+      "authority_class": "FP001_PHASE8_PROOF_CONTRACT_HISTORICAL",
+      "sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
+      "superseded_version": null,
+      "lifecycle": "historical",
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836"
     }
   ],
   "integrity_rules": {
@@ -1801,18 +1861,18 @@
         "FRONTEND_EXPERIENCE_SYSTEM"
       ],
       "navigation_document_paths": [
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md",
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
         "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md",
         "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
         "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
       ],
       "stale_open_work_v1_2_44_guard_note": "The exact 02_OPEN_WORK_v1.2.44.md stale-path pattern rejects unarchived references in active navigation documents. This is a routing guard only; it does not prove lifecycle or policy semantics.",
-      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52/v1.2.53/v1.2.54/v1.2.55, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4/v0.3.5/v0.3.6/v0.3.7, HARDEN-02 status v0.4.2/v0.4.6/v0.4.7/v0.4.8/v0.4.9, Engineering Standards candidate v1.0.0, Identity dossier v0.1.2 and FP-001 reconciliation candidates v0.1.2/v0.1.1 are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records. The immediate PR #77/Open Work v1.2.57, Atlas v0.3.9, HARDEN-02 v0.5.1 and FP-001 Skeleton v0.1.3 predecessors are also archive-qualified only. The immediate PR #81/Open Work v1.2.58, Atlas v0.4.0, HARDEN-02 v0.5.2 and FP-001 Skeleton v0.1.4 predecessors are also archive-qualified only. OPS-UPD-004 was completed by merged PR #112 on main 3f09bc91199e74d27645ebbb37d45c4831340952, routing current Product v1.7.0, Decisions v1.7.0, Open Work v1.2.60, Roadmap v1.2.1, Atlas v0.4.2 and HARDEN-02 v0.5.4; their immediate predecessors are archive-qualified only. The OPS-UPD-002 candidate routes Product v1.8.0, Decisions v1.8.0, Open Work v1.2.61, Roadmap v1.2.2, Atlas v0.4.3 and HARDEN-02 v0.5.5; direct predecessors Product v1.7.0, Decisions v1.7.0, Open Work v1.2.60, Roadmap v1.2.1, Atlas v0.4.2 and HARDEN-02 v0.5.4 are archive-qualified only. The Phase 7B adjudication successor routes Open Work v1.2.62, Atlas v0.4.4, FP-001 Skeleton v0.1.6 and HARDEN-02 v0.5.6; their immediate predecessors Open Work v1.2.61, Atlas v0.4.3, FP-001 Skeleton v0.1.5 and HARDEN-02 v0.5.5 are archive-qualified only. The FP-001 Audit dossier work-start successor routes Open Work v1.2.63, Delivery Atlas v0.4.5, FP-001 Skeleton v0.1.7 and HARDEN-02 v0.5.7; their immediate predecessors Open Work v1.2.62, Atlas v0.4.4, FP-001 Skeleton v0.1.6 and HARDEN-02 v0.5.6 are archive-qualified only. The FP-001 Audit candidate-review successor routes Open Work v1.2.64, Delivery Atlas v0.4.6, FP-001 Skeleton v0.1.8 and HARDEN-02 v0.5.8; immediate predecessors Open Work v1.2.63, Atlas v0.4.5, Skeleton v0.1.7 and HARDEN-02 v0.5.7 are archive-qualified only. The separate PR #119 Audit v0.1.0 current-status promotion routes Open Work v1.2.65, Atlas v0.4.7, FP-001 Skeleton v0.1.9 and HARDEN-02 v0.5.9. Their immediate predecessors Open Work v1.2.64, Atlas v0.4.6, Skeleton v0.1.8 and HARDEN-02 v0.5.8 are archive-qualified only; the exact PR #118 candidate is pinned as historical certification evidence and is not current governing-root authority. The v1.2.66 candidate-routing predecessor recorded Open Work v1.2.66, Atlas v0.4.8, Skeleton v0.1.10 and HARDEN-02 v0.5.10; direct predecessors Open Work v1.2.65, Atlas v0.4.7, Skeleton v0.1.9 and HARDEN-02 v0.5.9 are archive-qualified only. The FP-001 Phase 7B reconciliation certification/current-status successor routes Open Work v1.2.67, Delivery Atlas v0.4.9, FP-001 Skeleton v0.1.11 and HARDEN-02 v0.5.11. Their direct predecessors Open Work v1.2.66, Atlas v0.4.8, Skeleton v0.1.10 and HARDEN-02 v0.5.10 are accepted only at their archive paths; unqualified predecessor references fail in current navigation. The PR #122 tracker-closure successor routes current Open Work v1.2.68, Atlas v0.4.10, Skeleton v0.1.12 and HARDEN-02 v0.5.12; their immediate predecessors Open Work v1.2.67, Atlas v0.4.9, Skeleton v0.1.11 and HARDEN-02 v0.5.11 are archive-qualified only. The separate Phase 7C status successor routes Open Work v1.2.70, Atlas v0.4.12, Skeleton v0.1.14 and HARDEN-02 v0.5.14; their direct predecessors Open Work v1.2.69, Atlas v0.4.11, Skeleton v0.1.13 and HARDEN-02 v0.5.13 are archive-qualified only in current routing. The PR #125 candidate is pinned as immutable certification evidence; the Final Feature Pack Contract remains a lower-level working artifact. The PR #126 resulting-main verification and tracker-closure successor routes current Open Work v1.2.71, Atlas v0.4.13, FP-001 Skeleton v0.1.15 and HARDEN-02 v0.5.15; direct predecessors Open Work v1.2.70, Atlas v0.4.12, Skeleton v0.1.14 and HARDEN-02 v0.5.14 are archive-qualified only. The Roadmap proof-classification timing successor routes Roadmap v1.2.3 and current Open Work v1.2.72, Atlas v0.4.14, FP-001 Skeleton v0.1.16 and HARDEN-02 v0.5.16; direct predecessors Open Work v1.2.71, Atlas v0.4.13, Skeleton v0.1.15, HARDEN-02 v0.5.15 and Roadmap v1.2.2 remain archive-qualified only. The Roadmap v1.2.2 immediate predecessor is archive-qualified only. The FP-001 classification status successor routes Open Work v1.2.73, Delivery Atlas v0.4.15, Skeleton v0.1.17 and HARDEN-02 v0.5.17; direct predecessors Open Work v1.2.72, Atlas v0.4.14, Skeleton v0.1.16 and HARDEN-02 v0.5.16 are archive-qualified only. The Development Entry Hard Stop PASS successor routes Open Work v1.2.74, Atlas v0.4.16, Skeleton v0.1.18 and HARDEN-02 v0.5.18; direct predecessors Open Work v1.2.73, Atlas v0.4.15, Skeleton v0.1.17 and HARDEN-02 v0.5.17 are archive-qualified only. The initial WELL-2 TB-001 candidate route used Open Work v1.2.75, Atlas v0.4.17, FP-001 Skeleton v0.1.19 and HARDEN-02 v0.5.19; those route predecessors and the v0.1.0 proof-contract candidate are archive-qualified only. The v1.2.76, v0.4.18, v0.1.20 and v0.5.20 route artifacts, plus proof-contract candidate v0.1.1, are archive-qualified predecessors. Current WELL-2 routing uses Open Work v1.2.77, Atlas v0.4.19, FP-001 Skeleton v0.1.21, HARDEN-02 v0.5.21 and proof-contract candidate v0.1.2.",
+      "stale_predecessor_current_path_guard_note": "Unqualified predecessor Open Work v1.2.48/v1.2.52/v1.2.53/v1.2.54/v1.2.55, Roadmap v1.1.4, Atlas v0.3.0/v0.3.4/v0.3.5/v0.3.6/v0.3.7, HARDEN-02 status v0.4.2/v0.4.6/v0.4.7/v0.4.8/v0.4.9, Engineering Standards candidate v1.0.0, Identity dossier v0.1.2 and FP-001 reconciliation candidates v0.1.2/v0.1.1 are rejected in active navigation. Archive-qualified predecessor references remain valid; Atlas and HARDEN status artifacts remain outside authority-document records. The immediate PR #77/Open Work v1.2.57, Atlas v0.3.9, HARDEN-02 v0.5.1 and FP-001 Skeleton v0.1.3 predecessors are also archive-qualified only. The immediate PR #81/Open Work v1.2.58, Atlas v0.4.0, HARDEN-02 v0.5.2 and FP-001 Skeleton v0.1.4 predecessors are also archive-qualified only. OPS-UPD-004 was completed by merged PR #112 on main 3f09bc91199e74d27645ebbb37d45c4831340952, routing current Product v1.7.0, Decisions v1.7.0, Open Work v1.2.60, Roadmap v1.2.1, Atlas v0.4.2 and HARDEN-02 v0.5.4; their immediate predecessors are archive-qualified only. The OPS-UPD-002 candidate routes Product v1.8.0, Decisions v1.8.0, Open Work v1.2.61, Roadmap v1.2.2, Atlas v0.4.3 and HARDEN-02 v0.5.5; direct predecessors Product v1.7.0, Decisions v1.7.0, Open Work v1.2.60, Roadmap v1.2.1, Atlas v0.4.2 and HARDEN-02 v0.5.4 are archive-qualified only. The Phase 7B adjudication successor routes Open Work v1.2.62, Atlas v0.4.4, FP-001 Skeleton v0.1.6 and HARDEN-02 v0.5.6; their immediate predecessors Open Work v1.2.61, Atlas v0.4.3, FP-001 Skeleton v0.1.5 and HARDEN-02 v0.5.5 are archive-qualified only. The FP-001 Audit dossier work-start successor routes Open Work v1.2.63, Delivery Atlas v0.4.5, FP-001 Skeleton v0.1.7 and HARDEN-02 v0.5.7; their immediate predecessors Open Work v1.2.62, Atlas v0.4.4, FP-001 Skeleton v0.1.6 and HARDEN-02 v0.5.6 are archive-qualified only. The FP-001 Audit candidate-review successor routes Open Work v1.2.64, Delivery Atlas v0.4.6, FP-001 Skeleton v0.1.8 and HARDEN-02 v0.5.8; immediate predecessors Open Work v1.2.63, Atlas v0.4.5, Skeleton v0.1.7 and HARDEN-02 v0.5.7 are archive-qualified only. The separate PR #119 Audit v0.1.0 current-status promotion routes Open Work v1.2.65, Atlas v0.4.7, FP-001 Skeleton v0.1.9 and HARDEN-02 v0.5.9. Their immediate predecessors Open Work v1.2.64, Atlas v0.4.6, Skeleton v0.1.8 and HARDEN-02 v0.5.8 are archive-qualified only; the exact PR #118 candidate is pinned as historical certification evidence and is not current governing-root authority. The v1.2.66 candidate-routing predecessor recorded Open Work v1.2.66, Atlas v0.4.8, Skeleton v0.1.10 and HARDEN-02 v0.5.10; direct predecessors Open Work v1.2.65, Atlas v0.4.7, Skeleton v0.1.9 and HARDEN-02 v0.5.9 are archive-qualified only. The FP-001 Phase 7B reconciliation certification/current-status successor routes Open Work v1.2.67, Delivery Atlas v0.4.9, FP-001 Skeleton v0.1.11 and HARDEN-02 v0.5.11. Their direct predecessors Open Work v1.2.66, Atlas v0.4.8, Skeleton v0.1.10 and HARDEN-02 v0.5.10 are accepted only at their archive paths; unqualified predecessor references fail in current navigation. The PR #122 tracker-closure successor routes current Open Work v1.2.68, Atlas v0.4.10, Skeleton v0.1.12 and HARDEN-02 v0.5.12; their immediate predecessors Open Work v1.2.67, Atlas v0.4.9, Skeleton v0.1.11 and HARDEN-02 v0.5.11 are archive-qualified only. The separate Phase 7C status successor routes Open Work v1.2.70, Atlas v0.4.12, Skeleton v0.1.14 and HARDEN-02 v0.5.14; their direct predecessors Open Work v1.2.69, Atlas v0.4.11, Skeleton v0.1.13 and HARDEN-02 v0.5.13 are archive-qualified only in current routing. The PR #125 candidate is pinned as immutable certification evidence; the Final Feature Pack Contract remains a lower-level working artifact. The PR #126 resulting-main verification and tracker-closure successor routes current Open Work v1.2.71, Atlas v0.4.13, FP-001 Skeleton v0.1.15 and HARDEN-02 v0.5.15; direct predecessors Open Work v1.2.70, Atlas v0.4.12, Skeleton v0.1.14 and HARDEN-02 v0.5.14 are archive-qualified only. The Roadmap proof-classification timing successor routes Roadmap v1.2.3 and current Open Work v1.2.72, Atlas v0.4.14, FP-001 Skeleton v0.1.16 and HARDEN-02 v0.5.16; direct predecessors Open Work v1.2.71, Atlas v0.4.13, Skeleton v0.1.15, HARDEN-02 v0.5.15 and Roadmap v1.2.2 remain archive-qualified only. The Roadmap v1.2.2 immediate predecessor is archive-qualified only. The FP-001 classification status successor routes Open Work v1.2.73, Delivery Atlas v0.4.15, Skeleton v0.1.17 and HARDEN-02 v0.5.17; direct predecessors Open Work v1.2.72, Atlas v0.4.14, Skeleton v0.1.16 and HARDEN-02 v0.5.16 are archive-qualified only. The Development Entry Hard Stop PASS successor routes Open Work v1.2.74, Atlas v0.4.16, Skeleton v0.1.18 and HARDEN-02 v0.5.18; direct predecessors Open Work v1.2.73, Atlas v0.4.15, Skeleton v0.1.17 and HARDEN-02 v0.5.17 are archive-qualified only. The initial WELL-2 TB-001 candidate route used Open Work v1.2.75, Atlas v0.4.17, FP-001 Skeleton v0.1.19 and HARDEN-02 v0.5.19; those route predecessors and the v0.1.0 proof-contract candidate are archive-qualified only. The v1.2.76, v0.4.18, v0.1.20 and v0.5.20 route artifacts, plus proof-contract candidate v0.1.1, are archive-qualified predecessors. Current WELL-2 routing uses Open Work v1.2.78, Atlas v0.4.20, FP-001 Skeleton v0.1.22, HARDEN-02 v0.5.22 and approved proof contract v0.1.2; its exact reviewed candidate is preserved at the archive path.",
       "retired_current_predecessor_paths": [
         "docs/00_platform/02_OPEN_WORK_v1.2.69.md",
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.11.md",
@@ -1848,7 +1908,11 @@
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.18.md",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md",
         "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.20.md",
-        "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md"
+        "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md",
+        "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
       ],
       "phase7c_candidate_path_note": "The exact PR #125 candidate is preserved as immutable historical certification evidence at docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md. The current lower-level Final Feature Pack Contract status route remains at docs/00_platform/working/; it is not a new governing-root authority entry. The four direct routing predecessors are archive-qualified only. The PR #126 resulting-main verification and tracker-closure successor routes current Open Work v1.2.71, Atlas v0.4.13, Skeleton v0.1.15 and HARDEN-02 v0.5.15. The Roadmap proof-classification timing successor routes current Open Work v1.2.72, Atlas v0.4.14, Skeleton v0.1.16 and HARDEN-02 v0.5.16; direct predecessors are archived byte-identically."
     },
@@ -2291,10 +2355,10 @@
       "application_implementation": "AUTHORISED",
       "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
       "current_paths": {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.78.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md",
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
       },
       "predecessor_archives_sha256": {
@@ -2345,7 +2409,7 @@
         "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md": "0f7da7407ddd2b1c57e6eb72843f963ad0486a82022b943910501e8fca541ea9",
         "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md": "bf7e75f74267957cb4f9da6851ce0c0d9b56fee8aa806009b86efe6fb2c0192d"
       },
-      "current_route_status_successor_version": "1.2.77 / 0.4.19 / 0.1.21 / 0.5.21",
+      "current_route_status_successor_version": "1.2.78 / 0.4.20 / 0.1.22 / 0.5.22",
       "classification_status": "COMPLETE / FINALISED",
       "architectural_proof_classification_status": "COMPLETE / FINALISED",
       "architectural_proof_requirement": "NEW_TRACER_BULLET",
@@ -2366,10 +2430,10 @@
       "phase7c_contract_path": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
       "phase7c_contract_sha256": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
       "current_routes": {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.78.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md"
       },
       "protected_upstream_authority_sha256": {
         "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md": "249f5985ff1e8971e1ac4437e4bbebd5a3db9254ab25a2238e135cb7a7ae5f4b",
@@ -2422,10 +2486,10 @@
         "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md": "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f"
       },
       "current_route_sha256": {
-        "docs/00_platform/02_OPEN_WORK_v1.2.77.md": "083afb593ef2e073b1f3d2964637a35dd91004a7d28c2d501814ba35a767db48",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md": "f128e80165510e0934dd3076408b736a6cca88707226df199265715dc3f39922",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md": "f744d32468d93eab25f3ac88c4d30ef981087ce22b4b75675f9ded38b3916c3b",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md": "1549525632055bb8a44b905e9bac32a32901f84e17b0358579751d3ad6458096",
+        "docs/00_platform/02_OPEN_WORK_v1.2.78.md": "a870e425ad3c8d1618adfc1d58d6670c05f5f7674642f567f668b36a0b0b6872",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md": "d47b457e365f94b8b674a2a4066f81caf01d5e5921ee1ea2026c6c69f884528b",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": "f29c27a0515a562cf97f7f37fb28c582f9069d66eb9feaa86fee5dfd332a27db",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": "09e15aade93ad9614ae9e8f656a63699a2a042d50d60421a7544f9debc20fd62",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2"
       },
       "candidate_contract_path": "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
@@ -2475,7 +2539,7 @@
       "candidate_path": "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
       "candidate_relative_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
       "candidate_version": "0.1.2",
-      "candidate_lifecycle": "CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
+      "candidate_lifecycle": "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
       "tracer_bullet_id": "TB-001",
       "id_allocation_authority": "Open Work v1.2.74 §§7, 9 and 12.30: Phase 8 uses TB-nnn for materially unproven paths; the prior promotion deferred the identifier and routed contract/task definition next. WELL-2 is that definition stage; Atlas lifecycle does not allocate IDs.",
       "candidate_base_main_sha": "0972864ef7f4638c96198e19a13977e0151e9726",
@@ -2484,21 +2548,21 @@
       "proof_result": "NOT STARTED",
       "proof_certification": "NOT STARTED",
       "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-      "phase8_execution_gate": "WAITING FOR CONTRACT APPROVAL AND A SEPARATE EXECUTION START",
+      "phase8_execution_gate": "WAITING FOR A SEPARATE EXECUTION START",
       "current_routes": {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.78.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md",
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
       },
       "current_route_sha256": {
-        "docs/00_platform/02_OPEN_WORK_v1.2.77.md": "083afb593ef2e073b1f3d2964637a35dd91004a7d28c2d501814ba35a767db48",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md": "f128e80165510e0934dd3076408b736a6cca88707226df199265715dc3f39922",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md": "f744d32468d93eab25f3ac88c4d30ef981087ce22b4b75675f9ded38b3916c3b",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md": "1549525632055bb8a44b905e9bac32a32901f84e17b0358579751d3ad6458096",
+        "docs/00_platform/02_OPEN_WORK_v1.2.78.md": "a870e425ad3c8d1618adfc1d58d6670c05f5f7674642f567f668b36a0b0b6872",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md": "d47b457e365f94b8b674a2a4066f81caf01d5e5921ee1ea2026c6c69f884528b",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": "f29c27a0515a562cf97f7f37fb28c582f9069d66eb9feaa86fee5dfd332a27db",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": "09e15aade93ad9614ae9e8f656a63699a2a042d50d60421a7544f9debc20fd62",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
-        "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836"
+        "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "2015acaac8f8aecbeeb654c21cc378f231df1c857d18a8eb9cc2eb1ca33dd239"
       },
       "candidate_sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
       "predecessor_archives_sha256": {
@@ -2515,7 +2579,11 @@
         "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.18.md": "e1c440dc0dab6a0faa3e1179de75dfe07b3c5c391c8ef0a84d14b4a6d99f302b",
         "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md": "d3fd678e8eef6ac43109f294ed811587e323d3d2ff555459eb47e9c8324087f1",
         "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.20.md": "d36133b08b496dd6c000c1e96ff5e78a352c4376e784efd2b3cab9838c710f31",
-        "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md": "817137641e33d9d74350e7f74a05778b3a80c0ea34e1e125dce905467c8974d2"
+        "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md": "817137641e33d9d74350e7f74a05778b3a80c0ea34e1e125dce905467c8974d2",
+        "docs/00_platform/archive/02_OPEN_WORK_v1.2.77.md": "083afb593ef2e073b1f3d2964637a35dd91004a7d28c2d501814ba35a767db48",
+        "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.19.md": "f128e80165510e0934dd3076408b736a6cca88707226df199265715dc3f39922",
+        "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md": "f744d32468d93eab25f3ac88c4d30ef981087ce22b4b75675f9ded38b3916c3b",
+        "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.21.md": "1549525632055bb8a44b905e9bac32a32901f84e17b0358579751d3ad6458096"
       },
       "frozen_source_sha256": {
         "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md": "249f5985ff1e8971e1ac4437e4bbebd5a3db9254ab25a2238e135cb7a7ae5f4b",
@@ -2531,7 +2599,16 @@
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
         "docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md": "8c02f367c97b3b9f977eb1572e2af0bd29ee87112215989180ed1bd90d0fdd7f"
       },
-      "application_source_paths_created": []
+      "application_source_paths_created": [],
+      "contract_design_review": "COMPLETE / PASS",
+      "reviewed_candidate_head_sha": "5486c94c1b659dfeb026dcbe6abf91978655c535",
+      "reviewed_candidate_review": "INDEPENDENT REVIEW PASS",
+      "candidate_merge_sha": "4234965c8da20dbb4ef0a7128614a5070244619a",
+      "candidate_exact_head_ci_run": 39484403424,
+      "resulting_main_ci_run": 39487861172,
+      "reviewed_candidate_archive_path": "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
+      "reviewed_candidate_archive_sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
+      "current_contract_sha256": "2015acaac8f8aecbeeb654c21cc378f231df1c857d18a8eb9cc2eb1ca33dd239"
     }
   }
 }

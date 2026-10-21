@@ -4,15 +4,17 @@
 - **Tracer Bullet:** `TB-001`
 - **Artifact version:** `v0.1.2`
 - **Candidate base main SHA:** `0972864ef7f4638c96198e19a13977e0151e9726`
-- **Lifecycle:** `CANDIDATE / REVIEW PENDING / NOT CERTIFIED`
+- **Lifecycle:** `CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION`
 - **Proof design:** FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS
+- **Contract/design review:** COMPLETE / PASS
 - **Proof execution:** NOT STARTED
 - **Proof certification:** NOT STARTED
 - **Phase 9 / Vertical Slices:** NOT STARTED / NOT AUTHORISED
 - **Authority class:** active working proof contract; derived under current authority; not Product, Architecture, Domain or Roadmap law
-- **Candidate predecessor:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md` (direct predecessor; preserved byte-identically)
+- **Design predecessor:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md` (direct predecessor; preserved byte-identically)
+- **Reviewed candidate:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` (exact PR #132 candidate; preserved byte-identically)
 
-This contract records the already-approved Phase 8 proof design for the materially unproven FP-001 authentication and durable-consequence path. `TB-001` is assigned at this routed task-definition stage: the route entering WELL-2, preserved at `archive/02_OPEN_WORK_v1.2.74.md`, uses `TB-nnn` for Phase 8 proof of materially unproven paths, places proof contract/task definition next, and records in §12.30 that no identifier was allocated in that prior promotion. WELL-2 performs that next definition action, and current Open Work v1.2.77 routes the successor candidate for TB-001 contract review. Atlas's Tracer Bullet lifecycle defines the proof boundary but explicitly does not create a contract, task or identifier; this separate routed task definition does. This is the first governed TB task in the repository. WELL-1's accepted Grill comments establish the source decisions; they did not allocate this identifier. The identifier and contract remain a candidate until independent review and the repository's approval gate complete. This v0.1.2 successor corrects the authority order and strengthens the governance checks for Q61/Q66, the Q28–Q56 implementation and verification conditions, and Q79 machine-readable evidence. It preserves v0.1.1 as its direct predecessor and retains the archived v0.1.0 history.
+This contract records the already-approved Phase 8 proof design for the materially unproven FP-001 authentication and durable-consequence path. `TB-001` is assigned at this routed task-definition stage: the route entering WELL-2, preserved at `archive/02_OPEN_WORK_v1.2.74.md`, uses `TB-nnn` for Phase 8 proof of materially unproven paths, places proof contract/task definition next, and records in §12.30 that no identifier was allocated in that prior promotion. WELL-2 performs that next definition action, and current Open Work v1.2.78 records the review-complete status route for the approved TB-001 contract. Atlas's Tracer Bullet lifecycle defines the proof boundary but explicitly does not create a contract, task or identifier; this separate routed task definition does. This is the first governed TB task in the repository. WELL-1's accepted Grill comments establish the source decisions; they did not allocate this identifier. Contract/design review is COMPLETE / PASS. The contract is current only after this status successor merges; approval does not certify architectural proof. This v0.1.2 successor corrects the authority order and strengthens the governance checks for Q61/Q66, the Q28–Q56 implementation and verification conditions, and Q79 machine-readable evidence. It preserves v0.1.1 as its direct predecessor and retains the archived v0.1.0 history.
 
 No application, proof harness, database, migration, dependency, provider integration, Phase 9 work or additional Plane ticket is created by this contract-authoring change.
 
@@ -186,13 +188,13 @@ Where a scenario claims concurrency, use separate genuine PostgreSQL transaction
 
 The required architecture is all-or-nothing for its invariants. A failure to preserve required PostgreSQL atomicity, identity ownership, must-not-lose consequences, E1/E2 acceptance, safe provider ambiguity or current authority is `BLOCKED / STOP`. It is not technical debt, a weighted pass, permission to weaken an invariant or a reason to start Phase 9.
 
-The proof result must report each required scenario as pass or fail with its durable evidence. Unrun, flaky, mocked in place of a required real boundary, or otherwise unproven evidence is not a pass. Proof execution and proof certification remain separate lifecycle gates. This contract candidate records neither a proof result nor a proof certification.
+The proof result must report each required scenario as pass or fail with its durable evidence. Unrun, flaky, mocked in place of a required real boundary, or otherwise unproven evidence is not a pass. Proof execution and proof certification remain separate lifecycle gates. This approved contract records neither a proof result nor proof certification.
 
 If evidence reveals an upstream contradiction, stop at the authority that owns it. Recommend the smallest safe amendment and re-proof consequence. Do not revise the locked design here to make a failing implementation pass.
 
 ## 10. Task boundary and completion gate
 
-This candidate defines one outcome, exact scope, current authoritative references, Resources, actions, data/transaction boundaries, security/privacy constraints, concurrency, async, tests, acceptance criteria, allowed tools and STOP conditions required by the Phase 8 task route.
+This contract defines one outcome, exact scope, current authoritative references, Resources, actions, data/transaction boundaries, security/privacy constraints, concurrency, async, tests, acceptance criteria, allowed tools and STOP conditions required by the Phase 8 task route.
 
 After independent review and approval, a separate execution start may implement only the bounded proof. The coding task must use the `NewYou`/`NewYouWeb` modular Phoenix/Ash application, one repo and the Resources listed in §§4–6; it must follow the foundation and verification decisions in §§7.2–7.3, and provide the deterministic proof entrypoint and nine scenario families above, plus the minimal browser spine. Proof execution must stop at the first unsatisfied invariant. Only a later evidence review may certify proof. Only a separate governed transition after certified proof can consider Phase 9.
 
@@ -210,11 +212,18 @@ The governing Open Work, Atlas, Skeleton and HARDEN-02 documents use their estab
 PROOF CLASSIFICATION: COMPLETE / FINALISED — NEW_TRACER_BULLET
 TRACER BULLET: REQUIRED / DEFINED AS REVIEW CANDIDATE
 TRACER BULLET ID: TB-001
-CONTRACT: CANDIDATE / REVIEW PENDING / NOT CERTIFIED
+CONTRACT: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION
 PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS
 PROOF EXECUTION: NOT STARTED
 PROOF RESULT: NOT STARTED
 PROOF CERTIFICATION: NOT STARTED
-PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY); EXECUTION WAITS FOR CONTRACT APPROVAL
+PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY); CONTRACT APPROVED; EXECUTION WAITS FOR A SEPARATE START
 PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
 ```
+
+
+## 13. Contract review and current-status promotion record
+
+Contract/design review is COMPLETE / PASS for the exact PR #132 head `5486c94c1b659dfeb026dcbe6abf91978655c535`. PR #132 merged that reviewed candidate unchanged as `4234965c8da20dbb4ef0a7128614a5070244619a`; the merge tree matches the independently reviewed candidate tree. Exact-head Foundation Integrity run [39484403424](https://github.com/JCSchoeman96/NewYou/actions/runs/39484403424) passed with 508 tests, 900 checks and no findings. Resulting-main Foundation Integrity run [39487861172](https://github.com/JCSchoeman96/NewYou/actions/runs/39487861172) passed.
+
+This current-status successor approves the frozen v0.1.2 contract for bounded Phase 8 proof execution. It does not certify architectural proof. PROOF EXECUTION, PROOF RESULT and PROOF CERTIFICATION remain NOT STARTED. A separate execution start is required. Phase 9 / Vertical Slices remain NOT STARTED / NOT AUTHORISED. This status change does not alter the design or any implementation decision.

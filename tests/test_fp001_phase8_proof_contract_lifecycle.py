@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 import shutil
 import tempfile
+import hashlib
 from pathlib import Path
 
 from tools.foundation_integrity_audit import (
@@ -17,16 +18,18 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
 CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-OPEN_WORK_STATUS_SNAPSHOT = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
+OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.78.md"
+HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
 
 
 class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
-    def test_contract_is_a_review_candidate_and_does_not_claim_executed_proof(self):
+    def test_contract_is_approved_without_claiming_executed_or_certified_proof(self):
         self.assertTrue(CONTRACT.is_file(), "the governed Phase 8 task contract is missing")
         text = CONTRACT.read_text(encoding="utf-8")
         for token in (
             "TB-001",
-            "CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
+            "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+            "**Contract/design review:** COMPLETE / PASS",
             "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
             "PROOF EXECUTION: NOT STARTED",
             "PROOF RESULT: NOT STARTED",
@@ -38,6 +41,11 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertNotIn("mix fp001.proof", text)
         self.assertNotIn("lib/new_you/", text)
         self.assertNotIn("test/fp001/proof/", text)
+        reviewed_candidate = ROOT / "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+        self.assertEqual(
+            "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
+            hashlib.sha256(reviewed_candidate.read_bytes()).hexdigest(),
+        )
 
     def test_contract_preserves_the_locked_architecture_and_mandatory_proof_families(self):
         self.assertTrue(CONTRACT.is_file(), "the governed Phase 8 task contract is missing")
@@ -202,14 +210,25 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
                     "Foundation Integrity accepted a contract with a locked decision removed",
                 )
 
-    def test_historical_open_work_status_routes_to_review_without_advancing_proof_or_phase9(self):
-        # This checks the certified v1.2.77 transition snapshot, regardless of
-        # whether a later successor has archived it.
-        self.assertTrue(OPEN_WORK_STATUS_SNAPSHOT.is_file(), "the Open Work status snapshot is missing")
-        text = OPEN_WORK_STATUS_SNAPSHOT.read_text(encoding="utf-8")
-        self.assertIn('"status_successor_version": "1.2.77"', text)
+    def test_open_work_routes_to_well38_without_advancing_proof_or_phase9(self):
+        self.assertTrue(OPEN_WORK.is_file(), "the Open Work status successor is missing")
+        text = OPEN_WORK.read_text(encoding="utf-8")
+        self.assertIn('"status_successor_version": "1.2.78"', text)
+        self.assertIn('"status_successor_base_sha": "4234965c8da20dbb4ef0a7128614a5070244619a"', text)
         self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", text)
         self.assertIn("TB-001", text)
+        self.assertIn("CONTRACT/DESIGN REVIEW: COMPLETE / PASS", text)
+        self.assertIn("CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", text)
+        self.assertIn("PROOF EXECUTION: NOT STARTED", text)
+        self.assertIn("PROOF CERTIFICATION: NOT STARTED", text)
+        self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
+        self.assertIn("NEXT GOVERNANCE ACTION: WELL-38 — Transition Foundation Integrity to implementation-era CI", text)
+
+    def test_archived_open_work_preserves_the_review_candidate_status(self):
+        self.assertTrue(HISTORICAL_OPEN_WORK.is_file(), "the historical Open Work status snapshot is missing")
+        text = HISTORICAL_OPEN_WORK.read_text(encoding="utf-8")
+        self.assertIn('"status_successor_version": "1.2.77"', text)
+        self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", text)
         self.assertIn("PROOF EXECUTION: NOT STARTED", text)
         self.assertIn("PROOF CERTIFICATION: NOT STARTED", text)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
