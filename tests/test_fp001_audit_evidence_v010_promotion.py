@@ -5,6 +5,11 @@ import subprocess
 import unittest
 from pathlib import Path
 
+from tests.foundation_test_support import (
+    current_document_path,
+    current_working_path,
+)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -164,26 +169,32 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
         self.assertNotIn("PHASE 7B RECONCILIATION: COMPLETE", self.open_work)
 
     def test_routing_successors_and_manifest_agree(self):
-        for version in ("v1.2.77", "v0.4.19", "v0.1.21", "v0.5.21", "v0.1.4", "v0.1.0"):
-            with self.subTest(version=version):
-                self.assertIn(version, self.readme)
+        current_routes = (
+            current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_"),
+            current_working_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_"),
+            current_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_"),
+            current_working_path(ROOT, "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_"),
+            current_working_path(ROOT, "FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_"),
+        )
+        current_open_work = current_document_path(ROOT, "OPEN_WORK")
+        self.assertIn(current_open_work.relative_to(ROOT / "docs/00_platform").as_posix(), self.readme)
+        for route in current_routes:
+            with self.subTest(route=route):
+                path = route.relative_to(ROOT / "docs/00_platform").as_posix()
+                self.assertIn(path, self.readme)
         self.assertIn("FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md", self.readme)
         audit_route = "working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
         for artifact in (self.atlas, self.skeleton, self.harden):
             with self.subTest(artifact=artifact[:40]):
                 self.assertIn(audit_route, artifact)
         open_work = next(row for row in self.manifest["governing_documents"] if row["document_id"] == "OPEN_WORK")
-        self.assertEqual("1.2.77", open_work["semver"])
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.77.md", open_work["repository_path"])
+        current_open_work = current_document_path(ROOT, "OPEN_WORK")
+        self.assertEqual(current_open_work.name, open_work["canonical_filename"])
+        self.assertEqual(current_open_work.relative_to(ROOT).as_posix(), open_work["repository_path"])
         navigation = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
-        for path in (
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
-            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
-            "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
-            "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+        for path in [route.relative_to(ROOT).as_posix() for route in current_routes] + [
             "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
-        ):
+        ]:
             self.assertIn(path, navigation)
         historical = json.dumps(self.manifest["historical_documents"])
         self.assertIn("FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md", historical)

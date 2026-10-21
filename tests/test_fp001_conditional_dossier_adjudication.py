@@ -204,6 +204,12 @@ class FP001ConditionalDossierAdjudicationTests(unittest.TestCase):
         allowed = lambda path: (
             path.startswith("docs/00_platform/")
             or path == "tools/foundation_integrity_audit.py"
+            or path in {
+                "tools/foundation_integrity_routing.py",
+                "tools/foundation_integrity_smoke.py",
+                "docs/development/foundation-integrity-ci.md",
+                "docs/development/github-branch-governance.md",
+            }
             or path.startswith("tests/")
             or path == ".github/workflows/foundation-integrity.yml"
         )

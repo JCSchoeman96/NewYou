@@ -10,6 +10,7 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
+from foundation_test_support import current_document_path, current_working_path, historical_snapshot_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +19,7 @@ BASE_MAIN = "24a9ad925ee1ab6d75ddb44bae6df0b4f3d09bca"
 PR126_MAIN = "69bef7bb2782cbff00a48505504ebd2686eb53d9"
 REVIEWED_HEAD = "e7d5d3908bedf1a75c6627448c3ed0c067b076f8"
 MERGE_TREE = "f5586314db6c3addab6482e866b8d781faba75bc"
+SUCCESSOR_BASE_MAIN = "4234965c8da20dbb4ef0a7128614a5070244619a"
 CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 CANDIDATE_ARCHIVE_SHA256 = "c4913808e7c403f223270599e6b3d2ec8f075dc8450a9271c3ebd7c97ab28a19"
 PROMOTION_RULE = "fp001_phase7c_final_contract_current_promotion"
@@ -43,7 +45,7 @@ def _git_show(commit: str, path: str) -> bytes:
 
 
 class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
-    def test_current_tracker_closure_and_hosted_provenance_are_pinned(self):
+    def test_pr126_promotion_provenance_and_predecessor_snapshot_are_pinned(self):
         manifest = json.loads((DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8"))
         rule = manifest["integrity_rules"][PROMOTION_RULE]
         expected = {
@@ -85,12 +87,22 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("historical", historical_open_work["lifecycle"])
 
         current_paths = rule["current_paths"]
-        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.77.md", current_paths["open_work"])
-        self.assertEqual("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md", current_paths["delivery_atlas"])
-        self.assertEqual("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md", current_paths["fp001_skeleton"])
-        self.assertEqual("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md", current_paths["harden_02"])
+        self.assertEqual(current_document_path(ROOT, "OPEN_WORK").relative_to(ROOT).as_posix(), current_paths["open_work"])
+        self.assertEqual(current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").relative_to(ROOT).as_posix(), current_paths["delivery_atlas"])
+        self.assertEqual(current_working_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_").relative_to(ROOT).as_posix(), current_paths["fp001_skeleton"])
+        self.assertEqual(current_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_").relative_to(ROOT).as_posix(), current_paths["harden_02"])
 
-        open_work = (ROOT / current_paths["open_work"]).read_text(encoding="utf-8")
+        # These assertions certify the predecessor state promoted by PR #126.
+        # The live current paths may advance while this snapshot remains archived.
+        for source_path, predecessor_name in (
+            ("docs/00_platform/02_OPEN_WORK_v1.2.77.md", "02_OPEN_WORK_v1.2.77.md"),
+            ("docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md", "DELIVERY_ATLAS_WORKING_v0.4.19.md"),
+            ("docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md", "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md"),
+            ("docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md", "HARDEN-02_CONTRACT_WORKING_v0.5.21.md"),
+        ):
+            archived = historical_snapshot_path(ROOT, predecessor_name)
+            self.assertEqual(_git_show(SUCCESSOR_BASE_MAIN, source_path), archived.read_bytes())
+        open_work = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md").read_text(encoding="utf-8")
         state = _marked_json(open_work, "<!-- HARDEN_02_LIFECYCLE_STATE_START -->", "<!-- HARDEN_02_LIFECYCLE_STATE_END -->")
         self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state["phase_7c"])
@@ -104,9 +116,7 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("AUTHORISED", state["application_implementation"])
         self.assertEqual("AUTHORISED", state["phase8"])
 
-    def test_current_routes_project_closed_tracker_and_keep_downstream_gates_closed(self):
-        manifest = json.loads((DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8"))
-        paths = manifest["integrity_rules"][PROMOTION_RULE]["current_paths"]
+    def test_current_readme_and_historical_routes_keep_downstream_gates_closed(self):
         readme = (DOCS / "README.md").read_text(encoding="utf-8")
         current_state = readme.split("## Current State", 1)[1].split("\n## ", 1)[0]
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", current_state)
@@ -123,34 +133,35 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertNotRegex(current_state, r"(?i)REUSE_EXISTING_PROOF:\s*SELECTED")
         self.assertNotRegex(current_state, r"\bTB-(?!001\b)\d{3,}\b")
 
-        open_work = (ROOT / paths["open_work"]).read_text(encoding="utf-8")
+        open_work = current_document_path(ROOT, "OPEN_WORK").read_text(encoding="utf-8")
         active = open_work.split("# 9. Immediate Next Action", 1)[1].split("# 10. Minimal Tools", 1)[0]
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", active)
         self.assertIn("PROGRAMME ROUTER #111: OPEN", active)
-        self.assertIn("NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", active)
+        current_state = _marked_json(open_work, "<!-- HARDEN_02_LIFECYCLE_STATE_START -->", "<!-- HARDEN_02_LIFECYCLE_STATE_END -->")
+        self.assertIn(f"NEXT GOVERNANCE ACTION: {current_state['next_governance_action']}", active)
         self.assertNotRegex(active, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
 
-        for key, route_heading, classification, candidate_lifecycle in (
+        for predecessor_name, route_heading, classification, candidate_lifecycle in (
             (
-                "delivery_atlas",
+                "DELIVERY_ATLAS_WORKING_v0.4.19.md",
                 "## 26.24 FP-001 Phase 8 TB-001 successor candidate route (current)",
                 "FP-001 Architectural Proof Classification remains COMPLETE / FINALISED as NEW_TRACER_BULLET",
                 "identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
             ),
             (
-                "fp001_skeleton",
+                "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
                 "## v0.1.21 — TB-001 proof-contract successor candidate route (current)",
                 None,
                 "identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
             ),
             (
-                "harden_02",
+                "HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
                 "## v0.5.21 — FP-001 TB-001 proof-contract successor candidate route (current)",
                 None,
                 "TB-001 is CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
             ),
         ):
-            content = (ROOT / paths[key]).read_text(encoding="utf-8")
+            content = historical_snapshot_path(ROOT, predecessor_name).read_text(encoding="utf-8")
             self.assertIn(route_heading, content)
             route = content.split(route_heading, 1)[1].split("\n## ", 1)[0]
             if classification is not None:

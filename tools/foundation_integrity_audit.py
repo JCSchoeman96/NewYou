@@ -5641,6 +5641,54 @@ def _fp001_protected_historical_evidence_issues(
     return issues
 
 
+def _fp001_pinned_historical_proof_contract_archives(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+) -> set[str]:
+    """Return proof-contract archives whose lifecycle and immutable bytes are pinned."""
+
+    phase8 = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {})
+    if not isinstance(phase8, dict):
+        return set()
+
+    predecessor_archives = phase8.get("predecessor_archives_sha256", {})
+    if not isinstance(predecessor_archives, dict):
+        predecessor_archives = {}
+    expected: dict[str, str] = {
+        relative: digest
+        for relative, digest in predecessor_archives.items()
+        if isinstance(relative, str)
+        and isinstance(digest, str)
+        and re.search(r"FP-001_TRACER_BULLET_CONTRACT_WORKING_v\d+\.\d+\.\d+\.md$", relative)
+    }
+    reviewed_path = phase8.get("reviewed_candidate_archive_path")
+    reviewed_digest = phase8.get("reviewed_candidate_archive_sha256")
+    if isinstance(reviewed_path, str) and isinstance(reviewed_digest, str):
+        expected[reviewed_path] = reviewed_digest
+
+    entries = [
+        entry
+        for entry in _all_entries(manifest)
+        if entry.get("lifecycle") == "historical"
+    ]
+    pinned: set[str] = set()
+    for relative, digest in expected.items():
+        path = root / relative
+        matches = [entry for entry in entries if _relative_path(entry) == relative]
+        if (
+            len(matches) == 1
+            and path.is_file()
+            and sha256_file(path) == digest
+            and matches[0].get("authority_class") == "FP001_PHASE8_PROOF_CONTRACT_HISTORICAL"
+            and matches[0].get("graph_policy") == "frozen_provenance"
+            and matches[0].get("sha256") == digest
+            and matches[0].get("provenance_sha256") == digest
+        ):
+            pinned.add(relative)
+    return pinned
+
+
 def _check_roadmap_proof_classification_lifecycle(
     root: Path,
     manifest: dict[str, Any],
@@ -5781,18 +5829,20 @@ def _check_roadmap_proof_classification_lifecycle(
     if not candidate_archive.is_file() or sha256_file(candidate_archive) != expected_fixed["pr125_candidate_archive_sha256"]:
         issues.append("immutable PR #125 candidate archive is missing or changed")
 
+    historical_proof_contract_archives = _fp001_pinned_historical_proof_contract_archives(
+        root,
+        manifest,
+        integrity_rules,
+    )
     platform_docs_root = root / "docs/00_platform"
     if platform_docs_root.is_dir():
         for path in platform_docs_root.rglob("*"):
             if not path.is_file() or not re.search(r"(?:TRACER_BULLET|ARCHITECTURAL_PROOF)(?:[-_\.]|$)", path.name, re.IGNORECASE):
                 continue
-            if path.relative_to(root).as_posix() in {
-                candidate_path,
-                "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md",
-                "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md",
-            }:
+            relative = path.relative_to(root).as_posix()
+            if relative == candidate_path or relative in historical_proof_contract_archives:
                 continue
-            issues.append(f"Tracer Bullet or architectural-proof artifact exists: {path.relative_to(root)}")
+            issues.append(f"Tracer Bullet or architectural-proof artifact exists: {relative}")
             break
 
     _record_check(

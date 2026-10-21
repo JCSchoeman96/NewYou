@@ -6,6 +6,12 @@ import re
 import unittest
 from pathlib import Path
 
+from foundation_test_support import (
+    FOUNDATION_WORKFLOW_BASELINE_SHA256,
+    WELL38_BASE_SHA,
+    git_snapshot_bytes,
+)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -46,7 +52,6 @@ PROTECTED_HASHES = {
     "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
     "docs/00_platform/working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md": "af35b9cd6159f8f1b5154bc5df8baa2c0547e7f0f94b8b8b37dbc182846a18cb",
-    ".github/workflows/foundation-integrity.yml": "5e63c77707fe767bbb89a38f4cfe1d9c972d4aefdcc13296bf5048cd4a3ae0f3",
 }
 
 REQUIRED_SUCCESSOR_PATHS = (
@@ -401,6 +406,15 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
             if expected_hash is None:
                 continue
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
+        workflow_baseline = git_snapshot_bytes(
+            ROOT,
+            WELL38_BASE_SHA,
+            ".github/workflows/foundation-integrity.yml",
+        )
+        self.assertEqual(
+            FOUNDATION_WORKFLOW_BASELINE_SHA256,
+            hashlib.sha256(workflow_baseline).hexdigest(),
+        )
 
     def test_scope_has_no_implementation_or_prohibited_artifact_changes(self):
         for relative_path in REQUIRED_SUCCESSOR_PATHS:

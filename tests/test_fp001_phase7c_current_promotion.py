@@ -7,6 +7,8 @@ import subprocess
 import unittest
 from pathlib import Path
 
+from tests.foundation_test_support import current_document_relative_path, current_working_relative_path
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -227,13 +229,15 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
         self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", self.open_work)
 
     def test_readme_and_manifest_route_current_lower_level_artifacts_without_new_root_authority(self):
-        for path in (
-            "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
-            "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
-            "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
-            "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
-            "02_OPEN_WORK_v1.2.77.md",
-        ):
+        current_routes = (
+            current_working_relative_path(ROOT, "FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_"),
+            current_working_relative_path(ROOT, "DELIVERY_ATLAS_WORKING_"),
+            current_working_relative_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_"),
+            current_working_relative_path(ROOT, "HARDEN-02_CONTRACT_WORKING_"),
+            current_document_relative_path(ROOT, "OPEN_WORK"),
+        )
+        for route in current_routes:
+            path = route.removeprefix("docs/00_platform/")
             with self.subTest(path=path):
                 self.assertIn(path, self.readme)
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", self.readme)

@@ -10,24 +10,26 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
+from foundation_test_support import current_document_path, current_working_path, historical_snapshot_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 BASE_SHA = "675a8c50ac53a995a48e4d262df42065f8ccd412"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.77.md"
+# The v1.2.77-era assertions below certify the archived transition snapshot.
+OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
 CONTRACT = DOCS / "working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 CONTRACT_ARCHIVE = DOCS / "archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
-ATLAS = DOCS / "working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
+ATLAS = historical_snapshot_path(ROOT, "DELIVERY_ATLAS_WORKING_v0.4.19.md")
 ATLAS_V416_ARCHIVE = DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.16.md"
 ATLAS_V417_ARCHIVE = DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.17.md"
-SKELETON = DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md"
+SKELETON = historical_snapshot_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md")
 SKELETON_V117_ARCHIVE = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.17.md"
 SKELETON_V118_ARCHIVE = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md"
 SKELETON_V119_ARCHIVE = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.19.md"
 SKELETON_V120_ARCHIVE = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md"
 ATLAS_V418_ARCHIVE = DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.18.md"
-HARDEN = DOCS / "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md"
+HARDEN = historical_snapshot_path(ROOT, "HARDEN-02_CONTRACT_WORKING_v0.5.21.md")
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 HARD_STOP_CHECK = "fp001_development_entry_hard_stop_lifecycle"
 SOURCE_FAILURE = "executable application/bootstrap source present while application implementation is not authorised"
@@ -116,7 +118,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
     # ------------------------------------------------------------------
     # Current route state
     # ------------------------------------------------------------------
-    def test_hard_stop_pass_authorises_bounded_phase8_only(self):
+    def test_historical_open_work_hard_stop_pass_authorises_bounded_phase8_only(self):
         text = OPEN_WORK.read_text(encoding="utf-8")
         state = _marked_json(
             text,
@@ -175,8 +177,15 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         self.assertEqual("AUTHORISED", rule["application_implementation"])
         self.assertNotIn("synthetic_authorization_fixture_relative_path", rule)
         open_work_entry = next(e for e in manifest["governing_documents"] if e["document_id"] == "OPEN_WORK")
-        self.assertEqual("1.2.77", open_work_entry["semver"])
-        self.assertEqual("1.2.76", open_work_entry["superseded_version"])
+        self.assertEqual(current_document_path(ROOT, "OPEN_WORK").name, open_work_entry["canonical_filename"])
+        self.assertEqual(
+            open_work_entry["semver"],
+            re.search(r"v(\d+\.\d+\.\d+)", open_work_entry["canonical_filename"]).group(1),
+        )
+        current_open_work = current_document_path(ROOT, "OPEN_WORK").read_text(encoding="utf-8")
+        predecessor_match = re.search(r"(?m)^- \*\*Predecessor:\*\* `archive/02_OPEN_WORK_v([\d.]+)\.md`", current_open_work)
+        self.assertIsNotNone(predecessor_match)
+        self.assertEqual(predecessor_match.group(1), open_work_entry["superseded_version"])
 
     def test_foundation_integrity_rejects_reverted_hard_stop_state(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -184,7 +193,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             shutil.copytree(DOCS, root / "docs" / "00_platform")
             shutil.copytree(ROOT / "tests", root / "tests", ignore=shutil.ignore_patterns("__pycache__"))
             shutil.copytree(ROOT / "tools", root / "tools", ignore=shutil.ignore_patterns("__pycache__"))
-            open_work = root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
+            open_work = current_document_path(root, "OPEN_WORK")
             text = open_work.read_text(encoding="utf-8")
             open_work.write_text(
                 text.replace("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", "DEVELOPMENT ENTRY HARD STOP: FAIL", 1),
@@ -249,7 +258,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
                     manifest.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
                 if mode in ("state", "both"):
                     _rewrite_marked_json(
-                        root / "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
+                        current_document_path(root, "OPEN_WORK"),
                         "<!-- HARDEN_02_LIFECYCLE_STATE_START -->",
                         "<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
                         updates,
@@ -267,7 +276,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             manifest = self._synthetic_repo(root)
-            atlas_path = root / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
+            atlas_path = current_working_path(root, "DELIVERY_ATLAS_WORKING_")
             atlas = atlas_path.read_text(encoding="utf-8")
             current = (
                 "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. "
@@ -282,11 +291,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             refresh_manifest(root, manifest)
             manifest_data = json.loads(manifest.read_text(encoding="utf-8"))
             hard_stop_rule = manifest_data["integrity_rules"]["fp001_development_entry_hard_stop_lifecycle"]
-            for relative in (
-                "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
-                "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
-                "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
-            ):
+            for relative in hard_stop_rule["current_route_sha256"]:
                 hard_stop_rule["current_route_sha256"][relative] = hashlib.sha256(
                     (root / relative).read_bytes()
                 ).hexdigest()
@@ -334,7 +339,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         expected = rule["predecessor_archives_sha256"]["docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md"]
         self.assertEqual(expected, hashlib.sha256(SKELETON_V120_ARCHIVE.read_bytes()).hexdigest())
 
-    def test_skeleton_current_status_is_pass_bounded_and_not_pre_hard_stop(self):
+    def test_historical_skeleton_successor_status_is_pass_bounded_and_not_pre_hard_stop(self):
         text = SKELETON.read_text(encoding="utf-8")
         current_body = text.split("## v0.1.13 current-route status (historical predecessor)", 1)[0]
         self.assertEqual([], _pre_hard_stop_hits(current_body))
@@ -401,7 +406,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         )
         self.assertIn("Development Entry Hard Stop PASS", _md_section(text, "## v0.4.16 Patch Scope"))
 
-    def test_atlas_current_status_has_no_contradictory_authorisation(self):
+    def test_historical_atlas_successor_status_has_no_contradictory_authorisation(self):
         text = ATLAS.read_text(encoding="utf-8")
         header = text.split("## v0.4.16 Patch Scope", 1)[0]
         current = _md_section(text, "## 26.25 FP-001 Phase 8 TB-001 successor candidate route (current)")
@@ -428,7 +433,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         self.assertIn("UNAUTHORISED", _md_section(text, "## 26.20 Phase 7C tracker closure routing"))
         self.assertIn("UNAUTHORISED", _md_section(text, "## 26.21 FP-001 architectural proof classification route (historical predecessor)"))
 
-    def test_harden_current_sections_do_not_project_pre_hard_stop_state(self):
+    def test_historical_harden_sections_do_not_project_pre_hard_stop_state(self):
         text = HARDEN.read_text(encoding="utf-8")
         section_18 = _between(text, "## 18. Downstream consequence", "## 19. Explicit exclusion confirmations")
         section_23 = _between(text, "## 23. FP-001 Phase 7B reconciliation current route", "## 24. FP-001 Phase 7C tracker closure")
@@ -446,7 +451,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             section_18,
         )
 
-    def test_harden_current_predecessor_and_section_20_authority_are_unambiguous(self):
+    def test_historical_harden_predecessor_and_section_20_authority_are_unambiguous(self):
         text = HARDEN.read_text(encoding="utf-8")
         header = text.split("### Revision log", 1)[0]
         section_20 = _md_section(text, "## 20. Contract-stage STOP")

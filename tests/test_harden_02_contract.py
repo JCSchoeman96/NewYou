@@ -7,6 +7,12 @@ import subprocess
 import unittest
 from pathlib import Path
 
+from foundation_test_support import (
+    FOUNDATION_WORKFLOW_BASELINE_SHA256,
+    WELL38_BASE_SHA,
+    git_snapshot_bytes,
+)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -66,7 +72,6 @@ PROTECTED_UPSTREAM_HASHES = {
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.40.md": "e53d416efe2b859053e4d2167b36065383f4f67603db56d833f20247d5120b3e",
     "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.1.0.md": "71615d3363a91a7e6002d907c6edd474fbd87f77bdfc6a38f5b11afd240a5626",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md": EXPECTED_ATLAS_V0_2_SHA256,
-    ".github/workflows/foundation-integrity.yml": "5e63c77707fe767bbb89a38f4cfe1d9c972d4aefdcc13296bf5048cd4a3ae0f3",
 }
 
 PROHIBITED_PRESENT_PATHS = (
@@ -1075,6 +1080,15 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
     def test_protected_hashes_unchanged(self):
         for relative_path, expected_hash in PROTECTED_UPSTREAM_HASHES.items():
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
+        workflow_baseline = git_snapshot_bytes(
+            ROOT,
+            WELL38_BASE_SHA,
+            ".github/workflows/foundation-integrity.yml",
+        )
+        self.assertEqual(
+            FOUNDATION_WORKFLOW_BASELINE_SHA256,
+            hashlib.sha256(workflow_baseline).hexdigest(),
+        )
 
     def test_harden_02_not_in_authority_manifest(self):
         paths = [
@@ -1153,12 +1167,13 @@ class FoundationIntegrityWorkflowTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("workflow_dispatch:", workflow)
-        self.assertIn("Verify exact-head checkout", workflow)
+        self.assertIn("Verify exact-SHA dispatch checkout", workflow)
         self.assertIn("github.event_name == 'workflow_dispatch'", workflow)
-        self.assertIn("EXPECTED_REF: ${{ inputs.ref }}", workflow)
-        self.assertIn('expected="$EXPECTED_REF"', workflow)
-        self.assertIn('"${GITHUB_SHA}" != "$expected"', workflow)
-        self.assertNotIn('expected="${{ inputs.ref }}"', workflow)
+        self.assertIn("EXPECTED_SHA: ${{ inputs.sha }}", workflow)
+        self.assertIn('expected="$EXPECTED_SHA"', workflow)
+        self.assertIn('if [[ "$GITHUB_SHA" != "$expected" ]]', workflow)
+        self.assertIn('if [[ "$actual" != "$expected" ]]', workflow)
+        self.assertIn("needs.route.outputs.foundation_full == 'true'", workflow)
 
 
 if __name__ == "__main__":

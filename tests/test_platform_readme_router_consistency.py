@@ -8,12 +8,12 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
+from foundation_test_support import current_document_path, current_working_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 README = DOCS / "README.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.77.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 STALE_PATTERNS = (
@@ -39,14 +39,18 @@ def _open_work_lifecycle_state(text: str) -> dict:
 class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        cls.open_work_path = current_document_path(ROOT, "OPEN_WORK")
+        cls.atlas_path = current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_")
         cls.readme = README.read_text(encoding="utf-8")
         cls.current_prose = _current_readme_prose(cls.readme)
         cls.current_state = cls.readme.split("## Current State", 1)[1].split("\n## ", 1)[0]
         cls.atlas_routing = cls.readme.split("## Delivery Atlas routing", 1)[1].split("\n## ", 1)[0]
-        cls.open_work_state = _open_work_lifecycle_state(OPEN_WORK.read_text(encoding="utf-8"))
+        cls.open_work_state = _open_work_lifecycle_state(cls.open_work_path.read_text(encoding="utf-8"))
 
     def test_delivery_atlas_routing_points_at_current_successor(self) -> None:
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.19.md", self.atlas_routing)
+        current_route = self.atlas_path.relative_to(DOCS).as_posix()
+        self.assertIn(current_route, self.atlas_routing)
         self.assertNotRegex(self.atlas_routing, r"\(working/DELIVERY_ATLAS_WORKING_v0\.4\.16\.md\)")
 
     def test_current_prose_agrees_with_open_work_classification(self) -> None:
@@ -55,7 +59,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", self.current_state)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", self.current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", self.current_state)
-        self.assertIn("NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", self.current_state)
+        self.assertIn(self.open_work_state["next_governance_action"], self.current_state)
 
     def test_current_prose_cannot_regress_to_stale_classification_routing(self) -> None:
         for pattern in STALE_PATTERNS:
@@ -74,11 +78,13 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             text = readme.read_text(encoding="utf-8")
             prose = _current_readme_prose(text)
             atlas = prose.split("## Delivery Atlas routing", 1)[1].split("\n## ", 1)[0]
-            stale_atlas = atlas.replace(
-                "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
-                "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
-                1,
-            )
+            current_atlas_path = current_working_path(root, "DELIVERY_ATLAS_WORKING_")
+            current_route = current_atlas_path.relative_to(fixture_docs).as_posix()
+            current_atlas = current_atlas_path.read_text(encoding="utf-8")
+            predecessor_match = re.search(r"(?m)^- \*\*Predecessor:\*\* `archive/([^`]+)`", current_atlas)
+            self.assertIsNotNone(predecessor_match)
+            stale_route = "working/" + predecessor_match.group(1)
+            stale_atlas = atlas.replace(current_route, stale_route, 1)
             stale_prose = prose.replace(atlas, stale_atlas, 1)
             readme.write_text(
                 stale_prose + text.split("## Historical status evidence", 1)[1],
@@ -88,7 +94,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             report = run_audit(root, manifest_path)
             check = next(item for item in report["checks"] if item["name"] == "platform_readme_router_consistency")
             self.assertEqual("FAIL", check["status"])
-            self.assertIn("v0.4.19", check["message"])
+            self.assertIn(current_atlas_path.name.rsplit("v", 1)[-1].removesuffix(".md"), check["message"])
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

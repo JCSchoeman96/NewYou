@@ -9,6 +9,7 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
+from foundation_test_support import current_working_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,7 +52,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             "COMPLETE / CERTIFIED / CURRENT",
             state["phase_7c"],
         )
-        self.assertEqual("TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", state["next_stage"])
+        self.assertEqual(state["next_governance_action"], state["next_stage"])
         self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         self.assertEqual("NEW_TRACER_BULLET", state["proof_classification"])
@@ -185,25 +186,25 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
     def test_current_derived_routes_reject_open_tracker_projection(self):
         cases = (
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+                "DELIVERY_ATLAS_WORKING_",
                 "preserves #120 as CLOSED / COMPLETED historical evidence",
                 "preserves #120 as OPEN historical evidence",
             ),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+                "FP-001_FEATURE_PACK_SKELETON_WORKING_",
                 "under completed tracker #120 (CLOSED / COMPLETED)",
                 "under open tracker #120 (CLOSED / COMPLETED)",
             ),
             (
-                "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+                "HARDEN-02_CONTRACT_WORKING_",
                 "RECONCILIATION EXECUTION TRACKER: #120 CLOSED / COMPLETED",
                 "RECONCILIATION EXECUTION TRACKER: #120 OPEN",
             ),
         )
-        for relative_path, anchor, replacement in cases:
-            with self.subTest(path=relative_path), tempfile.TemporaryDirectory() as directory:
+        for filename_prefix, anchor, replacement in cases:
+            with self.subTest(prefix=filename_prefix), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_fixture(directory)
-                path = root / "docs/00_platform" / relative_path
+                path = current_working_path(root, filename_prefix)
                 current = path.read_text(encoding="utf-8")
                 self.assertIn(anchor, current)
                 path.write_text(current.replace(anchor, replacement, 1), encoding="utf-8")
@@ -217,20 +218,20 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
     def test_current_derived_routes_keep_programme_router_open(self):
         cases = (
             (
-                "working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+                "DELIVERY_ATLAS_WORKING_",
                 "Programme router #111 remains OPEN",
                 "Programme router #111 is CLOSED",
             ),
             (
-                "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+                "FP-001_FEATURE_PACK_SKELETON_WORKING_",
                 "Programme router #111 remains OPEN",
                 "Programme router #111 is CLOSED",
             ),
         )
-        for relative_path, anchor, replacement in cases:
-            with self.subTest(path=relative_path), tempfile.TemporaryDirectory() as directory:
+        for filename_prefix, anchor, replacement in cases:
+            with self.subTest(prefix=filename_prefix), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_fixture(directory)
-                path = root / "docs/00_platform" / relative_path
+                path = current_working_path(root, filename_prefix)
                 current = path.read_text(encoding="utf-8")
                 self.assertIn(anchor, current)
                 path.write_text(current.replace(anchor, replacement, 1), encoding="utf-8")
