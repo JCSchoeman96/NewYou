@@ -46,6 +46,45 @@ class FoundationSmokeTests(unittest.TestCase):
             self.assertTrue(failed_paths)
             self.assertIn("archived=True", failed_paths[0]["message"])
 
+    def test_smoke_rejects_current_routes_resolving_to_archive_symlinks(self):
+        for route_kind in ("manifest", "working"):
+            with self.subTest(route_kind=route_kind), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._fixture(directory)
+                if route_kind == "manifest":
+                    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                    open_work = next(
+                        entry
+                        for entry in manifest["governing_documents"]
+                        if entry["document_id"] == "OPEN_WORK"
+                        and entry.get("lifecycle", "current") != "historical"
+                    )
+                    current_path = root / open_work["repository_path"]
+                else:
+                    readme = (root / "docs/00_platform/README.md").read_text(encoding="utf-8")
+                    section = readme.split("## Active Working Artifacts", 1)[1].split("\n## ", 1)[0]
+                    active_routes = re.findall(r"(?m)^-\s+`([^`\s]+\.md)`", section)
+                    current_route = next(
+                        route
+                        for route in active_routes
+                        if Path(route).name.startswith("EXPERIENCE_DECISIONS_WORKING_")
+                    )
+                    current_path = root / "docs/00_platform" / current_route
+                archive_path = root / "docs/00_platform/archive" / current_path.name
+                archive_path.parent.mkdir(parents=True, exist_ok=True)
+                current_path.rename(archive_path)
+                current_path.symlink_to(archive_path)
+
+                report = run_smoke_audit(root, manifest_path)
+
+                self.assertEqual("FAIL", report["status"])
+                failed_routes = [
+                    check
+                    for check in report["checks"]
+                    if check["name"] in {"smoke_current_manifest_path", "smoke_current_working_path"}
+                    and check["status"] == "FAIL"
+                ]
+                self.assertTrue(failed_routes, report["checks"])
+
     def test_smoke_rejects_stale_readme_working_route(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._fixture(directory)
@@ -176,6 +215,41 @@ class FoundationSmokeTests(unittest.TestCase):
             self.assertIn(current_route, product_text)
             archived_route = f"Current Product Law is `archive/{product_law['canonical_filename']}`."
             product_path.write_text(product_text.replace(current_route, archived_route, 1), encoding="utf-8")
+            refresh_manifest(root, manifest_path)
+
+            report = run_smoke_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    check["name"] == "current_authority_route_resolution" and check["status"] == "FAIL"
+                    for check in report["checks"]
+                ),
+                report["checks"],
+            )
+
+    def test_smoke_rejects_product_law_route_to_another_current_authority(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._fixture(directory)
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            product_law = next(
+                entry
+                for entry in manifest["governing_documents"]
+                if entry["document_id"] == "PLATFORM_BASELINE"
+                and entry.get("lifecycle", "current") != "historical"
+            )
+            decisions = next(
+                entry
+                for entry in manifest["governing_documents"]
+                if entry["document_id"] == "DECISION_REGISTER"
+                and entry.get("lifecycle", "current") != "historical"
+            )
+            product_path = root / product_law["repository_path"]
+            product_text = product_path.read_text(encoding="utf-8")
+            current_route = f"Current Product Law is v{product_law['semver']}."
+            self.assertIn(current_route, product_text)
+            redirected_route = f"Current Product Law is `{decisions['canonical_filename']}`."
+            product_path.write_text(product_text.replace(current_route, redirected_route, 1), encoding="utf-8")
             refresh_manifest(root, manifest_path)
 
             report = run_smoke_audit(root, manifest_path)

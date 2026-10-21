@@ -48,6 +48,18 @@ def _active_working_routes(readme: str) -> list[str]:
     return re.findall(r"(?m)^\s*[-*]\s+`([^`\s]+\.md)`", section)
 
 
+def _route_resolves_outside_archive(root: Path, route: Path, target: Path) -> bool:
+    """Reject lexical archive routes and current paths that resolve through symlinks into archive."""
+
+    return (
+        not route.is_absolute()
+        and ".." not in route.parts
+        and "archive" not in route.parts
+        and target.is_relative_to(root)
+        and "archive" not in target.relative_to(root).parts
+    )
+
+
 def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[str, Any]:
     """Validate active manifest entries and current README/Open Work routing only."""
 
@@ -110,7 +122,7 @@ def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[
         route = Path(relative)
         target = (root / route).resolve()
         safe = bool(relative) and not route.is_absolute() and ".." not in route.parts and target.is_relative_to(root)
-        not_archived = "archive" not in route.parts
+        not_archived = _route_resolves_outside_archive(root, route, target)
         exists = safe and target.is_file()
         expected_filename = str(entry.get("canonical_filename", ""))
         filename_matches = target.name == expected_filename
@@ -190,10 +202,7 @@ def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[
         route = Path(link)
         target = (root / "docs/00_platform" / route).resolve()
         atlas_targets_resolve = atlas_targets_resolve and (
-            not route.is_absolute()
-            and ".." not in route.parts
-            and "archive" not in route.parts
-            and target.is_relative_to(root)
+            _route_resolves_outside_archive(root, route, target)
             and target.is_file()
         )
     atlas_route_ok = (
@@ -217,12 +226,9 @@ def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[
         route = Path("docs/00_platform") / working_relative
         target = (root / route).resolve()
         valid = (
-            not working_relative.is_absolute()
-            and bool(working_relative.parts)
+            bool(working_relative.parts)
             and working_relative.parts[0] == "working"
-            and ".." not in working_relative.parts
-            and "archive" not in working_relative.parts
-            and target.is_relative_to(root)
+            and _route_resolves_outside_archive(root, working_relative, target)
             and target.is_file()
         )
         working_routes_valid = working_routes_valid and valid
@@ -243,10 +249,7 @@ def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[
         route = Path(str(relative))
         target = (root / route).resolve()
         valid = (
-            not route.is_absolute()
-            and ".." not in route.parts
-            and "archive" not in route.parts
-            and target.is_relative_to(root)
+            _route_resolves_outside_archive(root, route, target)
             and target.is_file()
         )
         navigation_routes_valid = navigation_routes_valid and valid

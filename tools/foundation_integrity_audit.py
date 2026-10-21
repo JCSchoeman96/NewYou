@@ -3613,6 +3613,11 @@ def _check_current_authority_route_resolution(
                 continue
             route_filenames = [str(entry.get("canonical_filename", ""))]
             route_values = route_filenames
+        if document_id == "PLATFORM_BASELINE" and route_filenames != [str(entry.get("canonical_filename", ""))]:
+            issues.append(
+                f"{document_id}: Current Product Law route {route_filenames!r} does not match its manifest route {entry.get('canonical_filename')!r}"
+            )
+            issue_paths.append(relative)
 
         for route_value, filename in zip(route_values, route_filenames):
             routed_entry = by_filename.get(filename)
