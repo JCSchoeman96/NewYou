@@ -3542,6 +3542,25 @@ def _check_current_authority_route_resolution(
     )
     issues: list[str] = []
     issue_paths: list[str] = []
+
+    def route_matches_current_manifest_path(route_value: str, entry: dict[str, Any]) -> bool:
+        route = Path(route_value)
+        entry_path = Path(_relative_path(entry))
+        try:
+            docs_relative_entry = entry_path.relative_to("docs/00_platform")
+        except ValueError:
+            return False
+        allowed_routes = {entry_path.as_posix(), docs_relative_entry.as_posix()}
+        if docs_relative_entry.parent == Path("."):
+            allowed_routes.add(entry_path.name)
+        return (
+            not route.is_absolute()
+            and ".." not in route.parts
+            and "archive" not in route.parts
+            and "archive" not in entry_path.parts
+            and route.as_posix() in allowed_routes
+        )
+
     for entry in target_entries:
         document_id = str(entry.get("document_id"))
         relative = _relative_path(entry)
@@ -3570,9 +3589,8 @@ def _check_current_authority_route_resolution(
             continue
 
         route_line = route_lines[0]
-        route_filenames = [
-            Path(value).name for value in CURRENT_ROUTE_FILENAME_PATTERN.findall(route_line)
-        ]
+        route_values = CURRENT_ROUTE_FILENAME_PATTERN.findall(route_line)
+        route_filenames = [Path(value).name for value in route_values]
         if document_id == "PROJECT_NORTH_STAR_AND_MVP":
             if route_filenames:
                 issues.append(
@@ -3594,8 +3612,9 @@ def _check_current_authority_route_resolution(
                 issue_paths.append(relative)
                 continue
             route_filenames = [str(entry.get("canonical_filename", ""))]
+            route_values = route_filenames
 
-        for filename in route_filenames:
+        for route_value, filename in zip(route_values, route_filenames):
             routed_entry = by_filename.get(filename)
             if routed_entry is None:
                 issues.append(
@@ -3606,6 +3625,12 @@ def _check_current_authority_route_resolution(
             if filename not in readme_filenames:
                 issues.append(
                     f"{document_id}: active route {filename!r} is absent from README current authority"
+                )
+                issue_paths.append(relative)
+                continue
+            if not route_matches_current_manifest_path(route_value, routed_entry):
+                issues.append(
+                    f"{document_id}: active route {route_value!r} does not resolve to the current manifest path {routed_entry.get('repository_path')!r}"
                 )
                 issue_paths.append(relative)
 
@@ -3629,28 +3654,9 @@ def _check_current_authority_route_resolution(
                 issues.append(f"{document_id}: active route {filename!r} is absent from README current authority")
                 issue_paths.append(relative)
             else:
-                route = Path(route_value)
-                entry_path = Path(_relative_path(by_filename[filename]))
-                try:
-                    docs_relative_entry = entry_path.relative_to("docs/00_platform")
-                except ValueError:
+                if not route_matches_current_manifest_path(route_value, by_filename[filename]):
                     issues.append(
-                        f"{document_id}: manifest route {entry_path.as_posix()!r} is outside docs/00_platform"
-                    )
-                    issue_paths.append(relative)
-                    continue
-                allowed_routes = {entry_path.as_posix(), docs_relative_entry.as_posix()}
-                if docs_relative_entry.parent == Path("."):
-                    allowed_routes.add(entry_path.name)
-                route_is_safe = (
-                    not route.is_absolute()
-                    and ".." not in route.parts
-                    and "archive" not in route.parts
-                    and route.as_posix() in allowed_routes
-                )
-                if not route_is_safe:
-                    issues.append(
-                        f"{document_id}: active route {route_value!r} does not resolve to the current manifest path {docs_relative_entry.as_posix()!r}"
+                        f"{document_id}: active route {route_value!r} does not resolve to the current manifest path {_relative_path(by_filename[filename])!r}"
                     )
                     issue_paths.append(relative)
 

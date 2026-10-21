@@ -160,6 +160,35 @@ class FoundationSmokeTests(unittest.TestCase):
                 report["checks"],
             )
 
+    def test_smoke_rejects_product_law_current_route_into_archive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._fixture(directory)
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            product_law = next(
+                entry
+                for entry in manifest["governing_documents"]
+                if entry["document_id"] == "PLATFORM_BASELINE"
+                and entry.get("lifecycle", "current") != "historical"
+            )
+            product_path = root / product_law["repository_path"]
+            product_text = product_path.read_text(encoding="utf-8")
+            current_route = f"Current Product Law is v{product_law['semver']}."
+            self.assertIn(current_route, product_text)
+            archived_route = f"Current Product Law is `archive/{product_law['canonical_filename']}`."
+            product_path.write_text(product_text.replace(current_route, archived_route, 1), encoding="utf-8")
+            refresh_manifest(root, manifest_path)
+
+            report = run_smoke_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    check["name"] == "current_authority_route_resolution" and check["status"] == "FAIL"
+                    for check in report["checks"]
+                ),
+                report["checks"],
+            )
+
     def test_smoke_accepts_a_successor_with_archived_predecessor(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._fixture(directory)
