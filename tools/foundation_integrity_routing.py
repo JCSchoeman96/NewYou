@@ -39,13 +39,12 @@ def classify_changed_paths(paths: list[str]) -> dict[str, bool]:
 def _changed_paths(event_name: str, base_sha: str, head_sha: str, cwd: str) -> list[str]:
     separator = "..." if event_name == "pull_request" else ".."
     result = subprocess.run(
-        ["git", "diff", "--no-renames", "--name-only", f"{base_sha}{separator}{head_sha}"],
+        ["git", "diff", "--no-renames", "--name-only", "-z", f"{base_sha}{separator}{head_sha}"],
         cwd=cwd,
         capture_output=True,
-        text=True,
         check=True,
     )
-    return [path for path in result.stdout.splitlines() if path]
+    return [os.fsdecode(path) for path in result.stdout.split(b"\0") if path]
 
 
 def classify_event(event_name: str, base_sha: str, head_sha: str, cwd: str = ".") -> dict[str, bool]:

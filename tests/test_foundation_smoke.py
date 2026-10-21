@@ -96,6 +96,40 @@ class FoundationSmokeTests(unittest.TestCase):
                 report["checks"],
             )
 
+    def test_smoke_rejects_current_authority_route_into_archive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._fixture(directory)
+            contract_path = root / current_working_relative_path(root, "HARDEN-02_CONTRACT_WORKING_")
+            contract = contract_path.read_text(encoding="utf-8")
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            architecture = next(
+                entry
+                for entry in manifest["governing_documents"]
+                if entry["document_id"] == "ARCHITECTURE_SYNTHESIS"
+                and entry.get("lifecycle", "current") != "historical"
+            )
+            marker = "### CURRENT AUTHORITY"
+            end_marker = "### CURRENT DERIVED EVIDENCE"
+            start = contract.index(marker)
+            end = contract.index(end_marker, start)
+            authority = contract[start:end]
+            current_route = f"`{architecture['canonical_filename']}`"
+            self.assertIn(current_route, authority)
+            archived_route = f"`archive/{architecture['canonical_filename']}`"
+            authority = authority.replace(current_route, archived_route, 1)
+            contract_path.write_text(contract[:start] + authority + contract[end:], encoding="utf-8")
+
+            report = run_smoke_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    check["name"] == "current_authority_route_resolution" and check["status"] == "FAIL"
+                    for check in report["checks"]
+                ),
+                report["checks"],
+            )
+
     def test_smoke_accepts_a_successor_with_archived_predecessor(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._fixture(directory)
@@ -211,13 +245,13 @@ class FoundationSmokeTests(unittest.TestCase):
             git("config", "user.email", "foundation-smoke@example.invalid")
             git("config", "user.name", "Foundation Smoke Test")
             (root / "mix.exs").write_text("defmodule Fixture.MixProject do end\n", encoding="utf-8")
-            (root / "lib").mkdir()
-            (root / "lib/accounts.ex").write_text("defmodule Accounts do end\n", encoding="utf-8")
+            (root / "assets").mkdir()
+            (root / "assets/café.svg").write_text("<svg/>\n", encoding="utf-8")
             git("add", ".")
             git("commit", "--quiet", "-m", "baseline")
             base_sha = git("rev-parse", "HEAD")
 
-            (root / "lib/accounts.ex").write_text("defmodule Accounts do\n  def list, do: []\nend\n", encoding="utf-8")
+            (root / "assets/café.svg").write_text("<svg><!-- update --></svg>\n", encoding="utf-8")
             git("commit", "--quiet", "-am", "application-only change")
             app_sha = git("rev-parse", "HEAD")
             app_decision = classify_event("pull_request", base_sha, app_sha, str(root))

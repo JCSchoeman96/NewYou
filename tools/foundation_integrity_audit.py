@@ -3614,19 +3614,45 @@ def _check_current_authority_route_resolution(
         relative: str,
         routed_names: list[str],
         expected_names: list[str],
+        route_values: list[str],
     ) -> None:
         if routed_names != expected_names:
             issues.append(
                 f"{document_id}: explicitly current routes {routed_names!r} do not match manifest routes {expected_names!r}"
             )
             issue_paths.append(relative)
-        for filename in routed_names:
+        for route_value, filename in zip(route_values, routed_names):
             if filename not in by_filename:
                 issues.append(f"{document_id}: active route {filename!r} is not a current manifest route")
                 issue_paths.append(relative)
             elif filename not in readme_filenames:
                 issues.append(f"{document_id}: active route {filename!r} is absent from README current authority")
                 issue_paths.append(relative)
+            else:
+                route = Path(route_value)
+                entry_path = Path(_relative_path(by_filename[filename]))
+                try:
+                    docs_relative_entry = entry_path.relative_to("docs/00_platform")
+                except ValueError:
+                    issues.append(
+                        f"{document_id}: manifest route {entry_path.as_posix()!r} is outside docs/00_platform"
+                    )
+                    issue_paths.append(relative)
+                    continue
+                allowed_routes = {entry_path.as_posix(), docs_relative_entry.as_posix()}
+                if docs_relative_entry.parent == Path("."):
+                    allowed_routes.add(entry_path.name)
+                route_is_safe = (
+                    not route.is_absolute()
+                    and ".." not in route.parts
+                    and "archive" not in route.parts
+                    and route.as_posix() in allowed_routes
+                )
+                if not route_is_safe:
+                    issues.append(
+                        f"{document_id}: active route {route_value!r} does not resolve to the current manifest path {docs_relative_entry.as_posix()!r}"
+                    )
+                    issue_paths.append(relative)
 
     expected_product_authority = [
         str(current_governing[document_id].get("canonical_filename", ""))
@@ -3648,12 +3674,10 @@ def _check_current_authority_route_resolution(
             r"(?m)^-\s+\*\*Current Product authority:\*\*\s*(.+)$",
             header,
         )
-        route_names = [
-            Path(filename).name
-            for filename in CURRENT_ROUTE_FILENAME_PATTERN.findall(current_authority_lines[0])
-        ] if len(current_authority_lines) == 1 else []
+        route_values = CURRENT_ROUTE_FILENAME_PATTERN.findall(current_authority_lines[0]) if len(current_authority_lines) == 1 else []
+        route_names = [Path(filename).name for filename in route_values]
         if len(current_authority_lines) == 1 or complete_authority_inventory:
-            record_current_routes("ROADMAP", relative, route_names, expected_product_authority)
+            record_current_routes("ROADMAP", relative, route_names, expected_product_authority, route_values)
 
     graph_rules = integrity_rules.get("graph_rules", {})
     navigation_paths = [str(path) for path in graph_rules.get("navigation_document_paths", [])]
@@ -3686,10 +3710,7 @@ def _check_current_authority_route_resolution(
                 continue
             cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
             if len(cells) >= 2 and cells[0] in {"Product Law", "Roadmap", "Planning tracker"}:
-                source_rows[cells[0]] = [
-                    Path(filename).name
-                    for filename in CURRENT_ROUTE_FILENAME_PATTERN.findall(cells[1])
-                ]
+                source_rows[cells[0]] = CURRENT_ROUTE_FILENAME_PATTERN.findall(cells[1])
         expected_atlas_sources = {
             "Product Law": expected_product_authority,
             "Roadmap": [str(current_governing["ROADMAP"].get("canonical_filename", ""))]
@@ -3701,8 +3722,9 @@ def _check_current_authority_route_resolution(
             record_current_routes(
                 "DELIVERY_ATLAS_WORKING",
                 atlas_relative,
-                source_rows.get(label, []),
+                [Path(route).name for route in source_rows.get(label, [])],
                 expected_names,
+                source_rows.get(label, []),
             )
 
     harden_relative = next(
@@ -3724,10 +3746,7 @@ def _check_current_authority_route_resolution(
             if line.lstrip().startswith("|") and "|---" not in line:
                 cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
                 if cells:
-                    authority_sources.extend(
-                        Path(filename).name
-                        for filename in CURRENT_ROUTE_FILENAME_PATTERN.findall(cells[0])
-                    )
+                    authority_sources.extend(CURRENT_ROUTE_FILENAME_PATTERN.findall(cells[0]))
         expected_harden_authority = [
             str(current_governing[document_id].get("canonical_filename", ""))
             for document_id in (
@@ -3740,8 +3759,9 @@ def _check_current_authority_route_resolution(
         record_current_routes(
             "HARDEN-02_CONTRACT_WORKING",
             harden_relative,
-            authority_sources,
+            [Path(route).name for route in authority_sources],
             expected_harden_authority,
+            authority_sources,
         )
 
     open_work_entry = current_governing.get("OPEN_WORK")
