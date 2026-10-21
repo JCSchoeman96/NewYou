@@ -4,12 +4,15 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import os
 import re
 import subprocess
 import sys
+import tempfile
+import tarfile
 from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable
@@ -106,9 +109,39 @@ def _fp001_phase8_candidate_route_is_current(manifest: dict[str, Any]) -> bool:
     entry = _active_open_work_entry(manifest)
     return (
         entry is not None
-        and entry.get("semver") == "1.2.77"
-        and _relative_path(entry) == "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
+        and entry.get("semver") in {"1.2.77", "1.2.78"}
+        and _relative_path(entry) == f"docs/00_platform/02_OPEN_WORK_v{entry.get('semver')}.md"
     )
+
+
+def _fp001_phase8_approved_status_successor_is_current(
+    manifest: dict[str, Any],
+) -> bool:
+    entry = _active_open_work_entry(manifest)
+    return (
+        entry is not None
+        and entry.get("semver") == "1.2.78"
+        and _relative_path(entry) == "docs/00_platform/02_OPEN_WORK_v1.2.78.md"
+    )
+
+
+def _open_work_lifecycle_state(open_work: str) -> dict[str, Any] | None:
+    marker_start = "<!-- HARDEN_02_LIFECYCLE_STATE_START -->"
+    marker_end = "<!-- HARDEN_02_LIFECYCLE_STATE_END -->"
+    if open_work.count(marker_start) != 1 or open_work.count(marker_end) != 1:
+        return None
+    match = re.search(
+        re.escape(marker_start) + r"\s*```json\s*(.*?)\s*```\s*" + re.escape(marker_end),
+        open_work,
+        re.DOTALL,
+    )
+    if match is None:
+        return None
+    try:
+        state = json.loads(match.group(1), object_pairs_hook=_reject_duplicate_json_keys)
+    except (json.JSONDecodeError, TypeError, ValueError):
+        return None
+    return state if isinstance(state, dict) else None
 
 
 def _load_integrity_rules(manifest: dict[str, Any]) -> dict[str, Any]:
@@ -606,6 +639,8 @@ def _h02_lifecycle_state(
         return _h02_fp001_hard_stop_lifecycle_state(state, active, readme, contract)
     if state.get("status_successor_version") == "1.2.77":
         return _h02_fp001_phase8_contract_candidate_lifecycle_state(state, active, readme, contract)
+    if state.get("status_successor_version") == "1.2.78":
+        return _h02_fp001_phase8_contract_approved_lifecycle_state(state, active, readme, contract)
     if state.get("status_successor_version") == "1.2.73":
         return _h02_fp001_classification_lifecycle_state(state, active, readme, contract)
     if state.get("status_successor_version") in {"0.5.9", "0.5.10", "0.5.11", "0.5.12", "0.5.13", "0.5.14", "0.5.15", "0.5.16"}:
@@ -1786,6 +1821,90 @@ def _h02_fp001_phase8_contract_candidate_lifecycle_state(
     return True, "TB-001 remains a review candidate; proof execution and Phase 9 remain unstarted"
 
 
+def _h02_fp001_phase8_contract_approved_lifecycle_state(
+    state: dict[str, Any],
+    active: str,
+    readme: str,
+    contract: str,
+) -> tuple[bool, str]:
+    """Validate the approved contract route while keeping proof execution separate."""
+
+    expected = {
+        "status_successor_version": "1.2.78",
+        "status_successor_base_sha": "4234965c8da20dbb4ef0a7128614a5070244619a",
+        "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
+        "next_stage": "WELL-38 — Transition Foundation Integrity to implementation-era CI",
+        "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
+        "phase_7b_reconciliation_execution_tracker_issue": 120,
+        "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
+        "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
+        "phase_7c_execution_tracker_issue": 124,
+        "phase_7c_execution_tracker_state": "CLOSED / COMPLETED",
+        "proof_classification": "NEW_TRACER_BULLET",
+        "architectural_proof_classification_status": "COMPLETE / FINALISED",
+        "selected_proof_vehicle": "NEW_TRACER_BULLET",
+        "reuse_existing_proof": "NOT SELECTED",
+        "tracer_bullet": "REQUIRED / DEFINED",
+        "tracer_bullet_id": "TB-001",
+        "proof_design": "FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
+        "architectural_proof_execution": "NOT STARTED",
+        "proof_result": "NOT STARTED",
+        "proof_certification": "NOT STARTED",
+        "proof_contract_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
+        "proof_contract_lifecycle": "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+        "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+        "phase8": "AUTHORISED",
+        "application_implementation": "AUTHORISED",
+        "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
+        "next_governance_action": "WELL-38 — Transition Foundation Integrity to implementation-era CI",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md",
+    }
+    if any(state.get(key) != value for key, value in expected.items()):
+        return False, "approved TB-001 status successor is incomplete or advances proof/Phase 9"
+    active_summary = active.split("<!-- HARDEN_02_LIFECYCLE_STATE_START -->", 1)[0]
+    required_active = (
+        "CONTRACT/DESIGN REVIEW: COMPLETE / PASS",
+        "TB-001 CONTRACT LIFECYCLE: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
+        "PROOF EXECUTION: NOT STARTED",
+        "PROOF RESULT: NOT STARTED",
+        "PROOF CERTIFICATION: NOT STARTED",
+        "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+        "NEXT GOVERNANCE ACTION: WELL-38 — Transition Foundation Integrity to implementation-era CI",
+    )
+    if any(token not in active_summary for token in required_active):
+        return False, "Open Work active route omits the approved-contract state or proof execution stop"
+    if re.search(r"(?im)^\s*PHASE 9(?: / VERTICAL SLICES)?\s*:\s*(?:AUTHORI[ZS]ED|STARTED|IN PROGRESS|COMPLETE)", active_summary):
+        return False, "Open Work advances Phase 9 or Vertical Slices"
+    if re.search(r"(?im)^\s*PROOF (?:EXECUTION|RESULT|CERTIFICATION)\s*:\s*(?:PASS|COMPLETE|CERTIFIED)", active_summary):
+        return False, "Open Work claims proof execution, result or certification"
+
+    readme_current = _markdown_h2_section(readme, "Current State") or ""
+    for token in required_active:
+        if token not in readme_current:
+            return False, "README current state does not mirror the approved-contract lifecycle"
+    route = _markdown_h2_section(
+        contract,
+        "v0.5.22 — FP-001 TB-001 approved contract route (current)",
+    ) or ""
+    for token in (
+        "TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS",
+        "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
+        "PROOF EXECUTION: NOT STARTED",
+        "PROOF RESULT: NOT STARTED",
+        "PROOF CERTIFICATION: NOT STARTED",
+        "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+        "NEXT GOVERNANCE ACTION: WELL-38 — Transition Foundation Integrity to implementation-era CI",
+    ):
+        if token not in route:
+            return False, "current HARDEN-02 route omits the approved-contract boundary"
+    return True, "TB-001 is approved for bounded Phase 8 proof execution; proof execution and Phase 9 remain unstarted"
+
+
 def _h02_audit_v010_promotion_lifecycle_state(
     state: dict[str, Any],
     active: str,
@@ -2477,6 +2596,10 @@ def _engineering_standards_certified_state(
     )
     hard_stop_current = "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED" in active
     proof_contract_candidate_current = "NEXT STAGE: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION" in active
+    proof_contract_approved_current = (
+        "TB-001 CONTRACT LIFECYCLE: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION" in active
+        and "CONTRACT/DESIGN REVIEW: COMPLETE / PASS" in active
+    )
     audit_promotion_current = reconciliation_certified_current or reconciliation_candidate_current or "NEXT STAGE: FP-001 PHASE 7B RECONCILIATION" in active
     audit_candidate_review_current = reconciliation_candidate_current or audit_promotion_current or "NEXT STAGE: FRESH INDEPENDENT EXACT-HEAD CANDIDATE REVIEW/CERTIFICATION" in active
     audit_work_start_current = audit_promotion_current or audit_candidate_review_current or "NEXT STAGE: AUTHOR AND REVIEW THE FP-001 AUDIT & EVIDENCE JIT DOMAIN DOSSIER CANDIDATE" in active
@@ -2582,6 +2705,9 @@ def _engineering_standards_certified_state(
     if active.count("- COMMUNICATIONS: REQUIRED / COMPLETE / CERTIFIED / CURRENT v0.1.0") != 1:
         return False, "Open Work required-dossier Communications route is missing or duplicated"
     expected_next = (
+        "NEXT STAGE: WELL-38 — Transition Foundation Integrity to implementation-era CI"
+        if proof_contract_approved_current
+        else
         "NEXT STAGE: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION"
         if hard_stop_current and proof_contract_candidate_current
         else "NEXT STAGE: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION"
@@ -3115,29 +3241,35 @@ def _check_product_semantics(
     roots = integrity_rules["document_roots"]
     readme_path = root / roots["context_index"]
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
-    fp001_candidates = (
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.16.md",
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.14.md",
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.13.md",
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.12.md",
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md",
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md",
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md",
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md",
-        root / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
-    )
-    fp001_path = next((path for path in fp001_candidates if path.is_file()), fp001_candidates[-1])
+    phase8_routes = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {}).get("current_routes", {})
+    skeleton_relative = phase8_routes.get("fp001_skeleton") if isinstance(phase8_routes, dict) else None
+    if not isinstance(skeleton_relative, str):
+        skeleton_relative = next(
+            (
+                str(path)
+                for path in integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
+                if Path(str(path)).name.startswith("FP-001_FEATURE_PACK_SKELETON_WORKING_")
+                and "/archive/" not in f"/{path}"
+            ),
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md",
+        )
+    fp001_path = root / skeleton_relative
     fp001 = fp001_path.read_text(encoding="utf-8") if fp001_path.is_file() else ""
-    atlas_relative_path = next(
-        (
-            str(path)
-            for path in integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
-            if Path(str(path)).name.startswith("DELIVERY_ATLAS_WORKING_")
-        ),
-        "",
+    atlas_relative_path = (
+        phase8_routes.get("delivery_atlas")
+        if isinstance(phase8_routes, dict)
+        else None
     )
+    if not isinstance(atlas_relative_path, str):
+        atlas_relative_path = next(
+            (
+                str(path)
+                for path in integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
+                if Path(str(path)).name.startswith("DELIVERY_ATLAS_WORKING_")
+                and "/archive/" not in f"/{path}"
+            ),
+            "",
+        )
     atlas_path = root / atlas_relative_path if atlas_relative_path else None
     atlas = atlas_path.read_text(encoding="utf-8") if atlas_path is not None and atlas_path.is_file() else ""
 
@@ -5528,7 +5660,7 @@ def _check_fp001_phase7c_candidate(
     phase8_candidate_current = any(
         entry.get("document_id") == "OPEN_WORK"
         and entry.get("lifecycle", "current") != "historical"
-        and entry.get("semver") == "1.2.77"
+        and entry.get("semver") in {"1.2.77", "1.2.78"}
         for entry in _all_entries(manifest)
     )
     if phase8_candidate_current:
@@ -5548,17 +5680,24 @@ def _check_fp001_phase7c_candidate(
             "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.20.md",
             "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md",
         ))
+    if _fp001_phase8_approved_status_successor_is_current(manifest):
+        expected_retired.extend((
+            "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+        ))
     if graph_rules.get("retired_current_predecessor_paths") != expected_retired:
         route_issues.append("manifest does not pin the retired current-predecessor paths")
     for relative in expected_retired:
         if (root / relative).exists():
             route_issues.append(f"unarchived retired predecessor remains at a current path: {relative}")
     expected_current_paths = {
-        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.19.md" if phase8_candidate_current else "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
-        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md" if phase8_candidate_current else "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
-        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md" if phase8_candidate_current else "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.20.md" if _fp001_phase8_approved_status_successor_is_current(manifest) else "working/DELIVERY_ATLAS_WORKING_v0.4.19.md" if phase8_candidate_current else "working/DELIVERY_ATLAS_WORKING_v0.4.16.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md" if _fp001_phase8_approved_status_successor_is_current(manifest) else "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md" if phase8_candidate_current else "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md" if _fp001_phase8_approved_status_successor_is_current(manifest) else "working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md" if phase8_candidate_current else "working/HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
     }
-    open_work_version = "1.2.77" if phase8_candidate_current else "1.2.74"
+    open_work_version = "1.2.78" if _fp001_phase8_approved_status_successor_is_current(manifest) else "1.2.77" if phase8_candidate_current else "1.2.74"
     open_work_path = docs / f"02_OPEN_WORK_v{open_work_version}.md"
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
     state_match = re.search(
@@ -6763,6 +6902,654 @@ def _check_fp001_phase8_proof_contract_lifecycle(
         if not issues else "; ".join(issues),
         path=candidate_path,
     )
+
+
+PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA = "4234965c8da20dbb4ef0a7128614a5070244619a"
+
+
+def _phase8_successor_manifest_history_issues(
+    root: Path,
+    manifest: dict[str, Any],
+    expected_routes: dict[str, str],
+    predecessor_routes: dict[str, tuple[str, str, str, str]],
+    candidate_path: str,
+) -> list[str]:
+    """Allow only the recorded v1.2.78 route/status delta from its pinned base."""
+
+    issues: list[str] = []
+    repository = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if repository.returncode != 0:
+        return ["cannot locate Git repository for the successor manifest comparison"]
+    base_result = subprocess.run(
+        [
+            "git",
+            "-C",
+            repository.stdout.strip(),
+            "show",
+            f"{PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA}:{DEFAULT_MANIFEST}",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if base_result.returncode != 0:
+        return ["pinned predecessor manifest is unavailable for successor comparison"]
+    try:
+        base_manifest = json.loads(
+            base_result.stdout,
+            object_pairs_hook=_reject_duplicate_json_keys,
+        )
+    except (json.JSONDecodeError, TypeError, ValueError):
+        return ["pinned predecessor manifest cannot be parsed for successor comparison"]
+    if not isinstance(base_manifest, dict):
+        return ["pinned predecessor manifest has an invalid root"]
+
+    expected = copy.deepcopy(base_manifest)
+    base_rules = base_manifest.get("integrity_rules", {})
+    expected_rules = expected.get("integrity_rules", {})
+    if not isinstance(base_rules, dict) or not isinstance(expected_rules, dict):
+        return ["pinned predecessor manifest has no integrity rules"]
+
+    base_phase8 = base_rules.get("fp001_phase8_proof_contract_lifecycle", {})
+    phase8 = expected_rules.get("fp001_phase8_proof_contract_lifecycle", {})
+    if not isinstance(base_phase8, dict) or not isinstance(phase8, dict):
+        return ["pinned predecessor manifest has no Phase 8 lifecycle rule"]
+
+    route_hashes = {
+        relative: sha256_file(root / relative) if (root / relative).is_file() else ""
+        for relative in expected_routes.values()
+    }
+    route_hashes[candidate_path] = sha256_file(root / candidate_path) if (root / candidate_path).is_file() else ""
+    phase8_predecessor_hashes = copy.deepcopy(base_phase8.get("predecessor_archives_sha256", {}))
+    base_current_hashes = base_phase8.get("current_route_sha256", {})
+    base_current_routes = base_phase8.get("current_routes", {})
+    if not isinstance(phase8_predecessor_hashes, dict) or not isinstance(base_current_hashes, dict) or not isinstance(base_current_routes, dict):
+        return ["pinned predecessor Phase 8 route or archive hashes are invalid"]
+
+    authority_classes = {
+        "OPEN_WORK_V1_2_77": "PLANNING_TRACKER_HISTORICAL",
+        "DELIVERY_ATLAS_V0_4_19": "DELIVERY_ATLAS_HISTORICAL",
+        "FP001_SKELETON_V0_1_21": "FP001_SKELETON_HISTORICAL",
+        "HARDEN_02_V0_5_21": "HARDEN_02_HISTORICAL",
+    }
+    new_history: list[dict[str, Any]] = []
+    for current_path, (archive_path, document_id, version, successor) in predecessor_routes.items():
+        key = next(
+            (name for name, path in expected_routes.items() if path == current_path),
+            None,
+        )
+        base_current_path = base_current_routes.get(key) if key is not None else None
+        digest = base_current_hashes.get(base_current_path) if isinstance(base_current_path, str) else None
+        if key is None or not isinstance(digest, str) or document_id not in authority_classes:
+            issues.append(f"pinned predecessor manifest does not bind route archive {archive_path}")
+            continue
+        phase8_predecessor_hashes[archive_path] = digest
+        new_history.append(
+            {
+                "document_id": document_id,
+                "canonical_filename": Path(archive_path).name,
+                "semver": version,
+                "repository_path": archive_path,
+                "authority_class": authority_classes[document_id],
+                "sha256": digest,
+                "superseded_version": successor,
+                "lifecycle": "historical",
+                "graph_policy": "frozen_provenance",
+                "provenance_sha256": digest,
+            }
+        )
+
+    candidate_digest = base_phase8.get("candidate_sha256")
+    candidate_archive_path = "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+    new_history.append(
+        {
+            "document_id": "FP001_PHASE8_PROOF_CONTRACT_V0_1_2_REVIEWED_CANDIDATE",
+            "canonical_filename": Path(candidate_path).name,
+            "semver": "0.1.2",
+            "repository_path": candidate_archive_path,
+            "authority_class": "FP001_PHASE8_PROOF_CONTRACT_HISTORICAL",
+            "sha256": candidate_digest,
+            "superseded_version": None,
+            "lifecycle": "historical",
+            "graph_policy": "frozen_provenance",
+            "provenance_sha256": candidate_digest,
+        }
+    )
+
+    phase8.update(
+        {
+            "candidate_exact_head_ci_run": 39484403424,
+            "candidate_lifecycle": "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+            "candidate_merge_sha": PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA,
+            "contract_design_review": "COMPLETE / PASS",
+            "current_contract_sha256": route_hashes.get(candidate_path),
+            "current_route_sha256": route_hashes,
+            "current_routes": expected_routes,
+            "phase8_execution_gate": "WAITING FOR A SEPARATE EXECUTION START",
+            "predecessor_archives_sha256": phase8_predecessor_hashes,
+            "resulting_main_ci_run": 39487861172,
+            "reviewed_candidate_archive_path": candidate_archive_path,
+            "reviewed_candidate_archive_sha256": candidate_digest,
+            "reviewed_candidate_head_sha": "5486c94c1b659dfeb026dcbe6abf91978655c535",
+            "reviewed_candidate_review": "INDEPENDENT REVIEW PASS",
+        }
+    )
+
+    roadmap_name = "roadmap_proof_classification_lifecycle"
+    base_roadmap = base_rules.get(roadmap_name, {})
+    roadmap = expected_rules.get(roadmap_name, {})
+    if not isinstance(base_roadmap, dict) or not isinstance(roadmap, dict):
+        issues.append("pinned predecessor has no Roadmap proof-classification lifecycle rule")
+    else:
+        roadmap_routes = copy.deepcopy(base_roadmap.get("current_routes", {}))
+        roadmap_hashes = copy.deepcopy(base_roadmap.get("current_route_sha256", {}))
+        if not isinstance(roadmap_routes, dict) or not isinstance(roadmap_hashes, dict):
+            issues.append("pinned predecessor Roadmap proof-classification routes are invalid")
+        else:
+            for key in tuple(roadmap_routes):
+                if key not in expected_routes:
+                    issues.append(f"pinned Roadmap proof-classification route has no successor: {key}")
+                    continue
+                old_path = roadmap_routes[key]
+                roadmap_routes[key] = expected_routes[key]
+                roadmap_hashes.pop(old_path, None)
+                roadmap_hashes[expected_routes[key]] = route_hashes.get(expected_routes[key], "")
+            roadmap["current_routes"] = roadmap_routes
+            roadmap["current_route_sha256"] = roadmap_hashes
+
+    promotion_name = "fp001_phase7c_final_contract_current_promotion"
+    promotion = expected_rules.get(promotion_name, {})
+    if not isinstance(promotion, dict):
+        issues.append("pinned predecessor has no Phase 7C promotion rule")
+    else:
+        promotion["current_paths"] = expected_routes
+        promotion["current_route_status_successor_version"] = "1.2.78 / 0.4.20 / 0.1.22 / 0.5.22"
+
+    graph = expected_rules.get("graph_rules", {})
+    base_graph = base_rules.get("graph_rules", {})
+    if not isinstance(graph, dict) or not isinstance(base_graph, dict):
+        issues.append("pinned predecessor has no graph routing rules")
+    else:
+        navigation = list(base_graph.get("navigation_document_paths", []))
+        for key in ("delivery_atlas", "fp001_skeleton", "harden_02"):
+            old_path = base_phase8.get("current_routes", {}).get(key)
+            if old_path not in navigation:
+                issues.append(f"pinned graph navigation omits predecessor route {old_path}")
+            else:
+                navigation[navigation.index(old_path)] = expected_routes[key]
+        graph["navigation_document_paths"] = navigation
+        graph["retired_current_predecessor_paths"] = list(
+            base_graph.get("retired_current_predecessor_paths", [])
+        ) + [
+            current_path.replace(Path(current_path).name, Path(details[0]).name)
+            for current_path, details in predecessor_routes.items()
+        ]
+        guard_note = str(base_graph.get("stale_predecessor_current_path_guard_note", ""))
+        marker = "Current WELL-2 routing uses "
+        if marker not in guard_note:
+            issues.append("pinned graph predecessor note has no current WELL-2 route statement")
+        else:
+            graph["stale_predecessor_current_path_guard_note"] = guard_note.split(marker, 1)[0] + (
+                "Current WELL-2 routing uses Open Work v1.2.78, Atlas v0.4.20, "
+                "FP-001 Skeleton v0.1.22, HARDEN-02 v0.5.22 and approved proof contract v0.1.2; "
+                "its exact reviewed candidate is preserved at the archive path."
+            )
+
+    open_work = next(
+        (
+            item
+            for item in expected.get("governing_documents", [])
+            if item.get("document_id") == "OPEN_WORK"
+        ),
+        None,
+    )
+    if not isinstance(open_work, dict):
+        issues.append("pinned manifest has no current Open Work entry")
+    else:
+        open_work.update(
+            {
+                "canonical_filename": Path(expected_routes["open_work"]).name,
+                "semver": "1.2.78",
+                "repository_path": expected_routes["open_work"],
+                "sha256": route_hashes.get(expected_routes["open_work"], ""),
+                "superseded_version": "1.2.77",
+                "lifecycle": "current",
+            }
+        )
+
+    expected.setdefault("historical_documents", []).extend(new_history)
+    expected["integrity_rules"] = expected_rules
+    if expected != manifest:
+        changed = [
+            key
+            for key in set(expected) | set(manifest)
+            if expected.get(key) != manifest.get(key)
+        ]
+        if "integrity_rules" in changed:
+            expected_rule_map = expected.get("integrity_rules", {})
+            manifest_rule_map = manifest.get("integrity_rules", {})
+            changed.extend(
+                f"integrity_rules.{key}"
+                for key in set(expected_rule_map) | set(manifest_rule_map)
+                if expected_rule_map.get(key) != manifest_rule_map.get(key)
+            )
+            for name in ("fp001_phase8_proof_contract_lifecycle", "graph_rules"):
+                expected_section = expected_rule_map.get(name, {})
+                actual_section = manifest_rule_map.get(name, {})
+                if isinstance(expected_section, dict) and isinstance(actual_section, dict):
+                    changed.extend(
+                        f"integrity_rules.{name}.{key}"
+                        for key in set(expected_section) | set(actual_section)
+                        if expected_section.get(key) != actual_section.get(key)
+                    )
+        changed.sort()
+        issues.append(
+            "successor manifest changes more than the pinned status, route and archive transition: "
+            + ", ".join(changed)
+        )
+    return issues
+
+
+def _phase8_approved_status_successor_issues(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+) -> list[str]:
+    """Check the v1.2.78 route, archived predecessors and bounded proof stop."""
+
+    issues: list[str] = []
+    if not _fp001_phase8_approved_status_successor_is_current(manifest):
+        return ["Open Work v1.2.78 is not the sole current status successor"]
+
+    expected_routes = {
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.78.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md",
+        "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
+    }
+    predecessor_routes = {
+        "docs/00_platform/02_OPEN_WORK_v1.2.78.md": (
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.77.md",
+            "OPEN_WORK_V1_2_77",
+            "1.2.77",
+            "1.2.78",
+        ),
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md": (
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+            "DELIVERY_ATLAS_V0_4_19",
+            "0.4.19",
+            "0.4.20",
+        ),
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": (
+            "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+            "FP001_SKELETON_V0_1_21",
+            "0.1.21",
+            "0.1.22",
+        ),
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": (
+            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+            "HARDEN_02_V0_5_21",
+            "0.5.21",
+            "0.5.22",
+        ),
+    }
+    phase8_rule = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {})
+    if not isinstance(phase8_rule, dict):
+        return ["Phase 8 proof-contract lifecycle rule is missing"]
+    if phase8_rule.get("current_routes") != expected_routes:
+        issues.append("Phase 8 lifecycle current routes do not match the v1.2.78 successor set")
+    candidate_path = "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+    expected_route_hashes = {*expected_routes.values(), candidate_path}
+    route_hashes = phase8_rule.get("current_route_sha256", {})
+    if not isinstance(route_hashes, dict) or set(route_hashes) != expected_route_hashes:
+        issues.append("Phase 8 lifecycle route hash map is incomplete or includes a stale route")
+    issues.extend(
+        _phase8_successor_manifest_history_issues(
+            root,
+            manifest,
+            expected_routes,
+            predecessor_routes,
+            candidate_path,
+        )
+    )
+
+    entries = _all_entries(manifest)
+    current_open_work = _active_open_work_entry(manifest)
+    if (
+        not isinstance(current_open_work, dict)
+        or _relative_path(current_open_work) != expected_routes["open_work"]
+        or current_open_work.get("semver") != "1.2.78"
+        or current_open_work.get("superseded_version") != "1.2.77"
+    ):
+        issues.append("manifest Open Work lineage is not v1.2.77 → v1.2.78")
+
+    active_files: dict[str, str] = {}
+    for label, relative in expected_routes.items():
+        path = root / relative
+        if not path.is_file() or path.is_symlink():
+            issues.append(f"current {label} route is missing or is a symlink: {relative}")
+            active_files[label] = ""
+            continue
+        digest = sha256_file(path)
+        active_files[label] = path.read_text(encoding="utf-8")
+        if route_hashes.get(relative) != digest:
+            issues.append(f"Phase 8 current-route SHA-256 differs: {relative}")
+        archived_route, document_id, version, successor = predecessor_routes.get(relative, ("", "", "", ""))
+        if archived_route:
+            archived = root / archived_route
+            historical_entry = next(
+                (entry for entry in entries if entry.get("document_id") == document_id),
+                None,
+            )
+            retired_current = root / relative
+            retired_current = retired_current.with_name(Path(archived_route).name)
+            expected_hash = historical_entry.get("sha256") if isinstance(historical_entry, dict) else None
+            if (
+                not archived.is_file()
+                or not isinstance(expected_hash, str)
+                or sha256_file(archived) != expected_hash
+                or historical_entry.get("repository_path") != archived_route
+                or historical_entry.get("semver") != version
+                or historical_entry.get("superseded_version") != successor
+                or historical_entry.get("lifecycle") != "historical"
+                or historical_entry.get("graph_policy") != "frozen_provenance"
+                or historical_entry.get("provenance_sha256") != expected_hash
+            ):
+                issues.append(f"immediate predecessor archive is missing or not manifest-pinned: {archived_route}")
+            if retired_current.exists():
+                issues.append(f"predecessor remains at its former current path: {retired_current.relative_to(root).as_posix()}")
+
+    navigation = integrity_rules.get("graph_rules", {}).get("navigation_document_paths", [])
+    for key, relative in expected_routes.items():
+        if key != "open_work" and relative not in navigation:
+            issues.append(f"manifest graph navigation omits current route: {relative}")
+    if candidate_path not in navigation:
+        issues.append("manifest graph navigation omits the current TB-001 contract")
+
+    open_work = active_files.get("open_work", "")
+    state = _open_work_lifecycle_state(open_work)
+    expected_state = {
+        "status_successor_version": "1.2.78",
+        "status_successor_base_sha": PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA,
+        "next_stage": "WELL-38 — Transition Foundation Integrity to implementation-era CI",
+        "proof_classification": "NEW_TRACER_BULLET",
+        "tracer_bullet": "REQUIRED / DEFINED",
+        "tracer_bullet_id": "TB-001",
+        "proof_design": "FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
+        "architectural_proof_execution": "NOT STARTED",
+        "proof_result": "NOT STARTED",
+        "proof_certification": "NOT STARTED",
+        "proof_contract_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
+        "proof_contract_lifecycle": "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
+        "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
+        "phase8": "AUTHORISED",
+        "application_implementation": "AUTHORISED",
+        "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
+        "next_governance_action": "WELL-38 — Transition Foundation Integrity to implementation-era CI",
+        "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
+        "current_fp001_skeleton": "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md",
+        "current_harden_02": "working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md",
+        "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
+        "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
+        "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
+        "phase_7c_execution_tracker_state": "CLOSED / COMPLETED",
+    }
+    if state is None or any(state.get(key) != value for key, value in expected_state.items()):
+        issues.append("Open Work lifecycle state changes a certified route or weakens the bounded proof stop")
+    active_start = open_work.find("# 9. Immediate Next Action")
+    active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
+    open_work_active = open_work[active_start:active_end] if active_start >= 0 and active_end > active_start else ""
+    current_status_tokens = (
+        "TB-001 CONTRACT LIFECYCLE: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "CONTRACT/DESIGN REVIEW: COMPLETE / PASS",
+        "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
+        "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
+        "PROOF EXECUTION: NOT STARTED",
+        "PROOF RESULT: NOT STARTED",
+        "PROOF CERTIFICATION: NOT STARTED",
+        "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+        "NEXT GOVERNANCE ACTION: WELL-38 — Transition Foundation Integrity to implementation-era CI",
+    )
+    if any(token not in open_work_active for token in current_status_tokens):
+        issues.append("current Open Work route omits the approved contract or downstream stop state")
+    if re.search(r"(?im)^\s*PHASE 9(?: / VERTICAL SLICES)?\s*:\s*(?:AUTHORI[ZS]ED|STARTED|IN PROGRESS|COMPLETE)", open_work_active):
+        issues.append("current Open Work authorises or starts Phase 9")
+    if re.search(r"(?im)^\s*PROOF (?:EXECUTION|RESULT|CERTIFICATION)\s*:\s*(?:PASS|COMPLETE|CERTIFIED)", open_work_active):
+        issues.append("current Open Work claims proof execution, result or certification")
+
+    candidate = root / candidate_path
+    candidate_hash = sha256_file(candidate) if candidate.is_file() else None
+    candidate_archive_path = "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+    candidate_archive = root / candidate_archive_path
+    candidate_history = next(
+        (entry for entry in entries if entry.get("document_id") == "FP001_PHASE8_PROOF_CONTRACT_V0_1_2_REVIEWED_CANDIDATE"),
+        None,
+    )
+    reviewed_hash = phase8_rule.get("reviewed_candidate_archive_sha256")
+    if (
+        phase8_rule.get("candidate_path") != candidate_path
+        or phase8_rule.get("candidate_lifecycle") != "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION"
+        or phase8_rule.get("contract_design_review") != "COMPLETE / PASS"
+        or phase8_rule.get("proof_design") != "FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS"
+        or phase8_rule.get("proof_execution") != "NOT STARTED"
+        or phase8_rule.get("proof_result") != "NOT STARTED"
+        or phase8_rule.get("proof_certification") != "NOT STARTED"
+        or phase8_rule.get("phase9_vertical_slices") != "NOT STARTED / NOT AUTHORISED"
+        or phase8_rule.get("phase8_execution_gate") != "WAITING FOR A SEPARATE EXECUTION START"
+        or phase8_rule.get("reviewed_candidate_archive_path") != candidate_archive_path
+        or not isinstance(reviewed_hash, str)
+        or candidate_hash is None
+        or not candidate_archive.is_file()
+        or sha256_file(candidate_archive) != reviewed_hash
+        or reviewed_hash != phase8_rule.get("candidate_sha256")
+        or not isinstance(candidate_history, dict)
+        or candidate_history.get("repository_path") != candidate_archive_path
+        or candidate_history.get("lifecycle") != "historical"
+        or candidate_history.get("graph_policy") != "frozen_provenance"
+        or candidate_history.get("sha256") != reviewed_hash
+        or candidate_history.get("provenance_sha256") != reviewed_hash
+    ):
+        issues.append("reviewed TB-001 candidate bytes or approved lifecycle provenance are not preserved")
+    if isinstance(route_hashes, dict) and route_hashes.get(candidate_path) != candidate_hash:
+        issues.append("current TB-001 contract hash differs from the manifest route pin")
+    candidate_text = candidate.read_text(encoding="utf-8") if candidate.is_file() else ""
+    for token in (
+        "TB-001",
+        "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
+        "PROOF EXECUTION: NOT STARTED",
+        "PROOF RESULT: NOT STARTED",
+        "PROOF CERTIFICATION: NOT STARTED",
+        "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+    ):
+        if token.casefold() not in candidate_text.casefold():
+            issues.append(f"current TB-001 contract omits required boundary {token!r}")
+    if not re.search(
+        r"(?i)contract/design review:\*{0,2}\s*complete / pass",
+        candidate_text,
+    ):
+        issues.append("current TB-001 contract omits the completed design-review status")
+
+    readme_path = root / "docs/00_platform/README.md"
+    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() and not readme_path.is_symlink() else ""
+    readme_current = _markdown_h2_section(readme, "Current State") or ""
+    if any(token not in readme_current for token in current_status_tokens):
+        issues.append("README current state does not mirror the approved contract and execution stop")
+    active_artifacts = _markdown_h2_section(readme, "Active Working Artifacts") or ""
+    for relative in (*[path for key, path in expected_routes.items() if key != "open_work"], candidate_path):
+        route = relative.removeprefix("docs/00_platform/")
+        if route not in active_artifacts:
+            issues.append(f"README active working routing omits {route}")
+    atlas_routing = _markdown_h2_section(readme, "Delivery Atlas routing") or ""
+    if "working/DELIVERY_ATLAS_WORKING_v0.4.20.md" not in atlas_routing:
+        issues.append("README Delivery Atlas routing does not name the current v0.4.20 route")
+    default_context = _markdown_h2_section(readme, "Default Agent Context") or ""
+    if "02_OPEN_WORK_v1.2.78.md" not in default_context or "02_OPEN_WORK_v1.2.77.md" in default_context:
+        issues.append("README default context does not route current Open Work v1.2.78")
+
+    route_status_tokens = (
+        "current / approved for bounded phase 8 proof execution",
+        "contract/design review: complete / pass",
+        "proof execution: not started",
+        "proof result: not started",
+        "proof certification: not started",
+        "phase 9 / vertical slices: not started / not authorised",
+    )
+    for key in ("delivery_atlas", "fp001_skeleton", "harden_02"):
+        route_text = active_files.get(key, "")
+        if any(token not in route_text.casefold() for token in route_status_tokens):
+            issues.append(f"current {key} route omits the approved TB-001 status or downstream stop")
+        if "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md" not in route_text:
+            issues.append(f"current {key} route does not link the approved TB-001 contract")
+
+    skeleton_text = active_files.get("fp001_skeleton", "")
+    skeleton_predecessor = root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md"
+    marker_start = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->"
+    marker_end = "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->"
+
+    def pmr_block(text: str) -> str:
+        if text.count(marker_start) != 1 or text.count(marker_end) != 1:
+            return ""
+        start = text.index(marker_start)
+        end = text.index(marker_end)
+        return text[start : end + len(marker_end)] if start < end else ""
+
+    predecessor_skeleton_text = skeleton_predecessor.read_text(encoding="utf-8") if skeleton_predecessor.is_file() else ""
+    if not pmr_block(skeleton_text) or pmr_block(skeleton_text) != pmr_block(predecessor_skeleton_text):
+        issues.append("current Skeleton PMR contract block differs from archived v0.1.21")
+    if "The six affected Domains and seven material capability relationships remain unchanged." not in skeleton_text:
+        issues.append("current Skeleton does not preserve the certified six-Domain/seven-capability scope")
+
+    application_sources = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {}).get("application_source_paths_created")
+    if application_sources != [] or _executable_application_source_paths(root):
+        issues.append("implementation-era status transition added executable application source")
+    standards = [
+        entry for entry in manifest.get("reference_documents", [])
+        if entry.get("document_id") == "ENGINEERING_STANDARDS"
+        and entry.get("lifecycle") == "current"
+    ]
+    if len(standards) != 1 or standards[0].get("repository_path") != "docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md":
+        issues.append("Engineering Standards supporting authority is not uniquely current")
+
+    return issues
+
+
+def _audit_exact_predecessor_commit(root: Path, sha: str) -> tuple[bool, str]:
+    """Run the full audit on the pinned pre-transition tree from Git history."""
+
+    if sha != PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA:
+        return False, "status successor base SHA is not the required main baseline"
+    repository = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if repository.returncode != 0:
+        return False, "cannot locate Git repository for the pinned predecessor audit"
+    repository_root = Path(repository.stdout.strip())
+    check = subprocess.run(
+        ["git", "-C", str(repository_root), "cat-file", "-e", f"{sha}^{{commit}}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if check.returncode != 0:
+        return False, f"pinned predecessor commit is unavailable: {sha}"
+    with tempfile.TemporaryDirectory(prefix="foundation-integrity-predecessor-") as directory:
+        archive_path = Path(directory) / "predecessor.tar"
+        tree_path = Path(directory) / "tree"
+        tree_path.mkdir()
+        with archive_path.open("wb") as output:
+            archived = subprocess.run(
+                ["git", "-C", str(repository_root), "archive", "--format=tar", sha],
+                stdout=output,
+                stderr=subprocess.PIPE,
+                text=False,
+                check=False,
+            )
+        if archived.returncode != 0:
+            error = archived.stderr.decode("utf-8", errors="replace").strip()
+            return False, f"cannot export pinned predecessor tree: {error}"
+        try:
+            with tarfile.open(archive_path, "r:") as archive:
+                archive.extractall(tree_path, filter="data")
+        except (OSError, tarfile.TarError) as error:
+            return False, f"cannot materialize pinned predecessor tree: {error}"
+        predecessor_manifest = tree_path / DEFAULT_MANIFEST
+        if not predecessor_manifest.is_file():
+            return False, "pinned predecessor has no current authority manifest"
+        report = run_audit(tree_path, predecessor_manifest)
+        if report.get("status") != "PASS":
+            failures = "; ".join(
+                f"{finding.get('check')}: {finding.get('message')}"
+                for finding in report.get("findings", [])[:5]
+            )
+            return False, f"pinned predecessor full audit failed: {failures}"
+        return True, f"exact predecessor {sha} passes {report.get('assertion_count')} Foundation Integrity assertions"
+
+
+def _check_phase8_approved_status_successor(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> bool:
+    issues = _phase8_approved_status_successor_issues(root, manifest, integrity_rules)
+    transition_ok = not issues
+    _record_check(
+        report,
+        "phase8_approved_status_successor_current",
+        transition_ok,
+        "Open Work v1.2.78 routes approved TB-001 and preserves the separate proof-execution and Phase 9 stops"
+        if transition_ok
+        else "; ".join(issues),
+        path="docs/00_platform/02_OPEN_WORK_v1.2.78.md",
+    )
+
+    state = _open_work_lifecycle_state(
+        (root / "docs/00_platform/02_OPEN_WORK_v1.2.78.md").read_text(encoding="utf-8")
+    ) if (root / "docs/00_platform/02_OPEN_WORK_v1.2.78.md").is_file() else None
+    base_sha = state.get("status_successor_base_sha") if isinstance(state, dict) else ""
+    predecessor_ok, predecessor_message = _audit_exact_predecessor_commit(root, str(base_sha))
+    _record_check(
+        report,
+        "phase8_approved_status_successor_predecessor_full_audit",
+        predecessor_ok,
+        predecessor_message,
+        path="docs/00_platform/02_OPEN_WORK_v1.2.77.md",
+    )
+
+    historical_names = (
+        "roadmap_proof_classification_lifecycle",
+        "fp001_development_entry_hard_stop_lifecycle",
+        "fp001_phase8_proof_contract_lifecycle",
+        "fp001_pmr_reconciliation",
+        "fp001_phase7b_baseline_and_dossiers",
+        "fp001_phase7b_gate_routing",
+        "fp001_phase7b_certification_current",
+        "fp001_phase7c_final_contract_current_promotion",
+        "platform_readme_router_consistency",
+    )
+    classification_ok = transition_ok and predecessor_ok
+    for name in historical_names:
+        _record_check(
+            report,
+            name,
+            classification_ok,
+            "predecessor-era current-status assertions are verified on the pinned exact-SHA snapshot; current routing and transition gates are checked on v1.2.78"
+            if classification_ok
+            else "historical/current classification cannot pass because successor state or predecessor full audit failed",
+            path="docs/00_platform/02_OPEN_WORK_v1.2.78.md",
+        )
+    return transition_ok and predecessor_ok
 
 
 def _check_platform_readme_router_consistency(
@@ -10345,16 +11132,23 @@ def run_audit(
         )
     if _production_mode(expected_counts):
         _check_production_graph(root, manifest, integrity_rules, report)
-        _check_roadmap_proof_classification_lifecycle(root, manifest, integrity_rules, report)
-        _check_fp001_development_entry_hard_stop_lifecycle(root, manifest, integrity_rules, report)
-        _check_fp001_phase8_proof_contract_lifecycle(root, manifest, integrity_rules, report)
         _check_product_semantics(root, entries, integrity_rules, report)
-        _check_fp001_pmr_reconciliation(root, manifest, integrity_rules, report)
-        _check_fp001_phase7b_candidate(root, manifest, integrity_rules, report)
-        _check_fp001_phase7b_certification_current(root, manifest, integrity_rules, report)
-        _check_fp001_phase7c_candidate(root, manifest, integrity_rules, report)
-        _check_fp001_phase7c_current_promotion(root, manifest, integrity_rules, report)
-        _check_platform_readme_router_consistency(root, report)
+        if _fp001_phase8_approved_status_successor_is_current(manifest):
+            # The predecessor-era suite runs against its pinned exact-SHA snapshot.
+            # The successor receives explicit current-path, archive-provenance and
+            # proof-stop checks so old status assertions do not masquerade as current.
+            _check_phase8_approved_status_successor(root, manifest, integrity_rules, report)
+            _check_fp001_phase7c_candidate(root, manifest, integrity_rules, report)
+        else:
+            _check_roadmap_proof_classification_lifecycle(root, manifest, integrity_rules, report)
+            _check_fp001_development_entry_hard_stop_lifecycle(root, manifest, integrity_rules, report)
+            _check_fp001_phase8_proof_contract_lifecycle(root, manifest, integrity_rules, report)
+            _check_fp001_pmr_reconciliation(root, manifest, integrity_rules, report)
+            _check_fp001_phase7b_candidate(root, manifest, integrity_rules, report)
+            _check_fp001_phase7b_certification_current(root, manifest, integrity_rules, report)
+            _check_fp001_phase7c_candidate(root, manifest, integrity_rules, report)
+            _check_fp001_phase7c_current_promotion(root, manifest, integrity_rules, report)
+            _check_platform_readme_router_consistency(root, report)
     else:
         _record_check(report, "fixture_graph_scope", True, "fixture graph checks use explicit reduced expectations")
 

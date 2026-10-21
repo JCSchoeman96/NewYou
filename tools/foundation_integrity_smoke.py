@@ -26,7 +26,7 @@ from tools.foundation_integrity_audit import (
     sha256_file,
 )
 
-REQUIRED_CURRENT_AUTHORITIES = {
+CURRENT_AUTHORITY_ORDER = (
     "PROJECT_NORTH_STAR_AND_MVP",
     "PLATFORM_BASELINE",
     "DECISION_REGISTER",
@@ -36,7 +36,20 @@ REQUIRED_CURRENT_AUTHORITIES = {
     "PLATFORM_OPERATING_MODEL",
     "FRONTEND_EXPERIENCE_SYSTEM",
     "OPEN_WORK",
-}
+)
+REQUIRED_CURRENT_AUTHORITIES = frozenset(CURRENT_AUTHORITY_ORDER)
+
+
+def _default_agent_authority_routes(readme: str) -> list[str]:
+    marker = "## Default Agent Context"
+    if marker not in readme:
+        return []
+    section = readme.split(marker, 1)[1]
+    section = re.split(r"(?m)^##\s+", section, maxsplit=1)[0]
+    route_pattern = re.compile(
+        r"(?m)^\s*\d+\.\s+(?:`([^`\n]+)`|\[[^\]]+\]\(([^)\s]+)(?:\s+[^)]*)?\))"
+    )
+    return [first or second for first, second in route_pattern.findall(section)]
 
 
 def _active_working_routes(readme: str) -> list[str]:
@@ -45,7 +58,10 @@ def _active_working_routes(readme: str) -> list[str]:
         return []
     section = readme.split(marker, 1)[1]
     section = re.split(r"(?m)^##\s+", section, maxsplit=1)[0]
-    return re.findall(r"(?m)^\s*[-*]\s+`([^`\s]+\.md)`", section)
+    route_pattern = re.compile(
+        r"(?m)^\s*[-*]\s+(?:`([^`\s]+\.md)`|\[[^\]]+\]\(([^)\s]+\.md)(?:\s+[^)]*)?\))"
+    )
+    return [first or second for first, second in route_pattern.findall(section)]
 
 
 def _route_resolves_outside_archive(root: Path, route: Path, target: Path) -> bool:
@@ -143,14 +159,49 @@ def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[
             path=relative,
         )
 
-    readme_path = root / str(integrity_rules["document_roots"]["context_index"])
-    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme_relative = Path(str(integrity_rules["document_roots"]["context_index"]))
+    readme_target = (root / readme_relative).resolve()
+    readme_path_valid = _route_resolves_outside_archive(root, readme_relative, readme_target)
+    readme_path = root / readme_relative
+    readme_exists = readme_path_valid and readme_target.is_file()
+    readme = readme_target.read_text(encoding="utf-8") if readme_exists else ""
     _record_check(
         report,
         "smoke_readme_exists",
-        bool(readme),
-        "current routing README is present" if readme else "current routing README is missing or empty",
-        path=str(readme_path.relative_to(root)) if readme_path.is_relative_to(root) else str(readme_path),
+        readme_exists and bool(readme),
+        "current routing README is present"
+        if readme_exists and readme
+        else "current routing README is missing, empty, unsafe, or resolves into archive",
+        path=readme_relative.as_posix(),
+    )
+
+    current_governing_entries = {
+        str(entry.get("document_id")): entry
+        for entry in manifest.get("governing_documents", [])
+        if isinstance(entry, dict) and entry.get("lifecycle", "current") != "historical"
+    }
+    expected_authority_routes = []
+    for document_id in CURRENT_AUTHORITY_ORDER:
+        entry = current_governing_entries.get(document_id)
+        if entry is None:
+            continue
+        repository_path = Path(str(entry.get("repository_path", "")))
+        try:
+            expected_authority_routes.append(
+                repository_path.relative_to("docs/00_platform").as_posix()
+            )
+        except ValueError:
+            expected_authority_routes.append(repository_path.as_posix())
+    readme_authority_routes = _default_agent_authority_routes(readme)
+    authority_routes_match = readme_authority_routes == expected_authority_routes
+    _record_check(
+        report,
+        "smoke_readme_authority_inventory",
+        authority_routes_match,
+        "README default context routes exactly the current authority manifest inventory"
+        if authority_routes_match
+        else f"README default authority routes differ from manifest routes: README={readme_authority_routes}, manifest={expected_authority_routes}",
+        path=readme_relative.as_posix(),
     )
 
     working_routes = _active_working_routes(readme)

@@ -46,6 +46,80 @@ class FoundationSmokeTests(unittest.TestCase):
             self.assertTrue(failed_paths)
             self.assertIn("archived=True", failed_paths[0]["message"])
 
+    def test_smoke_rejects_extra_archived_default_agent_authority_route(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._fixture(directory)
+            readme_path = root / "docs/00_platform/README.md"
+            readme = readme_path.read_text(encoding="utf-8")
+            current_open_work = "9. `02_OPEN_WORK_v1.2.77.md`"
+            self.assertIn(current_open_work, readme)
+            readme_path.write_text(
+                readme.replace(
+                    current_open_work,
+                    current_open_work + "\n10. `archive/02_OPEN_WORK_v1.2.76.md`",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    check["name"] == "smoke_readme_authority_inventory" and check["status"] == "FAIL"
+                    for check in report["checks"]
+                ),
+                report["checks"],
+            )
+
+    def test_smoke_rejects_archived_active_working_markdown_link(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._fixture(directory)
+            readme_path = root / "docs/00_platform/README.md"
+            readme = readme_path.read_text(encoding="utf-8")
+            current_route = "working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md"
+            current_bullet = f"- `{current_route}`"
+            self.assertIn(current_bullet, readme)
+            readme_path.write_text(
+                readme.replace(
+                    current_bullet,
+                    "- [Experience Decisions](archive/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md)",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    check["name"] == "smoke_current_working_path" and check["status"] == "FAIL"
+                    for check in report["checks"]
+                ),
+                report["checks"],
+            )
+
+    def test_smoke_rejects_readme_symlink_into_archive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._fixture(directory)
+            readme_path = root / "docs/00_platform/README.md"
+            archive_path = root / "docs/00_platform/archive/README.md"
+            readme_path.rename(archive_path)
+            readme_path.symlink_to(Path("archive/README.md"))
+
+            report = run_smoke_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    check["name"] == "smoke_readme_exists" and check["status"] == "FAIL"
+                    for check in report["checks"]
+                ),
+                report["checks"],
+            )
+
     def test_smoke_rejects_current_routes_resolving_to_archive_symlinks(self):
         for route_kind in ("manifest", "working"):
             with self.subTest(route_kind=route_kind), tempfile.TemporaryDirectory() as directory:

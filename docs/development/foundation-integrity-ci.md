@@ -100,22 +100,39 @@ python3 -m compileall -q tools tests
 PASS
 
 python3 -m unittest discover -s tests -v
-Ran 521 tests in 874.634s
+Ran 534 tests in 867.562s
 OK
 
 python3 -m unittest discover -s tests -p 'test_foundation_smoke.py' -v
-Ran 13 tests
+Ran 22 tests
 OK
 
 python3 tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
 PASS — 900 assertions, 0 findings
 
 python3 -m tools.foundation_integrity_smoke --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
-PASS — 46 assertions, 0 findings
+PASS — 47 assertions, 0 findings
 
-git diff --check HEAD
+git diff --check 4234965c8da20dbb4ef0a7128614a5070244619a
 PASS
 ```
+
+The read-only successor check used PR #133 at head
+`4b920180bca39ffa369579776335a6fd61885efd` as the current tree:
+
+```text
+python3 tools/foundation_integrity_audit.py --root <PR #133 checkout> --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+PASS — 928 assertions, 0 findings
+
+python3 -m tools.foundation_integrity_smoke --root <PR #133 checkout> --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+PASS — 47 assertions, 0 findings
+```
+
+Mutation checks confirmed the lane boundary remains fail-closed. Changing the
+archived Skeleton v0.1.21 bytes in a disposable copy of that tree made Full
+fail with 12 findings. Routing manifest Open Work v1.2.78 into `archive/` made
+Smoke fail with three findings. The exact predecessor audit passes only the
+pinned main SHA `4234965c8da20dbb4ef0a7128614a5070244619a`.
 
 ## Reclassification of PR #133 legacy failures
 
