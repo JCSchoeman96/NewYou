@@ -6608,23 +6608,17 @@ def _check_fp001_phase8_proof_contract_lifecycle(
     candidate_path = "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
     candidate_rel = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
     current_routes = {
-        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.78.md",
-        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
-        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md",
-        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md",
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
     }
     expected_fixed = {
         "candidate_path": candidate_path,
         "candidate_relative_path": candidate_rel,
         "candidate_version": "0.1.2",
-        "candidate_lifecycle": "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
-        "contract_design_review": "COMPLETE / PASS",
-        "reviewed_candidate_head_sha": "5486c94c1b659dfeb026dcbe6abf91978655c535",
-        "reviewed_candidate_review": "INDEPENDENT REVIEW PASS",
-        "candidate_merge_sha": "4234965c8da20dbb4ef0a7128614a5070244619a",
-        "candidate_exact_head_ci_run": 39484403424,
-        "resulting_main_ci_run": 39487861172,
+        "candidate_lifecycle": "CANDIDATE / REVIEW PENDING / NOT CERTIFIED",
         "tracer_bullet_id": "TB-001",
         "id_allocation_authority": "Open Work v1.2.74 §§7, 9 and 12.30: Phase 8 uses TB-nnn for materially unproven paths; the prior promotion deferred the identifier and routed contract/task definition next. WELL-2 is that definition stage; Atlas lifecycle does not allocate IDs.",
         "candidate_base_main_sha": "0972864ef7f4638c96198e19a13977e0151e9726",
@@ -6634,18 +6628,15 @@ def _check_fp001_phase8_proof_contract_lifecycle(
         "proof_result": "NOT STARTED",
         "proof_certification": "NOT STARTED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-        "phase8_execution_gate": "WAITING FOR A SEPARATE EXECUTION START",
-        "reviewed_candidate_archive_path": "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
-        "reviewed_candidate_archive_sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
-        "current_contract_sha256": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4",
+        "phase8_execution_gate": "WAITING FOR CONTRACT APPROVAL AND A SEPARATE EXECUTION START",
         "current_routes": current_routes,
         "current_route_sha256": {
-            "docs/00_platform/02_OPEN_WORK_v1.2.78.md": "7ab24ce13ba37306c78cd795f3bb308c75a8d6627aa5ea8780bd2b162f013770",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md": "961aff33d733fbde63c47dc1993c7d34a91130cfcfdab84394121889ddee0721",
-            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": "4b15a9e29164841bbfe3ad153d4ddc9b7770a404f03bc5c6484ce5669a158539",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": "b4e4e1c90d73275626889acbfec8f04c880456de8596e8b79424365de304d80f",
+            "docs/00_platform/02_OPEN_WORK_v1.2.77.md": "083afb593ef2e073b1f3d2964637a35dd91004a7d28c2d501814ba35a767db48",
+            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md": "f128e80165510e0934dd3076408b736a6cca88707226df199265715dc3f39922",
+            "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md": "f744d32468d93eab25f3ac88c4d30ef981087ce22b4b75675f9ded38b3916c3b",
+            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md": "1549525632055bb8a44b905e9bac32a32901f84e17b0358579751d3ad6458096",
             "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
-            "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4",
+            "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
         },
         "predecessor_archives_sha256": {
             "docs/00_platform/archive/02_OPEN_WORK_v1.2.74.md": "0872b5566f38a6c9cff53dbf7a236c0ba5b74308053aeb91796a45a3e9d9f852",
@@ -6662,10 +6653,6 @@ def _check_fp001_phase8_proof_contract_lifecycle(
             "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md": "d3fd678e8eef6ac43109f294ed811587e323d3d2ff555459eb47e9c8324087f1",
             "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.20.md": "d36133b08b496dd6c000c1e96ff5e78a352c4376e784efd2b3cab9838c710f31",
             "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md": "817137641e33d9d74350e7f74a05778b3a80c0ea34e1e125dce905467c8974d2",
-            "docs/00_platform/archive/02_OPEN_WORK_v1.2.77.md": "083afb593ef2e073b1f3d2964637a35dd91004a7d28c2d501814ba35a767db48",
-            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.19.md": "f128e80165510e0934dd3076408b736a6cca88707226df199265715dc3f39922",
-            "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md": "f744d32468d93eab25f3ac88c4d30ef981087ce22b4b75675f9ded38b3916c3b",
-            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.21.md": "1549525632055bb8a44b905e9bac32a32901f84e17b0358579751d3ad6458096",
         },
         "frozen_source_sha256": {
             "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md": "249f5985ff1e8971e1ac4437e4bbebd5a3db9254ab25a2238e135cb7a7ae5f4b",
@@ -6905,7 +6892,7 @@ def _check_fp001_phase8_proof_contract_lifecycle(
     if re.search(r"(?im)^\s*PHASE 9(?: / VERTICAL SLICES)?\s*:\s*(?:AUTHORI[ZS]ED|STARTED|IN PROGRESS|COMPLETE)", text):
         issues.append("TB-001 candidate authorises Phase 9 / Vertical Slices")
     if _executable_application_source_paths(root):
-        issues.append("application implementation source exists before a separate TB-001 proof execution start")
+        issues.append("application implementation source exists before TB-001 contract approval and execution start")
 
     _record_check(
         report,

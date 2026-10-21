@@ -17,6 +17,7 @@ from tests.foundation_test_support import historical_snapshot_path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
+SUCCESSOR_CHECK = "phase8_approved_status_successor_current"
 CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
 OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.78.md"
 HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
@@ -238,6 +239,8 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", active_status)
         self.assertIn("The next governance action is WELL-38", active_status)
         self.assertIn("[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.4.20.md)", readme)
+        self.assertNotIn("The TB-001 proof-contract candidate is routed separately", readme)
+        self.assertNotIn("TB-001 proof-contract candidate review / certification is next", readme)
 
         atlas = (ROOT / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md").read_text(encoding="utf-8")
         skeleton = (ROOT / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md").read_text(encoding="utf-8")
@@ -277,7 +280,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("## v0.1.20 — TB-001 proof-contract successor candidate route (historical predecessor)", skeleton)
         self.assertIn("## v0.5.20 — FP-001 TB-001 proof-contract successor candidate route (historical predecessor)", harden)
 
-    def test_foundation_integrity_rejects_a_stale_readme_active_candidate_route(self):
+    def test_foundation_integrity_rejects_a_stale_readme_active_successor_route(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             shutil.copytree(ROOT / "docs", root / "docs")
@@ -291,11 +294,11 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             refresh_manifest(root, manifest)
 
             report = run_audit(root, manifest)
-            check = next(item for item in report["checks"] if item["name"] == LIFECYCLE_CHECK)
+            check = next(item for item in report["checks"] if item["name"] == SUCCESSOR_CHECK)
 
             self.assertEqual("FAIL", check["status"], check["message"])
             self.assertIn(
-                f"README active working artifacts do not route current Phase 8 source: {current}",
+                f"README active working routing omits {current}",
                 check["message"],
             )
 
