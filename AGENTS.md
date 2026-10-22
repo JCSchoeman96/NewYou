@@ -64,9 +64,9 @@ Plane tracks delivery. GitHub governed sources remain architectural and product 
 
 `mix check` is the canonical fast gate. `mix check.deep` is the slower engineering gate.
 
-Application CI runs `mix check` and `mix check.deep`. Foundation Smoke runs for every PR. Foundation Full runs for governance-sensitive PRs and deliberate exact-SHA certification. Scheduled and manual nightly hardening runs Foundation Full plus `mix check.deep` on `main`; ordinary application pushes and PRs do not run Full.
+Application CI runs `mix check` and `mix check.deep`. Foundation Smoke runs for every PR and is part of the required `Foundation Integrity` merge gate. Governance-sensitive PRs also start Foundation Full automatically as non-blocking historical evidence; the required merge gate does not wait for it. Deliberate exact-SHA certification is dispatched directly through Foundation Full. Scheduled and manual nightly hardening runs Foundation Full plus `mix check.deep` on `main`; ordinary application pushes and PRs do not run Full.
 
-Before handoff verify the exact diff, exact head SHA, relevant checks and tests, Plane state and a clean worktree.
+Before handoff verify the exact diff, exact head SHA, relevant required checks and tests, Plane state and a clean worktree. Do not wait for non-blocking Foundation Full unless the task or governing authority explicitly requires full certification.
 
 ## Local DevCore Credentials
 

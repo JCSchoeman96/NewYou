@@ -11,14 +11,15 @@ Every changed path is classified into exactly one category:
 * ``unknown``: anything unclassified. Unknown paths fail closed to Full.
 
 Pull requests are routed from their exact diff. A ``push`` to ``main`` never
-routes Foundation Full. Governance-sensitive PRs that require Full complete
-that cold lane before merge under the strict, up-to-date required-check policy.
-Ordinary application PRs run Application CI and Foundation Smoke without Full.
-When the merge tree is unchanged, repeating the cold lane on the ``main`` push
-adds no coverage. Scheduled nightly hardening separately runs Foundation Full
-and ``mix check.deep`` against ``main``. A manual ``workflow_dispatch`` of the
-Foundation workflow remains the deliberate exact-SHA certification path and
-always selects Full.
+routes Foundation Full. Governance-sensitive PRs automatically start the cold
+Full lane as non-blocking historical evidence; the required Foundation
+Integrity merge gate does not wait for it. Ordinary application PRs run
+Application CI and Foundation Smoke without Full. Superseded PR workflow runs
+are cancelled by the workflow concurrency policy. Scheduled nightly hardening
+separately runs Foundation Full and ``mix check.deep`` against ``main``.
+Deliberate exact-SHA certification is dispatched directly through the
+Foundation Full workflow. If this classifier is invoked for a
+``workflow_dispatch`` event it still fails closed to Full.
 """
 
 from __future__ import annotations
@@ -132,8 +133,8 @@ def classify_event(event_name: str, base_sha: str, head_sha: str, cwd: str = "."
     if event_name == "workflow_dispatch":
         return {"foundation_full": True, "application_changes": False}
     if event_name == "push":
-        # Governance-sensitive PRs run Full before merge; ordinary PRs use Smoke.
-        # Application CI still runs against the pushed range.
+        # The required push gate is Smoke plus any routed Application CI.
+        # Foundation Full is retained separately by nightly/manual hardening.
         if not base_sha or not head_sha:
             return {"foundation_full": False, "application_changes": True}
         try:
@@ -163,7 +164,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"foundation_full={str(decision['foundation_full']).lower()}")
     print(f"application_changes={str(decision['application_changes']).lower()}")
     if decision["foundation_full"]:
-        print("Foundation Full required for this change range.", file=sys.stderr)
+        print("Foundation Full selected as non-blocking historical evidence.", file=sys.stderr)
     return 0
 
 

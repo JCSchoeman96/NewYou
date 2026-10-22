@@ -1,18 +1,25 @@
 name: Foundation Full
 
 # Historical governance verification. This workflow is physically separate from
-# normal application CI. Foundation Integrity calls it for governance-sensitive
-# changes or exact-SHA certification. Nightly hardening calls it on main.
+# the required merge gate. Foundation Integrity starts it automatically as
+# non-blocking evidence for governance-sensitive PRs; Nightly hardening calls it
+# on main; and workflow_dispatch provides deliberate exact-SHA certification.
 # Every invocation starts cold, without dependency or build caches.
 
 on:
   workflow_call:
     inputs:
       sha:
-        description: Exact 40-character commit SHA for a manual certification dispatch; empty otherwise.
+        description: Exact commit SHA to check out when a caller supplies one; empty uses the caller SHA.
         required: false
         type: string
         default: ""
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Exact 40-character commit SHA to certify.
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -26,7 +33,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.sha || github.sha }}
+          ref: ${{ inputs.sha != '' && inputs.sha || github.sha }}
           fetch-depth: 0
       - name: Verify exact-SHA dispatch checkout
         if: github.event_name == 'workflow_dispatch'
@@ -38,11 +45,6 @@ jobs:
           expected="$EXPECTED_SHA"
           if ! [[ "$expected" =~ ^[0-9a-f]{40}$ ]]; then
             echo "sha must be a 40-character commit SHA; got: $expected"
-            exit 1
-          fi
-          if [[ "$GITHUB_SHA" != "$expected" ]]; then
-            echo "Workflow ref SHA ${GITHUB_SHA} does not match requested ${expected}"
-            echo "Use workflow from the branch whose tip is the certified SHA."
             exit 1
           fi
           actual="$(git rev-parse HEAD)"

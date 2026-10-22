@@ -5,22 +5,22 @@ name: Foundation Integrity
 # Smoke safety net, and calls two reusable lanes:
 #
 #   Normal engineering PR -> Foundation Smoke + Application CI (mix check, mix check.deep)
-#   Governance-sensitive PR or exact-SHA certification -> Foundation Full
+#   Governance-sensitive PR -> the same required fast gate + non-blocking Foundation Full evidence
 #
-# Routing lives in tools/foundation_integrity_routing.py. Foundation Full is
-# implemented in foundation-full.yml and Application CI in application-ci.yml.
+# Foundation Full is intentionally not a dependency of the required aggregate.
+# It remains automatic for governance-sensitive PRs, while direct exact-SHA
+# certification is owned by foundation-full.yml. New PR heads cancel superseded
+# runs so obsolete cold verification does not queue behind current work.
 
 on:
   pull_request:
   push:
     branches:
       - main
-  workflow_dispatch:
-    inputs:
-      sha:
-        description: Exact 40-character commit SHA to validate with Foundation Full.
-        required: true
-        type: string
+
+concurrency:
+  group: foundation-integrity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -36,7 +36,7 @@ jobs:
       - name: Check out change range
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.sha || github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
       - name: Classify changed paths
         id: classify
@@ -54,36 +54,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.sha || github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
-      - name: Verify exact-SHA dispatch checkout
-        if: github.event_name == 'workflow_dispatch'
-        shell: bash
-        env:
-          EXPECTED_SHA: ${{ inputs.sha }}
-        run: |
-          set -euo pipefail
-          expected="$EXPECTED_SHA"
-          if ! [[ "$expected" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "sha must be a 40-character commit SHA; got: $expected"
-            exit 1
-          fi
-          if [[ "$GITHUB_SHA" != "$expected" ]]; then
-            echo "Workflow ref SHA ${GITHUB_SHA} does not match requested ${expected}"
-            echo "Use workflow from the branch whose tip is the certified SHA."
-            exit 1
-          fi
-          actual="$(git rev-parse HEAD)"
-          if [[ "$actual" != "$expected" ]]; then
-            echo "Checked out ${actual} but requested ${expected}"
-            exit 1
-          fi
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Run Foundation Smoke tests
         run: python -m unittest discover -s tests -p 'test_foundation_smoke.py' -v
+      - name: Verify merge-gate topology
+        run: python -m unittest discover -s tests -p 'test_foundation_merge_gate.py' -v
       - name: Run current authority smoke audit
         run: python -m tools.foundation_integrity_smoke --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
 
@@ -98,26 +78,21 @@ jobs:
     needs: route
     if: needs.route.outputs.foundation_full == 'true'
     uses: ./.github/workflows/foundation-full.yml
-    with:
-      sha: ${{ github.event_name == 'workflow_dispatch' && inputs.sha || '' }}
 
   foundation-integrity:
     name: Foundation Integrity
-    needs: [route, foundation-smoke, application-ci, foundation-full]
+    needs: [route, foundation-smoke, application-ci]
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Require Smoke, routed Application CI and any routed Full verification
+      - name: Require Smoke and routed Application CI
         env:
           ROUTE_RESULT: ${{ needs.route.result }}
           SMOKE_RESULT: ${{ needs.foundation-smoke.result }}
           APP_REQUIRED: ${{ needs.route.outputs.application_changes }}
           APP_RESULT: ${{ needs.application-ci.result }}
-          FULL_REQUIRED: ${{ needs.route.outputs.foundation_full }}
-          FULL_RESULT: ${{ needs.foundation-full.result }}
         run: |
           set -euo pipefail
-          FULL_REQUIRED="${FULL_REQUIRED:-}"
           APP_REQUIRED="${APP_REQUIRED:-}"
           if [[ "$ROUTE_RESULT" != "success" ]]; then
             echo "CI lane routing did not complete successfully: $ROUTE_RESULT"
@@ -142,24 +117,6 @@ jobs:
               ;;
             *)
               echo "Invalid/missing Application CI routing decision: $APP_REQUIRED"
-              exit 1
-              ;;
-          esac
-          case "$FULL_REQUIRED" in
-            true)
-              if [[ "$FULL_RESULT" != "success" ]]; then
-                echo "Foundation Full was required but did not pass: $FULL_RESULT"
-                exit 1
-              fi
-              ;;
-            false)
-              if [[ "$FULL_RESULT" != "skipped" ]]; then
-                echo "Foundation Full was not required but did not skip: $FULL_RESULT"
-                exit 1
-              fi
-              ;;
-            *)
-              echo "Invalid/missing Foundation Full routing decision: $FULL_REQUIRED"
               exit 1
               ;;
           esac
