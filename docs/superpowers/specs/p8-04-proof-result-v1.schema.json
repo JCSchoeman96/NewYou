@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:new-you:p8-04:proof-result:1.0.0",
+  "title": "P8-04 proof result v1.0.0 candidate",
+  "description": "Planning wire contract. The runner must also enforce the cross-field and coverage rules in the P8-04 specification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "mode", "contract", "metadata_complete", "git", "runtime", "dependencies", "coverage_inventory", "results", "cleanup", "overall_verdict", "exit_code", "reason_codes"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "run_id": {"$ref": "#/$defs/label"},
+    "mode": {"enum": ["harness_self_test", "tb001", "diagnostic"]},
+    "contract": {"const": "TB-001/v0.1.2"},
+    "metadata_complete": {"type": "boolean"},
+    "git": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["head_before", "head_after", "clean_before", "clean_after", "lock_sha256_before", "lock_sha256_after"],
+      "properties": {
+        "head_before": {"$ref": "#/$defs/git_sha_or_null"},
+        "head_after": {"$ref": "#/$defs/git_sha_or_null"},
+        "clean_before": {"type": ["boolean", "null"]},
+        "clean_after": {"type": ["boolean", "null"]},
+        "lock_sha256_before": {"$ref": "#/$defs/sha256_or_null"},
+        "lock_sha256_after": {"$ref": "#/$defs/sha256_or_null"}
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["elixir", "otp", "erts", "postgresql", "mix_env"],
+      "properties": {
+        "elixir": {"$ref": "#/$defs/version_or_null"},
+        "otp": {"$ref": "#/$defs/version_or_null"},
+        "erts": {"$ref": "#/$defs/version_or_null"},
+        "postgresql": {"$ref": "#/$defs/version_or_null"},
+        "mix_env": {"enum": ["test", null]}
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "source", "locked_version", "loaded_version", "revision", "runtime_required"],
+        "properties": {
+          "name": {"$ref": "#/$defs/label"},
+          "source": {"enum": ["hex", "git", "path"]},
+          "locked_version": {"$ref": "#/$defs/version_or_null"},
+          "loaded_version": {"$ref": "#/$defs/version_or_null"},
+          "revision": {"$ref": "#/$defs/git_sha_or_null"},
+          "runtime_required": {"type": "boolean"}
+        }
+      }
+    },
+    "coverage_inventory": {
+      "const": [
+        "registration_pmr_reconciliation",
+        "proof_capability_scanner_replay_supersession",
+        "session_login_revocation_restart",
+        "communications_durability_backlog_ambiguity",
+        "audit_e2",
+        "audit_e1",
+        "recovery_primary_email_change",
+        "non_enumeration_current_privacy",
+        "source_authority_bypass_negatives",
+        "browser_spine"
+      ]
+    },
+    "results": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["coverage_id", "manifest_sha256", "required_case_ids", "status", "verdict", "reason_codes", "cases"],
+        "properties": {
+          "coverage_id": {"$ref": "#/$defs/coverage_id"},
+          "manifest_sha256": {"$ref": "#/$defs/sha256_or_null"},
+          "required_case_ids": {"type": "array", "maxItems": 512, "uniqueItems": true, "items": {"$ref": "#/$defs/label"}},
+          "status": {"$ref": "#/$defs/status"},
+          "verdict": {"$ref": "#/$defs/verdict"},
+          "reason_codes": {"$ref": "#/$defs/reason_codes"},
+          "cases": {"type": "array", "maxItems": 512, "items": {"$ref": "#/$defs/case"}}
+        },
+        "allOf": [{
+          "if": {"properties": {"verdict": {"const": "PASS"}}},
+          "then": {"properties": {"status": {"const": "completed"}, "manifest_sha256": {"type": "string"}, "required_case_ids": {"minItems": 1}, "cases": {"minItems": 1, "items": {"properties": {"verdict": {"const": "PASS"}}}}}},
+          "else": {"properties": {"reason_codes": {"minItems": 1}}}
+        }]
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verdict", "workers_stopped", "connections_released", "locks_released", "reason_codes"],
+      "properties": {
+        "verdict": {"$ref": "#/$defs/verdict"},
+        "workers_stopped": {"type": "boolean"},
+        "connections_released": {"type": "boolean"},
+        "locks_released": {"type": "boolean"},
+        "reason_codes": {"$ref": "#/$defs/reason_codes"}
+      }
+    },
+    "overall_verdict": {"$ref": "#/$defs/verdict"},
+    "exit_code": {"enum": [0, 1, 2]},
+    "reason_codes": {"$ref": "#/$defs/reason_codes"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"overall_verdict": {"const": "PASS"}}},
+      "then": {
+        "properties": {
+          "exit_code": {"const": 0},
+          "metadata_complete": {"const": true},
+          "results": {"minItems": 1, "items": {"properties": {"verdict": {"const": "PASS"}}}},
+          "cleanup": {"properties": {"verdict": {"const": "PASS"}, "workers_stopped": {"const": true}, "connections_released": {"const": true}, "locks_released": {"const": true}}}
+        }
+      },
+      "else": {"properties": {"exit_code": {"enum": [1, 2]}, "reason_codes": {"minItems": 1}}}
+    },
+    {
+      "if": {"properties": {"metadata_complete": {"const": false}}},
+      "then": {"properties": {"overall_verdict": {"const": "FAIL"}, "exit_code": {"const": 2}}}
+    },
+    {
+      "if": {"properties": {"metadata_complete": {"const": true}}},
+      "then": {
+        "properties": {
+          "dependencies": {"minItems": 1},
+          "git": {"properties": {
+            "head_before": {"type": "string"}, "head_after": {"type": "string"},
+            "clean_before": {"type": "boolean"}, "clean_after": {"type": "boolean"},
+            "lock_sha256_before": {"type": "string"}, "lock_sha256_after": {"type": "string"}
+          }},
+          "runtime": {"properties": {
+            "elixir": {"type": "string"}, "otp": {"type": "string"}, "erts": {"type": "string"},
+            "postgresql": {"type": "string"}, "mix_env": {"const": "test"}
+          }}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"mode": {"const": "tb001"}}},
+      "then": {"properties": {"results": {"minItems": 10, "maxItems": 10, "items": {"properties": {"coverage_id": {"not": {"const": "harness"}}}}}}}
+    },
+    {
+      "if": {"properties": {"mode": {"const": "tb001"}, "overall_verdict": {"const": "PASS"}}},
+      "then": {"properties": {"git": {"properties": {"clean_before": {"const": true}, "clean_after": {"const": true}}}}}
+    }
+  ],
+  "$defs": {
+    "label": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9_.:-]+$"},
+    "version_or_null": {"type": ["string", "null"], "minLength": 1, "maxLength": 128},
+    "git_sha_or_null": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+    "sha256_or_null": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "verdict": {"enum": ["PASS", "FAIL"]},
+    "status": {"enum": ["completed", "missing", "not_run", "timeout", "error"]},
+    "reason_codes": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/label"}},
+    "coverage_id": {
+      "enum": [
+        "registration_pmr_reconciliation", "proof_capability_scanner_replay_supersession",
+        "session_login_revocation_restart", "communications_durability_backlog_ambiguity",
+        "audit_e2", "audit_e1", "recovery_primary_email_change",
+        "non_enumeration_current_privacy", "source_authority_bypass_negatives", "browser_spine", "harness"
+      ]
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["case_id", "invariant_id", "boundary", "cut_point", "race_id", "status", "verdict", "expected", "observations", "assertion_ids", "assertions_executed", "duration_ms", "timeout_ms", "timeout_override_reason", "reason_codes"],
+      "properties": {
+        "case_id": {"$ref": "#/$defs/label"},
+        "invariant_id": {"$ref": "#/$defs/label"},
+        "boundary": {"$ref": "#/$defs/label"},
+        "cut_point": {"enum": [null, "transaction.before_commit", "transaction.after_commit", "scheduling.before_enqueue", "scheduling.after_enqueue", "provider.before_invoke", "provider.after_invoke_before_persist", "evidence.before_materialize", "evidence.after_materialize_before_commit"]},
+        "race_id": {"anyOf": [{"$ref": "#/$defs/label"}, {"type": "null"}]},
+        "status": {"$ref": "#/$defs/status"},
+        "verdict": {"$ref": "#/$defs/verdict"},
+        "expected": {"type": "string", "minLength": 1, "maxLength": 512},
+        "observations": {
+          "type": "array", "maxItems": 64,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["code", "value"],
+            "properties": {
+              "code": {"$ref": "#/$defs/label"},
+              "value": {"type": ["string", "integer", "boolean", "null"], "maxLength": 256}
+            }
+          }
+        },
+        "assertion_ids": {"type": "array", "maxItems": 512, "uniqueItems": true, "items": {"$ref": "#/$defs/label"}},
+        "assertions_executed": {"type": "integer", "minimum": 0},
+        "duration_ms": {"type": "integer", "minimum": 0},
+        "timeout_ms": {"type": "integer", "minimum": 1},
+        "timeout_override_reason": {"type": ["string", "null"], "minLength": 1, "maxLength": 256},
+        "reason_codes": {"$ref": "#/$defs/reason_codes"}
+      },
+      "allOf": [{
+        "if": {"properties": {"verdict": {"const": "PASS"}}},
+        "then": {"properties": {"status": {"const": "completed"}, "assertions_executed": {"minimum": 1}, "assertion_ids": {"minItems": 1}}},
+        "else": {"properties": {"reason_codes": {"minItems": 1}}}
+      }]
+    }
+  }
+}
