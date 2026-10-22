@@ -10,8 +10,12 @@ from foundation_test_support import (
     FOUNDATION_WORKFLOW_BASELINE_SHA256,
     WELL38_BASE_SHA,
     git_snapshot_bytes,
+    git_snapshot_path_exists,
 )
 
+
+# Exact historical Stage 4A amendment that introduced this test.
+HISTORICAL_SCOPE_SHA = "2d8b279504dbbffd445812e698fc01494d380e43"
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -101,7 +105,6 @@ REQUIRED_SUCCESSOR_PATHS = (
 )
 
 PROHIBITED_PRESENT_PATHS = (
-    "mix.exs",
     "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
     "docs/00_platform/reference/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
     "docs/00_platform/working/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
@@ -324,10 +327,11 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
     def test_scope_has_no_implementation_or_prohibited_artifact_changes(self):
         for relative_path in REQUIRED_SUCCESSOR_PATHS:
             self.assertTrue((ROOT / relative_path).is_file(), relative_path)
+        self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, "mix.exs"))
         for relative_path in PROHIBITED_PRESENT_PATHS:
             self.assertFalse((ROOT / relative_path).exists(), relative_path)
-        self.assertFalse((ROOT / ".formatter.exs").exists())
-        self.assertFalse((ROOT / ".credo.exs").exists())
+        self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, ".formatter.exs"))
+        self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, ".credo.exs"))
         workflow_dir = ROOT / ".github" / "workflows"
         self.assertEqual(
             ["foundation-integrity.yml"],

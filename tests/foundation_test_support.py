@@ -29,6 +29,40 @@ def git_snapshot_bytes(root: Path, revision: str, repository_path: str) -> bytes
     return result.stdout
 
 
+def _exact_git_tree(root: Path, revision: str) -> str:
+    """Resolve only an immutable full object ID; missing history is an error."""
+
+    if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise ValueError("historical revision must be a full 40-character Git object ID")
+    return subprocess.run(
+        ["git", "rev-parse", "--verify", f"{revision}^{{tree}}"],
+        cwd=Path(root), capture_output=True, text=True, check=True,
+    ).stdout.strip()
+
+
+def git_snapshot_path_exists(root: Path, revision: str, repository_path: str) -> bool:
+    """Test file or directory existence in an exact tree, never the checkout."""
+
+    tree = _exact_git_tree(root, revision)
+    paths = subprocess.run(
+        ["git", "ls-tree", "--full-tree", "-r", "--name-only", "-z", tree],
+        cwd=Path(root), capture_output=True, text=True, check=True,
+    ).stdout.split("\0")
+    return any(path == repository_path or path.startswith(repository_path.rstrip("/") + "/") for path in paths)
+
+
+def git_changed_paths(root: Path, base_revision: str, candidate_revision: str) -> list[str]:
+    """Compare two exact trees without including HEAD or working-tree changes."""
+
+    base = _exact_git_tree(root, base_revision)
+    candidate = _exact_git_tree(root, candidate_revision)
+    result = subprocess.run(
+        ["git", "diff", "--no-renames", "--name-only", "-z", base, candidate, "--"],
+        cwd=Path(root), capture_output=True, text=True, check=True,
+    )
+    return sorted(path for path in result.stdout.split("\0") if path)
+
+
 def copy_git_snapshot_tree(
     repository_root: Path,
     revision: str,

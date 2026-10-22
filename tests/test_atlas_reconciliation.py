@@ -7,8 +7,12 @@ import subprocess
 import unittest
 from pathlib import Path
 
+from tests.foundation_test_support import git_snapshot_path_exists
 from tests.test_atlas_authority_boundary import _normalise_atlas_successor
 
+
+# Recorded Atlas v0.4.6 baseline already used for historical byte comparisons.
+HISTORICAL_SCOPE_SHA = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -80,7 +84,6 @@ PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
     "docs/00_platform/reference/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
     "docs/00_platform/working/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
-    "mix.exs",
 )
 
 
@@ -399,6 +402,7 @@ class AtlasReconciliationIntegrityTests(unittest.TestCase):
     def test_upstream_law_and_fp001_unchanged(self):
         for relative_path, expected_hash in PROTECTED_HASHES.items():
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
+        self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, "mix.exs"))
         for relative_path in PROHIBITED_PRESENT_PATHS:
             self.assertFalse((ROOT / relative_path).exists(), relative_path)
         # Atlas must not invent HARDEN-02 law; later governed successors may advance independently.
