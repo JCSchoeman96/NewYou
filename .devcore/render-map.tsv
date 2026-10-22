@@ -1,0 +1,2 @@
+dev	.devcore/env.dev.local.template	.env.dev.local	DATABASE_URL,PGHOST,PGPORT,PGDATABASE,PGUSER,PGPASSWORD
+test	.devcore/env.test.local.template	.env.test.local	DATABASE_URL,PGHOST,PGPORT,PGDATABASE,PGUSER,PGPASSWORD

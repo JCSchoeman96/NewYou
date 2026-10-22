@@ -10,8 +10,12 @@ from foundation_test_support import (
     FOUNDATION_WORKFLOW_BASELINE_SHA256,
     WELL38_BASE_SHA,
     git_snapshot_bytes,
+    git_snapshot_path_exists,
 )
 
+
+# Exact historical Roadmap amendment that introduced this test.
+HISTORICAL_SCOPE_SHA = "c2d27d63f33e8b1440f130afcbc1a3aff74cf853"
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -70,7 +74,6 @@ PROHIBITED_PRESENT_PATHS = (
     "docs/00_platform/02_OPEN_WORK_v1.2.38.md",
     "docs/00_platform/02_OPEN_WORK_v1.2.46.md",
     "docs/00_platform/05_ROADMAP_v1.1.2.md",
-    "mix.exs",
     "docs/00_platform/ENGINEERING_STANDARDS_v1.0.0.md",
     "docs/00_platform/reference/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
     "docs/00_platform/working/ENGINEERING_STANDARDS_WORKING_v0.1.0.md",
@@ -419,10 +422,11 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
     def test_scope_has_no_implementation_or_prohibited_artifact_changes(self):
         for relative_path in REQUIRED_SUCCESSOR_PATHS:
             self.assertTrue((ROOT / relative_path).is_file(), relative_path)
+        self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, "mix.exs"))
         for relative_path in PROHIBITED_PRESENT_PATHS:
             self.assertFalse((ROOT / relative_path).exists(), relative_path)
-        self.assertFalse((ROOT / ".formatter.exs").exists())
-        self.assertFalse((ROOT / ".credo.exs").exists())
+        self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, ".formatter.exs"))
+        self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, ".credo.exs"))
         atlas = (DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.1.0.md").read_bytes()
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md"],

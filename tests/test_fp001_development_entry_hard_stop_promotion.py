@@ -4,7 +4,6 @@ import hashlib
 import json
 import re
 import shutil
-import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,6 +11,7 @@ from pathlib import Path
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
 from foundation_test_support import (
     WELL38_BASE_SHA,
+    git_changed_paths,
     copy_git_snapshot_tree,
     current_document_path,
     current_working_path,
@@ -318,14 +318,8 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
 
     def test_pr_scope_base_to_candidate_adds_no_application_source(self):
         """Scope record for PR #131 only: the promotion itself adds no executable application source."""
-        result = subprocess.run(
-            ["git", "diff", "--name-only", BASE_SHA, "--"],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        changed = [line for line in result.stdout.splitlines() if line]
+        # PR #131 resulting main is recorded in the approved TB-001 contract.
+        changed = git_changed_paths(ROOT, BASE_SHA, "0972864ef7f4638c96198e19a13977e0151e9726")
         self.assertTrue(changed, "base-to-candidate diff unexpectedly empty")
         source_like = [
             path

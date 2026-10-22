@@ -7,9 +7,13 @@ from pathlib import Path
 
 from tests.foundation_test_support import (
     current_document_path,
+    git_changed_paths,
     current_working_path,
 )
 
+
+# PR #119 resulting main recorded by the Phase 7B baseline.
+HISTORICAL_SCOPE_HEAD = "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd"
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -283,13 +287,7 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
                     else path
                 )
                 self.assertEqual(_git_show(BASE_MAIN, baseline_path), (ROOT / path).read_bytes())
-        changed = subprocess.run(
-            ["git", "diff", "--name-only", BASE_MAIN],
-            cwd=ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.splitlines()
+        changed = git_changed_paths(ROOT, BASE_MAIN, HISTORICAL_SCOPE_HEAD)
         application_prefixes = ("app/", "apps/", "backend/", "frontend/", "lib/", "src/")
         self.assertEqual([], [path for path in changed if path.startswith(application_prefixes)])
 
