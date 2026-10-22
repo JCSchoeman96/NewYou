@@ -38,7 +38,7 @@ defmodule NewYou.BootstrapTest do
     result =
       Ecto.Adapters.SQL.query!(
         NewYou.Repo,
-        "SELECT ash_elixir_or(NULL::boolean, true), version FROM schema_migrations",
+        "SELECT ash_elixir_or(NULL::boolean, true), version FROM schema_migrations WHERE version = 20261022104847",
         []
       )
 

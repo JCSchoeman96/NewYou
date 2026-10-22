@@ -5,7 +5,7 @@ defmodule NewYou.MixProject do
     [
       app: :new_you,
       version: "0.1.0",
-      elixir: "~> 1.19",
+      elixir: "~> 1.20.4",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -42,12 +42,11 @@ defmodule NewYou.MixProject do
   defp deps do
     [
       {:tidewave, "== 0.9.1", only: [:dev]},
-      {:sourceror, "~> 1.8", only: [:dev, :test]},
       {:ash_postgres, "== 2.15.1"},
       {:ash, "== 3.37.0"},
       # Reactor >= 1.0.2 requires prerelease multigraph; keep the dependency tree stable.
       {:reactor, "== 1.0.1"},
-      {:igniter, "~> 0.6", only: [:dev, :test]},
+      {:igniter, "~> 0.8.4", only: [:dev, :test]},
       {:phoenix, "~> 1.8.16"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.13"},

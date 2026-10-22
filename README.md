@@ -6,7 +6,9 @@ are defined.
 
 ## Local prerequisites
 
-Use the versions in `.tool-versions`: Erlang/OTP 28.1.1 and Elixir 1.19.3.
+Use the versions in `.tool-versions`: Erlang/OTP 29.1.2 and Elixir 1.20.4.
+Verify with `elixir -v`. If the shell has not activated these versions, prefix
+commands with `mise exec --`.
 Install the workstation `devcore-project` CLI from the approved DevCore bootstrap
 kit. The workstation owns the shared services; this repository never starts,
 stops, recreates, or deletes them.
@@ -94,7 +96,7 @@ Reactor is constrained to stable 1.0.1 with libgraph 0.16.0 because Reactor
 Ash's declared `~> 1.0` requirement. Revisit the constraint when that dependency
 has a stable release. Reactor 1.0.2 also includes an Elixir compile fix,
 so recheck the constraint before upgrading the pinned toolchain. Compilation
-and tests below use Elixir 1.19.3.
+and tests below use Elixir 1.20.4 on OTP 29.1.2.
 Stable release metadata and compatibility were checked against
 [Hex](https://hex.pm/packages/ash),
 [Phoenix installation requirements](https://hexdocs.pm/phoenix/installation.html),
