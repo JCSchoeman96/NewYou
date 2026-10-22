@@ -71,24 +71,32 @@ defmodule NewYou.Architecture.AshWriteBoundary do
   @write_keyword ~r/\b(insert|update|delete|merge|truncate|alter|drop|create|grant|revoke|copy|do|call|set|reset|lock|vacuum|reindex|cluster|refresh|into|for\s+update)\b/i
   @sql_comment ~r/--|\/\*/
   @sql_string_literal ~r/
-                        (?:[eE]|[uU]&)?'(?:''|\\.|[^'])*'
+                        (?<![\p{L}\p{N}_$])
+                        (?:
+                          [eE]'(?:''|\\.|[^'])*'
+                          |
+                          [uU]&'(?:''|[^'])*'
+                          |
+                          '(?:''|[^'])*'
+                        )
                         |
-                        (?<![a-zA-Z0-9_$])\$([a-zA-Z_][a-zA-Z0-9_]*)\$.*?\$\1\$
+                        (?<![\p{L}\p{N}_$])\$([\p{L}_][\p{L}\p{N}_]*)\$.*?\$\1\$
                         |
-                        (?<![a-zA-Z0-9_$])\$\$.*?\$\$
-                      /sx
+                        (?<![\p{L}\p{N}_$])\$\$.*?\$\$
+                      /sux
+  @sql_quoted_identifier ~r/"(?:""|[^"])*"/s
   @sql_function_call ~r/
-                        (?<![a-z0-9_$])
+                        (?<![\p{L}\p{N}_$])
                         (?!(?:
                           select|from|where|and|or|not|in|exists|as|with|values|show|explain|
                             case|when|then|else|end|over|filter|distinct|all|any|some|on|
                             using|having|limit|offset|order|group|union|intersect|except|
                             fetch|for|join|lateral|recursive|sets|rollup|cube|array|row
                         )\b)
-                        (?:[a-z_][a-z0-9_$]*|"(?:[^"]|"")+")
-                        (?:\s*\.\s*(?:[a-z_][a-z0-9_$]*|"(?:[^"]|"")+"))*
+                        (?:[_\p{L}][\p{L}\p{N}_$]*|"(?:[^"]|"")+")
+                        (?:\s*\.\s*(?:[_\p{L}][\p{L}\p{N}_$]*|"(?:[^"]|"")+"))*
                         \s*\(
-                      /ix
+                      /ixu
 
   # Infrastructure exceptions. Each entry must name the exact file and the
   # reason it may touch the Repo. Keep this list short; prefer Ash actions.
@@ -159,6 +167,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
       {:ok, ast} ->
         aliases = collect_aliases(ast)
         imports = collect_imports(ast, aliases)
+        repo_variables = collect_repo_variables(ast, aliases)
 
         context =
           if String.starts_with?(path, "lib/new_you_web/"),
@@ -167,7 +176,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
 
         {_, violations} =
           Macro.prewalk(ast, [], fn node, acc ->
-            {node, violations_for(node, aliases, imports, path, context) ++ acc}
+            {node, violations_for(node, aliases, imports, repo_variables, path, context) ++ acc}
           end)
 
         violations
@@ -192,6 +201,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
          {:use, meta, [{:__aliases__, _, _} = target | _]} = _node,
          aliases,
          _imports,
+         _repo_variables,
          path,
          _context
        ) do
@@ -215,6 +225,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
          {{:., meta, [receiver, function]}, _call_meta, args},
          aliases,
          _imports,
+         repo_variables,
          path,
          context
        )
@@ -225,6 +236,13 @@ defmodule NewYou.Architecture.AshWriteBoundary do
       {:__aliases__, _, _} ->
         module = resolve(receiver, aliases)
         call_violations(module, function, args || [], line, path, context)
+
+      {name, _, _context} when is_atom(name) ->
+        if MapSet.member?(repo_variables, name) do
+          call_violations(@repo, function, args || [], line, path, context)
+        else
+          []
+        end
 
       _ ->
         []
@@ -238,6 +256,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
          {function, meta, args},
          _aliases,
          imports,
+         _repo_variables,
          path,
          context
        )
@@ -251,7 +270,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     |> Enum.flat_map(&call_violations(&1.module, function, args, line, path, context))
   end
 
-  defp violations_for(_node, _aliases, _imports, _path, _context), do: []
+  defp violations_for(_node, _aliases, _imports, _repo_variables, _path, _context), do: []
 
   defp call_violations(module, function, args, line, path, context) do
     cond do
@@ -320,12 +339,15 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     case Enum.fetch(args, statement_index) do
       {:ok, statement} when is_binary(statement) ->
         # Ignore string contents so SQL-looking text in literals does not
-        # affect write-keyword, comment or function-call checks.
+        # affect write-keyword, comment or function-call checks. Quoted
+        # identifiers are removed only for keyword and comment checks because
+        # a quoted function name still needs to be checked as a function call.
         sql = Regex.replace(@sql_string_literal, statement, " ")
+        sql_tokens = Regex.replace(@sql_quoted_identifier, sql, " ")
 
         if Regex.match?(@read_only_prefix, sql) and
-             not Regex.match?(@write_keyword, sql) and
-             not Regex.match?(@sql_comment, sql) and
+             not Regex.match?(@write_keyword, sql_tokens) and
+             not Regex.match?(@sql_comment, sql_tokens) and
              not Regex.match?(@sql_function_call, sql) do
           []
         else
@@ -399,6 +421,27 @@ defmodule NewYou.Architecture.AshWriteBoundary do
       end)
 
     imports
+  end
+
+  # Track only local variables assigned a resolved Repo module. This closes
+  # calls such as `repo.query!(...)` without following arbitrary values or
+  # attempting general data-flow analysis.
+  defp collect_repo_variables(ast, aliases) do
+    {_, variables} =
+      Macro.prewalk(ast, MapSet.new(), fn
+        {:=, _, [{name, _, _context}, {:__aliases__, _, _} = target]} = node, acc
+        when is_atom(name) ->
+          if resolve(target, aliases) == @repo do
+            {node, MapSet.put(acc, name)}
+          else
+            {node, acc}
+          end
+
+        node, acc ->
+          {node, acc}
+      end)
+
+    variables
   end
 
   defp imported_functions(opts) do

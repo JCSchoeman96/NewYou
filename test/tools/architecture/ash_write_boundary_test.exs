@@ -48,6 +48,19 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       assert [:raw_sql_write] == rules(source)
     end
 
+    test "raw SQL writes through a Repo module variable fail" do
+      source = """
+      defmodule NewYou.Accounts do
+        def hack do
+          repo = NewYou.Repo
+          repo.query!("UPDATE accounts SET locked = true", [])
+        end
+      end
+      """
+
+      assert [:raw_sql_write] == rules(source)
+    end
+
     test "SELECT calls to unknown database functions fail closed" do
       for sql <- ["SELECT lock_account($1)", "SELECT lock_account /* gap */ ($1)"] do
         source = """
@@ -58,6 +71,28 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
 
         assert [:raw_sql_write] == rules(source)
       end
+    end
+
+    test "ordinary SQL strings do not hide calls after a backslash" do
+      sql = ~S|SELECT 'a\', nextval('accounts_seq')::text, 'x'|
+
+      source = """
+      defmodule NewYou.Accounts do
+        def inspect_literal, do: NewYou.Repo.query!(#{inspect(sql)}, [])
+      end
+      """
+
+      assert [:raw_sql_write] == rules(source)
+    end
+
+    test "non-ASCII SQL function calls fail closed" do
+      source = """
+      defmodule NewYou.Accounts do
+        def read, do: NewYou.Repo.query!("SELECT функция_записи()", [])
+      end
+      """
+
+      assert [:raw_sql_write] == rules(source)
     end
 
     test "SELECT INTO table writes fail" do
@@ -313,6 +348,30 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
 
         assert [] == rules(source)
       end
+    end
+
+    test "quoted SQL identifiers are not keywords or comments" do
+      for sql <- ["SELECT 1 AS \"into\"", "SELECT 1 AS \"col--name\""] do
+        source = """
+        defmodule NewYou.Health do
+          def inspect_identifier, do: NewYou.Repo.query!(#{inspect(sql)}, [])
+        end
+        """
+
+        assert [] == rules(source)
+      end
+    end
+
+    test "non-ASCII dollar quote tags are masked" do
+      sql = "SELECT $тег$update$тег$"
+
+      source = """
+      defmodule NewYou.Health do
+        def inspect_literal, do: NewYou.Repo.query!(#{inspect(sql)}, [])
+      end
+      """
+
+      assert [] == rules(source)
     end
 
     test "imported read-only SQL passes" do
