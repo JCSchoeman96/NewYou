@@ -7,7 +7,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
   that would route business state around owning Ash actions:
 
     * `:repo_write` - a mutating `NewYou.Repo` call (`insert`, `update`, `delete`, ...)
-    * `:raw_sql_write` - `Repo.query`/`Ecto.Adapters.SQL.query` with mutating or non-literal SQL
+    * `:raw_sql_write` - raw SQL that is mutating, function-calling, commented or non-literal
     * `:ecto_multi_write` - a persisting `Ecto.Multi` operation or callback
     * `:parallel_ecto_schema` - `use Ecto.Schema`, a second business model beside Ash resources
     * `:outer_layer_ash_write` - a generic Ash mutation in web or worker code
@@ -66,9 +66,22 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     :delete_all
   ]
 
-  # Only literal, read-only statements may run through raw SQL.
+  # Only literal read statements with no SQL function calls may run through raw SQL.
   @read_only_prefix ~r/\A\s*(select|with|show|values|explain)\b/i
   @write_keyword ~r/\b(insert|update|delete|merge|truncate|alter|drop|create|grant|revoke|copy|do|call|set|reset|lock|vacuum|reindex|cluster|refresh|for\s+update)\b/i
+  @sql_comment ~r/--|\/\*/
+  @sql_function_call ~r/
+                        (?<![a-z0-9_$])
+                        (?!(?:
+                          select|from|where|and|or|not|in|exists|as|with|values|show|explain|
+                            case|when|then|else|end|over|filter|distinct|all|any|some|on|
+                            using|having|limit|offset|order|group|union|intersect|except|
+                            fetch|for|join|lateral|recursive|sets|rollup|cube|array|row
+                        )\b)
+                        (?:[a-z_][a-z0-9_$]*|"(?:[^"]|"")+")
+                        (?:\s*\.\s*(?:[a-z_][a-z0-9_$]*|"(?:[^"]|"")+"))*
+                        \s*\(
+                      /ix
 
   # Infrastructure exceptions. Each entry must name the exact file and the
   # reason it may touch the Repo. Keep this list short; prefer Ash actions.
@@ -256,7 +269,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
         ]
 
       module in @raw_sql_modules and function in @raw_sql_functions ->
-        raw_sql_violations(args, line, path, context, function)
+        raw_sql_violations(module, args, line, path, context, function)
 
       module == [:Ecto, :Multi] and function in @multi_write_functions ->
         [
@@ -294,31 +307,37 @@ defmodule NewYou.Architecture.AshWriteBoundary do
             String.ends_with?(normalized, ["_worker.ex", "_job.ex", "/worker.ex", "/job.ex"])))
   end
 
-  defp raw_sql_violations([statement | _], line, path, _context, function)
-       when is_binary(statement) do
-    if Regex.match?(@read_only_prefix, statement) and not Regex.match?(@write_keyword, statement) do
-      []
-    else
-      [
-        violation(
-          path,
-          line,
-          :raw_sql_write,
-          "mutating or non-read-only raw SQL via `#{function}` bypasses Ash actions"
-        )
-      ]
-    end
-  end
+  defp raw_sql_violations(module, args, line, path, _context, function) do
+    statement_index = if module == @repo, do: 0, else: 1
 
-  defp raw_sql_violations(_args, line, path, _context, function) do
-    [
-      violation(
-        path,
-        line,
-        :raw_sql_write,
-        "non-literal raw SQL via `#{function}` cannot be proven read-only; use an Ash read or an allowlisted infrastructure path"
-      )
-    ]
+    case Enum.fetch(args, statement_index) do
+      {:ok, statement} when is_binary(statement) ->
+        if Regex.match?(@read_only_prefix, statement) and
+             not Regex.match?(@write_keyword, statement) and
+             not Regex.match?(@sql_comment, statement) and
+             not Regex.match?(@sql_function_call, statement) do
+          []
+        else
+          [
+            violation(
+              path,
+              line,
+              :raw_sql_write,
+              "mutating, function-calling, commented or non-read-only raw SQL via `#{function}` bypasses Ash actions"
+            )
+          ]
+        end
+
+      _ ->
+        [
+          violation(
+            path,
+            line,
+            :raw_sql_write,
+            "non-literal raw SQL via `#{function}` cannot be proven read-only; use an Ash read or an allowlisted infrastructure path"
+          )
+        ]
+    end
   end
 
   # Collects `alias A.B`, `alias A.B, as: C` and `alias A.{B, C}` into a

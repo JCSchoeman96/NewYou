@@ -48,6 +48,18 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       assert [:raw_sql_write] == rules(source)
     end
 
+    test "SELECT calls to unknown database functions fail closed" do
+      for sql <- ["SELECT lock_account($1)", "SELECT lock_account /* gap */ ($1)"] do
+        source = """
+        defmodule NewYou.Accounts do
+          def hack, do: NewYou.Repo.query!(#{inspect(sql)}, [1])
+        end
+        """
+
+        assert [:raw_sql_write] == rules(source)
+      end
+    end
+
     test "non-literal raw SQL fails closed" do
       source = """
       defmodule NewYou.Accounts do
@@ -259,6 +271,16 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       source = """
       defmodule NewYou.Health do
         def ping, do: NewYou.Repo.query!("SELECT 1", [])
+      end
+      """
+
+      assert [] == rules(source)
+    end
+
+    test "read-only Ecto SQL adapter query passes" do
+      source = """
+      defmodule NewYou.Health do
+        def ping, do: Ecto.Adapters.SQL.query(NewYou.Repo, "SELECT 1", [])
       end
       """
 
