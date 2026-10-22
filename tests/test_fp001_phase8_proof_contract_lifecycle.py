@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 import shutil
+import subprocess
 import tempfile
 import hashlib
 from pathlib import Path
@@ -24,6 +25,12 @@ HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
 
 
 class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
+    def _copy_production_fixture(self, root: Path) -> tuple[Path, Path]:
+        shutil.copytree(ROOT / "docs", root / "docs")
+        manifest = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+        refresh_manifest(root, manifest)
+        return root, manifest
+
     def test_contract_is_approved_without_claiming_executed_or_certified_proof(self):
         self.assertTrue(CONTRACT.is_file(), "the governed Phase 8 task contract is missing")
         text = CONTRACT.read_text(encoding="utf-8")
@@ -304,13 +311,86 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
 
     def test_foundation_integrity_checks_the_phase8_proof_contract_transition(self):
         report = run_audit(ROOT, MANIFEST)
-        check = next(
-            (item for item in report["checks"] if item["name"] == LIFECYCLE_CHECK),
-            None,
-        )
+        checks = {item["name"]: item for item in report["checks"]}
+        self.assertIn(LIFECYCLE_CHECK, checks, "pinned predecessor certification is not preserved")
+        self.assertEqual("PASS", checks[LIFECYCLE_CHECK]["status"], checks[LIFECYCLE_CHECK]["message"])
+        self.assertEqual("PASS", checks[SUCCESSOR_CHECK]["status"], checks[SUCCESSOR_CHECK]["message"])
 
-        self.assertIsNotNone(check, "Foundation Integrity does not check the Phase 8 proof-contract route")
-        self.assertEqual("PASS", check["status"], check["message"])
+    def test_temporary_content_root_uses_canonical_git_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest = self._copy_production_fixture(Path(directory))
+            self.assertFalse((root / ".git").exists())
+
+            report = run_audit(root, manifest)
+            checks = {item["name"]: item for item in report["checks"]}
+
+            self.assertEqual("PASS", report["status"], report["findings"])
+            self.assertEqual("PASS", checks[SUCCESSOR_CHECK]["status"], checks[SUCCESSOR_CHECK]["message"])
+            self.assertEqual(
+                "PASS",
+                checks["phase8_approved_status_successor_predecessor_full_audit"]["status"],
+                checks["phase8_approved_status_successor_predecessor_full_audit"]["message"],
+            )
+
+    def test_explicit_repository_without_git_fails_successor_provenance_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest = self._copy_production_fixture(Path(directory) / "content")
+            repository_without_git = Path(directory) / "missing-git"
+            repository_without_git.mkdir()
+
+            report = run_audit(root, manifest, repository_root=repository_without_git)
+            checks = {item["name"]: item for item in report["checks"]}
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertEqual("FAIL", checks[SUCCESSOR_CHECK]["status"])
+            self.assertIn("cannot locate Git repository", checks[SUCCESSOR_CHECK]["message"])
+            predecessor = checks["phase8_approved_status_successor_predecessor_full_audit"]
+            self.assertEqual("FAIL", predecessor["status"])
+            self.assertIn("cannot locate Git repository", predecessor["message"])
+
+    def test_git_repository_without_pinned_predecessor_fails_provenance_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest = self._copy_production_fixture(Path(directory) / "content")
+            repository_without_predecessor = Path(directory) / "git-repository"
+            repository_without_predecessor.mkdir()
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repository_without_predecessor,
+                check=True,
+            )
+
+            report = run_audit(
+                root,
+                manifest,
+                repository_root=repository_without_predecessor,
+            )
+            checks = {item["name"]: item for item in report["checks"]}
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertEqual("FAIL", checks[SUCCESSOR_CHECK]["status"])
+            predecessor = checks["phase8_approved_status_successor_predecessor_full_audit"]
+            self.assertEqual("FAIL", predecessor["status"])
+            self.assertIn("pinned predecessor commit is unavailable", predecessor["message"])
+
+    def test_corrupted_archived_predecessor_fails_even_for_temporary_content_root(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest = self._copy_production_fixture(Path(directory))
+            archive = root / "docs/00_platform/archive/02_OPEN_WORK_v1.2.77.md"
+            archive.write_bytes(archive.read_bytes() + b"\nCORRUPTED HISTORICAL PREDECESSOR\n")
+
+            report = run_audit(root, manifest)
+            checks = {item["name"]: item for item in report["checks"]}
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertEqual("FAIL", checks[SUCCESSOR_CHECK]["status"], checks[SUCCESSOR_CHECK]["message"])
+            self.assertTrue(
+                any(
+                    item["check"] == "manifest_hash_parity"
+                    and item["path"] == "docs/00_platform/archive/02_OPEN_WORK_v1.2.77.md"
+                    for item in report["findings"]
+                ),
+                report["findings"],
+            )
 
 
 

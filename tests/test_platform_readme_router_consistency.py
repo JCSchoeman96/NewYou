@@ -92,7 +92,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             )
 
             report = run_audit(root, manifest_path)
-            check = next(item for item in report["checks"] if item["name"] == "platform_readme_router_consistency")
+            check = next(item for item in report["checks"] if item["name"] == "phase8_approved_status_successor_current")
             self.assertEqual("FAIL", check["status"])
             self.assertIn(current_atlas_path.name.rsplit("v", 1)[-1].removesuffix(".md"), check["message"])
 
@@ -111,8 +111,9 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             )
 
             report = run_audit(root, manifest_path)
-            check = next(item for item in report["checks"] if item["name"] == "platform_readme_router_consistency")
-            self.assertEqual("PASS", check["status"])
+            checks = {item["name"]: item for item in report["checks"]}
+            self.assertEqual("PASS", checks["phase8_approved_status_successor_current"]["status"])
+            self.assertEqual("PASS", checks["platform_readme_router_consistency"]["status"])
 
 
 if __name__ == "__main__":

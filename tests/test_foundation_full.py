@@ -11,6 +11,7 @@ from tools.foundation_integrity_audit import (
     _audit_exact_predecessor_commit,
     run_audit,
 )
+from tests.foundation_test_support import WELL38_BASE_SHA, copy_git_snapshot_tree
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs/00_platform"
@@ -40,7 +41,7 @@ class FoundationFullHistoricalTests(unittest.TestCase):
     def test_full_audit_rejects_changed_governance_lifecycle_rule(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            shutil.copytree(DOCS, root / "docs/00_platform")
+            copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform")
             manifest_path = root / MANIFEST_RELATIVE
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             manifest["integrity_rules"]["roadmap_proof_classification_lifecycle"][

@@ -10,7 +10,7 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import _markdown_h2_section, run_audit
-from tests.foundation_test_support import historical_snapshot_path
+from tests.foundation_test_support import current_document_path, historical_snapshot_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -187,6 +187,12 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         current_state = _markdown_h2_section(readme, "Current State")
         self.assertIsNotNone(current_state)
         current_state = current_state or ""
+        current_open_work = current_document_path(ROOT, "OPEN_WORK").read_text(encoding="utf-8")
+        active_start = current_open_work.find("# 9. Immediate Next Action")
+        active_end = current_open_work.find("# 10. Minimal Tools", active_start + 1)
+        active = current_open_work[active_start:active_end] if active_start >= 0 and active_end > active_start else ""
+        next_actions = re.findall(r"(?m)^NEXT GOVERNANCE ACTION:.*$", active)
+        self.assertEqual(1, len(next_actions), "current Open Work must have one next action")
         self.assertIn("- PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", current_state)
         self.assertIn(
             "- PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
@@ -194,7 +200,7 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         )
         self.assertIn("- PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", current_state)
         self.assertIn("FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT", current_state)
-        self.assertIn("NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", current_state)
+        self.assertIn(f"- {next_actions[0]}", current_state)
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", current_state)
@@ -355,10 +361,16 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
                 encoding="utf-8",
             )
             rejected = run_audit(root, fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
-            route_check = next(item for item in rejected["checks"] if item["name"] == "fp001_phase8_proof_contract_lifecycle")
-            self.assertEqual("FAIL", route_check["status"], route_check["message"])
+            route_findings = [
+                finding for finding in rejected["findings"]
+                if finding["check"] in {"active_document_graph", "phase8_approved_status_successor_current"}
+            ]
+            self.assertTrue(route_findings, rejected["findings"])
             for name in names:
-                self.assertIn(name, route_check["message"])
+                self.assertTrue(
+                    any(name in finding["message"] for finding in route_findings),
+                    rejected["findings"],
+                )
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -372,7 +384,7 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
                 encoding="utf-8",
             )
             accepted = run_audit(root, fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
-            route_check = next(item for item in accepted["checks"] if item["name"] == "fp001_phase8_proof_contract_lifecycle")
+            route_check = next(item for item in accepted["checks"] if item["name"] == "phase8_approved_status_successor_current")
             self.assertEqual("PASS", route_check["status"], route_check["message"])
 
     def test_successor_does_not_change_upstream_authority_or_application_source(self):

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -11,6 +10,7 @@ from tools.foundation_integrity_audit import (
     _check_fp001_phase7c_current_promotion,
     run_audit,
 )
+from foundation_test_support import WELL38_BASE_SHA, copy_git_snapshot_tree
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,8 +23,7 @@ ARCHIVE_REL = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKI
 
 class FP001Phase7CCurrentPromotionAuditTests(unittest.TestCase):
     def _copy_fixture(self, root: Path) -> tuple[Path, dict]:
-        source_docs = ROOT / "docs" / "00_platform"
-        shutil.copytree(source_docs, root / "docs" / "00_platform")
+        copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform")
         manifest_path = root / "docs" / "00_platform" / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         return root, json.loads(manifest_path.read_text(encoding="utf-8"))
 
@@ -108,10 +107,15 @@ class FP001Phase7CCurrentPromotionAuditTests(unittest.TestCase):
         text = text[:end] + "\n" + line + "\n" + text[end:]
         path.write_text(text, encoding="utf-8")
 
-    def test_phase7c_current_status_promotion_passes_foundation_integrity(self):
+    def test_current_successor_and_pinned_predecessor_pass_foundation_integrity(self):
         report = run_audit(ROOT, ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
-        check = next(item for item in report["checks"] if item["name"] == PROMOTION_RULE)
-        self.assertEqual("PASS", check["status"], check["message"])
+        checks = {item["name"]: item for item in report["checks"]}
+        for name in (
+            "phase8_approved_status_successor_current",
+            "phase8_approved_status_successor_predecessor_full_audit",
+            PROMOTION_RULE,
+        ):
+            self.assertEqual("PASS", checks[name]["status"], checks[name]["message"])
 
     def test_fail_closed_mutations_cover_phase7c_closure_and_provenance(self):
         mutations = (

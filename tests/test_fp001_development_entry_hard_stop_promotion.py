@@ -10,7 +10,13 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
-from foundation_test_support import current_document_path, current_working_path, historical_snapshot_path
+from foundation_test_support import (
+    WELL38_BASE_SHA,
+    copy_git_snapshot_tree,
+    current_document_path,
+    current_working_path,
+    historical_snapshot_path,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -202,7 +208,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             report = run_audit(root, root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
             phase8_check = next(
                 check for check in report["checks"]
-                if check["name"] == "fp001_phase8_proof_contract_lifecycle"
+                if check["name"] == "phase8_approved_status_successor_current"
             )
             self.assertEqual("FAIL", report["status"])
             self.assertEqual("FAIL", phase8_check["status"])
@@ -210,9 +216,12 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
     # ------------------------------------------------------------------
     # Application-source guard: authorisation-conditional, state-derived
     # ------------------------------------------------------------------
-    def _synthetic_repo(self, root: Path) -> Path:
+    def _synthetic_repo(self, root: Path, *, historical: bool = False) -> Path:
         for name in ("docs", "tests", "tools"):
             shutil.copytree(ROOT / name, root / name, ignore=shutil.ignore_patterns("__pycache__"))
+        if historical:
+            shutil.rmtree(root / "docs" / "00_platform")
+            copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform")
         for relative, content in SYNTHETIC_SOURCE_FILES.items():
             target = root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -221,7 +230,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
 
     def test_review_pending_state_blocks_synthetic_application_source(self):
         with tempfile.TemporaryDirectory() as directory:
-            manifest = self._synthetic_repo(Path(directory))
+            manifest = self._synthetic_repo(Path(directory), historical=True)
             report = run_audit(Path(directory), manifest)
             check = next(
                 item for item in report["checks"]
@@ -250,7 +259,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         for label, (mode, updates) in scenarios.items():
             with self.subTest(scenario=label), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
-                manifest = self._synthetic_repo(root)
+                manifest = self._synthetic_repo(root, historical=True)
                 if mode in ("rule", "both"):
                     data = json.loads(manifest.read_text(encoding="utf-8"))
                     rule = data["integrity_rules"]["fp001_development_entry_hard_stop_lifecycle"]
@@ -299,10 +308,13 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             report = run_audit(root, manifest)
             check = next(
                 item for item in report["checks"]
-                if item["name"] == "fp001_phase8_proof_contract_lifecycle"
+                if item["name"] == "phase8_approved_status_successor_current"
             )
             self.assertEqual("FAIL", check["status"], check["message"])
-            self.assertIn("manifest Phase 8 route hash differs", check["message"])
+            self.assertIn(
+                "Phase 8 current-route SHA-256 differs: docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
+                check["message"],
+            )
 
     def test_pr_scope_base_to_candidate_adds_no_application_source(self):
         """Scope record for PR #131 only: the promotion itself adds no executable application source."""
