@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 
-from tests.foundation_test_support import git_snapshot_path_exists
+from tests.foundation_test_support import git_snapshot_directory_names, git_snapshot_path_exists
 
 # Exact Stage 4B completion commit that introduced this test and its artifact.
 HISTORICAL_SCOPE_SHA = "cc91dd74915bb9b9ce2027ef8ee8939db816f616"
@@ -174,10 +174,9 @@ class Stage4BEngineeringPolicyGrillIntegrityTests(unittest.TestCase):
         self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, "mix.exs"))
         self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, ".formatter.exs"))
         self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, ".credo.exs"))
-        workflow_dir = ROOT / ".github" / "workflows"
         self.assertEqual(
             ["foundation-integrity.yml"],
-            sorted(path.name for path in workflow_dir.glob("*")),
+            git_snapshot_directory_names(ROOT, HISTORICAL_SCOPE_SHA, ".github/workflows"),
         )
 
     def test_planning_routes_architecture_amendment_next_after_stage_4b(self):
