@@ -11,6 +11,7 @@ from foundation_test_support import (
     WELL38_BASE_SHA,
     git_snapshot_bytes,
     git_snapshot_path_exists,
+    git_snapshot_directory_names,
 )
 
 
@@ -432,10 +433,9 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
             PROTECTED_HASHES["docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md"],
             hashlib.sha256(atlas).hexdigest(),
         )
-        workflow_dir = ROOT / ".github" / "workflows"
         self.assertEqual(
             ["foundation-integrity.yml"],
-            sorted(path.name for path in workflow_dir.glob("*")),
+            git_snapshot_directory_names(ROOT, HISTORICAL_SCOPE_SHA, ".github/workflows"),
         )
         for forbidden in ("LOW/STANDARD/HIGH", "typespec", "Dialyzer", "Credo", "Splode"):
             self.assertNotIn(forbidden, self.roadmap)

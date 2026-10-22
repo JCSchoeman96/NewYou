@@ -1,6 +1,11 @@
 defmodule NewYouWeb.Router do
   use NewYouWeb, :router
 
+  # sobelow_skip ["Config.CSP"]
+  # Reviewed suppression (WELL-4): the root layout carries an intentional inline
+  # theme-bootstrap <script>, which a strict Content-Security-Policy would block.
+  # Remove this skip when that script moves to a bundled asset and a CSP is added;
+  # the follow-up is tracked in Plane, not in this comment.
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session

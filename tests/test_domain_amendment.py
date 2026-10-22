@@ -11,6 +11,7 @@ from foundation_test_support import (
     WELL38_BASE_SHA,
     git_snapshot_bytes,
     git_snapshot_path_exists,
+    git_snapshot_directory_names,
 )
 
 
@@ -335,10 +336,9 @@ class DomainAmendmentIntegrityTests(unittest.TestCase):
             self.assertFalse((ROOT / relative_path).exists(), relative_path)
         self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, ".formatter.exs"))
         self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, ".credo.exs"))
-        workflow_dir = ROOT / ".github" / "workflows"
         self.assertEqual(
             ["foundation-integrity.yml"],
-            sorted(path.name for path in workflow_dir.glob("*")),
+            git_snapshot_directory_names(ROOT, HISTORICAL_SCOPE_SHA, ".github/workflows"),
         )
         workflow_baseline = git_snapshot_bytes(
             ROOT,

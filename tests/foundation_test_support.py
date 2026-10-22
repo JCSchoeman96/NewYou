@@ -51,6 +51,18 @@ def git_snapshot_path_exists(root: Path, revision: str, repository_path: str) ->
     return any(path == repository_path or path.startswith(repository_path.rstrip("/") + "/") for path in paths)
 
 
+def git_snapshot_directory_names(root: Path, revision: str, directory: str) -> list[str]:
+    """Immediate child names of a directory in an exact historical tree, never the checkout."""
+
+    tree = _exact_git_tree(root, revision)
+    paths = subprocess.run(
+        ["git", "ls-tree", "--full-tree", "-r", "--name-only", "-z", tree],
+        cwd=Path(root), capture_output=True, text=True, check=True,
+    ).stdout.split("\0")
+    prefix = directory.rstrip("/") + "/"
+    return sorted({path[len(prefix):].split("/", 1)[0] for path in paths if path.startswith(prefix)})
+
+
 def git_changed_paths(root: Path, base_revision: str, candidate_revision: str) -> list[str]:
     """Compare two exact trees without including HEAD or working-tree changes."""
 
