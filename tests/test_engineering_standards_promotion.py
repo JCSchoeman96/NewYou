@@ -6,6 +6,8 @@ import shutil
 import tempfile
 import unittest
 from pathlib import Path
+
+from foundation_test_support import current_document_relative_path
 from typing import Callable
 
 from tools.foundation_integrity_audit import run_audit
@@ -16,7 +18,7 @@ DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
 CURRENT_STANDARDS_RELATIVE = Path("docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md")
 ARCHIVED_CANDIDATE_RELATIVE = Path("docs/00_platform/archive/ENGINEERING_STANDARDS_v1.0.0.md")
-OPEN_WORK_RELATIVE = Path("docs/00_platform/02_OPEN_WORK_v1.2.77.md")
+OPEN_WORK_RELATIVE = Path(current_document_relative_path(ROOT, "OPEN_WORK"))
 README_RELATIVE = Path("docs/00_platform/README.md")
 
 

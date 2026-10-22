@@ -6,6 +6,8 @@ import re
 import unittest
 from pathlib import Path
 
+from foundation_test_support import current_document_path, current_working_path
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -13,8 +15,6 @@ ROADMAP = DOCS / "05_ROADMAP_v1.2.3.md"
 ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.2.2.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.2.2.md"
 CURRENT_ROADMAP = DOCS / "05_ROADMAP_v1.2.3.md"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.77.md"
-ATLAS = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.19.md"
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 ROADMAP_V1_1_4_SHA256 = "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
@@ -120,8 +120,8 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         cls.roadmap = ROADMAP.read_text(encoding="utf-8") if ROADMAP.is_file() else ""
         cls.current_roadmap = CURRENT_ROADMAP.read_text(encoding="utf-8") if CURRENT_ROADMAP.is_file() else ""
         cls.predecessor = ROADMAP_PREDECESSOR.read_text(encoding="utf-8") if ROADMAP_PREDECESSOR.is_file() else ""
-        cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
-        cls.atlas = ATLAS.read_text(encoding="utf-8")
+        cls.open_work = current_document_path(ROOT, "OPEN_WORK").read_text(encoding="utf-8")
+        cls.atlas = current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").read_text(encoding="utf-8")
         cls.readme = README.read_text(encoding="utf-8")
         cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 
@@ -171,7 +171,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertEqual("05_ROADMAP_v1.2.3.md", roadmap["canonical_filename"])
         self.assertEqual("docs/00_platform/05_ROADMAP_v1.2.3.md", roadmap["repository_path"])
         self.assertEqual(_sha256(CURRENT_ROADMAP), roadmap["sha256"])
-        self.assertEqual("02_OPEN_WORK_v1.2.77.md", open_work["canonical_filename"])
+        self.assertEqual(Path(open_work["repository_path"]).name, open_work["canonical_filename"])
 
         header = self.current_roadmap.split("## Amendment summary", 1)[0]
         route_lines = re.findall(r"(?m)^- \*\*Current programme routing:\*\* (.+)$", header)

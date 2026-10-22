@@ -7,8 +7,8 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      ref:
-        description: Exact commit SHA to check out and validate (40-character git object id).
+      sha:
+        description: Exact 40-character commit SHA to validate with Foundation Full.
         required: true
         type: string
 
@@ -16,43 +16,148 @@ permissions:
   contents: read
 
 jobs:
-  foundation-integrity:
-    name: Foundation Integrity
+  route:
+    name: Route CI lanes
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    outputs:
+      foundation_full: ${{ steps.classify.outputs.foundation_full }}
+      application_changes: ${{ steps.classify.outputs.application_changes }}
+    steps:
+      - name: Check out change range
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.sha || github.sha }}
+          fetch-depth: 0
+      - name: Classify changed paths
+        id: classify
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: python tools/foundation_integrity_routing.py --root . >> "$GITHUB_OUTPUT"
+
+  foundation-smoke:
+    name: Foundation Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.sha }}
-          fetch-depth: 0
-      - name: Verify exact-head checkout
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.sha || github.sha }}
+          fetch-depth: 1
+      - name: Verify exact-SHA dispatch checkout
         if: github.event_name == 'workflow_dispatch'
         shell: bash
         env:
-          EXPECTED_REF: ${{ inputs.ref }}
+          EXPECTED_SHA: ${{ inputs.sha }}
         run: |
           set -euo pipefail
-          expected="$EXPECTED_REF"
+          expected="$EXPECTED_SHA"
           if ! [[ "$expected" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "ref must be a 40-character commit SHA; got: $expected"
+            echo "sha must be a 40-character commit SHA; got: $expected"
             exit 1
           fi
-          if [[ "${GITHUB_SHA}" != "$expected" ]]; then
-            echo "GITHUB_SHA ${GITHUB_SHA} does not match ref input ${expected}"
+          if [[ "$GITHUB_SHA" != "$expected" ]]; then
+            echo "Workflow ref SHA ${GITHUB_SHA} does not match requested ${expected}"
             echo "Use workflow from the branch whose tip is the certified SHA."
             exit 1
           fi
           actual="$(git rev-parse HEAD)"
           if [[ "$actual" != "$expected" ]]; then
-            echo "Checked out ${actual} but ref input was ${expected}"
+            echo "Checked out ${actual} but requested ${expected}"
             exit 1
           fi
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - name: Run unit tests
+      - name: Run Foundation Smoke tests
+        run: python -m unittest discover -s tests -p 'test_foundation_smoke.py' -v
+      - name: Run current authority smoke audit
+        run: python -m tools.foundation_integrity_smoke --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+
+  foundation-full:
+    name: Foundation Full
+    needs: route
+    if: needs.route.outputs.foundation_full == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify exact-SHA dispatch checkout
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.sha }}
+        run: |
+          set -euo pipefail
+          expected="$EXPECTED_SHA"
+          if ! [[ "$expected" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "sha must be a 40-character commit SHA; got: $expected"
+            exit 1
+          fi
+          if [[ "$GITHUB_SHA" != "$expected" ]]; then
+            echo "Workflow ref SHA ${GITHUB_SHA} does not match requested ${expected}"
+            echo "Use workflow from the branch whose tip is the certified SHA."
+            exit 1
+          fi
+          actual="$(git rev-parse HEAD)"
+          if [[ "$actual" != "$expected" ]]; then
+            echo "Checked out ${actual} but requested ${expected}"
+            exit 1
+          fi
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Run full governance and historical unit tests
         run: python -m unittest discover -s tests -v
-      - name: Run manifest-backed foundation audit
+      - name: Run manifest-backed full foundation audit
         run: python tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+
+  foundation-integrity:
+    name: Foundation Integrity
+    needs: [route, foundation-smoke, foundation-full]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require Smoke and any routed Full verification
+        env:
+          ROUTE_RESULT: ${{ needs.route.result }}
+          SMOKE_RESULT: ${{ needs.foundation-smoke.result }}
+          FULL_REQUIRED: ${{ needs.route.outputs.foundation_full }}
+          FULL_RESULT: ${{ needs.foundation-full.result }}
+        run: |
+          set -euo pipefail
+          FULL_REQUIRED="${FULL_REQUIRED:-}"
+          if [[ "$ROUTE_RESULT" != "success" ]]; then
+            echo "CI lane routing did not complete successfully: $ROUTE_RESULT"
+            exit 1
+          fi
+          if [[ "$SMOKE_RESULT" != "success" ]]; then
+            echo "Foundation Smoke did not pass: $SMOKE_RESULT"
+            exit 1
+          fi
+          case "$FULL_REQUIRED" in
+            true)
+              if [[ "$FULL_RESULT" != "success" ]]; then
+                echo "Foundation Full was required but did not pass: $FULL_RESULT"
+                exit 1
+              fi
+              ;;
+            false)
+              if [[ "$FULL_RESULT" != "skipped" ]]; then
+                echo "Foundation Full was not required but did not skip: $FULL_RESULT"
+                exit 1
+              fi
+              ;;
+            *)
+              echo "Invalid/missing Foundation Full routing decision: $FULL_REQUIRED"
+              exit 1
+              ;;
+          esac

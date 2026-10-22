@@ -10,6 +10,7 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import _markdown_h2_section, run_audit
+from tests.foundation_test_support import historical_snapshot_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +19,7 @@ MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 BASELINE_MAIN_SHA = "f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3"
 PR_121_CANDIDATE_SHA = "b6f82218026f3372ccacc96ffdbb37430e8e503f"
 MERGE_TREE_SHA = "98e553d45006136277e4b2aa629c97c31f7742e2"
+STATUS_BASELINE_SHA = "4234965c8da20dbb4ef0a7128614a5070244619a"
 ARCHIVED_CANDIDATE_SHA256 = "274306e73e2450806516a5b76ca96f1a768af7824ba823cca6c9371c58e65401"
 POST_MERGE_ATTESTATION_URL = (
     "https://github.com/JCSchoeman96/NewYou/pull/121#issuecomment-6235345322"
@@ -203,9 +205,17 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             "the current README cannot give Phase 7C both NEXT and BLOCKED status",
         )
 
-    def test_lifecycle_manifest_and_scope_are_current_and_unchanged(self):
+    def test_historical_pr121_open_work_status_snapshot_is_preserved(self):
+        # PR #121's v1.2.77 status remains certification evidence after a
+        # later Open Work successor moves the current route.
+        open_work_path = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
+        self.assertEqual(
+            _git_show(STATUS_BASELINE_SHA, "docs/00_platform/02_OPEN_WORK_v1.2.77.md"),
+            open_work_path.read_bytes(),
+            "the PR #121 status snapshot must remain byte-identical to its certified baseline",
+        )
         state = _lifecycle_state(
-            (ROOT / self.entries["OPEN_WORK"]["repository_path"]).read_text(encoding="utf-8")
+            open_work_path.read_text(encoding="utf-8")
         )
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state.get("phase_7b_reconciliation"))
         self.assertEqual("COMPLETE / CERTIFIED / CURRENT", state.get("phase_7c"))
@@ -230,15 +240,18 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertEqual("NEW_TRACER_BULLET", phase7c_contract.get("proof_classification"))
         self.assertEqual("AUTHORISED", phase7c_contract.get("phase8"))
 
-        current_open_work = self.entries["OPEN_WORK"]
-        self.assertEqual("02_OPEN_WORK_v1.2.77.md", current_open_work["canonical_filename"])
-        self.assertEqual("1.2.77", current_open_work["semver"])
+        status_snapshot = self.entries.get("OPEN_WORK_V1_2_77", self.entries["OPEN_WORK"])
+        self.assertEqual("02_OPEN_WORK_v1.2.77.md", status_snapshot["canonical_filename"])
+        self.assertEqual("1.2.77", status_snapshot["semver"])
         self.assertEqual(
-            "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
-            current_open_work["repository_path"],
+            open_work_path.relative_to(ROOT).as_posix(),
+            status_snapshot["repository_path"],
         )
-        self.assertEqual("1.2.76", current_open_work["superseded_version"])
-        self.assertEqual("current", current_open_work["lifecycle"])
+        self.assertIn(status_snapshot["lifecycle"], {"current", "historical"})
+        self.assertEqual(
+            status_snapshot["lifecycle"] == "historical",
+            "archive" in Path(status_snapshot["repository_path"]).parts,
+        )
 
         direct_predecessor = self.entries.get("OPEN_WORK_V1_2_75", {})
         self.assertEqual("archive/02_OPEN_WORK_v1.2.75.md", direct_predecessor.get("repository_path", "").removeprefix("docs/00_platform/"))

@@ -6,6 +6,8 @@ import re
 import unittest
 from pathlib import Path
 
+from foundation_test_support import current_document_path
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -507,7 +509,7 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
                 self.assertEqual(expected_hash, hashlib.sha256(path.read_bytes()).hexdigest())
 
     def test_current_readme_and_open_work_route_tracker_124_as_closed(self):
-        current_open_work = (DOCS / "02_OPEN_WORK_v1.2.77.md").read_text(encoding="utf-8")
+        current_open_work = current_document_path(ROOT, "OPEN_WORK").read_text(encoding="utf-8")
         state_match = re.search(
             r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
             current_open_work,
@@ -524,7 +526,7 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", readme)
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", readme)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", readme)
-        self.assertIn("NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", readme)
+        self.assertIn(f"NEXT GOVERNANCE ACTION: {state['next_governance_action']}", readme)
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", readme)
         self.assertIn("PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", readme)
 

@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 from tools import foundation_integrity_audit
+from foundation_test_support import current_document_path, current_working_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,11 +55,9 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
         cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
-        cls.atlas = (DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.19.md").read_text(encoding="utf-8")
-        cls.harden02 = (DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.21.md").read_text(
-            encoding="utf-8"
-        )
-        cls.fp001 = (DOCS / "working" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md").read_text(
+        cls.atlas = current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").read_text(encoding="utf-8")
+        cls.harden02 = current_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_").read_text(encoding="utf-8")
+        cls.fp001 = current_working_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_").read_text(
             encoding="utf-8"
         )
         cls.integrity_rules = json.loads(MANIFEST.read_text(encoding="utf-8"))["integrity_rules"]
@@ -343,7 +342,7 @@ class ProductLawHardeningTests(unittest.TestCase):
             "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
             "00_PLATFORM_v1.8.0.md",
             "01_DECISIONS_v1.8.0.md",
-            "02_OPEN_WORK_v1.2.77.md",
+            current_document_path(ROOT, "OPEN_WORK").name,
             "04_DOMAIN_MAP_v1.2.0.md",
             "05_ROADMAP_v1.2.3.md",
         ):
@@ -463,14 +462,14 @@ class ProductLawHardeningTests(unittest.TestCase):
             "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
             "docs/00_platform/00_PLATFORM_v1.8.0.md",
             "docs/00_platform/01_DECISIONS_v1.8.0.md",
-            "docs/00_platform/02_OPEN_WORK_v1.2.77.md",
+            current_document_path(ROOT, "OPEN_WORK").relative_to(ROOT).as_posix(),
             "docs/00_platform/05_ROADMAP_v1.2.3.md",
             "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
             "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
             "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
             "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
-            "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md",
-            "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.21.md",
+            current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").relative_to(ROOT).as_posix(),
+            current_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_").relative_to(ROOT).as_posix(),
             "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
             "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
             "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
@@ -679,7 +678,7 @@ class ProductLawHardeningTests(unittest.TestCase):
             "03_ARCHITECTURE_v1.1.1.md",
             "04_DOMAIN_MAP_v1.2.0.md",
             "05_ROADMAP_v1.2.3.md",
-            "02_OPEN_WORK_v1.2.77.md",
+            current_document_path(ROOT, "OPEN_WORK").name,
             "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
         )
         source_table = self.atlas.split("## 1.2 Purpose", 1)[0]

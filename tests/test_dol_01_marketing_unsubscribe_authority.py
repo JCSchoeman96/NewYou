@@ -6,6 +6,8 @@ import re
 import unittest
 from pathlib import Path
 
+from foundation_test_support import current_working_path, historical_snapshot_path
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -40,7 +42,6 @@ EXPECTED_CURRENT = {
     "PROJECT_NORTH_STAR_AND_MVP": ("PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md", "1.3.0"),
     "PLATFORM_BASELINE": ("00_PLATFORM_v1.8.0.md", "1.8.0"),
     "DECISION_REGISTER": ("01_DECISIONS_v1.8.0.md", "1.8.0"),
-    "OPEN_WORK": ("02_OPEN_WORK_v1.2.77.md", "1.2.77"),
     "DOMAIN_MAP": ("04_DOMAIN_MAP_v1.2.0.md", "1.2.0"),
     "ROADMAP": ("05_ROADMAP_v1.2.3.md", "1.2.3"),
 }
@@ -263,12 +264,19 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             self.assertEqual(f"docs/00_platform/{filename}", entry["repository_path"])
             self.assertEqual(_sha256(ROOT / entry["repository_path"]), entry["sha256"])
 
+        open_work = governing["OPEN_WORK"]
+        self.assertEqual(Path(open_work["repository_path"]).name, open_work["canonical_filename"])
+        self.assertRegex(open_work["semver"], r"^\d+\.\d+\.\d+$")
+        self.assertEqual(_sha256(ROOT / open_work["repository_path"]), open_work["sha256"])
+
         all_entries = (
             self.manifest["governing_documents"]
             + self.manifest["reference_documents"]
             + self.manifest["historical_documents"]
         )
-        for filename, _version in EXPECTED_CURRENT.values():
+        expected_current_filenames = [filename for filename, _version in EXPECTED_CURRENT.values()]
+        expected_current_filenames.append(open_work["canonical_filename"])
+        for filename in expected_current_filenames:
             self.assertEqual(1, sum(entry["canonical_filename"] == filename for entry in all_entries), filename)
 
         for filename, expected_hash in PREDECESSOR_SHA256.items():
@@ -297,7 +305,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
 
     def test_current_routes_are_current_and_old_paths_remain_archived(self):
-        atlas_path = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.19.md"
+        atlas_path = current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").relative_to(ROOT).as_posix()
         self.assertEqual(
             atlas_path,
             self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"][0],
@@ -316,7 +324,9 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             _sha256(DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.3.md"),
         )
         current_section = self.readme.split("## Default Agent Context", 1)[1].split("## Active Working Artifacts", 1)[0]
-        for filename, _version in EXPECTED_CURRENT.values():
+        current_filenames = [filename for filename, _version in EXPECTED_CURRENT.values()]
+        current_filenames.append(self.open_work_entry["canonical_filename"])
+        for filename in current_filenames:
             self.assertIn(filename, current_section)
 
         for stale_name in (
@@ -339,7 +349,7 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             "00_PLATFORM_v1.8.0.md",
             "01_DECISIONS_v1.8.0.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "DELIVERY_ATLAS_WORKING_v0.4.19.md",
+            Path(atlas_path).name,
         ):
             self.assertIn(current_name, immediate_next_action)
         for stale_name in (
@@ -398,24 +408,25 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             "→ PHASE 8 ONLY AFTER DEVELOPMENT ENTRY HARD STOP PASSES",
         )
         predecessor_gates = [line for line in _gate_lines(predecessor) if not line.startswith(advanced_prefixes)]
-        current_gates = [line for line in _gate_lines(self.open_work) if not line.startswith(advanced_prefixes)]
+        preserved_successor = _read(historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md"))
+        current_gates = [line for line in _gate_lines(preserved_successor) if not line.startswith(advanced_prefixes)]
         self.assertEqual(predecessor_gates, current_gates)
-        self.assertIn("DOL-01", self.open_work)
-        self.assertIn("FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED", self.open_work)
-        self.assertIn("COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0", self.open_work)
-        self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", self.open_work)
-        self.assertIn("ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED", self.open_work)
-        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", self.open_work)
-        self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", self.open_work)
-        self.assertIn("TRACER BULLET ID: TB-001", self.open_work)
-        self.assertIn("ARCHITECTURAL PROOF EXECUTION: NOT STARTED", self.open_work)
-        self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", self.open_work)
-        self.assertIn("NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", self.open_work)
-        self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", self.open_work)
-        self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", self.open_work)
+        self.assertIn("DOL-01", preserved_successor)
+        self.assertIn("FP001_RECONCILIATION_REQUIRED: COMPLETE / CERTIFIED", preserved_successor)
+        self.assertIn("COMMUNICATIONS DOSSIER: COMPLETE / CERTIFIED / CURRENT v0.1.0", preserved_successor)
+        self.assertIn("HARDEN-02 EXECUTION: COMPLETE / CERTIFIED", preserved_successor)
+        self.assertIn("ENGINEERING STANDARDS AUTHORITY PROMOTION: COMPLETE / CERTIFIED", preserved_successor)
+        self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", preserved_successor)
+        self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", preserved_successor)
+        self.assertIn("TRACER BULLET ID: TB-001", preserved_successor)
+        self.assertIn("ARCHITECTURAL PROOF EXECUTION: NOT STARTED", preserved_successor)
+        self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", preserved_successor)
+        self.assertIn("NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION", preserved_successor)
+        self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", preserved_successor)
+        self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", preserved_successor)
         self.assertIn(
             "EXECUTABLE DEVELOPMENT: AUTHORISED ONLY FOR BOUNDED PHASE 8 ARCHITECTURAL PROOF / NEW_TRACER_BULLET",
-            self.open_work,
+            preserved_successor,
         )
 
 

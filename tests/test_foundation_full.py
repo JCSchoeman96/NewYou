@@ -1,0 +1,86 @@
+from __future__ import annotations
+
+import json
+import shutil
+import tempfile
+import unittest
+from pathlib import Path
+
+from tools.foundation_integrity_audit import (
+    PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA,
+    _audit_exact_predecessor_commit,
+    run_audit,
+)
+
+ROOT = Path(__file__).resolve().parents[1]
+DOCS = ROOT / "docs/00_platform"
+MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
+
+
+class FoundationFullHistoricalTests(unittest.TestCase):
+    def test_successor_full_audit_uses_the_exact_historical_base_sha(self):
+        passes, message = _audit_exact_predecessor_commit(
+            ROOT,
+            PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA,
+        )
+        self.assertTrue(passes, message)
+        self.assertIn("900 Foundation Integrity assertions", message)
+
+        passes, message = _audit_exact_predecessor_commit(ROOT, "0" * 40)
+        self.assertFalse(passes)
+        self.assertIn("required main baseline", message)
+
+        with tempfile.TemporaryDirectory(dir=ROOT, prefix=".foundation-full-nested-root-") as nested_root:
+            passes, message = _audit_exact_predecessor_commit(
+                Path(nested_root),
+                PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA,
+            )
+        self.assertTrue(passes, message)
+
+    def test_full_audit_rejects_changed_governance_lifecycle_rule(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copytree(DOCS, root / "docs/00_platform")
+            manifest_path = root / MANIFEST_RELATIVE
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["integrity_rules"]["roadmap_proof_classification_lifecycle"][
+                "selected_proof_vehicle"
+            ] = "REUSE_EXISTING_PROOF"
+            manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    finding["check"] == "roadmap_proof_classification_lifecycle"
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+    def test_full_audit_rejects_changed_historical_certification_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copytree(DOCS, root / "docs/00_platform")
+            manifest_path = root / MANIFEST_RELATIVE
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            historical = manifest["historical_documents"][0]
+            historical_path = root / historical["repository_path"]
+            historical_path.write_bytes(historical_path.read_bytes() + b"\n")
+
+            report = run_audit(root, manifest_path)
+
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(
+                    finding["check"] in {"manifest_hash_parity", "frozen_provenance_hash"}
+                    and finding["path"] == historical["repository_path"]
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
+
+
+if __name__ == "__main__":
+    unittest.main()

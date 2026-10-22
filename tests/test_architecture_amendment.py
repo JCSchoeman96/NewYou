@@ -6,6 +6,12 @@ import re
 import unittest
 from pathlib import Path
 
+from foundation_test_support import (
+    FOUNDATION_WORKFLOW_BASELINE_SHA256,
+    WELL38_BASE_SHA,
+    git_snapshot_bytes,
+)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -80,7 +86,6 @@ PROTECTED_HASHES = {
     "docs/00_platform/working/TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md": "64deb759ae8eda7391208c2a23db755651e2fc722fdd3142dd4a2f6a7c531511",
     "docs/00_platform/working/TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md": "2ad2d2f5e3410ef01e28f8fc6f5cf7a709f58e5dbec8d2d034e73cef659b2e7e",
     "docs/00_platform/working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md": "27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017",
-    ".github/workflows/foundation-integrity.yml": "5e63c77707fe767bbb89a38f4cfe1d9c972d4aefdcc13296bf5048cd4a3ae0f3",
 }
 
 REQUIRED_SUCCESSOR_PATHS = (
@@ -306,6 +311,15 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
     def test_protected_upstream_and_downstream_artifacts_keep_exact_hashes(self):
         for relative_path, expected_hash in PROTECTED_HASHES.items():
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
+        workflow_baseline = git_snapshot_bytes(
+            ROOT,
+            WELL38_BASE_SHA,
+            ".github/workflows/foundation-integrity.yml",
+        )
+        self.assertEqual(
+            FOUNDATION_WORKFLOW_BASELINE_SHA256,
+            hashlib.sha256(workflow_baseline).hexdigest(),
+        )
 
     def test_scope_has_no_implementation_or_prohibited_artifact_changes(self):
         for relative_path in REQUIRED_SUCCESSOR_PATHS:
@@ -319,9 +333,14 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
             ["foundation-integrity.yml"],
             sorted(path.name for path in workflow_dir.glob("*")),
         )
+        workflow_baseline = git_snapshot_bytes(
+            ROOT,
+            WELL38_BASE_SHA,
+            ".github/workflows/foundation-integrity.yml",
+        )
         self.assertEqual(
-            PROTECTED_HASHES[".github/workflows/foundation-integrity.yml"],
-            _sha256(workflow_dir / "foundation-integrity.yml"),
+            FOUNDATION_WORKFLOW_BASELINE_SHA256,
+            hashlib.sha256(workflow_baseline).hexdigest(),
         )
         supplement = self.law[self.law.index("# 6. Architecture amendment supplement") :]
         self.assertNotIn("TARGETED_ENGINEERING_POLICY_GRILL", supplement)

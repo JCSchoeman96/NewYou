@@ -10,13 +10,14 @@ from tools.foundation_integrity_audit import (
     refresh_manifest,
     run_audit,
 )
+from tests.foundation_test_support import historical_snapshot_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
 CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.77.md"
+OPEN_WORK_STATUS_SNAPSHOT = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
 
 
 class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
@@ -201,9 +202,11 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
                     "Foundation Integrity accepted a contract with a locked decision removed",
                 )
 
-    def test_open_work_routes_to_review_without_advancing_proof_or_phase9(self):
-        self.assertTrue(OPEN_WORK.is_file(), "the Open Work status successor is missing")
-        text = OPEN_WORK.read_text(encoding="utf-8")
+    def test_historical_open_work_status_routes_to_review_without_advancing_proof_or_phase9(self):
+        # This checks the certified v1.2.77 transition snapshot, regardless of
+        # whether a later successor has archived it.
+        self.assertTrue(OPEN_WORK_STATUS_SNAPSHOT.is_file(), "the Open Work status snapshot is missing")
+        text = OPEN_WORK_STATUS_SNAPSHOT.read_text(encoding="utf-8")
         self.assertIn('"status_successor_version": "1.2.77"', text)
         self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", text)
         self.assertIn("TB-001", text)

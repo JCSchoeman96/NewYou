@@ -13,6 +13,7 @@ from tools.foundation_integrity_audit import (
     _fp001_phase7b_candidate_text_issues,
     run_audit,
 )
+from foundation_test_support import current_working_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -126,7 +127,7 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
             "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->",
             "<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->",
         )
-        current_skeleton = (DOCS / "working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.21.md").read_text()
+        current_skeleton = current_working_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_").read_text()
         archived_skeleton = (DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.10.md").read_text()
         for marker in pmr_markers:
             self.assertEqual(current_skeleton.count(marker), 1)
