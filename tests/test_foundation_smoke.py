@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -540,6 +541,61 @@ class FoundationSmokeTests(unittest.TestCase):
         self.assertNotRegex(smoke_job, r"(?m)^    if:")
         self.assertIn("fetch-depth: 1", smoke_job)
         self.assertNotIn("fetch-depth: 0", smoke_job)
+
+    def test_foundation_integrity_aggregate_enforces_router_and_lane_results(self):
+        workflow = (ROOT / ".github/workflows/foundation-integrity.yml").read_text(encoding="utf-8")
+        self.assertIn("FULL_REQUIRED: ${{ needs.route.outputs.foundation_full }}", workflow)
+        aggregate_job = workflow.split("  foundation-integrity:\n", 1)[1]
+        run_marker = "        run: |\n"
+        self.assertIn(run_marker, aggregate_job)
+        run_block = aggregate_job.split(run_marker, 1)[1]
+        script_lines = []
+        for line in run_block.splitlines():
+            if line.startswith("          "):
+                script_lines.append(line[10:])
+            elif not line.strip():
+                script_lines.append("")
+            else:
+                break
+        script = "\n".join(script_lines)
+
+        cases = (
+            ("true requires successful Full", "true", "success", "success", "success", 0),
+            ("true rejects skipped Full", "true", "success", "success", "skipped", 1),
+            ("false requires skipped Full", "false", "success", "success", "skipped", 0),
+            ("false rejects successful Full", "false", "success", "success", "success", 1),
+            ("empty routing output fails", "", "success", "success", "skipped", 1),
+            ("malformed routing output fails", "sometimes", "success", "success", "skipped", 1),
+            ("missing routing output fails", None, "success", "success", "skipped", 1),
+            ("Full failure fails", "true", "success", "success", "failure", 1),
+            ("Full cancellation fails", "true", "success", "success", "cancelled", 1),
+            ("Smoke failure fails", "false", "success", "failure", "skipped", 1),
+            ("route failure fails", "false", "failure", "success", "skipped", 1),
+        )
+        for label, full_required, route_result, smoke_result, full_result, expected in cases:
+            with self.subTest(label=label):
+                env = os.environ.copy()
+                env.update(
+                    ROUTE_RESULT=route_result,
+                    SMOKE_RESULT=smoke_result,
+                    FULL_RESULT=full_result,
+                )
+                if full_required is None:
+                    env.pop("FULL_REQUIRED", None)
+                else:
+                    env["FULL_REQUIRED"] = full_required
+                result = subprocess.run(
+                    ["bash", "-c", script],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    env=env,
+                )
+                self.assertEqual(
+                    expected,
+                    result.returncode,
+                    f"{label}: stdout={result.stdout!r}; stderr={result.stderr!r}",
+                )
 
 
 if __name__ == "__main__":

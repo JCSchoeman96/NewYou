@@ -130,9 +130,11 @@ jobs:
         env:
           ROUTE_RESULT: ${{ needs.route.result }}
           SMOKE_RESULT: ${{ needs.foundation-smoke.result }}
+          FULL_REQUIRED: ${{ needs.route.outputs.foundation_full }}
           FULL_RESULT: ${{ needs.foundation-full.result }}
         run: |
           set -euo pipefail
+          FULL_REQUIRED="${FULL_REQUIRED:-}"
           if [[ "$ROUTE_RESULT" != "success" ]]; then
             echo "CI lane routing did not complete successfully: $ROUTE_RESULT"
             exit 1
@@ -141,7 +143,21 @@ jobs:
             echo "Foundation Smoke did not pass: $SMOKE_RESULT"
             exit 1
           fi
-          if [[ "$FULL_RESULT" != "success" && "$FULL_RESULT" != "skipped" ]]; then
-            echo "Foundation Full did not pass or skip by route: $FULL_RESULT"
-            exit 1
-          fi
+          case "$FULL_REQUIRED" in
+            true)
+              if [[ "$FULL_RESULT" != "success" ]]; then
+                echo "Foundation Full was required but did not pass: $FULL_RESULT"
+                exit 1
+              fi
+              ;;
+            false)
+              if [[ "$FULL_RESULT" != "skipped" ]]; then
+                echo "Foundation Full was not required but did not skip: $FULL_RESULT"
+                exit 1
+              fi
+              ;;
+            *)
+              echo "Invalid/missing Foundation Full routing decision: $FULL_REQUIRED"
+              exit 1
+              ;;
+          esac
