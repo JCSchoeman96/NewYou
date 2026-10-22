@@ -164,14 +164,21 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
 
                 self.assertEqual("FAIL", report["status"])
                 self.assertTrue(
-                    any(finding["check"] == "platform_readme_router_consistency" for finding in report["findings"]),
+                    any(finding["check"] == "phase8_approved_status_successor_current" for finding in report["findings"]),
                     report["findings"],
                 )
 
     def test_current_reconciliation_header_rejects_open_tracker_projection(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_fixture(directory)
-            path = root / "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            navigation = manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
+            current_route = next(
+                relative
+                for relative in navigation
+                if Path(relative).name.startswith("FP-001_PHASE_7B_RECONCILIATION_WORKING_")
+            )
+            path = root / current_route
             current = path.read_text(encoding="utf-8")
             header, body = current.split("## 1. Baseline and authority set", 1)
             header = header.replace("CLOSED / COMPLETED", "OPEN", 1)
@@ -181,7 +188,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             report = run_audit(root, manifest_path)
 
             self.assertEqual("FAIL", report["status"])
-            self.assertTrue(any(finding["check"] == "fp001_phase7b_certification_current" for finding in report["findings"]))
+            self.assertTrue(any(finding["check"] == "phase8_approved_status_successor_current" for finding in report["findings"]))
 
     def test_current_derived_routes_reject_open_tracker_projection(self):
         cases = (
@@ -310,7 +317,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             self.assertEqual("FAIL", report["status"])
             self.assertTrue(
                 any(
-                    finding["check"] == "fp001_phase8_proof_contract_lifecycle"
+                    finding["check"] == "phase8_approved_status_successor_current"
                     for finding in report["findings"]
                 ),
                 report["findings"],

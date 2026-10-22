@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import tempfile
 import unittest
@@ -60,6 +61,17 @@ def _rewrite_open_work(root: Path, before: str, after: str) -> None:
         raise AssertionError(f"mutation marker not found in current Open Work section: {before}")
     text = text[:start] + active.replace(before, after, 1) + text[end:]
     path.write_text(text, encoding="utf-8")
+
+
+def _current_next_governance_action(root: Path) -> str:
+    text = (root / OPEN_WORK_RELATIVE).read_text(encoding="utf-8")
+    start = text.find("# 9. Immediate Next Action")
+    end = text.find("# 10. Minimal Tools", start + 1)
+    active = text[start:end] if start >= 0 and end > start else ""
+    matches = re.findall(r"(?m)^NEXT GOVERNANCE ACTION:.*$", active)
+    if len(matches) != 1:
+        raise AssertionError(f"expected one current Open Work next action, found {len(matches)}")
+    return matches[0]
 
 
 class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
@@ -161,7 +173,7 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
         def next_token_still_names_standards(root: Path, manifest: dict) -> None:
             _rewrite_open_work(
                 root,
-                "NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION",
+                _current_next_governance_action(root),
                 "NEXT STAGE: ENGINEERING_STANDARDS_AUTHORITY_PROMOTION_REQUIRED",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")
@@ -238,7 +250,7 @@ class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):
             )
             _rewrite_open_work(
                 root,
-                "NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION",
+                _current_next_governance_action(root),
                 "NEXT STAGE: PHASE 8 IMPLEMENTATION",
             )
             _refresh_manifest_hash(root, manifest, "OPEN_WORK")

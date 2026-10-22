@@ -6905,10 +6905,12 @@ def _check_fp001_phase8_proof_contract_lifecycle(
 
 
 PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA = "4234965c8da20dbb4ef0a7128614a5070244619a"
+_PHASE8_PREDECESSOR_AUDIT_CACHE: dict[tuple[Path, str], tuple[bool, str]] = {}
 
 
 def _phase8_successor_manifest_history_issues(
     root: Path,
+    repository_root: Path,
     manifest: dict[str, Any],
     expected_routes: dict[str, str],
     predecessor_routes: dict[str, tuple[str, str, str, str]],
@@ -6918,7 +6920,7 @@ def _phase8_successor_manifest_history_issues(
 
     issues: list[str] = []
     repository = subprocess.run(
-        ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+        ["git", "-C", str(repository_root), "rev-parse", "--show-toplevel"],
         capture_output=True,
         text=True,
         check=False,
@@ -7157,6 +7159,7 @@ def _phase8_successor_manifest_history_issues(
 
 def _phase8_approved_status_successor_issues(
     root: Path,
+    repository_root: Path,
     manifest: dict[str, Any],
     integrity_rules: dict[str, Any],
 ) -> list[str]:
@@ -7212,6 +7215,7 @@ def _phase8_approved_status_successor_issues(
     issues.extend(
         _phase8_successor_manifest_history_issues(
             root,
+            repository_root,
             manifest,
             expected_routes,
             predecessor_routes,
@@ -7308,17 +7312,21 @@ def _phase8_approved_status_successor_issues(
     open_work_active = open_work[active_start:active_end] if active_start >= 0 and active_end > active_start else ""
     current_status_tokens = (
         "TB-001 CONTRACT LIFECYCLE: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "TRACER BULLET ID: TB-001",
         "CONTRACT/DESIGN REVIEW: COMPLETE / PASS",
         "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
         "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
         "PROOF EXECUTION: NOT STARTED",
         "PROOF RESULT: NOT STARTED",
         "PROOF CERTIFICATION: NOT STARTED",
+        "PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED",
         "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
         "NEXT GOVERNANCE ACTION: WELL-38 — Transition Foundation Integrity to implementation-era CI",
     )
     if any(token not in open_work_active for token in current_status_tokens):
         issues.append("current Open Work route omits the approved contract or downstream stop state")
+    if "PHASE 7B TRACKER #120: CLOSED / COMPLETED" not in open_work_active:
+        issues.append("current Open Work route does not keep completed tracker #120 historical")
     if re.search(r"(?im)^\s*PHASE 9(?: / VERTICAL SLICES)?\s*:\s*(?:AUTHORI[ZS]ED|STARTED|IN PROGRESS|COMPLETE)", open_work_active):
         issues.append("current Open Work authorises or starts Phase 9")
     if re.search(r"(?im)^\s*PROOF (?:EXECUTION|RESULT|CERTIFICATION)\s*:\s*(?:PASS|COMPLETE|CERTIFIED)", open_work_active):
@@ -7382,7 +7390,61 @@ def _phase8_approved_status_successor_issues(
     readme_current = _markdown_h2_section(readme, "Current State") or ""
     if any(token not in readme_current for token in current_status_tokens):
         issues.append("README current state does not mirror the approved contract and execution stop")
+    if "PHASE 7B EXECUTION/CONTROL TRACKER #120: CLOSED / COMPLETED" not in readme_current:
+        issues.append("README current state omits tracker #120 completion")
+    graph_rules = integrity_rules.get("graph_rules", {})
+    retired_predecessors = graph_rules.get("retired_current_predecessor_paths", []) if isinstance(graph_rules, dict) else []
+    for retired_path in retired_predecessors:
+        if not isinstance(retired_path, str):
+            continue
+        filename = Path(retired_path).name
+        current_without_archived_references = readme_current.replace(f"archive/{filename}", "")
+        if re.search(
+            rf"(?<![A-Za-z0-9_.-]){re.escape(filename)}(?![A-Za-z0-9_.-])",
+            current_without_archived_references,
+        ):
+            issues.append(
+                "README current state routes retired predecessor without archive qualification: "
+                f"{filename}"
+            )
+    blocked_phase7c = re.compile(
+        r"\bphase\s+7c\b[^.!?\n]{0,100}\bblocked\b[^.!?\n]{0,40}\bnot[\s/_-]*started\b",
+        re.IGNORECASE,
+    )
+    if any(
+        blocked_phase7c.search(sentence)
+        for paragraph in re.split(r"\n\s*\n", readme_current)
+        for sentence in re.split(r"(?<=[.!?])\s+", paragraph)
+    ):
+        issues.append("README current state contains a BLOCKED / NOT_STARTED Phase 7C statement")
     active_artifacts = _markdown_h2_section(readme, "Active Working Artifacts") or ""
+    phase7b_routes = [
+        relative
+        for relative in navigation
+        if Path(relative).name.startswith("FP-001_PHASE_7B_RECONCILIATION_WORKING_")
+    ]
+    if len(phase7b_routes) != 1:
+        issues.append("manifest navigation does not resolve one current Phase 7B reconciliation route")
+    else:
+        phase7b_route = phase7b_routes[0]
+        phase7b_path = root / phase7b_route
+        if phase7b_path.is_symlink() or not phase7b_path.is_file():
+            issues.append(f"current Phase 7B reconciliation route is missing or is a symlink: {phase7b_route}")
+        else:
+            phase7b_header = phase7b_path.read_text(encoding="utf-8").split(
+                "## 1. Baseline and authority set", 1
+            )[0]
+            phase7b_status_tokens = (
+                "COMPLETE\nCERTIFIED\nCURRENT",
+                "CLOSED / COMPLETED",
+                "NON-IMPLEMENTATION",
+                "NOT PHASE 7C",
+                "NOT DEVELOPMENT-ENTRY AUTHORITY",
+            )
+            if any(token not in phase7b_header for token in phase7b_status_tokens):
+                issues.append("current Phase 7B reconciliation route does not preserve its certified closed status")
+        if phase7b_route.removeprefix("docs/00_platform/") not in active_artifacts:
+            issues.append("README active working routing omits the current Phase 7B reconciliation route")
     for relative in (*[path for key, path in expected_routes.items() if key != "open_work"], candidate_path):
         route = relative.removeprefix("docs/00_platform/")
         if route not in active_artifacts:
@@ -7441,13 +7503,13 @@ def _phase8_approved_status_successor_issues(
     return issues
 
 
-def _audit_exact_predecessor_commit(root: Path, sha: str) -> tuple[bool, str]:
+def _audit_exact_predecessor_commit(repository_root: Path, sha: str) -> tuple[bool, str]:
     """Run the full audit on the pinned pre-transition tree from Git history."""
 
     if sha != PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA:
         return False, "status successor base SHA is not the required main baseline"
     repository = subprocess.run(
-        ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+        ["git", "-C", str(repository_root), "rev-parse", "--show-toplevel"],
         capture_output=True,
         text=True,
         check=False,
@@ -7463,6 +7525,10 @@ def _audit_exact_predecessor_commit(root: Path, sha: str) -> tuple[bool, str]:
     )
     if check.returncode != 0:
         return False, f"pinned predecessor commit is unavailable: {sha}"
+    cache_key = (repository_root.resolve(), sha)
+    cached = _PHASE8_PREDECESSOR_AUDIT_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
     with tempfile.TemporaryDirectory(prefix="foundation-integrity-predecessor-") as directory:
         archive_path = Path(directory) / "predecessor.tar"
         tree_path = Path(directory) / "tree"
@@ -7486,23 +7552,31 @@ def _audit_exact_predecessor_commit(root: Path, sha: str) -> tuple[bool, str]:
         predecessor_manifest = tree_path / DEFAULT_MANIFEST
         if not predecessor_manifest.is_file():
             return False, "pinned predecessor has no current authority manifest"
-        report = run_audit(tree_path, predecessor_manifest)
+        report = run_audit(tree_path, predecessor_manifest, repository_root=repository_root)
         if report.get("status") != "PASS":
             failures = "; ".join(
                 f"{finding.get('check')}: {finding.get('message')}"
                 for finding in report.get("findings", [])[:5]
             )
             return False, f"pinned predecessor full audit failed: {failures}"
-        return True, f"exact predecessor {sha} passes {report.get('assertion_count')} Foundation Integrity assertions"
+        result = (
+            True,
+            f"exact predecessor {sha} passes {report.get('assertion_count')} Foundation Integrity assertions",
+        )
+        _PHASE8_PREDECESSOR_AUDIT_CACHE[cache_key] = result
+        return result
 
 
 def _check_phase8_approved_status_successor(
     root: Path,
+    repository_root: Path,
     manifest: dict[str, Any],
     integrity_rules: dict[str, Any],
     report: dict[str, Any],
 ) -> bool:
-    issues = _phase8_approved_status_successor_issues(root, manifest, integrity_rules)
+    issues = _phase8_approved_status_successor_issues(
+        root, repository_root, manifest, integrity_rules
+    )
     transition_ok = not issues
     _record_check(
         report,
@@ -7518,7 +7592,9 @@ def _check_phase8_approved_status_successor(
         (root / "docs/00_platform/02_OPEN_WORK_v1.2.78.md").read_text(encoding="utf-8")
     ) if (root / "docs/00_platform/02_OPEN_WORK_v1.2.78.md").is_file() else None
     base_sha = state.get("status_successor_base_sha") if isinstance(state, dict) else ""
-    predecessor_ok, predecessor_message = _audit_exact_predecessor_commit(root, str(base_sha))
+    predecessor_ok, predecessor_message = _audit_exact_predecessor_commit(
+        repository_root, str(base_sha)
+    )
     _record_check(
         report,
         "phase8_approved_status_successor_predecessor_full_audit",
@@ -7538,16 +7614,15 @@ def _check_phase8_approved_status_successor(
         "fp001_phase7c_final_contract_current_promotion",
         "platform_readme_router_consistency",
     )
-    classification_ok = transition_ok and predecessor_ok
     for name in historical_names:
         _record_check(
             report,
             name,
-            classification_ok,
-            "predecessor-era current-status assertions are verified on the pinned exact-SHA snapshot; current routing and transition gates are checked on v1.2.78"
-            if classification_ok
-            else "historical/current classification cannot pass because successor state or predecessor full audit failed",
-            path="docs/00_platform/02_OPEN_WORK_v1.2.78.md",
+            predecessor_ok,
+            "predecessor-era current-status assertions pass on the pinned exact-SHA snapshot; v1.2.78 routing is checked separately"
+            if predecessor_ok
+            else predecessor_message,
+            path="docs/00_platform/archive/02_OPEN_WORK_v1.2.77.md",
         )
     return transition_ok and predecessor_ok
 
@@ -11058,10 +11133,16 @@ def run_audit(
     root: Path,
     manifest_path: Path,
     expected_counts: dict[str, int] | None = None,
+    repository_root: Path | None = None,
 ) -> dict[str, Any]:
-    """Run all foundation checks and return a JSON-serializable report."""
+    """Run all foundation checks and return a JSON-serializable report.
+
+    ``root`` selects the mutable content under audit. Immutable predecessor
+    provenance comes from ``repository_root`` or this tool's canonical checkout.
+    """
 
     root = Path(root)
+    repository_root = Path(repository_root) if repository_root is not None else _default_root()
     manifest_path = Path(manifest_path)
     if not manifest_path.is_absolute():
         manifest_path = root / manifest_path
@@ -11137,7 +11218,9 @@ def run_audit(
             # The predecessor-era suite runs against its pinned exact-SHA snapshot.
             # The successor receives explicit current-path, archive-provenance and
             # proof-stop checks so old status assertions do not masquerade as current.
-            _check_phase8_approved_status_successor(root, manifest, integrity_rules, report)
+            _check_phase8_approved_status_successor(
+                root, repository_root, manifest, integrity_rules, report
+            )
             _check_fp001_phase7c_candidate(root, manifest, integrity_rules, report)
         else:
             _check_roadmap_proof_classification_lifecycle(root, manifest, integrity_rules, report)
@@ -11214,7 +11297,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.refresh_manifest is not None:
         refresh_manifest(root, args.refresh_manifest)
         manifest_path = args.refresh_manifest
-    report = run_audit(root, manifest_path)
+    report = run_audit(root, manifest_path, repository_root=root)
     if args.as_json:
         print(json.dumps(report, indent=2, sort_keys=True))
     else:

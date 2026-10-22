@@ -13,7 +13,7 @@ from pathlib import Path
 from tools.foundation_integrity_audit import refresh_manifest
 from tools.foundation_integrity_routing import classify_changed_paths, classify_event
 from tools.foundation_integrity_smoke import run_smoke_audit
-from foundation_test_support import current_working_relative_path
+from foundation_test_support import current_document_path, current_working_relative_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,7 +52,7 @@ class FoundationSmokeTests(unittest.TestCase):
             root, manifest_path = self._fixture(directory)
             readme_path = root / "docs/00_platform/README.md"
             readme = readme_path.read_text(encoding="utf-8")
-            current_open_work = "9. `02_OPEN_WORK_v1.2.77.md`"
+            current_open_work = f"9. `{current_document_path(root, 'OPEN_WORK').name}`"
             self.assertIn(current_open_work, readme)
             readme_path.write_text(
                 readme.replace(

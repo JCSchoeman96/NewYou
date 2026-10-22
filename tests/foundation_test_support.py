@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import re
 import subprocess
+import tarfile
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +27,26 @@ def git_snapshot_bytes(root: Path, revision: str, repository_path: str) -> bytes
         check=True,
     )
     return result.stdout
+
+
+def copy_git_snapshot_tree(
+    repository_root: Path,
+    revision: str,
+    destination: Path,
+    *repository_paths: str,
+) -> None:
+    """Materialize committed paths as a content fixture without a .git directory."""
+
+    result = subprocess.run(
+        ["git", "archive", "--format=tar", revision, *repository_paths],
+        cwd=Path(repository_root),
+        capture_output=True,
+        check=True,
+    )
+    destination = Path(destination)
+    destination.mkdir(parents=True, exist_ok=True)
+    with tarfile.open(fileobj=io.BytesIO(result.stdout), mode="r:") as archive:
+        archive.extractall(destination, filter="data")
 
 
 def manifest_data(root: Path) -> dict[str, Any]:

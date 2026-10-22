@@ -195,7 +195,7 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
             refresh_manifest(root, manifest_path)
 
             report = run_audit(root, manifest_path)
-            check = next(item for item in report["checks"] if item["name"] == "fp001_phase8_proof_contract_lifecycle")
+            check = next(item for item in report["checks"] if item["name"] == "phase8_approved_status_successor_current")
             self.assertEqual("FAIL", check["status"], check["message"])
 
     def test_candidate_archive_and_direct_predecessor_archives_are_immutable(self):

@@ -20,6 +20,8 @@ from tools.foundation_integrity_audit import (
     sha256_file,
 )
 from foundation_test_support import (
+    WELL38_BASE_SHA,
+    copy_git_snapshot_tree,
     current_document_path,
     current_document_relative_path,
     current_working_path,
@@ -227,7 +229,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_pmr_certified_successors_pass_production_audit(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
 
             report = run_audit(root, manifest_path)
 
@@ -238,7 +240,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_audit_status_successor_requires_current_lifecycle_header(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             candidate = root / (
                 "docs/00_platform/working/"
                 "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
@@ -271,7 +273,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_audit_current_promotion_rejects_misattributed_successor_provenance(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             docs = root / "docs/00_platform"
 
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -326,7 +328,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_audit_rejects_unexpected_additional_active_dossier_candidates(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             unexpected = root / (
                 "docs/00_platform/working/"
                 "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.1.md"
@@ -386,7 +388,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_identity_v014_promotion_is_current_and_pins_distinct_same_version_archives(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
 
             report = run_audit(root, manifest_path)
             promotion_check = next(
@@ -598,7 +600,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         for name, mutate in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
                 dossier = self._ensure_identity_lifecycle_block(dossier_path)
                 dossier_path.write_text(mutate(dossier), encoding="utf-8")
@@ -615,7 +617,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_identity_v014_current_dossier_bytes_remain_pinned(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
             dossier = self._ensure_identity_lifecycle_block(dossier_path)
             historical_heading = "### Inherited v0.1.3 certification evidence\n"
@@ -647,7 +649,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         collapsed_provenance = "PR #76 certification/promotion is COMPLETE / CERTIFIED / CURRENT."
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             open_work_path = _current_open_work_path(root)
             open_work = open_work_path.read_text(encoding="utf-8")
             section_start = open_work.index("## 12.14 —")
@@ -688,7 +690,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         for name, anchor, replacement in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 dossier_path = root / "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
                 dossier = self._ensure_identity_lifecycle_block(dossier_path)
                 self.assertIn(anchor, dossier)
@@ -732,7 +734,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         for name, anchor, replacement in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 atlas_path = historical_snapshot_path(root, "DELIVERY_ATLAS_WORKING_v0.4.19.md")
                 is_archived = "archive" in atlas_path.parts
                 original_open_work = _current_open_work_path(root).read_bytes()
@@ -774,7 +776,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         for name, declaration in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 atlas_path = historical_snapshot_path(root, "DELIVERY_ATLAS_WORKING_v0.4.19.md")
                 is_archived = "archive" in atlas_path.parts
                 atlas = atlas_path.read_text(encoding="utf-8")
@@ -823,11 +825,11 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             report = run_audit(root, manifest_path)
             promotion_check = next(
                 check for check in report["checks"]
-                if check["name"] == "fp001_phase8_proof_contract_lifecycle"
+                if check["name"] == "phase8_approved_status_successor_current"
             )
 
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-            self.assertIn("manifest Phase 8 route hash differs", promotion_check["message"])
+            self.assertIn("Phase 8 current-route SHA-256 differs", promotion_check["message"])
 
     def test_fp001_pmr_validates_harden_v0520_successor_metadata(self):
         predecessor = "- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.20.md` (preserved byte-identically)\n"
@@ -865,7 +867,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         for name, anchor, replacement in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 harden_path = historical_snapshot_path(root, "HARDEN-02_CONTRACT_WORKING_v0.5.21.md")
                 is_archived = "archive" in harden_path.parts
                 harden = harden_path.read_text(encoding="utf-8")
@@ -914,11 +916,11 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             report = run_audit(root, manifest_path)
             promotion_check = next(
                 check for check in report["checks"]
-                if check["name"] == "fp001_phase8_proof_contract_lifecycle"
+                if check["name"] == "phase8_approved_status_successor_current"
             )
 
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-            self.assertIn("manifest Phase 8 route hash differs", promotion_check["message"])
+            self.assertIn("Phase 8 current-route SHA-256 differs", promotion_check["message"])
 
     def test_fp001_pmr_rejects_harden_metadata_declarations_outside_header(self):
         declarations = (
@@ -949,11 +951,11 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 report = run_audit(root, manifest_path)
                 promotion_check = next(
                     check for check in report["checks"]
-                    if check["name"] == "fp001_phase8_proof_contract_lifecycle"
+                    if check["name"] == "phase8_approved_status_successor_current"
                 )
 
                 self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-                self.assertIn("manifest Phase 8 route hash differs", promotion_check["message"])
+                self.assertIn("Phase 8 current-route SHA-256 differs", promotion_check["message"])
 
     def test_fp001_pmr_rejects_immediate_predecessors_left_in_working_routes(self):
         stale_routes = (
@@ -972,7 +974,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         for name, stale_route, other_route, expected_message in stale_routes:
             with self.subTest(route=name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 stale_path = root / stale_route
                 other_path = root / other_route
                 archive_path = root / stale_route.replace("/working/", "/archive/")
@@ -1010,11 +1012,11 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             report = run_audit(root, manifest_path)
             promotion_check = next(
                 check for check in report["checks"]
-                if check["name"] == "fp001_phase8_proof_contract_lifecycle"
+                if check["name"] == "phase8_approved_status_successor_current"
             )
 
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-            self.assertIn("manifest Phase 8 route hash differs", promotion_check["message"])
+            self.assertIn("Phase 8 current-route SHA-256 differs", promotion_check["message"])
 
     def test_fp001_identity_v014_promotion_rejects_non_immediate_atlas_predecessor(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -1038,11 +1040,11 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             report = run_audit(root, manifest_path)
             promotion_check = next(
                 check for check in report["checks"]
-                if check["name"] == "fp001_phase8_proof_contract_lifecycle"
+                if check["name"] == "phase8_approved_status_successor_current"
             )
 
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-            self.assertIn("manifest Phase 8 route hash differs", promotion_check["message"])
+            self.assertIn("Phase 8 current-route SHA-256 differs", promotion_check["message"])
 
     def test_fp001_identity_v014_promotion_rejects_lineage_route_and_gate_mutations(self):
         def rewrite_current_open_work_state(root: Path, mutate) -> None:
@@ -1227,7 +1229,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
         for name, mutate in mutations:
             with self.subTest(mutation=name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 mutate(root)
                 if name not in {
                     "missing exact PR #76 candidate archive",
@@ -1283,7 +1285,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         for name, mutate in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 open_work_path = _current_open_work_path(root)
                 open_work = open_work_path.read_text(encoding="utf-8")
                 lifecycle_start = open_work.index("<!-- HARDEN_02_LIFECYCLE_STATE_START -->")
@@ -1337,7 +1339,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
                 self.assertTrue(
                     any(
-                        finding["check"] == "fp001_phase8_proof_contract_lifecycle"
+                        finding["check"] == "phase8_approved_status_successor_current"
                         for finding in report["findings"]
                     ),
                     report["findings"],
@@ -1411,8 +1413,8 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             self.assertEqual("FAIL", report["status"], report["findings"])
             self.assertTrue(
                 any(
-                    finding["check"] == "fp001_phase8_proof_contract_lifecycle"
-                    and "manifest Phase 8 route hash differs" in finding["message"]
+                    finding["check"] == "phase8_approved_status_successor_current"
+                    and "Phase 8 current-route SHA-256 differs" in finding["message"]
                     for finding in report["findings"]
                 ),
                 report["findings"],
@@ -1436,15 +1438,18 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             report = run_audit(root, manifest_path)
             promotion_check = next(
                 check for check in report["checks"]
-                if check["name"] == "fp001_phase8_proof_contract_lifecycle"
+                if check["name"] == "phase8_approved_status_successor_current"
             )
 
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-            self.assertIn("frozen Phase 8 proof source changed", promotion_check["message"])
+            self.assertIn(
+                "Phase 8 current-route SHA-256 differs: docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
+                promotion_check["message"],
+            )
 
     def test_fp001_pmr_rejects_multiple_active_skeleton_versions(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             working = root / "docs/00_platform/working"
             active = working / _current_working_path(root, "FP-001_FEATURE_PACK_SKELETON_WORKING_").name
             duplicate = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md"
@@ -1462,7 +1467,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_pmr_rejects_multiple_active_identity_dossier_versions(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             working = root / "docs/00_platform/working"
             active = working / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
             duplicate = working / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md"
@@ -1535,7 +1540,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         source_root = Path(__file__).resolve().parents[1]
         for name, target, current, replacement in mutations:
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 relative = {
                     "skeleton": _current_working_relative_path(root, "FP-001_FEATURE_PACK_SKELETON_WORKING_"),
                     "dossier": "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
@@ -1554,6 +1559,10 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                     active_start = text.index("# 9. Immediate Next Action")
                     active_end = text.index("# 10. Minimal Tools", active_start + 1)
                     active = text[active_start:active_end]
+                    if name == "communications_route_still_downstream":
+                        current_action = re.findall(r"(?m)^NEXT GOVERNANCE ACTION:.*$", active)
+                        self.assertEqual(1, len(current_action), "current next-action route must be unique")
+                        current = current_action[0]
                     self.assertIn(current, active, f"current-route mutation anchor missing: {name}")
                     active = active.replace(current, replacement, 1)
                     text = text[:active_start] + active + text[active_end:]
@@ -1579,7 +1588,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_pmr_successor_requires_archived_predecessors_and_current_routes(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             predecessor_paths = (
                 root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md",
                 root / "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
@@ -1603,7 +1612,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_pmr_rejects_stale_candidate_path_alongside_certified_successor(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             working = root / "docs/00_platform/working"
             stale = working / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
             certified = working / _current_working_path(root, "FP-001_FEATURE_PACK_SKELETON_WORKING_").name
@@ -1621,7 +1630,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_pmr_rejects_communications_dossier_when_not_certified_current(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             communications = root / "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
             communications.write_text("status-only PR mutation\n", encoding="utf-8")
             refresh_manifest(root, manifest_path)
@@ -1640,7 +1649,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_communications_v010_promotion_is_current_and_pins_archives(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
 
             report = run_audit(root, manifest_path)
             promotion_check = next(
@@ -1700,7 +1709,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         for label, mutator in mutations:
             with self.subTest(mutation=label), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 if label == "harden_i07_stale":
                     path = _current_working_path(root, "HARDEN-02_CONTRACT_WORKING_")
                     path.write_text(
@@ -1749,7 +1758,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         relative = "docs/00_platform/archive/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
         for mutation in ("missing", "wrong_hash", "path_substitution"):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
                 archives = manifest["integrity_rules"]["communications_v010_promotion_archives"]
                 if mutation == "missing":
@@ -1779,7 +1788,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         }
         for mutation in ("missing", "malformed", "wrong", "path_substitution"):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
                 hashes = manifest["integrity_rules"]["fp001_pmr_predecessor_archives"]
                 if mutation == "missing":
@@ -1807,7 +1816,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         relative = "docs/00_platform/archive/02_OPEN_WORK_v1.2.57.md"
         for mutation in ("missing", "wrong_hash", "path_substitution"):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
                 archives = manifest["integrity_rules"]["communications_start_status_archives"]
                 if mutation == "missing":
@@ -1837,8 +1846,9 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
             self.assertTrue(
                 any(
-                    finding["check"] == "fp001_pmr_reconciliation"
-                    and "Communications-start predecessor bytes changed" in finding["message"]
+                    finding["check"] == "manifest_hash_parity"
+                    and finding["path"] == relative
+                    and "SHA-256 mismatch" in finding["message"]
                     for finding in report["findings"]
                 ),
                 report["findings"],
@@ -1846,7 +1856,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_pmr_candidate_archive_missing_fails_closed(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             (root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md").unlink()
 
             report = run_audit(root, manifest_path)
@@ -1861,7 +1871,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_pmr_corrupted_skeleton_archive_fails_closed(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             archive = root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
             archive.write_bytes(archive.read_bytes() + b"\nARCHIVE CORRUPTION\n")
 
@@ -1877,7 +1887,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_pmr_corrupted_identity_archive_fails_closed(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             archive = root / "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
             archive.write_bytes(archive.read_bytes() + b"\nARCHIVE CORRUPTION\n")
 
@@ -1893,7 +1903,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_pmr_corrupted_candidate_archive_fails_closed(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             archive = root / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.2.md"
             archive.write_bytes(archive.read_bytes() + b"\nARCHIVE CORRUPTION\n")
 
@@ -1909,7 +1919,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_identity_v013_candidate_archive_corruption_fails_closed(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             archive = root / "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md"
             archive.write_bytes(archive.read_bytes() + b"\nARCHIVE CORRUPTION\n")
 
@@ -1925,7 +1935,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_fp001_identity_v013_candidate_path_is_retired_after_promotion(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             stale_candidate = root / "docs/00_platform/working/candidates/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md"
             stale_candidate.parent.mkdir(parents=True, exist_ok=True)
             stale_candidate.write_text("unpromoted candidate route\n", encoding="utf-8")
@@ -1947,6 +1957,18 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         refresh_manifest(root, manifest_path)
+        return root, manifest_path
+
+    def _copy_predecessor_fixture(self, root: Path) -> tuple[Path, Path]:
+        """Materialize the exact v1.2.77 governance snapshot for historical tests."""
+
+        copy_git_snapshot_tree(
+            REPOSITORY_ROOT,
+            WELL38_BASE_SHA,
+            root,
+            "docs/00_platform",
+        )
+        manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         return root, manifest_path
 
     def test_phase7b_certification_rejects_stale_current_readme_but_allows_history(self):
@@ -1972,7 +1994,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             certification_check = next(
                 item
                 for item in report["checks"]
-                if item["name"] == "fp001_phase8_proof_contract_lifecycle"
+                if item["name"] == "phase8_approved_status_successor_current"
             )
             self.assertEqual("FAIL", certification_check["status"])
             self.assertIn("BLOCKED / NOT_STARTED Phase 7C statement", certification_check["message"])
@@ -1998,7 +2020,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
     def test_roadmap_proof_classification_lifecycle_is_a_foundation_integrity_check(self):
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
 
             report = run_audit(root, manifest_path)
 
@@ -2056,7 +2078,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
     def test_roadmap_proof_classification_final_contract_hash_pins_fail_closed(self):
         for pin in ("phase7c_contract_sha256", "current_route_sha256"):
             with self.subTest(pin=pin), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
                 rule = manifest["integrity_rules"]["roadmap_proof_classification_lifecycle"]
                 if pin == "phase7c_contract_sha256":
@@ -2218,7 +2240,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         )
         for name, relative, old, new, expected_message in mutations:
             with self.subTest(regression=name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 relative = {
                     "atlas": _current_working_relative_path(root, "DELIVERY_ATLAS_WORKING_"),
                     "open_work": _current_open_work_relative_path(root),
@@ -2260,7 +2282,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                     self.assertIn("manifest Phase 8 route hash differs", lifecycle_check["message"])
 
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             archive = root / "docs/00_platform/archive/02_OPEN_WORK_v1.2.72.md"
             archive.write_text(archive.read_text(encoding="utf-8") + "\narchive drift\n", encoding="utf-8")
 
@@ -2278,7 +2300,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             "docs/00_platform/FP-001_ARCHITECTURAL_PROOF_CLASSIFICATION_v0.1.0.md",
         ):
             with self.subTest(artifact=relative), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_production_fixture(Path(directory))
+                root, manifest_path = self._copy_predecessor_fixture(Path(directory))
                 artifact = root / relative
                 artifact.write_text("proof artifact\n", encoding="utf-8")
 
@@ -2292,7 +2314,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 self.assertIn("Tracer Bullet or architectural-proof artifact exists", lifecycle_check["message"])
 
         with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_production_fixture(Path(directory))
+            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
             (root / "mix.exs").write_text("# application source\n", encoding="utf-8")
             refresh_manifest(root, manifest_path)
 
@@ -3096,12 +3118,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
             self.assertEqual(expected_hash, manifest["governing_documents"][0]["sha256"])
 
     def _copy_phase7c_audit_fixture(self, root: Path) -> tuple[Path, Path]:
-        source_root = Path(__file__).resolve().parents[1]
-        fixture_docs = root / "docs" / "00_platform"
-        shutil.copytree(source_root / "docs" / "00_platform", fixture_docs)
-        manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-        refresh_manifest(root, manifest_path)
-        return fixture_docs, manifest_path
+        return self._copy_predecessor_fixture(root)
 
     def _mutate_phase7c_open_work(
         self,

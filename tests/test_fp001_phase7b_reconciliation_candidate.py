@@ -3,7 +3,6 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import shutil
 import subprocess
 import tempfile
 import unittest
@@ -13,7 +12,11 @@ from tools.foundation_integrity_audit import (
     _fp001_phase7b_candidate_text_issues,
     run_audit,
 )
-from foundation_test_support import current_working_path
+from foundation_test_support import (
+    WELL38_BASE_SHA,
+    copy_git_snapshot_tree,
+    current_working_path,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -174,28 +177,25 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
             issues,
         )
 
-    def test_production_foundation_integrity_accepts_the_current_candidate_state(self):
+    def test_production_foundation_integrity_accepts_the_successor_and_audits_the_pinned_predecessor(self):
         report = run_audit(ROOT, MANIFEST_PATH)
         checks = {check["name"]: check for check in report["checks"]}
         for name in (
-            "fp001_phase7b_candidate_lifecycle",
-            "fp001_phase7b_seam_matrix",
+            "phase8_approved_status_successor_current",
+            "phase8_approved_status_successor_predecessor_full_audit",
             "fp001_phase7b_baseline_and_dossiers",
             "fp001_phase7b_gate_routing",
-            "fp001_phase7c_final_contract_current_promotion",
-            "fp001_pmr_reconciliation",
-            "harden_02_lifecycle_state",
         ):
             self.assertEqual(checks[name]["status"], "PASS", checks[name]["message"])
 
-    def test_production_foundation_integrity_rejects_missing_or_unclassified_seams(self):
-        _, rules = manifest_and_rules()
+    def test_historical_candidate_seam_matrix_mutations_fail_the_full_audit(self):
         for mutation in ("missing", "unclassified"):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
-                fixture_docs = root / "docs" / "00_platform"
-                shutil.copytree(DOCS, fixture_docs)
-                manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+                copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform")
+                manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                rules = manifest["integrity_rules"]["fp001_phase7b_reconciliation_candidate"]
                 candidate_path = root / rules["path"]
                 text = candidate_path.read_text(encoding="utf-8")
                 row = next(line for line in text.splitlines() if line.startswith("| S-15 |"))
@@ -210,7 +210,6 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
                     item for item in report["checks"]
                     if item["name"] == "fp001_phase7b_seam_matrix"
                 )
-
                 self.assertEqual("FAIL", check["status"], check["message"])
 
 
