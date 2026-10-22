@@ -72,6 +72,52 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       assert :ecto_multi_write in rules(source)
     end
 
+    test "Ecto.Multi.run fails because its callback receives the Repo" do
+      source = """
+      defmodule NewYou.Accounts do
+        def persist(changeset) do
+          Ecto.Multi.new()
+          |> Ecto.Multi.run(:write, fn repo, _changes -> {:ok, repo.insert(changeset)} end)
+        end
+      end
+      """
+
+      assert [:ecto_multi_write] == rules(source)
+    end
+
+    test "imported Repo writes fail" do
+      source = """
+      defmodule NewYou.Accounts do
+        import NewYou.Repo, only: [insert: 1]
+        def persist(changeset), do: insert(changeset)
+      end
+      """
+
+      assert [:repo_write] == rules(source)
+    end
+
+    test "imported raw SQL mutations fail" do
+      source = """
+      defmodule NewYou.Accounts do
+        import NewYou.Repo, only: [query!: 2]
+        def mutate, do: query!("UPDATE accounts SET locked = true", [])
+      end
+      """
+
+      assert [:raw_sql_write] == rules(source)
+    end
+
+    test "imported Multi.run fails" do
+      source = """
+      defmodule NewYou.Accounts do
+        import Ecto.Multi, only: [run: 3]
+        def persist(changeset, multi), do: run(multi, :write, fn repo, _changes -> {:ok, repo.insert(changeset)} end)
+      end
+      """
+
+      assert [:ecto_multi_write] == rules(source)
+    end
+
     test "parallel Ecto business schema fails" do
       source = """
       defmodule NewYou.Accounts.User do
@@ -119,7 +165,8 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
             "lib/new_you/workers/cleanup.ex",
             "lib/new_you/accounts/workers/cleanup.ex",
             "lib/new_you/jobs/cleanup.ex",
-            "lib/new_you/accounts/cleanup_worker.ex"
+            "lib/new_you/accounts/cleanup_worker.ex",
+            "lib/new_you/delivery/worker.ex"
           ],
           function <-
             ~w(create create! update update! destroy destroy! bulk_create bulk_create! bulk_update bulk_update! bulk_destroy bulk_destroy!) do
@@ -137,6 +184,32 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       """
 
       assert [:outer_layer_ash_write] == rules(source, "lib/new_you/workers/cleanup.ex")
+    end
+
+    test "imported Ash mutations fail in workers" do
+      source = """
+      defmodule NewYou.Workers.Cleanup do
+        import Ash, only: [create!: 3, update!: 2, destroy!: 1]
+        def create(attrs), do: create!(NewYou.Accounts.User, attrs, action: :register)
+        def update(record), do: update!(record, %{})
+        def destroy(record), do: destroy!(record)
+      end
+      """
+
+      violations = AshWriteBoundary.check_source(source, "lib/new_you/delivery/worker.ex")
+
+      assert Enum.count(violations, &(&1.rule == :outer_layer_ash_write)) == 3
+    end
+
+    test "an imported Ash action remains valid in its owning application module" do
+      source = """
+      defmodule NewYou.Accounts do
+        import Ash, only: [create!: 3]
+        def create(attrs), do: create!(NewYou.Accounts.User, attrs, action: :register)
+      end
+      """
+
+      assert [] == rules(source)
     end
 
     test "unparseable governed file fails closed" do
@@ -158,9 +231,10 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
     test "outer layers may call owning interfaces and generic Ash reads" do
       source = """
       defmodule Outer do
+        import Ash, only: [read!: 1]
         def run(value) do
           NewYou.Accounts.register(value)
-          Ash.read!(NewYou.Accounts.Account)
+          read!(NewYou.Accounts.Account)
         end
       end
       """
@@ -185,6 +259,17 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       source = """
       defmodule NewYou.Health do
         def ping, do: NewYou.Repo.query!("SELECT 1", [])
+      end
+      """
+
+      assert [] == rules(source)
+    end
+
+    test "imported read-only SQL passes" do
+      source = """
+      defmodule NewYou.Health do
+        import NewYou.Repo, only: [query!: 2]
+        def ping, do: query!("SELECT 1", [])
       end
       """
 

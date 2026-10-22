@@ -8,14 +8,15 @@ defmodule NewYou.Architecture.AshWriteBoundary do
 
     * `:repo_write` - a mutating `NewYou.Repo` call (`insert`, `update`, `delete`, ...)
     * `:raw_sql_write` - `Repo.query`/`Ecto.Adapters.SQL.query` with mutating or non-literal SQL
-    * `:ecto_multi_write` - a persisting `Ecto.Multi` operation
+    * `:ecto_multi_write` - a persisting `Ecto.Multi` operation or callback
     * `:parallel_ecto_schema` - `use Ecto.Schema`, a second business model beside Ash resources
     * `:outer_layer_ash_write` - a generic Ash mutation in web or worker code
     * `:parse_error` - a file in scope that cannot be parsed, failing closed
 
   Ordinary reads, owning application Ash actions, Sandbox configuration, migrations and the Repo
-  module itself are not rejected. The analysis uses the compiler's own parser
-  (`Code.string_to_quoted/2`), so no general static-analysis engine is involved.
+  module itself are not rejected. Qualified calls and statically imported local calls use the same
+  checks. The analysis uses the compiler's own parser (`Code.string_to_quoted/2`), so no general
+  static-analysis engine is involved.
   """
 
   @repo [:NewYou, :Repo]
@@ -55,6 +56,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
   @raw_sql_modules [@repo, [:Ecto, :Adapters, :SQL]]
 
   @multi_write_functions [
+    :run,
     :insert,
     :insert_all,
     :insert_or_update,
@@ -136,6 +138,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     case Code.string_to_quoted(source, file: path, columns: false) do
       {:ok, ast} ->
         aliases = collect_aliases(ast)
+        imports = collect_imports(ast, aliases)
 
         context =
           if String.starts_with?(path, "lib/new_you_web/"),
@@ -144,7 +147,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
 
         {_, violations} =
           Macro.prewalk(ast, [], fn node, acc ->
-            {node, violations_for(node, aliases, path, context) ++ acc}
+            {node, violations_for(node, aliases, imports, path, context) ++ acc}
           end)
 
         violations
@@ -168,6 +171,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
   defp violations_for(
          {:use, meta, [{:__aliases__, _, _} = target | _]} = _node,
          aliases,
+         _imports,
          path,
          _context
        ) do
@@ -190,6 +194,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
   defp violations_for(
          {{:., meta, [receiver, function]}, _call_meta, args},
          aliases,
+         _imports,
          path,
          context
        )
@@ -206,7 +211,27 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     end
   end
 
-  defp violations_for(_node, _aliases, _path, _context), do: []
+  # Imported calls appear as local calls in the AST. Resolve only imports whose
+  # module and function signatures are statically known, then reuse the same
+  # rules as qualified calls. Import scopes are file-wide, like aliases above.
+  defp violations_for(
+         {function, meta, args},
+         _aliases,
+         imports,
+         path,
+         context
+       )
+       when is_atom(function) and (is_list(args) or is_nil(args)) do
+    line = Keyword.get(meta, :line, 0)
+    args = args || []
+    arity = length(args)
+
+    imports
+    |> Enum.filter(&imported_function?(&1, function, arity))
+    |> Enum.flat_map(&call_violations(&1.module, function, args, line, path, context))
+  end
+
+  defp violations_for(_node, _aliases, _imports, _path, _context), do: []
 
   defp call_violations(module, function, args, line, path, context) do
     cond do
@@ -239,7 +264,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
             path,
             line,
             :ecto_multi_write,
-            "`Ecto.Multi.#{function}` persists business state outside an Ash action"
+            multi_write_message(function)
           )
         ]
 
@@ -247,6 +272,12 @@ defmodule NewYou.Architecture.AshWriteBoundary do
         []
     end
   end
+
+  defp multi_write_message(:run),
+    do: "`Ecto.Multi.run` can execute Repo writes outside an Ash action"
+
+  defp multi_write_message(function),
+    do: "`Ecto.Multi.#{function}` persists business state outside an Ash action"
 
   defp outer_layer_ash_write?(module, function, path) do
     module == [:Ash] and function in @ash_write_functions and outer_layer?(path)
@@ -260,7 +291,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     String.starts_with?(normalized, "lib/new_you_web/") or
       (String.starts_with?(normalized, "lib/new_you/") and
          (Enum.any?(Path.split(normalized), &(&1 in ["workers", "jobs"])) or
-            String.ends_with?(normalized, ["_worker.ex", "_job.ex"])))
+            String.ends_with?(normalized, ["_worker.ex", "_job.ex", "/worker.ex", "/job.ex"])))
   end
 
   defp raw_sql_violations([statement | _], line, path, _context, function)
@@ -318,6 +349,58 @@ defmodule NewYou.Architecture.AshWriteBoundary do
 
     aliases
   end
+
+  defp collect_imports(ast, aliases) do
+    {_, imports} =
+      Macro.prewalk(ast, [], fn
+        {:import, _, [{:__aliases__, _, _} = target]} = node, acc ->
+          {node, [%{module: resolve(target, aliases), functions: :all} | acc]}
+
+        {:import, _, [{:__aliases__, _, _} = target, opts]} = node, acc when is_list(opts) ->
+          import = %{
+            module: resolve(target, aliases),
+            functions: imported_functions(opts)
+          }
+
+          {node, [import | acc]}
+
+        node, acc ->
+          {node, acc}
+      end)
+
+    imports
+  end
+
+  defp imported_functions(opts) do
+    case Keyword.fetch(opts, :only) do
+      {:ok, :functions} ->
+        :all
+
+      {:ok, :macros} ->
+        :none
+
+      {:ok, only} when is_list(only) ->
+        {:only, MapSet.new(only)}
+
+      {:ok, _unknown} ->
+        :all
+
+      :error ->
+        case Keyword.fetch(opts, :except) do
+          {:ok, except} when is_list(except) -> {:except, MapSet.new(except)}
+          _ -> :all
+        end
+    end
+  end
+
+  defp imported_function?(%{functions: :all}, _function, _arity), do: true
+  defp imported_function?(%{functions: :none}, _function, _arity), do: false
+
+  defp imported_function?(%{functions: {:only, functions}}, function, arity),
+    do: MapSet.member?(functions, {function, arity})
+
+  defp imported_function?(%{functions: {:except, functions}}, function, arity),
+    do: not MapSet.member?(functions, {function, arity})
 
   defp resolve({:__aliases__, _, [head | tail]}, aliases) do
     case Map.fetch(aliases, head) do

@@ -34,7 +34,7 @@ Every durable business truth has exactly one owning Domain. Mutations go through
 
 Derived state, caches, analytics, PubSub, provider state and UI projections are never business authority.
 
-Do not bypass owning Ash interfaces with ordinary Repo, Ecto or raw-SQL business writes. `mix check.architecture` enforces this (ARC-029).
+Business writes use the owning Ash interface. Controllers, LiveViews and workers call the owning Domain/application interface; owning application code may implement those interfaces with Ash actions. Do not use `NewYou.Repo`, raw SQL or `Ecto.Multi` write/run operations as parallel business-write paths. `mix check.architecture` enforces these boundaries (ARC-029).
 
 Do not introduce Redis, extra services, extra Repos, ETS/process authority or speculative infrastructure without a demonstrated requirement.
 
@@ -64,7 +64,7 @@ Plane tracks delivery. GitHub governed sources remain architectural and product 
 
 `mix check` is the canonical fast gate. `mix check.deep` is the slower engineering gate.
 
-Application CI runs `mix check` and `mix check.deep`. Foundation Smoke runs for every PR. Historical Foundation Full runs only for governance-sensitive changes or deliberate exact-SHA certification.
+Application CI runs `mix check` and `mix check.deep`. Foundation Smoke runs for every PR. Foundation Full runs for governance-sensitive PRs and deliberate exact-SHA certification. Scheduled and manual nightly hardening runs Foundation Full plus `mix check.deep` on `main`; ordinary application pushes and PRs do not run Full.
 
 Before handoff verify the exact diff, exact head SHA, relevant checks and tests, Plane state and a clean worktree.
 

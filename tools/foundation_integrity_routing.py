@@ -11,11 +11,14 @@ Every changed path is classified into exactly one category:
 * ``unknown``: anything unclassified. Unknown paths fail closed to Full.
 
 Pull requests are routed from their exact diff. A ``push`` to ``main`` never
-routes Foundation Full: ``main`` only advances through PRs whose head was
-already verified by Full under the strict up-to-date required-check policy, so
-re-running the cold lane on an identical merge tree is pure waste. A manual
-``workflow_dispatch`` is the deliberate exact-SHA certification path and always
-selects Full.
+routes Foundation Full. Governance-sensitive PRs that require Full complete
+that cold lane before merge under the strict, up-to-date required-check policy.
+Ordinary application PRs run Application CI and Foundation Smoke without Full.
+When the merge tree is unchanged, repeating the cold lane on the ``main`` push
+adds no coverage. Scheduled nightly hardening separately runs Foundation Full
+and ``mix check.deep`` against ``main``. A manual ``workflow_dispatch`` of the
+Foundation workflow remains the deliberate exact-SHA certification path and
+always selects Full.
 """
 
 from __future__ import annotations
