@@ -8,6 +8,8 @@ import unittest
 from pathlib import Path
 
 
+from tests.foundation_test_support import git_changed_paths
+
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 STARTING_MAIN = "332d51f19d77430fe4e95911920fe0c87cab524a"
@@ -190,17 +192,9 @@ class FP001ConditionalDossierAdjudicationTests(unittest.TestCase):
         )
 
     def test_only_authorized_audit_candidate_and_no_implementation_artifacts_were_introduced(self) -> None:
-        committed = subprocess.run(
-            ["git", "diff", "--name-only", f"{STARTING_MAIN}...HEAD"],
-            cwd=ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.splitlines()
-        working_tree = subprocess.run(
-            ["git", "status", "--short"], cwd=ROOT, check=True, capture_output=True, text=True
-        ).stdout.splitlines()
-        paths = sorted(set(committed) | {line[3:] for line in working_tree})
+        # This cumulative scope includes the authorised Audit candidate and its
+        # PR #119 promotion, whose resulting main is the pinned Phase 7B base.
+        paths = git_changed_paths(ROOT, STARTING_MAIN, "5d282ecca4e13b621c7f96c05c47d6fac43ec1bd")
         allowed = lambda path: (
             path.startswith("docs/00_platform/")
             or path == "tools/foundation_integrity_audit.py"

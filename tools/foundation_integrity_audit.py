@@ -6905,7 +6905,43 @@ def _check_fp001_phase8_proof_contract_lifecycle(
 
 
 PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA = "4234965c8da20dbb4ef0a7128614a5070244619a"
+# Exact final PR #133 head, preserved as the second parent of merge
+# 9e5bd3189aa5c79bbf128da464654c917def8a90. Later implementation is outside
+# this historical status transition.
+PHASE8_APPROVED_STATUS_SUCCESSOR_HEAD_SHA = "c30388f8ae548040126483ec53957d0fc80b8246"
 _PHASE8_PREDECESSOR_AUDIT_CACHE: dict[tuple[Path, str], tuple[bool, str]] = {}
+
+
+def _phase8_status_transition_source_issues(repository_root: Path) -> list[str]:
+    """Prove the pinned status transition itself changed no application source."""
+
+    trees: list[str] = []
+    for revision in (PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA, PHASE8_APPROVED_STATUS_SUCCESSOR_HEAD_SHA):
+        if not re.fullmatch(r"[0-9a-f]{40}", revision):
+            return ["status transition historical revision is not an exact Git object ID"]
+        result = subprocess.run(
+            ["git", "rev-parse", "--verify", f"{revision}^{{tree}}"],
+            cwd=repository_root, capture_output=True, text=True, check=False,
+        )
+        if result.returncode != 0:
+            return [f"pinned status transition revision is unavailable: {revision}"]
+        trees.append(result.stdout.strip())
+    result = subprocess.run(
+        ["git", "diff", "--no-renames", "--name-only", "-z", *trees, "--"],
+        cwd=repository_root, capture_output=True, text=True, check=False,
+    )
+    if result.returncode != 0:
+        return ["cannot compare the pinned historical status transition trees"]
+    source_paths = [
+        path for path in result.stdout.split("\0") if path and (
+            Path(path).name == "mix.exs"
+            or path.endswith((".ex", ".exs"))
+            or set(Path(path).parts) & APPLICATION_SOURCE_DIRECTORY_NAMES
+        )
+    ]
+    if source_paths:
+        return ["implementation-era status transition added executable application source: " + ", ".join(source_paths)]
+    return []
 
 
 def _phase8_successor_manifest_history_issues(
@@ -7490,8 +7526,9 @@ def _phase8_approved_status_successor_issues(
         issues.append("current Skeleton does not preserve the certified six-Domain/seven-capability scope")
 
     application_sources = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {}).get("application_source_paths_created")
-    if application_sources != [] or _executable_application_source_paths(root):
+    if application_sources != []:
         issues.append("implementation-era status transition added executable application source")
+    issues.extend(_phase8_status_transition_source_issues(repository_root))
     standards = [
         entry for entry in manifest.get("reference_documents", [])
         if entry.get("document_id") == "ENGINEERING_STANDARDS"

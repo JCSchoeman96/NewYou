@@ -7,8 +7,14 @@ import subprocess
 import unittest
 from pathlib import Path
 
-from tests.foundation_test_support import current_document_relative_path, current_working_relative_path
+from tests.foundation_test_support import (
+    current_document_relative_path,
+    current_working_relative_path,
+    git_changed_paths,
+)
 
+# PR #126 reviewed promotion head recorded below in lifecycle evidence.
+HISTORICAL_SCOPE_HEAD = "e7d5d3908bedf1a75c6627448c3ed0c067b076f8"
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -275,12 +281,6 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
         for path in PROTECTED_PATHS:
             with self.subTest(path=path):
                 self.assertEqual(_git_show(CLASSIFICATION_BASE_MAIN, path), (ROOT / path).read_bytes())
-        changed = subprocess.run(
-            ["git", "diff", "--name-only", CLASSIFICATION_BASE_MAIN],
-            cwd=ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.splitlines()
+        changed = git_changed_paths(ROOT, "cfc63a7a77299cd59c98d88b57a88bb5b4ac29e5", HISTORICAL_SCOPE_HEAD)
         application_prefixes = ("app/", "apps/", "backend/", "frontend/", "lib/", "src/")
         self.assertEqual([], [path for path in changed if path.startswith(application_prefixes)])

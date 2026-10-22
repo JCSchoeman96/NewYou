@@ -10,8 +10,11 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import _markdown_h2_section, run_audit
-from tests.foundation_test_support import current_document_path, historical_snapshot_path
+from tests.foundation_test_support import current_document_path, git_changed_paths, historical_snapshot_path
 
+
+# PR #122 reviewed head, second parent of merge 3f4c9bf564b2b011e96171b8664428423eeba558.
+HISTORICAL_SCOPE_HEAD = "5f0747b766b76df24d764f88774cf73315e61c01"
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -388,21 +391,7 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             self.assertEqual("PASS", route_check["status"], route_check["message"])
 
     def test_successor_does_not_change_upstream_authority_or_application_source(self):
-        tracked_changed = subprocess.run(
-            ["git", "diff", "--name-only", BASELINE_MAIN_SHA],
-            cwd=ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.splitlines()
-        untracked = subprocess.run(
-            ["git", "ls-files", "--others", "--exclude-standard"],
-            cwd=ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.splitlines()
-        changed = sorted(set(tracked_changed + untracked))
+        changed = git_changed_paths(ROOT, BASELINE_MAIN_SHA, HISTORICAL_SCOPE_HEAD)
         protected = (
             "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_",
             "docs/00_platform/00_PLATFORM_",

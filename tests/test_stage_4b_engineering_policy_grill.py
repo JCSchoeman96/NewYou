@@ -6,6 +6,11 @@ import unittest
 from pathlib import Path
 
 
+from tests.foundation_test_support import git_snapshot_path_exists
+
+# Exact Stage 4B completion commit that introduced this test and its artifact.
+HISTORICAL_SCOPE_SHA = "cc91dd74915bb9b9ce2027ef8ee8939db816f616"
+
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACT = (
     ROOT
@@ -166,9 +171,9 @@ class Stage4BEngineeringPolicyGrillIntegrityTests(unittest.TestCase):
         self.assertIsNone(
             re.search(r"\bARC-(?:32[8-9]|3[3-9]\d|[4-9]\d{2})\b", self.text)
         )
-        self.assertFalse((ROOT / "mix.exs").exists())
-        self.assertFalse((ROOT / ".formatter.exs").exists())
-        self.assertFalse((ROOT / ".credo.exs").exists())
+        self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, "mix.exs"))
+        self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, ".formatter.exs"))
+        self.assertFalse(git_snapshot_path_exists(ROOT, HISTORICAL_SCOPE_SHA, ".credo.exs"))
         workflow_dir = ROOT / ".github" / "workflows"
         self.assertEqual(
             ["foundation-integrity.yml"],
