@@ -132,7 +132,7 @@ def classify_event(event_name: str, base_sha: str, head_sha: str, cwd: str = "."
     if event_name == "workflow_dispatch":
         return {"foundation_full": True, "application_changes": False}
     if event_name == "push":
-        # Post-merge main: Full was already verified at the PR head (see module docstring).
+        # Governance-sensitive PRs run Full before merge; ordinary PRs use Smoke.
         # Application CI still runs against the pushed range.
         if not base_sha or not head_sha:
             return {"foundation_full": False, "application_changes": True}

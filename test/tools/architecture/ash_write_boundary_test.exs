@@ -61,6 +61,18 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       assert [:raw_sql_write] == rules(source)
     end
 
+    test "Repo writes through a module attribute fail" do
+      source = """
+      defmodule NewYou.Accounts do
+        @repo NewYou.Repo
+
+        def persist(changeset), do: @repo.insert(changeset)
+      end
+      """
+
+      assert [:repo_write] == rules(source)
+    end
+
     test "SELECT calls to unknown database functions fail closed" do
       for sql <- ["SELECT lock_account($1)", "SELECT lock_account /* gap */ ($1)"] do
         source = """

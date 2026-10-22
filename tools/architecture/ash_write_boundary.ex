@@ -168,6 +168,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
         aliases = collect_aliases(ast)
         imports = collect_imports(ast, aliases)
         repo_variables = collect_repo_variables(ast, aliases)
+        repo_attributes = collect_repo_attributes(ast, aliases)
 
         context =
           if String.starts_with?(path, "lib/new_you_web/"),
@@ -176,7 +177,16 @@ defmodule NewYou.Architecture.AshWriteBoundary do
 
         {_, violations} =
           Macro.prewalk(ast, [], fn node, acc ->
-            {node, violations_for(node, aliases, imports, repo_variables, path, context) ++ acc}
+            {node,
+             violations_for(
+               node,
+               aliases,
+               imports,
+               repo_variables,
+               repo_attributes,
+               path,
+               context
+             ) ++ acc}
           end)
 
         violations
@@ -202,6 +212,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
          aliases,
          _imports,
          _repo_variables,
+         _repo_attributes,
          path,
          _context
        ) do
@@ -226,26 +237,18 @@ defmodule NewYou.Architecture.AshWriteBoundary do
          aliases,
          _imports,
          repo_variables,
+         repo_attributes,
          path,
          context
        )
        when is_atom(function) and (is_list(args) or is_nil(args)) do
     line = Keyword.get(meta, :line, 0)
+    module = receiver_module(receiver, aliases, repo_variables, repo_attributes)
 
-    case receiver do
-      {:__aliases__, _, _} ->
-        module = resolve(receiver, aliases)
-        call_violations(module, function, args || [], line, path, context)
-
-      {name, _, _context} when is_atom(name) ->
-        if MapSet.member?(repo_variables, name) do
-          call_violations(@repo, function, args || [], line, path, context)
-        else
-          []
-        end
-
-      _ ->
-        []
+    if module do
+      call_violations(module, function, args || [], line, path, context)
+    else
+      []
     end
   end
 
@@ -257,6 +260,7 @@ defmodule NewYou.Architecture.AshWriteBoundary do
          _aliases,
          imports,
          _repo_variables,
+         _repo_attributes,
          path,
          context
        )
@@ -270,7 +274,36 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     |> Enum.flat_map(&call_violations(&1.module, function, args, line, path, context))
   end
 
-  defp violations_for(_node, _aliases, _imports, _repo_variables, _path, _context), do: []
+  defp violations_for(
+         _node,
+         _aliases,
+         _imports,
+         _repo_variables,
+         _repo_attributes,
+         _path,
+         _context
+       ),
+       do: []
+
+  defp receiver_module(
+         {:__aliases__, _, _} = receiver,
+         aliases,
+         _repo_variables,
+         _repo_attributes
+       ),
+       do: resolve(receiver, aliases)
+
+  defp receiver_module({:@, _, [{name, _, _}]}, _aliases, _repo_variables, repo_attributes)
+       when is_atom(name) do
+    if MapSet.member?(repo_attributes, name), do: @repo
+  end
+
+  defp receiver_module({name, _, _context}, _aliases, repo_variables, _repo_attributes)
+       when is_atom(name) do
+    if MapSet.member?(repo_variables, name), do: @repo
+  end
+
+  defp receiver_module(_receiver, _aliases, _repo_variables, _repo_attributes), do: nil
 
   defp call_violations(module, function, args, line, path, context) do
     cond do
@@ -442,6 +475,26 @@ defmodule NewYou.Architecture.AshWriteBoundary do
       end)
 
     variables
+  end
+
+  # Track module attributes assigned a resolved Repo module so calls through
+  # `@repo` use the same persistence checks as aliases and local variables.
+  defp collect_repo_attributes(ast, aliases) do
+    {_, attributes} =
+      Macro.prewalk(ast, MapSet.new(), fn
+        {:@, _, [{name, _, [{:__aliases__, _, _} = target]}]} = node, acc
+        when is_atom(name) ->
+          if resolve(target, aliases) == @repo do
+            {node, MapSet.put(acc, name)}
+          else
+            {node, acc}
+          end
+
+        node, acc ->
+          {node, acc}
+      end)
+
+    attributes
   end
 
   defp imported_functions(opts) do
