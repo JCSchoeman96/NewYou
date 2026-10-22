@@ -112,6 +112,33 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       assert [:repo_write] == rules(source, "lib/new_you/workers/cleanup.ex")
     end
 
+    test "generic Ash mutations fail in controllers, LiveViews and workers" do
+      for path <- [
+            @web_path,
+            "lib/new_you_web/live/profile_live.ex",
+            "lib/new_you/workers/cleanup.ex",
+            "lib/new_you/accounts/workers/cleanup.ex",
+            "lib/new_you/jobs/cleanup.ex",
+            "lib/new_you/accounts/cleanup_worker.ex"
+          ],
+          function <-
+            ~w(create create! update update! destroy destroy! bulk_create bulk_create! bulk_update bulk_update! bulk_destroy bulk_destroy!) do
+        source = "defmodule Outer do; def run(value), do: Ash.#{function}(value); end"
+        assert [:outer_layer_ash_write] == rules(source, path)
+      end
+    end
+
+    test "aliased Ash mutation in a worker fails" do
+      source = """
+      defmodule NewYou.Workers.Cleanup do
+        alias Ash, as: Persistence
+        def perform(value), do: value |> Persistence.destroy!()
+      end
+      """
+
+      assert [:outer_layer_ash_write] == rules(source, "lib/new_you/workers/cleanup.ex")
+    end
+
     test "unparseable governed file fails closed" do
       assert [:parse_error] == rules("defmodule Broken do def x(", @app_path)
     end
@@ -126,6 +153,20 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       """
 
       assert [] == rules(source)
+    end
+
+    test "outer layers may call owning interfaces and generic Ash reads" do
+      source = """
+      defmodule Outer do
+        def run(value) do
+          NewYou.Accounts.register(value)
+          Ash.read!(NewYou.Accounts.Account)
+        end
+      end
+      """
+
+      assert [] == rules(source, @web_path)
+      assert [] == rules(source, "lib/new_you/workers/cleanup.ex")
     end
 
     test "ordinary Repo reads pass" do

@@ -1,10 +1,9 @@
 name: Foundation Full
 
 # Historical governance verification. This workflow is physically separate from
-# normal application CI. It is called only by foundation-integrity.yml, and only
-# when the router selects Foundation Full for a governance-sensitive change or a
-# deliberate exact-SHA manual certification. Its checks are unchanged; only the
-# routing that selects them has moved.
+# normal application CI. Foundation Integrity calls it for governance-sensitive
+# changes or exact-SHA certification. Nightly hardening calls it on main.
+# Every invocation starts cold, without dependency or build caches.
 
 on:
   workflow_call:

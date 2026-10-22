@@ -143,6 +143,23 @@ class EventRoutingTests(unittest.TestCase):
 class TopologyTests(unittest.TestCase):
     """The lane topology is physically split and wired through native reusable workflows."""
 
+    def test_nightly_hardening_is_main_only_cold_and_separate_from_pr_checks(self):
+        workflow = (WORKFLOWS / "nightly-hardening.yml").read_text(encoding="utf-8")
+        self.assertIn("  schedule:", workflow)
+        self.assertIn("    - cron:", workflow)
+        self.assertIn("  workflow_dispatch:", workflow)
+        self.assertNotIn("  push:", workflow)
+        self.assertNotIn("  pull_request:", workflow)
+        self.assertEqual(2, workflow.count("if: github.ref == 'refs/heads/main'"))
+        self.assertIn("uses: ./.github/workflows/foundation-full.yml", workflow)
+        self.assertIn("sha: ${{ github.sha }}", workflow)
+        self.assertIn("run: mix check.deep", workflow)
+        self.assertNotIn("actions/cache", workflow)
+        full = (WORKFLOWS / "foundation-full.yml").read_text(encoding="utf-8")
+        self.assertNotIn("actions/cache", full)
+        integrity = (WORKFLOWS / "foundation-integrity.yml").read_text(encoding="utf-8")
+        self.assertNotIn("nightly-hardening", integrity)
+
     def test_required_entry_point_keeps_name_and_routes_both_lanes(self):
         workflow = (WORKFLOWS / "foundation-integrity.yml").read_text(encoding="utf-8")
         self.assertIn("name: Foundation Integrity", workflow)

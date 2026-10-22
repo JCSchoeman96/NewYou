@@ -10,9 +10,10 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     * `:raw_sql_write` - `Repo.query`/`Ecto.Adapters.SQL.query` with mutating or non-literal SQL
     * `:ecto_multi_write` - a persisting `Ecto.Multi` operation
     * `:parallel_ecto_schema` - `use Ecto.Schema`, a second business model beside Ash resources
+    * `:outer_layer_ash_write` - a generic Ash mutation in web or worker code
     * `:parse_error` - a file in scope that cannot be parsed, failing closed
 
-  Ordinary reads, Ash actions, Sandbox configuration, migrations and the Repo
+  Ordinary reads, owning application Ash actions, Sandbox configuration, migrations and the Repo
   module itself are not rejected. The analysis uses the compiler's own parser
   (`Code.string_to_quoted/2`), so no general static-analysis engine is involved.
   """
@@ -33,6 +34,21 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     :delete,
     :delete!,
     :delete_all
+  ]
+
+  @ash_write_functions [
+    :create,
+    :create!,
+    :update,
+    :update!,
+    :destroy,
+    :destroy!,
+    :bulk_create,
+    :bulk_create!,
+    :bulk_update,
+    :bulk_update!,
+    :bulk_destroy,
+    :bulk_destroy!
   ]
 
   @raw_sql_functions [:query, :query!, :query_many, :query_many!]
@@ -76,9 +92,14 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     normalized = String.replace(path, "\\", "/")
 
     cond do
-      Map.has_key?(@infrastructure_allowlist, normalized) -> :infrastructure
-      String.starts_with?(normalized, "lib/") and String.ends_with?(normalized, ".ex") -> :application
-      true -> :out_of_scope
+      Map.has_key?(@infrastructure_allowlist, normalized) ->
+        :infrastructure
+
+      String.starts_with?(normalized, "lib/") and String.ends_with?(normalized, ".ex") ->
+        :application
+
+      true ->
+        :out_of_scope
     end
   end
 
@@ -115,7 +136,11 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     case Code.string_to_quoted(source, file: path, columns: false) do
       {:ok, ast} ->
         aliases = collect_aliases(ast)
-        context = if String.starts_with?(path, "lib/new_you_web/"), do: "web layer", else: "application code"
+
+        context =
+          if String.starts_with?(path, "lib/new_you_web/"),
+            do: "web layer",
+            else: "application code"
 
         {_, violations} =
           Macro.prewalk(ast, [], fn node, acc ->
@@ -130,12 +155,22 @@ defmodule NewYou.Architecture.AshWriteBoundary do
         line = if is_list(meta), do: Keyword.get(meta, :line, 0), else: 0
 
         [
-          violation(path, line, :parse_error, "cannot parse governed file: #{inspect(message)} #{token}")
+          violation(
+            path,
+            line,
+            :parse_error,
+            "cannot parse governed file: #{inspect(message)} #{token}"
+          )
         ]
     end
   end
 
-  defp violations_for({:use, meta, [{:__aliases__, _, _} = target | _]} = _node, aliases, path, _context) do
+  defp violations_for(
+         {:use, meta, [{:__aliases__, _, _} = target | _]} = _node,
+         aliases,
+         path,
+         _context
+       ) do
     case resolve(target, aliases) do
       [:Ecto, :Schema] ->
         [
@@ -152,7 +187,12 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     end
   end
 
-  defp violations_for({{:., meta, [receiver, function]}, _call_meta, args}, aliases, path, context)
+  defp violations_for(
+         {{:., meta, [receiver, function]}, _call_meta, args},
+         aliases,
+         path,
+         context
+       )
        when is_atom(function) and (is_list(args) or is_nil(args)) do
     line = Keyword.get(meta, :line, 0)
 
@@ -170,6 +210,16 @@ defmodule NewYou.Architecture.AshWriteBoundary do
 
   defp call_violations(module, function, args, line, path, context) do
     cond do
+      outer_layer_ash_write?(module, function, path) ->
+        [
+          violation(
+            path,
+            line,
+            :outer_layer_ash_write,
+            "`Ash.#{function}` persists directly from web or worker code; use the owning Domain/application interface"
+          )
+        ]
+
       module == @repo and function in @repo_write_functions ->
         [
           violation(
@@ -198,7 +248,23 @@ defmodule NewYou.Architecture.AshWriteBoundary do
     end
   end
 
-  defp raw_sql_violations([statement | _], line, path, _context, function) when is_binary(statement) do
+  defp outer_layer_ash_write?(module, function, path) do
+    module == [:Ash] and function in @ash_write_functions and outer_layer?(path)
+  end
+
+  # Web code and conventional worker/job paths are outer layers. Owning
+  # application modules remain free to implement their interfaces with Ash.
+  defp outer_layer?(path) do
+    normalized = String.replace(path, "\\", "/")
+
+    String.starts_with?(normalized, "lib/new_you_web/") or
+      (String.starts_with?(normalized, "lib/new_you/") and
+         (Enum.any?(Path.split(normalized), &(&1 in ["workers", "jobs"])) or
+            String.ends_with?(normalized, ["_worker.ex", "_job.ex"])))
+  end
+
+  defp raw_sql_violations([statement | _], line, path, _context, function)
+       when is_binary(statement) do
     if Regex.match?(@read_only_prefix, statement) and not Regex.match?(@write_keyword, statement) do
       []
     else
