@@ -528,16 +528,19 @@ class FoundationSmokeTests(unittest.TestCase):
 
     def test_manual_full_workflow_uses_and_verifies_an_exact_sha(self):
         workflow = (ROOT / ".github/workflows/foundation-integrity.yml").read_text(encoding="utf-8")
+        full_workflow = (ROOT / ".github/workflows/foundation-full.yml").read_text(encoding="utf-8")
         self.assertIn("workflow_dispatch:", workflow)
         self.assertIn("sha:", workflow)
         self.assertIn("inputs.sha", workflow)
-        self.assertIn('if [[ "$actual" != "$expected" ]]', workflow)
-        self.assertIn('if [[ "$GITHUB_SHA" != "$expected" ]]', workflow)
+        self.assertIn("workflow_call:", full_workflow)
+        self.assertIn('if [[ "$actual" != "$expected" ]]', full_workflow)
+        self.assertIn('if [[ "$GITHUB_SHA" != "$expected" ]]', full_workflow)
         self.assertIn("needs.route.outputs.foundation_full == 'true'", workflow)
+        self.assertIn("uses: ./.github/workflows/foundation-full.yml", workflow)
         self.assertIn("python tools/foundation_integrity_routing.py --root .", workflow)
         self.assertIn("  foundation-integrity:\n    name: Foundation Integrity", workflow)
-        self.assertIn("needs: [route, foundation-smoke, foundation-full]", workflow)
-        smoke_job = workflow.split("  foundation-smoke:\n", 1)[1].split("\n  foundation-full:", 1)[0]
+        self.assertIn("needs: [route, foundation-smoke, application-ci, foundation-full]", workflow)
+        smoke_job = workflow.split("  foundation-smoke:\n", 1)[1].split("\n  application-ci:", 1)[0]
         self.assertNotRegex(smoke_job, r"(?m)^    if:")
         self.assertIn("fetch-depth: 1", smoke_job)
         self.assertNotIn("fetch-depth: 0", smoke_job)
@@ -545,6 +548,7 @@ class FoundationSmokeTests(unittest.TestCase):
     def test_foundation_integrity_aggregate_enforces_router_and_lane_results(self):
         workflow = (ROOT / ".github/workflows/foundation-integrity.yml").read_text(encoding="utf-8")
         self.assertIn("FULL_REQUIRED: ${{ needs.route.outputs.foundation_full }}", workflow)
+        self.assertIn("APP_REQUIRED: ${{ needs.route.outputs.application_changes }}", workflow)
         aggregate_job = workflow.split("  foundation-integrity:\n", 1)[1]
         run_marker = "        run: |\n"
         self.assertIn(run_marker, aggregate_job)
@@ -579,6 +583,8 @@ class FoundationSmokeTests(unittest.TestCase):
                     ROUTE_RESULT=route_result,
                     SMOKE_RESULT=smoke_result,
                     FULL_RESULT=full_result,
+                    APP_REQUIRED="false",
+                    APP_RESULT="skipped",
                 )
                 if full_required is None:
                     env.pop("FULL_REQUIRED", None)

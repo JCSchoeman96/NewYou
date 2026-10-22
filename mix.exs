@@ -12,7 +12,9 @@ defmodule NewYou.MixProject do
       deps: deps(),
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
       listeners: [Phoenix.CodeReloader],
-      consolidate_protocols: Mix.env() != :dev
+      consolidate_protocols: Mix.env() != :dev,
+      usage_rules: usage_rules(),
+      dialyzer: dialyzer()
     ]
   end
 
@@ -28,7 +30,47 @@ defmodule NewYou.MixProject do
 
   def cli do
     [
-      preferred_envs: [check: :test]
+      preferred_envs: [check: :test, "check.deep": :test]
+    ]
+  end
+
+  # UsageRules runs in skills-only mode: it generates framework and dependency
+  # skills under .agents/skills and never writes AGENTS.md (no `file:` key).
+  # Regenerate with `mix usage_rules.sync`; verify with `mix usage_rules.sync --check`.
+  defp usage_rules do
+    [
+      skills: [
+        location: ".agents/skills",
+        deps: [:igniter],
+        build: [
+          "elixir-otp": [
+            description:
+              "Use when writing or reviewing Elixir or OTP code: pattern matching, processes, GenServer, supervision, and idiomatic Elixir style.",
+            usage_rules: [:elixir, :otp]
+          ],
+          # Explicit dependency lists, not regexes: a regex would pull in
+          # dev-only or test-only packages and make the output depend on the
+          # Mix environment that ran the sync.
+          "ash-framework": [
+            description:
+              "Use when working with Ash resources, domains, actions, changes, policies, data layers, or AshPostgres.",
+            usage_rules: [:ash, :ash_postgres]
+          ],
+          "phoenix-framework": [
+            description:
+              "Use when working with Phoenix controllers, routers, LiveViews, components, endpoints, or Phoenix.Ecto and Phoenix.HTML helpers.",
+            usage_rules: [:phoenix]
+          ]
+        ]
+      ]
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_local_path: "_build/plts",
+      plt_core_path: "_build/plts",
+      plt_add_apps: [:mix, :ex_unit]
     ]
   end
 
@@ -47,6 +89,10 @@ defmodule NewYou.MixProject do
       # Reactor >= 1.0.2 requires prerelease multigraph; keep the dependency tree stable.
       {:reactor, "== 1.0.1"},
       {:igniter, "~> 0.8.4", only: [:dev, :test]},
+      {:usage_rules, "== 1.2.8", only: [:dev, :test], runtime: false},
+      {:credo, "== 1.7.19", only: [:dev, :test], runtime: false},
+      {:sobelow, "== 0.16.0", only: [:dev, :test], runtime: false},
+      {:dialyxir, "== 1.4.8", only: [:dev, :test], runtime: false},
       {:phoenix, "~> 1.8.16"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.13"},
@@ -96,7 +142,20 @@ defmodule NewYou.MixProject do
         "esbuild new_you --minify",
         "phx.digest"
       ],
-      check: ["compile --warnings-as-errors", "format --check-formatted", "test"]
+      # Fast, blocking, fail-fast gate ordered cheapest and highest-signal first.
+      # Historical Foundation Full is never part of this alias.
+      check: [
+        "format --check-formatted",
+        "compile --warnings-as-errors",
+        "check.architecture",
+        "usage_rules.sync --check",
+        "credo --strict",
+        "sobelow --exit --skip --private --router lib/new_you_web/router.ex",
+        "test"
+      ],
+      # Slower engineering gate. Dialyzer owns its PLT build and caching.
+      "check.deep": ["dialyzer --format dialyxir"],
+      "check.architecture": ["run --no-start tools/architecture/check_ash_writes.exs"]
     ]
   end
 end

@@ -1,0 +1,61 @@
+name: Foundation Full
+
+# Historical governance verification. This workflow is physically separate from
+# normal application CI. It is called only by foundation-integrity.yml, and only
+# when the router selects Foundation Full for a governance-sensitive change or a
+# deliberate exact-SHA manual certification. Its checks are unchanged; only the
+# routing that selects them has moved.
+
+on:
+  workflow_call:
+    inputs:
+      sha:
+        description: Exact 40-character commit SHA for a manual certification dispatch; empty otherwise.
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  foundation-full:
+    name: Foundation Full
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify exact-SHA dispatch checkout
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.sha }}
+        run: |
+          set -euo pipefail
+          expected="$EXPECTED_SHA"
+          if ! [[ "$expected" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "sha must be a 40-character commit SHA; got: $expected"
+            exit 1
+          fi
+          if [[ "$GITHUB_SHA" != "$expected" ]]; then
+            echo "Workflow ref SHA ${GITHUB_SHA} does not match requested ${expected}"
+            echo "Use workflow from the branch whose tip is the certified SHA."
+            exit 1
+          fi
+          actual="$(git rev-parse HEAD)"
+          if [[ "$actual" != "$expected" ]]; then
+            echo "Checked out ${actual} but requested ${expected}"
+            exit 1
+          fi
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Run full governance and historical unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Run manifest-backed full foundation audit
+        run: python tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
