@@ -60,6 +60,16 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       end
     end
 
+    test "SELECT INTO table writes fail" do
+      source = """
+      defmodule NewYou.Accounts do
+        def archive, do: NewYou.Repo.query!("SELECT * INTO archived_accounts FROM accounts", [])
+      end
+      """
+
+      assert [:raw_sql_write] == rules(source)
+    end
+
     test "non-literal raw SQL fails closed" do
       source = """
       defmodule NewYou.Accounts do
@@ -285,6 +295,24 @@ defmodule NewYou.Architecture.AshWriteBoundaryTest do
       """
 
       assert [] == rules(source)
+    end
+
+    test "SQL string contents do not look like SQL functions or comments" do
+      for sql <- [
+            "SELECT 'lock_account()'",
+            "SELECT E'lock_account()'",
+            "SELECT '-- /* update */'",
+            "SELECT $$lock_account()$$",
+            "SELECT $payload$lock_account() -- /* update */$payload$"
+          ] do
+        source = """
+        defmodule NewYou.Health do
+          def inspect_literal, do: NewYou.Repo.query!(#{inspect(sql)}, [])
+        end
+        """
+
+        assert [] == rules(source)
+      end
     end
 
     test "imported read-only SQL passes" do

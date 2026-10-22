@@ -68,8 +68,15 @@ defmodule NewYou.Architecture.AshWriteBoundary do
 
   # Only literal read statements with no SQL function calls may run through raw SQL.
   @read_only_prefix ~r/\A\s*(select|with|show|values|explain)\b/i
-  @write_keyword ~r/\b(insert|update|delete|merge|truncate|alter|drop|create|grant|revoke|copy|do|call|set|reset|lock|vacuum|reindex|cluster|refresh|for\s+update)\b/i
+  @write_keyword ~r/\b(insert|update|delete|merge|truncate|alter|drop|create|grant|revoke|copy|do|call|set|reset|lock|vacuum|reindex|cluster|refresh|into|for\s+update)\b/i
   @sql_comment ~r/--|\/\*/
+  @sql_string_literal ~r/
+                        (?:[eE]|[uU]&)?'(?:''|\\.|[^'])*'
+                        |
+                        (?<![a-zA-Z0-9_$])\$([a-zA-Z_][a-zA-Z0-9_]*)\$.*?\$\1\$
+                        |
+                        (?<![a-zA-Z0-9_$])\$\$.*?\$\$
+                      /sx
   @sql_function_call ~r/
                         (?<![a-z0-9_$])
                         (?!(?:
@@ -312,10 +319,14 @@ defmodule NewYou.Architecture.AshWriteBoundary do
 
     case Enum.fetch(args, statement_index) do
       {:ok, statement} when is_binary(statement) ->
-        if Regex.match?(@read_only_prefix, statement) and
-             not Regex.match?(@write_keyword, statement) and
-             not Regex.match?(@sql_comment, statement) and
-             not Regex.match?(@sql_function_call, statement) do
+        # Ignore string contents so SQL-looking text in literals does not
+        # affect write-keyword, comment or function-call checks.
+        sql = Regex.replace(@sql_string_literal, statement, " ")
+
+        if Regex.match?(@read_only_prefix, sql) and
+             not Regex.match?(@write_keyword, sql) and
+             not Regex.match?(@sql_comment, sql) and
+             not Regex.match?(@sql_function_call, sql) do
           []
         else
           [
