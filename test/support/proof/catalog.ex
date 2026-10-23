@@ -176,48 +176,77 @@ defmodule NewYou.Proof.Catalog do
         do: Enum.reject(@coverage_inventory, &Map.has_key?(required().business_manifests, &1)),
         else: []
 
-    expected_cases =
-      case mode do
-        :harness_self_test -> Enum.map(required().self_test.cases, &{"harness", &1.case_id})
-        :tb001 -> []
-        :diagnostic -> []
-      end
+    business_manifests = required().business_manifests
+
+    expected_cases = expected_registration_cases(mode, business_manifests)
 
     missing_cases = Enum.reject(expected_cases, &(&1 in ids)) |> Enum.map(&elem(&1, 1))
 
     errors =
-      []
-      |> maybe_add(mode == :tb001, :missing_manifest)
-      |> maybe_add(
-        mode == :harness_self_test and missing_cases != [],
-        :missing_self_test_registration
-      )
-      |> maybe_add(mode == :tb001 and missing_families != [], :missing_family)
-      |> maybe_add(
-        Enum.any?(registrations, fn registration ->
-          match?(
-            {:error, reason} when reason in [:unknown_coverage, :missing_manifest, :unknown_case],
-            lookup_manifest(registration.coverage_id, registration.case_id)
-          )
-        end),
-        :unknown_case
-      )
-      |> maybe_add(
-        Enum.any?(
-          registrations,
-          &(not is_nil(known_manifest(&1.coverage_id, &1.case_id)) and
-              &1.invariant_id != known_manifest(&1.coverage_id, &1.case_id).invariant_id)
-        ),
-        :unknown_invariant
-      )
-      |> maybe_add(duplicate?(ids), :duplicate_case)
-      |> maybe_add(duplicate?(Enum.map(registrations, & &1.invariant_id)), :duplicate_invariant)
+      coverage_registration_errors(mode, missing_families, missing_cases) ++
+        registration_identity_errors(registrations) ++
+        duplicate_registration_errors(ids, registrations)
 
     %{
-      errors: Enum.reverse(errors),
+      errors: Enum.uniq(errors),
       missing_cases: missing_cases,
       missing_families: missing_families
     }
+  end
+
+  defp expected_registration_cases(:harness_self_test, _business_manifests),
+    do: Enum.map(required().self_test.cases, &{"harness", &1.case_id})
+
+  defp expected_registration_cases(:tb001, business_manifests) do
+    Enum.flat_map(@coverage_inventory, &compiled_case_ids(&1, business_manifests))
+  end
+
+  defp expected_registration_cases(:diagnostic, _business_manifests), do: []
+
+  defp compiled_case_ids(coverage_id, business_manifests) do
+    case Map.get(business_manifests, coverage_id) do
+      %{cases: cases} -> Enum.map(cases, &{coverage_id, &1.case_id})
+      _ -> []
+    end
+  end
+
+  defp coverage_registration_errors(mode, missing_families, missing_cases) do
+    []
+    |> maybe_add(mode == :tb001 and missing_families != [], :missing_manifest)
+    |> maybe_add(mode == :tb001 and missing_families != [], :missing_family)
+    |> maybe_add(
+      mode == :harness_self_test and missing_cases != [],
+      :missing_self_test_registration
+    )
+  end
+
+  defp registration_identity_errors(registrations) do
+    unknown_case? = Enum.any?(registrations, &registration_manifest_missing?/1)
+    unknown_invariant? = Enum.any?(registrations, &registration_invariant_invalid?/1)
+
+    []
+    |> maybe_add(unknown_case?, :unknown_case)
+    |> maybe_add(unknown_invariant?, :unknown_invariant)
+  end
+
+  defp registration_manifest_missing?(registration) do
+    match?(
+      {:error, reason} when reason in [:unknown_coverage, :missing_manifest, :unknown_case],
+      lookup_manifest(registration.coverage_id, registration.case_id)
+    )
+  end
+
+  defp registration_invariant_invalid?(registration) do
+    case known_manifest(registration.coverage_id, registration.case_id) do
+      nil -> false
+      manifest -> registration.invariant_id != manifest.invariant_id
+    end
+  end
+
+  defp duplicate_registration_errors(ids, registrations) do
+    []
+    |> maybe_add(duplicate?(ids), :duplicate_case)
+    |> maybe_add(duplicate?(Enum.map(registrations, & &1.invariant_id)), :duplicate_invariant)
   end
 
   defp self_test_manifest(case_id, cut_point) do

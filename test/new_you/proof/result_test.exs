@@ -58,9 +58,51 @@ defmodule NewYou.Proof.ResultTest do
              %{overall_verdict: "FAIL", exit_code: 1}
   end
 
+  test "complete tb001 evidence can pass the pure verdict boundary" do
+    assert Result.verdict(
+             mode: :tb001,
+             metadata_complete: true,
+             checks: [:pass],
+             cleanup: :pass
+           ) == %{overall_verdict: "PASS", exit_code: 0}
+  end
+
   test "schema and cross-field validation reject caller counts and inconsistent pass" do
     malformed = %{"overall_verdict" => "PASS", "exit_code" => 0, "assertions_executed" => 100}
     assert {:error, _} = Result.validate(malformed, mode: :harness_self_test)
+  end
+
+  test "companion schema keeps the approved inventory and fixed wire keys" do
+    schema =
+      File.read!("docs/superpowers/specs/p8-04-proof-result-v1.schema.json")
+      |> Jason.decode!()
+
+    assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+    assert schema["$id"] == "urn:new-you:p8-04:proof-result:1.0.0"
+
+    assert schema["required"] ==
+             ~w(schema_version run_id mode contract metadata_complete git runtime dependencies coverage_inventory results cleanup overall_verdict exit_code reason_codes)
+
+    assert schema["properties"]["coverage_inventory"]["const"] == Catalog.coverage_inventory()
+
+    assert schema["properties"]["mode"]["enum"] ==
+             ["harness_self_test", "tb001", "diagnostic"]
+
+    assert schema["$defs"]["case"]["properties"]["cut_point"]["enum"] == [
+             nil,
+             "transaction.before_commit",
+             "transaction.after_commit",
+             "scheduling.before_enqueue",
+             "scheduling.after_enqueue",
+             "provider.before_invoke",
+             "provider.after_invoke_before_persist",
+             "evidence.before_materialize",
+             "evidence.after_materialize_before_commit"
+           ]
+
+    assert schema["additionalProperties"] == false
+    assert schema["properties"]["results"]["items"]["additionalProperties"] == false
+    assert schema["$defs"]["case"]["additionalProperties"] == false
   end
 
   test "source capture uses the current checkout and lockfile" do
@@ -134,6 +176,80 @@ defmodule NewYou.Proof.ResultTest do
     assert :ok = Result.validate(self_test_result(digest), mode: :harness_self_test)
   end
 
+  test "self-test result rejects a missing required case" do
+    result = self_test_result(Catalog.required().self_test.digest)
+    [entry] = result["results"]
+    result = %{result | "results" => [%{entry | "cases" => Enum.drop(entry["cases"], -1)}]}
+
+    assert {:error, reasons} = Result.validate(result, mode: :harness_self_test)
+    assert :incomplete_self_test_manifest in reasons
+  end
+
+  test "self-test result rejects a missing required assertion" do
+    result = self_test_result(Catalog.required().self_test.digest)
+    [entry] = result["results"]
+    [first | rest] = entry["cases"]
+    missing_assertion = %{first | "assertion_ids" => [], "assertions_executed" => 0}
+
+    result = %{result | "results" => [%{entry | "cases" => [missing_assertion | rest]}]}
+
+    assert {:error, reasons} = Result.validate(result, mode: :harness_self_test)
+    assert :invalid_case_pass in reasons
+  end
+
+  test "self-test result rejects duplicate cases" do
+    result = self_test_result(Catalog.required().self_test.digest)
+    [entry] = result["results"]
+    [first | rest] = entry["cases"]
+    result = %{result | "results" => [%{entry | "cases" => [first | [first | rest]]}]}
+
+    assert {:error, reasons} = Result.validate(result, mode: :harness_self_test)
+    assert :incomplete_self_test_manifest in reasons
+  end
+
+  test "self-test result rejects an assertion with the wrong invariant" do
+    result = self_test_result(Catalog.required().self_test.digest)
+    [entry] = result["results"]
+    [first | rest] = entry["cases"]
+    wrong_invariant = %{first | "invariant_id" => "forged.invariant"}
+
+    result = %{result | "results" => [%{entry | "cases" => [wrong_invariant | rest]}]}
+
+    assert {:error, _reasons} = Result.validate(result, mode: :harness_self_test)
+  end
+
+  test "self-test result rejects a passing family with a failed case" do
+    result = self_test_result(Catalog.required().self_test.digest)
+    [entry] = result["results"]
+    [first | rest] = entry["cases"]
+
+    failed_case = %{
+      first
+      | "verdict" => "FAIL",
+        "reason_codes" => ["assertion.failed"]
+    }
+
+    result = %{result | "results" => [%{entry | "cases" => [failed_case | rest]}]}
+
+    assert {:error, _reasons} = Result.validate(result, mode: :harness_self_test)
+  end
+
+  test "full verdict uses exit 2 for incomplete metadata or cleanup" do
+    assert Result.verdict(
+             mode: :tb001,
+             metadata_complete: false,
+             checks: [:pass],
+             cleanup: :pass
+           ) == %{overall_verdict: "FAIL", exit_code: 2}
+
+    assert Result.verdict(
+             mode: :tb001,
+             metadata_complete: true,
+             checks: [:pass],
+             cleanup: :fail
+           ) == %{overall_verdict: "FAIL", exit_code: 2}
+  end
+
   test "complete metadata must include every dependency from the current lockfile" do
     result = unavailable_full_result()
 
@@ -170,6 +286,101 @@ defmodule NewYou.Proof.ResultTest do
 
     assert {:error, reasons} = Result.validate(result, mode: :tb001)
     assert :dependency_lock_mismatch in reasons
+  end
+
+  test "dependency capture preserves runtime-required role when app is absent" do
+    expression =
+      ~S|:ok = Application.stop(:jason); :ok = Application.unload(:jason); {:ok, dependencies} = NewYou.Proof.Result.capture_dependencies(); dependency = Enum.find(dependencies, &(&1.name == "jason")); IO.puts("P8_04_DEPENDENCY_CAPTURE=" <> Jason.encode!(%{"runtime_required" => dependency.runtime_required, "loaded_version" => dependency.loaded_version}))|
+
+    {stdout, exit_code} =
+      System.cmd("mix", ["run", "-e", expression],
+        stderr_to_stdout: true,
+        env: [{"MIX_ENV", "test"}]
+      )
+
+    assert exit_code == 0, stdout
+
+    payload =
+      stdout
+      |> String.split("\n")
+      |> Enum.find(&String.starts_with?(&1, "P8_04_DEPENDENCY_CAPTURE="))
+
+    assert is_binary(payload), stdout
+
+    assert {:ok, dependency} =
+             payload |> String.replace_prefix("P8_04_DEPENDENCY_CAPTURE=", "") |> Jason.decode()
+
+    assert dependency["runtime_required"] == true
+    assert dependency["loaded_version"] == nil
+  end
+
+  test "dependency classification separates expected runtime roles from loaded apps" do
+    lock_entries = [
+      {:jason, hex_lock_entry("1.4.5")},
+      {:source_tool, hex_lock_entry("0.1.0")}
+    ]
+
+    assert {:ok, entries} =
+             Result.classify_dependencies(
+               lock_entries,
+               %{"jason" => true, "source_tool" => false},
+               %{"jason" => "1.4.5"}
+             )
+
+    assert Enum.map(entries, & &1.name) == ["jason", "source_tool"]
+    assert length(entries) == length(lock_entries)
+
+    assert %{runtime_required: true, loaded_version: "1.4.5", locked_version: "1.4.5"} =
+             Enum.find(entries, &(&1.name == "jason"))
+
+    assert %{runtime_required: false, loaded_version: nil} =
+             Enum.find(entries, &(&1.name == "source_tool"))
+  end
+
+  test "dependency classification keeps an unloaded runtime app required" do
+    assert {:ok, [dependency]} =
+             Result.classify_dependencies(
+               [{:jason, hex_lock_entry("1.4.5")}],
+               %{"jason" => true},
+               %{}
+             )
+
+    assert dependency.runtime_required
+    assert dependency.loaded_version == nil
+  end
+
+  test "dependency classification rejects duplicate names and missing runtime roles" do
+    entry = hex_lock_entry("1.4.5")
+
+    assert {:error, :duplicate_dependency} =
+             Result.classify_dependencies(
+               [{:jason, entry}, {:jason, entry}],
+               %{"jason" => true},
+               %{"jason" => "1.4.5"}
+             )
+
+    assert {:error, :runtime_role_unavailable} =
+             Result.classify_dependencies(
+               [{:jason, entry}],
+               %{},
+               %{"jason" => "1.4.5"}
+             )
+  end
+
+  test "dependency classification rejects git entries without revisions and path sources" do
+    assert {:error, :unreproducible_lock_entry} =
+             Result.classify_dependencies(
+               [{:git_dep, {:git, "https://example.invalid/dep.git", nil, []}}],
+               %{"git_dep" => true},
+               %{}
+             )
+
+    assert {:error, :unreproducible_lock_entry} =
+             Result.classify_dependencies(
+               [{:local_dep, {:path, "../local_dep", []}}],
+               %{"local_dep" => false},
+               %{}
+             )
   end
 
   test "database preflight rejects DEV and production identities" do
@@ -328,4 +539,7 @@ defmodule NewYou.Proof.ResultTest do
       {:error, _reason} -> []
     end
   end
+
+  defp hex_lock_entry(version),
+    do: {:hex, "synthetic", version, <<0::256>>, [:mix], [], "hexpm", nil}
 end

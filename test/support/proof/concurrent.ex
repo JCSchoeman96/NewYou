@@ -117,12 +117,17 @@ defmodule NewYou.Proof.Concurrent do
      %{
        reason: :shared_connection_rejected,
        backend_pids: %{a: a, b: b},
-       cleanup: %{confirmed: true}
+       cleanup: %{confirmed: true, locks_remaining: 0, active_transactions: 0}
      }}
   end
 
   defp shared_identity_verdict(_a, _b),
-    do: {:error, %{reason: :shared_fixture_invalid, cleanup: %{confirmed: true}}}
+    do:
+      {:error,
+       %{
+         reason: :shared_fixture_invalid,
+         cleanup: %{confirmed: true, locks_remaining: 0, active_transactions: 0}
+       }}
 
   defp failed_shared_fixture(scenario, reason) do
     cleanup_scenario(scenario)

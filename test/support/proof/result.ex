@@ -45,7 +45,6 @@ defmodule NewYou.Proof.Result do
         not metadata_complete? -> {"FAIL", 2}
         not cleanup_ok? -> {"FAIL", 2}
         checks == [] or not Enum.all?(checks, &(&1 == :pass)) -> {"FAIL", 1}
-        mode == :tb001 -> {"FAIL", 1}
         true -> {"PASS", 0}
       end
 
@@ -92,27 +91,166 @@ defmodule NewYou.Proof.Result do
 
     with {:ok, contents} <- File.read(lock_path),
          true <- String.trim(contents) != "",
-         lock when is_map(lock) and map_size(lock) > 0 <- Mix.Dep.Lock.read(lock_path) do
+         lock when is_map(lock) and map_size(lock) > 0 <- Mix.Dep.Lock.read(lock_path),
+         {:ok, runtime_roles} <- expected_runtime_roles(Map.keys(lock)) do
       loaded =
         Map.new(Application.loaded_applications(), fn {app, _description, version} ->
           {Atom.to_string(app), List.to_string(version)}
         end)
 
-      entries =
-        lock
-        |> Enum.sort_by(fn {name, _entry} -> Atom.to_string(name) end)
-        |> Enum.map(fn {name, entry} -> dependency_entry(Atom.to_string(name), entry, loaded) end)
-
-      if Enum.any?(entries, &is_nil/1),
-        do: {:error, :unreproducible_lock_entry},
-        else: {:ok, entries}
+      classify_dependencies(Map.to_list(lock), runtime_roles, loaded)
     else
-      {:error, _} -> {:error, :lock_unavailable}
+      {:error, reason} -> {:error, reason}
       _ -> {:error, :lock_invalid}
     end
   rescue
     _ -> {:error, :lock_invalid}
   end
+
+  @doc false
+  @spec classify_dependencies([{atom() | String.t(), tuple()}], map(), map()) ::
+          {:ok, [map()]} | {:error, atom()}
+  def classify_dependencies(lock_entries, runtime_roles, loaded)
+      when is_list(lock_entries) and is_map(runtime_roles) and is_map(loaded) do
+    names = Enum.map(lock_entries, fn {name, _entry} -> dependency_name(name) end)
+
+    cond do
+      lock_entries == [] or Enum.any?(names, &is_nil/1) ->
+        {:error, :lock_invalid}
+
+      length(names) != length(Enum.uniq(names)) ->
+        {:error, :duplicate_dependency}
+
+      Enum.any?(names, fn name -> not is_boolean(Map.get(runtime_roles, name)) end) ->
+        {:error, :runtime_role_unavailable}
+
+      true ->
+        entries =
+          lock_entries
+          |> Enum.sort_by(fn {name, _entry} -> dependency_name(name) end)
+          |> Enum.map(fn {name, entry} ->
+            name = dependency_name(name)
+            dependency_entry(name, entry, Map.fetch!(runtime_roles, name), loaded)
+          end)
+
+        if Enum.any?(entries, &is_nil/1),
+          do: {:error, :unreproducible_lock_entry},
+          else: {:ok, entries}
+    end
+  rescue
+    _ -> {:error, :lock_invalid}
+  end
+
+  def classify_dependencies(_lock_entries, _runtime_roles, _loaded),
+    do: {:error, :lock_invalid}
+
+  defp expected_runtime_roles(lock_names) do
+    dependencies = Mix.Dep.cached()
+
+    case validate_reproducible_dependencies(dependencies, lock_names) do
+      :ok -> derive_runtime_roles(dependencies, lock_names)
+      {:error, reason} -> {:error, reason}
+    end
+  rescue
+    _ -> {:error, :runtime_role_unavailable}
+  end
+
+  defp validate_reproducible_dependencies(dependencies, lock_names) do
+    flattened = flatten_mix_dependencies(dependencies)
+    locked_names = MapSet.new(Enum.map(lock_names, &Atom.to_string/1))
+
+    invalid_source? = Enum.any?(flattened, &local_dependency?/1)
+
+    unlocked_dependency? =
+      Enum.any?(flattened, &(not MapSet.member?(locked_names, Atom.to_string(&1.app))))
+
+    if invalid_source? or unlocked_dependency?,
+      do: {:error, :unreproducible_dependency},
+      else: :ok
+  end
+
+  defp derive_runtime_roles(dependencies, lock_names) do
+    roles = Map.new(lock_names, &{Atom.to_string(&1), false})
+
+    dependencies
+    |> Enum.reduce_while({:ok, roles, MapSet.new()}, &collect_runtime_root/2)
+    |> case do
+      {:ok, expected, _visited} -> {:ok, expected}
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  defp collect_runtime_root(%Mix.Dep{top_level: true} = dependency, {:ok, roles, visited}) do
+    if runtime_application?(dependency) do
+      case collect_runtime_roles(dependency, roles, visited) do
+        {:ok, next_roles, next_visited} -> {:cont, {:ok, next_roles, next_visited}}
+        {:error, reason} -> {:halt, {:error, reason}}
+      end
+    else
+      {:cont, {:ok, roles, visited}}
+    end
+  end
+
+  defp collect_runtime_root(_dependency, accumulator), do: {:cont, accumulator}
+
+  defp collect_runtime_roles(dependency, roles, visited) do
+    name = Atom.to_string(dependency.app)
+
+    cond do
+      not runtime_application?(dependency) ->
+        {:ok, roles, visited}
+
+      MapSet.member?(visited, name) ->
+        {:ok, roles, visited}
+
+      not Map.has_key?(roles, name) ->
+        {:error, :unreproducible_dependency}
+
+      true ->
+        roles = Map.put(roles, name, true)
+        visited = MapSet.put(visited, name)
+
+        Enum.reduce_while(dependency.deps, {:ok, roles, visited}, &collect_runtime_child/2)
+    end
+  end
+
+  defp collect_runtime_child(child, {:ok, roles, visited}) do
+    case collect_runtime_roles(child, roles, visited) do
+      {:ok, next_roles, next_visited} -> {:cont, {:ok, next_roles, next_visited}}
+      {:error, reason} -> {:halt, {:error, reason}}
+    end
+  end
+
+  defp flatten_mix_dependencies(dependencies) do
+    Enum.reduce(dependencies, {[], MapSet.new()}, fn dependency, acc ->
+      flatten_mix_dependency(dependency, acc)
+    end)
+    |> elem(0)
+  end
+
+  defp flatten_mix_dependency(dependency, {flattened, visited}) do
+    name = Atom.to_string(dependency.app)
+
+    if MapSet.member?(visited, name) do
+      {flattened, visited}
+    else
+      visited = MapSet.put(visited, name)
+      flattened = [dependency | flattened]
+
+      Enum.reduce(dependency.deps, {flattened, visited}, fn child, acc ->
+        flatten_mix_dependency(child, acc)
+      end)
+    end
+  end
+
+  defp local_dependency?(%Mix.Dep{opts: opts}), do: Keyword.has_key?(opts, :path)
+
+  defp runtime_application?(%Mix.Dep{opts: opts}),
+    do: Keyword.get(opts, :runtime, true) != false and Keyword.get(opts, :app, true) != false
+
+  defp dependency_name(name) when is_atom(name), do: Atom.to_string(name)
+  defp dependency_name(name) when is_binary(name), do: name
+  defp dependency_name(_name), do: nil
 
   @spec capture_postgresql() :: {:ok, String.t()} | {:error, atom()}
   def capture_postgresql do
@@ -345,9 +483,7 @@ defmodule NewYou.Proof.Result do
 
   defp validate_dependency_source(source, locked, revision) do
     []
-    |> add_errors(
-      if(source in ["hex", "git", "path"], do: [], else: [:invalid_dependency_source])
-    )
+    |> add_errors(if(source in ["hex", "git"], do: [], else: [:invalid_dependency_source]))
     |> add_errors(
       if(optional_sha_or_nil?(revision), do: [], else: [:invalid_dependency_revision])
     )
@@ -486,27 +622,30 @@ defmodule NewYou.Proof.Result do
   end
 
   defp validate_result_entry_verdict(entry) do
-    status = value(entry, "status")
-    verdict = value(entry, "verdict")
-    digest = value(entry, "manifest_sha256")
-    required_ids = value(entry, "required_case_ids")
+    []
+    |> add_errors(validate_entry_failure_reason(entry))
+    |> add_errors(validate_entry_pass(entry))
+  end
+
+  defp validate_entry_failure_reason(entry) do
+    if value(entry, "verdict") == "FAIL" and
+         not valid_reasons?(value(entry, "reason_codes")),
+       do: [:missing_failure_reason],
+       else: []
+  end
+
+  defp validate_entry_pass(entry) do
     cases = value(entry, "cases")
 
-    []
-    |> add_errors(
-      if(verdict == "FAIL" and not valid_reasons?(value(entry, "reason_codes")),
-        do: [:missing_failure_reason],
-        else: []
-      )
-    )
-    |> add_errors(
-      if(
-        verdict == "PASS" and
-          (status != "completed" or digest == nil or required_ids == [] or cases == []),
-        do: [:invalid_pass_entry],
-        else: []
-      )
-    )
+    cases_pass? =
+      is_list(cases) and cases != [] and Enum.all?(cases, &(value(&1, "verdict") == "PASS"))
+
+    invalid_pass? =
+      value(entry, "verdict") == "PASS" and
+        (value(entry, "status") != "completed" or is_nil(value(entry, "manifest_sha256")) or
+           value(entry, "required_case_ids") == [] or not cases_pass?)
+
+    if invalid_pass?, do: [:invalid_pass_entry], else: []
   end
 
   defp validate_result_entry_manifest(entry) do
@@ -516,9 +655,11 @@ defmodule NewYou.Proof.Result do
     status = value(entry, "status")
     verdict = value(entry, "verdict")
 
-    if coverage == "harness",
-      do: validate_self_test_manifest(digest, required_ids),
-      else: validate_business_manifest(digest, required_ids, status, verdict)
+    if coverage == "harness" do
+      validate_self_test_manifest(digest, required_ids)
+    else
+      validate_business_manifest(entry, digest, required_ids, status, verdict)
+    end
   end
 
   defp validate_self_test_manifest(digest, required_ids) do
@@ -528,10 +669,60 @@ defmodule NewYou.Proof.Result do
        else: []
   end
 
-  defp validate_business_manifest(digest, required_ids, status, verdict) do
-    if digest != nil or required_ids != [] or status != "missing" or verdict != "FAIL",
-      do: [:unavailable_business_manifest],
-      else: []
+  defp validate_business_manifest(entry, digest, required_ids, status, verdict) do
+    coverage = value(entry, "coverage_id")
+
+    case Map.get(Catalog.required().business_manifests, coverage) do
+      nil ->
+        missing_business_manifest_errors(entry, digest, required_ids, status, verdict)
+
+      manifest ->
+        validate_compiled_business_manifest(
+          entry,
+          manifest,
+          digest,
+          required_ids,
+          status,
+          verdict
+        )
+    end
+  end
+
+  defp missing_business_manifest_errors(entry, digest, required_ids, status, verdict) do
+    if digest == nil and required_ids == [] and status == "missing" and verdict == "FAIL" and
+         value(entry, "cases") == [] and
+         "missing.manifest" in (value(entry, "reason_codes") || []) do
+      []
+    else
+      [:unavailable_business_manifest]
+    end
+  end
+
+  defp validate_compiled_business_manifest(entry, manifest, digest, required_ids, status, verdict) do
+    expected_ids = Enum.map(manifest.cases, & &1.case_id)
+    cases = value(entry, "cases") || []
+    case_ids = Enum.map(cases, &value(&1, "case_id"))
+
+    errors =
+      []
+      |> maybe_error(digest != manifest.digest, :invalid_business_manifest_digest)
+      |> maybe_error(required_ids != expected_ids, :invalid_business_required_cases)
+      |> maybe_error(case_ids != expected_ids, :incomplete_business_cases)
+
+    valid_status? =
+      (status == "completed" and verdict in ["PASS", "FAIL"]) or
+        (status in ["missing", "not_run", "timeout", "error"] and verdict == "FAIL")
+
+    errors
+    |> maybe_error(not valid_status?, :invalid_business_result_status)
+    |> maybe_error(
+      verdict == "PASS" and not Enum.all?(cases, &(value(&1, "verdict") == "PASS")),
+      :invalid_pass_entry
+    )
+    |> maybe_error(
+      verdict == "FAIL" and not valid_reasons?(value(entry, "reason_codes")),
+      :missing_failure_reason
+    )
   end
 
   defp validate_case(case_data, coverage, required_ids) when is_map(case_data) do
@@ -625,33 +816,71 @@ defmodule NewYou.Proof.Result do
 
   defp validate_case_verdict(case_data, coverage, required_ids) do
     case_id = value(case_data, "case_id")
+    manifest = manifest_case(coverage, case_id)
+
+    []
+    |> add_errors(validate_case_verdict_fields(case_data, required_ids, manifest))
+    |> add_errors(validate_case_manifest_fields(case_data, manifest))
+  end
+
+  defp validate_case_verdict_fields(case_data, required_ids, manifest) do
+    case_id = value(case_data, "case_id")
     verdict = value(case_data, "verdict")
     assertion_ids = value(case_data, "assertion_ids")
-    status = value(case_data, "status")
-    count = value(case_data, "assertions_executed")
-    assertion_manifest = manifest_assertions(coverage, case_id)
+    assertion_manifest = if manifest, do: Map.get(manifest, :assertion_ids), else: nil
 
-    cond do
-      invalid_case_pass?(verdict, status, count, assertion_ids) ->
-        [:invalid_case_pass]
+    []
+    |> maybe_error(
+      invalid_case_pass?(
+        verdict,
+        value(case_data, "status"),
+        value(case_data, "assertions_executed"),
+        assertion_ids
+      ),
+      :invalid_case_pass
+    )
+    |> maybe_error(
+      unapproved_assertions?(verdict, assertion_manifest, assertion_ids),
+      :unapproved_assertions
+    )
+    |> maybe_error(unexpected_case_pass?(verdict, case_id, required_ids), :unexpected_case_pass)
+    |> maybe_error(
+      verdict == "FAIL" and not valid_reasons?(value(case_data, "reason_codes")),
+      :missing_case_failure_reason
+    )
+    |> maybe_error(
+      (manifest && verdict == "FAIL") and
+        (not is_list(assertion_ids) or not Enum.all?(assertion_ids, &(&1 in assertion_manifest))),
+      :unapproved_assertions
+    )
+  end
 
-      unapproved_assertions?(verdict, assertion_manifest, assertion_ids) ->
-        [:unapproved_assertions]
+  defp validate_case_manifest_fields(_case_data, nil), do: []
 
-      unexpected_case_pass?(verdict, case_id, required_ids) ->
-        [:unexpected_case_pass]
-
-      verdict == "FAIL" and not valid_reasons?(value(case_data, "reason_codes")) ->
-        [:missing_case_failure_reason]
-
-      true ->
-        []
-    end
+  defp validate_case_manifest_fields(case_data, manifest) do
+    []
+    |> maybe_error(
+      value(case_data, "invariant_id") != Map.get(manifest, :invariant_id),
+      :case_invariant_mismatch
+    )
+    |> maybe_error(
+      value(case_data, "boundary") != Map.get(manifest, :boundary),
+      :case_boundary_mismatch
+    )
+    |> maybe_error(
+      value(case_data, "cut_point") != Map.get(manifest, :cut_point),
+      :case_cut_point_mismatch
+    )
+    |> maybe_error(
+      value(case_data, "race_id") != Map.get(manifest, :race_id),
+      :case_race_mismatch
+    )
   end
 
   defp invalid_case_pass?("PASS", status, count, assertion_ids),
     do:
-      status != "completed" or count < 1 or assertion_ids == [] or count != length(assertion_ids)
+      status != "completed" or not is_integer(count) or count < 1 or not is_list(assertion_ids) or
+        assertion_ids == [] or count != length(assertion_ids)
 
   defp invalid_case_pass?(_verdict, _status, _count, _assertion_ids), do: false
 
@@ -689,8 +918,25 @@ defmodule NewYou.Proof.Result do
     |> add_errors(validate_verdict_exit(result))
     |> add_errors(validate_failure_reason(result))
     |> add_errors(validate_metadata_claim(result))
+    |> add_errors(validate_cleanup_exit(result))
     |> add_errors(validate_overall_pass(result))
     |> add_errors(validate_source_state(result, mode))
+  end
+
+  defp validate_cleanup_exit(result) do
+    cleanup = value(result, "cleanup") || %{}
+
+    cleanup_failed? =
+      value(cleanup, "verdict") != "PASS" or
+        Enum.any?(
+          ~w(workers_stopped connections_released locks_released),
+          &(value(cleanup, &1) != true)
+        )
+
+    if cleanup_failed? and
+         (value(result, "overall_verdict") != "FAIL" or value(result, "exit_code") != 2),
+       do: [:cleanup_failure_mismatch],
+       else: []
   end
 
   defp validate_verdict_exit(result) do
@@ -780,34 +1026,42 @@ defmodule NewYou.Proof.Result do
   defp source_dirty?(git),
     do: value(git, "clean_before") != true or value(git, "clean_after") != true
 
-  defp manifest_assertions("harness", case_id) do
-    case Enum.find(Catalog.required().self_test.cases, &(&1.case_id == case_id)) do
-      nil -> nil
-      manifest -> manifest.assertion_ids
+  defp manifest_case("harness", case_id) do
+    case Catalog.lookup_manifest("harness", case_id) do
+      {:ok, manifest} -> manifest
+      _ -> nil
     end
   end
 
-  defp manifest_assertions(_coverage, _case_id), do: nil
+  defp manifest_case(coverage, case_id) do
+    case Catalog.lookup_manifest(coverage, case_id) do
+      {:ok, manifest} -> manifest
+      _ -> nil
+    end
+  end
 
   defp dependency_entry(
          name,
          {:hex, _package, version, _checksum, _managers, _deps, _repo, _outer_checksum},
+         runtime_required?,
          loaded
        ) do
-    runtime_dependency(name, "hex", version, nil, loaded)
+    runtime_dependency(name, "hex", version, nil, runtime_required?, loaded)
   end
 
-  defp dependency_entry(name, {:git, _url, revision, _options}, loaded)
+  defp dependency_entry(name, {:git, _url, revision, _options}, runtime_required?, loaded)
        when is_binary(revision) do
     source = if Regex.match?(~r/^[0-9a-f]{40}$/, revision), do: "git", else: nil
-    if source, do: runtime_dependency(name, source, nil, revision, loaded), else: nil
+
+    if source,
+      do: runtime_dependency(name, source, nil, revision, runtime_required?, loaded),
+      else: nil
   end
 
-  defp dependency_entry(_name, _entry, _loaded), do: nil
+  defp dependency_entry(_name, _entry, _runtime_required?, _loaded), do: nil
 
-  defp runtime_dependency(name, source, locked_version, revision, loaded) do
-    loaded_version = Map.get(loaded, name)
-    runtime_required? = not is_nil(loaded_version)
+  defp runtime_dependency(name, source, locked_version, revision, runtime_required?, loaded) do
+    loaded_version = if runtime_required?, do: Map.get(loaded, name), else: nil
 
     %{
       name: name,
@@ -961,6 +1215,9 @@ defmodule NewYou.Proof.Result do
   end
 
   defp add_errors(errors, additions), do: additions ++ errors
+
+  defp maybe_error(errors, true, reason), do: [reason | errors]
+  defp maybe_error(errors, _condition, _reason), do: errors
 
   defp value(map, key) when is_map(map) do
     map

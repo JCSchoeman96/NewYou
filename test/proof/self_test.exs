@@ -11,6 +11,8 @@ defmodule NewYou.Proof.SelfTest do
   @assertion_context_key {__MODULE__, :assertion_context}
   @observations_context_key {__MODULE__, :observations_context}
   @cleanup_context_key {__MODULE__, :cleanup_context}
+  @broken_invariant_case "cut.raise.transaction.before_commit"
+  @failure_fixture_case "result.callback_failures"
 
   @spec run([String.t()], keyword()) :: {[map()], map()}
   def run(case_ids, opts \\ []) do
@@ -18,8 +20,63 @@ defmodule NewYou.Proof.SelfTest do
     registrations = register_probes(Catalog.required().self_test.cases)
     registration_map = Map.new(registrations, &{&1.case_id, &1.callback})
     registration_map = Map.merge(registration_map, Keyword.get(opts, :callback_overrides, %{}))
+    registration_map = Map.merge(registration_map, fixture_overrides(case_ids, opts[:fixture]))
+    {results, cleanup} = execute(case_ids, manifests, registration_map, [], clean_cleanup())
 
-    execute(case_ids, manifests, registration_map, [], clean_cleanup())
+    {results, apply_fixture_cleanup(cleanup, opts[:fixture])}
+  end
+
+  defp fixture_overrides([@broken_invariant_case], :broken_invariant),
+    do: %{@broken_invariant_case => broken_assertion_callback()}
+
+  defp fixture_overrides([@failure_fixture_case], fixture)
+       when fixture in [:callback_exception, :callback_exit, :callback_throw, :callback_timeout],
+       do: %{@failure_fixture_case => failure_fixture_callback(fixture)}
+
+  defp fixture_overrides(_case_ids, _fixture), do: %{}
+
+  defp apply_fixture_cleanup(cleanup, :cleanup_failure) do
+    %{
+      cleanup
+      | "verdict" => "FAIL",
+        "workers_stopped" => false,
+        "reason_codes" => ["cleanup.unconfirmed"]
+    }
+  end
+
+  defp apply_fixture_cleanup(cleanup, _fixture), do: cleanup
+
+  defp broken_assertion_callback do
+    fn ->
+      case Process.get(@assertion_context_key) do
+        {scenario, case_id, assertion_id} ->
+          Result.expect!(scenario, case_id, assertion_id, :unexpected, :expected)
+
+        _ ->
+          :registration_failure
+      end
+    end
+  end
+
+  defp failure_fixture_callback(:callback_exception),
+    do: fn -> raise("synthetic-secret-canary") end
+
+  defp failure_fixture_callback(:callback_exit), do: fn -> exit(:synthetic_exit) end
+  defp failure_fixture_callback(:callback_throw), do: fn -> throw(:synthetic_throw) end
+
+  defp failure_fixture_callback(:callback_timeout) do
+    fn ->
+      task = Task.async(fn -> Process.sleep(1_000) end)
+
+      case Task.yield(task, 10) do
+        nil ->
+          Task.shutdown(task, :brutal_kill)
+          :timeout
+
+        result ->
+          result
+      end
+    end
   end
 
   defp register_probes(manifests) do
@@ -88,8 +145,15 @@ defmodule NewYou.Proof.SelfTest do
     _ ->
       Process.delete(@assertion_context_key)
       Process.delete(@observations_context_key)
-      cleanup = Process.delete(@cleanup_context_key) || initial_case_cleanup(manifest.case_id)
       _ = if Process.alive?(ledger.controller), do: Scenario.stop(ledger)
+      Process.delete(@cleanup_context_key)
+
+      cleanup = %{
+        workers_stopped: false,
+        connections_released: false,
+        locks_released: false
+      }
+
       {case_result(manifest, "error", "FAIL", [], ["probe.failed"]), cleanup}
   end
 
@@ -148,7 +212,11 @@ defmodule NewYou.Proof.SelfTest do
         assertions_complete?
       )
 
-    if is_nil(reason), do: {"PASS", "completed", []}, else: {"FAIL", "error", [reason]}
+    cond do
+      is_nil(reason) -> {"PASS", "completed", []}
+      reason == "timeout.expired" -> {"FAIL", "timeout", [reason]}
+      true -> {"FAIL", "error", [reason]}
+    end
   end
 
   defp case_failure_reason(
@@ -160,6 +228,8 @@ defmodule NewYou.Proof.SelfTest do
          failed_ids,
          assertions_complete?
        ) do
+    assertion_reason = assertion_failure_reason(failed_ids, assertions_complete?, assertion_ids)
+
     cond do
       outcome == :registration_failure ->
         "registration.missing"
@@ -167,20 +237,25 @@ defmodule NewYou.Proof.SelfTest do
       not controller_stopped? ->
         "cleanup.unconfirmed"
 
-      assertion_reason = assertion_failure_reason(failed_ids, assertions_complete?, assertion_ids) ->
+      outcome == :timeout ->
+        "timeout.expired"
+
+      failed_ids != [] ->
         assertion_reason
 
-      stop_result != :ok ->
-        "cleanup.unconfirmed"
-
-      outcome != :ok ->
-        "probe.failed"
-
-      manifest.assertion_ids == [] ->
-        "assertion.missing"
-
       true ->
-        nil
+        trailing_case_failure_reason(manifest, outcome, assertion_reason, stop_result)
+    end
+  end
+
+  defp trailing_case_failure_reason(manifest, outcome, assertion_reason, stop_result) do
+    cond do
+      outcome == :probe_exception -> "probe.failed"
+      not is_nil(assertion_reason) -> assertion_reason
+      stop_result != :ok -> "cleanup.unconfirmed"
+      outcome != :ok -> "probe.failed"
+      manifest.assertion_ids == [] -> "assertion.missing"
+      true -> nil
     end
   end
 
@@ -519,6 +594,7 @@ defmodule NewYou.Proof.SelfTest do
 
   defp database_probe(fixture) do
     scenario_probe(fn scenario ->
+      record_database_cleanup_pending()
       result = Concurrent.infrastructure_fixture(scenario, fixture: fixture, timeout: 5_000)
       record_database_cleanup(result)
       passed?(database_fixture_verified?(fixture, result))
@@ -554,22 +630,40 @@ defmodule NewYou.Proof.SelfTest do
   end
 
   defp record_database_cleanup(result) do
-    cleanup =
-      case result do
-        {:ok, proof} -> Map.get(proof, :cleanup, %{})
-        {:error, proof} -> Map.get(proof, :cleanup, %{})
-      end
+    database_cleanup_observations(result) |> record_cleanup()
+  end
 
-    record_cleanup(
-      connections_released: Map.get(cleanup, :confirmed) == true,
-      locks_released:
-        Map.get(cleanup, :locks_remaining, 0) == 0 and
-          Map.get(cleanup, :active_transactions, 0) == 0
-    )
+  @doc false
+  @spec database_cleanup_observations(term()) :: %{
+          required(:connections_released) => boolean(),
+          required(:locks_released) => boolean()
+        }
+  def database_cleanup_observations({status, proof})
+      when status in [:ok, :error] and is_map(proof) do
+    case Map.get(proof, :cleanup) do
+      cleanup when is_map(cleanup) ->
+        %{
+          connections_released: Map.get(cleanup, :confirmed) == true,
+          locks_released:
+            Map.get(cleanup, :locks_remaining) == 0 and
+              Map.get(cleanup, :active_transactions) == 0
+        }
+
+      _ ->
+        %{connections_released: false, locks_released: false}
+    end
+  end
+
+  def database_cleanup_observations(_result),
+    do: %{connections_released: false, locks_released: false}
+
+  defp record_database_cleanup_pending do
+    record_cleanup(connections_released: false, locks_released: false)
   end
 
   defp database_timeout_probe do
     scenario_probe(fn scenario ->
+      record_database_cleanup_pending()
       parent = self()
       watcher_ref = make_ref()
       lock_key = positive_key()
@@ -718,6 +812,7 @@ defmodule NewYou.Proof.SelfTest do
   end
 
   defp database_worker_crash_probe do
+    record_database_cleanup_pending()
     scenario = Scenario.start()
     parent = self()
     lock_key = positive_key()
@@ -997,6 +1092,7 @@ defmodule NewYou.Proof.SelfTest do
   end
 
   defp execute_fresh_connection_probe do
+    record_database_cleanup_pending()
     parent = self()
     reference = make_ref()
     lock_key = positive_key()
@@ -1216,11 +1312,88 @@ defmodule NewYou.Proof.SelfTest do
   end
 
   defp broken_invariant_probe do
-    passed?(
-      Result.verdict(mode: :tb001, metadata_complete: true, checks: [:pass], cleanup: :pass) ==
-        %{overall_verdict: "FAIL", exit_code: 1}
-    )
+    output =
+      Path.join(
+        System.tmp_dir!(),
+        "proof-broken-invariant-#{System.unique_integer([:positive])}.json"
+      )
+
+    try do
+      {cli_output, exit_code} =
+        System.cmd(
+          "mix",
+          [
+            "run",
+            "test/proof/run.exs",
+            "--mode",
+            "diagnostic",
+            "--output",
+            output,
+            "--case",
+            @broken_invariant_case,
+            "--fixture",
+            "broken_invariant"
+          ],
+          stderr_to_stdout: true,
+          env: [{"MIX_ENV", "test"}]
+        )
+
+      case_result = read_broken_invariant_case(output)
+      record_broken_invariant_observations(exit_code, case_result)
+
+      passed?(exit_code == 1 and cli_output != :error and expected_broken_invariant?(case_result))
+    rescue
+      _ -> passed?(false)
+    after
+      File.rm(output)
+    end
   end
+
+  defp read_broken_invariant_case(output) do
+    artifact =
+      case File.read(output) do
+        {:ok, contents} -> Jason.decode(contents)
+        _ -> {:error, :missing_artifact}
+      end
+
+    case broken_invariant_artifact(artifact) do
+      {case_result, true} -> case_result
+      _ -> %{}
+    end
+  end
+
+  defp record_broken_invariant_observations(exit_code, case_result) do
+    Process.put(@observations_context_key, [
+      %{"code" => "broken_invariant.exit_code", "value" => exit_code},
+      %{"code" => "broken_invariant.case", "value" => case_result["case_id"]},
+      %{"code" => "broken_invariant.invariant", "value" => case_result["invariant_id"]},
+      %{"code" => "broken_invariant.cut_point", "value" => case_result["cut_point"]},
+      %{
+        "code" => "broken_invariant.reason_code",
+        "value" => List.first(case_result["reason_codes"] || [])
+      }
+    ])
+  end
+
+  defp expected_broken_invariant?(case_result) do
+    Map.take(case_result, ~w(case_id invariant_id cut_point verdict)) == %{
+      "case_id" => @broken_invariant_case,
+      "invariant_id" => @broken_invariant_case,
+      "cut_point" => "transaction.before_commit",
+      "verdict" => "FAIL"
+    } and "assertion.failed" in (case_result["reason_codes"] || [])
+  end
+
+  defp broken_invariant_artifact(
+         {:ok, %{"mode" => "diagnostic", "overall_verdict" => "FAIL"} = result}
+       ) do
+    case result["results"] do
+      [%{"coverage_id" => "harness", "cases" => [case_result]}] -> {case_result, true}
+      _ -> {%{}, false}
+    end
+  end
+
+  defp broken_invariant_artifact(_artifact), do: {%{}, false}
 
   defp output_failure_probe do
     directory = Path.join(System.tmp_dir!(), "p8-04-output-#{System.unique_integer([:positive])}")

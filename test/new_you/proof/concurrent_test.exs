@@ -354,6 +354,8 @@ defmodule NewYou.Proof.ConcurrentTest do
     assert result.reason == :shared_connection_rejected
     assert result.backend_pids.a == result.backend_pids.b
     assert result.cleanup.confirmed
+    assert result.cleanup.locks_remaining == 0
+    assert result.cleanup.active_transactions == 0
     assert :ok = Scenario.stop(scenario)
   end
 
