@@ -102,6 +102,36 @@ defmodule NewYou.Proof.ConcurrentTest do
     assert {:error, _} = Scenario.stop(scenario)
   end
 
+  test "run reports unconfirmed cleanup when the scenario controller is lost" do
+    scenario = Scenario.start()
+    parent = self()
+
+    killer =
+      spawn(fn ->
+        receive do
+          {:callback_waiting, worker} ->
+            send(parent, {:controller_killed, worker})
+            Process.exit(scenario.controller, :kill)
+        end
+      end)
+
+    result =
+      Concurrent.run(
+        scenario,
+        %{
+          waiting: fn ->
+            send(killer, {:callback_waiting, self()})
+            Process.sleep(:infinity)
+          end
+        },
+        timeout: 1_000
+      )
+
+    assert_receive {:controller_killed, worker}
+    assert {:error, %{cleanup: %{confirmed: false}}} = result
+    refute Process.alive?(worker)
+  end
+
   test "a worker death rolls back its PostgreSQL transaction" do
     scenario = Scenario.start()
     parent = self()
@@ -339,5 +369,49 @@ defmodule NewYou.Proof.ConcurrentTest do
     refute result.contention_observed
     assert result.cleanup.confirmed
     assert :ok = Scenario.stop(scenario)
+  end
+
+  test "infrastructure fixture bounds pool exhaustion and reports unavailable capacity" do
+    scenario = Scenario.start()
+    parent = self()
+
+    holders =
+      for index <- 1..9 do
+        Scenario.spawn(scenario, "pool_holder_#{index}", fn ->
+          :ok = Ecto.Adapters.SQL.Sandbox.checkout(NewYou.Repo, sandbox: false)
+          send(parent, {:pool_held, self()})
+
+          receive do
+            :release -> Ecto.Adapters.SQL.Sandbox.checkin(NewYou.Repo)
+          end
+        end)
+      end
+
+    holder_pids =
+      Enum.map(holders, fn _holder ->
+        assert_receive({:pool_held, pid})
+        pid
+      end)
+
+    assert {:error, %{reason: :pool_unavailable, cleanup: %{confirmed: true}}} =
+             Concurrent.infrastructure_fixture(scenario, timeout: 100)
+
+    Enum.each(holder_pids, &send(&1, :release))
+    assert :ok = await_owned_processes(scenario)
+    assert {:error, _} = Scenario.stop(scenario)
+  end
+
+  defp await_owned_processes(scenario, attempts \\ 100)
+  defp await_owned_processes(_scenario, 0), do: {:error, :workers_still_alive}
+
+  defp await_owned_processes(scenario, attempts) do
+    case Scenario.owned_processes(scenario) do
+      [] ->
+        :ok
+
+      _ ->
+        Process.sleep(10)
+        await_owned_processes(scenario, attempts - 1)
+    end
   end
 end

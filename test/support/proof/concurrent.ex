@@ -201,8 +201,11 @@ defmodule NewYou.Proof.Concurrent do
           contention_failure(scenario, lock_parts, error, observer, [actor_identity.backend_pid])
       end
     else
-      false -> contention_failure(scenario, lock_parts, :shared_identity, observer, [])
-      error -> contention_failure(scenario, lock_parts, error, observer, [])
+      false ->
+        contention_failure(scenario, lock_parts, :shared_identity, observer, [])
+
+      error ->
+        contention_failure(scenario, lock_parts, error, observer, [])
     end
   end
 
@@ -386,20 +389,33 @@ defmodule NewYou.Proof.Concurrent do
         )
 
       {:concurrent_error, pid, label, reason} when is_map_key(pending, pid) ->
-        cleanup_scenario(scenario)
-        {:error, %{reason: reason, label: label, outcomes: outcomes}}
+        cleanup = cleanup_scenario(scenario)
+
+        {:error,
+         %{
+           reason: reason,
+           label: label,
+           outcomes: outcomes,
+           cleanup: cleanup_observation(cleanup)
+         }}
 
       {:DOWN, ref, :process, pid, reason} when is_map_key(pending, pid) ->
         if Map.fetch!(pending, pid) == ref do
-          cleanup_scenario(scenario)
-          {:error, %{reason: {:worker_down, safe_reason(reason)}, outcomes: outcomes}}
+          cleanup = cleanup_scenario(scenario)
+
+          {:error,
+           %{
+             reason: {:worker_down, safe_reason(reason)},
+             outcomes: outcomes,
+             cleanup: cleanup_observation(cleanup)
+           }}
         else
           collect_callbacks(scenario, pending, outcomes, deadline)
         end
     after
       remaining ->
-        cleanup_scenario(scenario)
-        {:error, %{reason: :timeout, outcomes: outcomes}}
+        cleanup = cleanup_scenario(scenario)
+        {:error, %{reason: :timeout, outcomes: outcomes, cleanup: cleanup_observation(cleanup)}}
     end
   end
 
@@ -442,7 +458,8 @@ defmodule NewYou.Proof.Concurrent do
             run_id: run_id,
             lock_parts: lock_parts,
             observer: observer,
-            observer_backend_pid: observer_identity.pid,
+            observer_backend_pid: observer_identity.backend_pid,
+            actor_backend_pids: [a_connection.backend_pid, b_connection.backend_pid],
             worker_a: worker_a,
             worker_b: worker_b,
             deadline: deadline
@@ -451,17 +468,27 @@ defmodule NewYou.Proof.Concurrent do
           contention_after_start(context, b_started, a)
 
         {:error, reason} ->
-          contention_failure(scenario, lock_parts, reason, observer, [])
+          contention_failure(
+            scenario,
+            lock_parts,
+            pool_failure_reason(reason),
+            observer,
+            [a_connection.backend_pid, b_connection.backend_pid]
+          )
       end
     else
-      false -> contention_failure(scenario, lock_parts, :shared_identity, observer, [])
-      error -> contention_failure(scenario, lock_parts, error, observer, [])
+      false ->
+        contention_failure(scenario, lock_parts, :shared_identity, observer, [])
+
+      error ->
+        contention_failure(scenario, lock_parts, pool_failure_reason(error), observer, [])
     end
   end
 
   defp contention_after_start(context, b_started, a) do
     %{scenario: scenario, run_id: run_id, lock_parts: lock_parts} = context
     %{observer: observer, observer_backend_pid: observer_backend_pid} = context
+    %{actor_backend_pids: actor_backend_pids} = context
     %{worker_a: worker_a, worker_b: worker_b, deadline: deadline} = context
 
     with {:ok, b} <- await_phase(b_started, deadline),
@@ -498,15 +525,21 @@ defmodule NewYou.Proof.Concurrent do
             lock_parts,
             error,
             observer,
-            [a.backend_pid, b.backend_pid]
+            actor_backend_pids
           )
       end
     else
       false ->
-        contention_failure(scenario, lock_parts, :shared_identity, observer, [a.backend_pid])
+        contention_failure(
+          scenario,
+          lock_parts,
+          :shared_identity,
+          observer,
+          actor_backend_pids
+        )
 
       error ->
-        contention_failure(scenario, lock_parts, error, observer, [a.backend_pid])
+        contention_failure(scenario, lock_parts, error, observer, actor_backend_pids)
     end
   end
 
@@ -799,13 +832,11 @@ defmodule NewYou.Proof.Concurrent do
     cleanup_deadline = now_ms() + @cleanup_timeout
 
     observer_cleanup =
-      verify_observer_cleanup(
-        observer,
-        nil,
-        lock_parts,
-        backend_pids,
-        cleanup_deadline
-      )
+      if workers_stopped == :ok do
+        verify_observer_cleanup(observer, nil, lock_parts, backend_pids, cleanup_deadline)
+      else
+        {:error, :workers_unconfirmed}
+      end
 
     if observer_cleanup != :ok, do: stop_worker(observer_pid)
     observer_stopped = await_completion(observer, cleanup_deadline)
@@ -831,9 +862,16 @@ defmodule NewYou.Proof.Concurrent do
         await_owned_down(workers, now_ms() + @cleanup_timeout)
 
       _ ->
-        :ok
+        {:error, :ownership_unavailable}
     end
   end
+
+  defp cleanup_observation(:ok), do: %{confirmed: true}
+  defp cleanup_observation(_error), do: %{confirmed: false}
+
+  defp pool_failure_reason(:phase_timeout), do: :pool_unavailable
+  defp pool_failure_reason({:error, :phase_timeout}), do: :pool_unavailable
+  defp pool_failure_reason(reason), do: reason
 
   defp stop_worker(pid) do
     if Process.alive?(pid), do: Process.exit(pid, :kill)
