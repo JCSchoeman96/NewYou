@@ -182,6 +182,9 @@ defmodule NewYou.Proof.Scenario do
   defp dispatch({:barrier_ack, phase, label}, caller, _request_ref, state),
     do: handle_barrier_ack(phase, label, caller, state)
 
+  defp dispatch({:barrier_define, phase, participants, timeout}, caller, _request_ref, state),
+    do: handle_barrier_define(phase, participants, timeout, caller, state)
+
   defp dispatch({:barrier_status, phase}, _caller, _request_ref, state) do
     case Map.get(state.barriers, phase) do
       nil -> {state, {:error, :unknown_phase}, false}
@@ -336,41 +339,61 @@ defmodule NewYou.Proof.Scenario do
       else: {state, {:error, Enum.reverse(state.failures)}, true}
   end
 
-  defp handle_operation({:barrier_define, phase, participants, timeout}, caller, state) do
-    cond do
-      caller != state.owner ->
-        fail(state, :owner_only, {:error, :owner_only})
+  defp handle_operation(_operation, _caller, state),
+    do: fail(state, :invalid_request, {:error, :invalid_request})
 
-      Map.has_key?(state.barriers, phase) ->
-        fail(state, :duplicate_phase, {:error, :duplicate_phase})
+  defp handle_barrier_define(phase, participants, timeout, caller, state) do
+    case barrier_definition_error(state, phase, participants, timeout, caller) do
+      nil ->
+        barrier = new_barrier(participants, timeout)
+        {put_barrier(state, phase, barrier), :ok, false}
 
-      not is_list(participants) or participants == [] or
-          length(Enum.uniq(participants)) != length(participants) ->
-        fail(state, :invalid_participants, {:error, :invalid_participants})
-
-      not is_integer(timeout) or timeout <= 0 or timeout > @max_timeout ->
-        fail(state, :invalid_deadline, {:error, :invalid_deadline})
-
-      true ->
-        barrier = %{
-          participants: MapSet.new(participants),
-          arrived: MapSet.new(),
-          waiters: %{},
-          acknowledged: MapSet.new(),
-          released: false,
-          release_waiter: nil,
-          timer_ref: nil,
-          timer_handle: nil,
-          release_deadline: nil,
-          deadline: now_ms() + timeout
-        }
-
-        {%{state | barriers: Map.put(state.barriers, phase, barrier)}, :ok, false}
+      {failure, response} ->
+        fail(state, failure, response)
     end
   end
 
-  defp handle_operation(_operation, _caller, state),
-    do: fail(state, :invalid_request, {:error, :invalid_request})
+  defp barrier_definition_error(state, phase, participants, timeout, caller) do
+    cond do
+      caller != state.owner ->
+        {:owner_only, {:error, :owner_only}}
+
+      Map.has_key?(state.barriers, phase) ->
+        {:duplicate_phase, {:error, :duplicate_phase}}
+
+      invalid_participants?(participants) ->
+        {:invalid_participants, {:error, :invalid_participants}}
+
+      invalid_timeout?(timeout) ->
+        {:invalid_deadline, {:error, :invalid_deadline}}
+
+      true ->
+        nil
+    end
+  end
+
+  defp invalid_participants?(participants) do
+    not is_list(participants) or participants == [] or
+      length(Enum.uniq(participants)) != length(participants)
+  end
+
+  defp invalid_timeout?(timeout),
+    do: not is_integer(timeout) or timeout <= 0 or timeout > @max_timeout
+
+  defp new_barrier(participants, timeout) do
+    %{
+      participants: MapSet.new(participants),
+      arrived: MapSet.new(),
+      waiters: %{},
+      acknowledged: MapSet.new(),
+      released: false,
+      release_waiter: nil,
+      timer_ref: nil,
+      timer_handle: nil,
+      release_deadline: nil,
+      deadline: now_ms() + timeout
+    }
+  end
 
   defp handle_barrier_arrive(phase, label, caller, request_ref, state) do
     case {Map.get(state.barriers, phase), worker_for(state, caller)} do
@@ -415,36 +438,44 @@ defmodule NewYou.Proof.Scenario do
         fail(state, :worker_mismatch, {:error, :worker_mismatch})
 
       {barrier, {:ok, ^label, _pid}} ->
-        cond do
-          not MapSet.member?(barrier.participants, label) ->
-            fail(state, :unknown_participant, {:error, :unknown_participant})
-
-          not barrier.released or is_nil(barrier.release_waiter) ->
-            {state, {:error, :release_failed}, false}
-
-          now_ms() >= barrier.release_deadline ->
-            expire_barrier_release(state, phase, barrier)
-
-          MapSet.member?(barrier.acknowledged, label) ->
-            fail(state, :duplicate_acknowledgement, {:error, :duplicate_acknowledgement})
-
-          true ->
-            acknowledged = MapSet.put(barrier.acknowledged, label)
-            updated = %{barrier | acknowledged: acknowledged}
-
-            if MapSet.equal?(acknowledged, barrier.participants) do
-              {owner, request_ref, _timer_ref} = barrier.release_waiter
-              Process.cancel_timer(barrier.timer_handle)
-              send(owner, {:scenario_reply, request_ref, :ok})
-              updated = %{updated | release_waiter: nil, timer_ref: nil, timer_handle: nil}
-              {put_barrier(state, phase, updated), :ok, false}
-            else
-              {put_barrier(state, phase, updated), :ok, false}
-            end
-        end
+        acknowledge_barrier(state, phase, label, barrier)
 
       {_barrier, {:ok, _other_label, _pid}} ->
         fail(state, :worker_mismatch, {:error, :worker_mismatch})
+    end
+  end
+
+  defp acknowledge_barrier(state, phase, label, barrier) do
+    cond do
+      not MapSet.member?(barrier.participants, label) ->
+        fail(state, :unknown_participant, {:error, :unknown_participant})
+
+      not barrier.released or is_nil(barrier.release_waiter) ->
+        {state, {:error, :release_failed}, false}
+
+      now_ms() >= barrier.release_deadline ->
+        expire_barrier_release(state, phase, barrier)
+
+      MapSet.member?(barrier.acknowledged, label) ->
+        fail(state, :duplicate_acknowledgement, {:error, :duplicate_acknowledgement})
+
+      true ->
+        record_barrier_ack(state, phase, label, barrier)
+    end
+  end
+
+  defp record_barrier_ack(state, phase, label, barrier) do
+    acknowledged = MapSet.put(barrier.acknowledged, label)
+    updated = %{barrier | acknowledged: acknowledged}
+
+    if MapSet.equal?(acknowledged, barrier.participants) do
+      {owner, request_ref, _timer_ref} = barrier.release_waiter
+      Process.cancel_timer(barrier.timer_handle)
+      send(owner, {:scenario_reply, request_ref, :ok})
+      updated = %{updated | release_waiter: nil, timer_ref: nil, timer_handle: nil}
+      {put_barrier(state, phase, updated), :ok, false}
+    else
+      {put_barrier(state, phase, updated), :ok, false}
     end
   end
 
@@ -502,60 +533,81 @@ defmodule NewYou.Proof.Scenario do
         fail(state, :unknown_phase, {:error, :unknown_phase})
 
       barrier ->
-        missing =
-          MapSet.difference(barrier.participants, barrier.arrived)
-          |> MapSet.to_list()
-          |> Enum.sort()
+        case release_problem(barrier, timeout) do
+          :ok ->
+            begin_barrier_release(state, phase, timeout, caller, request_ref, barrier)
 
-        missing_acknowledgements =
-          barrier.waiters
-          |> Enum.filter(fn {_label, {pid, _ref}} -> not Process.alive?(pid) end)
-          |> Enum.map(&elem(&1, 0))
-          |> Enum.sort()
-
-        cond do
-          not is_integer(timeout) or timeout < 0 or timeout > @max_timeout ->
-            fail(state, :invalid_deadline, {:error, :invalid_deadline})
-
-          timeout == 0 or now_ms() > barrier.deadline ->
-            Enum.each(Map.values(barrier.waiters), &reply_waiter(&1, {:error, :deadline}))
-            fail(state, :barrier_deadline, {:error, :deadline})
-
-          missing != [] ->
-            response = {:error, {:missing_arrivals, missing}}
-            Enum.each(Map.values(barrier.waiters), &reply_waiter(&1, response))
-            fail(state, {:missing_arrivals, missing}, response)
-
-          missing_acknowledgements != [] ->
-            response = {:error, {:missing_acknowledgements, missing_acknowledgements}}
-            Enum.each(Map.values(barrier.waiters), &reply_waiter(&1, response))
-            fail(state, {:missing_acknowledgements, missing_acknowledgements}, response)
-
-          true ->
-            wait_ms = min(timeout, max(barrier.deadline - now_ms(), 1))
-            timer_ref = make_ref()
-
-            timer_handle =
-              Process.send_after(self(), {:barrier_release_timeout, phase, timer_ref}, wait_ms)
-
-            Enum.each(Map.values(barrier.waiters), &reply_waiter(&1, :released))
-
-            updated = %{
-              barrier
-              | released: true,
-                release_waiter: {caller, request_ref, timer_ref},
-                timer_ref: timer_ref,
-                timer_handle: timer_handle,
-                release_deadline: min(barrier.deadline, now_ms() + timeout)
-            }
-
-            {put_barrier(state, phase, updated), :deferred, false}
+          {failure, response, notify_arrivals?} ->
+            fail_barrier_release(state, barrier, failure, response, notify_arrivals?)
         end
     end
   end
 
   defp release_barrier(_phase, _timeout, _caller, _request_ref, state),
     do: fail(state, :owner_only, {:error, :owner_only})
+
+  defp release_problem(barrier, timeout) do
+    missing =
+      MapSet.difference(barrier.participants, barrier.arrived) |> MapSet.to_list() |> Enum.sort()
+
+    missing_acknowledgements =
+      barrier.waiters
+      |> Enum.filter(fn {_label, {pid, _ref}} -> not Process.alive?(pid) end)
+      |> Enum.map(&elem(&1, 0))
+      |> Enum.sort()
+
+    cond do
+      not is_integer(timeout) or timeout < 0 or timeout > @max_timeout ->
+        {:invalid_deadline, {:error, :invalid_deadline}, false}
+
+      timeout == 0 or now_ms() > barrier.deadline ->
+        {:barrier_deadline, {:error, :deadline}, true}
+
+      missing != [] ->
+        {{:missing_arrivals, missing}, {:error, {:missing_arrivals, missing}}, true}
+
+      missing_acknowledgements != [] ->
+        {{:missing_acknowledgements, missing_acknowledgements},
+         {:error, {:missing_acknowledgements, missing_acknowledgements}}, true}
+
+      true ->
+        :ok
+    end
+  end
+
+  defp notify_barrier_waiters(barrier, response),
+    do: Enum.each(Map.values(barrier.waiters), &reply_waiter(&1, response))
+
+  defp fail_barrier_release(state, barrier, failure, response, notify_arrivals?) do
+    maybe_notify_barrier_waiters(barrier, response, notify_arrivals?)
+    fail(state, failure, response)
+  end
+
+  defp maybe_notify_barrier_waiters(barrier, response, true),
+    do: notify_barrier_waiters(barrier, response)
+
+  defp maybe_notify_barrier_waiters(_barrier, _response, false), do: :ok
+
+  defp begin_barrier_release(state, phase, timeout, caller, request_ref, barrier) do
+    wait_ms = min(timeout, max(barrier.deadline - now_ms(), 1))
+    timer_ref = make_ref()
+
+    timer_handle =
+      Process.send_after(self(), {:barrier_release_timeout, phase, timer_ref}, wait_ms)
+
+    notify_barrier_waiters(barrier, :released)
+
+    updated = %{
+      barrier
+      | released: true,
+        release_waiter: {caller, request_ref, timer_ref},
+        timer_ref: timer_ref,
+        timer_handle: timer_handle,
+        release_deadline: min(barrier.deadline, now_ms() + timeout)
+    }
+
+    {put_barrier(state, phase, updated), :deferred, false}
+  end
 
   defp reply_waiter({pid, request_ref}, response),
     do: send(pid, {:scenario_reply, request_ref, response})
@@ -573,32 +625,41 @@ defmodule NewYou.Proof.Scenario do
   defp worker_down(state, ref, pid, reason) do
     case Map.get(state.workers, pid) do
       %{monitor: ^ref} = worker ->
-        failures =
-          if reason == :normal or
-               (worker.expected_exit and reason in [:killed, :proof_terminated]),
-             do: state.failures,
-             else: [:worker_failed | state.failures]
-
-        state = update_worker(state, pid, %{worker | worker_down: true}, failures)
-        fail_barriers_for_worker(state, pid)
+        handle_worker_down(state, pid, worker, reason)
 
       _ ->
-        case Map.get(state.guardians, pid) do
-          nil ->
-            state
-
-          worker_pid ->
-            worker = Map.fetch!(state.workers, worker_pid)
-
-            failures =
-              if reason == :normal,
-                do: state.failures,
-                else: [:guardian_failed | state.failures]
-
-            if not worker.worker_down, do: Process.exit(worker_pid, :kill)
-            update_worker(state, worker_pid, %{worker | guardian_down: true}, failures)
-        end
+        handle_guardian_down(state, pid, reason)
     end
+  end
+
+  defp handle_worker_down(state, pid, worker, reason) do
+    failures =
+      if expected_worker_exit?(worker, reason),
+        do: state.failures,
+        else: [:worker_failed | state.failures]
+
+    state = update_worker(state, pid, %{worker | worker_down: true}, failures)
+    fail_barriers_for_worker(state, pid)
+  end
+
+  defp expected_worker_exit?(%{expected_exit: true}, reason),
+    do: reason in [:killed, :proof_terminated]
+
+  defp expected_worker_exit?(_worker, :normal), do: true
+  defp expected_worker_exit?(_worker, _reason), do: false
+
+  defp handle_guardian_down(state, guardian, reason) do
+    case Map.get(state.guardians, guardian) do
+      nil -> state
+      worker_pid -> guardian_process_down(state, worker_pid, reason)
+    end
+  end
+
+  defp guardian_process_down(state, worker_pid, reason) do
+    worker = Map.fetch!(state.workers, worker_pid)
+    failures = if reason == :normal, do: state.failures, else: [:guardian_failed | state.failures]
+    if not worker.worker_down, do: Process.exit(worker_pid, :kill)
+    update_worker(state, worker_pid, %{worker | guardian_down: true}, failures)
   end
 
   defp update_worker(state, pid, worker, failures) do
@@ -616,33 +677,39 @@ defmodule NewYou.Proof.Scenario do
 
   defp fail_barriers_for_worker(state, worker_pid) do
     Enum.reduce(state.barriers, state, fn {phase, barrier}, acc ->
-      if Enum.any?(barrier.waiters, fn {_label, {pid, _ref}} -> pid == worker_pid end) and
-           not is_nil(barrier.release_waiter) do
-        {owner, request_ref, _timer_ref} = barrier.release_waiter
-
-        missing =
-          MapSet.difference(barrier.participants, barrier.acknowledged)
-          |> MapSet.to_list()
-          |> Enum.sort()
-
-        response = {:error, {:missing_acknowledgements, missing}}
-        send(owner, {:scenario_reply, request_ref, response})
-        if barrier.timer_handle, do: Process.cancel_timer(barrier.timer_handle)
-
-        updated = %{
-          barrier
-          | released: false,
-            release_waiter: nil,
-            timer_ref: nil,
-            timer_handle: nil
-        }
-
-        failure = {:missing_acknowledgements, missing}
-        put_barrier(%{acc | failures: Enum.uniq([failure | acc.failures])}, phase, updated)
-      else
-        acc
-      end
+      if waiting_worker?(barrier, worker_pid),
+        do: fail_barrier_acknowledgement(acc, phase, barrier),
+        else: acc
     end)
+  end
+
+  defp waiting_worker?(barrier, worker_pid) do
+    not is_nil(barrier.release_waiter) and
+      Enum.any?(barrier.waiters, fn {_label, {pid, _ref}} -> pid == worker_pid end)
+  end
+
+  defp fail_barrier_acknowledgement(state, phase, barrier) do
+    {owner, request_ref, _timer_ref} = barrier.release_waiter
+
+    missing =
+      MapSet.difference(barrier.participants, barrier.acknowledged)
+      |> MapSet.to_list()
+      |> Enum.sort()
+
+    response = {:error, {:missing_acknowledgements, missing}}
+    send(owner, {:scenario_reply, request_ref, response})
+    if barrier.timer_handle, do: Process.cancel_timer(barrier.timer_handle)
+
+    updated = %{
+      barrier
+      | released: false,
+        release_waiter: nil,
+        timer_ref: nil,
+        timer_handle: nil
+    }
+
+    failure = {:missing_acknowledgements, missing}
+    put_barrier(%{state | failures: Enum.uniq([failure | state.failures])}, phase, updated)
   end
 
   defp cleanup_workers(state) do

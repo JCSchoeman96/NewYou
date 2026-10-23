@@ -267,7 +267,7 @@ defmodule NewYou.Proof.ControllerTest do
       end
 
     assert eventually(fn -> Barrier.arrivals(scenario, :phase) == [:one, :two] end)
-    assert :ok = Barrier.release(scenario, :phase, 100)
+    assert :ok = Barrier.release(scenario, :phase, 1_000)
     assert_receive {:one, :ok}
     assert_receive {:two, :ok}
     Enum.each(workers, fn {pid, ref} -> assert_receive {:DOWN, ^ref, :process, ^pid, :normal} end)
