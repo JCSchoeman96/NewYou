@@ -72,6 +72,93 @@ defmodule NewYou.Proof.ResultTest do
     assert {:error, _} = Result.validate(malformed, mode: :harness_self_test)
   end
 
+  test "empty diagnostic results cannot claim PASS" do
+    sha = String.duplicate("a", 40)
+    lock_sha = String.duplicate("b", 64)
+    result = self_test_result(Catalog.required().self_test.digest)
+
+    result = %{
+      result
+      | "mode" => "diagnostic",
+        "metadata_complete" => true,
+        "git" => %{
+          "head_before" => sha,
+          "head_after" => sha,
+          "clean_before" => true,
+          "clean_after" => true,
+          "lock_sha256_before" => lock_sha,
+          "lock_sha256_after" => lock_sha
+        },
+        "runtime" => %{
+          "elixir" => System.version(),
+          "otp" => List.to_string(:erlang.system_info(:otp_release)),
+          "erts" => List.to_string(:erlang.system_info(:version)),
+          "postgresql" => "18.6",
+          "mix_env" => "test"
+        },
+        "dependencies" => test_dependency_metadata(),
+        "results" => [],
+        "overall_verdict" => "PASS",
+        "exit_code" => 0,
+        "reason_codes" => []
+    }
+
+    assert {:error, reasons} = Result.validate(result, mode: :diagnostic)
+    assert :invalid_overall_pass in reasons
+  end
+
+  test "a timeout case requires the infrastructure failure exit code" do
+    result = self_test_result(Catalog.required().self_test.digest)
+    [entry] = result["results"]
+    [first_case | remaining_cases] = entry["cases"]
+
+    timed_out_case = %{
+      first_case
+      | "status" => "timeout",
+        "verdict" => "FAIL",
+        "reason_codes" => ["timeout.expired"]
+    }
+
+    timed_out_entry = %{
+      entry
+      | "verdict" => "FAIL",
+        "reason_codes" => ["self_test.incomplete"],
+        "cases" => [timed_out_case | remaining_cases]
+    }
+
+    sha = String.duplicate("a", 40)
+    lock_sha = String.duplicate("b", 64)
+
+    result = %{
+      result
+      | "mode" => "diagnostic",
+        "metadata_complete" => true,
+        "git" => %{
+          "head_before" => sha,
+          "head_after" => sha,
+          "clean_before" => true,
+          "clean_after" => true,
+          "lock_sha256_before" => lock_sha,
+          "lock_sha256_after" => lock_sha
+        },
+        "runtime" => %{
+          "elixir" => System.version(),
+          "otp" => List.to_string(:erlang.system_info(:otp_release)),
+          "erts" => List.to_string(:erlang.system_info(:version)),
+          "postgresql" => "18.6",
+          "mix_env" => "test"
+        },
+        "dependencies" => test_dependency_metadata(),
+        "results" => [timed_out_entry],
+        "overall_verdict" => "FAIL",
+        "exit_code" => 1,
+        "reason_codes" => ["coverage.incomplete"]
+    }
+
+    assert {:error, reasons} = Result.validate(result, mode: :diagnostic)
+    assert :timeout_failure_mismatch in reasons
+  end
+
   test "companion schema keeps the approved inventory and fixed wire keys" do
     schema =
       File.read!("docs/superpowers/specs/p8-04-proof-result-v1.schema.json")
@@ -481,7 +568,7 @@ defmodule NewYou.Proof.ResultTest do
           "assertions_executed" => length(manifest.assertion_ids),
           "duration_ms" => 0,
           "timeout_ms" => manifest.timeout_ms,
-          "timeout_override_reason" => nil,
+          "timeout_override_reason" => manifest.timeout_override_reason,
           "reason_codes" => []
         }
       end)

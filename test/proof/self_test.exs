@@ -118,16 +118,22 @@ defmodule NewYou.Proof.SelfTest do
   end
 
   defp execute_case_with_ledger(manifest, callback, ledger) do
-    cleanup = initial_case_cleanup(manifest.case_id)
-    Process.delete(@observations_context_key)
-    Process.put(@cleanup_context_key, cleanup)
+    execute_case_with_ledger(manifest, callback, ledger, System.monotonic_time(:millisecond))
+  end
 
-    outcome = run_registered_case(manifest, callback, ledger)
-    {snapshot, stop_result, controller_stopped?} = finish_case_ledger(ledger)
-    case_cleanup = Process.delete(@cleanup_context_key) || initial_case_cleanup(manifest.case_id)
-    observations = Process.delete(@observations_context_key)
+  defp execute_case_with_ledger(manifest, callback, ledger, started_at) do
+    {outcome, callback_cleanup, observations, snapshot, stop_result, controller_stopped?,
+     workers_stopped?} =
+      run_registered_case(manifest, callback, ledger, started_at)
 
     {assertion_ids, failed_ids, assertion_count} = assertion_snapshot(snapshot, manifest.case_id)
+
+    case_cleanup =
+      Map.put(
+        callback_cleanup,
+        :workers_stopped,
+        callback_cleanup.workers_stopped and workers_stopped? and controller_stopped?
+      )
 
     {verdict, status, reasons} =
       case_outcome(
@@ -140,7 +146,10 @@ defmodule NewYou.Proof.SelfTest do
         assertion_count
       )
 
-    {case_result(manifest, status, verdict, assertion_ids, reasons, observations), case_cleanup}
+    duration_ms = elapsed_ms(started_at)
+
+    {case_result(manifest, status, verdict, assertion_ids, reasons, observations, duration_ms),
+     case_cleanup}
   rescue
     _ ->
       Process.delete(@assertion_context_key)
@@ -154,39 +163,110 @@ defmodule NewYou.Proof.SelfTest do
         locks_released: false
       }
 
-      {case_result(manifest, "error", "FAIL", [], ["probe.failed"]), cleanup}
+      duration_ms = elapsed_ms(started_at)
+      {case_result(manifest, "error", "FAIL", [], ["probe.failed"], nil, duration_ms), cleanup}
   end
 
-  defp run_registered_case(manifest, callback, ledger) do
+  defp run_registered_case(manifest, callback, ledger, started_at) do
     assertion_id = List.first(manifest.assertion_ids)
 
     with true <- length(manifest.assertion_ids) == 1,
          :ok <- Scenario.require_assertions(ledger, manifest.case_id, manifest.assertion_ids),
          true <- is_function(callback, 0) do
-      Process.put(@assertion_context_key, {ledger, manifest.case_id, assertion_id})
-
-      try do
-        callback.()
-      rescue
-        _ -> :probe_exception
-      catch
-        _, _ -> :probe_exception
-      after
-        Process.delete(@assertion_context_key)
-      end
+      run_case_callback(manifest, callback, ledger, assertion_id, started_at)
     else
-      _ -> :registration_failure
+      _ ->
+        {snapshot, stop_result, controller_stopped?, workers_stopped?} =
+          finish_case_ledger(ledger)
+
+        {:registration_failure, initial_case_cleanup(manifest.case_id), nil, snapshot,
+         stop_result, controller_stopped?, workers_stopped?}
+    end
+  end
+
+  defp run_case_callback(manifest, callback, ledger, assertion_id, started_at) do
+    parent = self()
+    reference = make_ref()
+    cleanup = initial_case_cleanup(manifest.case_id)
+    deadline = started_at + manifest.timeout_ms
+
+    {worker, monitor} =
+      Scenario.spawn(ledger, :self_test_case, fn ->
+        Process.put(@assertion_context_key, {ledger, manifest.case_id, assertion_id})
+        Process.put(@cleanup_context_key, cleanup)
+
+        outcome =
+          try do
+            callback.()
+          rescue
+            _ -> :probe_exception
+          catch
+            _, _ -> :probe_exception
+          after
+            Process.delete(@assertion_context_key)
+          end
+
+        callback_cleanup = Process.delete(@cleanup_context_key) || cleanup
+        observations = Process.delete(@observations_context_key)
+        completed_at = System.monotonic_time(:millisecond)
+        send(parent, {reference, self(), outcome, callback_cleanup, observations, completed_at})
+
+        receive do
+          {:case_result_ack, ^reference} -> :ok
+        end
+      end)
+
+    {outcome, callback_cleanup, observations} =
+      receive do
+        {^reference, ^worker, outcome, callback_cleanup, observations, completed_at} ->
+          if completed_at <= deadline do
+            send(worker, {:case_result_ack, reference})
+            {outcome, callback_cleanup, observations}
+          else
+            {:timeout, cleanup, nil}
+          end
+
+        {:DOWN, ^monitor, :process, ^worker, _reason} ->
+          {:probe_exception, cleanup, nil}
+      after
+        max(deadline - System.monotonic_time(:millisecond), 0) ->
+          {:timeout, cleanup, nil}
+      end
+
+    {snapshot, stop_result, controller_stopped?, workers_stopped?} = finish_case_ledger(ledger)
+    Process.demonitor(monitor, [:flush])
+    flush_case_result(reference, worker)
+
+    {outcome, callback_cleanup, observations, snapshot, stop_result, controller_stopped?,
+     workers_stopped?}
+  end
+
+  defp flush_case_result(reference, worker) do
+    receive do
+      {^reference, ^worker, _outcome, _cleanup, _observations, _completed_at} -> :ok
+    after
+      0 -> :ok
     end
   end
 
   defp finish_case_ledger(ledger) do
     snapshot = Scenario.assertion_snapshot(ledger)
+    owned_processes = Scenario.owned_processes(ledger)
     stop_result = Scenario.stop(ledger)
     controller_stopped? = not Process.alive?(ledger.controller)
-    current_cleanup = Process.get(@cleanup_context_key)
-    record_cleanup(workers_stopped: current_cleanup.workers_stopped and controller_stopped?)
-    {snapshot, stop_result, controller_stopped?}
+    workers_stopped? = owned_processes_stopped?(owned_processes)
+    {snapshot, stop_result, controller_stopped?, workers_stopped?}
   end
+
+  defp owned_processes_stopped?(workers) when is_list(workers) do
+    Enum.all?(workers, fn {worker, guardian} ->
+      not Process.alive?(worker) and not Process.alive?(guardian)
+    end)
+  end
+
+  defp owned_processes_stopped?(_workers), do: false
+
+  defp elapsed_ms(started_at), do: max(System.monotonic_time(:millisecond) - started_at, 0)
 
   defp case_outcome(
          manifest,
@@ -1499,7 +1579,7 @@ defmodule NewYou.Proof.SelfTest do
           "assertions_executed" => length(manifest.assertion_ids),
           "duration_ms" => 0,
           "timeout_ms" => manifest.timeout_ms,
-          "timeout_override_reason" => nil,
+          "timeout_override_reason" => manifest.timeout_override_reason,
           "reason_codes" => []
         }
       end)
@@ -1615,7 +1695,15 @@ defmodule NewYou.Proof.SelfTest do
       callback: fn -> :ok end
     }
 
-  defp case_result(manifest, status, verdict, assertion_ids, reason_codes, observations \\ nil) do
+  defp case_result(
+         manifest,
+         status,
+         verdict,
+         assertion_ids,
+         reason_codes,
+         observations \\ nil,
+         duration_ms \\ 0
+       ) do
     %{
       "case_id" => manifest.case_id,
       "invariant_id" => manifest.invariant_id,
@@ -1628,9 +1716,9 @@ defmodule NewYou.Proof.SelfTest do
       "observations" => case_observations(verdict, assertion_ids, observations),
       "assertion_ids" => assertion_ids,
       "assertions_executed" => length(assertion_ids),
-      "duration_ms" => 0,
+      "duration_ms" => duration_ms,
       "timeout_ms" => manifest.timeout_ms,
-      "timeout_override_reason" => nil,
+      "timeout_override_reason" => Map.get(manifest, :timeout_override_reason),
       "reason_codes" => reason_codes
     }
   end

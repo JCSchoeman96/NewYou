@@ -250,6 +250,8 @@ defmodule NewYou.Proof.Catalog do
   end
 
   defp self_test_manifest(case_id, cut_point) do
+    {timeout_ms, timeout_override_reason} = self_test_timeout(case_id)
+
     base = %{
       coverage_id: "harness",
       case_id: case_id,
@@ -265,13 +267,22 @@ defmodule NewYou.Proof.Catalog do
       boundary: "test_infrastructure",
       cut_point: cut_point,
       assertion_ids: [case_id <> ".verified"],
-      timeout_ms: 10_000,
+      timeout_ms: timeout_ms,
+      timeout_override_reason: timeout_override_reason,
       expected:
         "the registered P8-04 infrastructure check completes and its required assertion matches"
     }
 
     Map.put(base, :digest, digest(base))
   end
+
+  defp self_test_timeout("result.broken_invariant_exit"),
+    do: {60_000, "nested proof CLI subprocess"}
+
+  defp self_test_timeout("production.exclusion"),
+    do: {240_000, "isolated production build and runtime probe"}
+
+  defp self_test_timeout(_case_id), do: {10_000, nil}
 
   defp known_manifest("harness", case_id),
     do: Enum.find(required().self_test.cases, &(&1.case_id == case_id))

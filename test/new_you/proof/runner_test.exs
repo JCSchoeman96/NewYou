@@ -206,18 +206,49 @@ defmodule NewYou.Proof.RunnerTest do
 
       {stdout, exit_code} = run_fixture_cli("result.callback_failures", fixture, output)
 
-      assert exit_code == 1, stdout
+      expected_exit_code = if fixture == "callback_timeout", do: 2, else: 1
+      assert exit_code == expected_exit_code, stdout
       refute String.contains?(stdout, "synthetic-secret-canary")
       assert {:ok, artifact} = output |> File.read!() |> Jason.decode()
       [entry] = artifact["results"]
       [case_result] = entry["cases"]
       assert artifact["overall_verdict"] == "FAIL"
-      assert artifact["exit_code"] == 1
+      assert artifact["exit_code"] == expected_exit_code
       assert case_result["case_id"] == "result.callback_failures"
       assert case_result["invariant_id"] == "result.callback_failures"
       assert case_result["status"] == status
       assert reason in case_result["reason_codes"]
     end
+  end
+
+  test "self-test case callbacks stop at their manifest deadline and record duration" do
+    parent = self()
+    reference = make_ref()
+    case_id = "result.callback_failures"
+
+    callback = fn ->
+      child =
+        spawn_link(fn ->
+          receive do
+            :release -> :ok
+          end
+        end)
+
+      send(parent, {reference, child})
+      Process.sleep(10_100)
+      :ok
+    end
+
+    {[case_result], cleanup} =
+      SelfTest.run([case_id], callback_overrides: %{case_id => callback})
+
+    assert_receive {^reference, child}
+    assert case_result["status"] == "timeout", inspect({case_result, cleanup})
+    assert case_result["verdict"] == "FAIL"
+    assert "timeout.expired" in case_result["reason_codes"]
+    assert case_result["duration_ms"] >= case_result["timeout_ms"]
+    assert cleanup["verdict"] == "PASS"
+    refute Process.alive?(child)
   end
 
   test "canonical CLI reports cleanup and output failures with exit 2" do

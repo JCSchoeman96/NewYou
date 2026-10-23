@@ -1,6 +1,8 @@
 Code.require_file("../../proof/self_test.exs", __DIR__)
 
 defmodule NewYou.Proof.Runner do
+  @external_resource Path.expand("../../proof/self_test.exs", __DIR__)
+
   @moduledoc """
   Deterministic P8-04 proof runner. Coverage completeness comes from compiled
   manifests; the current catalog contains no business manifests.
@@ -789,6 +791,7 @@ defmodule NewYou.Proof.Runner do
 
     cleanup_ok? = cleanup["verdict"] == "PASS"
     selected_pass? = results != [] and Enum.all?(results, &(&1["verdict"] == "PASS"))
+    timed_out? = results_include_timeout?(results)
 
     {verdict, exit_code} =
       overall_verdict(
@@ -796,7 +799,8 @@ defmodule NewYou.Proof.Runner do
         cleanup_ok?,
         source_changed?,
         dirty_full?,
-        selected_pass?
+        selected_pass?,
+        timed_out?
       )
 
     reason_codes =
@@ -805,7 +809,8 @@ defmodule NewYou.Proof.Runner do
         cleanup_ok?,
         source_changed?,
         dirty_full?,
-        selected_pass?
+        selected_pass?,
+        timed_out?
       )
 
     result_document(mode, results, cleanup, metadata, verdict, exit_code, reason_codes)
@@ -816,10 +821,12 @@ defmodule NewYou.Proof.Runner do
          cleanup_ok?,
          source_changed?,
          dirty_full?,
-         selected_pass?
+         selected_pass?,
+         timed_out?
        ) do
     cond do
       not metadata_complete? or not cleanup_ok? or source_changed? or dirty_full? -> {"FAIL", 2}
+      timed_out? -> {"FAIL", 2}
       not selected_pass? -> {"FAIL", 1}
       true -> {"PASS", 0}
     end
@@ -830,14 +837,22 @@ defmodule NewYou.Proof.Runner do
          cleanup_ok?,
          source_changed?,
          dirty_full?,
-         selected_pass?
+         selected_pass?,
+         timed_out?
        ) do
     []
     |> add_reason(not metadata_complete?, "metadata.unavailable")
     |> add_reason(source_changed?, "source.changed")
     |> add_reason(dirty_full?, "source.dirty")
     |> add_reason(not cleanup_ok?, "cleanup.failed")
+    |> add_reason(timed_out?, "timeout.expired")
     |> add_reason(not selected_pass?, "coverage.incomplete")
+  end
+
+  defp results_include_timeout?(results) do
+    Enum.any?(results, fn result ->
+      Enum.any?(result["cases"] || [], &(&1["status"] == "timeout"))
+    end)
   end
 
   defp result_document(mode, results, cleanup, metadata, verdict, exit_code, reason_codes) do

@@ -37,6 +37,23 @@ defmodule NewYou.Proof.CatalogTest do
            end)
   end
 
+  test "slow self-test subprocesses declare explicit bounded timeout overrides" do
+    manifests = Map.new(Catalog.required().self_test.cases, &{&1.case_id, &1})
+
+    assert manifests["result.broken_invariant_exit"].timeout_ms == 60_000
+
+    assert manifests["result.broken_invariant_exit"].timeout_override_reason ==
+             "nested proof CLI subprocess"
+
+    assert manifests["production.exclusion"].timeout_ms == 240_000
+
+    assert manifests["production.exclusion"].timeout_override_reason ==
+             "isolated production build and runtime probe"
+
+    assert manifests["cut.raise.transaction.before_commit"].timeout_ms == 10_000
+    assert manifests["cut.raise.transaction.before_commit"].timeout_override_reason == nil
+  end
+
   test "manifest lookup distinguishes unavailable inventory from unknown identifiers" do
     assert {:error, :unknown_coverage} = Catalog.lookup_manifest("unknown", "case.one")
 

@@ -875,6 +875,15 @@ defmodule NewYou.Proof.Result do
       value(case_data, "race_id") != Map.get(manifest, :race_id),
       :case_race_mismatch
     )
+    |> maybe_error(
+      value(case_data, "timeout_ms") != Map.get(manifest, :timeout_ms),
+      :case_timeout_mismatch
+    )
+    |> maybe_error(
+      value(case_data, "timeout_override_reason") !=
+        Map.get(manifest, :timeout_override_reason),
+      :case_timeout_override_mismatch
+    )
   end
 
   defp invalid_case_pass?("PASS", status, count, assertion_ids),
@@ -919,6 +928,7 @@ defmodule NewYou.Proof.Result do
     |> add_errors(validate_failure_reason(result))
     |> add_errors(validate_metadata_claim(result))
     |> add_errors(validate_cleanup_exit(result))
+    |> add_errors(validate_timeout_failure(result))
     |> add_errors(validate_overall_pass(result))
     |> add_errors(validate_source_state(result, mode))
   end
@@ -938,6 +948,29 @@ defmodule NewYou.Proof.Result do
        do: [:cleanup_failure_mismatch],
        else: []
   end
+
+  defp validate_timeout_failure(result) do
+    timed_out? =
+      case value(result, "results") do
+        results when is_list(results) -> Enum.any?(results, &contains_timeout_case?/1)
+        _ -> false
+      end
+
+    if timed_out? and
+         (value(result, "overall_verdict") != "FAIL" or value(result, "exit_code") != 2 or
+            "timeout.expired" not in (value(result, "reason_codes") || [])),
+       do: [:timeout_failure_mismatch],
+       else: []
+  end
+
+  defp contains_timeout_case?(entry) when is_map(entry) do
+    case value(entry, "cases") do
+      cases when is_list(cases) -> Enum.any?(cases, &(value(&1, "status") == "timeout"))
+      _ -> false
+    end
+  end
+
+  defp contains_timeout_case?(_entry), do: false
 
   defp validate_verdict_exit(result) do
     overall = value(result, "overall_verdict")
@@ -991,7 +1024,8 @@ defmodule NewYou.Proof.Result do
   end
 
   defp validate_overall_pass(result) do
-    passing_checks? = Enum.all?(value(result, "results") || [], &(value(&1, "verdict") == "PASS"))
+    results = value(result, "results") || []
+    passing_checks? = results != [] and Enum.all?(results, &(value(&1, "verdict") == "PASS"))
     cleanup = value(result, "cleanup") || %{}
 
     cleanup_pass? =
