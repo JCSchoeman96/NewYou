@@ -20,6 +20,8 @@ A required lane failure still blocks merge. The required aggregate does not depe
 
 Governance-sensitive, mixed or unknown pull-request changes still automatically start Foundation Full. That cold historical suite is retained as non-blocking evidence rather than a merge-critical dependency.
 
+Routing is path-specific. `docs/00_platform/**`, `tests/**`, `tools/foundation_integrity_*` and the explicit Foundation workflows remain governance-sensitive. Known engineering and execution documentation under `docs/development/**`, `docs/superpowers/**` and `docs/execution/**` runs through Application CI. Unclassified paths, including other `docs/**` paths, fail closed to Foundation Full.
+
 A new commit on the same pull request cancels the superseded Foundation Integrity workflow run so obsolete cold verification does not queue behind current work.
 
 Foundation Full remains available independently for deliberate exact-SHA certification through its own `workflow_dispatch` input. Nightly hardening on `main` continues to run Foundation Full plus `mix check.deep` on fresh runners.
