@@ -7,6 +7,8 @@ defmodule NewYou.Proof.Concurrent do
 
   @default_timeout 5_000
   @cleanup_timeout 5_000
+  @observer_response_grace 250
+  @observer_query_margin 250
 
   @spec run(Scenario.t(), %{required(Scenario.worker_label()) => (-> term())}, keyword()) ::
           {:ok, map()} | {:error, map()}
@@ -48,6 +50,9 @@ defmodule NewYou.Proof.Concurrent do
 
       fixture == :contention ->
         run_contention(scenario, timeout)
+
+      fixture == :nonblocking ->
+        run_contention(scenario, timeout, :nonblocking)
 
       fixture == :shared_connection ->
         shared_connection_fixture(scenario, timeout)
@@ -418,7 +423,9 @@ defmodule NewYou.Proof.Concurrent do
     end
   end
 
-  defp run_contention(scenario, timeout) do
+  defp run_contention(scenario, timeout), do: run_contention(scenario, timeout, :contention)
+
+  defp run_contention(scenario, timeout, fixture) do
     parent = self()
     run_id = lock_key(scenario.reference)
     lock_parts = lock_parts(run_id)
@@ -434,12 +441,12 @@ defmodule NewYou.Proof.Concurrent do
 
     worker_a =
       Scenario.spawn(scenario, :a, fn ->
-        contention_owner(parent, run_id, a_started, a_ready, deadline)
+        contention_owner(parent, run_id, a_started, a_ready, deadline, fixture)
       end)
 
     worker_b =
       Scenario.spawn(scenario, :b, fn ->
-        contention_waiter(parent, run_id, b_started, b_ready, deadline)
+        contention_waiter(parent, run_id, b_started, b_ready, deadline, fixture)
       end)
 
     with {:ok, observer_identity} <- await_phase(observer_ready, deadline),
@@ -461,6 +468,7 @@ defmodule NewYou.Proof.Concurrent do
             actor_backend_pids: [a_connection.backend_pid, b_connection.backend_pid],
             worker_a: worker_a,
             worker_b: worker_b,
+            fixture: fixture,
             deadline: deadline
           }
 
@@ -485,61 +493,113 @@ defmodule NewYou.Proof.Concurrent do
   end
 
   defp contention_after_start(context, b_started, a) do
-    %{scenario: scenario, run_id: run_id, lock_parts: lock_parts} = context
-    %{observer: observer, observer_backend_pid: observer_backend_pid} = context
+    %{scenario: scenario, lock_parts: lock_parts, deadline: deadline} = context
+    %{observer: observer} = context
     %{actor_backend_pids: actor_backend_pids} = context
-    %{worker_a: worker_a, worker_b: worker_b, deadline: deadline} = context
 
     with {:ok, b} <- await_phase(b_started, deadline),
          true <- a.backend_pid != b.backend_pid,
-         true <- a.transaction_id != b.transaction_id,
-         :ok <- observe_blocking(observer, b.backend_pid, a.backend_pid, deadline) do
-      send(a.pid, {:release_lock, run_id})
+         true <- a.transaction_id != b.transaction_id do
+      case observe_blocking(observer, b.backend_pid, a.backend_pid, deadline) do
+        :ok ->
+          complete_contention(context, a, b)
 
-      with :ok <- await_transaction(elem(worker_a, 0), :a, {:ok, :released}, deadline),
-           :ok <- await_transaction(elem(worker_b, 0), :b, {:ok, :ok}, deadline),
-           :ok <- await_completion(worker_a, deadline),
-           :ok <- await_completion(worker_b, deadline),
-           :ok <-
-             verify_observer_cleanup(
-               observer,
-               observer_backend_pid,
-               lock_parts,
-               [a.backend_pid, b.backend_pid],
-               deadline
-             ),
-           :ok <- await_completion(observer, deadline) do
-        {:ok,
-         %{
-           contention_observed: true,
-           backend_pids: %{a: a.backend_pid, b: b.backend_pid},
-           transaction_ids: %{a: a.transaction_id, b: b.transaction_id},
-           acquisition_order: [:a, :b],
-           cleanup: %{confirmed: true, locks_remaining: 0, active_transactions: 0}
-         }}
-      else
         error ->
-          contention_failure(
-            scenario,
-            lock_parts,
-            error,
-            observer,
-            actor_backend_pids
-          )
+          contention_observation_failed(context, a, b, error)
       end
     else
       false ->
-        contention_failure(
-          scenario,
-          lock_parts,
-          :shared_identity,
-          observer,
-          actor_backend_pids
-        )
+        contention_failure(scenario, lock_parts, :shared_identity, observer, actor_backend_pids)
 
       error ->
         contention_failure(scenario, lock_parts, error, observer, actor_backend_pids)
     end
+  end
+
+  defp contention_observation_failed(context, a, b, error) do
+    if context.fixture == :nonblocking do
+      reject_nonblocking_contention(context, a, b, error)
+    else
+      contention_failure(
+        context.scenario,
+        context.lock_parts,
+        error,
+        context.observer,
+        context.actor_backend_pids
+      )
+      |> add_observed_transaction_identity(context, a, b)
+    end
+  end
+
+  defp complete_contention(context, a, b) do
+    %{scenario: scenario, run_id: run_id, lock_parts: lock_parts} = context
+    %{observer: observer, observer_backend_pid: observer_backend_pid} = context
+    %{actor_backend_pids: actor_backend_pids, deadline: deadline} = context
+    %{worker_a: worker_a, worker_b: worker_b} = context
+
+    send(a.pid, {:release_lock, run_id})
+    if context.fixture == :nonblocking, do: send(b.pid, {:release_nonblocking, run_id})
+
+    with :ok <- await_transaction(elem(worker_a, 0), :a, {:ok, :released}, deadline),
+         :ok <- await_transaction(elem(worker_b, 0), :b, {:ok, :ok}, deadline),
+         :ok <- await_completion(worker_a, deadline),
+         :ok <- await_completion(worker_b, deadline),
+         :ok <-
+           verify_observer_cleanup(
+             observer,
+             observer_backend_pid,
+             lock_parts,
+             [a.backend_pid, b.backend_pid],
+             deadline
+           ),
+         :ok <- await_completion(observer, deadline) do
+      {:ok,
+       %{
+         contention_observed: true,
+         backend_pids: %{a: a.backend_pid, b: b.backend_pid},
+         transaction_ids: %{a: a.transaction_id, b: b.transaction_id},
+         acquisition_order: [:a, :b],
+         cleanup: %{confirmed: true, locks_remaining: 0, active_transactions: 0}
+       }}
+    else
+      error ->
+        contention_failure(scenario, lock_parts, error, observer, actor_backend_pids)
+    end
+  end
+
+  defp reject_nonblocking_contention(context, a, b, observation_error) do
+    %{scenario: scenario, run_id: run_id, lock_parts: lock_parts} = context
+    %{observer: observer, actor_backend_pids: actor_backend_pids} = context
+    %{worker_a: worker_a, worker_b: worker_b} = context
+    cleanup_deadline = now_ms() + @cleanup_timeout
+
+    send(a.pid, {:release_lock, run_id})
+    send(b.pid, {:release_nonblocking, run_id})
+
+    actor_cleanup =
+      with :ok <- await_transaction(elem(worker_a, 0), :a, {:ok, :released}, cleanup_deadline),
+           :ok <- await_transaction(elem(worker_b, 0), :b, {:ok, :ok}, cleanup_deadline),
+           :ok <- await_completion(worker_a, cleanup_deadline),
+           do: await_completion(worker_b, cleanup_deadline)
+
+    reason = if actor_cleanup == :ok, do: observation_error, else: actor_cleanup
+
+    contention_failure(scenario, lock_parts, reason, observer, actor_backend_pids)
+    |> add_observed_transaction_identity(context, a, b)
+  end
+
+  defp add_observed_transaction_identity({:error, failure}, context, a, b) do
+    {:error,
+     Map.merge(failure, %{
+       backend_pids: %{
+         a: a.backend_pid,
+         b: b.backend_pid,
+         observer: context.observer_backend_pid
+       },
+       transaction_ids: %{a: a.transaction_id, b: b.transaction_id},
+       overlap_observed: true,
+       contention_observed: false
+     })}
   end
 
   defp observer_worker(parent, ready_ref) do
@@ -588,7 +648,7 @@ defmodule NewYou.Proof.Concurrent do
     |> length() == length(identities)
   end
 
-  defp contention_owner(parent, run_id, phase_ref, ready_ref, deadline) do
+  defp contention_owner(parent, run_id, phase_ref, ready_ref, deadline, fixture) do
     case checkout_worker() do
       :ok ->
         send(parent, {ready_ref, %{backend_pid: backend_pid(), pid: self()}})
@@ -596,10 +656,18 @@ defmodule NewYou.Proof.Concurrent do
         transaction_result =
           receive do
             {:begin_transaction, ^run_id} ->
+              transaction_timeout =
+                if fixture == :nonblocking, do: 30_000, else: max(deadline - now_ms(), 1)
+
               NewYou.Repo.transaction(
                 fn ->
                   remaining = max(deadline - now_ms(), 1)
-                  :ok = query_ok("SELECT pg_advisory_xact_lock($1::bigint)", [run_id], remaining)
+
+                  if fixture == :contention do
+                    :ok =
+                      query_ok("SELECT pg_advisory_xact_lock($1::bigint)", [run_id], remaining)
+                  end
+
                   identity = transaction_identity(remaining)
 
                   send(
@@ -614,7 +682,7 @@ defmodule NewYou.Proof.Concurrent do
                     30_000 -> NewYou.Repo.rollback(:owner_timeout)
                   end
                 end,
-                timeout: max(deadline - now_ms(), 1)
+                timeout: transaction_timeout
               )
           after
             max(deadline - now_ms(), 0) -> {:error, :start_timeout}
@@ -627,7 +695,7 @@ defmodule NewYou.Proof.Concurrent do
     end
   end
 
-  defp contention_waiter(parent, run_id, phase_ref, ready_ref, deadline) do
+  defp contention_waiter(parent, run_id, phase_ref, ready_ref, deadline, fixture) do
     case checkout_worker() do
       :ok ->
         send(parent, {ready_ref, %{backend_pid: backend_pid(), pid: self()}})
@@ -635,16 +703,21 @@ defmodule NewYou.Proof.Concurrent do
         transaction_result =
           receive do
             {:begin_transaction, ^run_id} ->
+              transaction_timeout =
+                if fixture == :nonblocking, do: 30_000, else: max(deadline - now_ms(), 1)
+
               NewYou.Repo.transaction(
                 fn ->
                   remaining = max(deadline - now_ms(), 1)
 
-                  :ok =
-                    query_ok(
-                      "SELECT set_config('lock_timeout', $1, true)",
-                      ["#{remaining}ms"],
-                      remaining
-                    )
+                  if fixture == :contention do
+                    :ok =
+                      query_ok(
+                        "SELECT set_config('lock_timeout', $1, true)",
+                        ["#{remaining}ms"],
+                        remaining
+                      )
+                  end
 
                   identity = transaction_identity(remaining)
 
@@ -654,9 +727,18 @@ defmodule NewYou.Proof.Concurrent do
                      %{backend_pid: backend_pid(), transaction_id: identity, pid: self()}}
                   )
 
-                  :ok = query_ok("SELECT pg_advisory_xact_lock($1::bigint)", [run_id], remaining)
+                  if fixture == :contention do
+                    :ok =
+                      query_ok("SELECT pg_advisory_xact_lock($1::bigint)", [run_id], remaining)
+                  else
+                    receive do
+                      {:release_nonblocking, ^run_id} -> :ok
+                    after
+                      30_000 -> NewYou.Repo.rollback(:nonblocking_timeout)
+                    end
+                  end
                 end,
-                timeout: max(deadline - now_ms(), 1)
+                timeout: transaction_timeout
               )
           after
             max(deadline - now_ms(), 0) -> {:error, :start_timeout}
@@ -700,7 +782,7 @@ defmodule NewYou.Proof.Concurrent do
     request_ref = make_ref()
     send(observer_pid, {:observe_blocking, request_ref, blocked_pid, blocker_pid, deadline})
 
-    case await_phase(request_ref, deadline) do
+    case await_phase(request_ref, deadline + @observer_response_grace) do
       {:ok, :ok} -> :ok
       {:ok, error} -> error
       error -> error
@@ -708,20 +790,20 @@ defmodule NewYou.Proof.Concurrent do
   end
 
   defp poll_blocking(blocked_pid, blocker_pid, deadline) do
-    case blocking_now(blocked_pid, blocker_pid, deadline) do
-      true ->
-        :ok
+    if now_ms() >= deadline - @observer_query_margin do
+      {:error, :contention_not_observed}
+    else
+      case blocking_now(blocked_pid, blocker_pid, deadline) do
+        true ->
+          :ok
 
-      false ->
-        if now_ms() < deadline do
+        false ->
           Process.sleep(10)
           poll_blocking(blocked_pid, blocker_pid, deadline)
-        else
-          {:error, :contention_not_observed}
-        end
 
-      {:error, _reason} ->
-        {:error, :contention_not_observed}
+        {:error, :observer_query_failed} = error ->
+          error
+      end
     end
   end
 

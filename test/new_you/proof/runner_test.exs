@@ -504,6 +504,10 @@ defmodule NewYou.Proof.RunnerTest do
         SelfTest.expect_manifest!(List.last(assertion_ids), :beta, :beta)
         SelfTest.expect_manifest!("dual.gamma", :gamma, :gamma)
       end,
+      fn ->
+        SelfTest.expect_manifest!(hd(assertion_ids), :alpha, :alpha)
+        throw(:callback_threw_after_first_assertion)
+      end,
       fn -> :PASS end,
       fn -> %{"verdict" => "PASS", "assertions_executed" => 2} end
     ]

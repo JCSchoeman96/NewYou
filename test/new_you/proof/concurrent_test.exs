@@ -342,6 +342,21 @@ defmodule NewYou.Proof.ConcurrentTest do
     assert :ok = Scenario.stop(scenario)
   end
 
+  test "infrastructure fixture rejects overlapping independent transactions without blocking" do
+    scenario = Scenario.start()
+
+    assert {:error, result} =
+             Concurrent.infrastructure_fixture(scenario, fixture: :nonblocking, timeout: 2_000)
+
+    assert result.reason == :contention_not_observed
+    assert Map.fetch!(result, :overlap_observed)
+    refute result.contention_observed
+    assert length(Map.values(result.backend_pids) |> Enum.uniq()) == 3
+    assert result.transaction_ids.a != result.transaction_ids.b
+    assert result.cleanup.confirmed, inspect(result)
+    assert :ok = Scenario.stop(scenario)
+  end
+
   test "infrastructure fixture rejects Sandbox.allow shared ownership" do
     scenario = Scenario.start()
 
