@@ -25,6 +25,9 @@ defmodule NewYou.Proof.Runner do
     cleanup_failure: {"provider.authentication_fixtures", "cleanup_failure"}
   }
 
+  @self_test_options [:root]
+  @diagnostic_options [:root, :case_ids, :fixture]
+
   @spec parse_args([String.t()]) ::
           {:ok,
            %{mode: atom(), output: String.t(), case_ids: [String.t()], fixture: atom() | nil}}
@@ -45,39 +48,66 @@ defmodule NewYou.Proof.Runner do
   @spec run(Result.mode(), keyword()) :: map()
   def run(mode, opts \\ [])
 
-  def run(mode, opts) when mode in [:harness_self_test, :tb001, :diagnostic] do
-    root = Keyword.get(opts, :root, File.cwd!())
+  def run(:tb001, []) do
+    case executing_project_root() do
+      root when is_binary(root) ->
+        run_with_metadata(:tb001, root, fn -> run_full_catalog() end)
 
-    if valid_run_fixture?(mode, opts) do
-      before = capture_metadata(root)
-
-      {results, cleanup} =
-        case mode do
-          :tb001 ->
-            run_full_catalog(opts)
-
-          :harness_self_test ->
-            run_self_test(self_test_case_ids(), root)
-
-          :diagnostic ->
-            run_self_test(diagnostic_case_ids(opts), root, Keyword.get(opts, :fixture))
-        end
-
-      after_run = capture_source(root)
-      metadata = combine_metadata(before, after_run)
-      build_result(mode, results, cleanup, metadata)
-    else
-      failure_envelope(mode, root, "runner.invalid_fixture")
+      _ ->
+        failure_envelope(:tb001, nil, "runner.project_unavailable")
     end
   rescue
-    _error ->
-      failure_envelope(mode, Keyword.get(opts, :root, File.cwd!()), "runner.failure")
+    _error -> failure_envelope(:tb001, executing_project_root(), "runner.failure")
   catch
-    _kind, _reason ->
-      failure_envelope(mode, Keyword.get(opts, :root, File.cwd!()), "runner.failure")
+    _kind, _reason -> failure_envelope(:tb001, executing_project_root(), "runner.failure")
   end
 
+  def run(:tb001, _opts),
+    do: failure_envelope(:tb001, executing_project_root(), "runner.unsupported_option")
+
+  def run(mode, opts) when mode in [:harness_self_test, :diagnostic] and is_list(opts) do
+    root = option_root(opts)
+
+    cond do
+      not valid_run_options?(mode, opts) ->
+        failure_envelope(mode, root, "runner.unsupported_option")
+
+      not valid_run_fixture?(mode, opts) ->
+        failure_envelope(mode, root, "runner.invalid_fixture")
+
+      true ->
+        run_mode(mode, opts, root)
+    end
+  rescue
+    _error -> failure_envelope(mode, option_root(opts), "runner.failure")
+  catch
+    _kind, _reason -> failure_envelope(mode, option_root(opts), "runner.failure")
+  end
+
+  def run(mode, _opts) when mode in [:harness_self_test, :diagnostic],
+    do: failure_envelope(mode, File.cwd!(), "runner.unsupported_option")
+
   def run(_mode, _opts), do: failure_envelope(:diagnostic, File.cwd!(), "runner.invalid_mode")
+
+  defp run_with_metadata(mode, root, execute) do
+    before = capture_metadata(root)
+    {results, cleanup} = execute.()
+    after_run = capture_source(root)
+    metadata = combine_metadata(before, after_run)
+    build_result(mode, results, cleanup, metadata)
+  end
+
+  defp run_mode(:harness_self_test, _opts, root) do
+    run_with_metadata(:harness_self_test, root, fn ->
+      run_self_test(self_test_case_ids(), root)
+    end)
+  end
+
+  defp run_mode(:diagnostic, opts, root) do
+    run_with_metadata(:diagnostic, root, fn ->
+      run_self_test(diagnostic_case_ids(opts), root, Keyword.get(opts, :fixture))
+    end)
+  end
 
   @doc false
   @spec evaluate_full(map(), [map()], boolean(), map()) :: map()
@@ -201,13 +231,9 @@ defmodule NewYou.Proof.Runner do
     {results, cleanup}
   end
 
-  defp run_full_catalog(opts) do
-    manifests =
-      Keyword.get(opts, :business_manifests, Catalog.required().business_manifests)
-
-    registrations =
-      Keyword.get(opts, :business_registrations, Catalog.compiled_business_registrations())
-
+  defp run_full_catalog do
+    manifests = Catalog.required().business_manifests
+    registrations = Catalog.compiled_business_registrations()
     execute_full_catalog(manifests, registrations)
   end
 
@@ -575,7 +601,12 @@ defmodule NewYou.Proof.Runner do
     with {:ok, %{mode: mode, output: output, case_ids: case_ids, fixture: fixture}} <-
            parse_args(args),
          true <- Mix.env() == :test do
-      result = run(mode, case_ids: case_ids, fixture: fixture)
+      result =
+        case mode do
+          :tb001 -> run(:tb001)
+          :harness_self_test -> run(:harness_self_test)
+          :diagnostic -> run(:diagnostic, case_ids: case_ids, fixture: fixture)
+        end
 
       case Result.validate(result, mode: mode) do
         :ok ->
@@ -697,6 +728,33 @@ defmodule NewYou.Proof.Runner do
           nil ->
             false
         end
+    end
+  end
+
+  defp valid_run_options?(mode, opts) do
+    allowed =
+      case mode do
+        :harness_self_test -> @self_test_options
+        :diagnostic -> @diagnostic_options
+      end
+
+    if Keyword.keyword?(opts) do
+      keys = Keyword.keys(opts)
+
+      length(keys) == length(Enum.uniq(keys)) and Enum.all?(keys, &(&1 in allowed))
+    else
+      false
+    end
+  end
+
+  defp option_root(opts) do
+    if Keyword.keyword?(opts), do: Keyword.get(opts, :root, File.cwd!()), else: File.cwd!()
+  end
+
+  defp executing_project_root do
+    case Mix.Project.project_file() do
+      path when is_binary(path) -> path |> Path.dirname() |> Path.expand()
+      _ -> nil
     end
   end
 
@@ -961,7 +1019,7 @@ defmodule NewYou.Proof.Runner do
         else: []
 
     build_result(mode, failure_results, failure_cleanup(), metadata)
-    |> Map.put("reason_codes", [reason, "metadata.unavailable"])
+    |> Map.update!("reason_codes", &Enum.uniq([reason | &1]))
     |> Map.put("exit_code", 2)
   rescue
     _ -> %{}

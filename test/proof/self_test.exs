@@ -32,37 +32,11 @@ defmodule NewYou.Proof.SelfTest do
   def finalize_cleanup(cleanup) when is_map(cleanup), do: cleanup_result(cleanup)
 
   @doc false
-  @spec assert_manifest_pass() :: :ok
-  def assert_manifest_pass do
+  @spec expect_manifest!(String.t(), term(), term()) :: term()
+  def expect_manifest!(assertion_id, observed, expected) when is_binary(assertion_id) do
     case Process.get(@assertion_context_key) do
       {scenario, case_id, assertion_ids} when is_list(assertion_ids) ->
-        Enum.each(assertion_ids, &Result.expect!(scenario, case_id, &1, true, true))
-        :ok
-
-      {scenario, case_id, assertion_id} when is_binary(assertion_id) ->
-        Result.expect!(scenario, case_id, assertion_id, true, true)
-        :ok
-
-      _ ->
-        raise RuntimeError, "proof assertion context missing"
-    end
-  end
-
-  @doc false
-  @spec assert_manifest_assertion(String.t()) :: :ok
-  def assert_manifest_assertion(assertion_id) when is_binary(assertion_id) do
-    case Process.get(@assertion_context_key) do
-      {scenario, case_id, assertion_ids} when is_list(assertion_ids) ->
-        if assertion_id in assertion_ids do
-          Result.expect!(scenario, case_id, assertion_id, true, true)
-          :ok
-        else
-          raise RuntimeError, "proof assertion not required by manifest"
-        end
-
-      {scenario, case_id, id} when id == assertion_id ->
-        Result.expect!(scenario, case_id, assertion_id, true, true)
-        :ok
+        Result.expect!(scenario, case_id, assertion_id, observed, expected)
 
       _ ->
         raise RuntimeError, "proof assertion context missing"
@@ -123,18 +97,7 @@ defmodule NewYou.Proof.SelfTest do
   defp failure_fixture_callback(:callback_throw), do: fn -> throw(:synthetic_throw) end
 
   defp failure_fixture_callback(:callback_timeout) do
-    fn ->
-      task = Task.async(fn -> Process.sleep(1_000) end)
-
-      case Task.yield(task, 10) do
-        nil ->
-          Task.shutdown(task, :brutal_kill)
-          :timeout
-
-        result ->
-          result
-      end
-    end
+    fn -> Process.sleep(11_000) end
   end
 
   defp register_probes(manifests) do
@@ -269,6 +232,7 @@ defmodule NewYou.Proof.SelfTest do
         outcome =
           try do
             callback.()
+            :ok
           rescue
             _ -> :probe_exception
           catch
@@ -1958,12 +1922,8 @@ defmodule NewYou.Proof.SelfTest do
 
   defp passed?(condition) do
     case Process.get(@assertion_context_key) do
-      {scenario, case_id, [assertion_id | _]} ->
-        Result.expect!(scenario, case_id, assertion_id, condition === true, true)
-        :ok
-
-      {scenario, case_id, assertion_id} when is_binary(assertion_id) ->
-        Result.expect!(scenario, case_id, assertion_id, condition === true, true)
+      {_scenario, _case_id, [assertion_id | _]} ->
+        expect_manifest!(assertion_id, condition === true, true)
         :ok
 
       _ ->

@@ -1,7 +1,7 @@
 defmodule NewYou.Proof.RunnerTest do
   use ExUnit.Case, async: false
 
-  alias NewYou.Proof.{Catalog, Runner, Scenario, SelfTest}
+  alias NewYou.Proof.{Catalog, Result, Runner, Scenario, SelfTest}
 
   test "CLI parsing accepts the approved modes and requires an output path" do
     for {mode, expected} <- [
@@ -298,25 +298,120 @@ defmodule NewYou.Proof.RunnerTest do
     assert File.read!(existing_output) == "synthetic-secret-canary"
   end
 
-  test "full mode exposes every missing business family and browser spine" do
-    root = clean_git_root()
-    on_exit(fn -> File.rm_rf(root) end)
+  test "canonical TB-001 rejects a caller-supplied complete business catalog" do
+    manifests = executable_fixture_manifests()
+    registrations = executable_fixture_registrations(manifests)
 
-    result = Runner.run(:tb001, root: root)
+    result =
+      Runner.run(:tb001,
+        business_manifests: manifests,
+        business_registrations: registrations
+      )
+
+    assert result["overall_verdict"] == "FAIL"
+    assert result["exit_code"] == 2
+    assert "runner.unsupported_option" in result["reason_codes"]
+    assert length(result["results"]) == length(Catalog.coverage_inventory())
+    assert Enum.all?(result["results"], &(&1["status"] == "missing"))
+    assert Enum.all?(result["results"], &("missing.manifest" in &1["reason_codes"]))
+    assert :ok = Result.validate(result, mode: :tb001)
+  end
+
+  test "canonical TB-001 rejects a business manifest override by itself" do
+    result = Runner.run(:tb001, business_manifests: executable_fixture_manifests())
+
+    assert result["exit_code"] == 2
+    assert "runner.unsupported_option" in result["reason_codes"]
+    assert Enum.all?(result["results"], &(&1["status"] == "missing"))
+  end
+
+  test "canonical TB-001 rejects business registrations by themselves" do
+    manifests = executable_fixture_manifests()
+    registrations = executable_fixture_registrations(manifests)
+
+    result = Runner.run(:tb001, business_registrations: registrations)
+
+    assert result["exit_code"] == 2
+    assert "runner.unsupported_option" in result["reason_codes"]
+    assert Enum.all?(result["results"], &(&1["status"] == "missing"))
+  end
+
+  test "canonical TB-001 rejects diagnostic-only and unknown runtime options" do
+    for opts <- [
+          [fixture: :broken_invariant],
+          [case_ids: ["cut.raise.transaction.before_commit"]],
+          [unreviewed_option: true]
+        ] do
+      result = Runner.run(:tb001, opts)
+
+      assert result["exit_code"] == 2
+      assert "runner.unsupported_option" in result["reason_codes"]
+    end
+  end
+
+  test "canonical TB-001 rejects an alternate Git root and keeps executing-checkout metadata" do
+    alternate_root = clean_git_root()
+    on_exit(fn -> File.rm_rf(alternate_root) end)
+
+    actual_root = Path.dirname(Mix.Project.project_file())
+    {actual_sha, 0} = System.cmd("git", ["-C", actual_root, "rev-parse", "HEAD"])
+    {alternate_sha, 0} = System.cmd("git", ["-C", alternate_root, "rev-parse", "HEAD"])
+
+    result = Runner.run(:tb001, root: alternate_root)
+
+    assert result["git"]["head_before"] == String.trim(actual_sha)
+    refute result["git"]["head_before"] == String.trim(alternate_sha)
+    assert result["exit_code"] == 2
+    assert "runner.unsupported_option" in result["reason_codes"]
+  end
+
+  test "blanket assertion helpers are absent from the callback API" do
+    Code.ensure_loaded!(SelfTest)
+
+    refute function_exported?(SelfTest, :assert_manifest_pass, 0)
+    refute function_exported?(SelfTest, :assert_manifest_assertion, 1)
+  end
+
+  test "a callback-returned PASS cannot satisfy missing manifest assertions" do
+    coverage_id = hd(Catalog.coverage_inventory())
+    case_id = "returned.pass.case"
+    manifests = %{coverage_id => fixture_manifest(coverage_id, [case_id])}
+
+    for callback <- [
+          fn -> :PASS end,
+          fn -> %{"verdict" => "PASS", "assertions_executed" => 1} end
+        ] do
+      registrations =
+        register_fixture_callbacks(manifests, fn _coverage_id, _case_id -> callback end)
+
+      {results, _cleanup} = Runner.execute_full_catalog(manifests, registrations)
+
+      case_result =
+        results
+        |> Enum.find(&(&1["coverage_id"] == coverage_id))
+        |> Map.fetch!("cases")
+        |> Enum.find(&(&1["case_id"] == case_id))
+
+      assert case_result["verdict"] == "FAIL"
+      assert "assertion.missing" in case_result["reason_codes"]
+    end
+  end
+
+  test "full mode exposes every missing business family and browser spine" do
+    result = Runner.run(:tb001)
 
     assert result["coverage_inventory"] == Catalog.coverage_inventory()
     assert Enum.map(result["results"], & &1["coverage_id"]) == Catalog.coverage_inventory()
-    assert result["metadata_complete"]
-    assert result["cleanup"]["verdict"] == "PASS"
+    assert result["git"]["head_before"] == current_project_sha()
     assert Enum.all?(result["results"], &(&1["status"] == "missing"))
     assert Enum.all?(result["results"], &(&1["verdict"] == "FAIL"))
     assert Enum.all?(result["results"], &("missing.manifest" in &1["reason_codes"]))
     assert result["overall_verdict"] == "FAIL"
-    assert result["exit_code"] == 1
+    assert result["exit_code"] in [1, 2]
     assert "browser_spine" == List.last(Enum.map(result["results"], & &1["coverage_id"]))
   end
 
-  test "canonical full executor runs registered callbacks through the same seam as tb001" do
+  test "synthetic full-catalog executor can pass a complete registered fixture" do
     manifests = executable_fixture_manifests()
     registrations = executable_fixture_registrations(manifests)
 
@@ -338,23 +433,32 @@ defmodule NewYou.Proof.RunnerTest do
 
   test "missing registration surfaces as missing case rather than executed registration failure" do
     coverage_id = hd(Catalog.coverage_inventory())
+    case_ids = ["unregistered.case", "later.case"]
 
     manifests = %{
-      coverage_id => fixture_manifest(coverage_id, ["only.case"])
+      coverage_id => fixture_manifest(coverage_id, case_ids)
     }
 
-    {results, _cleanup} = Runner.execute_full_catalog(manifests, [])
+    registrations =
+      register_fixture_callbacks(manifests, fn _coverage_id, _case_id ->
+        fn -> SelfTest.expect_manifest!("later.case.verified", true, true) end
+      end)
+
+    registrations = Enum.reject(registrations, &(&1.case_id == "unregistered.case"))
+
+    {results, _cleanup} = Runner.execute_full_catalog(manifests, registrations)
 
     entry = Enum.find(results, &(&1["coverage_id"] == coverage_id))
-    case_result = Enum.find(entry["cases"], &(&1["case_id"] == "only.case"))
+    [missing_case, later_case] = entry["cases"]
 
     assert entry["verdict"] == "FAIL"
-    assert case_result["status"] == "missing"
-    assert "missing.case" in case_result["reason_codes"]
-    refute "registration.missing" in case_result["reason_codes"]
+    assert missing_case["status"] == "missing"
+    assert "missing.case" in missing_case["reason_codes"]
+    refute "registration.missing" in missing_case["reason_codes"]
+    assert later_case["status"] == "not_run"
   end
 
-  test "canonical full executor records every required assertion when a case declares more than one" do
+  test "synthetic executor requires explicit observed values for every assertion" do
     coverage_id = hd(Catalog.coverage_inventory())
     assertion_ids = ["dual.alpha.verified", "dual.beta.verified"]
 
@@ -363,47 +467,61 @@ defmodule NewYou.Proof.RunnerTest do
     }
 
     registrations =
-      register_fixture_callbacks(manifests, fn _coverage_id, case_id ->
+      register_fixture_callbacks(manifests, fn _coverage_id, _case_id ->
         fn ->
-          if case_id == "dual.case" do
-            SelfTest.assert_manifest_pass()
-          else
-            SelfTest.assert_manifest_pass()
-          end
+          SelfTest.expect_manifest!(hd(assertion_ids), :observed_alpha, :observed_alpha)
+          SelfTest.expect_manifest!(List.last(assertion_ids), :observed_beta, :observed_beta)
+          :PASS
         end
       end)
 
-    {results, _} = Runner.execute_full_catalog(manifests, registrations)
+    {results, cleanup} = Runner.execute_full_catalog(manifests, registrations)
     entry = Enum.find(results, &(&1["coverage_id"] == coverage_id))
     case_result = Enum.find(entry["cases"], &(&1["case_id"] == "dual.case"))
 
     assert case_result["verdict"] == "PASS"
     assert case_result["assertion_ids"] == assertion_ids
     assert case_result["assertions_executed"] == 2
+    assert cleanup["verdict"] == "PASS"
 
-    partial_registrations =
-      register_fixture_callbacks(manifests, fn _coverage_id, case_id ->
-        fn ->
-          if case_id == "dual.case" do
-            SelfTest.assert_manifest_assertion(hd(assertion_ids))
-          else
-            SelfTest.assert_manifest_pass()
-          end
-        end
-      end)
+    mutations = [
+      fn -> SelfTest.expect_manifest!(hd(assertion_ids), :alpha, :alpha) end,
+      fn -> SelfTest.expect_manifest!(List.last(assertion_ids), :beta, :beta) end,
+      fn ->
+        SelfTest.expect_manifest!(hd(assertion_ids), :wrong, :alpha)
+        SelfTest.expect_manifest!(List.last(assertion_ids), :beta, :beta)
+      end,
+      fn ->
+        SelfTest.expect_manifest!(hd(assertion_ids), :alpha, :alpha)
+        SelfTest.expect_manifest!(List.last(assertion_ids), :wrong, :beta)
+      end,
+      fn ->
+        SelfTest.expect_manifest!(hd(assertion_ids), :alpha, :alpha)
+        SelfTest.expect_manifest!(hd(assertion_ids), :alpha, :alpha)
+      end,
+      fn ->
+        SelfTest.expect_manifest!(hd(assertion_ids), :alpha, :alpha)
+        SelfTest.expect_manifest!(List.last(assertion_ids), :beta, :beta)
+        SelfTest.expect_manifest!("dual.gamma", :gamma, :gamma)
+      end,
+      fn -> :PASS end,
+      fn -> %{"verdict" => "PASS", "assertions_executed" => 2} end
+    ]
 
-    {partial_results, _} = Runner.execute_full_catalog(manifests, partial_registrations)
+    for callback <- mutations do
+      mutation_registrations =
+        register_fixture_callbacks(manifests, fn _coverage_id, _case_id -> callback end)
 
-    partial_case =
-      partial_results
-      |> Enum.find(&(&1["coverage_id"] == coverage_id))
-      |> Map.fetch!("cases")
-      |> Enum.find(&(&1["case_id"] == "dual.case"))
+      {mutation_results, _} = Runner.execute_full_catalog(manifests, mutation_registrations)
 
-    assert partial_case["verdict"] == "FAIL"
+      mutation_case =
+        mutation_results
+        |> Enum.find(&(&1["coverage_id"] == coverage_id))
+        |> Map.fetch!("cases")
+        |> Enum.find(&(&1["case_id"] == "dual.case"))
 
-    assert "assertion.incomplete" in partial_case["reason_codes"] or
-             "assertion.failed" in partial_case["reason_codes"]
+      assert mutation_case["verdict"] == "FAIL"
+    end
   end
 
   test "compiled registration validation fails closed on duplicate and unknown entries" do
@@ -416,18 +534,22 @@ defmodule NewYou.Proof.RunnerTest do
     assert {:error, errors} = Catalog.validate_compiled_registrations(manifests, duplicate)
     assert :duplicate_case in errors
 
-    unknown =
-      Map.put(registration, :coverage_id, "unapproved_family")
+    unknown_case = Map.put(registration, :case_id, "unapproved.case")
 
     assert {:error, [:unknown_case]} =
-             Catalog.validate_compiled_registrations(manifests, [unknown])
+             Catalog.validate_compiled_registrations(manifests, [unknown_case])
+
+    unknown_family = Map.put(registration, :coverage_id, "unapproved_family")
+
+    assert {:error, [:unknown_case]} =
+             Catalog.validate_compiled_registrations(manifests, [unknown_family])
 
     {results, cleanup} = Runner.execute_full_catalog(manifests, duplicate)
     assert cleanup["verdict"] == "FAIL"
     assert Enum.any?(results, &("registration.invalid" in &1["reason_codes"]))
   end
 
-  test "canonical full executor stops at the first failing invariant and marks later work not_run" do
+  test "synthetic full executor stops at the first failed predicate and marks later work not_run" do
     [first_family, second_family | _rest] = Catalog.coverage_inventory()
 
     manifests = %{
@@ -438,23 +560,27 @@ defmodule NewYou.Proof.RunnerTest do
 
     registrations =
       register_fixture_callbacks(manifests, fn _coverage_id, case_id ->
-        if case_id == "first.case" do
-          fn ->
-            SelfTest.assert_manifest_assertion("first.case.verified")
-            :probe_exception
-          end
-        else
-          fn -> SelfTest.assert_manifest_pass() end
+        case case_id do
+          "first.case" ->
+            fn ->
+              SelfTest.expect_manifest!("first.case.verified", :observed, :expected)
+            end
+
+          _ ->
+            fn -> SelfTest.expect_manifest!(case_id <> ".verified", true, true) end
         end
       end)
 
-    {results, _cleanup} = Runner.execute_full_catalog(manifests, registrations)
+    {results, cleanup} = Runner.execute_full_catalog(manifests, registrations)
 
     first_entry = Enum.find(results, &(&1["coverage_id"] == first_family))
     second_entry = Enum.find(results, &(&1["coverage_id"] == second_family))
 
     assert first_entry["verdict"] == "FAIL"
-    assert Enum.find(first_entry["cases"], &(&1["case_id"] == "first.case"))["verdict"] == "FAIL"
+    first_case = Enum.find(first_entry["cases"], &(&1["case_id"] == "first.case"))
+    assert first_case["verdict"] == "FAIL"
+    assert "assertion.failed" in first_case["reason_codes"]
+    assert cleanup["verdict"] == "PASS"
 
     assert Enum.find(first_entry["cases"], &(&1["case_id"] == "later.case"))["status"] ==
              "not_run"
@@ -791,8 +917,8 @@ defmodule NewYou.Proof.RunnerTest do
   defp executable_fixture_manifests, do: full_fixture_manifests()
 
   defp executable_fixture_registrations(manifests) do
-    register_fixture_callbacks(manifests, fn _coverage_id, _case_id ->
-      fn -> SelfTest.assert_manifest_pass() end
+    register_fixture_callbacks(manifests, fn _coverage_id, case_id ->
+      fn -> SelfTest.expect_manifest!(case_id <> ".verified", true, true) end
     end)
   end
 
@@ -942,5 +1068,11 @@ defmodule NewYou.Proof.RunnerTest do
       )
 
     root
+  end
+
+  defp current_project_sha do
+    root = Path.dirname(Mix.Project.project_file())
+    {sha, 0} = System.cmd("git", ["-C", root, "rev-parse", "HEAD"])
+    String.trim(sha)
   end
 end
