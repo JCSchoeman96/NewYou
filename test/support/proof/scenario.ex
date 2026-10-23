@@ -143,7 +143,8 @@ defmodule NewYou.Proof.Scenario do
       guardians: %{},
       cuts: %{},
       failures: [],
-      barriers: %{}
+      barriers: %{},
+      provider_scripts: %{}
     })
   end
 
@@ -191,6 +192,91 @@ defmodule NewYou.Proof.Scenario do
       barrier -> {state, MapSet.to_list(barrier.arrived) |> Enum.sort(), false}
     end
   end
+
+  defp dispatch({:provider_configure, scripts}, caller, _request_ref, state)
+       when caller == state.owner do
+    if map_size(state.provider_scripts) > 0 do
+      {state, {:error, :scripts_already_configured}, false}
+    else
+      scripts =
+        Map.new(scripts, fn {operation_ref, steps} ->
+          {operation_ref, %{steps: steps, index: 0, backlog_released: false}}
+        end)
+
+      {%{state | provider_scripts: scripts}, :ok, false}
+    end
+  end
+
+  defp dispatch({:provider_configure, _scripts}, _caller, _request_ref, state),
+    do: {state, {:error, :owner_only}, false}
+
+  defp dispatch({:provider_next, operation_ref, script_step}, _caller, _request_ref, state) do
+    case Map.get(state.provider_scripts, operation_ref) do
+      nil ->
+        {state, {:error, :unknown_script}, false}
+
+      %{steps: steps, index: index} when index >= length(steps) ->
+        {state, {:error, :script_exhausted}, false}
+
+      %{steps: steps, index: index} = script ->
+        current = Enum.at(steps, index)
+
+        cond do
+          current.step != script_step ->
+            {state, {:error, :script_step_mismatch}, false}
+
+          current.outcome == :backlog and not script.backlog_released ->
+            result = %{
+              operation_ref: operation_ref,
+              step: current.step,
+              outcome: :backlog,
+              released: false
+            }
+
+            {state, {:ok, result}, false}
+
+          true ->
+            result = Map.put(current, :operation_ref, operation_ref)
+            updated = %{script | index: index + 1}
+
+            {%{state | provider_scripts: Map.put(state.provider_scripts, operation_ref, updated)},
+             {:ok, result}, false}
+        end
+    end
+  end
+
+  defp dispatch({:provider_release_backlog, operation_ref}, caller, _request_ref, state)
+       when caller == state.owner do
+    case Map.get(state.provider_scripts, operation_ref) do
+      nil ->
+        {state, {:error, :unknown_script}, false}
+
+      %{steps: steps, index: index} = script when index < length(steps) ->
+        current = Enum.at(steps, index)
+
+        if current.outcome == :backlog do
+          result = %{
+            operation_ref: operation_ref,
+            step: current.step,
+            outcome: :backlog,
+            released: true
+          }
+
+          updated = %{script | index: index + 1, backlog_released: true}
+
+          {%{state | provider_scripts: Map.put(state.provider_scripts, operation_ref, updated)},
+           {:ok, result}, false}
+        else
+          {state, {:error, :not_backlogged}, false}
+        end
+
+      _ ->
+        {state, {:error, :script_exhausted}, false}
+    end
+  end
+
+  defp dispatch({:provider_release_backlog, _operation_ref}, _caller, _request_ref, state),
+    do: {state, {:error, :owner_only}, false}
 
   defp dispatch({:record_failure, failure}, _caller, _request_ref, state),
     do: fail(state, failure, :ok)
