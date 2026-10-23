@@ -88,11 +88,30 @@ defmodule NewYou.Proof.Scenario do
   @spec verify_consumed(t()) :: :ok | {:error, term()}
   def verify_consumed(%__MODULE__{} = scenario), do: request(scenario, :verify_consumed)
 
+  @spec require_assertions(t(), String.t(), [String.t()]) :: :ok | {:error, atom()}
+  def require_assertions(%__MODULE__{} = scenario, case_id, assertion_ids),
+    do: request(scenario, {:require_assertions, case_id, assertion_ids})
+
+  @spec record_assertion(t(), String.t(), String.t(), term(), term()) :: :ok | {:error, atom()}
+  def record_assertion(%__MODULE__{} = scenario, case_id, assertion_id, observed, expected),
+    do: request(scenario, {:record_assertion, case_id, assertion_id, observed, expected})
+
+  @spec assertion_snapshot(t()) ::
+          %{
+            String.t() => %{
+              assertion_ids: [String.t()],
+              failed_ids: [String.t()],
+              count: non_neg_integer()
+            }
+          }
+          | {:error, term()}
+  def assertion_snapshot(%__MODULE__{} = scenario), do: request(scenario, :assertion_snapshot)
+
   @spec owned_processes(t()) :: [{pid(), pid()}] | {:error, term()}
   def owned_processes(%__MODULE__{} = scenario), do: request(scenario, :owned_processes)
 
   @spec request(t(), term()) :: term()
-  @spec request(t(), term(), pos_integer()) :: term()
+  @spec request(t(), term(), term()) :: term()
   def request(scenario, operation, timeout \\ @request_timeout)
 
   def request(%__MODULE__{} = scenario, operation, timeout)
@@ -144,7 +163,8 @@ defmodule NewYou.Proof.Scenario do
       cuts: %{},
       failures: [],
       barriers: %{},
-      provider_scripts: %{}
+      provider_scripts: %{},
+      assertions: %{}
     })
   end
 
@@ -318,6 +338,57 @@ defmodule NewYou.Proof.Scenario do
     {state, children, false}
   end
 
+  defp handle_operation({:require_assertions, case_id, assertion_ids}, caller, state)
+       when caller == state.owner do
+    cond do
+      not valid_assertion_label?(case_id) or not valid_assertion_ids?(assertion_ids) ->
+        fail(state, :invalid_assertion_manifest, {:error, :invalid_assertion_manifest})
+
+      Map.has_key?(state.assertions, case_id) ->
+        fail(state, :duplicate_assertion_manifest, {:error, :duplicate_assertion_manifest})
+
+      true ->
+        ledger = %{required: assertion_ids, entries: []}
+        {%{state | assertions: Map.put(state.assertions, case_id, ledger)}, :ok, false}
+    end
+  end
+
+  defp handle_operation({:require_assertions, _case_id, _assertion_ids}, _caller, state),
+    do: fail(state, :owner_only, {:error, :owner_only})
+
+  defp handle_operation(
+         {:record_assertion, case_id, assertion_id, observed, expected},
+         caller,
+         state
+       ) do
+    cond do
+      not owner_or_worker?(state, caller) ->
+        fail(state, :owner_only, {:error, :owner_only})
+
+      not Map.has_key?(state.assertions, case_id) ->
+        fail(state, :unknown_assertion_case, {:error, :unknown_assertion_case})
+
+      true ->
+        record_required_assertion(state, case_id, assertion_id, observed, expected)
+    end
+  end
+
+  defp handle_operation(:assertion_snapshot, caller, state) when caller == state.owner do
+    snapshot =
+      Map.new(state.assertions, fn {case_id, ledger} ->
+        matched_ids = for %{id: id, matched: true} <- ledger.entries, do: id
+        failed_ids = for %{id: id, matched: false} <- ledger.entries, do: id
+
+        {case_id,
+         %{assertion_ids: matched_ids, failed_ids: failed_ids, count: length(ledger.entries)}}
+      end)
+
+    {state, snapshot, false}
+  end
+
+  defp handle_operation(:assertion_snapshot, _caller, state),
+    do: fail(state, :owner_only, {:error, :owner_only})
+
   defp handle_operation({:arm, name, label, mode}, caller, state) do
     case NewYou.Proof.CutPoints.normalize_name(name) do
       :error ->
@@ -427,6 +498,44 @@ defmodule NewYou.Proof.Scenario do
 
   defp handle_operation(_operation, _caller, state),
     do: fail(state, :invalid_request, {:error, :invalid_request})
+
+  defp record_required_assertion(state, case_id, assertion_id, observed, expected) do
+    ledger = Map.fetch!(state.assertions, case_id)
+
+    cond do
+      assertion_id not in ledger.required ->
+        fail(state, :unknown_assertion, {:error, :unknown_assertion})
+
+      Enum.any?(ledger.entries, &(&1.id == assertion_id)) ->
+        fail(state, :duplicate_assertion, {:error, :duplicate_assertion})
+
+      true ->
+        matched = observed === expected
+        entry = %{id: assertion_id, matched: matched}
+        updated = %{ledger | entries: ledger.entries ++ [entry]}
+        state = %{state | assertions: Map.put(state.assertions, case_id, updated)}
+        assertion_response(state, matched)
+    end
+  end
+
+  defp assertion_response(state, true), do: {state, :ok, false}
+
+  defp assertion_response(state, false),
+    do: fail(state, :assertion_mismatch, {:error, :assertion_mismatch})
+
+  defp owner_or_worker?(state, caller),
+    do: caller == state.owner or match?({:ok, _, _}, worker_for(state, caller))
+
+  defp valid_assertion_ids?(ids) when is_list(ids) and ids != [] do
+    Enum.all?(ids, &valid_assertion_label?/1) and length(ids) == length(Enum.uniq(ids))
+  end
+
+  defp valid_assertion_ids?(_), do: false
+
+  defp valid_assertion_label?(value) when is_binary(value),
+    do: byte_size(value) in 1..128 and Regex.match?(~r/^[A-Za-z0-9_.:-]+$/, value)
+
+  defp valid_assertion_label?(_), do: false
 
   defp handle_barrier_define(phase, participants, timeout, caller, state) do
     case barrier_definition_error(state, phase, participants, timeout, caller) do

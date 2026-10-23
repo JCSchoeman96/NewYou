@@ -1,4 +1,6 @@
-Code.require_file("../../proof/fixtures/provider_fixtures.exs", __DIR__)
+unless Code.ensure_loaded?(NewYou.Proof.ProviderFixtures) do
+  Code.require_file("../../proof/fixtures/provider_fixtures.exs", __DIR__)
+end
 
 defmodule NewYou.Proof.ProviderTest do
   use ExUnit.Case, async: false

@@ -84,9 +84,6 @@ defmodule NewYou.Proof.Concurrent do
 
       {:already, _kind} ->
         {:error, %{reason: :connection_already_owned, cleanup: %{confirmed: false}}}
-
-      _ ->
-        {:error, %{reason: :checkout_failed, cleanup: %{confirmed: false}}}
     end
   end
 
@@ -284,9 +281,6 @@ defmodule NewYou.Proof.Concurrent do
 
       {:already, _kind} ->
         send(parent, {:concurrent_error, self(), label, :connection_already_owned})
-
-      _other ->
-        send(parent, {:concurrent_error, self(), label, {:checkout_failed, :unavailable}})
     end
   end
 
@@ -685,7 +679,6 @@ defmodule NewYou.Proof.Concurrent do
       :ok -> :ok
       {:already, :owner} -> {:error, :connection_already_owned}
       {:already, :allowed} -> {:error, :connection_already_allowed}
-      _ -> {:error, :checkout_failed}
     end
   end
 
