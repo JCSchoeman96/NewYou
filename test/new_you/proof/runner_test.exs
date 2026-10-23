@@ -329,10 +329,102 @@ defmodule NewYou.Proof.RunnerTest do
     assert Enum.all?(results, &(&1["status"] == "completed"))
     assert Enum.all?(results, &(&1["verdict"] == "PASS"))
     assert cleanup["verdict"] == "PASS"
+
     assert Enum.all?(results, fn entry ->
-      [case_result] = entry["cases"]
-      case_result["assertions_executed"] == 1 and case_result["verdict"] == "PASS"
-    end)
+             [case_result] = entry["cases"]
+             case_result["assertions_executed"] == 1 and case_result["verdict"] == "PASS"
+           end)
+  end
+
+  test "missing registration surfaces as missing case rather than executed registration failure" do
+    coverage_id = hd(Catalog.coverage_inventory())
+
+    manifests = %{
+      coverage_id => fixture_manifest(coverage_id, ["only.case"])
+    }
+
+    {results, _cleanup} = Runner.execute_full_catalog(manifests, [])
+
+    entry = Enum.find(results, &(&1["coverage_id"] == coverage_id))
+    case_result = Enum.find(entry["cases"], &(&1["case_id"] == "only.case"))
+
+    assert entry["verdict"] == "FAIL"
+    assert case_result["status"] == "missing"
+    assert "missing.case" in case_result["reason_codes"]
+    refute "registration.missing" in case_result["reason_codes"]
+  end
+
+  test "canonical full executor records every required assertion when a case declares more than one" do
+    coverage_id = hd(Catalog.coverage_inventory())
+    assertion_ids = ["dual.alpha.verified", "dual.beta.verified"]
+
+    manifests = %{
+      coverage_id => fixture_manifest(coverage_id, ["dual.case"], assertion_ids: assertion_ids)
+    }
+
+    registrations =
+      register_fixture_callbacks(manifests, fn _coverage_id, case_id ->
+        fn ->
+          if case_id == "dual.case" do
+            SelfTest.assert_manifest_pass()
+          else
+            SelfTest.assert_manifest_pass()
+          end
+        end
+      end)
+
+    {results, _} = Runner.execute_full_catalog(manifests, registrations)
+    entry = Enum.find(results, &(&1["coverage_id"] == coverage_id))
+    case_result = Enum.find(entry["cases"], &(&1["case_id"] == "dual.case"))
+
+    assert case_result["verdict"] == "PASS"
+    assert case_result["assertion_ids"] == assertion_ids
+    assert case_result["assertions_executed"] == 2
+
+    partial_registrations =
+      register_fixture_callbacks(manifests, fn _coverage_id, case_id ->
+        fn ->
+          if case_id == "dual.case" do
+            SelfTest.assert_manifest_assertion(hd(assertion_ids))
+          else
+            SelfTest.assert_manifest_pass()
+          end
+        end
+      end)
+
+    {partial_results, _} = Runner.execute_full_catalog(manifests, partial_registrations)
+
+    partial_case =
+      partial_results
+      |> Enum.find(&(&1["coverage_id"] == coverage_id))
+      |> Map.fetch!("cases")
+      |> Enum.find(&(&1["case_id"] == "dual.case"))
+
+    assert partial_case["verdict"] == "FAIL"
+
+    assert "assertion.incomplete" in partial_case["reason_codes"] or
+             "assertion.failed" in partial_case["reason_codes"]
+  end
+
+  test "compiled registration validation fails closed on duplicate and unknown entries" do
+    coverage_id = hd(Catalog.coverage_inventory())
+    manifests = %{coverage_id => fixture_manifest(coverage_id, ["only.case"])}
+    [registration] = register_fixture_callbacks(manifests, fn _, _ -> fn -> :ok end end)
+
+    duplicate = [registration, registration]
+
+    assert {:error, errors} = Catalog.validate_compiled_registrations(manifests, duplicate)
+    assert :duplicate_case in errors
+
+    unknown =
+      Map.put(registration, :coverage_id, "unapproved_family")
+
+    assert {:error, [:unknown_case]} =
+             Catalog.validate_compiled_registrations(manifests, [unknown])
+
+    {results, cleanup} = Runner.execute_full_catalog(manifests, duplicate)
+    assert cleanup["verdict"] == "FAIL"
+    assert Enum.any?(results, &("registration.invalid" in &1["reason_codes"]))
   end
 
   test "canonical full executor stops at the first failing invariant and marks later work not_run" do
@@ -347,7 +439,10 @@ defmodule NewYou.Proof.RunnerTest do
     registrations =
       register_fixture_callbacks(manifests, fn _coverage_id, case_id ->
         if case_id == "first.case" do
-          fn -> :force_failure end
+          fn ->
+            SelfTest.assert_manifest_assertion("first.case.verified")
+            :probe_exception
+          end
         else
           fn -> SelfTest.assert_manifest_pass() end
         end
@@ -360,7 +455,10 @@ defmodule NewYou.Proof.RunnerTest do
 
     assert first_entry["verdict"] == "FAIL"
     assert Enum.find(first_entry["cases"], &(&1["case_id"] == "first.case"))["verdict"] == "FAIL"
-    assert Enum.find(first_entry["cases"], &(&1["case_id"] == "later.case"))["status"] == "not_run"
+
+    assert Enum.find(first_entry["cases"], &(&1["case_id"] == "later.case"))["status"] ==
+             "not_run"
+
     assert second_entry["status"] == "not_run"
     assert second_entry["verdict"] == "FAIL"
   end
@@ -709,7 +807,6 @@ defmodule NewYou.Proof.RunnerTest do
 
   defp registration_entries(coverage_id, family_manifest, callback_builder) do
     Enum.map(family_manifest.cases, fn case_manifest ->
-
       %{
         coverage_id: coverage_id,
         case_id: case_manifest.case_id,
@@ -729,16 +826,19 @@ defmodule NewYou.Proof.RunnerTest do
 
   defp fixture_manifest(coverage_id, case_ids, opts \\ []) do
     timeout_ms = Keyword.get(opts, :timeout_ms, 10_000)
+    shared_assertion_ids = Keyword.get(opts, :assertion_ids)
 
     cases =
       Enum.map(case_ids, fn case_id ->
+        assertion_ids = shared_assertion_ids || [case_id <> ".verified"]
+
         %{
           case_id: case_id,
           invariant_id: case_id <> ".invariant",
           boundary: "test_boundary",
           cut_point: nil,
           race_id: nil,
-          assertion_ids: [case_id <> ".verified"],
+          assertion_ids: assertion_ids,
           timeout_ms: timeout_ms,
           expected: "the internal fixture assertion passes"
         }

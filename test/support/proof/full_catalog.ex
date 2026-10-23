@@ -3,14 +3,18 @@ defmodule NewYou.Proof.FullCatalog do
 
   alias NewYou.Proof.{Catalog, SelfTest}
 
-  @spec execute(map(), [Catalog.registration()]) :: {[map()], map()}
+  @spec execute(map(), [Catalog.registration()]) ::
+          {:ok, [map()], map()} | {:error, [atom()]}
   def execute(manifests, registrations)
       when is_map(manifests) and is_list(registrations) do
-    registration_index =
-      Map.new(registrations, fn registration ->
-        {{registration.coverage_id, registration.case_id}, registration.callback}
-      end)
+    with :ok <- Catalog.validate_compiled_registrations(manifests, registrations),
+         {:ok, registration_index} <- registration_index(registrations) do
+      {observed_cases, cleanup} = do_execute(manifests, registration_index)
+      {:ok, observed_cases, cleanup}
+    end
+  end
 
+  defp do_execute(manifests, registration_index) do
     {observations, cleanup, _stopped?} =
       Enum.reduce(Catalog.coverage_inventory(), {[], SelfTest.initial_cleanup_state(), false}, fn
         _coverage_id, {observations, cleanup, true} ->
@@ -29,33 +33,63 @@ defmodule NewYou.Proof.FullCatalog do
     {Enum.reverse(observations), SelfTest.finalize_cleanup(cleanup)}
   end
 
+  defp registration_index(registrations) do
+    Enum.reduce_while(registrations, {%{}, []}, fn registration, {index, _errors} ->
+      key = {registration.coverage_id, registration.case_id}
+
+      if Map.has_key?(index, key) do
+        {:halt, {:error, [:duplicate_case]}}
+      else
+        {:cont, {Map.put(index, key, registration.callback), []}}
+      end
+    end)
+    |> case do
+      {:error, reasons} -> {:error, reasons}
+      {index, _} -> {:ok, index}
+    end
+  end
+
   defp execute_family(coverage_id, manifest, registration_index, observations, cleanup) do
     cases = Map.get(manifest, :cases, [])
 
-    {observations, cleanup, family_failed?} =
-      Enum.reduce(cases, {observations, cleanup, false}, fn case_manifest, acc ->
-        execute_family_case(coverage_id, manifest, case_manifest, registration_index, acc)
-      end)
-
-    {observations, cleanup, family_failed?}
+    Enum.reduce(cases, {observations, cleanup, false}, fn case_manifest, acc ->
+      execute_family_case(coverage_id, manifest, case_manifest, registration_index, acc)
+    end)
   end
 
-  defp execute_family_case(_coverage_id, _family_manifest, _case_manifest, _registration_index, {observations, cleanup, true}) do
+  defp execute_family_case(
+         _coverage_id,
+         _family_manifest,
+         _case_manifest,
+         _registration_index,
+         {observations, cleanup, true}
+       ) do
     {observations, cleanup, true}
   end
 
-  defp execute_family_case(coverage_id, family_manifest, case_manifest, registration_index, {observations, cleanup, false}) do
+  defp execute_family_case(
+         coverage_id,
+         family_manifest,
+         case_manifest,
+         registration_index,
+         {observations, cleanup, false}
+       ) do
     manifest = case_manifest(coverage_id, family_manifest, case_manifest)
-    callback = Map.get(registration_index, {coverage_id, manifest.case_id})
 
-    {case_result, case_cleanup} = SelfTest.execute_registered_case(manifest, callback)
-    observation = observation_from_case(coverage_id, case_result)
+    case Map.fetch(registration_index, {coverage_id, manifest.case_id}) do
+      {:ok, callback} ->
+        {case_result, case_cleanup} = SelfTest.execute_registered_case(manifest, callback)
+        observation = observation_from_case(coverage_id, case_result)
 
-    {
-      [observation | observations],
-      SelfTest.merge_cleanup_state(cleanup, case_cleanup),
-      case_result["verdict"] != "PASS"
-    }
+        {
+          [observation | observations],
+          SelfTest.merge_cleanup_state(cleanup, case_cleanup),
+          case_result["verdict"] != "PASS"
+        }
+
+      :error ->
+        {observations, cleanup, true}
+    end
   end
 
   defp case_manifest(coverage_id, family_manifest, case_manifest) when is_map(case_manifest) do

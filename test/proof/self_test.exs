@@ -33,7 +33,41 @@ defmodule NewYou.Proof.SelfTest do
 
   @doc false
   @spec assert_manifest_pass() :: :ok
-  def assert_manifest_pass, do: passed?(true)
+  def assert_manifest_pass do
+    case Process.get(@assertion_context_key) do
+      {scenario, case_id, assertion_ids} when is_list(assertion_ids) ->
+        Enum.each(assertion_ids, &Result.expect!(scenario, case_id, &1, true, true))
+        :ok
+
+      {scenario, case_id, assertion_id} when is_binary(assertion_id) ->
+        Result.expect!(scenario, case_id, assertion_id, true, true)
+        :ok
+
+      _ ->
+        raise RuntimeError, "proof assertion context missing"
+    end
+  end
+
+  @doc false
+  @spec assert_manifest_assertion(String.t()) :: :ok
+  def assert_manifest_assertion(assertion_id) when is_binary(assertion_id) do
+    case Process.get(@assertion_context_key) do
+      {scenario, case_id, assertion_ids} when is_list(assertion_ids) ->
+        if assertion_id in assertion_ids do
+          Result.expect!(scenario, case_id, assertion_id, true, true)
+          :ok
+        else
+          raise RuntimeError, "proof assertion not required by manifest"
+        end
+
+      {scenario, case_id, id} when id == assertion_id ->
+        Result.expect!(scenario, case_id, assertion_id, true, true)
+        :ok
+
+      _ ->
+        raise RuntimeError, "proof assertion context missing"
+    end
+  end
 
   @spec run([String.t()], keyword()) :: {[map()], map()}
   def run(case_ids, opts \\ []) do
@@ -70,6 +104,9 @@ defmodule NewYou.Proof.SelfTest do
   defp broken_assertion_callback do
     fn ->
       case Process.get(@assertion_context_key) do
+        {scenario, case_id, [assertion_id | _]} ->
+          Result.expect!(scenario, case_id, assertion_id, :unexpected, :expected)
+
         {scenario, case_id, assertion_id} ->
           Result.expect!(scenario, case_id, assertion_id, :unexpected, :expected)
 
@@ -197,12 +234,10 @@ defmodule NewYou.Proof.SelfTest do
   end
 
   defp run_registered_case(manifest, callback, ledger, started_at) do
-    assertion_id = List.first(manifest.assertion_ids)
-
-    with true <- length(manifest.assertion_ids) == 1,
+    with true <- manifest_assertion_ids_valid?(manifest),
          :ok <- Scenario.require_assertions(ledger, manifest.case_id, manifest.assertion_ids),
          true <- is_function(callback, 0) do
-      run_case_callback(manifest, callback, ledger, assertion_id, started_at)
+      run_case_callback(manifest, callback, ledger, started_at)
     else
       _ ->
         {snapshot, stop_result, controller_stopped?, workers_stopped?} =
@@ -213,7 +248,14 @@ defmodule NewYou.Proof.SelfTest do
     end
   end
 
-  defp run_case_callback(manifest, callback, ledger, assertion_id, started_at) do
+  defp manifest_assertion_ids_valid?(manifest) do
+    ids = Map.get(manifest, :assertion_ids, [])
+
+    is_list(ids) and ids != [] and length(ids) == length(Enum.uniq(ids)) and
+      Enum.all?(ids, &(is_binary(&1) and byte_size(&1) in 1..128))
+  end
+
+  defp run_case_callback(manifest, callback, ledger, started_at) do
     parent = self()
     reference = make_ref()
     cleanup = initial_case_cleanup(manifest.case_id)
@@ -221,7 +263,7 @@ defmodule NewYou.Proof.SelfTest do
 
     {worker, monitor} =
       Scenario.spawn(ledger, :self_test_case, fn ->
-        Process.put(@assertion_context_key, {ledger, manifest.case_id, assertion_id})
+        Process.put(@assertion_context_key, {ledger, manifest.case_id, manifest.assertion_ids})
         Process.put(@cleanup_context_key, cleanup)
 
         outcome =
@@ -1916,7 +1958,11 @@ defmodule NewYou.Proof.SelfTest do
 
   defp passed?(condition) do
     case Process.get(@assertion_context_key) do
-      {scenario, case_id, assertion_id} ->
+      {scenario, case_id, [assertion_id | _]} ->
+        Result.expect!(scenario, case_id, assertion_id, condition === true, true)
+        :ok
+
+      {scenario, case_id, assertion_id} when is_binary(assertion_id) ->
         Result.expect!(scenario, case_id, assertion_id, condition === true, true)
         :ok
 

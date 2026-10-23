@@ -86,6 +86,46 @@ defmodule NewYou.Proof.Catalog do
   @spec compiled_business_registrations() :: [registration()]
   def compiled_business_registrations, do: []
 
+  @spec validate_compiled_registrations(map(), [registration()]) :: :ok | {:error, [atom()]}
+  def validate_compiled_registrations(manifests, registrations)
+      when is_map(manifests) and is_list(registrations) do
+    ids = Enum.map(registrations, &{&1.coverage_id, &1.case_id})
+
+    errors =
+      []
+      |> maybe_add(duplicate?(ids), :duplicate_case)
+      |> maybe_add(duplicate?(Enum.map(registrations, & &1.invariant_id)), :duplicate_invariant)
+      |> Kernel.++(compiled_registration_errors(manifests, registrations))
+
+    if errors == [], do: :ok, else: {:error, Enum.uniq(errors)}
+  end
+
+  def validate_compiled_registrations(_manifests, _registrations),
+    do: {:error, [:invalid_registration]}
+
+  defp compiled_registration_errors(manifests, registrations) do
+    Enum.flat_map(registrations, fn registration ->
+      case compiled_registration_error(manifests, registration) do
+        nil -> []
+        reason -> [reason]
+      end
+    end)
+  end
+
+  defp compiled_registration_error(manifests, registration) do
+    case Map.get(manifests, registration.coverage_id) do
+      %{cases: cases} when is_list(cases) ->
+        case Enum.find(cases, &(&1.case_id == registration.case_id)) do
+          %{invariant_id: invariant_id} when invariant_id == registration.invariant_id -> nil
+          %{invariant_id: _other} -> :unknown_invariant
+          nil -> :unknown_case
+        end
+
+      _ ->
+        :unknown_case
+    end
+  end
+
   def required do
     cases =
       for(cut <- @cuts, mode <- ["raise", "terminate"], do: {"cut.#{mode}.#{cut}", cut}) ++

@@ -167,11 +167,38 @@ defmodule NewYou.Proof.Runner do
   @spec execute_full_catalog(map(), [Catalog.registration()]) :: {[map()], map()}
   def execute_full_catalog(manifests, registrations)
       when is_map(manifests) and is_list(registrations) do
-    {observed_cases, cleanup} = FullCatalog.execute(manifests, registrations)
+    case FullCatalog.execute(manifests, registrations) do
+      {:ok, observed_cases, cleanup} ->
+        evaluation = evaluate_full(manifests, observed_cases, true, cleanup)
+        {Enum.map(evaluation.entries, &full_entry_document/1), cleanup}
 
-    evaluation = evaluate_full(manifests, observed_cases, true, cleanup)
+      {:error, _reasons} ->
+        invalid_registration_catalog(manifests)
+    end
+  end
 
-    {Enum.map(evaluation.entries, &full_entry_document/1), cleanup}
+  defp invalid_registration_catalog(manifests) do
+    cleanup = failure_cleanup()
+
+    evaluation =
+      evaluate_full(
+        manifests,
+        [],
+        false,
+        cleanup
+      )
+
+    results =
+      Enum.map(evaluation.entries, fn entry ->
+        full_entry_document(%{
+          entry
+          | verdict: "FAIL",
+            status: if(entry.status == "missing", do: "missing", else: "error"),
+            reason_codes: Enum.uniq(entry.reason_codes ++ ["registration.invalid"])
+        })
+      end)
+
+    {results, cleanup}
   end
 
   defp run_full_catalog(opts) do
