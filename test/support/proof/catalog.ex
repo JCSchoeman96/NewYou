@@ -67,12 +67,20 @@ defmodule NewYou.Proof.Catalog do
     "privacy.redaction"
   ]
 
+  @business_manifests %{}
+
+  @type business_manifest :: %{
+          required(:version) => String.t(),
+          required(:digest) => String.t(),
+          required(:cases) => [map()]
+        }
+
   @spec coverage_inventory() :: [String.t()]
   def coverage_inventory, do: @coverage_inventory
 
   @spec required() :: %{
           coverage_inventory: [String.t()],
-          business_manifests: %{},
+          business_manifests: %{optional(String.t()) => business_manifest()},
           self_test: %{version: String.t(), digest: String.t(), cases: [map()]}
         }
   def required do
@@ -85,17 +93,39 @@ defmodule NewYou.Proof.Catalog do
 
     %{
       coverage_inventory: @coverage_inventory,
-      business_manifests: %{},
+      business_manifests: business_manifests(),
       self_test: %{version: "1.0.0", digest: digest(manifests), cases: manifests}
     }
   end
+
+  @spec lookup_manifest(String.t(), String.t()) ::
+          {:ok, map()} | {:error, :unknown_coverage | :missing_manifest | :unknown_case}
+  def lookup_manifest(coverage_id, case_id)
+      when is_binary(coverage_id) and is_binary(case_id) do
+    cond do
+      coverage_id not in ["harness" | @coverage_inventory] ->
+        {:error, :unknown_coverage}
+
+      coverage_id != "harness" and
+          not Map.has_key?(required().business_manifests, coverage_id) ->
+        {:error, :missing_manifest}
+
+      manifest = known_manifest(coverage_id, case_id) ->
+        {:ok, manifest}
+
+      true ->
+        {:error, :unknown_case}
+    end
+  end
+
+  def lookup_manifest(_coverage_id, _case_id), do: {:error, :unknown_coverage}
 
   @spec register([registration()], String.t(), String.t(), String.t(), (-> term())) ::
           {:ok, [registration()]} | {:error, atom()}
   def register(registrations, coverage_id, case_id, invariant_id, callback)
       when is_list(registrations) and is_binary(coverage_id) and is_binary(case_id) and
              is_binary(invariant_id) and is_function(callback, 0) do
-    with {:ok, manifest} <- find_manifest(coverage_id, case_id),
+    with {:ok, manifest} <- lookup_manifest(coverage_id, case_id),
          :ok <- validate_unique_case(registrations, coverage_id, case_id),
          :ok <- validate_registration_invariant(manifest, invariant_id),
          :ok <- validate_unique_invariant(registrations, invariant_id) do
@@ -115,14 +145,6 @@ defmodule NewYou.Proof.Catalog do
 
   def register(_registrations, _coverage_id, _case_id, _invariant_id, _callback),
     do: {:error, :invalid_registration}
-
-  defp find_manifest(coverage_id, case_id) do
-    cond do
-      coverage_id not in ["harness" | @coverage_inventory] -> {:error, :unknown_coverage}
-      manifest = known_manifest(coverage_id, case_id) -> {:ok, manifest}
-      true -> {:error, :unknown_case}
-    end
-  end
 
   defp validate_unique_case(registrations, coverage_id, case_id) do
     if Enum.any?(registrations, &(&1.coverage_id == coverage_id and &1.case_id == case_id)),
@@ -148,10 +170,11 @@ defmodule NewYou.Proof.Catalog do
           %{errors: [atom()], missing_cases: [String.t()], missing_families: [String.t()]}
   def validate_registrations(registrations, mode) when is_list(registrations) do
     ids = Enum.map(registrations, &{&1.coverage_id, &1.case_id})
-    families = Enum.map(registrations, & &1.coverage_id)
 
     missing_families =
-      if mode == :tb001, do: Enum.reject(@coverage_inventory, &(&1 in families)), else: []
+      if mode == :tb001,
+        do: Enum.reject(@coverage_inventory, &Map.has_key?(required().business_manifests, &1)),
+        else: []
 
     expected_cases =
       case mode do
@@ -171,7 +194,12 @@ defmodule NewYou.Proof.Catalog do
       )
       |> maybe_add(mode == :tb001 and missing_families != [], :missing_family)
       |> maybe_add(
-        Enum.any?(registrations, &is_nil(known_manifest(&1.coverage_id, &1.case_id))),
+        Enum.any?(registrations, fn registration ->
+          match?(
+            {:error, reason} when reason in [:unknown_coverage, :missing_manifest, :unknown_case],
+            lookup_manifest(registration.coverage_id, registration.case_id)
+          )
+        end),
         :unknown_case
       )
       |> maybe_add(
@@ -219,7 +247,14 @@ defmodule NewYou.Proof.Catalog do
   defp known_manifest("harness", case_id),
     do: Enum.find(required().self_test.cases, &(&1.case_id == case_id))
 
-  defp known_manifest(_coverage_id, _case_id), do: nil
+  defp known_manifest(coverage_id, case_id) do
+    case Map.get(business_manifests(), coverage_id) do
+      %{cases: cases} when is_list(cases) -> Enum.find(cases, &(&1.case_id == case_id))
+      _ -> nil
+    end
+  end
+
+  defp business_manifests, do: Map.new(@business_manifests)
 
   defp digest(term) do
     :crypto.hash(:sha256, :erlang.term_to_binary(term, [:deterministic]))

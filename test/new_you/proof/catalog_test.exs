@@ -37,6 +37,32 @@ defmodule NewYou.Proof.CatalogTest do
            end)
   end
 
+  test "manifest lookup distinguishes unavailable inventory from unknown identifiers" do
+    assert {:error, :unknown_coverage} = Catalog.lookup_manifest("unknown", "case.one")
+
+    assert {:error, :missing_manifest} =
+             Catalog.lookup_manifest("registration_pmr_reconciliation", "case.one")
+
+    assert {:error, :unknown_case} = Catalog.lookup_manifest("harness", "unknown.case")
+
+    manifest = hd(Catalog.required().self_test.cases)
+    assert {:ok, ^manifest} = Catalog.lookup_manifest("harness", manifest.case_id)
+  end
+
+  test "caller registrations cannot establish any business family as available" do
+    registrations =
+      Enum.map(Catalog.coverage_inventory(), fn coverage_id ->
+        registration(coverage_id, "forged.case", "forged.invariant")
+      end)
+
+    result = Catalog.validate_registrations(registrations, :tb001)
+
+    assert result.missing_families == Catalog.coverage_inventory()
+    assert :missing_manifest in result.errors
+    assert :missing_family in result.errors
+    assert :unknown_case in result.errors
+  end
+
   test "registrations reject unknown and duplicate coverage, case and invariant ids" do
     assert {:error, :unknown_coverage} =
              Catalog.register([], "unknown", "case.one", "inv.one", fn -> :ok end)
