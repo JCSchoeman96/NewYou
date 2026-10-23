@@ -8,7 +8,7 @@ defmodule NewYou.Proof.Runner do
   manifests; the current catalog contains no business manifests.
   """
 
-  alias NewYou.Proof.{Catalog, CutPoints, Result, SelfTest}
+  alias NewYou.Proof.{Catalog, CutPoints, FullCatalog, Result, SelfTest}
 
   @modes %{
     "harness_self_test" => :harness_self_test,
@@ -54,7 +54,7 @@ defmodule NewYou.Proof.Runner do
       {results, cleanup} =
         case mode do
           :tb001 ->
-            run_full_catalog()
+            run_full_catalog(opts)
 
           :harness_self_test ->
             run_self_test(self_test_case_ids(), root)
@@ -163,18 +163,25 @@ defmodule NewYou.Proof.Runner do
     end
   end
 
-  defp run_full_catalog do
-    cleanup = clean_cleanup()
+  @doc false
+  @spec execute_full_catalog(map(), [Catalog.registration()]) :: {[map()], map()}
+  def execute_full_catalog(manifests, registrations)
+      when is_map(manifests) and is_list(registrations) do
+    {observed_cases, cleanup} = FullCatalog.execute(manifests, registrations)
 
-    evaluation =
-      evaluate_full(
-        Catalog.required().business_manifests,
-        [],
-        true,
-        cleanup
-      )
+    evaluation = evaluate_full(manifests, observed_cases, true, cleanup)
 
     {Enum.map(evaluation.entries, &full_entry_document/1), cleanup}
+  end
+
+  defp run_full_catalog(opts) do
+    manifests =
+      Keyword.get(opts, :business_manifests, Catalog.required().business_manifests)
+
+    registrations =
+      Keyword.get(opts, :business_registrations, Catalog.compiled_business_registrations())
+
+    execute_full_catalog(manifests, registrations)
   end
 
   defp evaluate_full_family(coverage_id, manifest, observations) do
@@ -899,16 +906,6 @@ defmodule NewYou.Proof.Runner do
         "cases" => []
       }
     end)
-  end
-
-  defp clean_cleanup do
-    %{
-      "verdict" => "PASS",
-      "workers_stopped" => true,
-      "connections_released" => true,
-      "locks_released" => true,
-      "reason_codes" => []
-    }
   end
 
   defp failure_envelope(mode, root, reason) do

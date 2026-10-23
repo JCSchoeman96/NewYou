@@ -83,6 +83,9 @@ defmodule NewYou.Proof.Catalog do
           business_manifests: %{optional(String.t()) => business_manifest()},
           self_test: %{version: String.t(), digest: String.t(), cases: [map()]}
         }
+  @spec compiled_business_registrations() :: [registration()]
+  def compiled_business_registrations, do: []
+
   def required do
     cases =
       for(cut <- @cuts, mode <- ["raise", "terminate"], do: {"cut.#{mode}.#{cut}", cut}) ++

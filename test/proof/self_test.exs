@@ -14,6 +14,27 @@ defmodule NewYou.Proof.SelfTest do
   @broken_invariant_case "cut.raise.transaction.before_commit"
   @failure_fixture_case "result.callback_failures"
 
+  @doc false
+  @spec execute_registered_case(map(), (-> term()) | nil) :: {map(), map()}
+  def execute_registered_case(manifest, callback) when is_map(manifest),
+    do: execute_case(manifest, callback)
+
+  @doc false
+  @spec initial_cleanup_state() :: map()
+  def initial_cleanup_state, do: clean_cleanup()
+
+  @doc false
+  @spec merge_cleanup_state(map(), map()) :: map()
+  def merge_cleanup_state(left, right), do: merge_cleanup(left, right)
+
+  @doc false
+  @spec finalize_cleanup(map()) :: map()
+  def finalize_cleanup(cleanup) when is_map(cleanup), do: cleanup_result(cleanup)
+
+  @doc false
+  @spec assert_manifest_pass() :: :ok
+  def assert_manifest_pass, do: passed?(true)
+
   @spec run([String.t()], keyword()) :: {[map()], map()}
   def run(case_ids, opts \\ []) do
     manifests = Map.new(Catalog.required().self_test.cases, &{&1.case_id, &1})

@@ -316,6 +316,55 @@ defmodule NewYou.Proof.RunnerTest do
     assert "browser_spine" == List.last(Enum.map(result["results"], & &1["coverage_id"]))
   end
 
+  test "canonical full executor runs registered callbacks through the same seam as tb001" do
+    manifests = executable_fixture_manifests()
+    registrations = executable_fixture_registrations(manifests)
+
+    assert Catalog.required().business_manifests == %{}
+    assert Catalog.compiled_business_registrations() == []
+
+    {results, cleanup} = Runner.execute_full_catalog(manifests, registrations)
+
+    assert Enum.map(results, & &1["coverage_id"]) == Catalog.coverage_inventory()
+    assert Enum.all?(results, &(&1["status"] == "completed"))
+    assert Enum.all?(results, &(&1["verdict"] == "PASS"))
+    assert cleanup["verdict"] == "PASS"
+    assert Enum.all?(results, fn entry ->
+      [case_result] = entry["cases"]
+      case_result["assertions_executed"] == 1 and case_result["verdict"] == "PASS"
+    end)
+  end
+
+  test "canonical full executor stops at the first failing invariant and marks later work not_run" do
+    [first_family, second_family | _rest] = Catalog.coverage_inventory()
+
+    manifests = %{
+      first_family =>
+        fixture_manifest(first_family, ["first.case", "later.case"], timeout_ms: 10_000),
+      second_family => fixture_manifest(second_family, ["second.case"], timeout_ms: 10_000)
+    }
+
+    registrations =
+      register_fixture_callbacks(manifests, fn _coverage_id, case_id ->
+        if case_id == "first.case" do
+          fn -> :force_failure end
+        else
+          fn -> SelfTest.assert_manifest_pass() end
+        end
+      end)
+
+    {results, _cleanup} = Runner.execute_full_catalog(manifests, registrations)
+
+    first_entry = Enum.find(results, &(&1["coverage_id"] == first_family))
+    second_entry = Enum.find(results, &(&1["coverage_id"] == second_family))
+
+    assert first_entry["verdict"] == "FAIL"
+    assert Enum.find(first_entry["cases"], &(&1["case_id"] == "first.case"))["verdict"] == "FAIL"
+    assert Enum.find(first_entry["cases"], &(&1["case_id"] == "later.case"))["status"] == "not_run"
+    assert second_entry["status"] == "not_run"
+    assert second_entry["verdict"] == "FAIL"
+  end
+
   test "test-only full evaluator accepts a complete fixture without catalog business manifests" do
     manifests = full_fixture_manifests()
     cases = full_fixture_cases(manifests)
@@ -641,7 +690,46 @@ defmodule NewYou.Proof.RunnerTest do
     end)
   end
 
-  defp fixture_manifest(coverage_id, case_ids) do
+  defp executable_fixture_manifests, do: full_fixture_manifests()
+
+  defp executable_fixture_registrations(manifests) do
+    register_fixture_callbacks(manifests, fn _coverage_id, _case_id ->
+      fn -> SelfTest.assert_manifest_pass() end
+    end)
+  end
+
+  defp register_fixture_callbacks(manifests, callback_builder) do
+    Enum.flat_map(Catalog.coverage_inventory(), fn coverage_id ->
+      case Map.get(manifests, coverage_id) do
+        nil -> []
+        family_manifest -> registration_entries(coverage_id, family_manifest, callback_builder)
+      end
+    end)
+  end
+
+  defp registration_entries(coverage_id, family_manifest, callback_builder) do
+    Enum.map(family_manifest.cases, fn case_manifest ->
+
+      %{
+        coverage_id: coverage_id,
+        case_id: case_manifest.case_id,
+        invariant_id: case_manifest.invariant_id,
+        callback: callback_builder.(coverage_id, case_manifest.case_id),
+        manifest:
+          Map.merge(case_manifest, %{
+            coverage_id: coverage_id,
+            version: family_manifest.version,
+            boundary: case_manifest.boundary,
+            timeout_ms: Map.get(case_manifest, :timeout_ms, 10_000),
+            expected: case_manifest.expected
+          })
+      }
+    end)
+  end
+
+  defp fixture_manifest(coverage_id, case_ids, opts \\ []) do
+    timeout_ms = Keyword.get(opts, :timeout_ms, 10_000)
+
     cases =
       Enum.map(case_ids, fn case_id ->
         %{
@@ -651,6 +739,7 @@ defmodule NewYou.Proof.RunnerTest do
           cut_point: nil,
           race_id: nil,
           assertion_ids: [case_id <> ".verified"],
+          timeout_ms: timeout_ms,
           expected: "the internal fixture assertion passes"
         }
       end)
