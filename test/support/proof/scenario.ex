@@ -642,10 +642,11 @@ defmodule NewYou.Proof.Scenario do
     fail_barriers_for_worker(state, pid)
   end
 
+  defp expected_worker_exit?(_worker, :normal), do: true
+
   defp expected_worker_exit?(%{expected_exit: true}, reason),
     do: reason in [:killed, :proof_terminated]
 
-  defp expected_worker_exit?(_worker, :normal), do: true
   defp expected_worker_exit?(_worker, _reason), do: false
 
   defp handle_guardian_down(state, guardian, reason) do
@@ -684,8 +685,13 @@ defmodule NewYou.Proof.Scenario do
   end
 
   defp waiting_worker?(barrier, worker_pid) do
-    not is_nil(barrier.release_waiter) and
-      Enum.any?(barrier.waiters, fn {_label, {pid, _ref}} -> pid == worker_pid end)
+    case Enum.find(barrier.waiters, fn {_label, {pid, _ref}} -> pid == worker_pid end) do
+      {label, _waiter} ->
+        not is_nil(barrier.release_waiter) and not MapSet.member?(barrier.acknowledged, label)
+
+      nil ->
+        false
+    end
   end
 
   defp fail_barrier_acknowledgement(state, phase, barrier) do

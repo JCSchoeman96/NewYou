@@ -274,6 +274,78 @@ defmodule NewYou.Proof.ControllerTest do
     assert :ok = Scenario.stop(scenario)
   end
 
+  test "an acknowledged participant may exit while another acknowledgement is pending" do
+    scenario = Scenario.start()
+    parent = self()
+    assert :ok = Barrier.define(scenario, :phase, [:one, :two])
+
+    {one, one_ref} =
+      Scenario.spawn(scenario, :one, fn ->
+        send(parent, {:one, Barrier.arrive(scenario, :phase, :one)})
+      end)
+
+    {two, two_ref} =
+      Scenario.spawn(scenario, :two, fn ->
+        assert :released = Scenario.request(scenario, {:barrier_arrive, :phase, :two}, 30_000)
+        send(parent, :two_released)
+
+        receive do
+          :ack_now ->
+            send(parent, {:two_ack, Scenario.request(scenario, {:barrier_ack, :phase, :two})})
+        end
+      end)
+
+    assert eventually(fn -> Barrier.arrivals(scenario, :phase) == [:one, :two] end)
+    release_ref = make_ref()
+
+    send(
+      scenario.controller,
+      {:scenario_request, scenario.reference, release_ref, self(),
+       {:barrier_release, :phase, 1_000}}
+    )
+
+    assert_receive {:one, :ok}
+    assert_receive {:DOWN, ^one_ref, :process, ^one, :normal}
+    assert_receive :two_released
+    send(two, :ack_now)
+    assert_receive {:two_ack, :ok}
+    assert_receive {:scenario_reply, ^release_ref, :ok}
+    assert_receive {:DOWN, ^two_ref, :process, ^two, :normal}
+    assert :ok = Scenario.stop(scenario)
+  end
+
+  test "a completed normal worker does not fail a queued stop" do
+    scenario = Scenario.start()
+    parent = self()
+
+    {worker, worker_ref} =
+      Scenario.spawn(scenario, :worker, fn ->
+        send(parent, :worker_started)
+
+        receive do
+          :finish -> :ok
+        end
+      end)
+
+    assert_receive :worker_started
+    :erlang.suspend_process(scenario.controller)
+    request_ref = make_ref()
+
+    send(
+      scenario.controller,
+      {:scenario_request, scenario.reference, request_ref, self(), :stop}
+    )
+
+    send(worker, :finish)
+    assert_receive {:DOWN, ^worker_ref, :process, ^worker, :normal}
+    controller_ref = Process.monitor(scenario.controller)
+    :erlang.resume_process(scenario.controller)
+
+    assert_receive {:scenario_reply, ^request_ref, :ok}
+    assert_receive {:DOWN, ^controller_ref, :process, controller, :normal}
+    assert controller == scenario.controller
+  end
+
   test "barrier rejects a duplicate participant arrival" do
     scenario = Scenario.start()
     parent = self()
