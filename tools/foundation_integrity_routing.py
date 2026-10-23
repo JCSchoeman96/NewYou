@@ -53,6 +53,9 @@ APPLICATION_PREFIXES = (
     ".devcore/",
     "assets/",
     "config/",
+    "docs/development/",
+    "docs/superpowers/",
+    "docs/execution/",
     "lib/",
     "priv/",
     "test/",
@@ -69,10 +72,10 @@ GOVERNANCE_FILES = frozenset(
     }
 )
 
-# `docs/` is the governed documentation tree. `tests/` is the historical Python
-# governance suite; normal Elixir tests live under `test/`.
+# `docs/00_platform/` is governed platform authority. `tests/` is the historical
+# Python governance suite; normal Elixir tests live under `test/`.
 GOVERNANCE_PREFIXES = (
-    "docs/",
+    "docs/00_platform/",
     "tests/",
     "tools/foundation_integrity_",
 )

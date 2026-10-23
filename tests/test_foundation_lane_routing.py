@@ -29,6 +29,16 @@ class ApplicationAndEngineeringRoutingTests(unittest.TestCase):
                 self.assertEqual("application", classify_path(path))
                 self.assertEqual({"foundation_full": False, "application_changes": True}, _route([path]))
 
+    def test_known_engineering_document_paths_run_application_ci_without_full(self):
+        for path in [
+            "docs/development/example.md",
+            "docs/superpowers/specs/example.md",
+            "docs/execution/FP-001/specs/example.md",
+        ]:
+            with self.subTest(path=path):
+                self.assertEqual("application", classify_path(path))
+                self.assertEqual({"foundation_full": False, "application_changes": True}, _route([path]))
+
     def test_engineering_tooling_and_ci_are_classified_intentionally(self):
         for path in [
             "mix.exs",
@@ -45,6 +55,16 @@ class ApplicationAndEngineeringRoutingTests(unittest.TestCase):
 
 class GovernanceRoutingTests(unittest.TestCase):
     """Scenario C: governance-sensitive changes select Full."""
+
+    def test_current_platform_authority_selects_full_only(self):
+        path = "docs/00_platform/00_PLATFORM_v1.8.0.md"
+        self.assertEqual("governance", classify_path(path))
+        self.assertEqual({"foundation_full": True, "application_changes": False}, _route([path]))
+
+    def test_platform_working_documents_remain_governance_paths(self):
+        path = "docs/00_platform/working/example.md"
+        self.assertEqual("governance", classify_path(path))
+        self.assertEqual({"foundation_full": True, "application_changes": False}, _route([path]))
 
     def test_governed_authority_document_selects_full(self):
         decision = _route(["docs/00_platform/02_OPEN_WORK_v1.2.78.md"])
@@ -74,6 +94,12 @@ class MixedAndUnknownRoutingTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertEqual("unknown", classify_path(path))
                 self.assertTrue(_route([path])["foundation_full"])
+
+    def test_unclassified_document_paths_fail_closed_to_full(self):
+        for path in ["docs/unclassified-area/example.md", "docs/something-new/foo.md"]:
+            with self.subTest(path=path):
+                self.assertEqual("unknown", classify_path(path))
+                self.assertEqual({"foundation_full": True, "application_changes": False}, _route([path]))
 
     def test_path_escapes_and_backslashes_fail_closed(self):
         for path in ["../lib/x.ex", "/lib/x.ex", r"lib\x.ex"]:
