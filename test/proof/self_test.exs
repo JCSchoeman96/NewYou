@@ -132,8 +132,16 @@ defmodule NewYou.Proof.SelfTest do
       Map.put(
         callback_cleanup,
         :workers_stopped,
-        callback_cleanup.workers_stopped and workers_stopped? and controller_stopped?
+        callback_cleanup.workers_stopped and workers_stopped? and controller_stopped? and
+          not cleanup_unconfirmed?(stop_result)
       )
+
+    case_cleanup =
+      if controller_stopped? and not cleanup_unconfirmed?(stop_result) do
+        case_cleanup
+      else
+        %{case_cleanup | connections_released: false, locks_released: false}
+      end
 
     {verdict, status, reasons} =
       case_outcome(
@@ -265,6 +273,25 @@ defmodule NewYou.Proof.SelfTest do
   end
 
   defp owned_processes_stopped?(_workers), do: false
+
+  defp cleanup_unconfirmed?({:error, reasons}) when is_list(reasons) do
+    Enum.any?(reasons, fn reason ->
+      reason in [
+        :cleanup_timeout,
+        :guardian_failed,
+        :nested_cleanup_failed,
+        :nested_cleanup_timeout,
+        :nested_cleanup_unconfirmed,
+        :nested_controller_failed
+      ]
+    end)
+  end
+
+  defp cleanup_unconfirmed?({:error, reason})
+       when reason in [:cleanup_timeout, :controller_down, :controller_timeout],
+       do: true
+
+  defp cleanup_unconfirmed?(_result), do: false
 
   defp elapsed_ms(started_at), do: max(System.monotonic_time(:millisecond) - started_at, 0)
 
@@ -603,13 +630,18 @@ defmodule NewYou.Proof.SelfTest do
     scenario = Scenario.start()
     owned_processes = Scenario.owned_processes(scenario)
     monitor = Process.monitor(scenario.controller)
+    expected_kill = Scenario.expect_nested_controller_kill(scenario)
     Process.exit(scenario.controller, :kill)
 
     down = receive_down(monitor, scenario.controller)
     result = Scenario.request(scenario, :verify_consumed)
+    confirmed_kill = Scenario.confirm_nested_controller_kill(scenario)
     record_scenario_cleanup(scenario, down, owned_processes)
 
-    passed?(down == :killed and result == {:error, :controller_down})
+    passed?(
+      expected_kill == :ok and down == :killed and result == {:error, :controller_down} and
+        confirmed_kill == :ok
+    )
   end
 
   defp lost_reply_probe do

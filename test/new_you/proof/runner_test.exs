@@ -1,7 +1,7 @@
 defmodule NewYou.Proof.RunnerTest do
   use ExUnit.Case, async: false
 
-  alias NewYou.Proof.{Catalog, Runner, SelfTest}
+  alias NewYou.Proof.{Catalog, Runner, Scenario, SelfTest}
 
   test "CLI parsing accepts the approved modes and requires an output path" do
     for {mode, expected} <- [
@@ -221,12 +221,15 @@ defmodule NewYou.Proof.RunnerTest do
     end
   end
 
-  test "self-test case callbacks stop at their manifest deadline and record duration" do
+  test "timed-out callbacks cannot leave nested scenario controllers alive or report cleanup PASS" do
     parent = self()
     reference = make_ref()
     case_id = "result.callback_failures"
 
     callback = fn ->
+      nested = Scenario.start()
+      :erlang.suspend_process(nested.controller)
+
       child =
         spawn_link(fn ->
           receive do
@@ -234,7 +237,7 @@ defmodule NewYou.Proof.RunnerTest do
           end
         end)
 
-      send(parent, {reference, child})
+      send(parent, {reference, nested.controller, child})
       Process.sleep(10_100)
       :ok
     end
@@ -242,13 +245,20 @@ defmodule NewYou.Proof.RunnerTest do
     {[case_result], cleanup} =
       SelfTest.run([case_id], callback_overrides: %{case_id => callback})
 
-    assert_receive {^reference, child}
+    assert_receive {^reference, nested_controller, child}
     assert case_result["status"] == "timeout", inspect({case_result, cleanup})
     assert case_result["verdict"] == "FAIL"
     assert "timeout.expired" in case_result["reason_codes"]
     assert case_result["duration_ms"] >= case_result["timeout_ms"]
-    assert cleanup["verdict"] == "PASS"
-    refute Process.alive?(child)
+
+    try do
+      assert cleanup["verdict"] == "FAIL"
+      assert cleanup["workers_stopped"] == false
+      refute Process.alive?(nested_controller)
+      refute Process.alive?(child)
+    after
+      if Process.alive?(nested_controller), do: Process.exit(nested_controller, :kill)
+    end
   end
 
   test "canonical CLI reports cleanup and output failures with exit 2" do
@@ -470,6 +480,17 @@ defmodule NewYou.Proof.RunnerTest do
 
   test "self-test records a failed controller reply as a passing fail-closed probe" do
     {[result], cleanup} = NewYou.Proof.SelfTest.run(["scenario.lost_reply"])
+
+    assert result["status"] == "completed"
+    assert result["verdict"] == "PASS"
+    assert cleanup["verdict"] == "PASS"
+    assert cleanup["workers_stopped"]
+    assert cleanup["connections_released"]
+    assert cleanup["locks_released"]
+  end
+
+  test "self-test confirms an intentional nested controller death before reporting cleanup PASS" do
+    {[result], cleanup} = SelfTest.run(["scenario.controller_death"])
 
     assert result["status"] == "completed"
     assert result["verdict"] == "PASS"

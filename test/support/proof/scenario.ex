@@ -11,24 +11,51 @@ defmodule NewYou.Proof.Scenario do
   @type worker_label :: atom() | binary()
 
   @request_timeout 5_000
+  @cleanup_timeout 5_000
+  @forced_cleanup_timeout 1_000
   @max_timeout 30_000
+  @cleanup_scope_key {__MODULE__, :cleanup_scope}
 
   @spec start() :: t()
   @spec start(keyword()) :: t()
   def start(_opts \\ []) do
     owner = self()
+    cleanup_scope = Process.get(@cleanup_scope_key)
+    parent_controller = if match?(%__MODULE__{}, cleanup_scope), do: cleanup_scope.controller
+    parent_reference = if match?(%__MODULE__{}, cleanup_scope), do: cleanup_scope.reference
     reference = make_ref()
-    {controller, monitor} = spawn_monitor(fn -> init(owner, reference) end)
 
-    receive do
-      {:scenario_ready, ^reference} ->
-        Process.demonitor(monitor, [:flush])
-        %__MODULE__{controller: controller, reference: reference, owner: owner}
-    after
-      @request_timeout ->
-        Process.exit(controller, :kill)
-        raise "proof scenario controller did not start"
-    end
+    {controller, monitor} =
+      spawn_monitor(fn -> init(owner, reference, parent_controller, parent_reference) end)
+
+    scenario =
+      receive do
+        {:scenario_ready, ^reference} ->
+          %__MODULE__{controller: controller, reference: reference, owner: owner}
+      after
+        @request_timeout ->
+          terminate_startup_controller(controller, monitor)
+          raise "proof scenario controller did not start"
+      end
+
+    result =
+      case cleanup_scope do
+        %__MODULE__{controller: parent} = scope when parent != controller ->
+          case request(scope, {:register_nested_scenario, reference, controller}) do
+            :ok ->
+              scenario
+
+            {:error, reason} ->
+              terminate_startup_controller(controller, monitor)
+              raise "could not register nested proof scenario: #{inspect(reason)}"
+          end
+
+        _ ->
+          scenario
+      end
+
+    Process.demonitor(monitor, [:flush])
+    result
   end
 
   @spec spawn(t(), worker_label(), (-> term())) :: {pid(), reference()}
@@ -42,8 +69,17 @@ defmodule NewYou.Proof.Scenario do
         send(scenario.owner, {:scenario_guard_ready, scenario.reference, worker, guardian})
 
         receive do
-          {:scenario_start, reference} when reference == scenario.reference -> fun.()
-          _ -> :ok
+          {:scenario_start, reference} when reference == scenario.reference ->
+            Process.put(@cleanup_scope_key, scenario)
+
+            try do
+              fun.()
+            after
+              Process.delete(@cleanup_scope_key)
+            end
+
+          _ ->
+            :ok
         end
       end)
 
@@ -73,7 +109,7 @@ defmodule NewYou.Proof.Scenario do
   def stop(%__MODULE__{} = scenario) do
     owner!(scenario)
     monitor = Process.monitor(scenario.controller)
-    result = request(scenario, :stop, @request_timeout + 1_000)
+    result = request(scenario, :stop, @request_timeout + @cleanup_timeout + 1_000)
 
     receive do
       {:DOWN, ^monitor, :process, controller, _reason} when controller == scenario.controller ->
@@ -82,6 +118,28 @@ defmodule NewYou.Proof.Scenario do
       5_000 ->
         Process.demonitor(monitor, [:flush])
         {:error, :cleanup_timeout}
+    end
+  end
+
+  @spec expect_nested_controller_kill(t()) :: :ok | {:error, term()}
+  def expect_nested_controller_kill(%__MODULE__{} = scenario) do
+    owner!(scenario)
+    request(scenario, :expect_nested_controller_kill)
+  end
+
+  @spec confirm_nested_controller_kill(t()) :: :ok | {:error, term()}
+  def confirm_nested_controller_kill(%__MODULE__{} = scenario) do
+    owner!(scenario)
+
+    case Process.get(@cleanup_scope_key) do
+      %__MODULE__{controller: parent} = scope when parent != scenario.controller ->
+        request(
+          scope,
+          {:confirm_nested_controller_kill, scenario.reference, scenario.controller}
+        )
+
+      _ ->
+        {:error, :not_nested_scenario}
     end
   end
 
@@ -150,18 +208,32 @@ defmodule NewYou.Proof.Scenario do
   defp owner!(%__MODULE__{owner: owner}) when owner == self(), do: :ok
   defp owner!(_scenario), do: raise("proof scenario operation must run in its owner")
 
-  defp init(owner, reference) do
+  defp terminate_startup_controller(controller, monitor) do
+    Process.exit(controller, :kill)
+
+    receive do
+      {:DOWN, ^monitor, :process, ^controller, _reason} -> :ok
+    after
+      @forced_cleanup_timeout -> Process.demonitor(monitor, [:flush])
+    end
+  end
+
+  defp init(owner, reference, parent_controller, parent_reference) do
     owner_monitor = Process.monitor(owner)
     send(owner, {:scenario_ready, reference})
 
     loop(%{
       owner: owner,
       owner_monitor: owner_monitor,
+      parent_controller: parent_controller,
+      parent_reference: parent_reference,
       reference: reference,
       workers: %{},
       guardians: %{},
+      nested_scenarios: %{},
       cuts: %{},
       failures: [],
+      cleanup_failures: [],
       barriers: %{},
       provider_scripts: %{},
       assertions: %{}
@@ -175,15 +247,24 @@ defmodule NewYou.Proof.Scenario do
         {state, response, stop?} = dispatch(operation, caller, request_ref, state)
 
         if stop? do
-          cleanup(state, response)
+          state = cleanup(state, response)
+          response = cleanup_response(state, response)
           send(caller, {:scenario_reply, request_ref, response})
+
+          if is_pid(state.parent_controller) and state.cleanup_failures != [] do
+            exit({:cleanup_failed, Enum.reverse(state.cleanup_failures)})
+          end
         else
           if response != :deferred, do: send(caller, {:scenario_reply, request_ref, response})
           loop(state)
         end
 
       {:DOWN, ref, :process, _pid, _reason} when ref == state.owner_monitor ->
-        cleanup(state, :owner_down)
+        state = cleanup(state, :owner_down)
+
+        if state.cleanup_failures != [] do
+          exit({:cleanup_failed, Enum.reverse(state.cleanup_failures)})
+        end
 
       {:barrier_release_timeout, phase, timer_ref} ->
         loop(barrier_release_timeout(state, phase, timer_ref))
@@ -333,6 +414,97 @@ defmodule NewYou.Proof.Scenario do
   defp handle_operation({:register_worker, _label, _pid, _guardian}, _caller, state),
     do: fail(state, :owner_only, {:error, :owner_only})
 
+  defp handle_operation({:register_nested_scenario, reference, controller}, caller, state) do
+    cond do
+      not owner_or_worker?(state, caller) ->
+        fail(state, :owner_only, {:error, :owner_only})
+
+      not is_reference(reference) or not is_pid(controller) or controller == self() ->
+        fail(state, :invalid_nested_scenario, {:error, :invalid_nested_scenario})
+
+      Map.has_key?(state.nested_scenarios, controller) ->
+        fail(state, :duplicate_nested_scenario, {:error, :duplicate_nested_scenario})
+
+      true ->
+        monitor = Process.monitor(controller)
+
+        nested_scenarios =
+          Map.put(state.nested_scenarios, controller, %{
+            reference: reference,
+            monitor: monitor,
+            expected_kill: false,
+            down_reason: nil
+          })
+
+        {%{state | nested_scenarios: nested_scenarios}, :ok, false}
+    end
+  end
+
+  defp handle_operation(:expect_nested_controller_kill, caller, state)
+       when caller == state.owner do
+    cond do
+      not is_pid(state.parent_controller) or not is_reference(state.parent_reference) ->
+        fail(state, :not_nested_scenario, {:error, :not_nested_scenario})
+
+      map_size(state.workers) > 0 or map_size(state.nested_scenarios) > 0 ->
+        fail(state, :nested_scenario_not_empty, {:error, :nested_scenario_not_empty})
+
+      true ->
+        parent = %__MODULE__{
+          controller: state.parent_controller,
+          reference: state.parent_reference,
+          owner: self()
+        }
+
+        case request(parent, {:expect_nested_controller_kill, state.reference, self()}) do
+          :ok -> {state, :ok, false}
+          {:error, reason} -> fail(state, reason, {:error, reason})
+        end
+    end
+  end
+
+  defp handle_operation(:expect_nested_controller_kill, _caller, state),
+    do: fail(state, :owner_only, {:error, :owner_only})
+
+  defp handle_operation({:expect_nested_controller_kill, reference, controller}, caller, state) do
+    case Map.get(state.nested_scenarios, controller) do
+      %{reference: ^reference, expected_kill: false} = nested when caller == controller ->
+        nested_scenarios =
+          Map.put(state.nested_scenarios, controller, %{nested | expected_kill: true})
+
+        {%{state | nested_scenarios: nested_scenarios}, :ok, false}
+
+      _ ->
+        fail(state, :invalid_nested_controller_kill, {:error, :invalid_nested_controller_kill})
+    end
+  end
+
+  defp handle_operation(
+         {:confirm_nested_controller_kill, reference, controller},
+         caller,
+         state
+       ) do
+    case Map.get(state.nested_scenarios, controller) do
+      %{reference: ^reference, expected_kill: true} = nested ->
+        cond do
+          not owner_or_worker?(state, caller) ->
+            fail(state, :owner_only, {:error, :owner_only})
+
+          Process.alive?(controller) ->
+            fail(state, :nested_controller_alive, {:error, :nested_controller_alive})
+
+          true ->
+            Process.demonitor(nested.monitor, [:flush])
+
+            {%{state | nested_scenarios: Map.delete(state.nested_scenarios, controller)}, :ok,
+             false}
+        end
+
+      _ ->
+        fail(state, :invalid_nested_controller_kill, {:error, :invalid_nested_controller_kill})
+    end
+  end
+
   defp handle_operation(:owned_processes, caller, state) when caller == state.owner do
     children = Enum.map(state.workers, fn {worker, info} -> {worker, info.guardian} end)
     {state, children, false}
@@ -477,7 +649,20 @@ defmodule NewYou.Proof.Scenario do
     end
   end
 
-  defp handle_operation(:stop, caller, state) when caller == state.owner do
+  defp handle_operation(:stop, caller, state) when caller == state.owner,
+    do: begin_stop(state)
+
+  defp handle_operation(:stop_from_parent, caller, state)
+       when is_pid(state.parent_controller) and caller == state.parent_controller,
+       do: {state, :stop_from_parent, true}
+
+  defp handle_operation(:stop_from_parent, _caller, state),
+    do: fail(state, :owner_only, {:error, :owner_only})
+
+  defp handle_operation(_operation, _caller, state),
+    do: fail(state, :invalid_request, {:error, :invalid_request})
+
+  defp begin_stop(state) do
     unreached =
       state.cuts
       |> Enum.filter(fn {_key, cut} -> not cut.consumed end)
@@ -489,15 +674,8 @@ defmodule NewYou.Proof.Scenario do
         do: state.failures,
         else: [{:unreached_cut_points, unreached} | state.failures]
 
-    state = cleanup_workers(%{state | failures: Enum.uniq(failures)})
-
-    if state.failures == [],
-      do: {state, :ok, true},
-      else: {state, {:error, Enum.reverse(state.failures)}, true}
+    {%{state | failures: Enum.uniq(failures)}, :ok, true}
   end
-
-  defp handle_operation(_operation, _caller, state),
-    do: fail(state, :invalid_request, {:error, :invalid_request})
 
   defp record_required_assertion(state, case_id, assertion_id, observed, expected) do
     ledger = Map.fetch!(state.assertions, case_id)
@@ -818,12 +996,35 @@ defmodule NewYou.Proof.Scenario do
     do: {%{state | failures: Enum.uniq([failure | state.failures])}, response, false}
 
   defp worker_down(state, ref, pid, reason) do
-    case Map.get(state.workers, pid) do
-      %{monitor: ^ref} = worker ->
-        handle_worker_down(state, pid, worker, reason)
+    case Map.get(state.nested_scenarios, pid) do
+      %{monitor: ^ref, expected_kill: true} = nested when reason == :killed ->
+        nested_scenarios =
+          Map.put(state.nested_scenarios, pid, %{nested | down_reason: reason})
+
+        %{state | nested_scenarios: nested_scenarios}
+
+      %{monitor: ^ref} ->
+        nested_scenarios = Map.delete(state.nested_scenarios, pid)
+
+        if reason == :normal do
+          %{state | nested_scenarios: nested_scenarios}
+        else
+          %{
+            state
+            | nested_scenarios: nested_scenarios,
+              failures: Enum.uniq([:nested_controller_failed | state.failures]),
+              cleanup_failures: Enum.uniq([:nested_controller_failed | state.cleanup_failures])
+          }
+        end
 
       _ ->
-        handle_guardian_down(state, pid, reason)
+        case Map.get(state.workers, pid) do
+          %{monitor: ^ref} = worker ->
+            handle_worker_down(state, pid, worker, reason)
+
+          _ ->
+            handle_guardian_down(state, pid, reason)
+        end
     end
   end
 
@@ -854,7 +1055,14 @@ defmodule NewYou.Proof.Scenario do
   defp guardian_process_down(state, worker_pid, reason) do
     worker = Map.fetch!(state.workers, worker_pid)
     failures = if reason == :normal, do: state.failures, else: [:guardian_failed | state.failures]
+
+    cleanup_failures =
+      if reason == :normal,
+        do: state.cleanup_failures,
+        else: Enum.uniq([:guardian_failed | state.cleanup_failures])
+
     if not worker.worker_down, do: Process.exit(worker_pid, :kill)
+    state = %{state | cleanup_failures: cleanup_failures}
     update_worker(state, worker_pid, %{worker | guardian_down: true}, failures)
   end
 
@@ -927,18 +1135,144 @@ defmodule NewYou.Proof.Scenario do
     if map_size(state.workers) == 0 or now_ms() >= deadline do
       if map_size(state.workers) == 0,
         do: state,
-        else: %{state | failures: [:cleanup_timeout | state.failures]}
+        else: %{
+          state
+          | failures: Enum.uniq([:cleanup_timeout | state.failures]),
+            cleanup_failures: Enum.uniq([:cleanup_timeout | state.cleanup_failures])
+        }
     else
       receive do
         {:DOWN, ref, :process, pid, reason} ->
           await_workers(worker_down(state, ref, pid, reason), deadline)
       after
-        max(deadline - now_ms(), 0) -> %{state | failures: [:cleanup_timeout | state.failures]}
+        max(deadline - now_ms(), 0) ->
+          %{
+            state
+            | failures: Enum.uniq([:cleanup_timeout | state.failures]),
+              cleanup_failures: Enum.uniq([:cleanup_timeout | state.cleanup_failures])
+          }
       end
     end
   end
 
-  defp cleanup(state, _reason), do: cleanup_workers(state)
+  defp cleanup(state, _reason) do
+    state
+    |> cleanup_nested_scenarios()
+    |> cleanup_workers()
+  end
+
+  defp cleanup_nested_scenarios(state) do
+    Enum.reduce(Map.to_list(state.nested_scenarios), state, fn {pid, nested}, state ->
+      stop_nested_scenario(state, pid, nested)
+    end)
+  end
+
+  defp stop_nested_scenario(state, pid, %{expected_kill: true, monitor: monitor}) do
+    if Process.alive?(pid) do
+      nested = Map.delete(Map.fetch!(state.nested_scenarios, pid), :expected_kill)
+      stop_nested_scenario(state, pid, nested)
+    else
+      remove_nested_scenario(state, pid, monitor)
+    end
+  end
+
+  defp stop_nested_scenario(state, pid, %{reference: reference, monitor: monitor}) do
+    request_ref = make_ref()
+
+    send(
+      pid,
+      {:scenario_request, reference, request_ref, self(), :stop_from_parent}
+    )
+
+    case await_nested_scenario(
+           pid,
+           monitor,
+           request_ref,
+           now_ms() + @cleanup_timeout,
+           nil,
+           nil
+         ) do
+      {:timeout, nil, :normal} ->
+        remove_nested_scenario(state, pid, monitor)
+
+      {:timeout, _response, _reason} ->
+        Process.exit(pid, :kill)
+        down_reason = await_nested_down(pid, monitor, @forced_cleanup_timeout)
+        state = remove_nested_scenario(state, pid, monitor)
+
+        failure =
+          if is_nil(down_reason), do: :nested_cleanup_unconfirmed, else: :nested_cleanup_timeout
+
+        %{
+          state
+          | failures: Enum.uniq([failure | state.failures]),
+            cleanup_failures: Enum.uniq([failure | state.cleanup_failures])
+        }
+
+      {response, :normal} when response in [:ok, nil] ->
+        remove_nested_scenario(state, pid, monitor)
+
+      {_response, :normal} ->
+        state = remove_nested_scenario(state, pid, monitor)
+
+        %{
+          state
+          | failures: Enum.uniq([:nested_cleanup_failed | state.failures]),
+            cleanup_failures: Enum.uniq([:nested_cleanup_failed | state.cleanup_failures])
+        }
+
+      {_response, _reason} ->
+        state = remove_nested_scenario(state, pid, monitor)
+
+        %{
+          state
+          | failures: Enum.uniq([:nested_controller_failed | state.failures]),
+            cleanup_failures: Enum.uniq([:nested_controller_failed | state.cleanup_failures])
+        }
+    end
+  end
+
+  defp await_nested_scenario(pid, monitor, request_ref, deadline, response, down_reason) do
+    cond do
+      not is_nil(response) and not is_nil(down_reason) ->
+        {response, down_reason}
+
+      now_ms() >= deadline ->
+        {:timeout, response, down_reason}
+
+      true ->
+        receive do
+          {:scenario_reply, ^request_ref, result} ->
+            await_nested_scenario(pid, monitor, request_ref, deadline, result, down_reason)
+
+          {:DOWN, ^monitor, :process, ^pid, reason} ->
+            await_nested_scenario(pid, monitor, request_ref, deadline, response, reason)
+        after
+          max(deadline - now_ms(), 0) -> {:timeout, response, down_reason}
+        end
+    end
+  end
+
+  defp await_nested_down(pid, monitor, timeout) do
+    receive do
+      {:DOWN, ^monitor, :process, ^pid, reason} -> reason
+    after
+      timeout -> if Process.alive?(pid), do: nil, else: :down_unobserved
+    end
+  end
+
+  defp remove_nested_scenario(state, pid, monitor) do
+    Process.demonitor(monitor, [:flush])
+    %{state | nested_scenarios: Map.delete(state.nested_scenarios, pid)}
+  end
+
+  defp cleanup_response(%{cleanup_failures: []}, :stop_from_parent), do: :ok
+
+  defp cleanup_response(state, :stop_from_parent),
+    do: {:error, Enum.reverse(state.cleanup_failures)}
+
+  defp cleanup_response(%{failures: []}, response), do: response
+  defp cleanup_response(state, _response), do: {:error, Enum.reverse(state.failures)}
 
   defp now_ms, do: System.monotonic_time(:millisecond)
 
