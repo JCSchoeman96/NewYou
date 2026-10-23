@@ -48,6 +48,29 @@ defmodule NewYou.Proof.ProviderTest do
     assert :ok = Scenario.stop(scenario)
   end
 
+  test "each backlog step needs its own explicit release" do
+    scenario = Scenario.start()
+
+    assert :ok =
+             Provider.configure(scenario, %{
+               @operation => [{:first_queue, :backlog}, {:second_queue, :backlog}]
+             })
+
+    assert {:ok, %{step: :first_queue, released: false}} =
+             Provider.next(scenario, @operation, :first_queue)
+
+    assert {:ok, %{step: :first_queue, released: true}} =
+             Provider.release_backlog(scenario, @operation)
+
+    assert {:ok, %{step: :second_queue, released: false}} =
+             Provider.next(scenario, @operation, :second_queue)
+
+    assert {:ok, %{step: :second_queue, released: true}} =
+             Provider.release_backlog(scenario, @operation)
+
+    assert :ok = Scenario.stop(scenario)
+  end
+
   test "duplicate and reordered observations retain event and operation identity" do
     scenario = Scenario.start()
 
@@ -128,7 +151,7 @@ defmodule NewYou.Proof.ProviderTest do
              Provider.authenticate_fixture({@operation, @operation, body}, valid, @key)
 
     assert {:error, :invalid_signature} =
-             Provider.authenticate_fixture({@operation, @operation, body}, <<0>>, @key)
+             Provider.authenticate_fixture({@operation, @operation, body}, <<0::256>>, @key)
 
     wrong_operation = ProviderFixtures.sign("other-operation|#{body}", @key)
 
@@ -145,6 +168,26 @@ defmodule NewYou.Proof.ProviderTest do
              Provider.authenticate_fixture(%{authenticated: true}, <<>>, @key)
   end
 
+  test "fixture authentication rejects oversized payloads and keys before hashing" do
+    oversized_body = String.duplicate("x", 4_097)
+    oversized_key = String.duplicate("k", 257)
+    signature = ProviderFixtures.sign("#{@operation}|small", @key)
+
+    assert {:error, :invalid_fixture} =
+             Provider.authenticate_fixture(
+               {@operation, @operation, oversized_body},
+               signature,
+               @key
+             )
+
+    assert {:error, :invalid_fixture} =
+             Provider.authenticate_fixture(
+               {@operation, @operation, "small"},
+               signature,
+               oversized_key
+             )
+  end
+
   test "script length and identifiers are bounded and diagnostics redact inputs" do
     scenario = Scenario.start()
     secret = "synthetic-secret-canary"
@@ -153,6 +196,14 @@ defmodule NewYou.Proof.ProviderTest do
 
     assert {:error, :invalid_script} =
              Provider.configure(scenario, %{make_ref() => [{:step, :accepted}]})
+
+    assert {:error, :invalid_script} =
+             Provider.configure(scenario, %{
+               @operation => [
+                 {:step,
+                  %{outcome: :delivered, event_ref: "person@example.test", logical_order: 1}}
+               ]
+             })
 
     refute inspect(Scenario.stop(scenario)) =~ secret
   end

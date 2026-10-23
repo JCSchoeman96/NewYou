@@ -262,7 +262,7 @@ defmodule NewYou.Proof.Scenario do
             released: true
           }
 
-          updated = %{script | index: index + 1, backlog_released: true}
+          updated = %{script | index: index + 1, backlog_released: false}
 
           {%{state | provider_scripts: Map.put(state.provider_scripts, operation_ref, updated)},
            {:ok, result}, false}

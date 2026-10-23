@@ -54,7 +54,8 @@ defmodule NewYou.Proof.Provider do
           | {:error, :invalid_fixture | :invalid_signature | :operation_reference_mismatch}
   def authenticate_fixture({expected_ref, operation_ref, body}, signature, key)
       when is_binary(expected_ref) and is_binary(operation_ref) and is_binary(body) and
-             is_binary(signature) and is_binary(key) do
+             byte_size(body) in 1..4_096 and is_binary(signature) and byte_size(signature) == 32 and
+             is_binary(key) and byte_size(key) in 1..256 do
     with :ok <- validate_fixture_refs(expected_ref, operation_ref),
          :ok <- validate_fixture_signature(operation_ref, body, signature, key),
          :ok <- validate_expected_ref(expected_ref, operation_ref) do
@@ -116,7 +117,9 @@ defmodule NewYou.Proof.Provider do
         Regex.match?(~r/\A[a-zA-Z0-9_-]+\z/, value)
 
   defp valid_label?(value),
-    do: (is_atom(value) or is_binary(value)) and byte_size(to_string(value)) in 1..@max_label
+    do:
+      (is_atom(value) or is_binary(value)) and byte_size(to_string(value)) in 1..@max_label and
+        Regex.match?(~r/\A[a-zA-Z0-9][a-zA-Z0-9._-]*\z/, to_string(value))
 
   defp valid_signature?(data, signature, key) do
     expected = :crypto.mac(:hmac, :sha256, key, data)
