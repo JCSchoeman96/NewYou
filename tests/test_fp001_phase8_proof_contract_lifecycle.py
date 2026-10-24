@@ -5,6 +5,8 @@ import shutil
 import subprocess
 import tempfile
 import hashlib
+import json
+import re
 from pathlib import Path
 
 from tools.foundation_integrity_audit import (
@@ -19,9 +21,21 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
 SUCCESSOR_CHECK = "phase8_approved_status_successor_current"
+PROVENANCE_CHECK = "phase8_status_successor_predecessor_provenance"
 CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.78.md"
+OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.80.md"
 HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
+APPROVAL_TIME_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.78.md"
+APPROVAL_TIME_ATLAS = ROOT / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.20.md"
+APPROVAL_TIME_SKELETON = ROOT / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md"
+APPROVAL_TIME_HARDEN = ROOT / "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.22.md"
+FROZEN_ROUTE_ARCHIVE_SHA256 = {
+    "docs/00_platform/archive/02_OPEN_WORK_v1.2.78.md": "7ab24ce13ba37306c78cd795f3bb308c75a8d6627aa5ea8780bd2b162f013770",
+    "docs/00_platform/archive/02_OPEN_WORK_v1.2.79.md": "f08b6c9cd8685bb4f5df7cebf36476e4fcdd8e07eb0d2b148cb39baf95bca24a",
+    "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.20.md": "222c9f14889196cb6d35d58fedfcf47a0aec83a30b5b7a6e1bf2ab5c95273eae",
+    "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md": "5bb5acde41de8cd9ccd0b356de13a25c7c4b18abc21b09d7b3caf5c22e49d6f9",
+    "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.22.md": "0b07d28dce1f212469fdb0863f93f6d03fe16c6a4e5e6b0c7d181d4dab58bd2f",
+}
 
 
 class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
@@ -30,6 +44,114 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         manifest = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         refresh_manifest(root, manifest)
         return root, manifest
+
+    def test_current_successor_resolves_manifest_routes_and_preserves_lifecycle_boundaries(self):
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        rules = manifest["integrity_rules"]
+        phase8 = rules["fp001_phase8_proof_contract_lifecycle"]
+        routes = phase8["current_routes"]
+        current_open_work = next(
+            entry
+            for entry in manifest["governing_documents"]
+            if entry["document_id"] == "OPEN_WORK" and entry.get("lifecycle") != "historical"
+        )
+        self.assertEqual(current_open_work["repository_path"], routes["open_work"])
+
+        promotion = rules["fp001_phase7c_final_contract_current_promotion"]
+        self.assertEqual(routes, promotion["current_paths"])
+        route_status = promotion["current_route_status_successor_version"].split(" / ")
+        self.assertEqual(
+            [Path(routes[key]).stem.rsplit("_v", 1)[1] for key in ("open_work", "delivery_atlas", "fp001_skeleton", "harden_02")],
+            route_status,
+        )
+
+        route_hashes = phase8["current_route_sha256"]
+        README = ROOT / "docs/00_platform/README.md"
+        readme = README.read_text(encoding="utf-8")
+        for relative in routes.values():
+            path = ROOT / relative
+            self.assertTrue(path.is_file(), f"current route is missing: {relative}")
+            self.assertEqual(route_hashes[relative], hashlib.sha256(path.read_bytes()).hexdigest())
+            self.assertIn(Path(relative).name, readme)
+
+        historical = manifest["historical_documents"]
+        predecessor_hashes = phase8["predecessor_archives_sha256"]
+        for label in ("open_work", "delivery_atlas", "fp001_skeleton", "harden_02"):
+            current_path = ROOT / routes[label]
+            metadata = "\n".join(current_path.read_text(encoding="utf-8").splitlines()[:40])
+            predecessor = re.search(r"(?im)^.*predecessor.*`(archive/[^`]+\.md)`", metadata)
+            self.assertIsNotNone(predecessor, f"{label} has no direct predecessor metadata")
+            archive_path = f"docs/00_platform/{predecessor.group(1)}"
+            archived = ROOT / archive_path
+            archive_entry = next(
+                (entry for entry in historical if entry.get("repository_path") == archive_path),
+                None,
+            )
+            self.assertTrue(archived.is_file(), f"predecessor archive is missing: {archive_path}")
+            digest = hashlib.sha256(archived.read_bytes()).hexdigest()
+            self.assertEqual(predecessor_hashes[archive_path], digest)
+            if archive_entry is not None:
+                self.assertEqual(archive_entry["sha256"], digest)
+                self.assertEqual(archive_entry["provenance_sha256"], digest)
+
+        open_work = (ROOT / routes["open_work"]).read_text(encoding="utf-8")
+        lifecycle = re.search(
+            r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
+            open_work,
+            re.DOTALL,
+        )
+        self.assertIsNotNone(lifecycle, "current Open Work lifecycle state is missing")
+        state = json.loads(lifecycle.group(1))
+        self.assertEqual(current_open_work["semver"], state["status_successor_version"])
+        self.assertEqual("STARTED", state["architectural_proof_execution"])
+        self.assertEqual("INCOMPLETE / COVERAGE-INCOMPLETE", state["proof_result"])
+        self.assertEqual("NOT CERTIFIED", state["proof_certification"])
+        self.assertEqual("NOT STARTED / NOT AUTHORISED", state["phase9_vertical_slices"])
+        self.assertIn("WELL-6 / P8-05", state["next_governance_action"])
+        self.assertIn("independent planning review before implementation", state["next_governance_action"])
+
+        for token in (
+            "WELL-5 / P8-04",
+            "PROOF EXECUTION: STARTED",
+            "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
+            "PROOF CERTIFICATION: NOT CERTIFIED",
+            "Phase 8 is NOT CERTIFIED",
+            "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+            "NEXT EXECUTION ACTION: WELL-6 / P8-05 planning through Grill-Me/JIT",
+        ):
+            self.assertIn(token, readme)
+
+        for relative, expected_digest in FROZEN_ROUTE_ARCHIVE_SHA256.items():
+            archive = ROOT / relative
+            self.assertTrue(archive.is_file(), f"frozen route archive is missing: {relative}")
+            self.assertEqual(expected_digest, hashlib.sha256(archive.read_bytes()).hexdigest())
+
+        report = run_audit(ROOT, MANIFEST)
+        checks = {item["name"]: item for item in report["checks"]}
+        self.assertEqual("PASS", checks["harden_02_lifecycle_state"]["status"])
+        self.assertIn(SUCCESSOR_CHECK, checks)
+        self.assertEqual("PASS", checks[SUCCESSOR_CHECK]["status"], checks[SUCCESSOR_CHECK]["message"])
+        self.assertEqual("PASS", checks[PROVENANCE_CHECK]["status"], checks[PROVENANCE_CHECK]["message"])
+        self.assertEqual("PASS", checks["fp001_phase7c_final_contract_current_promotion"]["status"])
+        self.assertEqual("PASS", checks["phase8_status_successor_phase7b_preservation"]["status"])
+
+    def test_current_successor_rejects_mutated_historical_promotion_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["integrity_rules"]["fp001_phase7c_final_contract_current_promotion"][
+                "pr126_reviewed_head_sha"
+            ] = "altered-historical-head"
+            manifest_path.write_text(
+                json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, manifest_path)
+            checks = {item["name"]: item for item in report["checks"]}
+            promotion = checks["fp001_phase7c_final_contract_current_promotion"]
+            self.assertEqual("FAIL", promotion["status"], promotion["message"])
+            self.assertIn("PR #126 promotion evidence changed", promotion["message"])
 
     def test_contract_is_approved_without_claiming_executed_or_certified_proof(self):
         self.assertTrue(CONTRACT.is_file(), "the governed Phase 8 task contract is missing")
@@ -218,44 +340,57 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
                     "Foundation Integrity accepted a contract with a locked decision removed",
                 )
 
-    def test_open_work_routes_to_well38_without_advancing_proof_or_phase9(self):
+    def test_open_work_routes_to_p805_after_well5_without_certifying_tb001_or_phase9(self):
         self.assertTrue(OPEN_WORK.is_file(), "the Open Work status successor is missing")
         text = OPEN_WORK.read_text(encoding="utf-8")
-        self.assertIn('"status_successor_version": "1.2.78"', text)
-        self.assertIn('"status_successor_base_sha": "4234965c8da20dbb4ef0a7128614a5070244619a"', text)
+        self.assertIn('"status_successor_version": "1.2.80"', text)
         self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", text)
         self.assertIn("TB-001", text)
         self.assertIn("CONTRACT/DESIGN REVIEW: COMPLETE / PASS", text)
         self.assertIn("CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", text)
-        self.assertIn("PROOF EXECUTION: NOT STARTED", text)
-        self.assertIn("PROOF CERTIFICATION: NOT STARTED", text)
+        self.assertIn("WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE", text)
+        self.assertIn("PROOF EXECUTION: STARTED", text)
+        self.assertIn("PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE", text)
+        self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", text)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
-        self.assertIn("NEXT GOVERNANCE ACTION: WELL-38 — Transition Foundation Integrity to implementation-era CI", text)
-        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.19.md`", text)
+        self.assertIn("NEXT GOVERNANCE ACTION: WELL-6 / P8-05", text)
+        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.20.md`", text)
 
-    def test_current_status_summaries_route_the_approved_contract_and_status_successors(self):
+    def test_approval_time_route_remains_archived_while_current_summaries_route_p805(self):
         contract = CONTRACT.read_text(encoding="utf-8")
         lifecycle = contract.split("## 12. Lifecycle state", 1)[1].split("## 13.", 1)[0]
         self.assertIn("TRACER BULLET: REQUIRED / DEFINED", lifecycle)
         self.assertNotIn("DEFINED AS REVIEW CANDIDATE", lifecycle)
         self.assertIn("Open Work v1.2.78, Delivery Atlas v0.4.20, FP-001 Skeleton v0.1.22 and HARDEN-02 v0.5.22", contract)
 
-        readme = (ROOT / "docs/00_platform/README.md").read_text(encoding="utf-8")
-        active_status = next(line for line in readme.splitlines() if line.startswith("PR #76 candidate certification and completed post-merge certification evidence"))
-        self.assertIn("contract/design review is COMPLETE / PASS", active_status)
-        self.assertIn("CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", active_status)
-        self.assertIn("The next governance action is WELL-38", active_status)
-        self.assertIn("[Delivery Atlas](working/DELIVERY_ATLAS_WORKING_v0.4.20.md)", readme)
-        self.assertNotIn("The TB-001 proof-contract candidate is routed separately", readme)
-        self.assertNotIn("TB-001 proof-contract candidate review / certification is next", readme)
+        for archived in (APPROVAL_TIME_OPEN_WORK, APPROVAL_TIME_ATLAS, APPROVAL_TIME_SKELETON, APPROVAL_TIME_HARDEN):
+            self.assertTrue(archived.is_file(), f"approval-time archive is missing: {archived.name}")
+        approval_open_work = APPROVAL_TIME_OPEN_WORK.read_text(encoding="utf-8")
+        self.assertIn('"status_successor_version": "1.2.78"', approval_open_work)
+        self.assertIn("PROOF EXECUTION: NOT STARTED", approval_open_work)
+        self.assertIn("PROOF RESULT: NOT STARTED", approval_open_work)
+        self.assertIn("PROOF CERTIFICATION: NOT STARTED", approval_open_work)
+        self.assertIn("NEXT GOVERNANCE ACTION: WELL-38", approval_open_work)
 
-        atlas = (ROOT / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md").read_text(encoding="utf-8")
-        skeleton = (ROOT / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md").read_text(encoding="utf-8")
-        harden = (ROOT / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md").read_text(encoding="utf-8")
-        self.assertIn("Planning tracker | `docs/00_platform/02_OPEN_WORK_v1.2.78.md`", atlas)
-        self.assertIn("`docs/00_platform/02_OPEN_WORK_v1.2.78.md §9`", skeleton)
-        self.assertIn("`02_OPEN_WORK_v1.2.78.md` | Programme routing", harden)
-        self.assertIn("`working/DELIVERY_ATLAS_WORKING_v0.4.20.md` | Current derived", harden)
+        readme = (ROOT / "docs/00_platform/README.md").read_text(encoding="utf-8")
+        current_state = readme.split("## Current State", 1)[1].split("## Historical status evidence", 1)[0]
+        self.assertIn("NEXT EXECUTION ACTION: WELL-6 / P8-05 planning", current_state)
+        self.assertIn("PROOF EXECUTION: STARTED", current_state)
+        self.assertIn("PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE", current_state)
+        self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", current_state)
+        self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", current_state)
+        self.assertNotIn("NEXT GOVERNANCE ACTION: WELL-38", current_state)
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.21.md", readme)
+        self.assertIn("working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.23.md", readme)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.23.md", readme)
+
+        atlas = APPROVAL_TIME_ATLAS.read_text(encoding="utf-8")
+        skeleton = APPROVAL_TIME_SKELETON.read_text(encoding="utf-8")
+        harden = APPROVAL_TIME_HARDEN.read_text(encoding="utf-8")
+        self.assertIn("Open Work v1.2.78, Delivery Atlas v0.4.20, FP-001 Skeleton v0.1.22 and HARDEN-02 v0.5.22", contract)
+        for relative, expected_digest in FROZEN_ROUTE_ARCHIVE_SHA256.items():
+            archive = ROOT / relative
+            self.assertEqual(expected_digest, hashlib.sha256(archive.read_bytes()).hexdigest())
 
     def test_archived_open_work_preserves_the_review_candidate_status(self):
         self.assertTrue(HISTORICAL_OPEN_WORK.is_file(), "the historical Open Work status snapshot is missing")
@@ -267,19 +402,22 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
         self.assertIn("TB-001 CONTRACT CANDIDATE REVIEW", text)
 
-    def test_current_harden_route_uses_approved_tb001_successor_and_preserves_predecessors(self):
-        atlas = (ROOT / "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md").read_text(encoding="utf-8")
-        skeleton = (ROOT / "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md").read_text(encoding="utf-8")
-        harden = (ROOT / "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.22.md").read_text(encoding="utf-8")
-        harden_phase7b_route = harden.split("## 23. FP-001 Phase 7B reconciliation current route", 1)[1].split("## 24.", 1)[0]
-        self.assertIn("TRACER BULLET: REQUIRED / DEFINED", harden_phase7b_route)
-        self.assertIn("TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS", harden_phase7b_route)
-        self.assertIn("TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", harden_phase7b_route)
-        self.assertIn("NEXT GOVERNANCE ACTION: WELL-38", harden_phase7b_route)
-        self.assertIn("Open Work v1.2.78", harden_phase7b_route)
-        self.assertNotIn("CANDIDATE / REVIEW PENDING", harden_phase7b_route)
+    def test_archived_harden_route_preserves_approved_tb001_predecessor_evidence(self):
+        atlas = APPROVAL_TIME_ATLAS.read_text(encoding="utf-8")
+        skeleton = APPROVAL_TIME_SKELETON.read_text(encoding="utf-8")
+        harden = APPROVAL_TIME_HARDEN.read_text(encoding="utf-8")
+        harden_approved_contract_route = harden.split(
+            "## v0.5.22 — FP-001 TB-001 approved contract route (current)", 1
+        )[1].split("\n## ", 1)[0]
+        self.assertIn("TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS", harden_approved_contract_route)
+        self.assertIn("TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", harden_approved_contract_route)
+        self.assertIn("PROOF RESULT: NOT STARTED", harden_approved_contract_route)
+        self.assertIn("NEXT EXECUTION ACTION: FP-001 P8 04", harden_approved_contract_route)
+        for relative, expected_digest in FROZEN_ROUTE_ARCHIVE_SHA256.items():
+            archive = ROOT / relative
+            self.assertEqual(expected_digest, hashlib.sha256(archive.read_bytes()).hexdigest())
 
-        open_work_history = OPEN_WORK.read_text(encoding="utf-8")
+        open_work_history = APPROVAL_TIME_OPEN_WORK.read_text(encoding="utf-8")
         self.assertIn("## 12.32 — TB-001 proof-contract v0.1.1 correction and route successor (historical predecessor)", open_work_history)
         self.assertIn("## 12.33 — TB-001 proof-contract v0.1.2 correction and route successor (historical predecessor)", open_work_history)
         self.assertIn("## 12.34 — TB-001 contract review and current-status promotion", open_work_history)
@@ -305,7 +443,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
 
             self.assertEqual("FAIL", check["status"], check["message"])
             self.assertIn(
-                f"README active working routing omits {current}",
+                "README active working artifacts omit the approved TB-001 contract",
                 check["message"],
             )
 
@@ -328,8 +466,8 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             self.assertEqual("PASS", checks[SUCCESSOR_CHECK]["status"], checks[SUCCESSOR_CHECK]["message"])
             self.assertEqual(
                 "PASS",
-                checks["phase8_approved_status_successor_predecessor_full_audit"]["status"],
-                checks["phase8_approved_status_successor_predecessor_full_audit"]["message"],
+                checks[PROVENANCE_CHECK]["status"],
+                checks[PROVENANCE_CHECK]["message"],
             )
 
     def test_explicit_repository_without_git_fails_successor_provenance_closed(self):
@@ -344,7 +482,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             self.assertEqual("FAIL", report["status"])
             self.assertEqual("FAIL", checks[SUCCESSOR_CHECK]["status"])
             self.assertIn("cannot locate Git repository", checks[SUCCESSOR_CHECK]["message"])
-            predecessor = checks["phase8_approved_status_successor_predecessor_full_audit"]
+            predecessor = checks[PROVENANCE_CHECK]
             self.assertEqual("FAIL", predecessor["status"])
             self.assertIn("cannot locate Git repository", predecessor["message"])
 
@@ -368,14 +506,14 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
 
             self.assertEqual("FAIL", report["status"])
             self.assertEqual("FAIL", checks[SUCCESSOR_CHECK]["status"])
-            predecessor = checks["phase8_approved_status_successor_predecessor_full_audit"]
+            predecessor = checks[PROVENANCE_CHECK]
             self.assertEqual("FAIL", predecessor["status"])
-            self.assertIn("pinned predecessor commit is unavailable", predecessor["message"])
+            self.assertIn("pinned status successor base commit is unavailable", predecessor["message"])
 
     def test_corrupted_archived_predecessor_fails_even_for_temporary_content_root(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest = self._copy_production_fixture(Path(directory))
-            archive = root / "docs/00_platform/archive/02_OPEN_WORK_v1.2.77.md"
+            archive = root / "docs/00_platform/archive/02_OPEN_WORK_v1.2.79.md"
             archive.write_bytes(archive.read_bytes() + b"\nCORRUPTED HISTORICAL PREDECESSOR\n")
 
             report = run_audit(root, manifest)
@@ -383,14 +521,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
 
             self.assertEqual("FAIL", report["status"])
             self.assertEqual("FAIL", checks[SUCCESSOR_CHECK]["status"], checks[SUCCESSOR_CHECK]["message"])
-            self.assertTrue(
-                any(
-                    item["check"] == "manifest_hash_parity"
-                    and item["path"] == "docs/00_platform/archive/02_OPEN_WORK_v1.2.77.md"
-                    for item in report["findings"]
-                ),
-                report["findings"],
-            )
+            self.assertIn("predecessor archive differs from exact base bytes", checks[SUCCESSOR_CHECK]["message"])
 
 
 

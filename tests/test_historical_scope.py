@@ -146,7 +146,7 @@ class HistoricalSuccessorAuditTests(unittest.TestCase):
             shutil.copytree(ROOT / "docs", root / "docs")
             (root / "mix.exs").write_text("later application source\n", encoding="utf-8")
             manifest = json.loads((root / audit.DEFAULT_MANIFEST).read_text(encoding="utf-8"))
-            route = "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md"
+            route = manifest["integrity_rules"]["fp001_phase8_proof_contract_lifecycle"]["current_routes"]["delivery_atlas"]
             (root / route).write_bytes((root / route).read_bytes() + b"\n")
             issues = audit._phase8_approved_status_successor_issues(
                 root, ROOT, manifest, manifest["integrity_rules"],

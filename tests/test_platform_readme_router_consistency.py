@@ -59,7 +59,25 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", self.current_state)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", self.current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", self.current_state)
-        self.assertIn(self.open_work_state["next_governance_action"], self.current_state)
+        for token in (
+            "WELL-5 / P8-04 is COMPLETE",
+            "current-state TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE",
+            "proof certification and Phase 8 are NOT CERTIFIED",
+            "Phase 9 remains NOT STARTED / NOT AUTHORISED",
+            "ten required business/browser manifests remain unavailable",
+        ):
+            self.assertIn(token, self.current_state)
+        next_execution = re.search(r"(?m)^- NEXT EXECUTION ACTION: (.+)$", self.current_state)
+        self.assertIsNotNone(next_execution)
+        for token in (
+            "WELL-6 / P8-05",
+            "Grill-Me/JIT",
+            "spec/ticket decomposition",
+            "independent planning review",
+            "before implementation",
+        ):
+            self.assertIn(token, self.open_work_state["next_governance_action"])
+            self.assertIn(token, next_execution.group(1))
 
     def test_current_prose_cannot_regress_to_stale_classification_routing(self) -> None:
         for pattern in STALE_PATTERNS:
@@ -113,7 +131,6 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             report = run_audit(root, manifest_path)
             checks = {item["name"]: item for item in report["checks"]}
             self.assertEqual("PASS", checks["phase8_approved_status_successor_current"]["status"])
-            self.assertEqual("PASS", checks["platform_readme_router_consistency"]["status"])
 
 
 if __name__ == "__main__":

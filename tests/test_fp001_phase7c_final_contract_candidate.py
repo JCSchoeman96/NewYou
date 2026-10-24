@@ -526,7 +526,18 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", readme)
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", readme)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", readme)
-        self.assertIn(f"NEXT GOVERNANCE ACTION: {state['next_governance_action']}", readme)
+        current_state = readme.split("## Current State", 1)[1].split("\n## ", 1)[0]
+        next_execution = re.search(r"(?m)^- NEXT EXECUTION ACTION: (.+)$", current_state)
+        self.assertIsNotNone(next_execution)
+        for required in (
+            "WELL-6 / P8-05",
+            "Grill-Me/JIT",
+            "spec/ticket decomposition",
+            "independent planning review",
+            "before implementation",
+        ):
+            self.assertIn(required, state["next_governance_action"])
+            self.assertIn(required, next_execution.group(1))
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", readme)
         self.assertIn("PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", readme)
 
