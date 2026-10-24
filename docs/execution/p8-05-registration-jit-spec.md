@@ -7,7 +7,7 @@
 
 ## Purpose and current boundary
 
-P8-05 is the first production-path Phase 8 proof slice. Its result is a bilingual browser registration path that accepts the governed account gates and creates one Identity-owned Account, its canonical active PMR, a verification Token, the selected Audit EvidenceObligation, a Communications MessageIntent, and initial durable scheduling within the TB-001 PostgreSQL acceptance transaction.
+P8-05 is the first production-path Phase 8 proof slice. Its result is a bilingual browser path that presents approved launch and safety content before registration, enforces the required 18+ and exact Terms/Privacy acceptance gates before Account creation, and creates one Identity-owned Account, its canonical active PMR, a verification Token, the selected Audit EvidenceObligation, a Communications MessageIntent, and initial durable scheduling within the TB-001 PostgreSQL acceptance transaction.
 
 The Account remains unverified and has no Session. The participant sees a localized verification-pending page. P8-05 does not consume verification proof, log the participant in, invoke the worker, contact a provider, or certify the full TB-001 proof.
 
@@ -20,17 +20,20 @@ This spec follows the outcome contract in Plane WELL-6. Live GitHub authority co
 | Area | P8-05 boundary |
 |---|---|
 | Identity ownership | Identity owns Account, canonical email, PMR, verification Token, and registration/resend operation truth. PMR remains Account-owned truth, not a separate Resource, login name, secret, or authorization mechanism. |
+| Entry and account gates | The participant selects Afrikaans or English and sees the exact approved launch and safety content before registration. Identity enforces 18+ confirmation and acceptance of the exact approved Terms and Privacy versions before creating an Account. A failed or missing gate creates no Account or PMR. |
 | Registration operation | The browser creates one opaque operation ID for each logical registration and reuses it across retries. Identity binds the ID to one immutable request. Reuse with changed input safely rejects; a corrected request uses a new ID. |
 | Duplicate email | A distinct operation for an existing canonical email returns the same neutral public response as a newly accepted registration. It creates no second Account, PMR, Token, MessageIntent, or job. The response must not reveal whether the address exists. |
 | Account and Session | Successful registration creates an unverified Account and no Session. Protected access stays blocked. Proof consumption and credential login are later slices. |
 | Pending experience | Show a localized verification-pending view with an explicit resend action. Do not offer email correction in this slice. |
 | Resend | Resend is a separate Identity operation. Replaying the same resend ID returns its prior result. A later explicit click uses a new ID. An accepted resend supersedes the old active challenge and creates one new MessageIntent and one Oban job whose arguments contain only that MessageIntent ID. |
-| Terms and Privacy | Identity records the exact approved Terms and Privacy version references, accepted locale, and acceptance time on the Account. Purpose-specific consent remains separate. |
+| Terms and Privacy | Before Account creation, the participant accepts the exact approved Terms and Privacy versions for the selected locale. Identity records those exact version references, accepted locale, and acceptance time on the Account. Purpose-specific consent remains separate. |
 | Durable scheduling | Oban scheduling uses the `ash_oban` direction already fixed by TB-001. Insert the job in the same PostgreSQL acceptance transaction. Do not run the worker or provider in this proof. |
 | Audit | Keep the selected E2 obligation for initial Account creation plus PMR assignment. Record resend through Identity audit and its Communications intent. The Audit owner must decide whether resend also needs a central EvidenceObligation before implementation. |
 | Abuse thresholds | OQ-035 remains unresolved and release-only. P8-05 selects no numeric rate, retry, or abuse threshold. |
 
 ## Registration and retry contract
+
+Before the registration form, the participant chooses Afrikaans or English and receives the approved launch and safety content for that locale. Do not infer locale through an unreviewed fallback. The registration path requires an affirmative 18+ confirmation and acceptance of the exact approved Terms and Privacy versions for the selected locale before Account creation. Identity validates these gates; browser state alone is not authority. A failed age gate, absent acceptance, or missing/unapproved Terms or Privacy version creates no Account or PMR. On acceptance, the Account records the exact Terms and Privacy version references, locale, and acceptance time.
 
 The browser allocates an opaque ID before the first registration request. The proposed format is a random 128-bit UUIDv4 generated by a cryptographically secure browser source. The browser retains it for retries of that logical request and discards it after a terminal response. A changed form submission gets a new ID. The ID is an idempotency key, not a credential or proof of identity.
 
@@ -85,9 +88,9 @@ ISO describes its check-character systems as detecting all single substitutions 
 
 ## Atomic acceptance and scheduling
 
-A successful initial registration commits all of these consequences in one authoritative PostgreSQL transaction or commits none:
+A successful initial registration commits all of these consequences in one authoritative PostgreSQL transaction or commits none. The required 18+ confirmation and exact approved Terms and Privacy acceptances must pass before Account creation; if any fails or lacks an approved locale/version reference, no Account or PMR is created:
 
-- Identity Account with required registration gates and accepted Terms/Privacy references;
+- Identity Account with successful 18+ confirmation, accepted exact Terms/Privacy version references, accepted locale, and acceptance time;
 - one unique Account-owned canonical active PMR;
 - one Identity verification Token, with no parallel SecurityChallenge store;
 - the selected Account-plus-PMR E2 EvidenceObligation;
@@ -115,7 +118,7 @@ The following Plane items block implementation. They do not change WELL-6 from P
 
 | Gate | Plane item | Required outcome |
 |---|---|---|
-| Approved bilingual content | `WELL-45` | Approved, immutable Afrikaans and English registration, verification, pending/resend, safety, Terms, and Privacy versions exist with owner, approval state, and exact locale/version references. No fallback or invented copy. |
+| Approved bilingual content | `WELL-45` | Approved, immutable Afrikaans and English locale-selection, launch, safety, registration, verification, pending/resend, Terms, and Privacy versions exist with owner, approval state, and exact locale/version references. No fallback or invented copy. |
 | Protected delivery capability | `WELL-46` | Security/Architecture confirms that an existing approved mechanism can safely retain and retrieve the verification bearer for durable delivery, or separately approves a mechanism and its boundary. TOTP approval for AshCloak does not imply delivery approval. |
 | Resend E2 classification | `WELL-47` | Audit owner decides whether resend challenge issuance requires a central EvidenceObligation in addition to Identity audit and Communications intent. If yes, record its evidence class, minimum payload, causal identity, and required atomic boundary. |
 
@@ -127,12 +130,12 @@ These are proposed coding tickets for review, not created Plane work items. Ever
 
 | Order | Proposed ticket | Depends on | Independent acceptance boundary |
 |---|---|---|---|
-| 1 | Identity registration, canonicalization, PMR, Token, and operation-idempotency primitives | Independent planning review; `WELL-45`; `WELL-46`; `WELL-47`; Identity/Product approval of canonicalizer; Identity approval of PMR and safe request-binding proposals | Identity-owned constraints/actions and focused tests enforce registration gates, one canonical email, one Account-owned PMR, bounded collision retry, immutable operation binding, unverified state, and no Session. No public path may commit a partial registration before integration. |
+| 1 | Identity registration, canonicalization, PMR, Token, and operation-idempotency primitives | Independent planning review; `WELL-45`; `WELL-46`; `WELL-47`; Identity/Product approval of canonicalizer; Identity approval of PMR and safe request-binding proposals | Identity-owned constraints/actions and focused tests enforce 18+ confirmation and exact approved Terms/Privacy acceptance before Account creation; a failed age or Terms/Privacy gate leaves no Account or PMR. Tests also enforce one canonical email, one Account-owned PMR, bounded collision retry, immutable operation binding, unverified state, and no Session. No public path may commit a partial registration before integration. |
 | 2 | Communications MessageIntent and transactional Oban scheduling | Independent planning review; Ticket 1 contracts; `WELL-45`; `WELL-46`; `WELL-47` | Owner interface creates one version-bound MessageIntent and same-transaction job with only its ID. Tests prove rollback and no worker/provider invocation. Protected bearer handling uses only the approved mechanism. |
 | 3 | Audit registration E2 and resend audit boundary | Independent planning review; Ticket 1; `WELL-45`; `WELL-46`; `WELL-47` | Initial Account-plus-PMR E2 is present in the transaction. Resend records Identity audit and follows the Audit owner’s explicit central-evidence decision. |
 | 4 | Registration and resend acceptance orchestration | Independent planning review; Tickets 1–3; `WELL-45`; `WELL-46`; `WELL-47` | One public application operation composes owner interfaces within the verified PostgreSQL boundary. Successful acceptance commits every required consequence; injected failure leaves none. Retries and duplicate email preserve the selected public result and one-set cardinality. |
-| 5 | Bilingual registration and verification-pending browser path | Independent planning review; Ticket 4; `WELL-45`; `WELL-46`; `WELL-47` | Afrikaans and English registration and pending views use the exact approved content versions. Resend is a separate explicit action. No email correction, session, login, proof consumption, silent fallback, or protected access. |
-| 6 | P8-05 production-path proof and evidence artifact | Independent planning review; Tickets 1–5; `WELL-45`; `WELL-46`; `WELL-47`; P8-04 harness | Real PostgreSQL/Ash path proves success, gate failure, duplicate email, same-ID replay, changed-input rejection, PMR collision bound, resend replay/supersession, E2 selection, atomic job presence/absence, ID-only job args, and no worker/provider execution. Run the P8-04 deterministic harness through its approved entrypoint. |
+| 5 | Bilingual registration and verification-pending browser path | Independent planning review; Ticket 4; `WELL-45`; `WELL-46`; `WELL-47` | Participant selects Afrikaans or English and sees the exact approved locale-specific launch and safety content before registration, with no fallback. Registration and pending views use their exact approved versions and expose the 18+ and Terms/Privacy gates. Resend is a separate explicit action. No email correction, session, login, proof consumption, silent fallback, or protected access. |
+| 6 | P8-05 production-path proof and evidence artifact | Independent planning review; Tickets 1–5; `WELL-45`; `WELL-46`; `WELL-47`; P8-04 harness | Real PostgreSQL/Ash path proves success with the accepted 18+ and exact Terms/Privacy references, locale, and acceptance time; proves a failed age gate and absent or unapproved Terms/Privacy version leave no Account or PMR; and proves duplicate email, same-ID replay, changed-input rejection, PMR collision bound, resend replay/supersession, E2 selection, atomic job presence/absence, ID-only job args, and no worker/provider execution. Run the P8-04 deterministic harness through its approved entrypoint. |
 
 Ticket 1 through ticket 3 may be built in parallel only after their shared contracts and all pre-implementation gates are approved. Ticket 4 is the first complete registration acceptance path. Ticket 5 follows that boundary. Ticket 6 closes the P8-05 proof outcome. P8-06 retains exhaustive rollback/replay/PMR concurrency proof; P8-07 retains scanner-safe proof-consumption proof; P8-10 retains provider ambiguity; P8-11 retains E2 materialization/restart recovery.
 
