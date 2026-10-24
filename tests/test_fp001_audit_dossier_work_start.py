@@ -96,7 +96,9 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
         immediate_predecessor = next(
             entry
             for entry in self.manifest["historical_documents"]
-            if entry.get("document_id") == "OPEN_WORK_V1_2_77"
+            if entry.get("semver") == current["superseded_version"]
+            and entry.get("lifecycle") == "historical"
+            and entry.get("document_id", "").startswith("OPEN_WORK_V")
         )
         self.assertEqual(current["superseded_version"], immediate_predecessor["semver"])
         self.assertEqual("historical", immediate_predecessor["lifecycle"])

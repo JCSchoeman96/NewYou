@@ -52,13 +52,18 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             "COMPLETE / CERTIFIED / CURRENT",
             state["phase_7c"],
         )
-        self.assertEqual(state["next_governance_action"], state["next_stage"])
+        self.assertIn("WELL-6", state["next_stage"])
+        self.assertIn("P8 05", state["next_stage"])
+        self.assertIn("planning", state["next_stage"].casefold())
+        self.assertIn("implementation not started", state["next_stage"].casefold())
         self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         self.assertEqual("NEW_TRACER_BULLET", state["proof_classification"])
         self.assertEqual("NOT SELECTED", state["reuse_existing_proof"])
         self.assertEqual("TB-001", state["tracer_bullet_id"])
-        self.assertEqual("NOT STARTED", state["architectural_proof_execution"])
+        self.assertEqual("STARTED", state["architectural_proof_execution"])
+        self.assertEqual("INCOMPLETE / COVERAGE-INCOMPLETE", state["proof_result"])
+        self.assertEqual("NOT CERTIFIED", state["proof_certification"])
         self.assertEqual("PASS / ALL 10 CONDITIONS SATISFIED", state["development_entry_hard_stop_status"])
         self.assertEqual("SATISFIED", state["development_entry_hard_stop_conditions_1_through_10"])
         self.assertEqual("AUTHORISED", state["application_implementation"])
@@ -188,7 +193,16 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             report = run_audit(root, manifest_path)
 
             self.assertEqual("FAIL", report["status"])
-            self.assertTrue(any(finding["check"] == "phase8_approved_status_successor_current" for finding in report["findings"]))
+            self.assertTrue(
+                any(
+                    finding["check"] in {
+                        "phase8_approved_status_successor_current",
+                        "phase8_status_successor_phase7b_preservation",
+                    }
+                    for finding in report["findings"]
+                ),
+                report["findings"],
+            )
 
     def test_current_derived_routes_reject_open_tracker_projection(self):
         cases = (

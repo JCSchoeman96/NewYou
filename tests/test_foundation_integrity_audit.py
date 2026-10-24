@@ -2014,7 +2014,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             certification_check = next(
                 item
                 for item in report["checks"]
-                if item["name"] == "fp001_phase7b_certification_current"
+                if item["name"] == "phase8_approved_status_successor_current"
             )
             self.assertEqual("PASS", certification_check["status"], certification_check["message"])
 
@@ -2097,8 +2097,8 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 self.assertEqual("FAIL", lifecycle_check["status"], lifecycle_check["message"])
                 self.assertIn("manifest SHA-256 pins disagree with actual bytes", lifecycle_check["message"])
 
-    def test_application_source_permission_is_independent_of_branch_and_head_ref(self):
-        """Authorisation comes from governed state only: detached HEAD / missing GITHUB_HEAD_REF cannot change it."""
+    def test_current_phase8_status_is_independent_of_branch_and_head_ref(self):
+        """The started Phase 8 route remains governed by repository authority."""
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
             (root / "mix.exs").write_text("# application source\n", encoding="utf-8")
@@ -2116,12 +2116,17 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 with patch("tools.foundation_integrity_audit.subprocess.run", side_effect=run_with_detached_head):
                     report = run_audit(root, manifest_path)
 
-            hard_stop_check = next(
+            route_check = next(
                 item for item in report["checks"]
-                if item["name"] == "fp001_development_entry_hard_stop_lifecycle"
+                if item["name"] == "phase8_approved_status_successor_current"
             )
-            self.assertEqual("PASS", hard_stop_check["status"], hard_stop_check["message"])
-            self.assertNotIn("application implementation is not authorised", hard_stop_check["message"])
+            self.assertEqual("PASS", route_check["status"], route_check["message"])
+            lifecycle_check = next(
+                item for item in report["checks"]
+                if item["name"] == "harden_02_lifecycle_state"
+            )
+            self.assertEqual("PASS", lifecycle_check["status"], lifecycle_check["message"])
+            self.assertIn("the TB-001 result is incomplete", lifecycle_check["message"])
 
     def test_roadmap_proof_classification_lifecycle_fails_closed_on_scope_regressions(self):
         mutations = (

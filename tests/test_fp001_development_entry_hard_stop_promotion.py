@@ -312,7 +312,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             )
             self.assertEqual("FAIL", check["status"], check["message"])
             self.assertIn(
-                "Phase 8 current-route SHA-256 differs: docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
+                "Phase 8 current-route SHA-256 differs: " + atlas_path.relative_to(root).as_posix(),
                 check["message"],
             )
 

@@ -203,7 +203,17 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         )
         self.assertIn("- PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", current_state)
         self.assertIn("FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT", current_state)
-        self.assertIn(f"- {next_actions[0]}", current_state)
+        next_execution = re.search(r"(?m)^- NEXT EXECUTION ACTION: (.+)$", current_state)
+        self.assertIsNotNone(next_execution)
+        for required in (
+            "WELL-6 / P8-05",
+            "Grill-Me/JIT",
+            "spec/ticket decomposition",
+            "independent planning review",
+            "before implementation",
+        ):
+            self.assertIn(required, next_actions[0])
+            self.assertIn(required, next_execution.group(1))
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", current_state)

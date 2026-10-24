@@ -112,7 +112,7 @@ class FP001Phase7CCurrentPromotionAuditTests(unittest.TestCase):
         checks = {item["name"]: item for item in report["checks"]}
         for name in (
             "phase8_approved_status_successor_current",
-            "phase8_approved_status_successor_predecessor_full_audit",
+            "phase8_status_successor_predecessor_provenance",
             PROMOTION_RULE,
         ):
             self.assertEqual("PASS", checks[name]["status"], checks[name]["message"])

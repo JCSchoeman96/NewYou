@@ -174,14 +174,13 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
             issues,
         )
 
-    def test_production_foundation_integrity_accepts_the_successor_and_audits_the_pinned_predecessor(self):
+    def test_production_foundation_integrity_accepts_the_successor_and_pins_predecessor_provenance(self):
         report = run_audit(ROOT, MANIFEST_PATH)
         checks = {check["name"]: check for check in report["checks"]}
         for name in (
             "phase8_approved_status_successor_current",
-            "phase8_approved_status_successor_predecessor_full_audit",
-            "fp001_phase7b_baseline_and_dossiers",
-            "fp001_phase7b_gate_routing",
+            "phase8_status_successor_predecessor_provenance",
+            "phase8_status_successor_phase7b_preservation",
         ):
             self.assertEqual(checks[name]["status"], "PASS", checks[name]["message"])
 

@@ -697,7 +697,7 @@ Historical H02-3 evidence remains historically true for the earlier programme st
 
 ## 20. Contract-stage STOP
 
-This artifact records the HARDEN-02 contract lifecycle status only. HARDEN-02 is not authority for Product, Architecture, Domain or Roadmap law, Engineering Standards promotion, FP-001 reconciliation, Communications or implementation. No application implementation is authorised by HARDEN-02 itself. Current Open Work v1.2.80 records the bounded Phase 8 / NEW_TRACER_BULLET route; P8-05 / WELL-6 implementation follows Grill-Me/JIT planning, spec/ticket decomposition and independent planning review.
+This artifact records the HARDEN-02 contract lifecycle status only. HARDEN-02 is not authority for Product, Architecture, Domain or Roadmap law, Engineering Standards promotion, FP-001 reconciliation, Communications or implementation. No application implementation is authorised by HARDEN-02 itself. Current Open Work v1.2.80 separately records application implementation as AUTHORISED only inside the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage. P8-05 / WELL-6 implementation follows Grill-Me/JIT planning, spec/ticket decomposition and independent planning review.
 
 This status-sync artifact itself does not execute HARDEN-02. The original v0.4.0 contract lifecycle remains COMPLETE / CERTIFIED on its recorded evidence. Do not reopen it or describe its evidence as missing without new contradictory repository evidence that challenges a recorded lifecycle requirement. If such evidence appears, STOP and resolve it through the applicable governed review. This status successor does not alter the certified v0.4.0 semantics.
 

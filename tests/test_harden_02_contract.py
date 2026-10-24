@@ -1163,7 +1163,10 @@ class Harden02ContractRecoveryTests(unittest.TestCase):
 
 class FoundationIntegrityWorkflowTests(unittest.TestCase):
     def test_workflow_exact_head_dispatch_binds_checkout_and_github_sha(self):
-        workflow = (ROOT / ".github" / "workflows" / "foundation-integrity.yml").read_text(
+        required_workflow = (ROOT / ".github" / "workflows" / "foundation-integrity.yml").read_text(
+            encoding="utf-8"
+        )
+        workflow = (ROOT / ".github" / "workflows" / "foundation-full.yml").read_text(
             encoding="utf-8"
         )
         self.assertIn("workflow_dispatch:", workflow)
@@ -1171,9 +1174,9 @@ class FoundationIntegrityWorkflowTests(unittest.TestCase):
         self.assertIn("github.event_name == 'workflow_dispatch'", workflow)
         self.assertIn("EXPECTED_SHA: ${{ inputs.sha }}", workflow)
         self.assertIn('expected="$EXPECTED_SHA"', workflow)
-        self.assertIn('if [[ "$GITHUB_SHA" != "$expected" ]]', workflow)
+        self.assertIn('actual="$(git rev-parse HEAD)"', workflow)
         self.assertIn('if [[ "$actual" != "$expected" ]]', workflow)
-        self.assertIn("needs.route.outputs.foundation_full == 'true'", workflow)
+        self.assertIn("needs.route.outputs.foundation_full == 'true'", required_workflow)
 
 
 if __name__ == "__main__":
