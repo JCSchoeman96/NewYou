@@ -101,7 +101,7 @@ A successful initial registration commits all PostgreSQL business consequences i
 - the selected Account-plus-PMR E2 EvidenceObligation;
 - one Communications MessageIntent bound to the exact approved content version, locale, destination provenance, and source operation;
 - one initial Oban scheduling row inserted through the approved `ash_oban` boundary, with only the MessageIntent ID in job arguments;
-- the already approved short-lived protected delivery capability for the verification bearer, bound to the source purpose and exact MessageIntent and recoverable only by the purpose-scoped delivery executor.
+- the short-lived protected delivery capability approved through WELL-46 before implementation, bound to the source purpose and exact MessageIntent and recoverable only by the purpose-scoped delivery executor.
 
 Identity, Communications, and Audit mutations must go through their owning Ash interfaces. The orchestration must use the supported transaction mechanism verified against the actual locked dependency versions. No direct `Repo`, raw SQL, or parallel `Ecto.Multi` business-write path is allowed. The provider and worker run only after commit, outside the acceptance transaction. Oban state and provider results never establish Account, PMR, verification, or Audit truth.
 
