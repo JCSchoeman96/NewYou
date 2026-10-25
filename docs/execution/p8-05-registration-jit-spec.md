@@ -27,10 +27,26 @@ This spec follows the outcome contract in Plane WELL-6. Live GitHub authority co
 | Account and Session | Successful registration creates an unverified Account and no Session. Protected access stays blocked. Proof consumption and credential login are later slices. |
 | Pending experience | Show a localized verification-pending view with an explicit resend action. Do not offer email correction in this slice. |
 | Resend | Resend is a separate Identity operation. Replaying the same resend ID returns its prior result. A later explicit click uses a new ID. An accepted resend supersedes the old active challenge and creates one new MessageIntent and its Communications durable schedule, whose executor payload contains only that MessageIntent identifier. Ordinary accepted resends are not selected as central E2: they create no resend EvidenceObligation and no Audit durable schedule. Identity records the resend operation in its own audit trail; Communications owns the MessageIntent and delivery schedule. |
-| Terms and Privacy | Before Account creation, the participant accepts the exact approved Terms and Privacy versions for the selected locale. Identity records those exact version references, accepted locale, and acceptance time on the Account. The same selected locale is stored as the Account's preferred language. Purpose-specific consent remains separate. |
+| Terms and Privacy | Before Account creation, the participant accepts the exact approved Terms and Privacy versions for the selected locale. Identity records those exact version references, accepted locale, and acceptance time on the Account. The same selected locale is stored as the Account's preferred language. Identity does not retain a complete registration-copy manifest. Purpose-specific consent remains separate. |
 | Durable scheduling | Initial registration establishes owner-specific Communications and Audit durable execution through the approved Oban/`ash_oban` direction inside the same PostgreSQL acceptance transaction. Communications scheduling is reconstructable from the MessageIntent identifier. Audit E2 scheduling is reconstructable from the EvidenceObligation identifier. Neither worker executes inside the acceptance transaction or as part of the P8-05 acceptance proof. The exact AshOban function or API remains implementation JIT and must be verified against locked dependency versions before coding. |
 | Audit | The selected initial Account-plus-PMR E2 requires both an EvidenceObligation and Audit materialisation scheduling inside the source acceptance boundary. An ordinary accepted resend is not selected as central E2 and creates no resend EvidenceObligation or Audit durable schedule; Identity records the resend operation in its own audit trail, and Communications owns its intent and delivery schedule. P8-05 may include only the minimum real Audit materialisation executor seam needed for the initial registration's committed Audit schedule to target a valid owner path, within the frozen EvidenceObligation and EvidenceRecord Resource set. P8-11 retains exhaustive E2 hardening and proof. |
 | Abuse thresholds | OQ-035 remains unresolved and release-only. P8-05 selects no numeric rate, retry, or abuse threshold. |
+
+## WELL-45 content-governance framework
+
+This section records the settled planning framework for WELL-45. It separates approval and binding rules from the actual participant-facing content versions. It contains no approved content strings or content-version IDs. The content versions remain subject to the approvals below.
+
+| Decision | P8-05 rule |
+|---|---|
+| Approval routing | Ordinary editorial and platform copy uses the `Content Approver`; Afrikaans quality uses the `Afrikaans Language Reviewer`; English quality uses the `English Language Reviewer`; general health education and non-clinical launch wellness framing use the `Health Content Approver`; personalised or clinical guidance goes to Venessa or an authorised clinical approver; safety-critical content goes to Venessa plus any second approval required by the applicable protocol; legal and consent content goes to an authorised legal or privacy approver. Record each approval separately against the exact version. One person may hold multiple roles, with each approval still recorded separately. |
+| Content ownership | Content & Media owns the immutable content and locale versions. Afrikaans and English are separately reviewed variants; do not use runtime translation, silent locale fallback, or an unpinned “latest” version. |
+| Message binding | Each Communications MessageIntent binds to its exact approved message-content version and locale. MessageIntent records Communications intent; it does not prove provider delivery or Identity verification. |
+| Registration acceptance | Identity records the exact accepted Terms and Privacy version references, accepted locale, and acceptance time. It does not bind a complete registration UI-copy manifest to the Account. |
+| Expiry wording | Defer participant-facing verification-expiry wording unless an applicable authority requires it. |
+| Verification-email scope | Add no extra safety or privacy copy to the verification email unless an applicable authority requires it. The message must use neutral wording that says a request was made to verify the address; it must not claim the recipient initiated the request. Exact Afrikaans and English strings require their scoped content and language approvals. |
+| Urgent-support wording | Add no emergency or urgent-support wording to this path unless current authority defines an urgent-safety outcome for it. |
+| Current gate | WELL-45 remains in Planning. Its content gate is `BLOCKED / NEEDS LEGAL/PRIVACY APPROVAL`: approved Afrikaans and English Terms and Privacy versions with immutable IDs and approval references have not been verified outside the repository. This status does not mark WELL-45 passed or authorize implementation. |
+| Scope boundary | This framework does not resolve WELL-46 or change the locked WELL-47 decision. |
 
 ## Registration and retry contract
 
@@ -203,7 +219,7 @@ A passing planning review alone does not close any gate, certify TB-001 or Phase
 
 ## Source references
 
-- `docs/00_platform/README.md` and `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` for current authority routing.
+- `docs/00_platform/README.md` and `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` for current authority routing; `docs/00_platform/00_PLATFORM_v1.8.0.md` §21E.4 for the scoped approval matrix.
 - `docs/00_platform/02_OPEN_WORK_v1.2.80.md` §12.36 for P8-04 completion and P8-05 planning route.
 - `docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` §§3–9 for the PostgreSQL acceptance boundary, `ash_oban`, E2, job-argument, and proof constraints.
 - `docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md` §§D.1, F.2, J.1, J.1a, O, R, T, and V for Account/PMR/Token ownership, delivery, resend, idempotency, security, frontend response, and tests.
