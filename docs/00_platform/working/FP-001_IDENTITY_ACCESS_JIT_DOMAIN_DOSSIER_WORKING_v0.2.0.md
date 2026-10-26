@@ -338,7 +338,7 @@ The active PMR invariant is one canonical active PMR per canonical individual Ac
 
 Allocation, duplicate merge and retry handling are collision-safe, concurrency-correct and idempotent. PMR lookup and Account/beneficiary association use the PMR only as the approved beneficiary key for that purpose, remain purpose-scoped, minimum-disclosure and non-authoritative. They cannot establish purchaser control, beneficiary consent, subscription, discount, entitlement, payment authority, authentication, authorisation or verification assurance.
 
-This reconciliation chooses no PMR prefix, alphabet, grouping, length, checksum/check algorithm, generator, schema, index strategy or implementation package. Exact representation remains unfrozen under `ARQ-IAM-013`.
+Phase 7A originally left the exact PMR representation unresolved under `ARQ-IAM-013`. The subsequent WELL-48 Identity owner decision selects `PMR-<16 Base36 data characters><1 ISO/IEC 7064 MOD 37,2 check character>` as the logical representation, recorded in the current P8-05 specification. Physical allocation-history, field, constraint/index and generator implementation remain JIT.
 
 <!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->
 

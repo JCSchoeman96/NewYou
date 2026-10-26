@@ -1762,7 +1762,7 @@
       "provenance_sha256": "ddffe1b32b42e6132ec855ad6bc6234aabff6b01b36fc60f60e1e94f16d9df56"
     },
     {
-      "document_id": "DELIVERY_ATLAS_V0_4_21",
+      "document_id": "DELIVERY_ATLAS_V0_4_22",
       "canonical_filename": "DELIVERY_ATLAS_WORKING_v0.4.22.md",
       "semver": "0.4.22",
       "repository_path": "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.22.md",
@@ -1786,7 +1786,7 @@
       "provenance_sha256": "06b303277bfd9f1cc2eb5007c3444ee000a779876ccf2475a5660182d583d66a"
     },
     {
-      "document_id": "HARDEN_02_V0_5_23",
+      "document_id": "HARDEN_02_V0_5_24",
       "canonical_filename": "HARDEN-02_CONTRACT_WORKING_v0.5.24.md",
       "semver": "0.5.24",
       "repository_path": "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.24.md",
@@ -2539,7 +2539,7 @@
         "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.24.md": "af2fb947686d1850f205b9e740a0df51d43b5e71a12a0e89059481a9b55bbcbb"
       },
       "protected_current_artifacts_sha256": {
-        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md": "f2127c6d88232f5382b918f5f1624034357e5496ec38578e70e38d370fddfc43",
+        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md": "dc9cbda17ce3ff83d9a2a89ea793a3f5e617f34700b3c568a0575a11c22db9bc",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "cc664c1e5d148c1a8f30f2a8d769645646162ff029494a2187e0a65775c27c83",
         "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "aa6c4a52518225a2d5bbe86734410e5e9e330e29613b1c1e150174e2e3a12046",
         "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md": "d6fb70a9a19286263404d191a60447158c1ccf8097c8be35465def37046169c6",
@@ -2731,7 +2731,7 @@
       "current_route_sha256": {
         "docs/00_platform/02_OPEN_WORK_v1.2.82.md": "b3f433156dd2813d9be9d9bcd4dca77463d83bd10f3e154094b7c0a3df4b457d",
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.23.md": "880d1e82c3b0b77bd175b653b7dbad0829130776b3e9707959e8453678e25a62",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.24.md": "e73e2c256f104a66bf33671e5ab4a0aa50207dd3b8519b80b9e6e412f74d630d",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.24.md": "0f7a89cf7bfccf54bb93e85dfba540f5284aae418bcef48bbf70c66df955c5b2",
         "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.25.md": "586a980f1a71afeeed12ca652fed1bd50e12a42a60258e173ab1fa2023be0fb4",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
         "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4"
@@ -2791,7 +2791,7 @@
         "p8_03_engineering_foundation_and_guardrails": "COMPLETE / WELL-4"
       },
       "protected_required_jit_dossier_sha256": {
-        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md": "f2127c6d88232f5382b918f5f1624034357e5496ec38578e70e38d370fddfc43"
+        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md": "dc9cbda17ce3ff83d9a2a89ea793a3f5e617f34700b3c568a0575a11c22db9bc"
       }
     },
     "identity_v020_promotion_archives": {

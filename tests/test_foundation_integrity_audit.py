@@ -2820,6 +2820,30 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 any(finding["check"] == "manifest_version_parity" for finding in report["findings"])
             )
 
+    def test_versioned_document_id_mismatch_is_reported(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_clean_fixture(root)
+            roadmap = next(
+                entry for entry in manifest["governing_documents"]
+                if entry["document_id"] == "ROADMAP"
+            )
+            roadmap["document_id"] = "ROADMAP_V9_9_9"
+            (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            mismatch = next(
+                (
+                    finding for finding in report["findings"]
+                    if finding["check"] == "manifest_document_id_version_parity"
+                ),
+                None,
+            )
+            self.assertIsNotNone(mismatch, report["findings"])
+            self.assertIn("ROADMAP_V9_9_9", mismatch["message"])
+            self.assertIn("SemVer '1.0.0'", mismatch["message"])
+
     def test_document_version_metadata_mismatch_is_reported(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

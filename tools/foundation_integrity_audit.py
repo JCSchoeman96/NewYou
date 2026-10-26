@@ -4301,6 +4301,31 @@ def _check_manifest_entries(root: Path, entries: list[dict[str, Any]], report: d
             else f"SemVer {entry.get('semver')!r} does not match versioned filename {canonical_filename!r}",
             path=repository_path,
         )
+        document_id = str(entry.get("document_id", ""))
+        document_id_version = re.search(r"(?:^|_)V(\d+(?:_\d+){2})$", document_id)
+        document_id_version_matches = (
+            document_id_version is None
+            or document_id_version.group(1).replace("_", ".") == str(entry.get("semver", ""))
+        )
+        if document_id_version is None:
+            document_id_version_message = f"document ID {document_id!r} has no version suffix"
+        elif document_id_version_matches:
+            document_id_version_message = (
+                f"versioned document ID {document_id!r} matches manifest SemVer {entry.get('semver')!r}"
+            )
+        else:
+            encoded_version = document_id_version.group(1).replace("_", ".")
+            document_id_version_message = (
+                f"document ID {document_id!r} encodes version {encoded_version!r}, "
+                f"not manifest SemVer {entry.get('semver')!r}"
+            )
+        _record_check(
+            report,
+            "manifest_document_id_version_parity",
+            document_id_version_matches,
+            document_id_version_message,
+            path=repository_path,
+        )
         is_historical = entry.get("lifecycle", "current") == "historical"
         declared_version = _declared_document_version(path.read_text(encoding="utf-8")) if exists else None
         document_version_matches = (
