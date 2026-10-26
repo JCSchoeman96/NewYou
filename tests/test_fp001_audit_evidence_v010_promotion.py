@@ -286,7 +286,12 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
                     if path == "docs/00_platform/archive/05_ROADMAP_v1.2.2.md"
                     else path
                 )
-                self.assertEqual(_git_show(BASE_MAIN, baseline_path), (ROOT / path).read_bytes())
+                current_path = (
+                    "docs/00_platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+                    if path.endswith("FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md")
+                    else path
+                )
+                self.assertEqual(_git_show(BASE_MAIN, baseline_path), (ROOT / current_path).read_bytes())
         changed = git_changed_paths(ROOT, BASE_MAIN, HISTORICAL_SCOPE_HEAD)
         application_prefixes = ("app/", "apps/", "backend/", "frontend/", "lib/", "src/")
         self.assertEqual([], [path for path in changed if path.startswith(application_prefixes)])

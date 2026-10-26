@@ -280,7 +280,12 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
     def test_no_upstream_authority_or_application_source_changed(self):
         for path in PROTECTED_PATHS:
             with self.subTest(path=path):
-                self.assertEqual(_git_show(CLASSIFICATION_BASE_MAIN, path), (ROOT / path).read_bytes())
+                current_path = (
+                    "docs/00_platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+                    if path.endswith("FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md")
+                    else path
+                )
+                self.assertEqual(_git_show(CLASSIFICATION_BASE_MAIN, path), (ROOT / current_path).read_bytes())
         changed = git_changed_paths(ROOT, "cfc63a7a77299cd59c98d88b57a88bb5b4ac29e5", HISTORICAL_SCOPE_HEAD)
         application_prefixes = ("app/", "apps/", "backend/", "frontend/", "lib/", "src/")
         self.assertEqual([], [path for path in changed if path.startswith(application_prefixes)])

@@ -72,9 +72,18 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         for token in (
             "WELL-6 / P8-05",
             "Grill-Me/JIT",
-            "spec/ticket decomposition",
-            "independent planning review",
-            "before implementation",
+            "planning COMPLETE",
+            "spec/ticket decomposition COMPLETE",
+        ):
+            self.assertIn(token, self.open_work_state["next_governance_action"])
+        self.assertIn(
+            "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+            self.open_work_state["next_governance_action"],
+        )
+        for token in (
+            "WELL-45 clearance",
+            "implementation/JIT verification",
+            "explicit P8-05 implementation authorization",
         ):
             self.assertIn(token, self.open_work_state["next_governance_action"])
             self.assertIn(token, next_execution.group(1))
@@ -89,6 +98,9 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             root = Path(directory)
             fixture_docs = root / "docs" / "00_platform"
             shutil.copytree(DOCS, fixture_docs)
+            fixture_execution = root / "docs" / "execution"
+            fixture_execution.mkdir(parents=True)
+            shutil.copy2(ROOT / "docs/execution/p8-05-registration-jit-spec.md", fixture_execution)
             manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
             refresh_manifest(root, manifest_path)
 
@@ -118,6 +130,9 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             root = Path(directory)
             fixture_docs = root / "docs" / "00_platform"
             shutil.copytree(DOCS, fixture_docs)
+            fixture_execution = root / "docs" / "execution"
+            fixture_execution.mkdir(parents=True)
+            shutil.copy2(ROOT / "docs/execution/p8-05-registration-jit-spec.md", fixture_execution)
             manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
             refresh_manifest(root, manifest_path)
 

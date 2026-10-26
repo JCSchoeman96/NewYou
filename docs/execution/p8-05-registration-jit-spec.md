@@ -213,12 +213,12 @@ Planning PASS does not clear WELL-45, authorize implementation, certify TB-001 o
 
 ## Implementation gates and ticket status
 
-The following conditions still govern implementation. WELL-6 remains in Planning, and implementation is not authorized.
+P8-05 Grill-Me/JIT planning, spec/ticket decomposition and independent planning review are COMPLETE. WELL-6 remains in Planning while the status promotion becomes effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization are handled. Implementation is not authorized.
 
 - `WELL-45` remains open with blocker `BLOCKED / NEEDS LEGAL/PRIVACY APPROVAL`. Before implementation, require approved immutable bilingual content with approval provenance, particularly Terms EN, Terms AF, Privacy EN, and Privacy AF, plus the remaining scoped content, language, health, and Legal/Privacy approvals. Record exact locale and version references. A planning PASS does not clear this gate.
 - `WELL-46` is canonically resolved by PR #148 and the live-main merge recorded above. Its accepted protected-delivery mechanism is unchanged. This status does not authorize implementation.
 - `WELL-47` is locked/completed. An ordinary accepted resend has no central resend EvidenceObligation or Audit durable schedule. Identity owns resend audit and challenge replacement; Communications owns the new MessageIntent and Communications schedule. This status update does not change that decision.
-- The three ticket-level JIT owner decisions are recorded in this spec and Identity v0.2.0 by the PR #151 status successor. WELL-45, independent planning review and explicit implementation authorization remain separate gates; WELL-48 stays Backlog/non-executable until they are satisfied. Do not create a Domain or global architecture amendment.
+- The three ticket-level JIT owner decisions are recorded in this spec and Identity v0.2.0 by the PR #151 status successor. Independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. The status promotion becoming effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization remain separate gates; WELL-48 stays Backlog / non-executable. Do not create a Domain or global architecture amendment.
 - Before coding `WELL-49` or `WELL-50`, verify the exact supported Ash/AshPostgres/AshOban/Oban transaction mechanism against the then-current repository dependency set and official primary documentation. Package compatibility alone does not authorize installation.
 
 `WELL-48` through `WELL-53` exist in Plane and remain in Backlog. Their accepted scope is summarized below; this status update does not move them or authorize implementation.
@@ -274,12 +274,12 @@ Stop if no supported mechanism can establish both required owner-specific durabl
 
 Stop if the only proposed fix requires changing TB-001, changing Domain ownership, a third Audit Resource, generic event infrastructure, placeholder or dead executor jobs, or absorbing P8-11 wholesale into P8-05.
 
-Planning PASS does not clear WELL-45, complete independent review, certify TB-001 or Phase 8, authorize Phase 9, or authorize implementation. P8-05 implementation remains UNAUTHORISED until the applicable gates pass and explicit implementation authorization is given. The owner decisions are canonically recorded by the separate current-status successor. WELL-46 is canonically resolved and WELL-47 is locked/completed as recorded above. WELL-6 remains in Planning until its remaining gates and execution authorization are handled under Plane and current authority.
+Planning PASS does not clear WELL-45, certify TB-001 or Phase 8, authorize Phase 9, or authorize P8-05 implementation. Independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. P8-05 implementation remains UNAUTHORISED until the applicable gates pass and explicit implementation authorization is given. The owner decisions are canonically recorded by the separate current-status successor. WELL-46 is canonically resolved and WELL-47 is locked/completed as recorded above. WELL-6 remains in Planning until its remaining gates and execution authorization are handled under Plane and current authority.
 
 ## Source references
 
 - `docs/00_platform/README.md` and `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` for current authority routing; `docs/00_platform/00_PLATFORM_v1.8.0.md` §21E.4 for the scoped approval matrix.
-- `docs/00_platform/02_OPEN_WORK_v1.2.81.md` §12.36 for P8-04 completion and P8-05 planning route.
+- `docs/00_platform/02_OPEN_WORK_v1.2.81.md` §12.37 for P8-05 current status and remaining gates; §12.36 is historical predecessor context.
 - `docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` §§3–9 for the PostgreSQL acceptance boundary, `ash_oban`, E2, job-argument, and proof constraints.
 - `docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md` §§D.1, F.2, J.1, J.1a, O, R, T, and V for Account/PMR/Token ownership, delivery, resend, idempotency, security, frontend response, and tests.
 - `docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` §§4–8 for MessageIntent authority, exact content/locale binding, resend, durable execution, and protected delivery.

@@ -154,7 +154,12 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
                     if path == "docs/00_platform/archive/05_ROADMAP_v1.2.2.md"
                     else path
                 )
-                self.assertEqual(_git_show(baseline_path), (ROOT / path).read_bytes(), path)
+                current_path = (
+                    "docs/00_platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+                    if path.endswith("FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md")
+                    else path
+                )
+                self.assertEqual(_git_show(baseline_path), (ROOT / current_path).read_bytes(), path)
 
     def test_reviewed_candidate_bytes_are_preserved_exactly(self):
         reviewed = subprocess.run(

@@ -53,9 +53,11 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             state["phase_7c"],
         )
         self.assertIn("WELL-6", state["next_stage"])
-        self.assertIn("P8 05", state["next_stage"])
-        self.assertIn("planning", state["next_stage"].casefold())
-        self.assertIn("implementation not started", state["next_stage"].casefold())
+        self.assertIn("P8-05 / WELL-6", state["next_stage"])
+        self.assertIn("PR #151 status promotion becoming effective", state["next_stage"])
+        self.assertIn("WELL-45 clearance", state["next_stage"])
+        self.assertIn("implementation/JIT verification", state["next_stage"])
+        self.assertIn("p8-05 remains unauthorized", state["next_stage"].casefold())
         self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         self.assertEqual("NEW_TRACER_BULLET", state["proof_classification"])
@@ -66,7 +68,10 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("NOT CERTIFIED", state["proof_certification"])
         self.assertEqual("PASS / ALL 10 CONDITIONS SATISFIED", state["development_entry_hard_stop_status"])
         self.assertEqual("SATISFIED", state["development_entry_hard_stop_conditions_1_through_10"])
-        self.assertEqual("AUTHORISED", state["application_implementation"])
+        self.assertEqual(
+            "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+            state["application_implementation"],
+        )
         self.assertEqual("AUTHORISED", state["phase8"])
 
     def test_current_route_and_immutable_candidate_semantics_are_preserved(self):
@@ -301,6 +306,12 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         root = Path(directory)
         fixture_docs = root / "docs" / "00_platform"
         shutil.copytree(DOCS, fixture_docs)
+        fixture_execution = root / "docs" / "execution"
+        fixture_execution.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(
+            ROOT / "docs/execution/p8-05-registration-jit-spec.md",
+            fixture_execution / "p8-05-registration-jit-spec.md",
+        )
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         return root, manifest_path
 

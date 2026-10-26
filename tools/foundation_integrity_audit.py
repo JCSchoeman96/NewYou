@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -1727,7 +1728,7 @@ def _h02_fp001_hard_stop_lifecycle_state(
         "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
         "next_stage": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
@@ -1782,7 +1783,7 @@ def _h02_fp001_phase8_contract_candidate_lifecycle_state(
         "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
         "next_stage": "TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "proof_classification": "NEW_TRACER_BULLET",
@@ -1880,7 +1881,7 @@ def _h02_fp001_phase8_contract_approved_lifecycle_state(
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         "next_governance_action": "WELL-38 — Transition Foundation Integrity to implementation-era CI",
         "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
@@ -1940,7 +1941,7 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
 
     expected = {
         "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
-        "next_stage": "FP-001 P8 05 / WELL-6 — independent planning review and WELL-45 clearance; implementation not authorized",
+        "next_stage": "P8-05 / WELL-6 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization; P8-05 remains unauthorized",
         "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
         "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
@@ -1963,7 +1964,7 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
         "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 OWNER DECISIONS CANONICALLY RECORDED; IMPLEMENTATION GATED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-        "next_governance_action": "WELL-6 / P8-05 — Grill-Me/JIT planning and spec/ticket decomposition complete; independent planning review, WELL-45 clearance, and explicit implementation authorization remain before implementation",
+        "next_governance_action": "WELL-6 / P8-05 — Grill-Me/JIT planning COMPLETE; spec/ticket decomposition COMPLETE; independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. The PR #151 status promotion becoming effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization remain; P8-05 implementation is unauthorized",
     }
     if any(state.get(key) != value for key, value in expected.items()):
         return False, "started Phase 8 proof route misstates the incomplete result or downstream stop"
@@ -1986,7 +1987,8 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
 
     readme_current = _markdown_h2_section(readme, "Current State") or ""
     readme_status = required_status[1:-1] + (
-        "NEXT EXECUTION ACTION: WELL-6 / P8-05 planning",
+        "NEXT GOVERNANCE ACTION: WELL-6 / P8-05 — Grill-Me/JIT planning COMPLETE; spec/ticket decomposition COMPLETE; independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. The PR #151 status promotion becoming effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization remain; P8-05 implementation is unauthorized",
+        "NEXT EXECUTION ACTION: WELL-6 / P8-05 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable P8-05 implementation/JIT verification, and explicit P8-05 implementation authorization",
     )
     if any(token not in readme_current for token in readme_status):
         return False, "README current state does not mirror the incomplete Phase 8 proof route"
@@ -5266,7 +5268,7 @@ def _check_fp001_phase7b_candidate(
         "architectural_proof_execution": "NOT STARTED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "phase8": "AUTHORISED",
         "next_stage": "TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION" if phase8_contract_candidate else "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         "next_governance_action": "TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION" if phase8_contract_candidate else "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
@@ -6218,7 +6220,7 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
         "tracer_bullet_id": "NONE / NOT CREATED",
         "architectural_proof_execution": "NOT STARTED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         "predecessor_archives_sha256": expected_predecessors,
@@ -6280,7 +6282,7 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "architectural_proof_classification_status": "COMPLETE / FINALISED",
         "reuse_existing_proof": "NOT SELECTED",
         "tracer_bullet_id": "NONE / NOT CREATED",
@@ -6882,7 +6884,7 @@ def _check_fp001_phase8_proof_contract_lifecycle(
         "tracer_bullet_id": "TB-001",
         "proof_design": "FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "architectural_proof_execution": "NOT STARTED",
         "proof_result": "NOT STARTED",
@@ -7461,7 +7463,7 @@ def _phase8_approved_status_successor_issues(
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         "next_governance_action": "WELL-38 — Transition Foundation Integrity to implementation-era CI",
         "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
@@ -7920,6 +7922,9 @@ def _phase8_started_status_successor_issues(
         "architectural_proof_execution": "STARTED",
         "proof_result": "INCOMPLETE / COVERAGE-INCOMPLETE",
         "proof_certification": "NOT CERTIFIED",
+        "phase8": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "next_stage": "P8-05 / WELL-6 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization; P8-05 remains unauthorized",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 OWNER DECISIONS CANONICALLY RECORDED; IMPLEMENTATION GATED",
         "current_delivery_atlas": routes["delivery_atlas"].removeprefix("docs/00_platform/"),
@@ -7931,8 +7936,33 @@ def _phase8_started_status_successor_issues(
         issues.append("Open Work lifecycle state disagrees with current Phase 8 routes or proof status")
     if state is not None:
         next_action = str(state.get("next_governance_action", ""))
-        if not all(token in next_action for token in ("WELL-6 / P8-05", "Grill-Me/JIT", "spec/ticket decomposition", "independent planning review", "before implementation")):
-            issues.append("Open Work does not require P8-05 planning and independent review before implementation")
+        required_next_action_tokens = (
+            "WELL-6 / P8-05",
+            "planning complete",
+            "decomposition complete",
+            "independent planning review is complete / pass with non-blocking corrections",
+            "WELL-45",
+            "implementation/JIT verification",
+            "explicit P8-05 implementation authorization",
+        )
+        if any(token.casefold() not in next_action.casefold() for token in required_next_action_tokens):
+            issues.append("Open Work does not route remaining P8-05 clearance, verification, and authorization gates")
+        if "independent planning review" in next_action.casefold() and not any(
+            status in next_action.casefold()
+            for status in ("complete", "pass with non-blocking corrections")
+        ):
+            issues.append("Open Work current action incorrectly leaves the completed independent planning review outstanding")
+        if "decomposition complete" not in next_action.casefold():
+            issues.append("Open Work current action incorrectly leaves P8-05 decomposition outstanding")
+        atlas_text = active_files.get("delivery_atlas", "")
+        atlas_predecessor = re.search(
+            r"(?im)^- \*\*Predecessor:\*\* `archive/([^`]+\.md)`",
+            "\n".join(atlas_text.splitlines()[:45]),
+        )
+        if atlas_predecessor is not None and (
+            f"immediate routing predecessor `archive/{atlas_predecessor.group(1)}`" not in open_work
+        ):
+            issues.append(f"Open Work Atlas predecessor does not match current route: {atlas_predecessor.group(1)}")
 
     open_work_section = re.search(
         r"(?m)^## .*WELL-5 / P8-04 completion and P8-05 planning route\s*$",
@@ -7956,7 +7986,12 @@ def _phase8_started_status_successor_issues(
         "WELL-6",
         "Grill-Me/JIT planning",
         "spec/ticket decomposition",
-        "independent planning review before implementation",
+        "P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete",
+        "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+        "WELL-45 remains blocking",
+        "WELL-48 remains Backlog / non-executable",
+        "P8-05 implementation remains UNAUTHORISED",
+        "status promotion becomes effective through PR #151",
     )
     if any(token.casefold() not in current_open_work_text.casefold() for token in required_current_tokens):
         issues.append("current Open Work status omits WELL-5 completion or the incomplete proof boundary")
@@ -7989,8 +8024,14 @@ def _phase8_started_status_successor_issues(
         "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
         "PROOF CERTIFICATION: NOT CERTIFIED",
         "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
-        "NEXT EXECUTION ACTION: WELL-6 / P8-05 planning through Grill-Me/JIT",
-        "spec/ticket decomposition and independent planning review before implementation",
+        "P8-05 planning: COMPLETE",
+        "Spec/ticket decomposition: COMPLETE",
+        "Independent planning review: COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+        "WELL-45: BLOCKING / NEEDS LEGAL/PRIVACY APPROVAL",
+        "WELL-48: BACKLOG / NON-EXECUTABLE",
+        "P8-05 IMPLEMENTATION: UNAUTHORISED",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "NEXT EXECUTION ACTION: WELL-6 / P8-05 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable P8-05 implementation/JIT verification, and explicit P8-05 implementation authorization",
         "ten required business/browser manifests remain unavailable",
     )
     for token in current_state_tokens:
@@ -8050,9 +8091,11 @@ def _phase8_started_status_successor_issues(
         "INCOMPLETE / COVERAGE-INCOMPLETE",
         "NOT CERTIFIED",
         "business/browser manifests remain unavailable",
-        "WELL-6",
-        "P8-05",
-        "Grill-Me/JIT planning",
+        "P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete",
+        "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+        "WELL-45 remains blocking",
+        "WELL-48 remains Backlog / non-executable",
+        "P8-05 implementation remains unauthorized",
         "NOT STARTED / NOT AUTHORISED",
     )
     for label in ("delivery_atlas", "fp001_skeleton", "harden_02"):
@@ -8069,14 +8112,11 @@ def _phase8_started_status_successor_issues(
                 issues.append(f"current {label} status omits {token!r}")
         if "phase 8" not in section.casefold():
             issues.append(f"current {label} status omits the Phase 8 certification boundary")
-        if (
-            "independent planning review" not in section.casefold()
-            or not any(
-                phrase in section.casefold()
-                for phrase in ("before implementation", "must precede implementation", "must precede implementati")
-            )
+        if "independent planning review" in section.casefold() and not any(
+            status in section.casefold()
+            for status in ("complete", "pass with non-blocking corrections")
         ):
-            issues.append(f"current {label} status omits the independent planning review gate")
+            issues.append(f"current {label} status incorrectly leaves the completed independent planning review outstanding")
 
     current_harden = active_files.get("harden_02", "")
     implementation_boundary = (
@@ -8366,7 +8406,18 @@ def _audit_exact_predecessor_commit(repository_root: Path, sha: str) -> tuple[bo
         predecessor_manifest = tree_path / DEFAULT_MANIFEST
         if not predecessor_manifest.is_file():
             return False, "pinned predecessor has no current authority manifest"
-        report = run_audit(tree_path, predecessor_manifest, repository_root=repository_root)
+        historical_tool_path = tree_path / "tools/foundation_integrity_audit.py"
+        historical_spec = importlib.util.spec_from_file_location(
+            f"foundation_integrity_audit_{sha[:12]}", historical_tool_path
+        )
+        if historical_spec is None or historical_spec.loader is None:
+            return False, "cannot load Foundation Integrity tool from the exact historical tree"
+        historical_tool = importlib.util.module_from_spec(historical_spec)
+        historical_spec.loader.exec_module(historical_tool)
+        report = historical_tool.run_audit(
+            tree_path,
+            predecessor_manifest,
+        )
         if report.get("status") != "PASS":
             failures = "; ".join(
                 f"{finding.get('check')}: {finding.get('message')}"
@@ -8425,6 +8476,7 @@ def _identity_v020_promotion_issues(
             "current_status_promotion": "PR #151 STATUS SUCCESSOR",
             "well_45": "BLOCKING / NEEDS LEGAL/PRIVACY APPROVAL",
             "well_48": "BACKLOG / NON-EXECUTABLE",
+            "phase_8_application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
             "p8_05_registration_implementation": "UNAUTHORISED",
             "owner_decisions": "CANONICALLY RECORDED",
         }
@@ -8515,6 +8567,8 @@ def _identity_v020_promotion_issues(
         "CERTIFIED / CURRENT",
         "WELL-45 remains blocking",
         "WELL-48 remains Backlog",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "P8-05 IMPLEMENTATION: UNAUTHORISED",
     ):
         if token not in readme:
             issues.append(f"README Identity current route omits {token!r}")
@@ -8528,6 +8582,10 @@ def _identity_v020_promotion_issues(
         "Identity v0.2.0: COMPLETE / CERTIFIED / CURRENT under PR #151 status successor",
         "P8-05 IMPLEMENTATION: UNAUTHORISED",
         "WELL-48: BACKLOG / NON-EXECUTABLE",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "PHASE 8: NOT CERTIFIED",
+        "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
     ):
         if token.casefold() not in open_work.casefold():
             issues.append(f"Open Work omits Identity promotion evidence or retained gate: {token}")
@@ -8870,7 +8928,7 @@ def _check_fp001_phase7c_current_promotion(
         "tracer_bullet_id": "NONE / NOT CREATED",
         "architectural_proof_execution": "NOT STARTED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
@@ -9114,7 +9172,7 @@ def _check_fp001_phase7c_current_promotion(
         "architectural_proof_execution": "NOT STARTED",
         "classification_authority_event": "SEPARATE OPEN WORK POST-PHASE-7C STATUS DECISION",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "development_entry_hard_stop_condition_9": "SATISFIED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
@@ -9191,7 +9249,7 @@ def _check_fp001_phase7c_current_promotion(
         "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
         "programme_router_issue_111_state": "OPEN",
         "proof_classification": "NEW_TRACER_BULLET",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "phase8": "AUTHORISED",
         "architectural_proof_classification_status": "COMPLETE / FINALISED",
         "architectural_proof_requirement": "NEW_TRACER_BULLET",
@@ -9729,7 +9787,7 @@ def _check_fp001_phase7b_certification_current(
             "architectural_proof_execution": "NOT STARTED",
             "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
             "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
-            "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+            "application_implementation": "AUTHORISED",
             "phase8": "AUTHORISED",
             "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
             "phase_7b_reconciliation_execution_tracker_issue": 120,
@@ -10229,7 +10287,7 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "next_stage": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
-        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "application_implementation": "AUTHORISED",
         "phase8": "AUTHORISED",
     }
     if any(state.get(key) != value for key, value in required_state.items()):

@@ -531,12 +531,22 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         self.assertIsNotNone(next_execution)
         for required in (
             "WELL-6 / P8-05",
-            "Grill-Me/JIT",
-            "spec/ticket decomposition",
-            "independent planning review",
-            "before implementation",
+            "planning COMPLETE",
+            "decomposition COMPLETE",
+            "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+            "PR #151 status promotion becoming effective",
+            "WELL-45 clearance",
+            "implementation/JIT verification",
+            "explicit P8-05 implementation authorization",
         ):
             self.assertIn(required, state["next_governance_action"])
+        for required in (
+            "WELL-6 / P8-05",
+            "PR #151 status promotion becoming effective",
+            "WELL-45 clearance",
+            "P8-05 implementation/JIT verification",
+            "explicit P8-05 implementation authorization",
+        ):
             self.assertIn(required, next_execution.group(1))
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", readme)
         self.assertIn("PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", readme)

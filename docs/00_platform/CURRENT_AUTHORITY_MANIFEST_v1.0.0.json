@@ -103,7 +103,7 @@
       "semver": "1.2.81",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.81.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "b7cc6a7c03841b4e3835a2460237fa6b7bb102f440410cff1b8b2921a2b63484",
+      "sha256": "4644ae1e41ee5f2fb38ef9033a6f6a8afcea7f4591b26fc6bc5fd530366c8af9",
       "superseded_version": "1.2.80",
       "lifecycle": "current"
     }
@@ -2483,7 +2483,7 @@
         "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.23.md": "23bf7260ebf0cd7b48aa8ec5ab89ff80233c1b82843faafbb0c3a3cd147ac792"
       },
       "protected_current_artifacts_sha256": {
-        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md": "8ddd2b9c6647e0488473a5d90336b2bc5c92588f10d910e7e9744687c7d37943",
+        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md": "f2127c6d88232f5382b918f5f1624034357e5496ec38578e70e38d370fddfc43",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "cc664c1e5d148c1a8f30f2a8d769645646162ff029494a2187e0a65775c27c83",
         "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "aa6c4a52518225a2d5bbe86734410e5e9e330e29613b1c1e150174e2e3a12046",
         "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md": "d6fb70a9a19286263404d191a60447158c1ccf8097c8be35465def37046169c6",
@@ -2603,14 +2603,14 @@
       "protected_required_jit_dossier_sha256": {
         "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "aa6c4a52518225a2d5bbe86734410e5e9e330e29613b1c1e150174e2e3a12046",
         "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "cc664c1e5d148c1a8f30f2a8d769645646162ff029494a2187e0a65775c27c83",
-        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md": "8ddd2b9c6647e0488473a5d90336b2bc5c92588f10d910e7e9744687c7d37943"
+        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md": "f2127c6d88232f5382b918f5f1624034357e5496ec38578e70e38d370fddfc43"
       },
       "current_route_sha256": {
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
-        "docs/00_platform/02_OPEN_WORK_v1.2.81.md": "b7cc6a7c03841b4e3835a2460237fa6b7bb102f440410cff1b8b2921a2b63484",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.22.md": "4ef82fff00b1a703fdb5448c77a91a7d827591f8a0216c4227dc1796f6b4c90c",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.24.md": "bb559721f6997da0f0a1d0e76c106ef4cd889a1c0f6c3176a7c5268da3e9398e",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.24.md": "96864f3e45ee62d2f9575e3aaafbf90416354b07a3cfb7d1be273e18692d3af3"
+        "docs/00_platform/02_OPEN_WORK_v1.2.81.md": "4644ae1e41ee5f2fb38ef9033a6f6a8afcea7f4591b26fc6bc5fd530366c8af9",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.22.md": "74be34102af0f65961789402b4fc170b959bf373301f2ce6afa21b2c5c529b1b",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.24.md": "067d029f51d66b12be7cc92613823b17450d5879c71b1f26d9851d4f5f497533",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.24.md": "3d5dbc3c907f445571e8c5c6ddb334e71b36db4789b196f2611e76169df3d216"
       },
       "candidate_contract_path": "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
     },
@@ -2668,7 +2668,7 @@
       "proof_result": "INCOMPLETE / COVERAGE-INCOMPLETE",
       "proof_certification": "NOT CERTIFIED",
       "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-      "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 PLANNING NEXT",
+      "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 OWNER DECISIONS CANONICALLY RECORDED; IMPLEMENTATION GATED",
       "current_routes": {
         "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.81.md",
         "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.22.md",
@@ -2679,10 +2679,10 @@
       "current_route_sha256": {
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
         "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4",
-        "docs/00_platform/02_OPEN_WORK_v1.2.81.md": "b7cc6a7c03841b4e3835a2460237fa6b7bb102f440410cff1b8b2921a2b63484",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.22.md": "4ef82fff00b1a703fdb5448c77a91a7d827591f8a0216c4227dc1796f6b4c90c",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.24.md": "bb559721f6997da0f0a1d0e76c106ef4cd889a1c0f6c3176a7c5268da3e9398e",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.24.md": "96864f3e45ee62d2f9575e3aaafbf90416354b07a3cfb7d1be273e18692d3af3"
+        "docs/00_platform/02_OPEN_WORK_v1.2.81.md": "4644ae1e41ee5f2fb38ef9033a6f6a8afcea7f4591b26fc6bc5fd530366c8af9",
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.22.md": "74be34102af0f65961789402b4fc170b959bf373301f2ce6afa21b2c5c529b1b",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.24.md": "067d029f51d66b12be7cc92613823b17450d5879c71b1f26d9851d4f5f497533",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.24.md": "3d5dbc3c907f445571e8c5c6ddb334e71b36db4789b196f2611e76169df3d216"
       },
       "candidate_sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
       "predecessor_archives_sha256": {
@@ -2739,14 +2739,14 @@
       "reviewed_candidate_archive_sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
       "current_contract_sha256": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4",
       "proof_execution_start_baseline_main_sha": "c91016ecb75ea29adc9cc21e4bf30bab51dcdc3c",
-      "next_governance_action": "Independent P8-05 / WELL-6 planning review, WELL-45 clearance, then explicit implementation authorization",
+      "next_governance_action": "P8-05 / WELL-6 Grill-Me/JIT planning, spec/ticket decomposition and independent planning review COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS; PR #151 status promotion becoming effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization remain",
       "completed_prerequisites": {
         "well_38_implementation_era_ci_transition": "COMPLETE",
         "p8_02_application_bootstrap": "COMPLETE / WELL-3",
         "p8_03_engineering_foundation_and_guardrails": "COMPLETE / WELL-4"
       },
       "protected_required_jit_dossier_sha256": {
-        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md": "8ddd2b9c6647e0488473a5d90336b2bc5c92588f10d910e7e9744687c7d37943"
+        "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md": "f2127c6d88232f5382b918f5f1624034357e5496ec38578e70e38d370fddfc43"
       }
     },
     "identity_v020_promotion_archives": {

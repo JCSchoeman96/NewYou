@@ -27,7 +27,7 @@ This structured block is the machine-authoritative lifecycle projection for this
   "communications_finalisation": "BLOCKED / STOP",
   "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
   "proof_classification": "NEW_TRACER_BULLET",
-  "phase_8_application_implementation": "UNAUTHORISED",
+  "phase_8_application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
   "well_45": "BLOCKING / NEEDS LEGAL/PRIVACY APPROVAL",
   "well_48": "BACKLOG / NON-EXECUTABLE",
   "p8_05_registration_implementation": "UNAUTHORISED",
