@@ -7695,14 +7695,14 @@ def _phase8_pinned_archive_sha256(
     if cached is not None:
         return cached
 
-    def read_revision_path(relative: str) -> bytes | None:
+    def read_revision_path(relative: str, revision: str = PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA) -> bytes | None:
         result = subprocess.run(
             [
                 "git",
                 "-C",
                 str(repository_path),
                 "show",
-                f"{PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA}:{relative}",
+                f"{revision}:{relative}",
             ],
             capture_output=True,
             check=False,
@@ -7736,6 +7736,24 @@ def _phase8_pinned_archive_sha256(
         ] if isinstance(routes, dict) else []
         for source_path in source_paths:
             base_bytes = read_revision_path(source_path)
+            if base_bytes is not None:
+                break
+
+    if base_bytes is None:
+        # A later routing successor can archive a predecessor that was still at its
+        # current path in the PR base, after the original status-certification base.
+        # Verify that archive against the direct repository predecessor at the PR
+        # boundary instead of treating the older certification base as its source.
+        filename = Path(archive_relative).name
+        source_paths = list(dict.fromkeys((
+            f"docs/00_platform/{filename}",
+            f"docs/00_platform/working/{filename}",
+        )))
+        for revision in ("HEAD^", "HEAD"):
+            for source_path in source_paths:
+                base_bytes = read_revision_path(source_path, revision)
+                if base_bytes is not None:
+                    break
             if base_bytes is not None:
                 break
 
@@ -8215,19 +8233,56 @@ def _phase8_phase7c_promotion_rule_issues(
     if any(current_hashes.get(path) != digest for path, digest in base_hashes.items()):
         issues.append("Phase 7C promotion changed an existing predecessor archive hash")
 
+    # The pinned Phase 7C promotion baseline can be several routing successors
+    # behind the current route. Preserve each archived route in that chain, not
+    # only the current file's immediate predecessor. Otherwise a later status
+    # successor would either drop valid history pins or fail because earlier
+    # successors added their direct predecessor archives after the pinned base.
+    base_phase8 = base_rules.get("fp001_phase8_proof_contract_lifecycle", {})
+    base_routes = base_phase8.get("current_routes", {}) if isinstance(base_phase8, dict) else {}
+    if not isinstance(base_routes, dict):
+        return issues + ["pinned Phase 8 route map is invalid"]
+
     new_archives: set[str] = set()
     for label in ("open_work", "delivery_atlas", "fp001_skeleton", "harden_02"):
         route = routes.get(label, "") if isinstance(routes, dict) else ""
-        path = root / route if isinstance(route, str) else None
-        text = path.read_text(encoding="utf-8") if path is not None and path.is_file() else ""
-        header = "\n".join(text.splitlines()[:45])
-        predecessor = re.search(r"(?im)^.*predecessor.*`(archive/[^`]+\.md)`", header)
-        if predecessor is None:
-            issues.append(f"current {label} route does not name its direct predecessor archive")
+        baseline_route = base_routes.get(label)
+        if not isinstance(route, str) or not isinstance(baseline_route, str):
+            issues.append(f"current or pinned {label} route is invalid")
             continue
-        new_archives.add(f"docs/00_platform/{predecessor.group(1)}")
+
+        cursor = route
+        visited: set[str] = set()
+        baseline_filename = Path(baseline_route).name
+        reached_baseline = cursor == baseline_route
+        while cursor != baseline_route:
+            if cursor in visited:
+                issues.append(f"current {label} route predecessor chain contains a cycle")
+                break
+            visited.add(cursor)
+            path = root / cursor
+            text = path.read_text(encoding="utf-8") if path.is_file() else ""
+            header = "\n".join(text.splitlines()[:45])
+            predecessor = re.search(r"(?im)^.*predecessor.*`(archive/[^`]+\.md)`", header)
+            if predecessor is None:
+                issues.append(f"current {label} route predecessor chain does not reach its pinned route")
+                break
+            archive_relative = f"docs/00_platform/{predecessor.group(1)}"
+            archive = root / archive_relative
+            if not archive.is_file():
+                issues.append(f"current {label} route predecessor chain is missing {archive_relative}")
+                break
+            new_archives.add(archive_relative)
+            if Path(archive_relative).name == baseline_filename:
+                if archive_relative != f"docs/00_platform/archive/{baseline_filename}":
+                    issues.append(f"current {label} route predecessor chain reaches the pinned filename outside archive/")
+                reached_baseline = True
+                break
+            cursor = archive_relative
+        if not reached_baseline:
+            issues.append(f"current {label} route predecessor chain does not reach its pinned route")
     if set(current_hashes) - set(base_hashes) != new_archives:
-        issues.append("Phase 7C promotion predecessor pins do not add exactly the current direct archives")
+        issues.append("Phase 7C promotion predecessor pins do not add exactly the archived current-route successor chain")
     return issues
 
 

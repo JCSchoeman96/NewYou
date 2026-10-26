@@ -23,7 +23,7 @@ LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
 SUCCESSOR_CHECK = "phase8_approved_status_successor_current"
 PROVENANCE_CHECK = "phase8_status_successor_predecessor_provenance"
 CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.80.md"
+OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.81.md"
 HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
 APPROVAL_TIME_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.78.md"
 APPROVAL_TIME_ATLAS = ROOT / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.20.md"
@@ -152,6 +152,25 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             promotion = checks["fp001_phase7c_final_contract_current_promotion"]
             self.assertEqual("FAIL", promotion["status"], promotion["message"])
             self.assertIn("PR #126 promotion evidence changed", promotion["message"])
+
+    def test_current_successor_requires_archive_pins_for_the_full_route_chain(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            promotion = manifest["integrity_rules"]["fp001_phase7c_final_contract_current_promotion"]
+            del promotion["predecessor_archives_sha256"][
+                "docs/00_platform/archive/02_OPEN_WORK_v1.2.79.md"
+            ]
+            manifest_path.write_text(
+                json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, manifest_path)
+            checks = {item["name"]: item for item in report["checks"]}
+            promotion_check = checks["fp001_phase7c_final_contract_current_promotion"]
+            self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+            self.assertIn("archived current-route successor chain", promotion_check["message"])
 
     def test_contract_is_approved_without_claiming_executed_or_certified_proof(self):
         self.assertTrue(CONTRACT.is_file(), "the governed Phase 8 task contract is missing")
@@ -343,7 +362,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
     def test_open_work_routes_to_p805_after_well5_without_certifying_tb001_or_phase9(self):
         self.assertTrue(OPEN_WORK.is_file(), "the Open Work status successor is missing")
         text = OPEN_WORK.read_text(encoding="utf-8")
-        self.assertIn('"status_successor_version": "1.2.80"', text)
+        self.assertIn('"status_successor_version": "1.2.81"', text)
         self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", text)
         self.assertIn("TB-001", text)
         self.assertIn("CONTRACT/DESIGN REVIEW: COMPLETE / PASS", text)
@@ -354,7 +373,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", text)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
         self.assertIn("NEXT GOVERNANCE ACTION: WELL-6 / P8-05", text)
-        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.20.md`", text)
+        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.21.md`", text)
 
     def test_approval_time_route_remains_archived_while_current_summaries_route_p805(self):
         contract = CONTRACT.read_text(encoding="utf-8")
@@ -380,9 +399,9 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", current_state)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", current_state)
         self.assertNotIn("NEXT GOVERNANCE ACTION: WELL-38", current_state)
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.21.md", readme)
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.22.md", readme)
         self.assertIn("working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.23.md", readme)
-        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.23.md", readme)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.24.md", readme)
 
         atlas = APPROVAL_TIME_ATLAS.read_text(encoding="utf-8")
         skeleton = APPROVAL_TIME_SKELETON.read_text(encoding="utf-8")

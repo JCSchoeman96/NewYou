@@ -154,7 +154,9 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
                     if path == "docs/00_platform/archive/05_ROADMAP_v1.2.2.md"
                     else path
                 )
-                self.assertEqual(_git_show(baseline_path), (ROOT / path).read_bytes(), path)
+                workspace_path = path.replace("docs/00_platform/00_PLATFORM_v1.8.0.md", "docs/00_platform/archive/00_PLATFORM_v1.8.0.md")
+                workspace_path = workspace_path.replace("docs/00_platform/01_DECISIONS_v1.8.0.md", "docs/00_platform/archive/01_DECISIONS_v1.8.0.md")
+                self.assertEqual(_git_show(baseline_path), (ROOT / workspace_path).read_bytes(), path)
 
     def test_reviewed_candidate_bytes_are_preserved_exactly(self):
         reviewed = subprocess.run(
@@ -561,8 +563,8 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
         self.assertIn("AE-WD-* identifiers remain working discovery identifiers", self.candidate)
         self.assertIsNone(re.search(r"AE-WD-\d{3}", self.candidate))
         for path in (
-            "docs/00_platform/00_PLATFORM_v1.8.0.md",
-            "docs/00_platform/01_DECISIONS_v1.8.0.md",
+            "docs/00_platform/archive/00_PLATFORM_v1.8.0.md",
+            "docs/00_platform/archive/01_DECISIONS_v1.8.0.md",
         ):
             self.assertNotRegex((ROOT / path).read_text(encoding="utf-8"), r"AE-WD-\d{3}")
 
