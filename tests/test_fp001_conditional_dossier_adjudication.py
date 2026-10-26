@@ -42,7 +42,7 @@ class FP001ConditionalDossierAdjudicationTests(unittest.TestCase):
         cls.open_work = git_show("docs/00_platform/02_OPEN_WORK_v1.2.62.md").decode("utf-8")
         cls.readme = git_show("docs/00_platform/README.md").decode("utf-8")
         cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
-        cls.roadmap = (DOCS / "05_ROADMAP_v1.2.3.md").read_text(encoding="utf-8")
+        cls.roadmap = (DOCS / "archive/05_ROADMAP_v1.2.3.md").read_text(encoding="utf-8")
 
     def test_exactly_the_three_conditional_dossiers_have_terminal_dispositions(self) -> None:
         table = self.skeleton.split("## 7. Domain participation", 1)[1].split("## 8.", 1)[0]
@@ -177,14 +177,14 @@ class FP001ConditionalDossierAdjudicationTests(unittest.TestCase):
 
     def test_upstream_semantic_authorities_are_unchanged_from_starting_main(self) -> None:
         authority_paths = (
-            "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
-            "docs/00_platform/00_PLATFORM_v1.8.0.md",
-            "docs/00_platform/01_DECISIONS_v1.8.0.md",
-            "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
-            "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
+            ("docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md", "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md"),
+            ("docs/00_platform/00_PLATFORM_v1.8.0.md", "docs/00_platform/archive/00_PLATFORM_v1.8.0.md"),
+            ("docs/00_platform/01_DECISIONS_v1.8.0.md", "docs/00_platform/archive/01_DECISIONS_v1.8.0.md"),
+            ("docs/00_platform/03_ARCHITECTURE_v1.1.1.md", "docs/00_platform/03_ARCHITECTURE_v1.1.1.md"),
+            ("docs/00_platform/04_DOMAIN_MAP_v1.2.0.md", "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md"),
         )
-        for path in authority_paths:
-            self.assertEqual(git_show(path), (ROOT / path).read_bytes(), path)
+        for baseline_path, workspace_path in authority_paths:
+            self.assertEqual(git_show(baseline_path), (ROOT / workspace_path).read_bytes(), baseline_path)
         roadmap_predecessor = DOCS / "archive/05_ROADMAP_v1.2.2.md"
         self.assertEqual(
             git_show("docs/00_platform/05_ROADMAP_v1.2.2.md"),

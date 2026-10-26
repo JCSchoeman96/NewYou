@@ -312,7 +312,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         )
 
     def test_current_governance_source_trails_resolve_to_current_or_archived_files(self):
-        self.assertIn("05_ROADMAP_v1.2.3.md", self.open_work)
+        self.assertIn("05_ROADMAP_v1.2.4.md", self.open_work)
         self.assertIn("archive/05_ROADMAP_v1.1.0.md", self.open_work)
         self.assertIn("archive/03_ARCHITECTURE_v1.1.0.md", self.open_work)
         self.assertIn("archive/04_DOMAIN_MAP_v1.1.0.md", self.open_work)
@@ -340,11 +340,11 @@ class ProductLawHardeningTests(unittest.TestCase):
         current_source_table = self.atlas.split("## 1.1 Authority hierarchy", 1)[1].split("## 1.2 Purpose", 1)[0]
         for current_name in (
             "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
-            "00_PLATFORM_v1.8.0.md",
-            "01_DECISIONS_v1.8.0.md",
+            current_document_path(ROOT, "PLATFORM_BASELINE").name,
+            current_document_path(ROOT, "DECISION_REGISTER").name,
             current_document_path(ROOT, "OPEN_WORK").name,
             "04_DOMAIN_MAP_v1.2.0.md",
-            "05_ROADMAP_v1.2.3.md",
+            current_document_path(ROOT, "ROADMAP").name,
         ):
             self.assertIn(current_name, current_source_table)
         self.assertNotIn("Product `v1.3.0`", historical_source_routing)
@@ -460,10 +460,10 @@ class ProductLawHardeningTests(unittest.TestCase):
 
         current_source_paths = (
             "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
-            "docs/00_platform/00_PLATFORM_v1.8.0.md",
-            "docs/00_platform/01_DECISIONS_v1.8.0.md",
+            current_document_path(ROOT, "PLATFORM_BASELINE").relative_to(ROOT).as_posix(),
+            current_document_path(ROOT, "DECISION_REGISTER").relative_to(ROOT).as_posix(),
             current_document_path(ROOT, "OPEN_WORK").relative_to(ROOT).as_posix(),
-            "docs/00_platform/05_ROADMAP_v1.2.3.md",
+            current_document_path(ROOT, "ROADMAP").relative_to(ROOT).as_posix(),
             "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
             "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
             "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
@@ -673,11 +673,11 @@ class ProductLawHardeningTests(unittest.TestCase):
     def test_atlas_routes_to_current_authorities_and_does_not_block_on_resolved_oq034(self):
         current_sources = (
             "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
-            "00_PLATFORM_v1.8.0.md",
-            "01_DECISIONS_v1.8.0.md",
+            current_document_path(ROOT, "PLATFORM_BASELINE").name,
+            current_document_path(ROOT, "DECISION_REGISTER").name,
             "03_ARCHITECTURE_v1.1.1.md",
             "04_DOMAIN_MAP_v1.2.0.md",
-            "05_ROADMAP_v1.2.3.md",
+            current_document_path(ROOT, "ROADMAP").name,
             current_document_path(ROOT, "OPEN_WORK").name,
             "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
         )
