@@ -1727,7 +1727,7 @@ def _h02_fp001_hard_stop_lifecycle_state(
         "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
         "next_stage": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
@@ -1782,7 +1782,7 @@ def _h02_fp001_phase8_contract_candidate_lifecycle_state(
         "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
         "next_stage": "TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "proof_classification": "NEW_TRACER_BULLET",
@@ -1880,7 +1880,7 @@ def _h02_fp001_phase8_contract_approved_lifecycle_state(
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         "next_governance_action": "WELL-38 — Transition Foundation Integrity to implementation-era CI",
         "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
@@ -1940,7 +1940,7 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
 
     expected = {
         "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
-        "next_stage": "FP-001 P8 05 / WELL-6 — registration proof slice planning (implementation not started)",
+        "next_stage": "FP-001 P8 05 / WELL-6 — independent planning review and WELL-45 clearance; implementation not authorized",
         "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
         "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
@@ -1960,10 +1960,10 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
-        "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 PLANNING NEXT",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 OWNER DECISIONS CANONICALLY RECORDED; IMPLEMENTATION GATED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-        "next_governance_action": "WELL-6 / P8-05 — Grill-Me/JIT planning, then spec/ticket decomposition and independent planning review before implementation",
+        "next_governance_action": "WELL-6 / P8-05 — Grill-Me/JIT planning and spec/ticket decomposition complete; independent planning review, WELL-45 clearance, and explicit implementation authorization remain before implementation",
     }
     if any(state.get(key) != value for key, value in expected.items()):
         return False, "started Phase 8 proof route misstates the incomplete result or downstream stop"
@@ -5266,7 +5266,7 @@ def _check_fp001_phase7b_candidate(
         "architectural_proof_execution": "NOT STARTED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "phase8": "AUTHORISED",
         "next_stage": "TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION" if phase8_contract_candidate else "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         "next_governance_action": "TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION" if phase8_contract_candidate else "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
@@ -6218,7 +6218,7 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
         "tracer_bullet_id": "NONE / NOT CREATED",
         "architectural_proof_execution": "NOT STARTED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
         "predecessor_archives_sha256": expected_predecessors,
@@ -6280,7 +6280,7 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "architectural_proof_classification_status": "COMPLETE / FINALISED",
         "reuse_existing_proof": "NOT SELECTED",
         "tracer_bullet_id": "NONE / NOT CREATED",
@@ -6882,7 +6882,7 @@ def _check_fp001_phase8_proof_contract_lifecycle(
         "tracer_bullet_id": "TB-001",
         "proof_design": "FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "architectural_proof_execution": "NOT STARTED",
         "proof_result": "NOT STARTED",
@@ -7032,7 +7032,7 @@ PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA = "4234965c8da20dbb4ef0a7128614a507024
 # 9e5bd3189aa5c79bbf128da464654c917def8a90. Later implementation is outside
 # this historical status transition.
 PHASE8_APPROVED_STATUS_SUCCESSOR_HEAD_SHA = "c30388f8ae548040126483ec53957d0fc80b8246"
-PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA = "991a57ade059b9d9a2eaa8a788da8eeeee765d0e"
+PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA = "2db8772153bb957140570a6606cda88c5e0b8853"
 _PHASE8_PREDECESSOR_AUDIT_CACHE: dict[tuple[Path, str], tuple[bool, str]] = {}
 _PHASE8_PINNED_ARCHIVE_SHA256_CACHE: dict[tuple[Path, str, str], tuple[str | None, str]] = {}
 _PHASE8_PINNED_BASE_MANIFEST_CACHE: dict[tuple[Path, str], tuple[dict[str, Any] | None, str]] = {}
@@ -7461,7 +7461,7 @@ def _phase8_approved_status_successor_issues(
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         "next_governance_action": "WELL-38 — Transition Foundation Integrity to implementation-era CI",
         "current_delivery_atlas": "working/DELIVERY_ATLAS_WORKING_v0.4.20.md",
@@ -7921,7 +7921,7 @@ def _phase8_started_status_successor_issues(
         "proof_result": "INCOMPLETE / COVERAGE-INCOMPLETE",
         "proof_certification": "NOT CERTIFIED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-        "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 PLANNING NEXT",
+        "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 OWNER DECISIONS CANONICALLY RECORDED; IMPLEMENTATION GATED",
         "current_delivery_atlas": routes["delivery_atlas"].removeprefix("docs/00_platform/"),
         "current_fp001_skeleton": routes["fp001_skeleton"].removeprefix("docs/00_platform/"),
         "current_harden_02": routes["harden_02"].removeprefix("docs/00_platform/"),
@@ -7948,7 +7948,7 @@ def _phase8_started_status_successor_issues(
 
     required_current_tokens = (
         "WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE",
-        "proof certification are not complete",
+        "proof certification is not complete",
         "Full TB-001 architectural proof remains INCOMPLETE",
         "Phase 8 is NOT CERTIFIED",
         "Phase 9 / Vertical Slices remain NOT STARTED / NOT AUTHORISED",
@@ -8189,6 +8189,7 @@ def _phase8_phase7c_promotion_rule_issues(
         "current_paths",
         "current_route_status_successor_version",
         "predecessor_archives_sha256",
+        "protected_current_artifacts_sha256",
     }
     for key in (set(base_rule) | set(current_rule)) - mutable_fields:
         if base_rule.get(key) != current_rule.get(key):
@@ -8214,6 +8215,26 @@ def _phase8_phase7c_promotion_rule_issues(
         return issues + ["Phase 7C promotion predecessor archive hash maps are malformed"]
     if any(current_hashes.get(path) != digest for path, digest in base_hashes.items()):
         issues.append("Phase 7C promotion changed an existing predecessor archive hash")
+
+    base_protected = base_rule.get("protected_current_artifacts_sha256", {})
+    current_protected = current_rule.get("protected_current_artifacts_sha256", {})
+    identity_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+    prior_identity_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+    if not isinstance(base_protected, dict) or not isinstance(current_protected, dict):
+        issues.append("Phase 7C promotion protected-current artifact maps are malformed")
+    else:
+        if current_protected.get(identity_path) != sha256_file(root / identity_path):
+            issues.append("current Identity v0.2.0 protected dossier hash differs from its bytes")
+        if prior_identity_path in current_protected:
+            issues.append("superseded Identity v0.1.4 remains pinned as current")
+        for path, digest in base_protected.items():
+            if path == prior_identity_path:
+                continue
+            if current_protected.get(path) != digest:
+                issues.append(f"Phase 7C promotion changed protected current artifact outside Identity routing: {path}")
+        expected_current_protected = (set(base_protected) - {prior_identity_path}) | {identity_path}
+        if set(current_protected) != expected_current_protected:
+            issues.append("Phase 7C promotion protected-current change is not limited to the Identity v0.1.4-to-v0.2.0 route")
 
     new_archives: set[str] = set()
     for label in ("open_work", "delivery_atlas", "fp001_skeleton", "harden_02"):
@@ -8360,6 +8381,159 @@ def _audit_exact_predecessor_commit(repository_root: Path, sha: str) -> tuple[bo
         return result
 
 
+def _identity_v020_promotion_issues(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+) -> list[str]:
+    """Check the separate Identity v0.2.0 current-status promotion and its evidence pins."""
+
+    issues: list[str] = []
+    active_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+    candidate_path = "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+    predecessor_path = "docs/00_platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+    expected_hashes = {
+        candidate_path: "3a6d914cef77c198e6068f3e27f4b968225dd06939c286557d99797af90df699",
+        predecessor_path: "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f",
+    }
+    if integrity_rules.get("identity_v020_promotion_archives") != expected_hashes:
+        issues.append("Identity candidate and v0.1.4 promoted-current archive pins differ from accepted evidence")
+    for path, expected_hash in expected_hashes.items():
+        source = root / path
+        if not source.is_file() or source.is_symlink() or sha256_file(source) != expected_hash:
+            issues.append(f"Identity promotion archive is missing or differs from exact source bytes: {path}")
+
+    active = root / active_path
+    if not active.is_file() or active.is_symlink():
+        issues.append("Identity v0.2.0 current dossier is missing or is a symlink")
+        active_text = ""
+        lifecycle: dict[str, Any] = {}
+    else:
+        active_text = active.read_text(encoding="utf-8")
+        region_parts = active_text.split("<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_START -->", 1)
+        region = region_parts[1].split("<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_END -->", 1)[0] if len(region_parts) == 2 else ""
+        state_match = re.search(r"```json\s*(\{.*?\})\s*```", region, re.DOTALL)
+        try:
+            lifecycle = json.loads(state_match.group(1)) if state_match else {}
+        except json.JSONDecodeError:
+            lifecycle = {}
+        required_lifecycle = {
+            "artifact_version": "v0.2.0",
+            "identity_lifecycle": "CERTIFIED / CURRENT",
+            "pr_150_candidate_certification": "COMPLETE",
+            "pr_150_post_merge_certification_evidence": "COMPLETE",
+            "current_status_promotion": "PR #151 STATUS SUCCESSOR",
+            "well_45": "BLOCKING / NEEDS LEGAL/PRIVACY APPROVAL",
+            "well_48": "BACKLOG / NON-EXECUTABLE",
+            "p8_05_registration_implementation": "UNAUTHORISED",
+            "owner_decisions": "CANONICALLY RECORDED",
+        }
+        if any(lifecycle.get(key) != value for key, value in required_lifecycle.items()):
+            issues.append("Identity v0.2.0 lifecycle state does not record current status and retained gates")
+        if "**Status:** `CERTIFIED / CURRENT`" not in active_text:
+            issues.append("Identity v0.2.0 dossier header does not state CERTIFIED / CURRENT")
+        for token in (
+            "Identity-owned `RegistrationOperation` Ash Resource",
+            "Eight-resource physical Ash implementation set",
+            "HMAC-SHA-256",
+            "Identity registration-binding key",
+            "24-hour",
+            "duplicate-email",
+        ):
+            if token.casefold() not in active_text.casefold():
+                issues.append(f"current Identity dossier omits accepted RegistrationOperation contract token: {token}")
+
+    candidate = root / candidate_path
+    if candidate.is_file() and not candidate.is_symlink():
+        candidate_text = candidate.read_text(encoding="utf-8")
+        for token in (
+            "CANDIDATE / CERTIFICATION PENDING / NOT CURRENT",
+            "RegistrationOperation",
+        ):
+            if token not in candidate_text:
+                issues.append(f"archived PR #150 candidate evidence omits {token!r}")
+    for token in (
+        "d43b6b32c2dec9cf54b5d4492d942a70984a8591",
+        "40299236086",
+        "40302375237",
+    ):
+        if token not in active_text:
+            issues.append(f"current Identity dossier omits PR #150 certification evidence {token}")
+
+    phase7c = integrity_rules.get("fp001_phase7c_final_contract_current_promotion", {})
+    phase8 = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {})
+    protected_current = phase7c.get("protected_current_artifacts_sha256", {}) if isinstance(phase7c, dict) else {}
+    protected_jit = phase8.get("protected_required_jit_dossier_sha256", {}) if isinstance(phase8, dict) else {}
+    active_digest = sha256_file(active) if active.is_file() and not active.is_symlink() else None
+    if protected_current.get(active_path) != active_digest or protected_jit.get(active_path) != active_digest:
+        issues.append("Identity v0.2.0 current dossier hash is not pinned in both current-artifact maps")
+    prior_identity_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+    if prior_identity_path in protected_current:
+        issues.append("superseded Identity v0.1.4 remains pinned as current")
+    if (root / "docs/00_platform/working/candidates/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md").exists():
+        issues.append("PR #150 candidate remains routed under the mutable candidates directory")
+    if (root / prior_identity_path).exists():
+        issues.append("superseded Identity v0.1.4 remains at the active working route")
+
+    history = manifest.get("historical_documents", [])
+    predecessor_entry = next(
+        (entry for entry in history if isinstance(entry, dict) and entry.get("document_id") == "FP001_IDENTITY_ACCESS_DOSSIER_V0_1_4_PROMOTED_CURRENT"),
+        None,
+    )
+    if (
+        not isinstance(predecessor_entry, dict)
+        or predecessor_entry.get("repository_path") != predecessor_path
+        or predecessor_entry.get("sha256") != expected_hashes[predecessor_path]
+    ):
+        issues.append("promoted/current Identity v0.1.4 snapshot is not registered as distinct historical evidence")
+
+    spec_path = root / "docs/execution/p8-05-registration-jit-spec.md"
+    spec = spec_path.read_text(encoding="utf-8") if spec_path.is_file() and not spec_path.is_symlink() else ""
+    for token in (
+        "preserve local-part bytes and case",
+        "IDNA has a separately reviewed rule",
+        "36^16",
+        "ISO/IEC 7064 MOD 37,2",
+        "registration-binding:v1",
+        "HMAC-SHA-256",
+        "dedicated environment-specific Identity registration-binding key",
+        "24 hours",
+        "WELL-45 remains",
+        "WELL-48",
+    ):
+        if token.casefold() not in spec.casefold():
+            issues.append(f"P8-05 spec omits canonically recorded WELL-48 decision: {token}")
+    if "P8-05 implementation remains UNAUTHORISED" not in spec:
+        issues.append("P8-05 spec does not retain the implementation stop")
+
+    readme_path = root / "docs/00_platform/README.md"
+    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() and not readme_path.is_symlink() else ""
+    for token in (
+        active_path.removeprefix("docs/00_platform/"),
+        candidate_path.removeprefix("docs/00_platform/"),
+        "promoted/current v0.1.4 snapshot",
+        "CERTIFIED / CURRENT",
+        "WELL-45 remains blocking",
+        "WELL-48 remains Backlog",
+    ):
+        if token not in readme:
+            issues.append(f"README Identity current route omits {token!r}")
+
+    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.81.md"
+    open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() and not open_work_path.is_symlink() else ""
+    for token in (
+        "PR #150",
+        "40299236086",
+        "40302375237",
+        "Identity v0.2.0: COMPLETE / CERTIFIED / CURRENT under PR #151 status successor",
+        "P8-05 IMPLEMENTATION: UNAUTHORISED",
+        "WELL-48: BACKLOG / NON-EXECUTABLE",
+    ):
+        if token.casefold() not in open_work.casefold():
+            issues.append(f"Open Work omits Identity promotion evidence or retained gate: {token}")
+    return issues
+
+
 def _check_phase8_approved_status_successor(
     root: Path,
     repository_root: Path,
@@ -8371,6 +8545,8 @@ def _check_phase8_approved_status_successor(
     issues = _phase8_approved_status_successor_issues(
         root, repository_root, manifest, integrity_rules
     )
+    identity_issues = _identity_v020_promotion_issues(root, manifest, integrity_rules) if _fp001_phase8_execution_status_successor_is_current(manifest) else []
+    issues.extend(identity_issues)
     transition_ok = not issues
     active_open_work = _active_open_work_entry(manifest)
     current_path = _relative_path(active_open_work) if active_open_work else "docs/00_platform/02_OPEN_WORK_v1.2.78.md"
@@ -8385,6 +8561,18 @@ def _check_phase8_approved_status_successor(
         else "; ".join(issues),
         path=current_path,
     )
+
+    if started_status_is_current:
+        identity_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+        _record_check(
+            report,
+            "identity_v020_current_status_promotion",
+            not identity_issues,
+            "Identity v0.2.0 is current with PR #150 evidence, preserved predecessor snapshots, and canonical P8-05 owner decisions"
+            if not identity_issues
+            else "; ".join(identity_issues),
+            path=identity_path,
+        )
 
     if started_status_is_current:
         phase8_rule = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {})
@@ -8682,7 +8870,7 @@ def _check_fp001_phase7c_current_promotion(
         "tracer_bullet_id": "NONE / NOT CREATED",
         "architectural_proof_execution": "NOT STARTED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
@@ -8926,7 +9114,7 @@ def _check_fp001_phase7c_current_promotion(
         "architectural_proof_execution": "NOT STARTED",
         "classification_authority_event": "SEPARATE OPEN WORK POST-PHASE-7C STATUS DECISION",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "development_entry_hard_stop_condition_9": "SATISFIED",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
@@ -9003,7 +9191,7 @@ def _check_fp001_phase7c_current_promotion(
         "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
         "programme_router_issue_111_state": "OPEN",
         "proof_classification": "NEW_TRACER_BULLET",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "phase8": "AUTHORISED",
         "architectural_proof_classification_status": "COMPLETE / FINALISED",
         "architectural_proof_requirement": "NEW_TRACER_BULLET",
@@ -9541,7 +9729,7 @@ def _check_fp001_phase7b_certification_current(
             "architectural_proof_execution": "NOT STARTED",
             "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
             "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
-            "application_implementation": "AUTHORISED",
+            "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
             "phase8": "AUTHORISED",
             "next_governance_action": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
             "phase_7b_reconciliation_execution_tracker_issue": 120,
@@ -10041,7 +10229,7 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "next_stage": "NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION",
-        "application_implementation": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "phase8": "AUTHORISED",
     }
     if any(state.get(key) != value for key, value in required_state.items()):

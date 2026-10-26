@@ -1954,6 +1954,12 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         source_root = Path(__file__).resolve().parents[1]
         fixture_docs = root / "docs" / "00_platform"
         shutil.copytree(source_root / "docs" / "00_platform", fixture_docs)
+        execution_docs = root / "docs" / "execution"
+        execution_docs.mkdir(parents=True)
+        shutil.copyfile(
+            source_root / "docs" / "execution" / "p8-05-registration-jit-spec.md",
+            execution_docs / "p8-05-registration-jit-spec.md",
+        )
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         refresh_manifest(root, manifest_path)
@@ -3165,6 +3171,47 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
 
             self.assertEqual("PASS", report["status"], report["findings"])
             self.assertEqual([], report["findings"])
+
+    def test_identity_v020_current_status_promotion_passes_foundation_integrity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+
+            report = run_audit(root, manifest_path)
+
+            identity_check = next(
+                check for check in report["checks"]
+                if check["name"] == "identity_v020_current_status_promotion"
+            )
+            self.assertEqual("PASS", identity_check["status"], identity_check["message"])
+
+    def test_identity_v020_current_status_promotion_rejects_lifecycle_regression(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            identity_path = root / (
+                "docs/00_platform/working/"
+                "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+            )
+            dossier = identity_path.read_text(encoding="utf-8")
+            marker = "<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_START -->"
+            end_marker = "<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_END -->"
+            start = dossier.index(marker)
+            end = dossier.index(end_marker, start)
+            region = dossier[start:end]
+            payload_match = re.search(r"```json\s*(\{.*?\})\s*```", region, re.DOTALL)
+            self.assertIsNotNone(payload_match, "Identity v0.2.0 lifecycle JSON is missing")
+            lifecycle = json.loads(payload_match.group(1))
+            lifecycle["identity_lifecycle"] = "CANDIDATE / CERTIFICATION PENDING / NOT CURRENT"
+            region = region[:payload_match.start(1)] + json.dumps(lifecycle, indent=2) + region[payload_match.end(1):]
+            identity_path.write_text(dossier[:start] + region + dossier[end:], encoding="utf-8")
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+
+            identity_check = next(
+                check for check in report["checks"]
+                if check["name"] == "identity_v020_current_status_promotion"
+            )
+            self.assertEqual("FAIL", identity_check["status"], identity_check["message"])
 
     def test_phase7c_foundation_integrity_rejects_candidate_mutations(self):
         candidate_rel = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
