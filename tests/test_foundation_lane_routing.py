@@ -57,7 +57,7 @@ class GovernanceRoutingTests(unittest.TestCase):
     """Scenario C: governance-sensitive changes select Full."""
 
     def test_current_platform_authority_selects_full_only(self):
-        path = "docs/00_platform/00_PLATFORM_v1.8.0.md"
+        path = "docs/00_platform/00_PLATFORM_v1.9.0.md"
         self.assertEqual("governance", classify_path(path))
         self.assertEqual({"foundation_full": True, "application_changes": False}, _route([path]))
 

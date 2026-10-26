@@ -11,10 +11,10 @@ from foundation_test_support import current_document_path, current_working_path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-ROADMAP = DOCS / "05_ROADMAP_v1.2.3.md"
+ROADMAP = DOCS / "archive" / "05_ROADMAP_v1.2.3.md"
 ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.2.2.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.2.2.md"
-CURRENT_ROADMAP = DOCS / "05_ROADMAP_v1.2.3.md"
+CURRENT_ROADMAP = current_document_path(ROOT, "ROADMAP")
 README = DOCS / "README.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 ROADMAP_V1_1_4_SHA256 = "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
@@ -161,15 +161,15 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
                     _normalise_roadmap_successor(malformed, self.predecessor)
 
     def test_roadmap_dynamic_routing_resolves_through_readme_and_manifest(self):
-        self.assertTrue(self.current_roadmap, "current Roadmap v1.2.3 must exist")
+        self.assertTrue(self.current_roadmap, "current Roadmap v1.2.4 must exist")
         manifest_current = {
             item["document_id"]: item
             for item in self.manifest["governing_documents"]
         }
         roadmap = manifest_current["ROADMAP"]
         open_work = manifest_current["OPEN_WORK"]
-        self.assertEqual("05_ROADMAP_v1.2.3.md", roadmap["canonical_filename"])
-        self.assertEqual("docs/00_platform/05_ROADMAP_v1.2.3.md", roadmap["repository_path"])
+        self.assertEqual(CURRENT_ROADMAP.name, roadmap["canonical_filename"])
+        self.assertEqual(CURRENT_ROADMAP.relative_to(ROOT).as_posix(), roadmap["repository_path"])
         self.assertEqual(_sha256(CURRENT_ROADMAP), roadmap["sha256"])
         self.assertEqual(Path(open_work["repository_path"]).name, open_work["canonical_filename"])
 
@@ -186,7 +186,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertIn(f"`{open_work['canonical_filename']}`", default_context)
 
     def test_readme_manifest_open_work_and_atlas_agree_on_current_roadmap(self):
-        current_route = "05_ROADMAP_v1.2.3.md"
+        current_route = CURRENT_ROADMAP.name
         self.assertIn(f"`{current_route}`", self.readme)
         self.assertGreaterEqual(self.open_work.count(current_route), 1)
         self.assertGreaterEqual(self.atlas.count(current_route), 1)
@@ -203,13 +203,13 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
 
         governing = {entry["document_id"]: entry for entry in self.manifest["governing_documents"]}
         self.assertEqual(current_route, governing["ROADMAP"]["canonical_filename"])
-        self.assertEqual("1.2.3", governing["ROADMAP"]["semver"])
+        self.assertEqual("1.2.4", governing["ROADMAP"]["semver"])
         history = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
-        predecessor_roadmap = history["ROADMAP_V1_2_2"]
-        self.assertEqual("05_ROADMAP_v1.2.2.md", predecessor_roadmap["canonical_filename"])
-        self.assertEqual("docs/00_platform/archive/05_ROADMAP_v1.2.2.md", predecessor_roadmap["repository_path"])
-        self.assertEqual("1.2.3", predecessor_roadmap["superseded_version"])
-        self.assertEqual(ROADMAP_V1_2_2_SHA256, predecessor_roadmap["sha256"])
+        predecessor_roadmap = history["ROADMAP_V1_2_3"]
+        self.assertEqual("05_ROADMAP_v1.2.3.md", predecessor_roadmap["canonical_filename"])
+        self.assertEqual("docs/00_platform/archive/05_ROADMAP_v1.2.3.md", predecessor_roadmap["repository_path"])
+        self.assertEqual("1.2.4", predecessor_roadmap["superseded_version"])
+        self.assertEqual("044b5c6308d59253cb0e5ae86d53e13611fb84dec04135b1175880d7881593c2", predecessor_roadmap["sha256"])
         old_roadmap = history["ROADMAP_V1_1_4"]
         self.assertEqual("05_ROADMAP_v1.1.4.md", old_roadmap["canonical_filename"])
         self.assertEqual(
@@ -237,19 +237,20 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
     def test_feature_pack_outcomes_and_unrelated_section_21_content_are_preserved(self):
         self.assertTrue(CURRENT_ROADMAP.is_file(), CURRENT_ROADMAP)
         self.assertTrue(ROADMAP.is_file(), ROADMAP)
-        old_packs = _feature_pack_sections(self.predecessor)
+        old_packs = _feature_pack_sections(self.roadmap)
         new_packs = _feature_pack_sections(self.current_roadmap)
         self.assertEqual(old_packs.keys(), new_packs.keys())
         for pack_id in old_packs:
-            if pack_id == "FP-001":
-                expected_fp001 = old_packs[pack_id].replace(
-                    "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET` — the first real authentication/session/recovery path materially exercises the accepted identity boundary; Phase 7 decides whether one proof can cover the complete path.",
-                    "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET`. This direction is provisional. Phase 7C freezes the architectural proof requirement and applicable obligations. The separate architectural proof classification gate after Phase 7C and before Phase 8 selects the final proof vehicle.",
+            expected = old_packs[pack_id]
+            if pack_id in {"FP-002", "FP-003"}:
+                expected = expected.replace("00_PLATFORM_v1.8.0.md", "00_PLATFORM_v1.9.0.md", 1)
+            if pack_id == "FP-009":
+                expected = expected.replace(
+                    "`00_PLATFORM_v1.6.0.md §§8, 21G, 21L.8, 21L.11–21L.18, 21T.9`; `DEC-039...DEC-043`, `DEC-170...DEC-190`, `DEC-275`, `DEC-278`, `DEC-283...DEC-285`, `DEC-312`.",
+                    "`00_PLATFORM_v1.9.0.md §§8, 21A.6, 21G, 21L.8, 21L.11–21L.18, 21T.9`; `DEC-039...DEC-043`, `DEC-045`, `DEC-170...DEC-190`, `DEC-275`, `DEC-278`, `DEC-283...DEC-285`, `DEC-312`, `DEC-315`.",
                     1,
                 )
-                self.assertEqual(expected_fp001, new_packs[pack_id], pack_id)
-            else:
-                self.assertEqual(old_packs[pack_id], new_packs[pack_id], pack_id)
+            self.assertEqual(expected, new_packs[pack_id], pack_id)
         for heading, next_heading in (("# 21. Phase 7 handoff", ""),):
             current = _section_bytes(CURRENT_ROADMAP, heading, next_heading)
             predecessor = _section_bytes(ROADMAP_PREDECESSOR, heading, next_heading)
@@ -288,9 +289,9 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         self.assertIn("Feature Pack count remains **17**", self.current_roadmap)
 
     def test_phase7c_freezes_proof_obligations_and_routes_classification_before_phase8(self):
-        successor = DOCS / "05_ROADMAP_v1.2.3.md"
+        successor = CURRENT_ROADMAP
         roadmap = successor.read_text(encoding="utf-8") if successor.is_file() else ""
-        self.assertTrue(successor.is_file(), "Roadmap v1.2.3 must be current")
+        self.assertTrue(successor.is_file(), "current Roadmap successor must exist")
 
         self.assertIn(
             "Phase 7C and the Final Feature Pack Contract freeze the architectural proof requirement and applicable proof obligations.",

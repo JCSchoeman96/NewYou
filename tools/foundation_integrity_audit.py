@@ -2689,6 +2689,41 @@ def _engineering_standards_certified_state(
     if "## Engineering Standards promotion candidate" in readme:
         return False, "README retains stale candidate-only Standards routing"
 
+    if _fp001_phase8_execution_status_successor_is_current(manifest):
+        phase8 = manifest.get("integrity_rules", {}).get(
+            "fp001_phase8_proof_contract_lifecycle", {}
+        )
+        routes = phase8.get("current_routes", {}) if isinstance(phase8, dict) else {}
+        harden_path = routes.get("harden_02") if isinstance(routes, dict) else None
+        harden_text = (Path(root) / harden_path).read_text(encoding="utf-8") if isinstance(harden_path, str) and (Path(root) / harden_path).is_file() else ""
+        current_route = re.search(
+            r"(?m)^## .*WELL-5 completion and P8-05 planning route \(current\)\s*$",
+            harden_text,
+        )
+        if current_route is None:
+            return False, "current HARDEN successor omits the WELL-5 completion and P8-05 route"
+        route_tail = harden_text[current_route.end():]
+        next_route = re.search(r"(?m)^## ", route_tail)
+        route = route_tail[:next_route.start()] if next_route else route_tail
+        required_current_route = (
+            "WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE",
+            "proof certification is not complete",
+            "INCOMPLETE / COVERAGE-INCOMPLETE",
+            "NOT CERTIFIED",
+            "P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete",
+            "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+            "WELL-45 remains blocking",
+            "WELL-48 remains Backlog / non-executable",
+            "P8-05 implementation remains UNAUTHORISED",
+            "application implementation remains AUTHORISED",
+            "NOT STARTED / NOT AUTHORISED",
+        )
+        if any(token.casefold() not in route.casefold() for token in required_current_route):
+            return False, "current HARDEN successor omits the bounded proof vehicle or a downstream gate"
+        if "phase 8" not in route.casefold():
+            return False, "current HARDEN successor omits the bounded Phase 8 boundary"
+        return True, "certified Engineering Standards remain current; bounded Phase 8 and P8-05 stop remain explicit"
+
     active_start = open_work.find("# 9. Immediate Next Action")
     active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
     if active_start < 0 or active_end < 0 or active_start >= active_end:
@@ -7034,7 +7069,7 @@ PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA = "4234965c8da20dbb4ef0a7128614a507024
 # 9e5bd3189aa5c79bbf128da464654c917def8a90. Later implementation is outside
 # this historical status transition.
 PHASE8_APPROVED_STATUS_SUCCESSOR_HEAD_SHA = "c30388f8ae548040126483ec53957d0fc80b8246"
-PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA = "2db8772153bb957140570a6606cda88c5e0b8853"
+PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA = "5c7acdd690008af24dc0242ca734cb900c56ea88"
 _PHASE8_PREDECESSOR_AUDIT_CACHE: dict[tuple[Path, str], tuple[bool, str]] = {}
 _PHASE8_PINNED_ARCHIVE_SHA256_CACHE: dict[tuple[Path, str, str], tuple[str | None, str]] = {}
 _PHASE8_PINNED_BASE_MANIFEST_CACHE: dict[tuple[Path, str], tuple[dict[str, Any] | None, str]] = {}
@@ -7697,14 +7732,14 @@ def _phase8_pinned_archive_sha256(
     if cached is not None:
         return cached
 
-    def read_revision_path(relative: str) -> bytes | None:
+    def read_revision_path(relative: str, revision: str = PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA) -> bytes | None:
         result = subprocess.run(
             [
                 "git",
                 "-C",
                 str(repository_path),
                 "show",
-                f"{PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA}:{relative}",
+                f"{revision}:{relative}",
             ],
             capture_output=True,
             check=False,
@@ -7738,6 +7773,24 @@ def _phase8_pinned_archive_sha256(
         ] if isinstance(routes, dict) else []
         for source_path in source_paths:
             base_bytes = read_revision_path(source_path)
+            if base_bytes is not None:
+                break
+
+    if base_bytes is None:
+        # A later routing successor can archive a predecessor that was still at its
+        # current path in the PR base, after the original status-certification base.
+        # Verify that archive against the direct repository predecessor at the PR
+        # boundary instead of treating the older certification base as its source.
+        filename = Path(archive_relative).name
+        source_paths = list(dict.fromkeys((
+            f"docs/00_platform/{filename}",
+            f"docs/00_platform/working/{filename}",
+        )))
+        for revision in ("HEAD^", "HEAD"):
+            for source_path in source_paths:
+                base_bytes = read_revision_path(source_path, revision)
+                if base_bytes is not None:
+                    break
             if base_bytes is not None:
                 break
 
@@ -8095,7 +8148,7 @@ def _phase8_started_status_successor_issues(
         "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
         "WELL-45 remains blocking",
         "WELL-48 remains Backlog / non-executable",
-        "P8-05 implementation remains unauthorized",
+            "P8-05 implementation remains unauthorised",
         "NOT STARTED / NOT AUTHORISED",
     )
     for label in ("delivery_atlas", "fp001_skeleton", "harden_02"):
@@ -8256,6 +8309,18 @@ def _phase8_phase7c_promotion_rule_issues(
     if any(current_hashes.get(path) != digest for path, digest in base_hashes.items()):
         issues.append("Phase 7C promotion changed an existing predecessor archive hash")
 
+
+    # The pinned Phase 7C promotion baseline can be several routing successors
+    # behind the current route. Preserve each archived route in that chain, not
+    # only the current file's immediate predecessor. Otherwise a later status
+    # successor would either drop valid history pins or fail because earlier
+    # successors added their direct predecessor archives after the pinned base.
+    base_phase8 = base_rules.get("fp001_phase8_proof_contract_lifecycle", {})
+    base_routes = base_phase8.get("current_routes", {}) if isinstance(base_phase8, dict) else {}
+    if not isinstance(base_routes, dict):
+        return issues + ["pinned Phase 8 route map is invalid"]
+
+
     base_protected = base_rule.get("protected_current_artifacts_sha256", {})
     current_protected = current_rule.get("protected_current_artifacts_sha256", {})
     identity_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
@@ -8279,16 +8344,43 @@ def _phase8_phase7c_promotion_rule_issues(
     new_archives: set[str] = set()
     for label in ("open_work", "delivery_atlas", "fp001_skeleton", "harden_02"):
         route = routes.get(label, "") if isinstance(routes, dict) else ""
-        path = root / route if isinstance(route, str) else None
-        text = path.read_text(encoding="utf-8") if path is not None and path.is_file() else ""
-        header = "\n".join(text.splitlines()[:45])
-        predecessor = re.search(r"(?im)^.*predecessor.*`(archive/[^`]+\.md)`", header)
-        if predecessor is None:
-            issues.append(f"current {label} route does not name its direct predecessor archive")
+        baseline_route = base_routes.get(label)
+        if not isinstance(route, str) or not isinstance(baseline_route, str):
+            issues.append(f"current or pinned {label} route is invalid")
             continue
-        new_archives.add(f"docs/00_platform/{predecessor.group(1)}")
+
+        cursor = route
+        visited: set[str] = set()
+        baseline_filename = Path(baseline_route).name
+        reached_baseline = cursor == baseline_route
+        while cursor != baseline_route:
+            if cursor in visited:
+                issues.append(f"current {label} route predecessor chain contains a cycle")
+                break
+            visited.add(cursor)
+            path = root / cursor
+            text = path.read_text(encoding="utf-8") if path.is_file() else ""
+            header = "\n".join(text.splitlines()[:45])
+            predecessor = re.search(r"(?im)^.*predecessor.*`(archive/[^`]+\.md)`", header)
+            if predecessor is None:
+                issues.append(f"current {label} route predecessor chain does not reach its pinned route")
+                break
+            archive_relative = f"docs/00_platform/{predecessor.group(1)}"
+            archive = root / archive_relative
+            if not archive.is_file():
+                issues.append(f"current {label} route predecessor chain is missing {archive_relative}")
+                break
+            new_archives.add(archive_relative)
+            if Path(archive_relative).name == baseline_filename:
+                if archive_relative != f"docs/00_platform/archive/{baseline_filename}":
+                    issues.append(f"current {label} route predecessor chain reaches the pinned filename outside archive/")
+                reached_baseline = True
+                break
+            cursor = archive_relative
+        if not reached_baseline:
+            issues.append(f"current {label} route predecessor chain does not reach its pinned route")
     if set(current_hashes) - set(base_hashes) != new_archives:
-        issues.append("Phase 7C promotion predecessor pins do not add exactly the current direct archives")
+        issues.append("Phase 7C promotion predecessor pins do not add exactly the archived current-route successor chain")
     return issues
 
 
@@ -8573,7 +8665,7 @@ def _identity_v020_promotion_issues(
         if token not in readme:
             issues.append(f"README Identity current route omits {token!r}")
 
-    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.81.md"
+    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.82.md"
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() and not open_work_path.is_symlink() else ""
     for token in (
         "PR #150",

@@ -13,7 +13,7 @@ P8-05 is the first production-path Phase 8 proof slice. Its bilingual browser pa
 
 The Account remains unverified and has no Session. The participant sees a localized verification-pending page. P8-05 does not consume verification proof, log the participant in, execute Communications or Audit durable workers, contact a provider, or certify the full TB-001 proof.
 
-The current authority route is Open Work v1.2.81, especially §12.37. PR #151 records Identity v0.2.0 as CERTIFIED / CURRENT and canonically records this reconciled owner contract. At the promotion base, main still routed v0.1.4. WELL-5 / P8-04 is complete, and the harness is available to later authorized Phase 8 slices. The current TB-001 proof remains `INCOMPLETE / COVERAGE-INCOMPLETE`, ten required business/browser manifests remain unavailable, and Phase 8 is not certified. Phase 9 remains `NOT STARTED / NOT AUTHORISED`.
+The current authority route is Open Work v1.2.82, especially §12.37. PR #151 records Identity v0.2.0 as CERTIFIED / CURRENT and canonically records this reconciled owner contract. At the promotion base, main still routed v0.1.4. WELL-5 / P8-04 is complete, and the harness is available to later authorized Phase 8 slices. The current TB-001 proof remains `INCOMPLETE / COVERAGE-INCOMPLETE`, ten required business/browser manifests remain unavailable, and Phase 8 is not certified. Phase 9 remains `NOT STARTED / NOT AUTHORISED`.
 
 This spec follows the outcome contract in Plane WELL-6. Live GitHub authority controls if a Plane description or this planning artifact becomes stale. It records the accepted WELL-48 owner decisions and reconciles them with the Identity v0.2.0 status successor; it changes no Product, Architecture, Domain, Roadmap, TB-001 or Domain ownership.
 
@@ -279,7 +279,7 @@ Planning PASS does not clear WELL-45, certify TB-001 or Phase 8, authorize Phase
 ## Source references
 
 - `docs/00_platform/README.md` and `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` for current authority routing; `docs/00_platform/00_PLATFORM_v1.8.0.md` §21E.4 for the scoped approval matrix.
-- `docs/00_platform/02_OPEN_WORK_v1.2.81.md` §12.37 for P8-05 current status and remaining gates; §12.36 is historical predecessor context.
+- `docs/00_platform/02_OPEN_WORK_v1.2.82.md` §12.37 for P8-05 current status and remaining gates; §12.36 is historical predecessor context.
 - `docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` §§3–9 for the PostgreSQL acceptance boundary, `ash_oban`, E2, job-argument, and proof constraints.
 - `docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md` §§D.1, F.2, J.1, J.1a, O, R, T, and V for Account/PMR/Token ownership, delivery, resend, idempotency, security, frontend response, and tests.
 - `docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` §§4–8 for MessageIntent authority, exact content/locale binding, resend, durable execution, and protected delivery.

@@ -48,7 +48,7 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
         cls.product = read(DOCS / cls.current["PLATFORM_BASELINE"]["canonical_filename"])
         cls.decisions = read(DOCS / cls.current["DECISION_REGISTER"]["canonical_filename"])
         cls.roadmap = read(DOCS / cls.current["ROADMAP"]["canonical_filename"])
-        cls.previous_roadmap = read(DOCS / "archive" / "05_ROADMAP_v1.2.1.md")
+        cls.previous_roadmap = read(DOCS / "archive" / "05_ROADMAP_v1.2.3.md")
         cls.domain_map = read(DOCS / cls.current["DOMAIN_MAP"]["canonical_filename"])
         cls.open_work = read(DOCS / cls.current["OPEN_WORK"]["canonical_filename"])
 
@@ -168,7 +168,7 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
         self.assertIn("DEC-313 supersedes this first-answer consumption meaning", dec055)
         self.assertIn("Other right types remain governed by their applicable current Product authority", dec055)
         self.assertEqual("current", self.current["DECISION_REGISTER"]["lifecycle"])
-        self.assertTrue(self.current["DECISION_REGISTER"]["canonical_filename"].endswith("v1.8.0.md"))
+        self.assertTrue(self.current["DECISION_REGISTER"]["canonical_filename"].endswith("v1.9.0.md"))
 
         archived = self.history["DECISION_REGISTER_V1_6_0"]
         self.assertEqual("historical", archived["lifecycle"])
@@ -198,10 +198,10 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
         self.assertRegex(ownership, r"(?m)^\| Access redemption code/consumable credit \| \*\*Entitlements\*\*")
         self.assertRegex(ownership, r"(?m)^\| Purchase/payment/refund/dispute truth \| \*\*Commerce\*\*")
 
-        self.assertEqual("1.8.0", self.current["PLATFORM_BASELINE"]["semver"])
-        self.assertEqual("1.8.0", self.current["DECISION_REGISTER"]["semver"])
-        self.assertIn("00_PLATFORM_v1.8.0.md", self.open_work)
-        self.assertIn("01_DECISIONS_v1.8.0.md", self.open_work)
+        self.assertEqual("1.9.0", self.current["PLATFORM_BASELINE"]["semver"])
+        self.assertEqual("1.9.0", self.current["DECISION_REGISTER"]["semver"])
+        self.assertIn("00_PLATFORM_v1.9.0.md", self.open_work)
+        self.assertIn("01_DECISIONS_v1.9.0.md", self.open_work)
         archived_open_work = read(ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.65.md")
         self.assertIn("PR #113 completed OPS-UPD-002 / issue #98 and issue #98 is closed", archived_open_work)
         self.assertIn("#98 is closed", self.open_work)
@@ -214,22 +214,27 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
         new_packs = feature_pack_sections(self.roadmap)
         self.assertEqual({f"FP-{index:03d}" for index in range(1, 18)}, set(new_packs))
         self.assertEqual(set(old_packs), set(new_packs))
-        changed = new_packs["FP-002"].replace(
-            "`PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§11–13`; `00_PLATFORM_v1.8.0.md §§21L.4–21L.6, 21L.13–21L.18, 21R.1–21R.2, 21R.5`; `DEC-029...DEC-050`, `DEC-258`, `DEC-268...DEC-285`, `DEC-292`, `DEC-299`, `DEC-300`, `DEC-303`, `DEC-314`.",
-            "`PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§11–13`; `00_PLATFORM_v1.6.0.md §§21L.4–21L.6, 21L.13–21L.18, 21R.1–21R.2, 21R.5`; `DEC-029...DEC-050`, `DEC-258`, `DEC-268...DEC-285`, `DEC-292`, `DEC-299`, `DEC-300`, `DEC-303`.",
+        self.assertEqual(
+            old_packs["FP-002"],
+            new_packs["FP-002"].replace("00_PLATFORM_v1.9.0.md", "00_PLATFORM_v1.8.0.md", 1),
         )
-        self.assertEqual(old_packs["FP-002"], changed)
         self.assertEqual(
             old_packs["FP-003"],
-            new_packs["FP-003"].replace("00_PLATFORM_v1.8.0.md", "00_PLATFORM_v1.7.0.md", 1),
+            new_packs["FP-003"].replace("00_PLATFORM_v1.9.0.md", "00_PLATFORM_v1.8.0.md", 1),
         )
+        expected_fp009 = old_packs["FP-009"].replace(
+            "`00_PLATFORM_v1.6.0.md §§8, 21G, 21L.8, 21L.11–21L.18, 21T.9`; `DEC-039...DEC-043`, `DEC-170...DEC-190`, `DEC-275`, `DEC-278`, `DEC-283...DEC-285`, `DEC-312`.",
+            "`00_PLATFORM_v1.9.0.md §§8, 21A.6, 21G, 21L.8, 21L.11–21L.18, 21T.9`; `DEC-039...DEC-043`, `DEC-045`, `DEC-170...DEC-190`, `DEC-275`, `DEC-278`, `DEC-283...DEC-285`, `DEC-312`, `DEC-315`.",
+            1,
+        )
+        self.assertEqual(expected_fp009, new_packs["FP-009"])
         expected_fp001 = old_packs["FP-001"].replace(
             "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET` — the first real authentication/session/recovery path materially exercises the accepted identity boundary; Phase 7 decides whether one proof can cover the complete path.",
             "**Anticipated Architectural Proof:** `PROBABLY_NEW_TRACER_BULLET`. This direction is provisional. Phase 7C freezes the architectural proof requirement and applicable obligations. The separate architectural proof classification gate after Phase 7C and before Phase 8 selects the final proof vehicle.",
             1,
         )
         self.assertEqual(expected_fp001, new_packs["FP-001"])
-        for pack_id in old_packs.keys() - {"FP-001", "FP-002", "FP-003"}:
+        for pack_id in old_packs.keys() - {"FP-001", "FP-002", "FP-003", "FP-009"}:
             self.assertEqual(old_packs[pack_id], new_packs[pack_id], pack_id)
         self.assertIn("remains unused until successful digital Assessment delivery", self.roadmap)
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])

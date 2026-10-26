@@ -58,6 +58,10 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
                 entry = all_entries["OPEN_WORK_V1_2_65"]
             elif document_id == "ROADMAP":
                 entry = all_entries["ROADMAP_V1_2_2"]
+            elif document_id == "PLATFORM_BASELINE":
+                entry = all_entries["PLATFORM_BASELINE_V1_8_0"]
+            elif document_id == "DECISION_REGISTER":
+                entry = all_entries["DECISION_REGISTER_V1_8_0"]
             else:
                 entry = all_entries[document_id]
             self.assertEqual(entry["semver"], expected["version"], document_id)

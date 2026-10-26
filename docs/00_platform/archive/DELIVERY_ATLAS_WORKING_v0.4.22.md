@@ -8,11 +8,15 @@
 - **Purpose:** Keep medium-resolution delivery navigation aligned with current Product, Architecture, Domain and Roadmap authority after the completed targeted amendment programme, and preserve the just-in-time routing required to prepare an active outcome safely.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
 - **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.21.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.
-- **SemVer transition:** `v0.4.21 → v0.4.22` (PATCH: records WELL-5 completion, the current incomplete TB-001 result, Identity v0.2.0 promotion, accepted P8-05 owner decisions and remaining gates; Atlas authority and delivery content are unchanged).
-- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This v0.4.22 successor routes current sources through Open Work v1.2.81 and Roadmap v1.2.3 and preserves #120 as CLOSED / COMPLETED historical evidence. Programme router #111 remains OPEN. Phase 7B reconciliation v0.1.0, Phase 7C and Final Feature Pack Contract v0.1.0 remain COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED. Architectural Proof Classification remains COMPLETE / FINALISED as NEW_TRACER_BULLET; reuse is NOT SELECTED. TB-001 contract/design review is COMPLETE / PASS and its approved contract remains current. Proof execution is STARTED. WELL-5 / P8-04 is COMPLETE from PR #141, merged at `991a57ade059b9d9a2eaa8a788da8eeeee765d0e`; reviewed head `6186545eb0b8d8c59388e364ece72df743a0f635` reached main with an identical tree. Self-test run [40014798086](https://github.com/JCSchoeman96/NewYou/actions/runs/40014798086) passed. Current-state TB-001 run [40014798103](https://github.com/JCSchoeman96/NewYou/actions/runs/40014798103) returned INCOMPLETE / COVERAGE-INCOMPLETE: ten required business/browser manifests remain unavailable. Full TB-001 proof remains incomplete and certification is NOT CERTIFIED; Phase 8 is NOT CERTIFIED. P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete; independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. WELL-45 remains blocking; WELL-48 remains Backlog / non-executable; P8-05 implementation remains unauthorized. Bounded Phase 8 proof application implementation remains authorised, while Phase 9 remains NOT STARTED / NOT AUTHORISED. The six affected Domains and seven material capability relationships remain unchanged. This is derived status routing only.
+- **SemVer transition:** `v0.4.21 → v0.4.22` (PATCH: refreshes current Product, Decision, Roadmap and Open Work routes after the statutory cancellation amendment; Atlas authority and delivery content are unchanged).
+- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This v0.4.22 successor routes current sources through Open Work v1.2.81 and Roadmap v1.2.4 and preserves #120 as CLOSED / COMPLETED historical evidence. Programme router #111 remains OPEN. Phase 7B reconciliation v0.1.0, Phase 7C and Final Feature Pack Contract v0.1.0 remain COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED. Architectural Proof Classification remains COMPLETE / FINALISED as NEW_TRACER_BULLET; reuse is NOT SELECTED. TB-001 contract/design review is COMPLETE / PASS and its approved contract remains current. Proof execution is STARTED. WELL-5 / P8-04 is COMPLETE from PR #141, merged at `991a57ade059b9d9a2eaa8a788da8eeeee765d0e`; reviewed head `6186545eb0b8d8c59388e364ece72df743a0f635` reached main with an identical tree. Self-test run [40014798086](https://github.com/JCSchoeman96/NewYou/actions/runs/40014798086) passed. Current-state TB-001 run [40014798103](https://github.com/JCSchoeman96/NewYou/actions/runs/40014798103) returned INCOMPLETE / COVERAGE-INCOMPLETE: ten required business/browser manifests remain unavailable. Full TB-001 proof remains incomplete and certification is NOT CERTIFIED; Phase 8 is NOT CERTIFIED. The next unit is P8-05 / WELL-6 planning, followed by Grill-Me/JIT, spec/ticket decomposition and independent planning review before implementation. Phase 9 remains NOT STARTED / NOT AUTHORISED. The six affected Domains and seven material capability relationships remain unchanged. This is derived status routing only.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
-- **Patch scope:** PATCH / records WELL-5 completion, the current TB-001 proof result and the P8-05 planning route; Atlas authority, Feature Pack content and delivery semantics are unchanged.
+- **Patch scope:** PATCH / refreshes current Product, Decision, Roadmap and Open Work routes after the statutory cancellation amendment; Atlas authority, Feature Pack content and delivery semantics are unchanged.
 
+
+## v0.4.21 Routing Patch Scope
+
+This routing-only successor archives v0.4.20 byte-identically and refreshes the current Product, Decision, Roadmap and Open Work paths. It does not change Feature Pack relationships, Domain participation, gates, proof status or implementation boundaries.
 
 ## v0.4.16 Patch Scope (historical predecessor)
 
@@ -87,10 +91,10 @@ The current sources that establish this chain are:
 
 | Authority level | Current source | Atlas relationship |
 |---|---|---|
-| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/00_platform/00_PLATFORM_v1.8.0.md`; `docs/00_platform/01_DECISIONS_v1.8.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/00_platform/00_PLATFORM_v1.9.0.md`; `docs/00_platform/01_DECISIONS_v1.9.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
 | Architecture Law | `docs/00_platform/03_ARCHITECTURE_v1.1.1.md` and the accepted Architecture Law represented by it (`reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`) | Defines architectural authority, state authority, interaction rules, failure behaviour, performance doctrine and deferred mechanisms. |
 | Domain Law | `docs/00_platform/04_DOMAIN_MAP_v1.2.0.md` | Defines who owns durable business truth and the domain-level dependency direction (20 Domains). |
-| Roadmap | `docs/00_platform/05_ROADMAP_v1.2.3.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Roadmap | `docs/00_platform/05_ROADMAP_v1.2.4.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
 | Planning tracker | `docs/00_platform/02_OPEN_WORK_v1.2.81.md` | Tracks unresolved gates, planning sequence and development stop conditions. It does not outrank Product, Architecture, Domain or Roadmap authority. |
 | Supporting cross-cutting contract | `docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md` | Supplies stable operating workflow guidance beneath the four upstream law levels. |
 | Supporting cross-cutting contract | `docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` | Supplies frontend, interaction, accessibility, public-experience and measurement guidance beneath the four upstream law levels. |
@@ -576,8 +580,8 @@ A public visitor can choose Afrikaans or English, understand the launch-facing p
 - Phase 1, Trusted entry and commercial truth.
 - Relative position: 1 of 17 and the first node on the approved core path.
 - Delivery character: foundational.
-- Platform Member Reference is **REQUIRED** inside this outcome (`RQ-1` / current Roadmap). Exact PMR encoding remains unfrozen (`ARQ-IAM-013`). FP-001 PMR reconciliation is COMPLETE / CERTIFIED under current Open Work. Identity dossier v0.2.0 is CERTIFIED / CURRENT under the separate PR #151 status successor, based on PR #150 certification evidence. Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP. This Atlas view does not create the Phase 7C Final Feature Pack Contract or classify proof.
-- Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under completed tracker #120 (CLOSED / COMPLETED). The exact PR #121 candidate is preserved in the immutable archive. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. Bounded Phase 8 proof execution is STARTED under the approved TB-001 contract. WELL-5 / P8-04 is COMPLETE; the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE and proof certification is NOT CERTIFIED. Phase 8 is NOT CERTIFIED. P8-05 / WELL-6 Grill-Me/JIT planning, spec/ticket decomposition and independent planning review are COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. The PR #151 status promotion becoming effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization remain. Content & Media is Supporting because governed public and communication content materially participates in this outcome. This corrects derived navigation only.
+- Platform Member Reference is **REQUIRED** inside this outcome (`RQ-1` / current Roadmap). Exact PMR encoding remains unfrozen (`ARQ-IAM-013`). FP-001 PMR reconciliation is COMPLETE / CERTIFIED under current Open Work. Identity dossier v0.1.4 is CERTIFIED / CURRENT under the separate PR #77 status successor, based on PR #76 certification evidence. Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT; Communications finalisation remains BLOCKED / STOP. This Atlas view does not create the Phase 7C Final Feature Pack Contract or classify proof.
+- Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under completed tracker #120 (CLOSED / COMPLETED). The exact PR #121 candidate is preserved in the immutable archive. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. Bounded Phase 8 proof execution is STARTED under the approved TB-001 contract. WELL-5 / P8-04 is COMPLETE; the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE and proof certification is NOT CERTIFIED. Phase 8 is NOT CERTIFIED. P8-05 / WELL-6 planning is next; implementation follows Grill-Me/JIT, spec/ticket decomposition and independent planning review. Content & Media is Supporting because governed public and communication content materially participates in this outcome. This corrects derived navigation only.
 
 ### Approved Dependencies
 
@@ -611,7 +615,7 @@ This provides the trusted entry capability that every protected core journey and
 
 ### Authority Anchors
 
-`05_ROADMAP_v1.2.3.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.2.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.8.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.81.md`.
+`05_ROADMAP_v1.2.4.md §6 FP-001`, with dependency and phase context in §§3.2, 5 and 14; `04_DOMAIN_MAP_v1.2.0.md §§3–5 and §6.1`; Product PMR law in `00_PLATFORM_v1.9.0.md §21P` / `DEC-297`; current gate and planning routing in `02_OPEN_WORK_v1.2.81.md`.
 
 ## FP-002 — Purchase to verified payment and entitlement
 
@@ -1494,7 +1498,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Approved Future Reuse / Extension Context:** Reused by every protected participant, operator, practitioner and future product-space journey without creating parallel identities or a separate PMR Feature Pack.
 
-**JIT Boundary:** Credential and session Resource/action contracts, recovery assurance, field policies, abuse-control implementation and physical PMR allocation-history/schema/index representation remain downstream. Identity v0.2.0 records the accepted PMR representation and logical allocation/retry contract and is COMPLETE / CERTIFIED / CURRENT under PR #151. FP-001 PMR reconciliation is COMPLETE / CERTIFIED. Communications JIT Domain Dossier v0.1.0 is COMPLETE / CERTIFIED / CURRENT. At the Open Work v1.2.75 status point, Audit & Evidence dossier v0.1.0 was REQUIRED / COMPLETE / CERTIFIED / CURRENT under the separate current-status promotion. PR #118 candidate certification and post-merge evidence are COMPLETE. Phase 7B reconciliation is COMPLETE / CERTIFIED / CURRENT under completed tracker #120 (CLOSED / COMPLETED). The exact candidate remains in the immutable archive. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after PR #126 resulting-main verification. Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. TB-001 contract/design review is COMPLETE / PASS; the v0.1.2 contract is CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. Proof design remains frozen to the accepted Q1–Q90 decisions, while the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE and proof certification is NOT CERTIFIED. Development Entry Hard Stop is PASS / ALL 10 CONDITIONS SATISFIED. WELL-5 / P8-04 is COMPLETE; Phase 8 remains NOT CERTIFIED. P8-05 / WELL-6 Grill-Me/JIT planning, spec/ticket decomposition and independent planning review are COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. The PR #151 status promotion becoming effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization remain. Phase 9 is NOT STARTED / NOT AUTHORISED. This Atlas remains derived, non-authoritative navigation and DOES NOT AUTHORISE IMPLEMENTATION.
+**JIT Boundary:** Credential and session Resource/action contracts, recovery assurance, field policies, abuse-control implementation and exact PMR encoding/prefix/alphabet/grouping/length/checksum/generator/schema (`ARQ-IAM-013`) remain downstream. FP-001 PMR reconciliation is COMPLETE / CERTIFIED. Identity dossier v0.1.4 and Communications JIT Domain Dossier v0.1.0 are COMPLETE / CERTIFIED / CURRENT. At the Open Work v1.2.75 status point, Audit & Evidence dossier v0.1.0 was REQUIRED / COMPLETE / CERTIFIED / CURRENT under the separate current-status promotion. PR #118 candidate certification and post-merge evidence are COMPLETE. Phase 7B reconciliation is COMPLETE / CERTIFIED / CURRENT under completed tracker #120 (CLOSED / COMPLETED). The exact candidate remains in the immutable archive. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after PR #126 resulting-main verification. Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. TB-001 contract/design review is COMPLETE / PASS; the v0.1.2 contract is CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. Proof design remains frozen to the accepted Q1–Q90 decisions, while the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE and proof certification is NOT CERTIFIED. Development Entry Hard Stop is PASS / ALL 10 CONDITIONS SATISFIED. WELL-5 / P8-04 is COMPLETE; Phase 8 remains NOT CERTIFIED. The next unit is P8-05 / WELL-6 planning, followed by Grill-Me/JIT, spec/ticket decomposition and independent planning review before implementation. Phase 9 is NOT STARTED / NOT AUTHORISED. This Atlas remains derived, non-authoritative navigation and DOES NOT AUTHORISE IMPLEMENTATION.
 
 ### CAP-002 — Scoped authorisation and relationship access
 
@@ -3530,8 +3534,8 @@ No performance implementation belongs in Section 9. It must not prescribe cachin
 
 | Source | Participant-journey use |
 |---|---|
-| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/00_platform/00_PLATFORM_v1.8.0.md`; `docs/00_platform/01_DECISIONS_v1.8.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
-| Roadmap | `docs/00_platform/05_ROADMAP_v1.2.3.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/00_platform/00_PLATFORM_v1.9.0.md`; `docs/00_platform/01_DECISIONS_v1.9.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Roadmap | `docs/00_platform/05_ROADMAP_v1.2.4.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
 | ATLAS-03 / ATLAS-04 | Relevant capability identity and active-Feature-Pack materiality. |
 | ATLAS-05 | Participating Domains and ownership-sensitive exceptions. |
 | ATLAS-06 | Lifecycle obligations and JIT lifecycle requirements. |
@@ -3698,10 +3702,10 @@ Section 10 creates no operator authority. It routes active-Feature-Pack planning
 
 | Source | Operator-planning use |
 |---|---|
-| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/00_platform/00_PLATFORM_v1.8.0.md`; `docs/00_platform/01_DECISIONS_v1.8.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/00_platform/00_PLATFORM_v1.9.0.md`; `docs/00_platform/01_DECISIONS_v1.9.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
 | Architecture Law | State authority, durable execution, provider/evidence and projection boundaries. |
 | Domain Law | Durable-truth ownership and cross-domain mutation rules. |
-| Roadmap | `docs/00_platform/05_ROADMAP_v1.2.3.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Roadmap | `docs/00_platform/05_ROADMAP_v1.2.4.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
 | Platform Operating Model | Stable human and workflow doctrine. |
 | Frontend Experience System | Operator interaction and experience doctrine. |
 | ATLAS-04 | Material capabilities for the active Feature Pack. |
@@ -3947,10 +3951,10 @@ Section 11 creates no new frontend authority. It derives only the minimum tempor
 
 | Source | Frontend-planning use |
 |---|---|
-| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/00_platform/00_PLATFORM_v1.8.0.md`; `docs/00_platform/01_DECISIONS_v1.8.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/00_platform/00_PLATFORM_v1.9.0.md`; `docs/00_platform/01_DECISIONS_v1.9.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
 | Architecture Law | Authoritative interaction, projection, failure/degradation and runtime boundaries. |
 | Domain Law | Durable-truth ownership and policy-sensitive relationships. |
-| Roadmap | `docs/00_platform/05_ROADMAP_v1.2.3.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Roadmap | `docs/00_platform/05_ROADMAP_v1.2.4.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
 | Platform Operating Model | Stable operator and human workflow doctrine. |
 | Frontend Experience System | Stable frontend, interaction, accessibility, responsive, design-system, SEO and measurement doctrine. |
 | ATLAS-04 | Material capabilities for the active Feature Pack. |
@@ -4281,10 +4285,10 @@ Section 12 consumes existing authority only:
 
 | Source | Section-12 use |
 |---|---|
-| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/00_platform/00_PLATFORM_v1.8.0.md`; `docs/00_platform/01_DECISIONS_v1.8.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Product Law | `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/00_platform/00_PLATFORM_v1.9.0.md`; `docs/00_platform/01_DECISIONS_v1.9.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
 | Architecture Law | Authority, durability, projection, provider evidence, async, failure and scaling doctrine. |
 | Domain Law | Exact durable-truth owner and approved cross-domain relationships. |
-| Roadmap | `docs/00_platform/05_ROADMAP_v1.2.3.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Roadmap | `docs/00_platform/05_ROADMAP_v1.2.4.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
 | ATLAS-04 | Material capabilities for the active Feature Pack. |
 | ATLAS-05 | Participating Domains and ownership-sensitive exceptions. |
 | ATLAS-06 | Lifecycle obligations and lifecycle ownership references. |
@@ -5355,11 +5359,10 @@ Post-merge self-test run [40014798086](https://github.com/JCSchoeman96/NewYou/ac
 
 The harness is available to later authorised Phase-8 proof slices. The next execution unit is P8-05 / WELL-6 planning. WELL-6 must complete Grill-Me/JIT planning, spec/ticket decomposition and independent planning review before implementation. Phase 9 remains NOT STARTED / NOT AUTHORISED. This status route changes no Product, Architecture, Domain, Roadmap, TB-001 design or proof-obligation semantics.
 
-
 ## 26.28 WELL-5 completion and P8-05 planning route (current)
 
-WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE. The current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE because the ten required business/browser manifests remain unavailable. Full TB-001 proof remains INCOMPLETE; proof certification and Phase 8 are NOT CERTIFIED; Phase 9 remains NOT STARTED / NOT AUTHORISED.
+WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE. PR [#141](https://github.com/JCSchoeman96/NewYou/pull/141) merged to main as `991a57ade059b9d9a2eaa8a788da8eeeee765d0e`; reviewed head `6186545eb0b8d8c59388e364ece72df743a0f635` reached main with an identical Git tree.
 
-PR #150 certified and merged Identity v0.2.0 candidate head `d43b6b32c2dec9cf54b5d4492d942a70984a8591` unchanged as main `2db8772153bb957140570a6606cda88c5e0b8853`; both trees are `06d9c13adcbed956b2452e749bd23a0991851d35`. Exact-head run 40299236086 passed Foundation Full, Smoke and Integrity. Resulting-main run 40302375237 passed routing, Foundation Smoke and Foundation Integrity; Foundation Full and Application CI were skipped by main routing. PR #151 records Identity v0.2.0 as CERTIFIED / CURRENT and canonically records the accepted email, PMR and RegistrationOperation/request-binding decisions. At the promotion base, main still routed v0.1.4.
+The self-test passed. The current-state TB-001 run returned INCOMPLETE / COVERAGE-INCOMPLETE because ten required business/browser manifests remain unavailable. Full TB-001 architectural proof remains INCOMPLETE, proof certification is NOT CERTIFIED, and Phase 8 is NOT CERTIFIED.
 
-P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete. Independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. WELL-45 remains blocking; WELL-48 remains Backlog / non-executable; P8-05 implementation remains unauthorized. Applicable implementation/JIT verification and explicit P8-05 implementation authorization remain. Bounded Phase 8 proof application implementation remains authorised; Phase 8 remains NOT CERTIFIED and Phase 9 remains NOT STARTED / NOT AUTHORISED. This Atlas is derived navigation only.
+The approved TB-001 contract remains CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. P8-05 / WELL-6 planning is next; Grill-Me/JIT planning, spec/ticket decomposition and independent planning review must precede implementation. Phase 9 remains NOT STARTED / NOT AUTHORISED. Current Open Work is v1.2.81. This Atlas remains derived navigation and does not authorize implementation.

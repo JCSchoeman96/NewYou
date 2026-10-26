@@ -9,6 +9,7 @@ from pathlib import Path
 from foundation_test_support import (
     FOUNDATION_WORKFLOW_BASELINE_SHA256,
     WELL38_BASE_SHA,
+    current_document_path,
     git_snapshot_bytes,
     git_snapshot_path_exists,
     git_snapshot_directory_names,
@@ -21,7 +22,7 @@ HISTORICAL_SCOPE_SHA = "c2d27d63f33e8b1440f130afcbc1a3aff74cf853"
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 ROADMAP = DOCS / "archive" / "05_ROADMAP_v1.1.3.md"
-ROADMAP_CURRENT = DOCS / "05_ROADMAP_v1.2.3.md"
+ROADMAP_CURRENT = current_document_path(ROOT, "ROADMAP")
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.2.md"
 ROADMAP_V1_0_0_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.0.0.md"
 ROADMAP_V1_1_0_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.1.0.md"
@@ -365,7 +366,7 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("## 12.6 ", self.open_work)
         self.assertLess(self.open_work.index("## 12.4 "), self.open_work.index("## 12.5 "))
         self.assertLess(self.open_work.index("## 12.5 "), self.open_work.index("## 12.6 "))
-        self.assertTrue("05_ROADMAP_v1.2.3.md" in self.readme, "README current Roadmap")
+        self.assertIn(ROADMAP_CURRENT.name, self.readme, "README current Roadmap")
         self.assertIn("archive/02_OPEN_WORK_v1.2.38.md", self.readme)
         self.assertIn("ROADMAP AMENDMENT: COMPLETE", self.readme)
         current = {
@@ -376,8 +377,8 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual(_sha256(ROOT / current["OPEN_WORK"]["repository_path"]), current["OPEN_WORK"]["sha256"])
         self.assertEqual("historical", {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK), {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["sha256"])
-        self.assertEqual("1.2.3", current["ROADMAP"]["semver"])
-        self.assertEqual("docs/00_platform/05_ROADMAP_v1.2.3.md", current["ROADMAP"]["repository_path"])
+        self.assertEqual("1.2.4", current["ROADMAP"]["semver"])
+        self.assertEqual(ROADMAP_CURRENT.relative_to(ROOT).as_posix(), current["ROADMAP"]["repository_path"])
         self.assertEqual(_sha256(ROADMAP_CURRENT), current["ROADMAP"]["sha256"])
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
         self.assertEqual(20, self.manifest["integrity_rules"]["expected_counts"]["domains"])
