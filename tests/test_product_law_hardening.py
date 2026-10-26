@@ -43,6 +43,16 @@ def matrix_rows(text: str, name: str) -> list[dict[str, str]]:
     return rows
 
 
+def document_section(document: str, heading: str) -> str:
+    match = re.search(rf"^{re.escape(heading)}\s*$", document, re.MULTILINE)
+    if match is None:
+        raise AssertionError(f"missing current-authority heading: {heading}")
+    content_start = match.end()
+    next_section = re.search(r"^#{1,2}\s", document[content_start:], re.MULTILINE)
+    content_end = content_start + next_section.start() if next_section else len(document)
+    return document[content_start:content_end]
+
+
 class ProductLawHardeningTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -52,7 +62,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.roadmap = current_document("ROADMAP")
         cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
         cls.architecture = (DOCS / "03_ARCHITECTURE_v1.1.1.md").read_text(encoding="utf-8")
-        cls.domain_map = (DOCS / "04_DOMAIN_MAP_v1.2.0.md").read_text(encoding="utf-8")
+        cls.domain_map = current_document("DOMAIN_MAP")
         cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
         cls.atlas = current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").read_text(encoding="utf-8")
@@ -61,6 +71,140 @@ class ProductLawHardeningTests(unittest.TestCase):
             encoding="utf-8"
         )
         cls.integrity_rules = json.loads(MANIFEST.read_text(encoding="utf-8"))["integrity_rules"]
+
+    def test_dec315_statutory_membership_cancellation_semantics_are_locked(self):
+        product = document_section(self.product, "## 21A.6 Billing and cancellation")
+        decision = document_section(
+            self.decisions, "## DEC-315 — Statutory consumer cancellation and refund rights"
+        )
+        policy = f"{product}\n{decision}"
+
+        self.assertIn(
+            "ordinary commercial cancellation, renewal and refund rules apply except to the extent that a non-waivable statutory consumer right provides otherwise",
+            product,
+        )
+        self.assertIn("This is a Product behaviour requirement", product)
+        self.assertIn("ordinary commercial cancellation, renewal and refund rules apply except to the extent", decision)
+
+        self.assertIn("genuine month-to-month product with no minimum term", product)
+        self.assertIn("ordinary monthly cancellation prevents the next renewal", product)
+        self.assertIn("Membership access remains available through the paid billing period", product)
+        self.assertIn("does not change monthly Membership into a minimum-term product", decision)
+
+        self.assertIn("Where applicable law classifies a Membership agreement as a fixed-term consumer agreement", product)
+        self.assertIn("recorded form legally sufficient for that right", product)
+        self.assertIn("pending/effective lifecycle", product)
+        self.assertIn("record the received notice and legally effective date", product)
+        self.assertIn("legally sufficient recorded notice", decision)
+        self.assertIn("legally effective mid-term cancellation lifecycle", decision)
+
+        amounts_due = product.index("collect only amounts lawfully owing through the effective cancellation date")
+        penalty = product.index("impose a cancellation penalty only where law permits")
+        credit = product.index("credit or refund any amount that remains the consumer's")
+        self.assertLess(amounts_due, penalty)
+        self.assertLess(penalty, credit)
+        self.assertIn("lawful amounts owing", decision)
+        self.assertIn("any required credit or refund", decision)
+
+        self.assertIn("only if the amount is reasonable under the applicable legal test", product)
+        self.assertIn("reasonable under the applicable legal factors", decision)
+        self.assertIn("evidence", product)
+        self.assertIn("evidence-based", decision)
+        self.assertIn("deterministic, versioned and auditable results after legal approval", product)
+        self.assertIn("deterministic, versioned and auditable policy after legal approval", decision)
+
+        self.assertIn("Product Law selects no percentage or formula", product)
+        self.assertIn("No percentage or formula is selected", decision)
+        self.assertNotRegex(policy, r"\b\d+(?:\.\d+)?\s*(?:%|percent|per cent)\b")
+        self.assertNotRegex(
+            policy,
+            r"(?i)\b(?:penalty|cancellation charge|cancellation fee)\b[^.\n]{0,160}"
+            r"\b(?:equals?|equal to|calculated as|computed as|fixed at|set at|pro rata|pro-rata|"
+            r"proportional to|fraction of|portion of|sum of|per remaining|for each remaining|"
+            r"per month|per day|multiplied by)\b",
+        )
+        self.assertIn("more consumer-favourable cap or a zero-penalty policy", product)
+        self.assertIn("more consumer-favourable cap or zero penalty", decision)
+        self.assertIn("unsupported penalty cannot be charged or used to delay or deny cancellation", product)
+        self.assertIn("unsupported penalty cannot delay or deny cancellation", decision)
+        self.assertIn("Provider behaviour, provider pricing and future lost revenue do not establish the lawful penalty", product)
+        self.assertIn("Provider behaviour, provider pricing and future lost revenue do not establish a lawful penalty", decision)
+
+        self.assertIn("provide required expiry notice with the timing, information and options required by law", product)
+        self.assertIn("expressly agrees to another fixed term where law requires", product)
+        self.assertIn("month-to-month continuation where it is the default", product)
+        self.assertIn("consumer's express agreement where law requires", decision)
+        self.assertIn("month-to-month continuation is supported where law makes it the default", decision)
+
+    def test_dec315_narrow_supersession_preserves_unrelated_product_truths(self):
+        product = document_section(self.product, "## 21A.6 Billing and cancellation")
+        decision_039 = document_section(self.decisions, "## DEC-039 — Membership billing")
+        decision_045 = document_section(self.decisions, "## DEC-045 — Refund boundaries")
+        decision_313 = document_section(
+            self.decisions, "## DEC-313 — Assessment-credit claim, hold, delivery and release"
+        )
+        decision_315 = document_section(
+            self.decisions, "## DEC-315 — Statutory consumer cancellation and refund rights"
+        )
+
+        self.assertIn("**Status:** SUPERSEDED IN PART BY DEC-315", decision_039)
+        self.assertIn("supersedes only the unconditional cancellation timing", decision_039)
+        self.assertIn(
+            "where an applicable non-waivable statutory consumer right requires another effective date",
+            decision_039,
+        )
+        self.assertIn("**Status:** SUPERSEDED IN PART BY DEC-315", decision_045)
+        self.assertIn("supersedes only Membership's ordinary partial-period boundary", decision_045)
+        self.assertIn(
+            "to the extent an applicable non-waivable statutory right provides a cancellation, refund or credit",
+            decision_045,
+        )
+        self.assertIn("Assessment, Plan and Event rules remain unchanged as ordinary commercial boundaries", decision_045)
+        self.assertIn("DEC-039's absolute end-of-paid-period cancellation timing", decision_315)
+        self.assertIn("DEC-045's Membership ordinary partial-period refund boundary", decision_315)
+        self.assertIn("does not change monthly Membership into a minimum-term product", decision_315)
+        self.assertIn("ordinary Assessment, Plan, gift or Event refund rules", product)
+        self.assertIn("alter Assessment, Plan, gift, Event or payment-reversal rules", decision_315)
+
+        self.assertIn("does not change DEC-313's Assessment-credit hold, consumption or release semantics", product)
+        self.assertIn("change DEC-313 Assessment-credit semantics", decision_315)
+        self.assertIn("first valid saved answer claims/holds the same credit in `held_unconsumed`", decision_313)
+        self.assertIn("only successful complete paid digital Assessment delivery", decision_313)
+        self.assertIn("releases the same credit to `available_unused`", decision_313)
+
+        self.assertIn("independently purchased Assessments, once-off Plans and historical check-ins remain", product)
+        self.assertIn("unused Membership-derived reassessment entitlements follow their existing expiry rule", product)
+        self.assertIn("Membership termination, payment refund or reversal, Entitlement termination and full Account deletion remain separate Product truths", product)
+        self.assertIn("alter Entitlement or Account-deletion rules", decision_315)
+
+        closure = document_section(self.product, "## 21I.2 Account closure")
+        deletion = document_section(self.product, "## 21I.3 Full deletion")
+        self.assertIn("Account closure is distinct from full deletion", closure)
+        self.assertIn("30 days", closure)
+        self.assertIn("14-day cancellation window", deletion)
+        self.assertIn("no reconstruction from transactions, backups or retained records", deletion)
+        self.assertIn("Use a 30-day recoverable account-closure window and a 14-day full-deletion cancellation window", self.decisions)
+        self.assertIn("completed deletion has no recovery or reconstruction path", self.decisions)
+
+    def test_dec315_preserves_commerce_entitlements_and_provider_authority_boundaries(self):
+        product = document_section(self.product, "## 21A.6 Billing and cancellation")
+        decision = document_section(
+            self.decisions, "## DEC-315 — Statutory consumer cancellation and refund rights"
+        )
+
+        self.assertIn("Commerce remains authoritative for the Membership contract and commercial cancellation/refund truth", decision)
+        self.assertIn("Entitlements remains authoritative for current access and grants", decision)
+        self.assertIn("Provider state remains evidence", decision)
+        self.assertIn("Commerce's cancellation effective date is authoritative", product)
+        self.assertIn("A provider cannot delay or reverse that date", product)
+        self.assertIn("cannot reactivate Membership", product)
+        self.assertIn("change Domain ownership", decision)
+
+        commerce = next(line for line in self.domain_map.splitlines() if "Membership/subscription/add-on commercial contract" in line)
+        entitlements = next(line for line in self.domain_map.splitlines() if "Entitlement/access grant" in line)
+        self.assertIn("**Commerce**", commerce)
+        self.assertIn("**Entitlements**", entitlements)
+        self.assertIn("external-provider state never become hidden business authority", self.domain_map)
 
     def test_paid_plan_matrix_covers_each_safety_outcome_and_terminal_closeout(self):
         rows = matrix_rows(self.product, "ELIGIBILITY-PAID-PLAN")
