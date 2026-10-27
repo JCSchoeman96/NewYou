@@ -52,13 +52,9 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             "COMPLETE / CERTIFIED / CURRENT",
             state["phase_7c"],
         )
-        self.assertIn("WELL-6", state["next_stage"])
-        self.assertIn("P8-05 / WELL-6", state["next_stage"])
-        self.assertIn("current Product v1.10.0 / DEC-316", state["next_stage"])
-        self.assertIn("both immutable EN development baselines", state["next_stage"])
-        self.assertIn("all other applicable JIT/implementation gates", state["next_stage"])
-        self.assertIn("approved English Terms/Privacy and legal/privacy approval evidence", state["next_stage"])
-        self.assertIn("explicit P8-05 implementation authorization", state["next_stage"])
+        self.assertIn("P8-05 IMPLEMENTATION AUTHORISED", state["next_stage"])
+        self.assertIn("WELL-48", state["next_stage"])
+        self.assertIn("RESULTING-MAIN VERIFICATION", state["next_stage"])
         self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         self.assertEqual("NEW_TRACER_BULLET", state["proof_classification"])
@@ -70,7 +66,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("PASS / ALL 10 CONDITIONS SATISFIED", state["development_entry_hard_stop_status"])
         self.assertEqual("SATISFIED", state["development_entry_hard_stop_conditions_1_through_10"])
         self.assertEqual(
-            "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+            "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION AUTHORISED",
             state["application_implementation"],
         )
         self.assertEqual("AUTHORISED", state["phase8"])

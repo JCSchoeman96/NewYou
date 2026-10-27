@@ -972,16 +972,17 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             root, manifest_path = self._copy_production_fixture(Path(directory))
             harden_path = _current_working_path(root, "HARDEN-02_CONTRACT_WORKING_")
             harden = harden_path.read_text(encoding="utf-8")
-            current_open_work_name = _current_open_work_path(root).name
-            current_open_work_version = re.search(r"v(\d+\.\d+\.\d+)", current_open_work_name).group(1)
+            self.assertIn("No application implementation is authorised by HARDEN-02 itself", harden)
             current_statement = (
-                "No application implementation is authorised by HARDEN-02 itself. "
-                f"Current Open Work v{current_open_work_version} separately records application implementation as AUTHORISED only inside "
-                "the bounded Phase 8 / NEW_TRACER_BULLET architectural-proof stage."
+                "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY"
             )
             self.assertIn(current_statement, harden)
             harden_path.write_text(
-                harden.replace(current_statement, "No application implementation is authorised.", 1),
+                harden.replace(
+                    current_statement,
+                    "P8-05 / WELL-6 IMPLEMENTATION: UNAUTHORISED",
+                    1,
+                ),
                 encoding="utf-8",
             )
             refresh_manifest(root, manifest_path)
@@ -2205,7 +2206,8 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 if item["name"] == "harden_02_lifecycle_state"
             )
             self.assertEqual("PASS", lifecycle_check["status"], lifecycle_check["message"])
-            self.assertIn("the TB-001 result is incomplete", lifecycle_check["message"])
+            self.assertIn("Phase 8 remains uncertified", lifecycle_check["message"])
+            self.assertIn("bounded P8-05 implementation is authorised", lifecycle_check["message"])
 
     def test_roadmap_proof_classification_lifecycle_fails_closed_on_scope_regressions(self):
         mutations = (
@@ -3368,10 +3370,13 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 ).group(1)
             )
             self.assertEqual(
-                "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+                "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION AUTHORISED",
                 lifecycle["phase_8_application_implementation"],
             )
-            self.assertEqual("UNAUTHORISED", lifecycle["p8_05_registration_implementation"])
+            self.assertEqual(
+                "AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+                lifecycle["p8_05_registration_implementation"],
+            )
 
     def test_identity_v020_current_status_promotion_rejects_lifecycle_regression(self):
         with tempfile.TemporaryDirectory() as directory:
