@@ -1870,6 +1870,18 @@
       "graph_policy": "frozen_provenance"
     },
     {
+      "document_id": "OPEN_WORK_V1_2_83",
+      "canonical_filename": "02_OPEN_WORK_v1.2.83.md",
+      "semver": "1.2.83",
+      "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.83.md",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
+      "sha256": "a373a09fddc6ce945792a9d88e579331452f10045ef5b913d2da8721467ab6ad",
+      "superseded_version": "1.2.84",
+      "lifecycle": "historical",
+      "provenance_sha256": "a373a09fddc6ce945792a9d88e579331452f10045ef5b913d2da8721467ab6ad",
+      "graph_policy": "frozen_provenance"
+    },
+    {
       "document_id": "FP001_FEATURE_PACK_SKELETON_V0_1_24",
       "canonical_filename": "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.24.md",
       "semver": "0.1.24",

@@ -165,18 +165,81 @@ def _open_work_lifecycle_state(open_work: str) -> dict[str, Any] | None:
     return state if isinstance(state, dict) else None
 
 
-_P8_05_CURRENT_AUTHORIZATION_SECTION_RE = re.compile(
-    r"(?m)^## (?:Current P8-05 implementation authorization|.*WELL-5 / P8-04 completion and P8-05 planning route|.*WELL-5 completion and P8-05 planning route \(current\))\s*$"
+_P8_05_CURRENT_AUTHORIZATION_HEADING_RE = re.compile(
+    r"(?m)^## Current P8-05 implementation authorization\s*$"
 )
 
 
-def _p8_05_current_authorization_section(text: str) -> str:
-    match = _P8_05_CURRENT_AUTHORIZATION_SECTION_RE.search(text)
+def _p8_05_current_authorization_heading_issues(text: str, label: str) -> list[str]:
+    headings = list(_P8_05_CURRENT_AUTHORIZATION_HEADING_RE.finditer(text))
+    if not headings:
+        return [f"{label} has no Current P8-05 implementation authorization section"]
+    if len(headings) > 1:
+        return [f"{label} has duplicate Current P8-05 implementation authorization sections"]
+    return []
+
+
+def _p8_05_unique_current_authorization_section(text: str, label: str = "artifact") -> tuple[str, list[str]]:
+    issues = _p8_05_current_authorization_heading_issues(text, label)
+    if issues:
+        return "", issues
+    match = _P8_05_CURRENT_AUTHORIZATION_HEADING_RE.search(text)
     if match is None:
-        return ""
+        return "", [f"{label} has no Current P8-05 implementation authorization section"]
     section_tail = text[match.end():]
     next_section = re.search(r"(?m)^## ", section_tail)
-    return section_tail[:next_section.start()] if next_section else section_tail
+    section = section_tail[: next_section.start()] if next_section else section_tail
+    return section, []
+
+
+def _p8_05_current_authorization_section(text: str) -> str:
+    section, _ = _p8_05_unique_current_authorization_section(text)
+    return section
+
+
+def _p8_05_route_surface_text(text: str, label: str = "artifact") -> tuple[str, list[str]]:
+    section, issues = _p8_05_unique_current_authorization_section(text, label)
+    if issues:
+        return "", issues
+    prefix = "\n".join(text.splitlines()[:30])
+    return f"{prefix}\n{section}", []
+
+
+def _p8_05_missing_tokens(surface: str, tokens: tuple[str, ...]) -> list[str]:
+    lowered = surface.casefold()
+    return [token for token in tokens if token.casefold() not in lowered]
+
+
+def _p8_05_additive_contradiction_issues(surface: str, label: str) -> list[str]:
+    issues: list[str] = []
+    lowered = surface.casefold()
+    if "p8-05 / well-6 implementation: authorised" in lowered and "p8-05 implementation: unauthorised" in lowered:
+        issues.append(f"{label} contradicts bounded P8-05 authorization with an unauthorised marker")
+    if "phase 8: not certified" in lowered and re.search(r"(?m)^\s*phase\s+8:\s*certified\s*$", surface, re.I):
+        issues.append(f"{label} contradicts Phase 8 not-certified state")
+    if "phase 9 / vertical slices: not started / not authorised" in lowered and re.search(
+        r"(?m)^\s*phase\s+9(?: / vertical slices)?\s*:\s*(?:authorised|started|in progress|complete)",
+        surface,
+        re.I,
+    ):
+        issues.append(f"{label} contradicts Phase 9 stop state")
+    for well in ("well-48", "well-49", "well-50"):
+        if re.search(rf"(?m)^\s*{well}\s*:\s*complete", surface, re.I):
+            issues.append(f"{label} marks {well.upper()} complete in the current route")
+    if re.search(
+        r"(?im)P8-05\s*/\s*WELL-6\s+IMPLEMENTATION:\s*AUTHORISED(?!\s*[—-]\s*BOUNDED)",
+        surface,
+    ):
+        issues.append(f"{label} broadens P8-05 implementation beyond the bounded Phase-8 qualifier")
+    if re.search(r"(?m)^\s*WELL-51\s*:\s*(?:COMPLETE|STARTED|IN PROGRESS|AUTHORI[ZS]ED)", surface):
+        if "WELL-51 follows the required WELL-48–50 seams" in surface:
+            issues.append(f"{label} advances WELL-51 before the required WELL-48–50 seams")
+    if "not legally approved" in lowered and re.search(
+        r"legally approved for production|production release(?:\s+is)?\s+authorised",
+        lowered,
+    ):
+        issues.append(f"{label} contradicts development-baseline legal approval boundaries")
+    return issues
 
 
 _P8_05_BOUNDED_APPLICATION_IMPLEMENTATION = (
@@ -209,19 +272,20 @@ def _p8_05_current_authorization_section_tokens() -> tuple[str, ...]:
 
 def _p8_05_bounded_authorization_route_tokens() -> tuple[str, ...]:
     return _p8_05_current_authorization_section_tokens() + (
-        "WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE",
-        "proof certification is not complete",
-        "INCOMPLETE / COVERAGE-INCOMPLETE",
-        "NOT CERTIFIED",
-        "Phase 8 is NOT CERTIFIED",
-        "Phase 9 / Vertical Slices remain NOT STARTED / NOT AUTHORISED",
-        "business/browser manifests remain unavailable",
-        "P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete",
-        "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
-        "WELL-45 is LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED",
-        "not legally approved",
-        "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
-        "Production, public release, paid pilot and applicable real-participant flows remain fail-closed",
+        "immutable English development baselines",
+        "Approved English Terms and Privacy and approval evidence remain required",
+        "Product v1.10.0 / DEC-316",
+        "This authorization does not authorize production",
+    )
+
+
+def _p8_05_open_work_programme_bounded_tokens() -> tuple[str, ...]:
+    return (
+        "WELL-5 / P8-04",
+        "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
+        "PROOF CERTIFICATION: NOT CERTIFIED",
+        "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+        "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
     )
 
 
@@ -2057,13 +2121,16 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
     )
     if any(token.casefold() not in readme_current.casefold() for token in readme_status):
         return False, "README current state does not mirror the incomplete Phase 8 proof route"
-    route = _p8_05_current_authorization_section(contract)
-    if not route:
-        return False, "current HARDEN-02 route omits the bounded P8-05 authorization section"
-    required_route = _p8_05_current_authorization_section_tokens()
-    if any(token.casefold() not in route.casefold() for token in required_route):
-        return False, "current HARDEN-02 route omits bounded P8-05 authorization or proof boundaries"
-    if "phase 8" not in route.casefold():
+    surface, surface_issues = _p8_05_route_surface_text(contract, "current HARDEN-02")
+    if surface_issues:
+        return False, surface_issues[0]
+    missing = _p8_05_missing_tokens(surface, _p8_05_bounded_authorization_route_tokens())
+    if missing:
+        return False, f"current HARDEN-02 route omits bounded P8-05 lifecycle tokens: {missing[0]!r}"
+    contradictions = _p8_05_additive_contradiction_issues(surface, "current HARDEN-02")
+    if contradictions:
+        return False, contradictions[0]
+    if "phase 8" not in surface.casefold():
         return False, "current HARDEN-02 route omits the Phase 8 certification boundary"
     return True, "WELL-5 is complete; bounded P8-05 implementation is authorised and Phase 8 remains uncertified"
 
@@ -2748,13 +2815,16 @@ def _engineering_standards_certified_state(
         routes = phase8.get("current_routes", {}) if isinstance(phase8, dict) else {}
         harden_path = routes.get("harden_02") if isinstance(routes, dict) else None
         harden_text = (Path(root) / harden_path).read_text(encoding="utf-8") if isinstance(harden_path, str) and (Path(root) / harden_path).is_file() else ""
-        route = _p8_05_current_authorization_section(harden_text)
-        if not route:
-            return False, "current HARDEN successor omits the bounded P8-05 authorization route"
-        required_current_route = _p8_05_current_authorization_section_tokens()
-        if any(token.casefold() not in route.casefold() for token in required_current_route):
-            return False, "current HARDEN successor omits bounded P8-05 authorization or a downstream gate"
-        if "phase 8" not in route.casefold():
+        surface, surface_issues = _p8_05_route_surface_text(harden_text, "current HARDEN successor")
+        if surface_issues:
+            return False, surface_issues[0]
+        missing = _p8_05_missing_tokens(surface, _p8_05_bounded_authorization_route_tokens())
+        if missing:
+            return False, f"current HARDEN successor omits bounded P8-05 lifecycle tokens: {missing[0]!r}"
+        contradictions = _p8_05_additive_contradiction_issues(surface, "current HARDEN successor")
+        if contradictions:
+            return False, contradictions[0]
+        if "phase 8" not in surface.casefold():
             return False, "current HARDEN successor omits the bounded Phase 8 boundary"
         return True, "certified Engineering Standards remain current; bounded Phase 8 P8-05 authorization remains explicit"
 
@@ -8106,15 +8176,31 @@ def _phase8_started_status_successor_issues(
         ):
             issues.append(f"Open Work Atlas predecessor does not match current route: {atlas_predecessor.group(1)}")
 
-    current_open_work_text = _p8_05_current_authorization_section(open_work)
-    if not current_open_work_text:
-        issues.append("current Open Work has no bounded P8-05 implementation authorization section")
+    current_open_work_text, open_work_section_issues = _p8_05_unique_current_authorization_section(
+        open_work, "current Open Work"
+    )
+    issues.extend(open_work_section_issues)
+    open_work_surface, open_work_surface_issues = _p8_05_route_surface_text(open_work, "current Open Work")
+    issues.extend(open_work_surface_issues)
 
-    required_current_tokens = _p8_05_current_authorization_section_tokens() + (
+    required_current_tokens = _p8_05_bounded_authorization_route_tokens() + (
         "Implementation/JIT verification is COMPLETE",
     )
-    if any(token.casefold() not in current_open_work_text.casefold() for token in required_current_tokens):
-        issues.append("current Open Work status omits bounded P8-05 authorization or proof boundaries")
+    if current_open_work_text and open_work_surface:
+        missing = _p8_05_missing_tokens(open_work_surface, required_current_tokens)
+        for token in missing:
+            issues.append(f"current Open Work status omits bounded P8-05 lifecycle token {token!r}")
+        active_start = open_work.find("# 9. Immediate Next Action")
+        active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
+        programme_surface = (
+            open_work[active_start:active_end]
+            if active_start >= 0 and active_end > active_start
+            else ""
+        )
+        combined_surface = f"{open_work_surface}\n{programme_surface}"
+        for token in _p8_05_missing_tokens(combined_surface, _p8_05_open_work_programme_bounded_tokens()):
+            issues.append(f"current Open Work programme state omits bounded lifecycle token {token!r}")
+        issues.extend(_p8_05_additive_contradiction_issues(combined_surface, "current Open Work"))
     active_start = open_work.find("# 9. Immediate Next Action")
     active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
     if active_start < 0 or active_end < 0 or active_start >= active_end:
@@ -8169,6 +8255,7 @@ def _phase8_started_status_successor_issues(
         "APPLICATION IMPLEMENTATION: AUTHORISED ONLY INSIDE BOUNDED PHASE 8 ARCHITECTURAL PROOF, INCLUDING P8-05",
         "NEXT EXECUTION ACTION: After this authorization is current and resulting-main verification succeeds",
         "WELL-45 remains a legal/privacy release gate",
+        "both immutable English development baselines",
         "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
     )
     for token in current_state_tokens:
@@ -8223,29 +8310,30 @@ def _phase8_started_status_successor_issues(
     if atlas_name not in atlas_routing:
         issues.append(f"README Delivery Atlas routing does not resolve to {atlas_name}")
 
-    support_tokens = _p8_05_current_authorization_section_tokens()
+    support_tokens = _p8_05_bounded_authorization_route_tokens()
     for label in ("delivery_atlas", "fp001_skeleton", "harden_02"):
         text = active_files.get(label, "")
-        section = _p8_05_current_authorization_section(text)
-        if not section:
-            issues.append(f"current {label} does not have a bounded P8-05 authorization section")
+        surface, surface_issues = _p8_05_route_surface_text(text, f"current {label}")
+        issues.extend(surface_issues)
+        if not surface:
             continue
-        for token in support_tokens:
-            if token.casefold() not in section.casefold():
-                issues.append(f"current {label} status omits {token!r}")
-        if "phase 8" not in section.casefold():
+        for token in _p8_05_missing_tokens(surface, support_tokens):
+            issues.append(f"current {label} status omits {token!r}")
+        if "phase 8" not in surface.casefold():
             issues.append(f"current {label} status omits the Phase 8 certification boundary")
-        if "independent planning review" in section.casefold() and not any(
-            status in section.casefold()
+        if "independent planning review" in surface.casefold() and not any(
+            status in surface.casefold()
             for status in ("complete", "pass with non-blocking corrections")
         ):
             issues.append(f"current {label} status incorrectly leaves the completed independent planning review outstanding")
+        issues.extend(_p8_05_additive_contradiction_issues(surface, f"current {label}"))
 
     current_harden = active_files.get("harden_02", "")
     if "No application implementation is authorised by HARDEN-02 itself" not in current_harden:
         issues.append("current HARDEN-02 does not preserve its implementation-authority boundary")
-    harden_authorization = _p8_05_current_authorization_section(current_harden)
-    if not harden_authorization or "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED" not in harden_authorization:
+    harden_surface, harden_surface_issues = _p8_05_route_surface_text(current_harden, "current HARDEN-02")
+    issues.extend(harden_surface_issues)
+    if harden_surface and "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED" not in harden_surface:
         issues.append("current HARDEN-02 does not record bounded P8-05 implementation authorization")
 
     issues.extend(_phase8_status_transition_source_issues(repository_root))

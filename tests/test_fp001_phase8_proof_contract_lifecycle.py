@@ -620,6 +620,115 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
                 )
                 self.assertEqual("FAIL", check["status"], check["message"])
 
+    def test_additive_contradictions_fail_foundation_integrity(self):
+        duplicate_section = (
+            "\n## Current P8-05 implementation authorization\n\n"
+            "P8-05 / WELL-6 IMPLEMENTATION: UNAUTHORISED — BROAD IMPLEMENTATION\n"
+            "PHASE 8: CERTIFIED\n"
+        )
+        additive_cases = (
+            (
+                "duplicate current authorization section",
+                lambda text: text + duplicate_section,
+            ),
+            (
+                "additive unauthorised marker",
+                lambda text: text.replace(
+                    "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+                    "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY\n"
+                    "P8-05 IMPLEMENTATION: UNAUTHORISED",
+                    1,
+                ),
+            ),
+            (
+                "additive broad authorization",
+                lambda text: text.replace(
+                    "AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+                    "AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY\n"
+                    "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — GENERAL IMPLEMENTATION",
+                    1,
+                ),
+            ),
+            (
+                "additive phase 8 certified",
+                lambda text: text.replace(
+                    "PHASE 8: NOT CERTIFIED",
+                    "PHASE 8: NOT CERTIFIED\nPHASE 8: CERTIFIED",
+                    1,
+                ),
+            ),
+            (
+                "additive phase 9 authorised",
+                lambda text: text.replace(
+                    "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+                    "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED\n"
+                    "PHASE 9 / VERTICAL SLICES: AUTHORISED / STARTED",
+                    1,
+                ),
+            ),
+            (
+                "additive well-48 complete",
+                lambda text: text.replace(
+                    "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
+                    "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION\n"
+                    "WELL-48: COMPLETE",
+                    1,
+                ),
+            ),
+            (
+                "additive well-49 complete",
+                lambda text: text.replace(
+                    "none is complete",
+                    "none is complete\nWELL-49: COMPLETE",
+                    1,
+                ),
+            ),
+            (
+                "additive well-50 complete",
+                lambda text: text.replace(
+                    "none is complete",
+                    "none is complete\nWELL-50: COMPLETE",
+                    1,
+                ),
+            ),
+            (
+                "additive well-51 before seams",
+                lambda text: text.replace(
+                    "WELL-51 follows the required WELL-48–50 seams",
+                    "WELL-51 follows the required WELL-48–50 seams\nWELL-51: AUTHORISED",
+                    1,
+                ),
+            ),
+            (
+                "additive production release authorised",
+                lambda text: text.replace(
+                    "NOT LEGALLY APPROVED",
+                    "NOT LEGALLY APPROVED\nProduction release is authorised without approved legal evidence",
+                    1,
+                ),
+            ),
+            (
+                "additive development baselines legally approved",
+                lambda text: text.replace(
+                    "NOT LEGALLY APPROVED",
+                    "NOT LEGALLY APPROVED\nDevelopment baselines are legally approved for production release",
+                    1,
+                ),
+            ),
+        )
+        for name, mutate in additive_cases:
+            with self.subTest(contradiction=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                open_work = root / OPEN_WORK.relative_to(ROOT)
+                text = open_work.read_text(encoding="utf-8")
+                open_work.write_text(mutate(text), encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+                report = run_audit(root, manifest_path)
+                check = next(
+                    item for item in report["checks"] if item["name"] == SUCCESSOR_CHECK
+                )
+                self.assertEqual("FAIL", check["status"], check["message"])
+
     def test_pre_authorization_archive_mutation_fails_foundation_integrity(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))

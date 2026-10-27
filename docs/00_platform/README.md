@@ -312,6 +312,8 @@ Engineering Standards remain supporting authority under `reference_documents`. T
 - Independent planning review: COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS
 - WELL-48 owner decisions for email, PMR and RegistrationOperation/request binding: ACCEPTED / CANONICALLY RECORDED by PR #151
 - WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED
+- IMMUTABLE ENGLISH DEVELOPMENT BASELINES: both immutable English development baselines exist; permitted only in governed non-production development; NOT LEGALLY APPROVED
+- PRODUCTION / APPLICABLE REAL-PARTICIPANT RELEASE: requires approved English Terms/Privacy and legal/privacy approval evidence; fail-closed without them
 - WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION; NOT COMPLETE
 - P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY
 - APPLICATION IMPLEMENTATION: AUTHORISED ONLY INSIDE BOUNDED PHASE 8 ARCHITECTURAL PROOF, INCLUDING P8-05
