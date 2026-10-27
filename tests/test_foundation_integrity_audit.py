@@ -3103,7 +3103,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
             ),
             (
                 "atlas",
-                "00_PLATFORM_v1.8.0.md",
+                None,
                 "00_PLATFORM_v1.5.1.md",
             ),
             (
@@ -3122,6 +3122,15 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 root = Path(directory)
                 fixture_docs = root / "docs" / "00_platform"
                 shutil.copytree(source_docs, fixture_docs)
+                source_p8_spec = (
+                    Path(__file__).resolve().parents[1]
+                    / "docs"
+                    / "execution"
+                    / "p8-05-registration-jit-spec.md"
+                )
+                fixture_p8_spec = root / "docs" / "execution" / source_p8_spec.name
+                fixture_p8_spec.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source_p8_spec, fixture_p8_spec)
                 manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
                 if route_kind == "roadmap":
@@ -3134,7 +3143,14 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 elif route_kind == "atlas":
                     atlas = _current_working_path(root, "DELIVERY_ATLAS_WORKING_")
                     relative = atlas.relative_to(root).as_posix()
-                    current_route = "00_PLATFORM_v1.9.0.md"
+                    current_route = Path(
+                        next(
+                            entry["repository_path"]
+                            for entry in manifest["governing_documents"]
+                            if entry["document_id"] == "PLATFORM_BASELINE"
+                            and entry.get("lifecycle") == "current"
+                        )
+                    ).name
                 elif route_kind == "harden_open_work":
                     harden = _current_working_path(root, "HARDEN-02_CONTRACT_WORKING_")
                     relative = harden.relative_to(root).as_posix()

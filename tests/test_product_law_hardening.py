@@ -63,7 +63,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
         cls.architecture = (DOCS / "03_ARCHITECTURE_v1.1.1.md").read_text(encoding="utf-8")
         cls.domain_map = current_document("DOMAIN_MAP")
-        cls.operating_model = (DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md").read_text(encoding="utf-8")
+        cls.operating_model = current_document_path(ROOT, "PLATFORM_OPERATING_MODEL").read_text(encoding="utf-8")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
         cls.atlas = current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").read_text(encoding="utf-8")
         cls.harden02 = current_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_").read_text(encoding="utf-8")
@@ -610,7 +610,7 @@ class ProductLawHardeningTests(unittest.TestCase):
             current_document_path(ROOT, "ROADMAP").relative_to(ROOT).as_posix(),
             "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
             "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
-            "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md",
+            current_document_path(ROOT, "PLATFORM_OPERATING_MODEL").relative_to(ROOT).as_posix(),
             "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
             current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").relative_to(ROOT).as_posix(),
             current_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_").relative_to(ROOT).as_posix(),
@@ -639,14 +639,7 @@ class ProductLawHardeningTests(unittest.TestCase):
                 "archive/04_DOMAIN_MAP_v1.1.0.md",
             ),
             "Operating Model": (
-                "archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md",
-                "archive/00_PLATFORM_v1.2.1.md",
-                "archive/01_DECISIONS_v1.2.2.md",
-                "archive/02_OPEN_WORK_v1.2.28.md",
-                "archive/03_ARCHITECTURE_v1.0.0.md",
-                "archive/04_DOMAIN_MAP_v1.0.0.md",
-                "archive/05_ROADMAP_v1.0.0.md",
-                "archive/PLATFORM_OPERATING_MODEL_v1.0.0.md",
+                "archive/PLATFORM_OPERATING_MODEL_v1.0.1.md",
             ),
             "Frontend Experience System": ("archive/FRONTEND_EXPERIENCE_SYSTEM_v1.0.0.md",),
         }

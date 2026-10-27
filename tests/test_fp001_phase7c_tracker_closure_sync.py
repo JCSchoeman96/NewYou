@@ -141,7 +141,19 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", active)
         self.assertIn("PROGRAMME ROUTER #111: OPEN", active)
         current_state = _marked_json(open_work, "<!-- HARDEN_02_LIFECYCLE_STATE_START -->", "<!-- HARDEN_02_LIFECYCLE_STATE_END -->")
-        self.assertIn(f"NEXT GOVERNANCE ACTION: {current_state['next_governance_action']}", active)
+        next_stage = re.search(r"(?m)^NEXT STAGE: (.+)$", active)
+        self.assertIsNotNone(next_stage)
+        for required in (
+            "Product v1.10.0 / DEC-316",
+            "both immutable EN development baselines",
+            "all other applicable P8-05 JIT/implementation gates",
+            "explicit authorization",
+            "WELL-45 remains a release gate",
+            "approved English Terms/Privacy",
+        ):
+            self.assertIn(required, next_stage.group(1))
+        self.assertIn("current Product v1.10.0 / DEC-316", current_state["next_governance_action"])
+        self.assertIn("WELL-45 is the legal/privacy release gate", current_state["next_governance_action"])
         self.assertNotRegex(active, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
 
         for predecessor_name, route_heading, classification, candidate_lifecycle in (

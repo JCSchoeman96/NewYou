@@ -62,14 +62,22 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
                 entry = all_entries["PLATFORM_BASELINE_V1_8_0"]
             elif document_id == "DECISION_REGISTER":
                 entry = all_entries["DECISION_REGISTER_V1_8_0"]
+            elif document_id == "PLATFORM_OPERATING_MODEL":
+                entry = all_entries["PLATFORM_OPERATING_MODEL_V1_0_1"]
             else:
                 entry = all_entries[document_id]
             self.assertEqual(entry["semver"], expected["version"], document_id)
-            self.assertEqual(entry["repository_path"], expected["path"], document_id)
+            expected_path = expected["path"]
+            if document_id == "PLATFORM_OPERATING_MODEL":
+                expected_path = "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md"
+            self.assertEqual(entry["repository_path"], expected_path, document_id)
 
         for path, expected_sha256 in rules["baseline_current_document_sha256"].items():
+            workspace_path = path
+            if path == "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md":
+                workspace_path = "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md"
             self.assertEqual(
-                hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
+                hashlib.sha256((ROOT / workspace_path).read_bytes()).hexdigest(),
                 expected_sha256,
                 path,
             )
