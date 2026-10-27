@@ -207,12 +207,22 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertIsNotNone(next_execution)
         for required in (
             "WELL-6 / P8-05",
-            "Grill-Me/JIT",
-            "spec/ticket decomposition",
-            "independent planning review",
-            "before implementation",
+            "planning COMPLETE",
+            "decomposition COMPLETE",
+            "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+            "PR #151 status promotion becoming effective",
+            "WELL-45 clearance",
+            "implementation/JIT verification",
+            "explicit P8-05 implementation authorization",
         ):
             self.assertIn(required, next_actions[0])
+        for required in (
+            "WELL-6 / P8-05",
+            "PR #151 status promotion becoming effective",
+            "WELL-45 clearance",
+            "P8-05 implementation/JIT verification",
+            "explicit P8-05 implementation authorization",
+        ):
             self.assertIn(required, next_execution.group(1))
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_state)
@@ -366,6 +376,12 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             root = Path(directory)
             fixture_docs = root / "docs" / "00_platform"
             shutil.copytree(DOCS, fixture_docs)
+            fixture_execution = root / "docs" / "execution"
+            fixture_execution.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(
+                ROOT / "docs/execution/p8-05-registration-jit-spec.md",
+                fixture_execution / "p8-05-registration-jit-spec.md",
+            )
             fixture_readme = fixture_docs / "README.md"
             fixture_readme.write_text(
                 original_readme[:current_end]
@@ -389,6 +405,12 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             root = Path(directory)
             fixture_docs = root / "docs" / "00_platform"
             shutil.copytree(DOCS, fixture_docs)
+            fixture_execution = root / "docs" / "execution"
+            fixture_execution.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(
+                ROOT / "docs/execution/p8-05-registration-jit-spec.md",
+                fixture_execution / "p8-05-registration-jit-spec.md",
+            )
             fixture_readme = fixture_docs / "README.md"
             fixture_readme.write_text(
                 original_readme[:current_end]

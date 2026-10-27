@@ -347,14 +347,16 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
     def test_fp001_identity_v013_archives_and_durable_delivery_section_are_preserved(self):
         tick = chr(96)
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
-        active = source_docs / "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+        active = source_docs / "archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+        current = source_docs / "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
         old_active = source_docs / "working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md"
         predecessor = source_docs / "archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.2.md"
         candidate = source_docs / "archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md"
         snapshot = source_docs / "archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3_SUPERSEDED_PROMOTED_CURRENT.md"
         stale_candidate = source_docs / "working/candidates/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.3.md"
 
-        self.assertTrue(active.is_file(), "certified v0.1.4 must be the active Identity dossier")
+        self.assertTrue(active.is_file(), "promoted/current v0.1.4 must remain as an archive-qualified snapshot")
+        self.assertTrue(current.is_file(), "v0.2.0 must be the active Identity dossier after the current-status promotion")
         self.assertFalse(old_active.exists(), "the superseded v0.1.3 file must no longer be an active route")
         self.assertTrue(predecessor.is_file(), "v0.1.2 must be preserved in the archive")
         self.assertTrue(candidate.is_file(), "the exact PR #70 candidate must be preserved in the archive")
@@ -377,6 +379,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         candidate_text = candidate.read_text(encoding="utf-8")
         snapshot_text = snapshot.read_text(encoding="utf-8")
         self.assertIn("**Status:** " + tick + "CERTIFIED / CURRENT" + tick, active_text)
+        self.assertIn("**Status:** " + tick + "CERTIFIED / CURRENT" + tick, current.read_text(encoding="utf-8"))
         section = "### J.1 Narrow Identity/Communications durable-delivery correction"
         next_heading = "### J.1a Automated retrieval / scanner-safe proof consumption"
         end_heading = "### J.2 Technical evidence and certification boundary"
@@ -384,7 +387,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         candidate_j1 = candidate_text.split(section, 1)[1].split(end_heading, 1)[0]
         snapshot_j1 = snapshot_text.split(section, 1)[1].split(end_heading, 1)[0]
         self.assertEqual(candidate_j1, snapshot_j1, "v0.1.3 candidate and promoted snapshot must retain distinct files but same J.1")
-        self.assertEqual(candidate_j1, active_j1, "v0.1.4 must preserve the certified J.1 section byte-for-byte")
+        self.assertEqual(candidate_j1, active_j1, "the promoted/current v0.1.4 snapshot must preserve the certified J.1 section byte-for-byte")
 
     def test_fp001_identity_v014_promotion_is_current_and_pins_distinct_same_version_archives(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -1044,7 +1047,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             )
 
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
-            self.assertIn("Phase 8 current-route SHA-256 differs", promotion_check["message"])
+            self.assertIn("Atlas predecessor", promotion_check["message"])
 
     def test_fp001_identity_v014_promotion_rejects_lineage_route_and_gate_mutations(self):
         def rewrite_current_open_work_state(root: Path, mutate) -> None:
@@ -1954,6 +1957,12 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         source_root = Path(__file__).resolve().parents[1]
         fixture_docs = root / "docs" / "00_platform"
         shutil.copytree(source_root / "docs" / "00_platform", fixture_docs)
+        execution_docs = root / "docs" / "execution"
+        execution_docs.mkdir(parents=True)
+        shutil.copyfile(
+            source_root / "docs" / "execution" / "p8-05-registration-jit-spec.md",
+            execution_docs / "p8-05-registration-jit-spec.md",
+        )
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         refresh_manifest(root, manifest_path)
@@ -2811,6 +2820,30 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 any(finding["check"] == "manifest_version_parity" for finding in report["findings"])
             )
 
+    def test_versioned_document_id_mismatch_is_reported(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self._write_clean_fixture(root)
+            roadmap = next(
+                entry for entry in manifest["governing_documents"]
+                if entry["document_id"] == "ROADMAP"
+            )
+            roadmap["document_id"] = "ROADMAP_V9_9_9"
+            (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
+
+            mismatch = next(
+                (
+                    finding for finding in report["findings"]
+                    if finding["check"] == "manifest_document_id_version_parity"
+                ),
+                None,
+            )
+            self.assertIsNotNone(mismatch, report["findings"])
+            self.assertIn("ROADMAP_V9_9_9", mismatch["message"])
+            self.assertIn("SemVer '1.0.0'", mismatch["message"])
+
     def test_document_version_metadata_mismatch_is_reported(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -3169,6 +3202,91 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
 
             self.assertEqual("PASS", report["status"], report["findings"])
             self.assertEqual([], report["findings"])
+
+    def test_identity_v020_current_status_promotion_passes_foundation_integrity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+
+            report = run_audit(root, manifest_path)
+
+            identity_check = next(
+                check for check in report["checks"]
+                if check["name"] == "identity_v020_current_status_promotion"
+            )
+            self.assertEqual("PASS", identity_check["status"], identity_check["message"])
+            identity_path = root / (
+                "docs/00_platform/working/"
+                "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+            )
+            lifecycle = json.loads(
+                re.search(
+                    r"```json\s*(\{.*?\})\s*```",
+                    identity_path.read_text(encoding="utf-8").split(
+                        "<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_START -->", 1
+                    )[1].split("<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_END -->", 1)[0],
+                    re.DOTALL,
+                ).group(1)
+            )
+            self.assertEqual(
+                "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+                lifecycle["phase_8_application_implementation"],
+            )
+            self.assertEqual("UNAUTHORISED", lifecycle["p8_05_registration_implementation"])
+
+    def test_identity_v020_current_status_promotion_rejects_lifecycle_regression(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            identity_path = root / (
+                "docs/00_platform/working/"
+                "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+            )
+            dossier = identity_path.read_text(encoding="utf-8")
+            marker = "<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_START -->"
+            end_marker = "<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_END -->"
+            start = dossier.index(marker)
+            end = dossier.index(end_marker, start)
+            region = dossier[start:end]
+            payload_match = re.search(r"```json\s*(\{.*?\})\s*```", region, re.DOTALL)
+            self.assertIsNotNone(payload_match, "Identity v0.2.0 lifecycle JSON is missing")
+            lifecycle = json.loads(payload_match.group(1))
+            lifecycle["identity_lifecycle"] = "CANDIDATE / CERTIFICATION PENDING / NOT CURRENT"
+            region = region[:payload_match.start(1)] + json.dumps(lifecycle, indent=2) + region[payload_match.end(1):]
+            identity_path.write_text(dossier[:start] + region + dossier[end:], encoding="utf-8")
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+
+            identity_check = next(
+                check for check in report["checks"]
+                if check["name"] == "identity_v020_current_status_promotion"
+            )
+            self.assertEqual("FAIL", identity_check["status"], identity_check["message"])
+
+    def test_identity_v020_current_status_promotion_rejects_broad_implementation_regression(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            identity_path = root / (
+                "docs/00_platform/working/"
+                "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+            )
+            dossier = identity_path.read_text(encoding="utf-8")
+            start = dossier.index("<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_START -->")
+            end = dossier.index("<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_END -->", start)
+            region = dossier[start:end]
+            payload_match = re.search(r"```json\s*(\{.*?\})\s*```", region, re.DOTALL)
+            self.assertIsNotNone(payload_match)
+            lifecycle = json.loads(payload_match.group(1))
+            lifecycle["phase_8_application_implementation"] = "UNAUTHORISED"
+            region = region[:payload_match.start(1)] + json.dumps(lifecycle, indent=2) + region[payload_match.end(1):]
+            identity_path.write_text(dossier[:start] + region + dossier[end:], encoding="utf-8")
+            refresh_manifest(root, manifest_path)
+
+            report = run_audit(root, manifest_path)
+            identity_check = next(
+                check for check in report["checks"]
+                if check["name"] == "identity_v020_current_status_promotion"
+            )
+            self.assertEqual("FAIL", identity_check["status"], identity_check["message"])
 
     def test_phase7c_foundation_integrity_rejects_candidate_mutations(self):
         candidate_rel = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"

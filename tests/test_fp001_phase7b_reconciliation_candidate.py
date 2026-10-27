@@ -79,7 +79,11 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
             ("Communications", "FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"),
             ("Audit & Evidence", "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"),
         ):
-            path = DOCS / "working" / filename
+            path = (
+                DOCS / "archive/identity_promotions" / filename
+                if domain == "Identity & Access"
+                else DOCS / "working" / filename
+            )
             self.assertEqual(
                 hashlib.sha256(path.read_bytes()).hexdigest(),
                 rules["dossier_sha256"][domain],

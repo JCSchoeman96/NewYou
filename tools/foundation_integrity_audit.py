@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -1940,7 +1941,7 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
 
     expected = {
         "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
-        "next_stage": "FP-001 P8 05 / WELL-6 — registration proof slice planning (implementation not started)",
+        "next_stage": "P8-05 / WELL-6 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization; P8-05 remains unauthorized",
         "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
         "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
@@ -1960,10 +1961,10 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
         "phase8": "AUTHORISED",
-        "application_implementation": "AUTHORISED",
-        "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 PLANNING NEXT",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 OWNER DECISIONS CANONICALLY RECORDED; IMPLEMENTATION GATED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-        "next_governance_action": "WELL-6 / P8-05 — Grill-Me/JIT planning, then spec/ticket decomposition and independent planning review before implementation",
+        "next_governance_action": "WELL-6 / P8-05 — Grill-Me/JIT planning COMPLETE; spec/ticket decomposition COMPLETE; independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. The PR #151 status promotion becoming effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization remain; P8-05 implementation is unauthorized",
     }
     if any(state.get(key) != value for key, value in expected.items()):
         return False, "started Phase 8 proof route misstates the incomplete result or downstream stop"
@@ -1986,7 +1987,8 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
 
     readme_current = _markdown_h2_section(readme, "Current State") or ""
     readme_status = required_status[1:-1] + (
-        "NEXT EXECUTION ACTION: WELL-6 / P8-05 planning",
+        "NEXT GOVERNANCE ACTION: WELL-6 / P8-05 — Grill-Me/JIT planning COMPLETE; spec/ticket decomposition COMPLETE; independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. The PR #151 status promotion becoming effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization remain; P8-05 implementation is unauthorized",
+        "NEXT EXECUTION ACTION: WELL-6 / P8-05 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable P8-05 implementation/JIT verification, and explicit P8-05 implementation authorization",
     )
     if any(token not in readme_current for token in readme_status):
         return False, "README current state does not mirror the incomplete Phase 8 proof route"
@@ -2686,6 +2688,41 @@ def _engineering_standards_certified_state(
         return False, "README does not identify the archived PR #65 candidate"
     if "## Engineering Standards promotion candidate" in readme:
         return False, "README retains stale candidate-only Standards routing"
+
+    if _fp001_phase8_execution_status_successor_is_current(manifest):
+        phase8 = manifest.get("integrity_rules", {}).get(
+            "fp001_phase8_proof_contract_lifecycle", {}
+        )
+        routes = phase8.get("current_routes", {}) if isinstance(phase8, dict) else {}
+        harden_path = routes.get("harden_02") if isinstance(routes, dict) else None
+        harden_text = (Path(root) / harden_path).read_text(encoding="utf-8") if isinstance(harden_path, str) and (Path(root) / harden_path).is_file() else ""
+        current_route = re.search(
+            r"(?m)^## .*WELL-5 completion and P8-05 planning route \(current\)\s*$",
+            harden_text,
+        )
+        if current_route is None:
+            return False, "current HARDEN successor omits the WELL-5 completion and P8-05 route"
+        route_tail = harden_text[current_route.end():]
+        next_route = re.search(r"(?m)^## ", route_tail)
+        route = route_tail[:next_route.start()] if next_route else route_tail
+        required_current_route = (
+            "WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE",
+            "proof certification is not complete",
+            "INCOMPLETE / COVERAGE-INCOMPLETE",
+            "NOT CERTIFIED",
+            "P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete",
+            "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+            "WELL-45 remains blocking",
+            "WELL-48 remains Backlog / non-executable",
+            "P8-05 implementation remains UNAUTHORISED",
+            "application implementation remains AUTHORISED",
+            "NOT STARTED / NOT AUTHORISED",
+        )
+        if any(token.casefold() not in route.casefold() for token in required_current_route):
+            return False, "current HARDEN successor omits the bounded proof vehicle or a downstream gate"
+        if "phase 8" not in route.casefold():
+            return False, "current HARDEN successor omits the bounded Phase 8 boundary"
+        return True, "certified Engineering Standards remain current; bounded Phase 8 and P8-05 stop remain explicit"
 
     active_start = open_work.find("# 9. Immediate Next Action")
     active_end = open_work.find("# 10. Minimal Tools", active_start + 1)
@@ -4262,6 +4299,31 @@ def _check_manifest_entries(root: Path, entries: list[dict[str, Any]], report: d
             f"SemVer matches for {repository_path}"
             if semver_matches
             else f"SemVer {entry.get('semver')!r} does not match versioned filename {canonical_filename!r}",
+            path=repository_path,
+        )
+        document_id = str(entry.get("document_id", ""))
+        document_id_version = re.search(r"(?:^|_)V(\d+(?:_\d+){2})$", document_id)
+        document_id_version_matches = (
+            document_id_version is None
+            or document_id_version.group(1).replace("_", ".") == str(entry.get("semver", ""))
+        )
+        if document_id_version is None:
+            document_id_version_message = f"document ID {document_id!r} has no version suffix"
+        elif document_id_version_matches:
+            document_id_version_message = (
+                f"versioned document ID {document_id!r} matches manifest SemVer {entry.get('semver')!r}"
+            )
+        else:
+            encoded_version = document_id_version.group(1).replace("_", ".")
+            document_id_version_message = (
+                f"document ID {document_id!r} encodes version {encoded_version!r}, "
+                f"not manifest SemVer {entry.get('semver')!r}"
+            )
+        _record_check(
+            report,
+            "manifest_document_id_version_parity",
+            document_id_version_matches,
+            document_id_version_message,
             path=repository_path,
         )
         is_historical = entry.get("lifecycle", "current") == "historical"
@@ -7032,7 +7094,7 @@ PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA = "4234965c8da20dbb4ef0a7128614a507024
 # 9e5bd3189aa5c79bbf128da464654c917def8a90. Later implementation is outside
 # this historical status transition.
 PHASE8_APPROVED_STATUS_SUCCESSOR_HEAD_SHA = "c30388f8ae548040126483ec53957d0fc80b8246"
-PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA = "991a57ade059b9d9a2eaa8a788da8eeeee765d0e"
+PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA = "5c7acdd690008af24dc0242ca734cb900c56ea88"
 _PHASE8_PREDECESSOR_AUDIT_CACHE: dict[tuple[Path, str], tuple[bool, str]] = {}
 _PHASE8_PINNED_ARCHIVE_SHA256_CACHE: dict[tuple[Path, str, str], tuple[str | None, str]] = {}
 _PHASE8_PINNED_BASE_MANIFEST_CACHE: dict[tuple[Path, str], tuple[dict[str, Any] | None, str]] = {}
@@ -7938,8 +8000,11 @@ def _phase8_started_status_successor_issues(
         "architectural_proof_execution": "STARTED",
         "proof_result": "INCOMPLETE / COVERAGE-INCOMPLETE",
         "proof_certification": "NOT CERTIFIED",
+        "phase8": "AUTHORISED",
+        "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+        "next_stage": "P8-05 / WELL-6 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization; P8-05 remains unauthorized",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-        "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 PLANNING NEXT",
+        "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 OWNER DECISIONS CANONICALLY RECORDED; IMPLEMENTATION GATED",
         "current_delivery_atlas": routes["delivery_atlas"].removeprefix("docs/00_platform/"),
         "current_fp001_skeleton": routes["fp001_skeleton"].removeprefix("docs/00_platform/"),
         "current_harden_02": routes["harden_02"].removeprefix("docs/00_platform/"),
@@ -7949,8 +8014,33 @@ def _phase8_started_status_successor_issues(
         issues.append("Open Work lifecycle state disagrees with current Phase 8 routes or proof status")
     if state is not None:
         next_action = str(state.get("next_governance_action", ""))
-        if not all(token in next_action for token in ("WELL-6 / P8-05", "Grill-Me/JIT", "spec/ticket decomposition", "independent planning review", "before implementation")):
-            issues.append("Open Work does not require P8-05 planning and independent review before implementation")
+        required_next_action_tokens = (
+            "WELL-6 / P8-05",
+            "planning complete",
+            "decomposition complete",
+            "independent planning review is complete / pass with non-blocking corrections",
+            "WELL-45",
+            "implementation/JIT verification",
+            "explicit P8-05 implementation authorization",
+        )
+        if any(token.casefold() not in next_action.casefold() for token in required_next_action_tokens):
+            issues.append("Open Work does not route remaining P8-05 clearance, verification, and authorization gates")
+        if "independent planning review" in next_action.casefold() and not any(
+            status in next_action.casefold()
+            for status in ("complete", "pass with non-blocking corrections")
+        ):
+            issues.append("Open Work current action incorrectly leaves the completed independent planning review outstanding")
+        if "decomposition complete" not in next_action.casefold():
+            issues.append("Open Work current action incorrectly leaves P8-05 decomposition outstanding")
+        atlas_text = active_files.get("delivery_atlas", "")
+        atlas_predecessor = re.search(
+            r"(?im)^- \*\*Predecessor:\*\* `archive/([^`]+\.md)`",
+            "\n".join(atlas_text.splitlines()[:45]),
+        )
+        if atlas_predecessor is not None and (
+            f"immediate routing predecessor `archive/{atlas_predecessor.group(1)}`" not in open_work
+        ):
+            issues.append(f"Open Work Atlas predecessor does not match current route: {atlas_predecessor.group(1)}")
 
     open_work_section = re.search(
         r"(?m)^## .*WELL-5 / P8-04 completion and P8-05 planning route\s*$",
@@ -7966,7 +8056,7 @@ def _phase8_started_status_successor_issues(
 
     required_current_tokens = (
         "WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE",
-        "proof certification are not complete",
+        "proof certification is not complete",
         "Full TB-001 architectural proof remains INCOMPLETE",
         "Phase 8 is NOT CERTIFIED",
         "Phase 9 / Vertical Slices remain NOT STARTED / NOT AUTHORISED",
@@ -7974,7 +8064,12 @@ def _phase8_started_status_successor_issues(
         "WELL-6",
         "Grill-Me/JIT planning",
         "spec/ticket decomposition",
-        "independent planning review before implementation",
+        "P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete",
+        "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+        "WELL-45 remains blocking",
+        "WELL-48 remains Backlog / non-executable",
+        "P8-05 implementation remains UNAUTHORISED",
+        "status promotion becomes effective through PR #151",
     )
     if any(token.casefold() not in current_open_work_text.casefold() for token in required_current_tokens):
         issues.append("current Open Work status omits WELL-5 completion or the incomplete proof boundary")
@@ -8007,8 +8102,14 @@ def _phase8_started_status_successor_issues(
         "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
         "PROOF CERTIFICATION: NOT CERTIFIED",
         "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
-        "NEXT EXECUTION ACTION: WELL-6 / P8-05 planning through Grill-Me/JIT",
-        "spec/ticket decomposition and independent planning review before implementation",
+        "P8-05 planning: COMPLETE",
+        "Spec/ticket decomposition: COMPLETE",
+        "Independent planning review: COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+        "WELL-45: BLOCKING / NEEDS LEGAL/PRIVACY APPROVAL",
+        "WELL-48: BACKLOG / NON-EXECUTABLE",
+        "P8-05 IMPLEMENTATION: UNAUTHORISED",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "NEXT EXECUTION ACTION: WELL-6 / P8-05 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable P8-05 implementation/JIT verification, and explicit P8-05 implementation authorization",
         "ten required business/browser manifests remain unavailable",
     )
     for token in current_state_tokens:
@@ -8068,9 +8169,11 @@ def _phase8_started_status_successor_issues(
         "INCOMPLETE / COVERAGE-INCOMPLETE",
         "NOT CERTIFIED",
         "business/browser manifests remain unavailable",
-        "WELL-6",
-        "P8-05",
-        "Grill-Me/JIT planning",
+        "P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete",
+        "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+        "WELL-45 remains blocking",
+        "WELL-48 remains Backlog / non-executable",
+            "P8-05 implementation remains unauthorised",
         "NOT STARTED / NOT AUTHORISED",
     )
     for label in ("delivery_atlas", "fp001_skeleton", "harden_02"):
@@ -8087,14 +8190,11 @@ def _phase8_started_status_successor_issues(
                 issues.append(f"current {label} status omits {token!r}")
         if "phase 8" not in section.casefold():
             issues.append(f"current {label} status omits the Phase 8 certification boundary")
-        if (
-            "independent planning review" not in section.casefold()
-            or not any(
-                phrase in section.casefold()
-                for phrase in ("before implementation", "must precede implementation", "must precede implementati")
-            )
+        if "independent planning review" in section.casefold() and not any(
+            status in section.casefold()
+            for status in ("complete", "pass with non-blocking corrections")
         ):
-            issues.append(f"current {label} status omits the independent planning review gate")
+            issues.append(f"current {label} status incorrectly leaves the completed independent planning review outstanding")
 
     current_harden = active_files.get("harden_02", "")
     implementation_boundary = (
@@ -8207,6 +8307,7 @@ def _phase8_phase7c_promotion_rule_issues(
         "current_paths",
         "current_route_status_successor_version",
         "predecessor_archives_sha256",
+        "protected_current_artifacts_sha256",
     }
     for key in (set(base_rule) | set(current_rule)) - mutable_fields:
         if base_rule.get(key) != current_rule.get(key):
@@ -8233,6 +8334,7 @@ def _phase8_phase7c_promotion_rule_issues(
     if any(current_hashes.get(path) != digest for path, digest in base_hashes.items()):
         issues.append("Phase 7C promotion changed an existing predecessor archive hash")
 
+
     # The pinned Phase 7C promotion baseline can be several routing successors
     # behind the current route. Preserve each archived route in that chain, not
     # only the current file's immediate predecessor. Otherwise a later status
@@ -8242,6 +8344,27 @@ def _phase8_phase7c_promotion_rule_issues(
     base_routes = base_phase8.get("current_routes", {}) if isinstance(base_phase8, dict) else {}
     if not isinstance(base_routes, dict):
         return issues + ["pinned Phase 8 route map is invalid"]
+
+
+    base_protected = base_rule.get("protected_current_artifacts_sha256", {})
+    current_protected = current_rule.get("protected_current_artifacts_sha256", {})
+    identity_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+    prior_identity_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+    if not isinstance(base_protected, dict) or not isinstance(current_protected, dict):
+        issues.append("Phase 7C promotion protected-current artifact maps are malformed")
+    else:
+        if current_protected.get(identity_path) != sha256_file(root / identity_path):
+            issues.append("current Identity v0.2.0 protected dossier hash differs from its bytes")
+        if prior_identity_path in current_protected:
+            issues.append("superseded Identity v0.1.4 remains pinned as current")
+        for path, digest in base_protected.items():
+            if path == prior_identity_path:
+                continue
+            if current_protected.get(path) != digest:
+                issues.append(f"Phase 7C promotion changed protected current artifact outside Identity routing: {path}")
+        expected_current_protected = (set(base_protected) - {prior_identity_path}) | {identity_path}
+        if set(current_protected) != expected_current_protected:
+            issues.append("Phase 7C promotion protected-current change is not limited to the Identity v0.1.4-to-v0.2.0 route")
 
     new_archives: set[str] = set()
     for label in ("open_work", "delivery_atlas", "fp001_skeleton", "harden_02"):
@@ -8400,7 +8523,18 @@ def _audit_exact_predecessor_commit(repository_root: Path, sha: str) -> tuple[bo
         predecessor_manifest = tree_path / DEFAULT_MANIFEST
         if not predecessor_manifest.is_file():
             return False, "pinned predecessor has no current authority manifest"
-        report = run_audit(tree_path, predecessor_manifest, repository_root=repository_root)
+        historical_tool_path = tree_path / "tools/foundation_integrity_audit.py"
+        historical_spec = importlib.util.spec_from_file_location(
+            f"foundation_integrity_audit_{sha[:12]}", historical_tool_path
+        )
+        if historical_spec is None or historical_spec.loader is None:
+            return False, "cannot load Foundation Integrity tool from the exact historical tree"
+        historical_tool = importlib.util.module_from_spec(historical_spec)
+        historical_spec.loader.exec_module(historical_tool)
+        report = historical_tool.run_audit(
+            tree_path,
+            predecessor_manifest,
+        )
         if report.get("status") != "PASS":
             failures = "; ".join(
                 f"{finding.get('check')}: {finding.get('message')}"
@@ -8415,6 +8549,166 @@ def _audit_exact_predecessor_commit(repository_root: Path, sha: str) -> tuple[bo
         return result
 
 
+def _identity_v020_promotion_issues(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+) -> list[str]:
+    """Check the separate Identity v0.2.0 current-status promotion and its evidence pins."""
+
+    issues: list[str] = []
+    active_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+    candidate_path = "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+    predecessor_path = "docs/00_platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+    expected_hashes = {
+        candidate_path: "3a6d914cef77c198e6068f3e27f4b968225dd06939c286557d99797af90df699",
+        predecessor_path: "3560e0cb147e21cdaa149b7e1c2abe43ad03af04619d08175ef0544279fa0d0f",
+    }
+    if integrity_rules.get("identity_v020_promotion_archives") != expected_hashes:
+        issues.append("Identity candidate and v0.1.4 promoted-current archive pins differ from accepted evidence")
+    for path, expected_hash in expected_hashes.items():
+        source = root / path
+        if not source.is_file() or source.is_symlink() or sha256_file(source) != expected_hash:
+            issues.append(f"Identity promotion archive is missing or differs from exact source bytes: {path}")
+
+    active = root / active_path
+    if not active.is_file() or active.is_symlink():
+        issues.append("Identity v0.2.0 current dossier is missing or is a symlink")
+        active_text = ""
+        lifecycle: dict[str, Any] = {}
+    else:
+        active_text = active.read_text(encoding="utf-8")
+        region_parts = active_text.split("<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_START -->", 1)
+        region = region_parts[1].split("<!-- IDENTITY_V020_CURRENT_LIFECYCLE_STATE_END -->", 1)[0] if len(region_parts) == 2 else ""
+        state_match = re.search(r"```json\s*(\{.*?\})\s*```", region, re.DOTALL)
+        try:
+            lifecycle = json.loads(state_match.group(1)) if state_match else {}
+        except json.JSONDecodeError:
+            lifecycle = {}
+        required_lifecycle = {
+            "artifact_version": "v0.2.0",
+            "identity_lifecycle": "CERTIFIED / CURRENT",
+            "pr_150_candidate_certification": "COMPLETE",
+            "pr_150_post_merge_certification_evidence": "COMPLETE",
+            "current_status_promotion": "PR #151 STATUS SUCCESSOR",
+            "well_45": "BLOCKING / NEEDS LEGAL/PRIVACY APPROVAL",
+            "well_48": "BACKLOG / NON-EXECUTABLE",
+            "phase_8_application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+            "p8_05_registration_implementation": "UNAUTHORISED",
+            "owner_decisions": "CANONICALLY RECORDED",
+        }
+        if any(lifecycle.get(key) != value for key, value in required_lifecycle.items()):
+            issues.append("Identity v0.2.0 lifecycle state does not record current status and retained gates")
+        if "**Status:** `CERTIFIED / CURRENT`" not in active_text:
+            issues.append("Identity v0.2.0 dossier header does not state CERTIFIED / CURRENT")
+        for token in (
+            "Identity-owned `RegistrationOperation` Ash Resource",
+            "Eight-resource physical Ash implementation set",
+            "HMAC-SHA-256",
+            "Identity registration-binding key",
+            "24-hour",
+            "duplicate-email",
+        ):
+            if token.casefold() not in active_text.casefold():
+                issues.append(f"current Identity dossier omits accepted RegistrationOperation contract token: {token}")
+
+    candidate = root / candidate_path
+    if candidate.is_file() and not candidate.is_symlink():
+        candidate_text = candidate.read_text(encoding="utf-8")
+        for token in (
+            "CANDIDATE / CERTIFICATION PENDING / NOT CURRENT",
+            "RegistrationOperation",
+        ):
+            if token not in candidate_text:
+                issues.append(f"archived PR #150 candidate evidence omits {token!r}")
+    for token in (
+        "d43b6b32c2dec9cf54b5d4492d942a70984a8591",
+        "40299236086",
+        "40302375237",
+    ):
+        if token not in active_text:
+            issues.append(f"current Identity dossier omits PR #150 certification evidence {token}")
+
+    phase7c = integrity_rules.get("fp001_phase7c_final_contract_current_promotion", {})
+    phase8 = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {})
+    protected_current = phase7c.get("protected_current_artifacts_sha256", {}) if isinstance(phase7c, dict) else {}
+    protected_jit = phase8.get("protected_required_jit_dossier_sha256", {}) if isinstance(phase8, dict) else {}
+    active_digest = sha256_file(active) if active.is_file() and not active.is_symlink() else None
+    if protected_current.get(active_path) != active_digest or protected_jit.get(active_path) != active_digest:
+        issues.append("Identity v0.2.0 current dossier hash is not pinned in both current-artifact maps")
+    prior_identity_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
+    if prior_identity_path in protected_current:
+        issues.append("superseded Identity v0.1.4 remains pinned as current")
+    if (root / "docs/00_platform/working/candidates/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md").exists():
+        issues.append("PR #150 candidate remains routed under the mutable candidates directory")
+    if (root / prior_identity_path).exists():
+        issues.append("superseded Identity v0.1.4 remains at the active working route")
+
+    history = manifest.get("historical_documents", [])
+    predecessor_entry = next(
+        (entry for entry in history if isinstance(entry, dict) and entry.get("document_id") == "FP001_IDENTITY_ACCESS_DOSSIER_V0_1_4_PROMOTED_CURRENT"),
+        None,
+    )
+    if (
+        not isinstance(predecessor_entry, dict)
+        or predecessor_entry.get("repository_path") != predecessor_path
+        or predecessor_entry.get("sha256") != expected_hashes[predecessor_path]
+    ):
+        issues.append("promoted/current Identity v0.1.4 snapshot is not registered as distinct historical evidence")
+
+    spec_path = root / "docs/execution/p8-05-registration-jit-spec.md"
+    spec = spec_path.read_text(encoding="utf-8") if spec_path.is_file() and not spec_path.is_symlink() else ""
+    for token in (
+        "preserve local-part bytes and case",
+        "IDNA has a separately reviewed rule",
+        "36^16",
+        "ISO/IEC 7064 MOD 37,2",
+        "registration-binding:v1",
+        "HMAC-SHA-256",
+        "dedicated environment-specific Identity registration-binding key",
+        "24 hours",
+        "WELL-45 remains",
+        "WELL-48",
+    ):
+        if token.casefold() not in spec.casefold():
+            issues.append(f"P8-05 spec omits canonically recorded WELL-48 decision: {token}")
+    if "P8-05 implementation remains UNAUTHORISED" not in spec:
+        issues.append("P8-05 spec does not retain the implementation stop")
+
+    readme_path = root / "docs/00_platform/README.md"
+    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() and not readme_path.is_symlink() else ""
+    for token in (
+        active_path.removeprefix("docs/00_platform/"),
+        candidate_path.removeprefix("docs/00_platform/"),
+        "promoted/current v0.1.4 snapshot",
+        "CERTIFIED / CURRENT",
+        "WELL-45 remains blocking",
+        "WELL-48 remains Backlog",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "P8-05 IMPLEMENTATION: UNAUTHORISED",
+    ):
+        if token not in readme:
+            issues.append(f"README Identity current route omits {token!r}")
+
+    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.82.md"
+    open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() and not open_work_path.is_symlink() else ""
+    for token in (
+        "PR #150",
+        "40299236086",
+        "40302375237",
+        "Identity v0.2.0: COMPLETE / CERTIFIED / CURRENT under PR #151 status successor",
+        "P8-05 IMPLEMENTATION: UNAUTHORISED",
+        "WELL-48: BACKLOG / NON-EXECUTABLE",
+        "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "PHASE 8: NOT CERTIFIED",
+        "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+    ):
+        if token.casefold() not in open_work.casefold():
+            issues.append(f"Open Work omits Identity promotion evidence or retained gate: {token}")
+    return issues
+
+
 def _check_phase8_approved_status_successor(
     root: Path,
     repository_root: Path,
@@ -8426,6 +8720,8 @@ def _check_phase8_approved_status_successor(
     issues = _phase8_approved_status_successor_issues(
         root, repository_root, manifest, integrity_rules
     )
+    identity_issues = _identity_v020_promotion_issues(root, manifest, integrity_rules) if _fp001_phase8_execution_status_successor_is_current(manifest) else []
+    issues.extend(identity_issues)
     transition_ok = not issues
     active_open_work = _active_open_work_entry(manifest)
     current_path = _relative_path(active_open_work) if active_open_work else "docs/00_platform/02_OPEN_WORK_v1.2.78.md"
@@ -8440,6 +8736,18 @@ def _check_phase8_approved_status_successor(
         else "; ".join(issues),
         path=current_path,
     )
+
+    if started_status_is_current:
+        identity_path = "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+        _record_check(
+            report,
+            "identity_v020_current_status_promotion",
+            not identity_issues,
+            "Identity v0.2.0 is current with PR #150 evidence, preserved predecessor snapshots, and canonical P8-05 owner decisions"
+            if not identity_issues
+            else "; ".join(identity_issues),
+            path=identity_path,
+        )
 
     if started_status_is_current:
         phase8_rule = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {})

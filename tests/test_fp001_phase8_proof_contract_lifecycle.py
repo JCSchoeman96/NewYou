@@ -23,7 +23,7 @@ LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
 SUCCESSOR_CHECK = "phase8_approved_status_successor_current"
 PROVENANCE_CHECK = "phase8_status_successor_predecessor_provenance"
 CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.81.md"
+OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.82.md"
 HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
 APPROVAL_TIME_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.78.md"
 APPROVAL_TIME_ATLAS = ROOT / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.20.md"
@@ -108,7 +108,19 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertEqual("NOT CERTIFIED", state["proof_certification"])
         self.assertEqual("NOT STARTED / NOT AUTHORISED", state["phase9_vertical_slices"])
         self.assertIn("WELL-6 / P8-05", state["next_governance_action"])
-        self.assertIn("independent planning review before implementation", state["next_governance_action"])
+        self.assertIn("p8-05 owner decisions canonically recorded", state["phase8_execution_gate"].casefold())
+        self.assertIn("WELL-45", state["next_governance_action"])
+        self.assertIn("explicit P8-05 implementation authorization", state["next_governance_action"])
+        self.assertIn(
+            "independent planning review is complete / pass with non-blocking corrections",
+            state["next_governance_action"].casefold(),
+        )
+        self.assertIn("decomposition complete", state["next_governance_action"].casefold())
+        self.assertEqual("AUTHORISED", state["phase8"])
+        self.assertEqual(
+            "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+            state["application_implementation"],
+        )
 
         for token in (
             "WELL-5 / P8-04",
@@ -117,7 +129,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             "PROOF CERTIFICATION: NOT CERTIFIED",
             "Phase 8 is NOT CERTIFIED",
             "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
-            "NEXT EXECUTION ACTION: WELL-6 / P8-05 planning through Grill-Me/JIT",
+            "NEXT EXECUTION ACTION: WELL-6 / P8-05 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable P8-05 implementation/JIT verification, and explicit P8-05 implementation authorization",
         ):
             self.assertIn(token, readme)
 
@@ -159,7 +171,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             promotion = manifest["integrity_rules"]["fp001_phase7c_final_contract_current_promotion"]
             del promotion["predecessor_archives_sha256"][
-                "docs/00_platform/archive/02_OPEN_WORK_v1.2.79.md"
+                "docs/00_platform/archive/02_OPEN_WORK_v1.2.81.md"
             ]
             manifest_path.write_text(
                 json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
@@ -362,7 +374,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
     def test_open_work_routes_to_p805_after_well5_without_certifying_tb001_or_phase9(self):
         self.assertTrue(OPEN_WORK.is_file(), "the Open Work status successor is missing")
         text = OPEN_WORK.read_text(encoding="utf-8")
-        self.assertIn('"status_successor_version": "1.2.81"', text)
+        self.assertIn('"status_successor_version": "1.2.82"', text)
         self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", text)
         self.assertIn("TB-001", text)
         self.assertIn("CONTRACT/DESIGN REVIEW: COMPLETE / PASS", text)
@@ -373,7 +385,18 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", text)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
         self.assertIn("NEXT GOVERNANCE ACTION: WELL-6 / P8-05", text)
-        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.21.md`", text)
+        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.22.md`", text)
+        self.assertFalse((ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.81.md").exists())
+        archived_predecessor = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.81.md"
+        self.assertEqual(
+            "ddffe1b32b42e6132ec855ad6bc6234aabff6b01b36fc60f60e1e94f16d9df56",
+            hashlib.sha256(archived_predecessor.read_bytes()).hexdigest(),
+        )
+        prior_atlas = ROOT / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.22.md"
+        self.assertIn(
+            "**Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.21.md` (direct routing predecessor",
+            prior_atlas.read_text(encoding="utf-8"),
+        )
 
     def test_approval_time_route_remains_archived_while_current_summaries_route_p805(self):
         contract = CONTRACT.read_text(encoding="utf-8")
@@ -393,15 +416,17 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
 
         readme = (ROOT / "docs/00_platform/README.md").read_text(encoding="utf-8")
         current_state = readme.split("## Current State", 1)[1].split("## Historical status evidence", 1)[0]
-        self.assertIn("NEXT EXECUTION ACTION: WELL-6 / P8-05 planning", current_state)
+        self.assertIn("NEXT EXECUTION ACTION: WELL-6 / P8-05 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable P8-05 implementation/JIT verification, and explicit P8-05 implementation authorization", current_state)
         self.assertIn("PROOF EXECUTION: STARTED", current_state)
         self.assertIn("PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE", current_state)
         self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", current_state)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", current_state)
         self.assertNotIn("NEXT GOVERNANCE ACTION: WELL-38", current_state)
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.22.md", readme)
-        self.assertIn("working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.23.md", readme)
-        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.24.md", readme)
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.23.md", readme)
+        self.assertIn("working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.24.md", readme)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.25.md", readme)
+        self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.4.22.md", readme)
+        self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.5.24.md", readme)
 
         atlas = APPROVAL_TIME_ATLAS.read_text(encoding="utf-8")
         skeleton = APPROVAL_TIME_SKELETON.read_text(encoding="utf-8")
