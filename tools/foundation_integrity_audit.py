@@ -7822,14 +7822,24 @@ def _phase8_pinned_archive_sha256(
     if base_bytes is None:
         # A later routing successor can archive a predecessor that was still at its
         # current path in the PR base, after the original status-certification base.
-        # Verify that archive against the direct repository predecessor at the PR
-        # boundary instead of treating the older certification base as its source.
+        # A merge-ref checkout has that base at HEAD^; a direct branch checkout can
+        # have several commits since the base. Walk first-parent history to the
+        # nearest source snapshot, then let the manifest hash comparison verify the
+        # archived bytes exactly.
         filename = Path(archive_relative).name
         source_paths = list(dict.fromkeys((
             f"docs/00_platform/{filename}",
             f"docs/00_platform/working/{filename}",
         )))
-        for revision in ("HEAD^", "HEAD"):
+
+        history = subprocess.run(
+            ["git", "-C", str(repository_path), "rev-list", "--first-parent", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        revisions = history.stdout.splitlines() if history.returncode == 0 else []
+        for revision in revisions:
             for source_path in source_paths:
                 base_bytes = read_revision_path(source_path, revision)
                 if base_bytes is not None:
