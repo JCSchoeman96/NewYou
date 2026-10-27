@@ -1234,7 +1234,7 @@ Historical PR #40 contract-lifecycle evidence: certified head `cb710860f4db65ce4
   "audit_dossier_candidate": "COMPLETE / CERTIFIED / MERGED UNCHANGED",
   "audit_dossier_candidate_pr": 118,
   "audit_dossier_work_start_baseline_main_sha": "332d51f19d77430fe4e95911920fe0c87cab524a",
-  "status_successor_version": "1.2.83",
+  "status_successor_version": "1.2.84",
   "execution_start_baseline_main_sha": "1c8fc94058176795d88cb82e08857e3d30c553e9",
   "certified_contract_version": "0.4.0",
   "contract_status": "COMPLETE / CERTIFIED",

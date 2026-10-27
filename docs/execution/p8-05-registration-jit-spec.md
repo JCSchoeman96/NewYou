@@ -296,7 +296,7 @@ Independent planning review and implementation/JIT verification are complete. P8
 
 P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY
 
-The locked repository stack is Ash 3.37.0, AshPostgres 2.15.1, Elixir 1.20.4 and Erlang/OTP 29.1.2. Reviewed later implementation candidates are AshOban 0.10.2 and Oban 2.24.2. They are not installed by this authorization; later dependency resolution must be verified.
+The locked repository stack is Ash 3.37.0, AshPostgres 2.15.1, Elixir 1.20.4 and Erlang/OTP 29.1.2. Reviewed later implementation candidates are AshOban 0.10.2 and Oban 2.24.2. They are not installed by this authorization; later dependency resolution must be verified. Once this governance authorization is current, bounded P8-05 implementation is authorised to add `ash_oban == 0.10.2` and `oban == 2.24.2`, subject to fresh dependency resolution, security and locked-stack compatibility verification in the implementation PR.
 
 The approved implementation direction is a purpose-specific Ash action using `transaction? true` and explicit `touches_resources`, with participating AshPostgres Resources using the same `NewYou.Repo`. Cross-Domain orchestration invokes each owning Domain's Ash interface. This is implementation/JIT evidence, not Architecture Law. It authorizes no direct Repo or raw SQL business writes, `Ecto.Multi` as a parallel business-write authority, custom outbox, generic event infrastructure, new Domain or new business Resource. Later executable tests must prove atomic rollback and consequence cardinality.
 
