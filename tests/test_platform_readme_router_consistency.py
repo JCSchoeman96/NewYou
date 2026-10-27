@@ -77,15 +77,18 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         ):
             self.assertIn(token, self.open_work_state["next_governance_action"])
         self.assertIn(
-            "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
+            "independent planning review COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
             self.open_work_state["next_governance_action"],
         )
+        self.assertIn("WELL-45 is the legal/privacy release gate", self.open_work_state["next_governance_action"])
+        self.assertIn("JIT/implementation gates", self.open_work_state["next_governance_action"])
+        self.assertIn("explicit P8-05 implementation authorization", self.open_work_state["next_governance_action"])
         for token in (
-            "WELL-45 clearance",
-            "implementation/JIT verification",
-            "explicit P8-05 implementation authorization",
+            "development may proceed only after Product v1.10.0 / DEC-316 is current",
+            "immutable English development baselines exist",
+            "explicit P8-05 implementation authorization is granted",
+            "WELL-45 production/real-participant release remains blocked",
         ):
-            self.assertIn(token, self.open_work_state["next_governance_action"])
             self.assertIn(token, next_execution.group(1))
 
     def test_current_prose_cannot_regress_to_stale_classification_routing(self) -> None:

@@ -1941,7 +1941,7 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
 
     expected = {
         "current_stage": "FP-001 PHASE 8 ARCHITECTURAL PROOF (BOUNDED)",
-        "next_stage": "P8-05 / WELL-6 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization; P8-05 remains unauthorized",
+        "next_stage": "P8-05 / WELL-6 — Development eligibility requires current Product v1.10.0 / DEC-316, both immutable EN development baselines, all other applicable JIT/implementation gates and explicit P8-05 implementation authorization; production and applicable real-participant release require approved English Terms/Privacy and legal/privacy approval evidence.",
         "phase_7b_reconciliation": "COMPLETE / CERTIFIED / CURRENT",
         "phase_7b_reconciliation_execution_tracker_state": "CLOSED / COMPLETED",
         "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
@@ -1964,7 +1964,7 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
         "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
         "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 OWNER DECISIONS CANONICALLY RECORDED; IMPLEMENTATION GATED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-        "next_governance_action": "WELL-6 / P8-05 — Grill-Me/JIT planning COMPLETE; spec/ticket decomposition COMPLETE; independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. The PR #151 status promotion becoming effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization remain; P8-05 implementation is unauthorized",
+        "next_governance_action": "WELL-6 / P8-05 — Grill-Me/JIT planning COMPLETE; spec/ticket decomposition COMPLETE; independent planning review COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. Development eligibility requires current Product v1.10.0 / DEC-316, both immutable EN development baselines, all other applicable JIT/implementation gates and explicit P8-05 implementation authorization. WELL-45 is the legal/privacy release gate; approved English Terms/Privacy and legal/privacy approval evidence are mandatory for production and applicable real-participant release. P8-05 implementation remains unauthorized until all other gates pass and explicit authorization is granted.",
     }
     if any(state.get(key) != value for key, value in expected.items()):
         return False, "started Phase 8 proof route misstates the incomplete result or downstream stop"
@@ -1987,8 +1987,8 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
 
     readme_current = _markdown_h2_section(readme, "Current State") or ""
     readme_status = required_status[1:-1] + (
-        "NEXT GOVERNANCE ACTION: WELL-6 / P8-05 — Grill-Me/JIT planning COMPLETE; spec/ticket decomposition COMPLETE; independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. The PR #151 status promotion becoming effective, WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization remain; P8-05 implementation is unauthorized",
-        "NEXT EXECUTION ACTION: WELL-6 / P8-05 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable P8-05 implementation/JIT verification, and explicit P8-05 implementation authorization",
+        "NEXT GOVERNANCE ACTION: WELL-6 / P8-05 — Grill-Me/JIT planning COMPLETE; spec/ticket decomposition COMPLETE; independent planning review COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. Development eligibility requires current Product v1.10.0 / DEC-316, both immutable English development baselines, all other applicable P8-05 JIT/implementation gates, and explicit P8-05 implementation authorization. This update grants no authorization. WELL-45 release evidence remains mandatory for production and applicable real-participant use.",
+        "NEXT EXECUTION ACTION: WELL-6 / P8-05 development may proceed only after Product v1.10.0 / DEC-316 is current, both immutable English development baselines exist, all other applicable implementation/JIT gates pass, and explicit P8-05 implementation authorization is granted; WELL-45 production/real-participant release remains blocked pending approved English Terms/Privacy and all other release gates.",
     )
     if any(token not in readme_current for token in readme_status):
         return False, "README current state does not mirror the incomplete Phase 8 proof route"
@@ -2712,7 +2712,7 @@ def _engineering_standards_certified_state(
             "NOT CERTIFIED",
             "P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete",
             "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
-            "WELL-45 remains blocking",
+            "WELL-45 is LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED",
             "WELL-48 remains Backlog / non-executable",
             "P8-05 implementation remains UNAUTHORISED",
             "application implementation remains AUTHORISED",
@@ -3955,6 +3955,7 @@ def _check_current_authority_route_resolution(
         "ARCHITECTURE_SYNTHESIS", "DOMAIN_MAP", "ROADMAP", "PLATFORM_OPERATING_MODEL",
         "FRONTEND_EXPERIENCE_SYSTEM",
     }.issubset(current_governing)
+    graph_rules = integrity_rules.get("graph_rules", {})
     roadmap_entry = current_governing.get("ROADMAP")
     if roadmap_entry is not None:
         relative = _relative_path(roadmap_entry)
@@ -3968,9 +3969,26 @@ def _check_current_authority_route_resolution(
         route_values = CURRENT_ROUTE_FILENAME_PATTERN.findall(current_authority_lines[0]) if len(current_authority_lines) == 1 else []
         route_names = [Path(filename).name for filename in route_values]
         if len(current_authority_lines) == 1 or complete_authority_inventory:
-            record_current_routes("ROADMAP", relative, route_names, expected_product_authority, route_values)
+            frozen_route_exception = graph_rules.get(
+                "current_route_source_at_freeze_exceptions", {}
+            ).get(relative)
+            if frozen_route_exception is None:
+                record_current_routes("ROADMAP", relative, route_names, expected_product_authority, route_values)
+            else:
+                expected_hash = frozen_route_exception.get("sha256")
+                if (
+                    len(current_authority_lines) != 1
+                    or route_names != frozen_route_exception.get("route_filenames")
+                    or not path.is_file()
+                    or expected_hash != sha256_file(path)
+                    or expected_hash != roadmap_entry.get("sha256")
+                    or not str(frozen_route_exception.get("reason", "")).strip()
+                ):
+                    issues.append(
+                        f"ROADMAP ({relative}): invalid source-at-freeze current-route exception for the exact path and SHA-256"
+                    )
+                    issue_paths.append(relative)
 
-    graph_rules = integrity_rules.get("graph_rules", {})
     navigation_paths = [str(path) for path in graph_rules.get("navigation_document_paths", [])]
     working_nav_paths = [path for path in navigation_paths if path.startswith("docs/00_platform/working/")]
     readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
@@ -7096,7 +7114,7 @@ PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA = "4234965c8da20dbb4ef0a7128614a507024
 PHASE8_APPROVED_STATUS_SUCCESSOR_HEAD_SHA = "c30388f8ae548040126483ec53957d0fc80b8246"
 PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA = "5c7acdd690008af24dc0242ca734cb900c56ea88"
 _PHASE8_PREDECESSOR_AUDIT_CACHE: dict[tuple[Path, str], tuple[bool, str]] = {}
-_PHASE8_PINNED_ARCHIVE_SHA256_CACHE: dict[tuple[Path, str, str], tuple[str | None, str]] = {}
+_PHASE8_PINNED_ARCHIVE_SHA256_CACHE: dict[tuple[Path, str, str, str], tuple[str | None, str]] = {}
 _PHASE8_PINNED_BASE_MANIFEST_CACHE: dict[tuple[Path, str], tuple[dict[str, Any] | None, str]] = {}
 
 
@@ -7748,9 +7766,19 @@ def _phase8_pinned_archive_sha256(
     if repository.returncode != 0:
         return None, "cannot locate Git repository for pinned archive provenance"
     repository_path = Path(repository.stdout.strip()).resolve()
+    head = subprocess.run(
+        ["git", "-C", str(repository_path), "rev-parse", "--verify", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    current_head = head.stdout.strip()
+    if head.returncode != 0 or not current_head:
+        return None, "cannot resolve current Git HEAD for pinned archive provenance"
     cache_key = (
         repository_path,
         PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA,
+        current_head,
         archive_relative,
     )
     cached = _PHASE8_PINNED_ARCHIVE_SHA256_CACHE.get(cache_key)
@@ -7804,14 +7832,24 @@ def _phase8_pinned_archive_sha256(
     if base_bytes is None:
         # A later routing successor can archive a predecessor that was still at its
         # current path in the PR base, after the original status-certification base.
-        # Verify that archive against the direct repository predecessor at the PR
-        # boundary instead of treating the older certification base as its source.
+        # A merge-ref checkout has that base at HEAD^; a direct branch checkout can
+        # have several commits since the base. Walk first-parent history to the
+        # nearest source snapshot, then let the manifest hash comparison verify the
+        # archived bytes exactly.
         filename = Path(archive_relative).name
         source_paths = list(dict.fromkeys((
             f"docs/00_platform/{filename}",
             f"docs/00_platform/working/{filename}",
         )))
-        for revision in ("HEAD^", "HEAD"):
+
+        history = subprocess.run(
+            ["git", "-C", str(repository_path), "rev-list", "--first-parent", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        revisions = history.stdout.splitlines() if history.returncode == 0 else []
+        for revision in revisions:
             for source_path in source_paths:
                 base_bytes = read_revision_path(source_path, revision)
                 if base_bytes is not None:
@@ -8002,7 +8040,7 @@ def _phase8_started_status_successor_issues(
         "proof_certification": "NOT CERTIFIED",
         "phase8": "AUTHORISED",
         "application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
-        "next_stage": "P8-05 / WELL-6 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable implementation/JIT verification and explicit P8-05 implementation authorization; P8-05 remains unauthorized",
+        "next_stage": "P8-05 / WELL-6 — Development eligibility requires current Product v1.10.0 / DEC-316, both immutable EN development baselines, all other applicable JIT/implementation gates and explicit P8-05 implementation authorization; production and applicable real-participant release require approved English Terms/Privacy and legal/privacy approval evidence.",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         "phase8_execution_gate": "STARTED / BOUNDED PHASE 8 / P8-05 OWNER DECISIONS CANONICALLY RECORDED; IMPLEMENTATION GATED",
         "current_delivery_atlas": routes["delivery_atlas"].removeprefix("docs/00_platform/"),
@@ -8018,9 +8056,9 @@ def _phase8_started_status_successor_issues(
             "WELL-6 / P8-05",
             "planning complete",
             "decomposition complete",
-            "independent planning review is complete / pass with non-blocking corrections",
+            "independent planning review complete / pass with non-blocking corrections",
             "WELL-45",
-            "implementation/JIT verification",
+            "all other applicable JIT/implementation gates",
             "explicit P8-05 implementation authorization",
         )
         if any(token.casefold() not in next_action.casefold() for token in required_next_action_tokens):
@@ -8066,10 +8104,14 @@ def _phase8_started_status_successor_issues(
         "spec/ticket decomposition",
         "P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete",
         "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
-        "WELL-45 remains blocking",
+        "WELL-45 is LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED",
+        "not legally approved",
+        "does not block development in explicitly permitted non-production contexts",
+        "unresolved release evidence remains final approved English Terms",
         "WELL-48 remains Backlog / non-executable",
         "P8-05 implementation remains UNAUTHORISED",
-        "status promotion becomes effective through PR #151",
+        "P8-05 development eligibility requires",
+        "Production, public release, paid pilot and applicable real-participant flows remain fail-closed",
     )
     if any(token.casefold() not in current_open_work_text.casefold() for token in required_current_tokens):
         issues.append("current Open Work status omits WELL-5 completion or the incomplete proof boundary")
@@ -8105,11 +8147,11 @@ def _phase8_started_status_successor_issues(
         "P8-05 planning: COMPLETE",
         "Spec/ticket decomposition: COMPLETE",
         "Independent planning review: COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
-        "WELL-45: BLOCKING / NEEDS LEGAL/PRIVACY APPROVAL",
+        "WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED",
         "WELL-48: BACKLOG / NON-EXECUTABLE",
         "P8-05 IMPLEMENTATION: UNAUTHORISED",
         "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
-        "NEXT EXECUTION ACTION: WELL-6 / P8-05 — PR #151 status promotion becoming effective; WELL-45 clearance, applicable P8-05 implementation/JIT verification, and explicit P8-05 implementation authorization",
+        "NEXT EXECUTION ACTION: WELL-6 / P8-05 development may proceed only after Product v1.10.0 / DEC-316 is current, both immutable English development baselines exist, all other applicable implementation/JIT gates pass, and explicit P8-05 implementation authorization is granted; WELL-45 production/real-participant release remains blocked pending approved English Terms/Privacy and all other release gates.",
         "ten required business/browser manifests remain unavailable",
     )
     for token in current_state_tokens:
@@ -8171,7 +8213,9 @@ def _phase8_started_status_successor_issues(
         "business/browser manifests remain unavailable",
         "P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete",
         "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
-        "WELL-45 remains blocking",
+        "WELL-45 is LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED",
+        "does not block development in explicitly permitted non-production contexts",
+        "production and applicable real-participant release",
         "WELL-48 remains Backlog / non-executable",
             "P8-05 implementation remains unauthorised",
         "NOT STARTED / NOT AUTHORISED",
@@ -8682,7 +8726,7 @@ def _identity_v020_promotion_issues(
         candidate_path.removeprefix("docs/00_platform/"),
         "promoted/current v0.1.4 snapshot",
         "CERTIFIED / CURRENT",
-        "WELL-45 remains blocking",
+        "WELL-45 is a legal/privacy release gate",
         "WELL-48 remains Backlog",
         "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
         "P8-05 IMPLEMENTATION: UNAUTHORISED",
@@ -8690,7 +8734,7 @@ def _identity_v020_promotion_issues(
         if token not in readme:
             issues.append(f"README Identity current route omits {token!r}")
 
-    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.82.md"
+    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.83.md"
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() and not open_work_path.is_symlink() else ""
     for token in (
         "PR #150",
@@ -12301,6 +12345,35 @@ def _check_production_graph(
         (relative, _path_is_under(relative, roots["reference"]))
         for relative in navigation_paths
     ]
+    source_at_freeze_exceptions = graph_rules.get("source_at_freeze_reference_exceptions", {})
+    if not isinstance(source_at_freeze_exceptions, dict):
+        stale_hits.append("graph rule source_at_freeze_reference_exceptions is not an object")
+        source_at_freeze_exceptions = {}
+    scan_paths = {relative for relative, _is_reference in scan_targets}
+    approved_source_exceptions: dict[str, set[str]] = {}
+    stale_pattern_sources = set(graph_rules.get("stale_reference_patterns", []))
+    for relative, exception in source_at_freeze_exceptions.items():
+        if not isinstance(relative, str) or relative not in scan_paths or not isinstance(exception, dict):
+            stale_hits.append(f"invalid source-at-freeze exception route: {relative!r}")
+            continue
+        exception_patterns = exception.get("patterns")
+        expected_hash = exception.get("sha256")
+        reason = exception.get("reason")
+        source = root / relative
+        if (
+            not isinstance(exception_patterns, list)
+            or not exception_patterns
+            or not all(isinstance(item, str) and item in stale_pattern_sources for item in exception_patterns)
+            or not isinstance(expected_hash, str)
+            or not isinstance(reason, str)
+            or not reason.strip()
+            or not source.is_file()
+            or source.is_symlink()
+            or sha256_file(source) != expected_hash
+        ):
+            stale_hits.append(f"invalid or changed source-at-freeze exception: {relative}")
+            continue
+        approved_source_exceptions[relative] = set(exception_patterns)
     for relative, is_reference in scan_targets:
         path = root / relative
         if not path.is_file():
@@ -12324,6 +12397,12 @@ def _check_production_graph(
         else:
             patterns = stale_patterns
         for pattern in patterns:
+            if pattern.pattern in approved_source_exceptions.get(relative, set()):
+                if not pattern.search(text):
+                    stale_hits.append(
+                        f"source-at-freeze exception no longer matches its declared reference: {relative}: {pattern.pattern}"
+                    )
+                continue
             if pattern.search(text):
                 stale_hits.append(f"{relative}: {pattern.pattern}")
     _record_check(

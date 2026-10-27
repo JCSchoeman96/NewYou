@@ -210,18 +210,22 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             "planning COMPLETE",
             "decomposition COMPLETE",
             "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
-            "PR #151 status promotion becoming effective",
-            "WELL-45 clearance",
-            "implementation/JIT verification",
+            "current Product v1.10.0 / DEC-316",
+            "both immutable EN development baselines",
+            "all other applicable P8-05 JIT/implementation gates",
             "explicit P8-05 implementation authorization",
+            "WELL-45 remains a legal/privacy release gate",
+            "approved English Terms/Privacy and approval evidence remain mandatory",
         ):
             self.assertIn(required, next_actions[0])
         for required in (
             "WELL-6 / P8-05",
-            "PR #151 status promotion becoming effective",
-            "WELL-45 clearance",
-            "P8-05 implementation/JIT verification",
+            "Product v1.10.0 / DEC-316",
+            "both immutable English development baselines",
+            "all other applicable implementation/JIT gates",
             "explicit P8-05 implementation authorization",
+            "WELL-45 production/real-participant release remains blocked",
+            "approved English Terms/Privacy",
         ):
             self.assertIn(required, next_execution.group(1))
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)

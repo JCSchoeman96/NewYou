@@ -67,3 +67,9 @@ Reopen only for new evidence, changed scope, a higher-authority contradiction or
 The pack intentionally preserves `OQ-013`, `OQ-014`, `OQ-015`, `OQ-016`, `OQ-020`, `OQ-021`, `OQ-024`, `OQ-029`, `OQ-030`, `OQ-031`, `OQ-032`, historical-route expiry/reuse policy, correction-impact/remediation detail, source-copy/IP review and FP-001 C&M dossier adjudication.
 
 Compact working evidence must never be used to bypass those owners/gates or Phase-8 development entry requirements.
+
+## English legal development-baseline snapshots
+
+The immutable source snapshots under `legal_baselines/` are retained for non-production development continuity under Product Law v1.10.0 / DEC-316. Their machine-readable record is `LEGAL_BASELINE_CONTENT_MANIFEST_v0.1.0.json`. These files are content evidence, not Content & Media authority, approved NewYou legal documents or a legal-sufficiency finding.
+
+The manifest records each exact content version ID, Terms/Privacy type, `en` locale, applicability, approval state, source URL/page ID, source modification timestamp, capture timestamp, content hash, and supersession/withdrawal fields. The source webpages are mutable. Each snapshot prominently displays NOT LEGALLY APPROVED FOR PRODUCTION OR REAL-PARTICIPANT RELEASE and is limited to expressly permitted development, tests, development environments and bounded Phase-8 architectural proof. No Afrikaans legal snapshot or translation is maintained.

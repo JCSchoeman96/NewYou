@@ -159,6 +159,8 @@ class Fp001AuditEvidenceJitDossierCandidateTests(unittest.TestCase):
                     workspace_path = "docs/00_platform/archive/00_PLATFORM_v1.8.0.md"
                 elif path == "docs/00_platform/01_DECISIONS_v1.8.0.md":
                     workspace_path = "docs/00_platform/archive/01_DECISIONS_v1.8.0.md"
+                elif path == "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.0.1.md":
+                    workspace_path = "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md"
                 elif path.endswith("FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"):
                     workspace_path = "docs/00_platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
                 self.assertEqual(_git_show(baseline_path), (ROOT / workspace_path).read_bytes(), path)

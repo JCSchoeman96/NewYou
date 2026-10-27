@@ -11,6 +11,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import tools.foundation_integrity_audit as foundation_integrity_audit
 from tools.foundation_integrity_audit import (
     _fp001_pinned_historical_proof_contract_archives,
     _h02_lifecycle_state,
@@ -113,6 +114,75 @@ IDENTITY_LIFECYCLE_STATE = {
 
 
 class FoundationIntegrityAuditTests(unittest.TestCase):
+    def test_phase8_archive_provenance_cache_tracks_current_head(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            subprocess.run(["git", "-C", str(root), "config", "user.name", "Foundation test"], check=True)
+            subprocess.run(["git", "-C", str(root), "config", "user.email", "foundation@example.invalid"], check=True)
+
+            manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest_path.parent.mkdir(parents=True)
+            manifest_path.write_text(
+                json.dumps({
+                    "integrity_rules": {
+                        "fp001_phase8_proof_contract_lifecycle": {"current_routes": {}}
+                    }
+                }),
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "-C", str(root), "add", "."], check=True)
+            subprocess.run(["git", "-C", str(root), "commit", "-q", "-m", "pinned base"], check=True)
+            pinned_base = subprocess.run(
+                ["git", "-C", str(root), "rev-parse", "HEAD"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+
+            archive_relative = "docs/00_platform/archive/PHASE8_SOURCE.md"
+            source_path = root / "docs/00_platform/PHASE8_SOURCE.md"
+            source_path.write_text("source snapshot A\n", encoding="utf-8")
+            subprocess.run(["git", "-C", str(root), "add", str(source_path)], check=True)
+            subprocess.run(["git", "-C", str(root), "commit", "-q", "-m", "source A"], check=True)
+            digest_a = hashlib.sha256(source_path.read_bytes()).hexdigest()
+
+            cache_before = foundation_integrity_audit._PHASE8_PINNED_ARCHIVE_SHA256_CACHE.copy()
+            foundation_integrity_audit._PHASE8_PINNED_ARCHIVE_SHA256_CACHE.clear()
+            try:
+                with patch.object(
+                    foundation_integrity_audit,
+                    "PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA",
+                    pinned_base,
+                ):
+                    first_digest, first_issue = foundation_integrity_audit._phase8_pinned_archive_sha256(
+                        root,
+                        archive_relative,
+                    )
+                    self.assertEqual("", first_issue)
+                    self.assertEqual(digest_a, first_digest)
+
+                    subprocess.run(
+                        ["git", "-C", str(root), "checkout", "-q", "-b", "source-b", pinned_base],
+                        check=True,
+                    )
+                    source_path.write_text("source snapshot B\n", encoding="utf-8")
+                    subprocess.run(["git", "-C", str(root), "add", str(source_path)], check=True)
+                    subprocess.run(["git", "-C", str(root), "commit", "-q", "-m", "source B"], check=True)
+                    digest_b = hashlib.sha256(source_path.read_bytes()).hexdigest()
+
+                    second_digest, second_issue = foundation_integrity_audit._phase8_pinned_archive_sha256(
+                        root,
+                        archive_relative,
+                    )
+            finally:
+                foundation_integrity_audit._PHASE8_PINNED_ARCHIVE_SHA256_CACHE.clear()
+                foundation_integrity_audit._PHASE8_PINNED_ARCHIVE_SHA256_CACHE.update(cache_before)
+
+            self.assertEqual("", second_issue)
+            self.assertEqual(digest_b, second_digest)
+            self.assertNotEqual(digest_a, second_digest)
+
     def test_markdown_h2_section_keeps_h3_h4_and_stops_at_next_peer_h2(self):
         text = """## Current State
 
@@ -2622,6 +2692,60 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
             graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
             self.assertEqual("PASS", graph_check["status"], graph_check["message"])
 
+    def test_source_at_freeze_reference_exception_is_exact_path_and_hash_bound(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+
+            report = run_audit(root, manifest_path)
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("PASS", graph_check["status"], graph_check["message"])
+
+            relative = "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
+            frozen = root / relative
+            frozen.write_text(
+                frozen.read_text(encoding="utf-8") + "\nSource-at-freeze citation remains pinned.\n",
+                encoding="utf-8",
+            )
+            report = run_audit(root, manifest_path)
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("FAIL", graph_check["status"], graph_check["message"])
+            self.assertIn("invalid or changed source-at-freeze exception", graph_check["message"])
+            self.assertIn(relative, graph_check["message"])
+
+    def test_roadmap_source_at_freeze_route_exception_is_exact_path_and_hash_bound(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+
+            report = run_audit(root, manifest_path)
+            route_check = next(
+                check for check in report["checks"]
+                if check["name"] == "current_authority_route_resolution"
+            )
+            self.assertEqual("PASS", route_check["status"], route_check["message"])
+
+            relative = "docs/00_platform/05_ROADMAP_v1.2.4.md"
+            roadmap = root / relative
+            roadmap.write_text(
+                roadmap.read_text(encoding="utf-8") + "\nUnexpected route mutation.\n",
+                encoding="utf-8",
+            )
+            report = run_audit(root, manifest_path)
+            route_check = next(
+                check for check in report["checks"]
+                if check["name"] == "current_authority_route_resolution"
+            )
+            self.assertEqual("FAIL", route_check["status"], route_check["message"])
+            self.assertIn("invalid source-at-freeze current-route exception", route_check["message"])
+            self.assertIn(relative, route_check["message"])
+
     def test_declared_working_navigation_path_is_scanned_for_stale_references(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -3049,7 +3173,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
             ),
             (
                 "atlas",
-                "00_PLATFORM_v1.8.0.md",
+                None,
                 "00_PLATFORM_v1.5.1.md",
             ),
             (
@@ -3068,6 +3192,15 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 root = Path(directory)
                 fixture_docs = root / "docs" / "00_platform"
                 shutil.copytree(source_docs, fixture_docs)
+                source_p8_spec = (
+                    Path(__file__).resolve().parents[1]
+                    / "docs"
+                    / "execution"
+                    / "p8-05-registration-jit-spec.md"
+                )
+                fixture_p8_spec = root / "docs" / "execution" / source_p8_spec.name
+                fixture_p8_spec.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source_p8_spec, fixture_p8_spec)
                 manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
                 if route_kind == "roadmap":
@@ -3080,7 +3213,14 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 elif route_kind == "atlas":
                     atlas = _current_working_path(root, "DELIVERY_ATLAS_WORKING_")
                     relative = atlas.relative_to(root).as_posix()
-                    current_route = "00_PLATFORM_v1.9.0.md"
+                    current_route = Path(
+                        next(
+                            entry["repository_path"]
+                            for entry in manifest["governing_documents"]
+                            if entry["document_id"] == "PLATFORM_BASELINE"
+                            and entry.get("lifecycle") == "current"
+                        )
+                    ).name
                 elif route_kind == "harden_open_work":
                     harden = _current_working_path(root, "HARDEN-02_CONTRACT_WORKING_")
                     relative = harden.relative_to(root).as_posix()

@@ -286,9 +286,15 @@ class FoundationSmokeTests(unittest.TestCase):
             )
             product_path = root / product_law["repository_path"]
             product_text = product_path.read_text(encoding="utf-8")
-            current_route = f"Current Product Law is v{product_law['semver']}."
+            current_route = (
+                f"Current Product Law: v{product_law['semver']} "
+                f"(`{product_law['canonical_filename']}`)"
+            )
             self.assertIn(current_route, product_text)
-            archived_route = f"Current Product Law is `archive/{product_law['canonical_filename']}`."
+            archived_route = current_route.replace(
+                f"`{product_law['canonical_filename']}`",
+                f"`archive/{product_law['canonical_filename']}`",
+            )
             product_path.write_text(product_text.replace(current_route, archived_route, 1), encoding="utf-8")
             refresh_manifest(root, manifest_path)
 
@@ -321,9 +327,15 @@ class FoundationSmokeTests(unittest.TestCase):
             )
             product_path = root / product_law["repository_path"]
             product_text = product_path.read_text(encoding="utf-8")
-            current_route = f"Current Product Law is v{product_law['semver']}."
+            current_route = (
+                f"Current Product Law: v{product_law['semver']} "
+                f"(`{product_law['canonical_filename']}`)"
+            )
             self.assertIn(current_route, product_text)
-            redirected_route = f"Current Product Law is `{decisions['canonical_filename']}`."
+            redirected_route = current_route.replace(
+                f"`{product_law['canonical_filename']}`",
+                f"`{decisions['canonical_filename']}`",
+            )
             product_path.write_text(product_text.replace(current_route, redirected_route, 1), encoding="utf-8")
             refresh_manifest(root, manifest_path)
 

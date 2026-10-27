@@ -531,23 +531,26 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         self.assertIsNotNone(next_execution)
         for required in (
             "WELL-6 / P8-05",
-            "planning COMPLETE",
-            "decomposition COMPLETE",
-            "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
-            "PR #151 status promotion becoming effective",
-            "WELL-45 clearance",
-            "implementation/JIT verification",
+            "current Product v1.10.0 / DEC-316",
+            "both immutable EN development baselines",
+            "all other applicable JIT/implementation gates",
             "explicit P8-05 implementation authorization",
+            "WELL-45 is the legal/privacy release gate",
+            "approved English Terms/Privacy and legal/privacy approval evidence are mandatory",
         ):
             self.assertIn(required, state["next_governance_action"])
         for required in (
             "WELL-6 / P8-05",
-            "PR #151 status promotion becoming effective",
-            "WELL-45 clearance",
-            "P8-05 implementation/JIT verification",
+            "Product v1.10.0 / DEC-316",
+            "both immutable English development baselines",
+            "all other applicable implementation/JIT gates",
             "explicit P8-05 implementation authorization",
+            "WELL-45 production/real-participant release remains blocked",
+            "approved English Terms/Privacy",
         ):
             self.assertIn(required, next_execution.group(1))
+        p8_spec = (ROOT / "docs/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
+        self.assertIn("P8-05 implementation remains UNAUTHORISED.", p8_spec)
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", readme)
         self.assertIn("PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", readme)
 
