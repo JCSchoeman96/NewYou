@@ -2733,7 +2733,7 @@
         "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md": "0f7da7407ddd2b1c57e6eb72843f963ad0486a82022b943910501e8fca541ea9",
         "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md": "bf7e75f74267957cb4f9da6851ce0c0d9b56fee8aa806009b86efe6fb2c0192d"
       },
-      "current_route_status_successor_version": "1.2.83 / 0.4.24 / 0.1.25 / 0.5.26",
+      "current_route_status_successor_version": "1.2.84 / 0.4.25 / 0.1.26 / 0.5.27",
       "classification_status": "COMPLETE / FINALISED",
       "architectural_proof_classification_status": "COMPLETE / FINALISED",
       "architectural_proof_requirement": "NEW_TRACER_BULLET",
