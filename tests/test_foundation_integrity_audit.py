@@ -2622,6 +2622,60 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
             graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
             self.assertEqual("PASS", graph_check["status"], graph_check["message"])
 
+    def test_source_at_freeze_reference_exception_is_exact_path_and_hash_bound(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+
+            report = run_audit(root, manifest_path)
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("PASS", graph_check["status"], graph_check["message"])
+
+            relative = "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
+            frozen = root / relative
+            frozen.write_text(
+                frozen.read_text(encoding="utf-8") + "\nSource-at-freeze citation remains pinned.\n",
+                encoding="utf-8",
+            )
+            report = run_audit(root, manifest_path)
+            graph_check = next(check for check in report["checks"] if check["name"] == "active_document_graph")
+            self.assertEqual("FAIL", graph_check["status"], graph_check["message"])
+            self.assertIn("invalid or changed source-at-freeze exception", graph_check["message"])
+            self.assertIn(relative, graph_check["message"])
+
+    def test_roadmap_source_at_freeze_route_exception_is_exact_path_and_hash_bound(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            fixture_docs = root / "docs" / "00_platform"
+            shutil.copytree(source_docs, fixture_docs)
+            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+
+            report = run_audit(root, manifest_path)
+            route_check = next(
+                check for check in report["checks"]
+                if check["name"] == "current_authority_route_resolution"
+            )
+            self.assertEqual("PASS", route_check["status"], route_check["message"])
+
+            relative = "docs/00_platform/05_ROADMAP_v1.2.4.md"
+            roadmap = root / relative
+            roadmap.write_text(
+                roadmap.read_text(encoding="utf-8") + "\nUnexpected route mutation.\n",
+                encoding="utf-8",
+            )
+            report = run_audit(root, manifest_path)
+            route_check = next(
+                check for check in report["checks"]
+                if check["name"] == "current_authority_route_resolution"
+            )
+            self.assertEqual("FAIL", route_check["status"], route_check["message"])
+            self.assertIn("invalid source-at-freeze current-route exception", route_check["message"])
+            self.assertIn(relative, route_check["message"])
+
     def test_declared_working_navigation_path_is_scanned_for_stale_references(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
