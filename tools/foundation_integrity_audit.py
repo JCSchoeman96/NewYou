@@ -7114,7 +7114,7 @@ PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA = "4234965c8da20dbb4ef0a7128614a507024
 PHASE8_APPROVED_STATUS_SUCCESSOR_HEAD_SHA = "c30388f8ae548040126483ec53957d0fc80b8246"
 PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA = "5c7acdd690008af24dc0242ca734cb900c56ea88"
 _PHASE8_PREDECESSOR_AUDIT_CACHE: dict[tuple[Path, str], tuple[bool, str]] = {}
-_PHASE8_PINNED_ARCHIVE_SHA256_CACHE: dict[tuple[Path, str, str], tuple[str | None, str]] = {}
+_PHASE8_PINNED_ARCHIVE_SHA256_CACHE: dict[tuple[Path, str, str, str], tuple[str | None, str]] = {}
 _PHASE8_PINNED_BASE_MANIFEST_CACHE: dict[tuple[Path, str], tuple[dict[str, Any] | None, str]] = {}
 
 
@@ -7766,9 +7766,19 @@ def _phase8_pinned_archive_sha256(
     if repository.returncode != 0:
         return None, "cannot locate Git repository for pinned archive provenance"
     repository_path = Path(repository.stdout.strip()).resolve()
+    head = subprocess.run(
+        ["git", "-C", str(repository_path), "rev-parse", "--verify", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    current_head = head.stdout.strip()
+    if head.returncode != 0 or not current_head:
+        return None, "cannot resolve current Git HEAD for pinned archive provenance"
     cache_key = (
         repository_path,
         PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA,
+        current_head,
         archive_relative,
     )
     cached = _PHASE8_PINNED_ARCHIVE_SHA256_CACHE.get(cache_key)

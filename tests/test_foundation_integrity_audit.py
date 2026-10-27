@@ -11,6 +11,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import tools.foundation_integrity_audit as foundation_integrity_audit
 from tools.foundation_integrity_audit import (
     _fp001_pinned_historical_proof_contract_archives,
     _h02_lifecycle_state,
@@ -113,6 +114,75 @@ IDENTITY_LIFECYCLE_STATE = {
 
 
 class FoundationIntegrityAuditTests(unittest.TestCase):
+    def test_phase8_archive_provenance_cache_tracks_current_head(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            subprocess.run(["git", "-C", str(root), "config", "user.name", "Foundation test"], check=True)
+            subprocess.run(["git", "-C", str(root), "config", "user.email", "foundation@example.invalid"], check=True)
+
+            manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+            manifest_path.parent.mkdir(parents=True)
+            manifest_path.write_text(
+                json.dumps({
+                    "integrity_rules": {
+                        "fp001_phase8_proof_contract_lifecycle": {"current_routes": {}}
+                    }
+                }),
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "-C", str(root), "add", "."], check=True)
+            subprocess.run(["git", "-C", str(root), "commit", "-q", "-m", "pinned base"], check=True)
+            pinned_base = subprocess.run(
+                ["git", "-C", str(root), "rev-parse", "HEAD"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+
+            archive_relative = "docs/00_platform/archive/PHASE8_SOURCE.md"
+            source_path = root / "docs/00_platform/PHASE8_SOURCE.md"
+            source_path.write_text("source snapshot A\n", encoding="utf-8")
+            subprocess.run(["git", "-C", str(root), "add", str(source_path)], check=True)
+            subprocess.run(["git", "-C", str(root), "commit", "-q", "-m", "source A"], check=True)
+            digest_a = hashlib.sha256(source_path.read_bytes()).hexdigest()
+
+            cache_before = foundation_integrity_audit._PHASE8_PINNED_ARCHIVE_SHA256_CACHE.copy()
+            foundation_integrity_audit._PHASE8_PINNED_ARCHIVE_SHA256_CACHE.clear()
+            try:
+                with patch.object(
+                    foundation_integrity_audit,
+                    "PHASE8_WELL5_STATUS_SUCCESSOR_BASE_SHA",
+                    pinned_base,
+                ):
+                    first_digest, first_issue = foundation_integrity_audit._phase8_pinned_archive_sha256(
+                        root,
+                        archive_relative,
+                    )
+                    self.assertEqual("", first_issue)
+                    self.assertEqual(digest_a, first_digest)
+
+                    subprocess.run(
+                        ["git", "-C", str(root), "checkout", "-q", "-b", "source-b", pinned_base],
+                        check=True,
+                    )
+                    source_path.write_text("source snapshot B\n", encoding="utf-8")
+                    subprocess.run(["git", "-C", str(root), "add", str(source_path)], check=True)
+                    subprocess.run(["git", "-C", str(root), "commit", "-q", "-m", "source B"], check=True)
+                    digest_b = hashlib.sha256(source_path.read_bytes()).hexdigest()
+
+                    second_digest, second_issue = foundation_integrity_audit._phase8_pinned_archive_sha256(
+                        root,
+                        archive_relative,
+                    )
+            finally:
+                foundation_integrity_audit._PHASE8_PINNED_ARCHIVE_SHA256_CACHE.clear()
+                foundation_integrity_audit._PHASE8_PINNED_ARCHIVE_SHA256_CACHE.update(cache_before)
+
+            self.assertEqual("", second_issue)
+            self.assertEqual(digest_b, second_digest)
+            self.assertNotEqual(digest_a, second_digest)
+
     def test_markdown_h2_section_keeps_h3_h4_and_stops_at_next_peer_h2(self):
         text = """## Current State
 
