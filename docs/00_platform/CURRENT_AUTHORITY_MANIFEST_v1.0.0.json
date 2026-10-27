@@ -103,7 +103,7 @@
       "semver": "1.2.84",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.84.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "fde3c4e2b5edd161751a66dee6aeee4dcf33cb30cde91cffc2a3252564e9139e",
+      "sha256": "613f0cfcb925b8a23c3580fdf5a54f24036b301d97371432fb4ec231d0e3a36f",
       "superseded_version": "1.2.83",
       "lifecycle": "current"
     }
@@ -2886,7 +2886,7 @@
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
       },
       "current_route_sha256": {
-        "docs/00_platform/02_OPEN_WORK_v1.2.84.md": "fde3c4e2b5edd161751a66dee6aeee4dcf33cb30cde91cffc2a3252564e9139e",
+        "docs/00_platform/02_OPEN_WORK_v1.2.84.md": "613f0cfcb925b8a23c3580fdf5a54f24036b301d97371432fb4ec231d0e3a36f",
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.25.md": "2d971e1d5655a0f08bf0483deebab9aacda7855c014a5dd912004970d822f4e6",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.26.md": "68dc10a24271ed565461e53e37e58f1add5c8a6fd01c44d6f43a9e53628ffb9f",
         "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.27.md": "3466de12392de1041b4bedc89fb1288696f3f3ac56e64b19655548824391e062",
