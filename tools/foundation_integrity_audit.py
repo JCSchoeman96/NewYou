@@ -8635,10 +8635,10 @@ def _identity_v020_promotion_issues(
             "pr_150_candidate_certification": "COMPLETE",
             "pr_150_post_merge_certification_evidence": "COMPLETE",
             "current_status_promotion": "PR #151 STATUS SUCCESSOR",
-            "well_45": "BLOCKING / NEEDS LEGAL/PRIVACY APPROVAL",
-            "well_48": "BACKLOG / NON-EXECUTABLE",
-            "phase_8_application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
-            "p8_05_registration_implementation": "UNAUTHORISED",
+            "well_45": "LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED",
+            "well_48": "NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION / NOT COMPLETE",
+            "phase_8_application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION AUTHORISED",
+            "p8_05_registration_implementation": "AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
             "owner_decisions": "CANONICALLY RECORDED",
         }
         if any(lifecycle.get(key) != value for key, value in required_lifecycle.items()):
@@ -8716,8 +8716,8 @@ def _identity_v020_promotion_issues(
     ):
         if token.casefold() not in spec.casefold():
             issues.append(f"P8-05 spec omits canonically recorded WELL-48 decision: {token}")
-    if "P8-05 implementation remains UNAUTHORISED" not in spec:
-        issues.append("P8-05 spec does not retain the implementation stop")
+    if "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY" not in spec:
+        issues.append("P8-05 spec omits the bounded implementation authorization")
 
     readme_path = root / "docs/00_platform/README.md"
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() and not readme_path.is_symlink() else ""
@@ -8727,24 +8727,24 @@ def _identity_v020_promotion_issues(
         "promoted/current v0.1.4 snapshot",
         "CERTIFIED / CURRENT",
         "WELL-45 is a legal/privacy release gate",
-        "WELL-48 remains Backlog",
-        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
-        "P8-05 IMPLEMENTATION: UNAUTHORISED",
+        "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION; NOT COMPLETE",
+        "APPLICATION IMPLEMENTATION: AUTHORISED ONLY INSIDE BOUNDED PHASE 8 ARCHITECTURAL PROOF, INCLUDING P8-05",
+        "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
     ):
         if token not in readme:
             issues.append(f"README Identity current route omits {token!r}")
 
-    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.83.md"
+    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.84.md"
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() and not open_work_path.is_symlink() else ""
     for token in (
         "PR #150",
         "40299236086",
         "40302375237",
         "Identity v0.2.0: COMPLETE / CERTIFIED / CURRENT under PR #151 status successor",
-        "P8-05 IMPLEMENTATION: UNAUTHORISED",
-        "WELL-48: BACKLOG / NON-EXECUTABLE",
+        "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+        "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION; NOT COMPLETE",
         "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
-        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)",
+        "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION AUTHORISED",
         "PHASE 8: NOT CERTIFIED",
         "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
     ):
