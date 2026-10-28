@@ -641,6 +641,15 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
                 ),
             ),
             (
+                "additive well-6 implementation unauthorised line",
+                lambda text: text.replace(
+                    "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+                    "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY\n"
+                    "P8-05 / WELL-6 IMPLEMENTATION: UNAUTHORISED",
+                    1,
+                ),
+            ),
+            (
                 "additive broad authorization",
                 lambda text: text.replace(
                     "AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
@@ -654,6 +663,14 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
                 lambda text: text.replace(
                     "PHASE 8: NOT CERTIFIED",
                     "PHASE 8: NOT CERTIFIED\nPHASE 8: CERTIFIED",
+                    1,
+                ),
+            ),
+            (
+                "additive phase 8 certified with suffix",
+                lambda text: text.replace(
+                    "PHASE 8: NOT CERTIFIED",
+                    "PHASE 8: NOT CERTIFIED\nPHASE 8: CERTIFIED / COMPLETE",
                     1,
                 ),
             ),

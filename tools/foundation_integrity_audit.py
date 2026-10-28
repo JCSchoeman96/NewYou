@@ -213,9 +213,19 @@ def _p8_05_missing_tokens(surface: str, tokens: tuple[str, ...]) -> list[str]:
 def _p8_05_additive_contradiction_issues(surface: str, label: str) -> list[str]:
     issues: list[str] = []
     lowered = surface.casefold()
-    if "p8-05 / well-6 implementation: authorised" in lowered and "p8-05 implementation: unauthorised" in lowered:
+    bounded_authorised = re.search(
+        r"(?im)P8-05\s*/\s*WELL-6\s+IMPLEMENTATION:\s*AUTHORISED\s*[—-]\s*BOUNDED",
+        surface,
+    )
+    if bounded_authorised and re.search(
+        r"(?im)^\s*P8-05(?:\s*/\s*WELL-6)?\s+IMPLEMENTATION:\s*UNAUTHORI[ZS]ED\b",
+        surface,
+    ):
         issues.append(f"{label} contradicts bounded P8-05 authorization with an unauthorised marker")
-    if "phase 8: not certified" in lowered and re.search(r"(?m)^\s*phase\s+8:\s*certified\s*$", surface, re.I):
+    if "phase 8: not certified" in lowered and re.search(
+        r"(?im)^\s*PHASE\s+8:\s*CERTIFIED\b",
+        surface,
+    ):
         issues.append(f"{label} contradicts Phase 8 not-certified state")
     if "phase 9 / vertical slices: not started / not authorised" in lowered and re.search(
         r"(?m)^\s*phase\s+9(?: / vertical slices)?\s*:\s*(?:authorised|started|in progress|complete)",
