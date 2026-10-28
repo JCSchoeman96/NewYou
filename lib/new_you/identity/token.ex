@@ -72,6 +72,10 @@ defmodule NewYou.Identity.Token do
       change filter(expr(expires_at < now()))
     end
 
+    destroy :remove_for_account_retirement do
+      public? false
+    end
+
     update :revoke_all_stored_for_subject do
       accept [:extra_data]
       argument :subject, :string, allow_nil?: false, sensitive?: true

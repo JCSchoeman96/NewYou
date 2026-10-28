@@ -6,7 +6,9 @@ defmodule NewYou.Identity.RegistrationOperation do
     repo NewYou.Repo
 
     custom_indexes do
-      index [:expires_at], name: "registration_operations_expiry_index"
+      index [:expires_at],
+        name: "registration_operations_expiry_index",
+        where: "state = 'bound'"
     end
 
     check_constraints do

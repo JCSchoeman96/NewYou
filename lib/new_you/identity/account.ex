@@ -55,8 +55,13 @@ defmodule NewYou.Identity.Account do
         message: "must be a supported credential state"
 
       check_constraint :confirmed_age_18?, "accounts_adult_confirmation",
-        check: "\"confirmed_age_18?\" IS TRUE",
+        check: "lifecycle_state <> 'active' OR \"confirmed_age_18?\" IS TRUE",
         message: "must confirm age 18 or older"
+
+      check_constraint :lifecycle_state, "accounts_lifecycle_state",
+        check:
+          "(lifecycle_state = 'active' AND first_name IS NOT NULL AND surname IS NOT NULL AND email IS NOT NULL AND preferred_language IS NOT NULL AND \"confirmed_age_18?\" IS TRUE AND terms_version_id IS NOT NULL AND privacy_version_id IS NOT NULL AND legal_accepted_at IS NOT NULL AND acceptance_locale IS NOT NULL AND credential_status IS NOT NULL AND hashed_password IS NOT NULL AND \"email_verified?\" IS NOT NULL AND pmr IS NOT NULL) OR (lifecycle_state = 'retired' AND first_name IS NULL AND surname IS NULL AND email IS NULL AND preferred_language IS NULL AND \"confirmed_age_18?\" IS NULL AND terms_version_id IS NULL AND privacy_version_id IS NULL AND legal_accepted_at IS NULL AND acceptance_locale IS NULL AND credential_status IS NULL AND hashed_password IS NULL AND \"email_verified?\" IS NULL AND pmr IS NOT NULL)",
+        message: "must retain complete active identity data or only a retired PMR reservation"
     end
   end
 
@@ -71,6 +76,7 @@ defmodule NewYou.Identity.Account do
       argument :subject, :string, allow_nil?: false, sensitive?: true
       get? true
       public? false
+      filter expr(lifecycle_state == :active)
       prepare AshAuthentication.Preparations.FilterBySubject
     end
 
@@ -95,6 +101,13 @@ defmodule NewYou.Identity.Account do
       change set_attribute(:credential_status, :active)
       change set_attribute(:email_verified?, false)
     end
+
+    update :retire_pmr_reservation do
+      accept []
+      public? false
+      require_atomic? false
+      change NewYou.Identity.Changes.RetirePmrReservation
+    end
   end
 
   policies do
@@ -107,73 +120,80 @@ defmodule NewYou.Identity.Account do
     uuid_v7_primary_key :id
 
     attribute :first_name, :string do
-      allow_nil? false
+      allow_nil? true
       public? false
     end
 
     attribute :surname, :string do
-      allow_nil? false
+      allow_nil? true
       public? false
     end
 
     attribute :email, :string do
-      allow_nil? false
+      allow_nil? true
       sensitive? true
       public? true
     end
 
     attribute :preferred_language, :atom do
-      allow_nil? false
+      allow_nil? true
       constraints one_of: [:af, :en]
       public? false
     end
 
     attribute :confirmed_age_18?, :boolean do
-      allow_nil? false
+      allow_nil? true
       public? false
     end
 
     attribute :terms_version_id, :string do
-      allow_nil? false
+      allow_nil? true
       public? false
     end
 
     attribute :privacy_version_id, :string do
-      allow_nil? false
+      allow_nil? true
       public? false
     end
 
     attribute :legal_accepted_at, AshPostgres.TimestamptzUsec do
-      allow_nil? false
+      allow_nil? true
       public? false
     end
 
     attribute :acceptance_locale, :atom do
-      allow_nil? false
+      allow_nil? true
       constraints one_of: [:af, :en]
       public? false
     end
 
     attribute :credential_status, :atom do
-      allow_nil? false
+      allow_nil? true
       constraints one_of: [:active, :replaced, :revoked]
       public? false
     end
 
     attribute :hashed_password, :string do
-      allow_nil? false
+      allow_nil? true
       sensitive? true
       public? false
     end
 
     attribute :email_verified?, :boolean do
-      allow_nil? false
+      allow_nil? true
       default false
       public? false
     end
 
     attribute :pmr, :string do
       allow_nil? false
+      public? false
+    end
+
+    attribute :lifecycle_state, :atom do
+      allow_nil? false
+      default :active
+      constraints one_of: [:active, :retired]
       public? false
     end
   end

@@ -317,6 +317,89 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
     assert resource_count("RegistrationOperation") == 1
   end
 
+  test "the supervised expiry executor tombstones a binding without operation ID reuse" do
+    request = valid_request()
+    assert {:ok, _} = register(request)
+
+    [bound] = records("RegistrationOperation")
+    expired_at = DateTime.add(bound.expires_at, 1, :second)
+    Application.put_env(:new_you, :identity_clock, fn -> expired_at end)
+
+    start_supervised!({NewYou.Identity.RegistrationOperationExpiry, interval_ms: 10})
+
+    assert_eventually(fn ->
+      [operation] = records("RegistrationOperation")
+      operation.state == :tombstoned
+    end)
+
+    [operation] = records("RegistrationOperation")
+    assert operation.operation_id == request.operation_id
+    assert_tombstoned(operation)
+
+    assert {:error, _} = register(request)
+    assert resource_count("Account") == 1
+    assert resource_count("Token") == 1
+    assert resource_count("RegistrationOperation") == 1
+  end
+
+  test "expiry cleanup tombstones duplicate-email bindings and is idempotent" do
+    first = valid_request()
+    duplicate = %{valid_request() | operation_id: Ecto.UUID.generate(), email: first.email}
+
+    assert {:ok, _} = register(first)
+    assert {:ok, _} = register(duplicate)
+
+    operations = records("RegistrationOperation")
+    assert length(operations) == 2
+    expired_at = operations |> Enum.map(& &1.expires_at) |> Enum.max(DateTime)
+    Application.put_env(:new_you, :identity_clock, fn -> DateTime.add(expired_at, 1, :second) end)
+
+    assert {:ok, 2} = NewYou.Identity.expire_registration_operations()
+    assert {:ok, 0} = NewYou.Identity.expire_registration_operations()
+
+    operations = records("RegistrationOperation")
+
+    assert Enum.map(operations, & &1.operation_id) |> Enum.sort() ==
+             Enum.sort([first.operation_id, duplicate.operation_id])
+
+    assert Enum.all?(operations, &(&1.state == :tombstoned))
+    assert Enum.all?(operations, fn operation -> is_nil(operation.created_account_id) end)
+    assert Enum.all?(operations, &tombstone_fields_cleared?/1)
+    assert {:error, _} = register(duplicate)
+
+    assert resource_count("Account") == 1
+    assert resource_count("Token") == 1
+    assert resource_count("RegistrationOperation") == 2
+  end
+
+  test "failed expiry cleanup leaves the original expiry unchanged and cannot revive it" do
+    request = valid_request()
+    assert {:ok, _} = register(request)
+    [bound] = records("RegistrationOperation")
+
+    Application.put_env(:new_you, :identity_clock, fn -> raise "clock unavailable" end)
+
+    assert {:error, :registration_unavailable} = NewYou.Identity.expire_registration_operations()
+    [unchanged] = records("RegistrationOperation")
+    assert unchanged.state == :bound
+    assert unchanged.expires_at == bound.expires_at
+    assert unchanged.committed_at == bound.committed_at
+    assert unchanged.request_fingerprint == bound.request_fingerprint
+    assert unchanged.password_verifier == bound.password_verifier
+
+    expired_at = DateTime.add(bound.expires_at, 1, :second)
+    Application.put_env(:new_you, :identity_clock, fn -> expired_at end)
+
+    assert {:ok, 1} = NewYou.Identity.expire_registration_operations()
+    [operation] = records("RegistrationOperation")
+    assert operation.state == :tombstoned
+    assert_tombstoned(operation)
+    assert {:error, _} = register(request)
+    [after_reuse_attempt] = records("RegistrationOperation")
+    assert after_reuse_attempt.state == :tombstoned
+    assert after_reuse_attempt.operation_id == request.operation_id
+  end
+
   test "linked Account invalidation tombstones registration replay material" do
     request = valid_request()
     assert {:ok, _} = register(request)
@@ -439,6 +522,61 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
     assert resource_count("RegistrationOperation") == 1
   end
 
+  test "retiring Account identity data preserves its PMR reservation across five collisions" do
+    candidate = "PMR-0123456789ABCDEFA"
+    attempts = self()
+
+    Application.put_env(:new_you, :identity_pmr_generator, fn ->
+      send(attempts, :pmr_candidate_generated)
+      {:ok, candidate}
+    end)
+
+    first = valid_request()
+    assert {:ok, _} = register(first)
+    assert_receive :pmr_candidate_generated
+
+    [account] = records("Account")
+    assert :ok = NewYou.Identity.retire_pmr_reservation(account.id)
+
+    [retired] = records("Account")
+    assert retired.id == account.id
+    assert retired.lifecycle_state == :retired
+    assert retired.pmr == candidate
+
+    for field <- [
+          :first_name,
+          :surname,
+          :email,
+          :preferred_language,
+          :confirmed_age_18?,
+          :terms_version_id,
+          :privacy_version_id,
+          :legal_accepted_at,
+          :acceptance_locale,
+          :credential_status,
+          :hashed_password,
+          :email_verified?
+        ] do
+      assert is_nil(Map.fetch!(retired, field))
+    end
+
+    assert resource_count("Token") == 0
+    [operation] = records("RegistrationOperation")
+    assert_tombstoned(operation)
+
+    second = %{valid_request() | email: "second@example.com"}
+    assert {:error, :registration_unavailable} = register(second)
+
+    for _ <- 1..5, do: assert_receive(:pmr_candidate_generated)
+    refute_receive :pmr_candidate_generated
+
+    assert retired.pmr == candidate
+    assert resource_count("Account") == 1
+    assert resource_count("Token") == 0
+    assert resource_count("RegistrationOperation") == 1
+    refute NewYou.Identity.PMR in Ash.Domain.Info.resources(NewYou.Identity)
+  end
+
   defp valid_request do
     %{
       operation_id: Ecto.UUID.generate(),
@@ -473,6 +611,47 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
   defp account_does_not_retain_raw_password?(account, password) do
     is_binary(account.hashed_password) and account.hashed_password != password and
       not Map.has_key?(Map.from_struct(account), :password)
+  end
+
+  defp assert_tombstoned(operation) do
+    assert operation.state == :tombstoned
+    assert operation.operation_id
+    assert tombstone_fields_cleared?(operation)
+  end
+
+  defp tombstone_fields_cleared?(operation) do
+    Enum.all?(
+      [
+        :request_fingerprint,
+        :fingerprint_key_version,
+        :password_verifier,
+        :verifier_provider,
+        :verifier_version,
+        :outcome,
+        :committed_at,
+        :expires_at,
+        :created_account_id
+      ],
+      &is_nil(Map.fetch!(operation, &1))
+    )
+  end
+
+  defp assert_eventually(predicate, timeout_ms \\ 1_000) do
+    deadline = System.monotonic_time(:millisecond) + timeout_ms
+    assert_eventually(predicate, deadline, timeout_ms)
+  end
+
+  defp assert_eventually(predicate, deadline, timeout_ms) do
+    if predicate.() do
+      :ok
+    else
+      if System.monotonic_time(:millisecond) < deadline do
+        Process.sleep(10)
+        assert_eventually(predicate, deadline, timeout_ms)
+      else
+        flunk("expected the expiry executor to clean the binding within #{timeout_ms}ms")
+      end
+    end
   end
 
   defp restore_app_env(key, nil), do: Application.delete_env(:new_you, key)

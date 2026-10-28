@@ -14,6 +14,7 @@ defmodule NewYou.Identity do
   }
 
   @operation_lifetime_seconds 24 * 60 * 60
+  @registration_operation_expiry_batch_size 100
   @verification_token_lifetime {24, :hours}
   @verifier_provider "AshAuthentication.Argon2Provider"
   @verifier_version "argon2_elixir-4.1.3"
@@ -60,6 +61,52 @@ defmodule NewYou.Identity do
 
   def invalidate_registration_operations(_), do: {:error, :registration_unavailable}
 
+  @doc "Tombstone expired registration bindings in bounded Identity-owned batches."
+  @spec expire_registration_operations() :: {:ok, non_neg_integer()} | {:error, atom()}
+  def expire_registration_operations do
+    now = now()
+
+    query =
+      Ash.Query.filter(
+        RegistrationOperation,
+        state == :bound and expires_at <= ^now
+      )
+      |> Ash.Query.sort(expires_at: :asc)
+      |> Ash.Query.limit(@registration_operation_expiry_batch_size)
+
+    with {:ok, operations} <- Ash.read(query, domain: __MODULE__, authorize?: false),
+         {:ok, count} <- tombstone_expired_operations(operations) do
+      {:ok, count}
+    else
+      _ -> {:error, :registration_unavailable}
+    end
+  rescue
+    _ -> {:error, :registration_unavailable}
+  catch
+    _, _ -> {:error, :registration_unavailable}
+  end
+
+  @doc "Remove Identity associations and personal Account fields while retaining its PMR reservation."
+  @spec retire_pmr_reservation(String.t()) :: :ok | {:error, atom()}
+  def retire_pmr_reservation(account_id) when is_binary(account_id) do
+    with {:ok, account_id} <- Ecto.UUID.cast(account_id),
+         {:ok, :ok} <-
+           Ash.transaction(
+             [Account, Token, RegistrationOperation],
+             fn -> retire_account_identity(account_id) end
+           ) do
+      :ok
+    else
+      _ -> {:error, :identity_unavailable}
+    end
+  rescue
+    _ -> {:error, :identity_unavailable}
+  catch
+    _, _ -> {:error, :identity_unavailable}
+  end
+
+  def retire_pmr_reservation(_), do: {:error, :identity_unavailable}
+
   defp tombstone_operations(operations) do
     Enum.reduce_while(operations, :ok, fn operation, :ok ->
       case tombstone_if_bound(operation) do
@@ -67,6 +114,72 @@ defmodule NewYou.Identity do
         {:error, _} = error -> {:halt, error}
       end
     end)
+  end
+
+  defp tombstone_expired_operations([]), do: {:ok, 0}
+
+  defp tombstone_expired_operations(operations) do
+    case Ash.transaction([RegistrationOperation], fn -> tombstone_expired_batch(operations) end) do
+      {:ok, count} when is_integer(count) -> {:ok, count}
+      _ -> {:error, :registration_unavailable}
+    end
+  end
+
+  defp tombstone_expired_batch(operations) do
+    case tombstone_operations(operations) do
+      :ok -> length(operations)
+      {:error, _} = error -> error
+    end
+  end
+
+  defp retire_account_identity(account_id) do
+    with {:ok, account} <- read_account(account_id),
+         :ok <- tombstone_account_operations(account_id),
+         :ok <- remove_account_tokens(account_id) do
+      retire_account(account)
+    end
+  end
+
+  defp read_account(account_id) do
+    query = Ash.Query.filter(Account, id == ^account_id)
+
+    case Ash.read(query, domain: __MODULE__, authorize?: false) do
+      {:ok, [account]} -> {:ok, account}
+      _ -> {:error, :identity_unavailable}
+    end
+  end
+
+  defp tombstone_account_operations(account_id) do
+    query = Ash.Query.filter(RegistrationOperation, created_account_id == ^account_id)
+
+    case Ash.read(query, domain: __MODULE__, authorize?: false) do
+      {:ok, operations} -> tombstone_operations(operations)
+      _ -> {:error, :identity_unavailable}
+    end
+  end
+
+  defp remove_account_tokens(account_id) do
+    query = Ash.Query.filter(Token, account_id == ^account_id)
+
+    case Ash.bulk_destroy(query, :remove_for_account_retirement, %{},
+           domain: __MODULE__,
+           authorize?: false,
+           return_errors?: true
+         ) do
+      %Ash.BulkResult{status: :success} -> :ok
+      _ -> {:error, :identity_unavailable}
+    end
+  end
+
+  defp retire_account(account) do
+    case Ash.update(account, %{},
+           action: :retire_pmr_reservation,
+           domain: __MODULE__,
+           authorize?: false
+         ) do
+      {:ok, _account} -> :ok
+      _ -> {:error, :identity_unavailable}
+    end
   end
 
   defp register_new(request, operation_id) do

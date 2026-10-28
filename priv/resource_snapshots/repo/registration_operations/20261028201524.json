@@ -1,0 +1,258 @@
+{
+  "attributes": [
+    {
+      "allow_nil?": false,
+      "default": "fragment(\"uuid_generate_v7()\")",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": true,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "operation_id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "request_fingerprint",
+      "type": "binary"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "fingerprint_key_version",
+      "type": "text"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "password_verifier",
+      "type": "text"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "verifier_provider",
+      "type": "text"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "verifier_version",
+      "type": "text"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "outcome",
+      "type": "text"
+    },
+    {
+      "allow_nil?": false,
+      "default": "\"bound\"",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "state",
+      "type": "text"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "committed_at",
+      "type": "timestamptz(6)"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "expires_at",
+      "type": "timestamptz(6)"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": false,
+      "references": {
+        "deferrable": false,
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "index?": false,
+        "index_where": null,
+        "match_tenant?": false,
+        "match_type": null,
+        "match_with": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "registration_operations_created_account_id_fkey",
+        "on_delete": null,
+        "on_update": null,
+        "primary_key?": true,
+        "schema": "public",
+        "table": "accounts"
+      },
+      "scale": null,
+      "size": null,
+      "source": "created_account_id",
+      "type": "uuid"
+    }
+  ],
+  "base_filter": null,
+  "check_constraints": [
+    {
+      "attribute": [
+        "state"
+      ],
+      "base_filter": null,
+      "check": "state IN ('bound', 'tombstoned')",
+      "name": "registration_operations_state"
+    },
+    {
+      "attribute": [
+        "outcome"
+      ],
+      "base_filter": null,
+      "check": "outcome IS NULL OR outcome = 'verification_pending'",
+      "name": "registration_operations_outcome"
+    },
+    {
+      "attribute": [
+        "request_fingerprint"
+      ],
+      "base_filter": null,
+      "check": "(state = 'tombstoned' AND request_fingerprint IS NULL AND fingerprint_key_version IS NULL AND password_verifier IS NULL AND verifier_provider IS NULL AND verifier_version IS NULL AND outcome IS NULL AND committed_at IS NULL AND expires_at IS NULL AND created_account_id IS NULL) OR (state = 'bound' AND request_fingerprint IS NOT NULL AND octet_length(request_fingerprint) = 32 AND fingerprint_key_version IS NOT NULL AND password_verifier IS NOT NULL AND verifier_provider IS NOT NULL AND verifier_version IS NOT NULL AND outcome IS NOT NULL AND outcome = 'verification_pending' AND committed_at IS NOT NULL AND expires_at IS NOT NULL AND expires_at > committed_at)",
+      "name": "registration_operations_binding_complete"
+    },
+    {
+      "attribute": [
+        "state"
+      ],
+      "base_filter": null,
+      "check": "state <> 'tombstoned' OR (request_fingerprint IS NULL AND fingerprint_key_version IS NULL AND password_verifier IS NULL AND verifier_provider IS NULL AND verifier_version IS NULL AND outcome IS NULL AND committed_at IS NULL AND expires_at IS NULL AND created_account_id IS NULL)",
+      "name": "registration_operations_tombstone_cleared"
+    }
+  ],
+  "create_table_options": null,
+  "custom_indexes": [
+    {
+      "all_tenants?": false,
+      "concurrently": false,
+      "error_fields": [
+        "expires_at"
+      ],
+      "fields": [
+        {
+          "type": "atom",
+          "value": "expires_at"
+        }
+      ],
+      "include": null,
+      "include_base_filter?": true,
+      "message": null,
+      "name": "registration_operations_expiry_index",
+      "nulls_distinct": true,
+      "prefix": null,
+      "table": null,
+      "unique": false,
+      "using": null,
+      "where": "state = 'bound'"
+    }
+  ],
+  "custom_statements": [],
+  "has_create_action": true,
+  "hash": "2E5C5E8FA30540471C9A369C934E99E63CABE1A4661843EC867265A77A9DBA48",
+  "identities": [
+    {
+      "all_tenants?": false,
+      "base_filter": null,
+      "index_name": "registration_operations_opaque_operation_id_index",
+      "keys": [
+        {
+          "type": "atom",
+          "value": "operation_id"
+        }
+      ],
+      "name": "opaque_operation_id",
+      "nils_distinct?": true,
+      "where": null
+    }
+  ],
+  "multitenancy": {
+    "attribute": null,
+    "global": null,
+    "strategy": null
+  },
+  "repo": "Elixir.NewYou.Repo",
+  "schema": null,
+  "table": "registration_operations",
+  "temporal": null
+}
