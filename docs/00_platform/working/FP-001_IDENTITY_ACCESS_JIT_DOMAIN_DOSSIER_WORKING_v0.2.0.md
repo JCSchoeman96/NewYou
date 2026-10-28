@@ -27,10 +27,10 @@ This structured block is the machine-authoritative lifecycle projection for this
   "communications_finalisation": "BLOCKED / STOP",
   "phase_7c": "COMPLETE / CERTIFIED / CURRENT",
   "proof_classification": "NEW_TRACER_BULLET",
-  "phase_8_application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
-  "well_45": "BLOCKING / NEEDS LEGAL/PRIVACY APPROVAL",
-  "well_48": "BACKLOG / NON-EXECUTABLE",
-  "p8_05_registration_implementation": "UNAUTHORISED",
+  "phase_8_application_implementation": "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION AUTHORISED",
+  "well_45": "LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED",
+  "well_48": "NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION / NOT COMPLETE",
+  "p8_05_registration_implementation": "AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
   "owner_decisions": "CANONICALLY RECORDED"
 }
 ```
@@ -733,10 +733,12 @@ Resource names represent business concepts, not database tables, screens or work
 
 ### `CURRENT_PHASE_AND_IMPLEMENTATION_STATUS`
 
+This current-status routing reconciliation changes no Identity v0.2.0 semantic version or owner decision.
+
 * Identity v0.1.4 is the archived predecessor; v0.2.0 is CERTIFIED / CURRENT under PR #151.
 * Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT under current Open Work. This dossier changes neither status nor proof classification.
 * TB-001 bounded Phase 8 proof execution is authorised and started; its current proof result remains INCOMPLETE / COVERAGE-INCOMPLETE and Phase 8 is not certified.
-* P8-05 registration implementation remains UNAUTHORISED. WELL-45 remains a separate blocking content/legal/privacy gate; WELL-48 remains Backlog. The accepted owner decisions are canonically recorded by the PR #151 current-status successor; independent review and the remaining gates still prevent implementation.
+* P8-05 registration implementation is AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY. WELL-45 remains a legal/privacy release gate; development baselines are NOT LEGALLY APPROVED. After this authorization is current and resulting-main verification succeeds, WELL-48, WELL-49 and WELL-50 may begin in parallel where dependencies permit; none is complete. WELL-50 depends on the agreed WELL-48 Account/PMR contract, not implementation completion. WELL-51 follows the required WELL-48–50 seams and owns the first integrated acceptance boundary; WELL-52 follows WELL-51; WELL-53 follows WELL-48–52 and closes the proof outcome.
 * Phase 9 / Vertical Slices remain NOT STARTED / NOT AUTHORISED.
 
 ### `BLOCKS_RELEASE_ONLY`
@@ -793,7 +795,7 @@ OQ-035 RESOLVED: NO
 OQ-036 RESOLVED: NO
 PHASE 7C: COMPLETE / CERTIFIED / CURRENT UNDER CURRENT OPEN WORK
 PHASE 8: AUTHORISED FOR BOUNDED ARCHITECTURAL PROOF ONLY; CURRENT PROOF INCOMPLETE
-P8-05 REGISTRATION IMPLEMENTATION: UNAUTHORISED
+P8-05 REGISTRATION IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY
 PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
 IMPLEMENTATION STARTED BY THIS SUCCESSOR: NO
 MIGRATIONS CREATED: NO

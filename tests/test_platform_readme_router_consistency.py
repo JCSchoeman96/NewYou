@@ -60,36 +60,37 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", self.current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", self.current_state)
         for token in (
-            "WELL-5 / P8-04 is COMPLETE",
-            "current-state TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE",
-            "proof certification and Phase 8 are NOT CERTIFIED",
-            "Phase 9 remains NOT STARTED / NOT AUTHORISED",
-            "ten required business/browser manifests remain unavailable",
+            "WELL-5 / P8-04: COMPLETE",
+            "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
+            "PHASE 8: NOT CERTIFIED",
+            "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+            "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+            "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
         ):
             self.assertIn(token, self.current_state)
         next_execution = re.search(r"(?m)^- NEXT EXECUTION ACTION: (.+)$", self.current_state)
         self.assertIsNotNone(next_execution)
         for token in (
-            "WELL-6 / P8-05",
-            "Grill-Me/JIT",
-            "planning COMPLETE",
-            "spec/ticket decomposition COMPLETE",
-        ):
-            self.assertIn(token, self.open_work_state["next_governance_action"])
-        self.assertIn(
-            "independent planning review COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
-            self.open_work_state["next_governance_action"],
-        )
-        self.assertIn("WELL-45 is the legal/privacy release gate", self.open_work_state["next_governance_action"])
-        self.assertIn("JIT/implementation gates", self.open_work_state["next_governance_action"])
-        self.assertIn("explicit P8-05 implementation authorization", self.open_work_state["next_governance_action"])
-        for token in (
-            "development may proceed only after Product v1.10.0 / DEC-316 is current",
-            "immutable English development baselines exist",
-            "explicit P8-05 implementation authorization is granted",
-            "WELL-45 production/real-participant release remains blocked",
+            "resulting-main verification",
+            "WELL-48",
+            "WELL-51 follows the required WELL-48–50 seams",
         ):
             self.assertIn(token, next_execution.group(1))
+        self.assertIn(
+            "WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED",
+            self.current_state,
+        )
+        for token in (
+            "p8-05 implementation authorised",
+            "bounded phase 8",
+            "well-48",
+            "resulting-main verification",
+        ):
+            self.assertIn(token, self.open_work_state["next_governance_action"].casefold())
+        self.assertEqual(
+            "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION AUTHORISED",
+            self.open_work_state["application_implementation"],
+        )
 
     def test_current_prose_cannot_regress_to_stale_classification_routing(self) -> None:
         for pattern in STALE_PATTERNS:

@@ -194,8 +194,15 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         active_start = current_open_work.find("# 9. Immediate Next Action")
         active_end = current_open_work.find("# 10. Minimal Tools", active_start + 1)
         active = current_open_work[active_start:active_end] if active_start >= 0 and active_end > active_start else ""
-        next_actions = re.findall(r"(?m)^NEXT GOVERNANCE ACTION:.*$", active)
-        self.assertEqual(1, len(next_actions), "current Open Work must have one next action")
+        state_match = re.search(
+            r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
+            current_open_work,
+            re.DOTALL,
+        )
+        self.assertIsNotNone(state_match)
+        lifecycle = json.loads(state_match.group(1))
+        next_stage = re.search(r"(?m)^NEXT STAGE: (.+)$", active)
+        self.assertIsNotNone(next_stage)
         self.assertIn("- PHASE 7B RECONCILIATION: COMPLETE / CERTIFIED / CURRENT", current_state)
         self.assertIn(
             "- PHASE 7C: COMPLETE / CERTIFIED / CURRENT",
@@ -206,28 +213,29 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         next_execution = re.search(r"(?m)^- NEXT EXECUTION ACTION: (.+)$", current_state)
         self.assertIsNotNone(next_execution)
         for required in (
-            "WELL-6 / P8-05",
-            "planning COMPLETE",
-            "decomposition COMPLETE",
-            "independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
-            "current Product v1.10.0 / DEC-316",
-            "both immutable EN development baselines",
-            "all other applicable P8-05 JIT/implementation gates",
-            "explicit P8-05 implementation authorization",
+            "P8-05 implementation is AUTHORISED",
+            "bounded Phase 8 architectural proof",
             "WELL-45 remains a legal/privacy release gate",
-            "approved English Terms/Privacy and approval evidence remain mandatory",
+            "NOT LEGALLY APPROVED",
+            "resulting-main verification",
+            "WELL-48",
+            "none is complete",
         ):
-            self.assertIn(required, next_actions[0])
+            self.assertIn(required, next_stage.group(1))
         for required in (
-            "WELL-6 / P8-05",
-            "Product v1.10.0 / DEC-316",
-            "both immutable English development baselines",
-            "all other applicable implementation/JIT gates",
-            "explicit P8-05 implementation authorization",
-            "WELL-45 production/real-participant release remains blocked",
-            "approved English Terms/Privacy",
+            "WELL-48",
+            "resulting-main verification",
+            "WELL-51 follows the required WELL-48–50 seams",
         ):
             self.assertIn(required, next_execution.group(1))
+        self.assertIn("bounded Phase 8 architectural proof", current_state)
+        self.assertIn("WELL-45 remains a legal/privacy release gate", current_state)
+        for required in (
+            "P8-05 IMPLEMENTATION AUTHORISED",
+            "WELL-48",
+            "RESULTING-MAIN VERIFICATION",
+        ):
+            self.assertIn(required, lifecycle["next_governance_action"])
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", current_state)

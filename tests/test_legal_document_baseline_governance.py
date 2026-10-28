@@ -107,7 +107,13 @@ class LegalDocumentBaselineGovernanceTests(unittest.TestCase):
         self.assertIn("latest lookup", spec)
         self.assertIn("default unapproved version", spec)
         self.assertIn("fails closed otherwise", spec)
-        self.assertIn("explicit P8-05 implementation authorization", spec)
+        self.assertIn(
+            "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+            spec,
+        )
+        self.assertIn("legal document locale is en for both documents", spec)
+        self.assertIn("not legally approved", spec.casefold())
+        self.assertIn("fail closed", spec.casefold())
         self.assertIn("WELL-45 is a release/legal-readiness gate, not a blanket development blocker", spec)
         for line in spec.splitlines():
             if line.startswith(("| WELL-48 |", "| WELL-49 |", "| WELL-50 |", "| WELL-51 |", "| WELL-52 |", "| WELL-53 |")):
@@ -130,7 +136,10 @@ class LegalDocumentBaselineGovernanceTests(unittest.TestCase):
         self.assertIn("WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED", current_state)
         self.assertIn("both immutable English development baselines", current_state)
         self.assertIn("approved English Terms/Privacy", current_state)
-        self.assertIn("WELL-45 is not a development dependency after the governed baseline contract is current", spec)
+        self.assertIn(
+            "WELL-45 alone no longer blocks bounded development with the immutable English baselines",
+            spec,
+        )
 
 
 if __name__ == "__main__":
