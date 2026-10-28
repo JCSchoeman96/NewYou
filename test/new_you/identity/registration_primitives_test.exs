@@ -317,6 +317,31 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
     assert resource_count("RegistrationOperation") == 1
   end
 
+  test "linked Account invalidation tombstones registration replay material" do
+    request = valid_request()
+    assert {:ok, _} = register(request)
+    [account] = records("Account")
+
+    assert :ok = NewYou.Identity.invalidate_registration_operations(account.id)
+
+    [operation] = records("RegistrationOperation")
+    assert operation.state == :tombstoned
+    assert is_nil(operation.request_fingerprint)
+    assert is_nil(operation.fingerprint_key_version)
+    assert is_nil(operation.password_verifier)
+    assert is_nil(operation.verifier_provider)
+    assert is_nil(operation.verifier_version)
+    assert is_nil(operation.outcome)
+    assert is_nil(operation.committed_at)
+    assert is_nil(operation.expires_at)
+    assert is_nil(operation.created_account_id)
+    assert {:error, _} = register(request)
+
+    assert resource_count("Account") == 1
+    assert resource_count("Token") == 1
+    assert resource_count("RegistrationOperation") == 1
+  end
+
   test "a same-request replay does not extend the 24-hour registration binding" do
     request = valid_request()
     assert {:ok, _} = register(request)
