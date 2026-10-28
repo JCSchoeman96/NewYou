@@ -104,6 +104,9 @@ if config_env() == :prod do
         "ash keyset signing"
       )
 
+  config :new_you,
+    identity_token_signing_secret: System.get_env("NEWYOU_IDENTITY_TOKEN_SIGNING_SECRET")
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key

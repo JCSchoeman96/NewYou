@@ -15,7 +15,8 @@ defmodule NewYou.Application do
       # Start a worker by calling: NewYou.Worker.start_link(arg)
       # {NewYou.Worker, arg},
       # Start to serve requests, typically the last entry
-      NewYouWeb.Endpoint
+      NewYouWeb.Endpoint,
+      {AshAuthentication.Supervisor, [otp_app: :new_you]}
     ]
 
     # See https://elixir.hexdocs.pm/Supervisor.html
