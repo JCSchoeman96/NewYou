@@ -36,6 +36,8 @@ For insufficiently defined work, the normal sequence is repository reconnaissanc
 
 Implementation begins only from an authorised Plane ticket or contract and after its applicable prerequisites are satisfied.
 
+Use focused, test-first development and applicable repository checks for material implementation or behaviour work.
+
 ## Required Skills
 
 Before implementation, use `.agents/skills/project-implementation/SKILL.md`.

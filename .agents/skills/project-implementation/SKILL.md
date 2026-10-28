@@ -14,7 +14,7 @@ Governance is frozen during ordinary implementation. Consume it; do not rewrite 
 5. **Load only relevant generated skills** from `.agents/skills/` (for example `ash-framework` for resources or actions, `phoenix-framework` for web work, `elixir-otp` for processes).
 6. **Use Igniter first** where it safely supports the change (`mix igniter.install`, generators). Hand-edit only where Igniter does not support it. Do not contort code to claim Igniter was used.
 7. **Use Tidewave/runtime evidence** in DEV when it answers a question better than static reading. Tidewave is diagnostic only, never business authority.
-8. **Implement ticket scope only.** Do not implement adjacent domains, resources or flows. Use focused, test-first development for new guardrails and bug fixes.
+8. **Implement ticket scope only.** Do not implement adjacent domains, resources or flows. Use focused, test-first development for material implementation or behaviour changes.
 9. **Record discovered delivery work in Plane** as you find it, including blockers, missing prerequisites, deferred fixes, security or architecture concerns and proof gaps. Link dependencies.
 10. **Run required verification.** Use `devcore-project run test -- mix check` (or the focused test while iterating) and follow `.agents/skills/code-change-verification/SKILL.md` before handoff.
 11. **Stop on a real authority contradiction.** Record it in Plane with the conflicting sources and the smallest recommended amendment. Do not silently fix upstream law from application code.
