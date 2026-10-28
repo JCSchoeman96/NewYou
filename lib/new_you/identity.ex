@@ -50,12 +50,7 @@ defmodule NewYou.Identity do
          {:ok, operations} <- Ash.read(query, domain: __MODULE__, authorize?: false),
          {:ok, :ok} <-
            Ash.transaction([RegistrationOperation], fn ->
-             Enum.reduce_while(operations, :ok, fn operation, :ok ->
-               case tombstone_if_bound(operation) do
-                 :ok -> {:cont, :ok}
-                 {:error, _} = error -> {:halt, error}
-               end
-             end)
+             tombstone_operations(operations)
            end) do
       :ok
     else
@@ -64,6 +59,15 @@ defmodule NewYou.Identity do
   end
 
   def invalidate_registration_operations(_), do: {:error, :registration_unavailable}
+
+  defp tombstone_operations(operations) do
+    Enum.reduce_while(operations, :ok, fn operation, :ok ->
+      case tombstone_if_bound(operation) do
+        :ok -> {:cont, :ok}
+        {:error, _} = error -> {:halt, error}
+      end
+    end)
+  end
 
   defp register_new(request, operation_id) do
     with {:ok, input} <- validate_request(request, operation_id),
@@ -110,108 +114,134 @@ defmodule NewYou.Identity do
   end
 
   defp allocate_account(input, fingerprint, key_version, attempt) do
-    with {:ok, pmr} <- next_pmr() do
-      result =
-        Ash.transaction([Account, Token, RegistrationOperation], fn ->
-          with {:ok, account} <- create_account(input, pmr),
-               {:ok, verification_proof} <- issue_verification_proof(account),
-               committed_at <- now(),
-               {:ok, _operation} <-
-                 create_operation(%{
-                   operation_id: input.operation_id,
-                   request_fingerprint: fingerprint,
-                   fingerprint_key_version: key_version,
-                   password_verifier: account.hashed_password,
-                   verifier_provider: @verifier_provider,
-                   verifier_version: @verifier_version,
-                   outcome: :verification_pending,
-                   committed_at: committed_at,
-                   expires_at: DateTime.add(committed_at, @operation_lifetime_seconds, :second),
-                   created_account_id: account.id
-                 }) do
-            %RegistrationResult{
-              status: :verification_pending,
-              account_id: account.id,
-              verification_proof: verification_proof
-            }
-          end
-        end)
-
-      case result do
-        {:ok, %RegistrationResult{} = accepted} ->
-          {:ok, accepted}
-
-        {:error, error} ->
-          cond do
-            attempt < 5 and error_has_unique_field?(error, :pmr) ->
-              allocate_account(input, fingerprint, key_version, attempt + 1)
-
-            error_has_unique_field?(error, :email) ->
-              bind_duplicate_email(input, fingerprint, key_version)
-
-            operation_id_collision?(error) ->
-              replay_after_race(input)
-
-            true ->
-              {:error, :registration_unavailable}
-          end
-
-        _ ->
-          {:error, :registration_unavailable}
-      end
-    else
+    case next_pmr() do
+      {:ok, pmr} -> create_registration_with_pmr(input, fingerprint, key_version, pmr, attempt)
       _ -> {:error, :registration_unavailable}
+    end
+  end
+
+  defp create_registration_with_pmr(input, fingerprint, key_version, pmr, attempt) do
+    result =
+      Ash.transaction([Account, Token, RegistrationOperation], fn ->
+        with {:ok, account} <- create_account(input, pmr),
+             {:ok, verification_proof} <- issue_verification_proof(account),
+             committed_at <- now(),
+             {:ok, _operation} <-
+               create_operation(%{
+                 operation_id: input.operation_id,
+                 request_fingerprint: fingerprint,
+                 fingerprint_key_version: key_version,
+                 password_verifier: account.hashed_password,
+                 verifier_provider: @verifier_provider,
+                 verifier_version: @verifier_version,
+                 outcome: :verification_pending,
+                 committed_at: committed_at,
+                 expires_at: DateTime.add(committed_at, @operation_lifetime_seconds, :second),
+                 created_account_id: account.id
+               }) do
+          %RegistrationResult{
+            status: :verification_pending,
+            account_id: account.id,
+            verification_proof: verification_proof
+          }
+        end
+      end)
+
+    case result do
+      {:ok, %RegistrationResult{} = accepted} ->
+        {:ok, accepted}
+
+      {:error, error} ->
+        route_allocation_error(error, input, fingerprint, key_version, attempt)
+
+      _ ->
+        {:error, :registration_unavailable}
+    end
+  end
+
+  defp route_allocation_error(error, input, fingerprint, key_version, attempt) do
+    cond do
+      attempt < 5 and error_has_unique_field?(error, :pmr) ->
+        allocate_account(input, fingerprint, key_version, attempt + 1)
+
+      error_has_unique_field?(error, :email) ->
+        bind_duplicate_email(input, fingerprint, key_version)
+
+      operation_id_collision?(error) ->
+        replay_after_race(input)
+
+      true ->
+        {:error, :registration_unavailable}
     end
   end
 
   defp bind_duplicate_email(input, fingerprint, key_version) do
-    with {:ok, password_verifier} <- hash_password(input.password) do
-      operation_result =
-        Ash.transaction([RegistrationOperation], fn ->
-          committed_at = now()
+    case hash_password(input.password) do
+      {:ok, password_verifier} ->
+        store_duplicate_email_operation(input, fingerprint, key_version, password_verifier)
 
-          create_operation(%{
-            operation_id: input.operation_id,
-            request_fingerprint: fingerprint,
-            fingerprint_key_version: key_version,
-            password_verifier: password_verifier,
-            verifier_provider: @verifier_provider,
-            verifier_version: @verifier_version,
-            outcome: :verification_pending,
-            committed_at: committed_at,
-            expires_at: DateTime.add(committed_at, @operation_lifetime_seconds, :second),
-            created_account_id: nil
-          })
-          |> case do
-            {:ok, _operation} ->
-              %RegistrationResult{status: :verification_pending, account_id: nil}
+      _ ->
+        {:error, :registration_unavailable}
+    end
+  end
 
-            {:error, error} ->
-              {:error, error}
-          end
-        end)
+  defp store_duplicate_email_operation(input, fingerprint, key_version, password_verifier) do
+    operation_result =
+      Ash.transaction([RegistrationOperation], fn ->
+        committed_at = now()
 
-      case operation_result do
-        {:ok, %RegistrationResult{} = accepted} ->
-          {:ok, accepted}
+        persist_duplicate_email_operation(
+          input,
+          fingerprint,
+          key_version,
+          password_verifier,
+          committed_at
+        )
+      end)
 
-        {:error, error} ->
-          if operation_id_collision?(error),
-            do: replay_after_race(input),
-            else: {:error, :registration_unavailable}
+    case operation_result do
+      {:ok, %RegistrationResult{} = accepted} ->
+        {:ok, accepted}
 
-        _ ->
-          {:error, :registration_unavailable}
-      end
-    else
-      _ -> {:error, :registration_unavailable}
+      {:error, error} ->
+        if operation_id_collision?(error),
+          do: replay_after_race(input),
+          else: {:error, :registration_unavailable}
+
+      _ ->
+        {:error, :registration_unavailable}
+    end
+  end
+
+  defp persist_duplicate_email_operation(
+         input,
+         fingerprint,
+         key_version,
+         password_verifier,
+         committed_at
+       ) do
+    attributes = %{
+      operation_id: input.operation_id,
+      request_fingerprint: fingerprint,
+      fingerprint_key_version: key_version,
+      password_verifier: password_verifier,
+      verifier_provider: @verifier_provider,
+      verifier_version: @verifier_version,
+      outcome: :verification_pending,
+      committed_at: committed_at,
+      expires_at: DateTime.add(committed_at, @operation_lifetime_seconds, :second),
+      created_account_id: nil
+    }
+
+    case create_operation(attributes) do
+      {:ok, _operation} -> %RegistrationResult{status: :verification_pending, account_id: nil}
+      {:error, error} -> {:error, error}
     end
   end
 
   defp replay_after_race(input) do
-    with {:ok, operation} when not is_nil(operation) <- read_operation(input.operation_id) do
-      replay_or_reject(operation, input)
-    else
+    case read_operation(input.operation_id) do
+      {:ok, %RegistrationOperation{} = operation} -> replay_or_reject(operation, input)
       _ -> {:error, :registration_unavailable}
     end
   end

@@ -1,10 +1,6 @@
 defmodule NewYou.Identity.RegistrationPrimitivesTest do
   use NewYou.DataCase, async: false
 
-  @email_module Module.concat(NewYou.Identity, "Email")
-  @pmr_module Module.concat(NewYou.Identity, "PMR")
-  @identity_module NewYou.Identity
-
   @terms_id "NEWYOU-TERMS-EN-DEV-2026-10-27-001"
   @privacy_id "NEWYOU-PRIVACY-EN-DEV-2026-10-27-001"
 
@@ -432,35 +428,15 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
     }
   end
 
-  defp email_canonicalize(value) do
-    assert Code.ensure_loaded?(@email_module)
-    assert function_exported?(@email_module, :canonicalize, 1)
-    apply(@email_module, :canonicalize, [value])
-  end
+  defp email_canonicalize(value), do: NewYou.Identity.Email.canonicalize(value)
 
-  defp pmr_check(value) do
-    assert Code.ensure_loaded?(@pmr_module)
-    assert function_exported?(@pmr_module, :check, 1)
-    apply(@pmr_module, :check, [value])
-  end
+  defp pmr_check(value), do: NewYou.Identity.PMR.check(value)
 
-  defp pmr_valid?(value) do
-    assert Code.ensure_loaded?(@pmr_module)
-    assert function_exported?(@pmr_module, :valid?, 1)
-    apply(@pmr_module, :valid?, [value])
-  end
+  defp pmr_valid?(value), do: NewYou.Identity.PMR.valid?(value)
 
-  defp pmr_generate do
-    assert Code.ensure_loaded?(@pmr_module)
-    assert function_exported?(@pmr_module, :generate, 0)
-    apply(@pmr_module, :generate, [])
-  end
+  defp pmr_generate, do: NewYou.Identity.PMR.generate()
 
-  defp register(request) do
-    assert Code.ensure_loaded?(@identity_module)
-    assert function_exported?(@identity_module, :register, 1)
-    apply(@identity_module, :register, [request])
-  end
+  defp register(request), do: NewYou.Identity.register(request)
 
   defp records(name) do
     resource = Module.concat(NewYou.Identity, name)
