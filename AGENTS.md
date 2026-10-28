@@ -18,6 +18,26 @@ For governed decisions, start with `docs/00_platform/README.md` and the current 
 
 Governance is read-only during ordinary implementation. Stop on a genuine authority contradiction; do not silently repair upstream law in implementation.
 
+The local agent is a planner and implementer, not a source of Product, Architecture, Domain or Roadmap law. It may make JIT implementation choices only where authority intentionally leaves them open. Never improvise missing product, architecture, domain, clinical, legal, commercial, safety or entitlement law.
+
+The authority order is Product Law, Architecture Law, Domain Law, Roadmap, supporting operating/frontend/engineering contracts, current Open Work, approved Feature Pack/JIT contracts, proof/evidence, then implementation. The README and manifest route current files. Working and derived artifacts are navigation or evidence, not governing authority; archive is historical evidence.
+
+## Reconnaissance and planning
+
+Before `/grilling`, `to-spec`, `to-tickets` or material implementation, inspect the relevant live state: README routing and the current authority manifest; applicable Product/Decision, Architecture, Domain, Roadmap, Operating and Frontend authority; current Open Work; relevant Feature Pack, JIT and proof contracts; Plane work, blockers and dependencies; and actual code, tests, migrations and dependencies. Follow evidence as far as the task requires, not the entire repository or every authority document.
+
+Classify material questions before deciding:
+
+- `LOCKED`: authority already answers it; follow it.
+- `JIT IMPLEMENTATION CHOICE`: authority intentionally leaves it open; choose the simplest compliant option.
+- `UNRESOLVED GOVERNED QUESTION`: stop, record it in Plane and escalate to the appropriate authority.
+
+For insufficiently defined work, the normal sequence is repository reconnaissance, `/grilling`, `to-spec` only if genuinely needed, `to-tickets`, Plane, independent Master Gate review, then implementation after applicable gates pass. Do not re-grill or re-spec settled decisions without new evidence, contradiction or changed scope.
+
+Implementation begins only from an authorised Plane ticket or contract and after its applicable prerequisites are satisfied.
+
+Use focused, test-first development and applicable repository checks for material implementation or behaviour work.
+
 ## Required Skills
 
 Before implementation, use `.agents/skills/project-implementation/SKILL.md`.
@@ -52,7 +72,7 @@ Tidewave is development-only. It is diagnostic tooling and never business author
 
 Plane is the mandatory execution ledger.
 
-Every delivery-affecting issue, blocker, dependency, deferred fix, follow-up, security concern, architecture concern or discovered missing prerequisite MUST be created or updated in Plane before handoff.
+All material delivery work MUST be created or updated in Plane before handoff: parent and Feature Pack work, every broken-down executable implementation ticket, blockers, dependencies, bugs and defects, security, privacy and architecture concerns, discovered or deferred work, missing prerequisites, test or proof gaps, and release blockers.
 
 Search for an existing Plane issue first. Do not create duplicates. Update the existing owner where one exists. Add dependency relations where sequencing exists.
 
@@ -69,6 +89,8 @@ Application CI runs `mix check` and `mix check.deep`. Foundation Smoke runs for 
 The current operational CI routing contract is `docs/development/foundation-integrity-merge-gate.md`.
 
 Before handoff verify the exact diff, exact head SHA, relevant required checks and tests, Plane state and a clean worktree. Do not wait for non-blocking Foundation Full unless the task or governing authority explicitly requires full certification.
+
+The implementing agent implements the authorised ticket, verifies it, updates Plane, creates the PR and provides exact evidence. It does not self-certify integration authority or silently merge. Final Master Gate review and merge recommendation are external to the implementing agent.
 
 ## Local DevCore Credentials
 
