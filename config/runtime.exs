@@ -47,6 +47,15 @@ if config_env() == :dev do
 end
 
 if config_env() == :prod do
+  platform_name = System.get_env("PLATFORM_NAME")
+
+  if is_nil(platform_name) or String.trim(platform_name) == "" or
+       String.trim(platform_name) in ["Development Platform", "Test Platform"] do
+    raise "environment variable PLATFORM_NAME must contain the approved public platform name"
+  end
+
+  config :new_you, :platform_name, platform_name
+
   config :new_you, NewYouWeb.Endpoint,
     http: [port: String.to_integer(System.get_env("PORT", "4220"))]
 
