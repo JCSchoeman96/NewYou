@@ -128,7 +128,7 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertIn("PROOF EXECUTION: STARTED", current_state)
         self.assertIn("PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE", current_state)
         self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", current_state)
-        self.assertIn("Phase 8 are NOT CERTIFIED", current_state)
+        self.assertIn("PHASE 8: NOT CERTIFIED", current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", current_state)
         self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", current_state)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", current_state)
@@ -141,7 +141,20 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", active)
         self.assertIn("PROGRAMME ROUTER #111: OPEN", active)
         current_state = _marked_json(open_work, "<!-- HARDEN_02_LIFECYCLE_STATE_START -->", "<!-- HARDEN_02_LIFECYCLE_STATE_END -->")
-        self.assertIn(f"NEXT GOVERNANCE ACTION: {current_state['next_governance_action']}", active)
+        next_stage = re.search(r"(?m)^NEXT STAGE: (.+)$", active)
+        self.assertIsNotNone(next_stage)
+        for required in (
+            "P8-05 implementation is AUTHORISED",
+            "bounded Phase 8 architectural proof",
+            "WELL-45 remains a legal/privacy release gate",
+            "NOT LEGALLY APPROVED",
+            "resulting-main verification",
+            "WELL-48",
+            "none is complete",
+        ):
+            self.assertIn(required, next_stage.group(1))
+        self.assertIn("P8-05 IMPLEMENTATION AUTHORISED", current_state["next_governance_action"])
+        self.assertIn("WELL-48", current_state["next_governance_action"])
         self.assertNotRegex(active, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
 
         for predecessor_name, route_heading, classification, candidate_lifecycle in (

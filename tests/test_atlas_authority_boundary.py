@@ -17,7 +17,7 @@ OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.48.md"
 CURRENT_OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.64.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
+POM = DOCS / "archive" / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
 
 
 def _sha256(path: Path) -> str:

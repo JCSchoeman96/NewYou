@@ -60,24 +60,37 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", self.current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", self.current_state)
         for token in (
-            "WELL-5 / P8-04 is COMPLETE",
-            "current-state TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE",
-            "proof certification and Phase 8 are NOT CERTIFIED",
-            "Phase 9 remains NOT STARTED / NOT AUTHORISED",
-            "ten required business/browser manifests remain unavailable",
+            "WELL-5 / P8-04: COMPLETE",
+            "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
+            "PHASE 8: NOT CERTIFIED",
+            "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+            "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+            "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
         ):
             self.assertIn(token, self.current_state)
         next_execution = re.search(r"(?m)^- NEXT EXECUTION ACTION: (.+)$", self.current_state)
         self.assertIsNotNone(next_execution)
         for token in (
-            "WELL-6 / P8-05",
-            "Grill-Me/JIT",
-            "spec/ticket decomposition",
-            "independent planning review",
-            "before implementation",
+            "resulting-main verification",
+            "WELL-48",
+            "WELL-51 follows the required WELL-48–50 seams",
         ):
-            self.assertIn(token, self.open_work_state["next_governance_action"])
             self.assertIn(token, next_execution.group(1))
+        self.assertIn(
+            "WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED",
+            self.current_state,
+        )
+        for token in (
+            "p8-05 implementation authorised",
+            "bounded phase 8",
+            "well-48",
+            "resulting-main verification",
+        ):
+            self.assertIn(token, self.open_work_state["next_governance_action"].casefold())
+        self.assertEqual(
+            "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION AUTHORISED",
+            self.open_work_state["application_implementation"],
+        )
 
     def test_current_prose_cannot_regress_to_stale_classification_routing(self) -> None:
         for pattern in STALE_PATTERNS:
@@ -89,6 +102,9 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             root = Path(directory)
             fixture_docs = root / "docs" / "00_platform"
             shutil.copytree(DOCS, fixture_docs)
+            fixture_execution = root / "docs" / "execution"
+            fixture_execution.mkdir(parents=True)
+            shutil.copy2(ROOT / "docs/execution/p8-05-registration-jit-spec.md", fixture_execution)
             manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
             refresh_manifest(root, manifest_path)
 
@@ -118,6 +134,9 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             root = Path(directory)
             fixture_docs = root / "docs" / "00_platform"
             shutil.copytree(DOCS, fixture_docs)
+            fixture_execution = root / "docs" / "execution"
+            fixture_execution.mkdir(parents=True)
+            shutil.copy2(ROOT / "docs/execution/p8-05-registration-jit-spec.md", fixture_execution)
             manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
             refresh_manifest(root, manifest_path)
 

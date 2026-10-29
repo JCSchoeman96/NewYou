@@ -63,15 +63,23 @@ def _rewrite_open_work(root: Path, before: str, after: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def _current_next_governance_action(root: Path) -> str:
-    text = (root / OPEN_WORK_RELATIVE).read_text(encoding="utf-8")
+def _current_open_work_programme_anchor(text: str) -> str:
     start = text.find("# 9. Immediate Next Action")
     end = text.find("# 10. Minimal Tools", start + 1)
     active = text[start:end] if start >= 0 and end > start else ""
-    matches = re.findall(r"(?m)^NEXT GOVERNANCE ACTION:.*$", active)
-    if len(matches) != 1:
-        raise AssertionError(f"expected one current Open Work next action, found {len(matches)}")
-    return matches[0]
+    for pattern in (
+        r"(?m)^NEXT STAGE:.*$",
+        r"(?m)^NEXT EXECUTION ACTION:.*$",
+        r"(?m)^NEXT GOVERNANCE ACTION:.*$",
+    ):
+        matches = re.findall(pattern, active)
+        if len(matches) == 1:
+            return matches[0]
+    raise AssertionError("expected one programme anchor in Open Work §9")
+
+
+def _current_next_governance_action(root: Path) -> str:
+    return _current_open_work_programme_anchor((root / OPEN_WORK_RELATIVE).read_text(encoding="utf-8"))
 
 
 class EngineeringStandardsPromotionAuditMutationTests(unittest.TestCase):

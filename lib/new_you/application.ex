@@ -7,21 +7,34 @@ defmodule NewYou.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      NewYouWeb.Telemetry,
-      NewYou.Repo,
-      {DNSCluster, query: Application.get_env(:new_you, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: NewYou.PubSub},
-      # Start a worker by calling: NewYou.Worker.start_link(arg)
-      # {NewYou.Worker, arg},
-      # Start to serve requests, typically the last entry
-      NewYouWeb.Endpoint
-    ]
+    children =
+      [
+        NewYouWeb.Telemetry,
+        NewYou.Repo,
+        {DNSCluster, query: Application.get_env(:new_you, :dns_cluster_query) || :ignore},
+        {Phoenix.PubSub, name: NewYou.PubSub}
+      ] ++
+        identity_children() ++
+        [
+          # Start a worker by calling: NewYou.Worker.start_link(arg)
+          # {NewYou.Worker, arg},
+          # Start to serve requests, typically the last entry
+          NewYouWeb.Endpoint,
+          {AshAuthentication.Supervisor, [otp_app: :new_you]}
+        ]
 
     # See https://elixir.hexdocs.pm/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: NewYou.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  defp identity_children do
+    if Application.get_env(:new_you, :identity_registration_expiry_enabled, true) do
+      [NewYou.Identity.RegistrationOperationExpiry]
+    else
+      []
+    end
   end
 
   # Tell Phoenix to update the endpoint configuration

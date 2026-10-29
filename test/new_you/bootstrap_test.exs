@@ -6,7 +6,7 @@ defmodule NewYou.BootstrapTest do
     assert Process.whereis(NewYou.Supervisor)
     assert Process.whereis(NewYou.Repo)
     assert Application.fetch_env!(:new_you, :ecto_repos) == [NewYou.Repo]
-    assert Application.fetch_env!(:new_you, :ash_domains) == []
+    assert Application.fetch_env!(:new_you, :ash_domains) == [NewYou.Identity]
   end
 
   test "the real connection uses the TEST cluster, role and database without CREATEDB" do

@@ -1,5 +1,12 @@
 import Config
 
+config :new_you, :identity_registration_legal_versions, %{
+  terms_version_id: "NEWYOU-TERMS-EN-DEV-2026-10-27-001",
+  privacy_version_id: "NEWYOU-PRIVACY-EN-DEV-2026-10-27-001"
+}
+
+config :new_you, :identity_registration_expiry_enabled, false
+
 config :ash,
   policies: [show_policy_breakdowns?: true],
   keyset_signing_secret: "X6qc21Qe1JMpA11OGt/0A+9HNSNalkN9Eb6Jgo4/LZU",

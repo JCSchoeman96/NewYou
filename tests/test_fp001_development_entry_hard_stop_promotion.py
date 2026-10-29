@@ -168,12 +168,20 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
 
     def test_predecessor_archives_are_byte_identical(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-        rule = manifest["integrity_rules"]["fp001_phase8_proof_contract_lifecycle"]
+        historical_documents = {
+            entry.get("repository_path"): entry
+            for entry in manifest["historical_documents"]
+            if isinstance(entry, dict)
+        }
         for _current_rel, archive_rel in PREDECESSORS:
             archive = ROOT / archive_rel
             self.assertTrue(archive.is_file(), archive_rel)
-            expected = rule["predecessor_archives_sha256"][archive_rel]
-            self.assertEqual(expected, hashlib.sha256(archive.read_bytes()).hexdigest(), archive_rel)
+            entry = historical_documents.get(archive_rel)
+            self.assertIsNotNone(entry, f"historical archive is not registered: {archive_rel}")
+            self.assertEqual("historical", entry.get("lifecycle"), archive_rel)
+            digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+            self.assertEqual(entry.get("sha256"), digest, archive_rel)
+            self.assertEqual(entry.get("provenance_sha256"), digest, archive_rel)
 
     def test_manifest_pins_hard_stop_lifecycle(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
@@ -341,8 +349,19 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             text,
         )
         self.assertNotIn("Direct predecessor v0.1.18", text)
-        rule = json.loads(MANIFEST.read_text(encoding="utf-8"))["integrity_rules"]["fp001_phase8_proof_contract_lifecycle"]
-        expected = rule["predecessor_archives_sha256"]["docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md"]
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        archive_rel = "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.20.md"
+        entry = next(
+            (
+                item for item in manifest["historical_documents"]
+                if item.get("repository_path") == archive_rel
+            ),
+            None,
+        )
+        self.assertIsNotNone(entry, "historical Skeleton v0.1.20 archive is not registered")
+        self.assertEqual("historical", entry.get("lifecycle"))
+        expected = entry["sha256"]
+        self.assertEqual(expected, entry.get("provenance_sha256"))
         self.assertEqual(expected, hashlib.sha256(SKELETON_V120_ARCHIVE.read_bytes()).hexdigest())
 
     def test_historical_skeleton_successor_status_is_pass_bounded_and_not_pre_hard_stop(self):

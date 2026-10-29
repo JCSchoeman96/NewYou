@@ -23,7 +23,8 @@ LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
 SUCCESSOR_CHECK = "phase8_approved_status_successor_current"
 PROVENANCE_CHECK = "phase8_status_successor_predecessor_provenance"
 CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.80.md"
+OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.84.md"
+PRE_AUTHORIZATION_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.83.md"
 HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
 APPROVAL_TIME_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.78.md"
 APPROVAL_TIME_ATLAS = ROOT / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.20.md"
@@ -107,8 +108,15 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertEqual("INCOMPLETE / COVERAGE-INCOMPLETE", state["proof_result"])
         self.assertEqual("NOT CERTIFIED", state["proof_certification"])
         self.assertEqual("NOT STARTED / NOT AUTHORISED", state["phase9_vertical_slices"])
-        self.assertIn("WELL-6 / P8-05", state["next_governance_action"])
-        self.assertIn("independent planning review before implementation", state["next_governance_action"])
+        self.assertIn("p8-05 implementation authorised", state["next_governance_action"].casefold())
+        self.assertIn("well-48", state["next_governance_action"].casefold())
+        self.assertIn("resulting-main verification", state["next_governance_action"].casefold())
+        self.assertIn("p8-05 implementation authorised", state["phase8_execution_gate"].casefold())
+        self.assertEqual("AUTHORISED", state["phase8"])
+        self.assertEqual(
+            "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION AUTHORISED",
+            state["application_implementation"],
+        )
 
         for token in (
             "WELL-5 / P8-04",
@@ -117,7 +125,9 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             "PROOF CERTIFICATION: NOT CERTIFIED",
             "Phase 8 is NOT CERTIFIED",
             "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
-            "NEXT EXECUTION ACTION: WELL-6 / P8-05 planning through Grill-Me/JIT",
+            "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+            "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
+            "NEXT EXECUTION ACTION: After this authorization is current and resulting-main verification succeeds",
         ):
             self.assertIn(token, readme)
 
@@ -152,6 +162,25 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             promotion = checks["fp001_phase7c_final_contract_current_promotion"]
             self.assertEqual("FAIL", promotion["status"], promotion["message"])
             self.assertIn("PR #126 promotion evidence changed", promotion["message"])
+
+    def test_current_successor_requires_archive_pins_for_the_full_route_chain(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            promotion = manifest["integrity_rules"]["fp001_phase7c_final_contract_current_promotion"]
+            del promotion["predecessor_archives_sha256"][
+                "docs/00_platform/archive/02_OPEN_WORK_v1.2.81.md"
+            ]
+            manifest_path.write_text(
+                json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+
+            report = run_audit(root, manifest_path)
+            checks = {item["name"]: item for item in report["checks"]}
+            promotion_check = checks["fp001_phase7c_final_contract_current_promotion"]
+            self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
+            self.assertIn("archived current-route successor chain", promotion_check["message"])
 
     def test_contract_is_approved_without_claiming_executed_or_certified_proof(self):
         self.assertTrue(CONTRACT.is_file(), "the governed Phase 8 task contract is missing")
@@ -343,7 +372,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
     def test_open_work_routes_to_p805_after_well5_without_certifying_tb001_or_phase9(self):
         self.assertTrue(OPEN_WORK.is_file(), "the Open Work status successor is missing")
         text = OPEN_WORK.read_text(encoding="utf-8")
-        self.assertIn('"status_successor_version": "1.2.80"', text)
+        self.assertIn('"status_successor_version": "1.2.84"', text)
         self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", text)
         self.assertIn("TB-001", text)
         self.assertIn("CONTRACT/DESIGN REVIEW: COMPLETE / PASS", text)
@@ -353,8 +382,19 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE", text)
         self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", text)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
-        self.assertIn("NEXT GOVERNANCE ACTION: WELL-6 / P8-05", text)
-        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.20.md`", text)
+        self.assertIn("P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY", text)
+        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.24.md`", text)
+        self.assertFalse((ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.81.md").exists())
+        archived_predecessor = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.81.md"
+        self.assertEqual(
+            "ddffe1b32b42e6132ec855ad6bc6234aabff6b01b36fc60f60e1e94f16d9df56",
+            hashlib.sha256(archived_predecessor.read_bytes()).hexdigest(),
+        )
+        prior_atlas = ROOT / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.22.md"
+        self.assertIn(
+            "**Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.21.md` (direct routing predecessor",
+            prior_atlas.read_text(encoding="utf-8"),
+        )
 
     def test_approval_time_route_remains_archived_while_current_summaries_route_p805(self):
         contract = CONTRACT.read_text(encoding="utf-8")
@@ -374,15 +414,18 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
 
         readme = (ROOT / "docs/00_platform/README.md").read_text(encoding="utf-8")
         current_state = readme.split("## Current State", 1)[1].split("## Historical status evidence", 1)[0]
-        self.assertIn("NEXT EXECUTION ACTION: WELL-6 / P8-05 planning", current_state)
+        self.assertIn("NEXT EXECUTION ACTION: After this authorization is current and resulting-main verification succeeds", current_state)
+        self.assertIn("P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY", current_state)
         self.assertIn("PROOF EXECUTION: STARTED", current_state)
         self.assertIn("PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE", current_state)
         self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", current_state)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", current_state)
         self.assertNotIn("NEXT GOVERNANCE ACTION: WELL-38", current_state)
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.21.md", readme)
-        self.assertIn("working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.23.md", readme)
-        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.23.md", readme)
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.25.md", readme)
+        self.assertIn("working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.26.md", readme)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.27.md", readme)
+        self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.4.24.md", readme)
+        self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.5.26.md", readme)
 
         atlas = APPROVAL_TIME_ATLAS.read_text(encoding="utf-8")
         skeleton = APPROVAL_TIME_SKELETON.read_text(encoding="utf-8")
@@ -509,6 +552,208 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             predecessor = checks[PROVENANCE_CHECK]
             self.assertEqual("FAIL", predecessor["status"])
             self.assertIn("pinned status successor base commit is unavailable", predecessor["message"])
+
+    def test_pre_authorization_open_work_preserves_unauthorised_p8_05_state(self):
+        self.assertTrue(PRE_AUTHORIZATION_OPEN_WORK.is_file())
+        text = PRE_AUTHORIZATION_OPEN_WORK.read_text(encoding="utf-8")
+        self.assertEqual(
+            "a373a09fddc6ce945792a9d88e579331452f10045ef5b913d2da8721467ab6ad",
+            hashlib.sha256(PRE_AUTHORIZATION_OPEN_WORK.read_bytes()).hexdigest(),
+        )
+        self.assertIn('"status_successor_version": "1.2.83"', text)
+        self.assertIn(
+            "AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION UNAUTHORISED",
+            text,
+        )
+        self.assertIn("P8-05 implementation remains UNAUTHORISED", text)
+        self.assertIn("WELL-48 remains Backlog / non-executable", text)
+
+    def test_bounded_authorization_boundary_mutations_fail_foundation_integrity(self):
+        mutations = (
+            (
+                "p8-05 unauthorised",
+                "P8-05 IMPLEMENTATION AUTHORISED",
+                "P8-05 IMPLEMENTATION UNAUTHORISED",
+            ),
+            (
+                "unbounded p8-05",
+                "AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+                "AUTHORISED — GENERAL IMPLEMENTATION",
+            ),
+            (
+                "phase 8 certified",
+                "PHASE 8: NOT CERTIFIED",
+                "PHASE 8: CERTIFIED",
+            ),
+            (
+                "tb-001 pass",
+                "TB-001 PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
+                "TB-001 PROOF RESULT: PASS / COMPLETE",
+            ),
+            (
+                "phase 9 authorised",
+                "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+                "PHASE 9 / VERTICAL SLICES: AUTHORISED / STARTED",
+            ),
+            (
+                "well-48 complete",
+                "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION; NOT COMPLETE",
+                "WELL-48: COMPLETE / CERTIFIED",
+            ),
+            (
+                "well-45 legally approved",
+                "NOT LEGALLY APPROVED",
+                "LEGALLY APPROVED FOR PRODUCTION RELEASE",
+            ),
+        )
+        for name, current, replacement in mutations:
+            with self.subTest(mutation=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                open_work = root / OPEN_WORK.relative_to(ROOT)
+                text = open_work.read_text(encoding="utf-8")
+                self.assertIn(current, text)
+                open_work.write_text(text.replace(current, replacement, 1), encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+                report = run_audit(root, manifest_path)
+                check = next(
+                    item for item in report["checks"] if item["name"] == SUCCESSOR_CHECK
+                )
+                self.assertEqual("FAIL", check["status"], check["message"])
+
+    def test_additive_contradictions_fail_foundation_integrity(self):
+        duplicate_section = (
+            "\n## Current P8-05 implementation authorization\n\n"
+            "P8-05 / WELL-6 IMPLEMENTATION: UNAUTHORISED — BROAD IMPLEMENTATION\n"
+            "PHASE 8: CERTIFIED\n"
+        )
+        additive_cases = (
+            (
+                "duplicate current authorization section",
+                lambda text: text + duplicate_section,
+            ),
+            (
+                "additive unauthorised marker",
+                lambda text: text.replace(
+                    "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+                    "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY\n"
+                    "P8-05 IMPLEMENTATION: UNAUTHORISED",
+                    1,
+                ),
+            ),
+            (
+                "additive well-6 implementation unauthorised line",
+                lambda text: text.replace(
+                    "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+                    "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY\n"
+                    "P8-05 / WELL-6 IMPLEMENTATION: UNAUTHORISED",
+                    1,
+                ),
+            ),
+            (
+                "additive broad authorization",
+                lambda text: text.replace(
+                    "AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
+                    "AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY\n"
+                    "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — GENERAL IMPLEMENTATION",
+                    1,
+                ),
+            ),
+            (
+                "additive phase 8 certified",
+                lambda text: text.replace(
+                    "PHASE 8: NOT CERTIFIED",
+                    "PHASE 8: NOT CERTIFIED\nPHASE 8: CERTIFIED",
+                    1,
+                ),
+            ),
+            (
+                "additive phase 8 certified with suffix",
+                lambda text: text.replace(
+                    "PHASE 8: NOT CERTIFIED",
+                    "PHASE 8: NOT CERTIFIED\nPHASE 8: CERTIFIED / COMPLETE",
+                    1,
+                ),
+            ),
+            (
+                "additive phase 9 authorised",
+                lambda text: text.replace(
+                    "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+                    "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED\n"
+                    "PHASE 9 / VERTICAL SLICES: AUTHORISED / STARTED",
+                    1,
+                ),
+            ),
+            (
+                "additive well-48 complete",
+                lambda text: text.replace(
+                    "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
+                    "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION\n"
+                    "WELL-48: COMPLETE",
+                    1,
+                ),
+            ),
+            (
+                "additive well-49 complete",
+                lambda text: text.replace(
+                    "none is complete",
+                    "none is complete\nWELL-49: COMPLETE",
+                    1,
+                ),
+            ),
+            (
+                "additive well-50 complete",
+                lambda text: text.replace(
+                    "none is complete",
+                    "none is complete\nWELL-50: COMPLETE",
+                    1,
+                ),
+            ),
+            (
+                "additive well-51 before seams",
+                lambda text: text.replace(
+                    "WELL-51 follows the required WELL-48–50 seams",
+                    "WELL-51 follows the required WELL-48–50 seams\nWELL-51: AUTHORISED",
+                    1,
+                ),
+            ),
+            (
+                "additive production release authorised",
+                lambda text: text.replace(
+                    "NOT LEGALLY APPROVED",
+                    "NOT LEGALLY APPROVED\nProduction release is authorised without approved legal evidence",
+                    1,
+                ),
+            ),
+            (
+                "additive development baselines legally approved",
+                lambda text: text.replace(
+                    "NOT LEGALLY APPROVED",
+                    "NOT LEGALLY APPROVED\nDevelopment baselines are legally approved for production release",
+                    1,
+                ),
+            ),
+        )
+        for name, mutate in additive_cases:
+            with self.subTest(contradiction=name), tempfile.TemporaryDirectory() as directory:
+                root, manifest_path = self._copy_production_fixture(Path(directory))
+                open_work = root / OPEN_WORK.relative_to(ROOT)
+                text = open_work.read_text(encoding="utf-8")
+                open_work.write_text(mutate(text), encoding="utf-8")
+                refresh_manifest(root, manifest_path)
+                report = run_audit(root, manifest_path)
+                check = next(
+                    item for item in report["checks"] if item["name"] == SUCCESSOR_CHECK
+                )
+                self.assertEqual("FAIL", check["status"], check["message"])
+
+    def test_pre_authorization_archive_mutation_fails_foundation_integrity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, manifest_path = self._copy_production_fixture(Path(directory))
+            archive = root / PRE_AUTHORIZATION_OPEN_WORK.relative_to(ROOT)
+            archive.write_bytes(archive.read_bytes() + b"\n# mutated historical evidence\n")
+            report = run_audit(root, manifest_path)
+            check = next(item for item in report["checks"] if item["name"] == SUCCESSOR_CHECK)
+            self.assertEqual("FAIL", check["status"], check["message"])
 
     def test_corrupted_archived_predecessor_fails_even_for_temporary_content_root(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -9,6 +9,7 @@ import unittest
 from pathlib import Path
 from typing import Callable
 
+from foundation_test_support import current_document_path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -28,8 +29,8 @@ ATLAS_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.6.md"
 ATLAS_ROUTING_SUCCESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.2.md"
 ATLAS_ROUTING_PREDECESSOR = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.3.1.md"
 
-POM = DOCS / "PLATFORM_OPERATING_MODEL_v1.0.1.md"
-ROADMAP = DOCS / "05_ROADMAP_v1.2.3.md"
+POM = current_document_path(ROOT, "PLATFORM_OPERATING_MODEL")
+ROADMAP = current_document_path(ROOT, "ROADMAP")
 SKELETON = DOCS / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
 
 MATRIX_START = "<!-- NEWYOU:PRODUCT-MATRIX:HARDEN-02-LIFECYCLE:START -->"
