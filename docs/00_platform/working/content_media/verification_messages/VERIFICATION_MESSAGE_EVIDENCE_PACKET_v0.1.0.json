@@ -1,0 +1,411 @@
+{
+  "packet_id": "verification-message-email-address-candidate-evidence-v0.1.0",
+  "packet_path": "docs/00_platform/working/content_media/verification_messages/VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.1.0.json",
+  "status": "CANDIDATE_EVIDENCE_ONLY_NOT_GOVERNING_AUTHORITY",
+  "created_date": "2026-10-29",
+  "authority_scope": {
+    "product_type": "verification_message",
+    "purpose": "Participant-facing verification of an email address or comparable identity claim.",
+    "owner": "Content & Media",
+    "applicability": [
+      "local development",
+      "automated tests",
+      "development environments",
+      "bounded P8-05 Phase-8 architectural proof"
+    ],
+    "prohibited_applicability": [
+      "production",
+      "public release",
+      "paid pilot",
+      "real-participant delivery"
+    ],
+    "governing_authority_references": [
+      "Product Law v1.12.0 §§21E.19–21E.20",
+      "Decision Register v1.12.0 DEC-319",
+      "docs/execution/p8-05-registration-jit-spec.md §WELL-63 bounded verification-message content eligibility"
+    ]
+  },
+  "content_item": {
+    "id": "NEWYOU-CONTENTITEM-VERIFICATION-MESSAGE-EMAIL-ADDRESS",
+    "type": "verification_message",
+    "purpose": "Registration email-address verification.",
+    "owner": "Content & Media",
+    "created_date": "2026-10-29",
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "content_version": {
+    "id": "NEWYOU-CONTENTVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-V1",
+    "content_item_id": "NEWYOU-CONTENTITEM-VERIFICATION-MESSAGE-EMAIL-ADDRESS",
+    "version_number": 1,
+    "state": "CANDIDATE_IMMUTABLE_BYTES",
+    "created_date": "2026-10-29",
+    "shared_structure": {
+      "message_kind": "email verification message",
+      "fields": [
+        "subject",
+        "body"
+      ],
+      "body_format": "plain text",
+      "locale_specific_copy_is_stored_only_in_content_translation_versions": true
+    },
+    "supersedes": null,
+    "superseded_by": null,
+    "supersession_event_reference": null
+  },
+  "serialization": {
+    "format_id": "verification-message-subject-body-text-v1",
+    "encoding": "UTF-8",
+    "line_endings": "LF",
+    "bom": false,
+    "final_newline": true,
+    "subject_line_prefix": "subject: ",
+    "subject_body_boundary": "one blank line",
+    "body_paragraph_boundary": "one blank line",
+    "digest_input": "exact file bytes",
+    "trailing_whitespace": "none"
+  },
+  "approved_literal_tokens": [
+    "{{platform_name}}",
+    "{{verification_link}}"
+  ],
+  "locale_versions": [
+    {
+      "id": "NEWYOU-CONTENTTRANSLATIONVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-EN-V1",
+      "content_item_id": "NEWYOU-CONTENTITEM-VERIFICATION-MESSAGE-EMAIL-ADDRESS",
+      "content_version_id": "NEWYOU-CONTENTVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-V1",
+      "locale": "en",
+      "state": "CANDIDATE_IMMUTABLE_BYTES",
+      "artifact_path": "docs/00_platform/working/content_media/verification_messages/NEWYOU-VERIFICATION-MESSAGE-EMAIL-ADDRESS-EN-V1.txt",
+      "byte_count": 221,
+      "sha256": "a8ceecc466497bd3d79ae9255a7f004b18461a2d6a1791028a68bcb1efd2a072",
+      "literal_tokens": [
+        "{{platform_name}}",
+        "{{verification_link}}"
+      ],
+      "approval_state": "PENDING_REQUIRED_APPROVAL",
+      "publication_state": "NOT_PUBLISHED",
+      "proof_eligibility_status": "NOT YET ELIGIBLE — REQUIRED EVIDENCE MISSING",
+      "supersession": {
+        "supersedes": null,
+        "superseded_by": null,
+        "event_reference": null
+      },
+      "withdrawal": {
+        "status": "NOT_WITHDRAWN",
+        "effective_at": null,
+        "actor_identity_id": null,
+        "grant_evidence_reference": null,
+        "reason": null,
+        "event_reference": null
+      },
+      "created_date": "2026-10-29"
+    },
+    {
+      "id": "NEWYOU-CONTENTTRANSLATIONVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-AF-V1",
+      "content_item_id": "NEWYOU-CONTENTITEM-VERIFICATION-MESSAGE-EMAIL-ADDRESS",
+      "content_version_id": "NEWYOU-CONTENTVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-V1",
+      "locale": "af",
+      "state": "CANDIDATE_IMMUTABLE_BYTES",
+      "artifact_path": "docs/00_platform/working/content_media/verification_messages/NEWYOU-VERIFICATION-MESSAGE-EMAIL-ADDRESS-AF-V1.txt",
+      "byte_count": 247,
+      "sha256": "c3212222fdcd878af6bdc2b17895d4d6cab44e162814e2a8deee10b7fd916494",
+      "literal_tokens": [
+        "{{platform_name}}",
+        "{{verification_link}}"
+      ],
+      "approval_state": "PENDING_REQUIRED_APPROVAL",
+      "publication_state": "NOT_PUBLISHED",
+      "proof_eligibility_status": "NOT YET ELIGIBLE — REQUIRED EVIDENCE MISSING",
+      "supersession": {
+        "supersedes": null,
+        "superseded_by": null,
+        "event_reference": null
+      },
+      "withdrawal": {
+        "status": "NOT_WITHDRAWN",
+        "effective_at": null,
+        "actor_identity_id": null,
+        "grant_evidence_reference": null,
+        "reason": null,
+        "event_reference": null
+      },
+      "created_date": "2026-10-29"
+    }
+  ],
+  "approval_state": "PENDING_REQUIRED_APPROVAL",
+  "publication_state": "NOT_PUBLISHED",
+  "approval_slots": [
+    {
+      "approval_requirement_id": "verification-message-email-address-en-content-approval",
+      "approval_type": "Content Approver",
+      "content_translation_version_id": "NEWYOU-CONTENTTRANSLATIONVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-EN-V1",
+      "locale": "en",
+      "exact_source_sha256": "a8ceecc466497bd3d79ae9255a7f004b18461a2d6a1791028a68bcb1efd2a072",
+      "required_approver_role": "Content Approver",
+      "approver_identity_id": null,
+      "role_or_grant_evidence_reference": null,
+      "decision_timestamp": null,
+      "decision": "PENDING_REQUIRED_APPROVAL",
+      "reason_or_comment": null,
+      "governing_authority_references": [
+        "Product Law v1.12.0 §§21E.19–21E.20",
+        "Decision Register v1.12.0 DEC-319",
+        "docs/execution/p8-05-registration-jit-spec.md §WELL-45 content-governance framework"
+      ]
+    },
+    {
+      "approval_requirement_id": "verification-message-email-address-en-language-review",
+      "approval_type": "English Language Reviewer",
+      "content_translation_version_id": "NEWYOU-CONTENTTRANSLATIONVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-EN-V1",
+      "locale": "en",
+      "exact_source_sha256": "a8ceecc466497bd3d79ae9255a7f004b18461a2d6a1791028a68bcb1efd2a072",
+      "required_approver_role": "English Language Reviewer",
+      "approver_identity_id": null,
+      "role_or_grant_evidence_reference": null,
+      "decision_timestamp": null,
+      "decision": "PENDING_REQUIRED_APPROVAL",
+      "reason_or_comment": null,
+      "governing_authority_references": [
+        "Product Law v1.12.0 §§21E.19–21E.20",
+        "Decision Register v1.12.0 DEC-319",
+        "docs/execution/p8-05-registration-jit-spec.md §WELL-45 content-governance framework"
+      ]
+    },
+    {
+      "approval_requirement_id": "verification-message-email-address-af-content-approval",
+      "approval_type": "Content Approver",
+      "content_translation_version_id": "NEWYOU-CONTENTTRANSLATIONVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-AF-V1",
+      "locale": "af",
+      "exact_source_sha256": "c3212222fdcd878af6bdc2b17895d4d6cab44e162814e2a8deee10b7fd916494",
+      "required_approver_role": "Content Approver",
+      "approver_identity_id": null,
+      "role_or_grant_evidence_reference": null,
+      "decision_timestamp": null,
+      "decision": "PENDING_REQUIRED_APPROVAL",
+      "reason_or_comment": null,
+      "governing_authority_references": [
+        "Product Law v1.12.0 §§21E.19–21E.20",
+        "Decision Register v1.12.0 DEC-319",
+        "docs/execution/p8-05-registration-jit-spec.md §WELL-45 content-governance framework"
+      ]
+    },
+    {
+      "approval_requirement_id": "verification-message-email-address-af-language-review",
+      "approval_type": "Afrikaans Language Reviewer",
+      "content_translation_version_id": "NEWYOU-CONTENTTRANSLATIONVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-AF-V1",
+      "locale": "af",
+      "exact_source_sha256": "c3212222fdcd878af6bdc2b17895d4d6cab44e162814e2a8deee10b7fd916494",
+      "required_approver_role": "Afrikaans Language Reviewer",
+      "approver_identity_id": null,
+      "role_or_grant_evidence_reference": null,
+      "decision_timestamp": null,
+      "decision": "PENDING_REQUIRED_APPROVAL",
+      "reason_or_comment": null,
+      "governing_authority_references": [
+        "Product Law v1.12.0 §§21E.19–21E.20",
+        "Decision Register v1.12.0 DEC-319",
+        "docs/execution/p8-05-registration-jit-spec.md §WELL-45 content-governance framework"
+      ]
+    }
+  ],
+  "approval_evidence_events": [],
+  "lifecycle_evidence": {
+    "decision": "NOT_RECORDED",
+    "actor_identity_id": null,
+    "grant_evidence_reference": null,
+    "effective_at": null,
+    "reason": null,
+    "applicability": [],
+    "required_role": "Content",
+    "required_scope": "verification_message_lifecycle",
+    "requested_applicability": [
+      "local development",
+      "automated tests",
+      "development environments",
+      "bounded P8-05 Phase-8 architectural proof"
+    ]
+  },
+  "lifecycle_evidence_events": [],
+  "lifecycle_evidence_recording": "APPEND_ONLY",
+  "lifecycle_event_required_fields": [
+    "event_type",
+    "content_translation_version_id",
+    "locale",
+    "exact_source_sha256",
+    "related_content_translation_version_id",
+    "lifecycle_actor_identity_id",
+    "grant_evidence_reference",
+    "grant_subject_identity_id",
+    "grant_exact_role",
+    "grant_exact_scope",
+    "grant_bounded_applicability",
+    "grant_reason",
+    "grant_governing_authority",
+    "granting_identity_id",
+    "grant_effective_at",
+    "grant_execution_evidence_reference",
+    "grant_expiry_or_review",
+    "grant_revocation_or_supersession_reference",
+    "decision",
+    "reason",
+    "effective_at"
+  ],
+  "proof_eligibility": {
+    "status": "NOT YET ELIGIBLE — REQUIRED EVIDENCE MISSING",
+    "eligible_for_new_message_intents": false,
+    "eligible_applicability": [],
+    "requested_applicability": [
+      "local development",
+      "automated tests",
+      "development environments",
+      "bounded P8-05 Phase-8 architectural proof"
+    ],
+    "prohibited_applicability": [
+      "production",
+      "public release",
+      "paid pilot",
+      "real-participant delivery"
+    ],
+    "missing_evidence": [
+      "four exact-byte role approvals",
+      "current Identity & Access grant for Content + verification_message_lifecycle",
+      "explicit Content & Media eligibility decision for each exact locale version"
+    ],
+    "approval_alone_is_sufficient": false,
+    "repository_bytes_alone_are_sufficient": false,
+    "wording_acceptance_is_sufficient": false,
+    "required_conditions": [
+      "all four exact-byte role approvals",
+      "current Identity & Access grant for Content + verification_message_lifecycle",
+      "Content & Media eligibility decision for each exact locale version and digest"
+    ]
+  },
+  "message_intent_binding": {
+    "resolution": "exact IDs only",
+    "required_references": [
+      "content_item.id",
+      "content_version.id",
+      "content_translation_version.id",
+      "locale",
+      "sha256"
+    ],
+    "silent_locale_fallback": false,
+    "latest_alias": false
+  },
+  "immutability_and_versioning_policy": {
+    "historical_bytes": "never edit; retain the committed source bytes and digest",
+    "wording_change": "create a new ContentTranslationVersion ID and obtain new exact-byte approvals",
+    "shared_structure_change": "create a successor ContentVersion and bind new locale versions to it when the governed structure changes materially",
+    "platform_name_change": "does not create a new ContentTranslationVersion; snapshot the configured value into each MessageIntent under WELL-62"
+  },
+  "provenance": {
+    "origin": "Project-authored candidate copy recorded in Plane WELL-61, comment dated 2026-10-29.",
+    "origin_scope": "Wording acceptance only; it is not role approval, publication, lifecycle authority, or proof eligibility.",
+    "external_source": null,
+    "created_date": "2026-10-29",
+    "platform_name_token_contract": "{{platform_name}} remains literal content and the configured value is snapshotted per MessageIntent under WELL-62.",
+    "verification_link_token_contract": "{{verification_link}} remains a literal token; no bearer or rendered URL is stored in this packet or source artifacts.",
+    "wording_acceptance_is_role_approval": false,
+    "repository_authorship_is_role_approval": false,
+    "plane_ownership_is_role_approval": false,
+    "approval_evidence_found": [],
+    "lifecycle_grant_evidence_found": []
+  },
+  "approval_evidence_recording": "APPEND_ONLY",
+  "approval_event_required_fields": [
+    "approval_requirement_id",
+    "content_translation_version_id",
+    "locale",
+    "exact_source_sha256",
+    "approver_identity_id",
+    "required_approver_role",
+    "role_or_grant_evidence_reference",
+    "decision_timestamp",
+    "decision",
+    "reason_or_comment",
+    "governing_authority_references"
+  ],
+  "lifecycle_evidence_slots": [
+    {
+      "content_translation_version_id": "NEWYOU-CONTENTTRANSLATIONVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-EN-V1",
+      "locale": "en",
+      "exact_source_sha256": "a8ceecc466497bd3d79ae9255a7f004b18461a2d6a1791028a68bcb1efd2a072",
+      "required_role": "Content",
+      "required_scope": "verification_message_lifecycle",
+      "required_applicability": [
+        "local development",
+        "automated tests",
+        "development environments",
+        "bounded P8-05 Phase-8 architectural proof"
+      ],
+      "decision": "NOT_RECORDED",
+      "actor_identity_id": null,
+      "grant_evidence_reference": null,
+      "effective_at": null,
+      "reason": null,
+      "execution_evidence_reference": null,
+      "expiry_or_review": null,
+      "revocation_or_supersession_reference": null,
+      "grant_subject_identity_id": null,
+      "grant_exact_role": "Content",
+      "grant_exact_scope": "verification_message_lifecycle",
+      "grant_bounded_applicability": [
+        "local development",
+        "automated tests",
+        "development environments",
+        "bounded P8-05 Phase-8 architectural proof"
+      ],
+      "grant_reason": null,
+      "grant_governing_authority": "Product Law v1.12.0 §15.1B and §21E.20; DEC-317 and DEC-319",
+      "granting_identity_id": null,
+      "grant_effective_at": null,
+      "grant_execution_evidence_reference": null,
+      "grant_expiry_or_review": null,
+      "grant_revocation_or_supersession_reference": null
+    },
+    {
+      "content_translation_version_id": "NEWYOU-CONTENTTRANSLATIONVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-AF-V1",
+      "locale": "af",
+      "exact_source_sha256": "c3212222fdcd878af6bdc2b17895d4d6cab44e162814e2a8deee10b7fd916494",
+      "required_role": "Content",
+      "required_scope": "verification_message_lifecycle",
+      "required_applicability": [
+        "local development",
+        "automated tests",
+        "development environments",
+        "bounded P8-05 Phase-8 architectural proof"
+      ],
+      "decision": "NOT_RECORDED",
+      "actor_identity_id": null,
+      "grant_evidence_reference": null,
+      "effective_at": null,
+      "reason": null,
+      "execution_evidence_reference": null,
+      "expiry_or_review": null,
+      "revocation_or_supersession_reference": null,
+      "grant_subject_identity_id": null,
+      "grant_exact_role": "Content",
+      "grant_exact_scope": "verification_message_lifecycle",
+      "grant_bounded_applicability": [
+        "local development",
+        "automated tests",
+        "development environments",
+        "bounded P8-05 Phase-8 architectural proof"
+      ],
+      "grant_reason": null,
+      "grant_governing_authority": "Product Law v1.12.0 §15.1B and §21E.20; DEC-317 and DEC-319",
+      "granting_identity_id": null,
+      "grant_effective_at": null,
+      "grant_execution_evidence_reference": null,
+      "grant_expiry_or_review": null,
+      "grant_revocation_or_supersession_reference": null
+    }
+  ],
+  "approval_identity_rule": "Each role approval is a separate evidence event, even when one identity holds both roles.",
+  "lifecycle_event_types": [
+    "BOUNDED_ELIGIBILITY",
+    "WITHDRAWAL",
+    "SUPERSESSION"
+  ]
+}

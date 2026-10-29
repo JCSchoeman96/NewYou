@@ -160,13 +160,14 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
     def test_current_route_and_well64_closure_do_not_regress(self) -> None:
         self.assertEqual("00_PLATFORM_v1.12.0.md", next(x for x in MANIFEST["governing_documents"] if x["document_id"] == "PLATFORM_BASELINE")["canonical_filename"])
         self.assertEqual("01_DECISIONS_v1.12.0.md", next(x for x in MANIFEST["governing_documents"] if x["document_id"] == "DECISION_REGISTER")["canonical_filename"])
-        self.assertEqual("02_OPEN_WORK_v1.2.86.md", next(x for x in MANIFEST["governing_documents"] if x["document_id"] == "OPEN_WORK")["canonical_filename"])
+        self.assertEqual("02_OPEN_WORK_v1.2.87.md", next(x for x in MANIFEST["governing_documents"] if x["document_id"] == "OPEN_WORK")["canonical_filename"])
         self.assertIn("WELL-64 is COMPLETE", self.open_work)
         self.assertNotIn("pending independent Master Gate review", self.open_work)
-        self.assertIn("WELL-63 remains PLANNING / IN PROGRESS until PR #162 merges and resulting-main verification passes", self.open_work)
         self.assertIn("resulting-main Foundation Integrity push run `40892033221` passed", self.open_work)
-        self.assertIn("WELL-63 remains PLANNING / IN PROGRESS", self.open_work)
-        self.assertIn("WELL-61 remains blocked by WELL-63", self.open_work)
+        current_status = self.open_work.split("## 12.41 — WELL-63 completion and WELL-61 verification-message candidate evidence", 1)[1]
+        self.assertIn("WELL-63 is COMPLETE", current_status)
+        self.assertIn("WELL-61 is PLANNING and unblocked by WELL-63", current_status)
+        self.assertIn("WELL-49 remains BLOCKED / WAITING ON WELL-60 AND WELL-61", current_status)
         self.assertIn("WELL-49 remains blocked by WELL-60 and WELL-61", self.open_work)
         self.assertIn("WELL-60 remains separate", self.open_work)
         self.assertIn("DEC-299 through DEC-319", self.readme)

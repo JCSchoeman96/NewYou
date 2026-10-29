@@ -929,9 +929,10 @@ class RoleAuthorityRegressionTests(unittest.TestCase):
             self.assertIn(phrase, agents)
         self.assertIn('WELL-64 is COMPLETE', open_work)
         self.assertNotIn('pending independent Master Gate review', open_work)
-        self.assertIn('WELL-63 remains PLANNING / IN PROGRESS until PR #162 merges and resulting-main verification passes', open_work)
-        self.assertIn('WELL-63 remains PLANNING / IN PROGRESS', open_work)
-        self.assertIn('WELL-61 remains blocked by WELL-63', open_work)
+        current_status = open_work.split('## 12.41 — WELL-63 completion and WELL-61 verification-message candidate evidence', 1)[1]
+        self.assertIn('WELL-63 is COMPLETE', current_status)
+        self.assertIn('WELL-61 is PLANNING and unblocked by WELL-63', current_status)
+        self.assertIn('WELL-49 remains BLOCKED / WAITING ON WELL-60 AND WELL-61', current_status)
         self.assertIn('WELL-65 owns later privileged-authentication implementation planning', open_work)
         self.assertIn('No runtime RBAC, authentication or Content & Media implementation is authorized here', open_work)
 
