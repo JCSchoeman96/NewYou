@@ -62,6 +62,9 @@ config :new_you,
   ash_domains: [NewYou.Identity],
   generators: [timestamp_type: :utc_datetime]
 
+# SQL query parameters can contain Identity credential verifiers.
+config :new_you, NewYou.Repo, log: false
+
 # Configure the endpoint
 config :new_you, NewYouWeb.Endpoint,
   url: [host: "localhost"],
