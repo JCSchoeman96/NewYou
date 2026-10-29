@@ -209,6 +209,7 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
 
     assert Regex.match?(~r/^PMR-[0-9A-Z]{16}[0-9A-Z*]$/, account.pmr)
     assert pmr_valid?(account.pmr)
+    assert_reserved_pmr(account.pmr)
     refute account.email_verified?
 
     assert token.account_id == account.id
@@ -522,47 +523,46 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
     assert resource_count("RegistrationOperation") == 1
   end
 
-  test "retiring Account identity data preserves its PMR reservation across five collisions" do
+  test "a PMR reservation survives removal of its Account row without identity association" do
+    candidate = "PMR-0123456789ABCDEFA"
+    account = create_account_for_pmr(candidate)
+
+    assert account.pmr == candidate
+    assert_reserved_pmr(candidate)
+
+    delete_account_row_for_test!(account)
+
+    assert resource_count("Account") == 0
+    assert_reserved_pmr(candidate)
+  end
+
+  test "the PostgreSQL reservation cannot be deleted through ordinary row mutation" do
+    candidate = "PMR-0123456789ABCDEFA"
+    _account = create_account_for_pmr(candidate)
+
+    assert_raise Postgrex.Error, fn ->
+      Ecto.Adapters.SQL.query!(
+        NewYou.Repo,
+        "DELETE FROM identity_pmr_reservations WHERE pmr = $1",
+        [candidate]
+      )
+    end
+  end
+
+  test "a PMR reserved after Account removal counts toward the five-collision bound" do
     candidate = "PMR-0123456789ABCDEFA"
     attempts = self()
+
+    account = create_account_for_pmr(candidate)
+    delete_account_row_for_test!(account)
+
+    assert resource_count("Account") == 0
+    assert_reserved_pmr(candidate)
 
     Application.put_env(:new_you, :identity_pmr_generator, fn ->
       send(attempts, :pmr_candidate_generated)
       {:ok, candidate}
     end)
-
-    first = valid_request()
-    assert {:ok, _} = register(first)
-    assert_receive :pmr_candidate_generated
-
-    [account] = records("Account")
-    assert :ok = NewYou.Identity.retire_pmr_reservation(account.id)
-
-    [retired] = records("Account")
-    assert retired.id == account.id
-    assert retired.lifecycle_state == :retired
-    assert retired.pmr == candidate
-
-    for field <- [
-          :first_name,
-          :surname,
-          :email,
-          :preferred_language,
-          :confirmed_age_18?,
-          :terms_version_id,
-          :privacy_version_id,
-          :legal_accepted_at,
-          :acceptance_locale,
-          :credential_status,
-          :hashed_password,
-          :email_verified?
-        ] do
-      assert is_nil(Map.fetch!(retired, field))
-    end
-
-    assert resource_count("Token") == 0
-    [operation] = records("RegistrationOperation")
-    assert_tombstoned(operation)
 
     second = %{valid_request() | email: "second@example.com"}
     assert {:error, :registration_unavailable} = register(second)
@@ -570,11 +570,36 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
     for _ <- 1..5, do: assert_receive(:pmr_candidate_generated)
     refute_receive :pmr_candidate_generated
 
-    assert retired.pmr == candidate
-    assert resource_count("Account") == 1
+    assert_reserved_pmr(candidate)
+    assert resource_count("Account") == 0
     assert resource_count("Token") == 0
-    assert resource_count("RegistrationOperation") == 1
+    assert resource_count("RegistrationOperation") == 0
     refute NewYou.Identity.PMR in Ash.Domain.Info.resources(NewYou.Identity)
+  end
+
+  test "PMR reservation storage does not add Account lifecycle or a PMR business Resource" do
+    account_attributes =
+      Enum.map(Ash.Resource.Info.attributes(NewYou.Identity.Account), & &1.name)
+
+    account_actions = Enum.map(Ash.Resource.Info.actions(NewYou.Identity.Account), & &1.name)
+    resources = Ash.Domain.Info.resources(NewYou.Identity)
+
+    refute :lifecycle_state in account_attributes
+    refute :retire_pmr_reservation in account_actions
+
+    assert Enum.sort(resources) ==
+             Enum.sort([
+               NewYou.Identity.Account,
+               NewYou.Identity.Token,
+               NewYou.Identity.RegistrationOperation
+             ])
+
+    assert {:ok, %Postgrex.Result{rows: [["pmr"]], num_rows: 1}} =
+             Ecto.Adapters.SQL.query(
+               NewYou.Repo,
+               "SELECT column_name FROM information_schema.columns WHERE table_name = 'identity_pmr_reservations' ORDER BY ordinal_position",
+               []
+             )
   end
 
   defp valid_request do
@@ -611,6 +636,48 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
   defp account_does_not_retain_raw_password?(account, password) do
     is_binary(account.hashed_password) and account.hashed_password != password and
       not Map.has_key?(Map.from_struct(account), :password)
+  end
+
+  defp create_account_for_pmr(pmr) do
+    request = valid_request()
+
+    Ash.create!(
+      NewYou.Identity.Account,
+      %{
+        first_name: request.first_name,
+        surname: request.surname,
+        email: "Alice+campaign.Example@example.com",
+        preferred_language: request.preferred_language,
+        confirmed_age_18?: true,
+        terms_version_id: request.terms_version_id,
+        privacy_version_id: request.privacy_version_id,
+        legal_accepted_at: DateTime.utc_now(),
+        acceptance_locale: request.preferred_language,
+        pmr: pmr,
+        password: request.password
+      },
+      action: :register,
+      domain: NewYou.Identity,
+      authorize?: false
+    )
+  end
+
+  defp delete_account_row_for_test!(account) do
+    result =
+      Ecto.Adapters.SQL.query!(NewYou.Repo, "DELETE FROM accounts WHERE id = $1", [
+        Ecto.UUID.dump!(account.id)
+      ])
+
+    assert result.num_rows == 1
+  end
+
+  defp assert_reserved_pmr(pmr) do
+    assert {:ok, %Postgrex.Result{rows: [[^pmr]], num_rows: 1}} =
+             Ecto.Adapters.SQL.query(
+               NewYou.Repo,
+               "SELECT pmr FROM identity_pmr_reservations WHERE pmr = $1",
+               [pmr]
+             )
   end
 
   defp assert_tombstoned(operation) do
