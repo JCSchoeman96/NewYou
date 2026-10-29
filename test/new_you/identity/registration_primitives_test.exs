@@ -231,6 +231,84 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
     refute Enum.any?(Ash.Resource.Info.actions(NewYou.Identity.Account), &(&1.type == :destroy))
   end
 
+  test "registration does not log credential or request-binding material at debug level" do
+    request = valid_request()
+    result_key = make_ref()
+    previous_logger_level = Logger.level()
+    Logger.configure(level: :debug)
+
+    logs =
+      try do
+        ExUnit.CaptureLog.capture_log(fn -> Process.put(result_key, register(request)) end)
+      after
+        Logger.configure(level: previous_logger_level)
+      end
+
+    result = Process.delete(result_key)
+
+    status =
+      case result do
+        {:ok, %{status: status}} -> status
+        _ -> :unexpected
+      end
+
+    assert status == :verification_pending, "synthetic registration did not succeed"
+
+    verification_proof =
+      case result do
+        {:ok, %{verification_proof: proof}} when is_binary(proof) -> proof
+        _ -> nil
+      end
+
+    accounts = records("Account")
+    operations = records("RegistrationOperation")
+
+    assert length(accounts) == 1, "synthetic registration did not create one Account"
+
+    assert length(operations) == 1,
+           "synthetic registration did not create one RegistrationOperation"
+
+    account = List.first(accounts)
+    operation = List.first(operations)
+
+    assert is_binary(account.hashed_password), "synthetic Account hash was not persisted"
+
+    assert is_binary(operation.password_verifier),
+           "synthetic operation verifier was not persisted"
+
+    assert account.hashed_password == operation.password_verifier
+
+    assert is_binary(operation.request_fingerprint),
+           "synthetic request fingerprint was not persisted"
+
+    assert is_binary(verification_proof), "synthetic verification bearer was not returned"
+
+    binding_keys = Application.fetch_env!(:new_you, :identity_registration_binding_keys)
+    binding_key = Map.fetch!(binding_keys.keys, binding_keys.active_version)
+    token_signing_secret = Application.fetch_env!(:new_you, :identity_token_signing_secret)
+
+    assert is_binary(binding_key), "synthetic registration-binding key was not configured"
+    assert is_binary(token_signing_secret), "synthetic token-signing secret was not configured"
+
+    sensitive_values = [
+      {:raw_password, request.password},
+      {:account_password_hash, account.hashed_password},
+      {:registration_password_verifier, operation.password_verifier},
+      {:registration_request_fingerprint, operation.request_fingerprint},
+      {:registration_binding_key, binding_key},
+      {:identity_token_signing_secret, token_signing_secret},
+      {:verification_bearer, verification_proof}
+    ]
+
+    exposed_values =
+      sensitive_values
+      |> Enum.filter(fn {_name, value} -> logged_value?(logs, value) end)
+      |> Enum.map(&elem(&1, 0))
+
+    assert exposed_values == [],
+           "registration SQL logs exposed synthetic sensitive fields: #{inspect(exposed_values)}"
+  end
+
   test "an identical operation retry replays without creating duplicate consequences" do
     request = valid_request()
 
@@ -632,6 +710,27 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
   end
 
   defp resource_count(name), do: length(records(name))
+
+  defp logged_value?(_logs, value) when not is_binary(value), do: false
+  defp logged_value?(_logs, <<>>), do: false
+
+  defp logged_value?(logs, value) do
+    value
+    |> log_renderings()
+    |> Enum.any?(fn rendering -> :binary.match(logs, rendering) != :nomatch end)
+  end
+
+  defp log_renderings(value) do
+    [
+      value,
+      inspect(value),
+      Base.encode16(value, case: :lower),
+      Base.encode16(value),
+      Base.encode64(value),
+      Base.url_encode64(value, padding: false)
+    ]
+    |> Enum.uniq()
+  end
 
   defp account_does_not_retain_raw_password?(account, password) do
     is_binary(account.hashed_password) and account.hashed_password != password and
