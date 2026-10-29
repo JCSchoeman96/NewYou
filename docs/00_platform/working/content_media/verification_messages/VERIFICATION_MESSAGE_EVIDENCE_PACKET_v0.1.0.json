@@ -92,7 +92,7 @@
         "event_reference": null
       },
       "withdrawal": {
-        "status": "NOT_WITHDRAWN",
+        "status": "NOT_RECORDED",
         "effective_at": null,
         "actor_identity_id": null,
         "grant_evidence_reference": null,
@@ -123,7 +123,7 @@
         "event_reference": null
       },
       "withdrawal": {
-        "status": "NOT_WITHDRAWN",
+        "status": "NOT_RECORDED",
         "effective_at": null,
         "actor_identity_id": null,
         "grant_evidence_reference": null,

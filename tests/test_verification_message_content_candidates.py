@@ -57,6 +57,15 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         self.assertEqual(CONTENT_VERSION_ID, packet["content_version"]["id"])
         self.assertEqual(CONTENT_ITEM_ID, packet["content_version"]["content_item_id"])
         self.assertEqual("CANDIDATE_IMMUTABLE_BYTES", packet["content_version"]["state"])
+        self.assertEqual(
+            {
+                "message_kind": "email verification message",
+                "fields": ["subject", "body"],
+                "body_format": "plain text",
+                "locale_specific_copy_is_stored_only_in_content_translation_versions": True,
+            },
+            packet["content_version"]["shared_structure"],
+        )
         self.assertEqual(2, len(packet["locale_versions"]))
         self.assertEqual(TOKEN_DECLARATIONS, packet["approved_literal_tokens"])
 
@@ -107,6 +116,10 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         self.assertEqual("exact file bytes", serialization["digest_input"])
         self.assertIn("new ContentTranslationVersion ID", packet["immutability_and_versioning_policy"]["wording_change"])
         self.assertIn("never edit", packet["immutability_and_versioning_policy"]["historical_bytes"])
+        self.assertEqual(
+            "create a successor ContentVersion and bind new locale versions to it when the governed structure changes materially",
+            packet["immutability_and_versioning_policy"]["shared_structure_change"],
+        )
         self.assertEqual("exact IDs only", packet["message_intent_binding"]["resolution"])
         self.assertFalse(packet["message_intent_binding"]["latest_alias"])
         self.assertFalse(packet["message_intent_binding"]["silent_locale_fallback"])
@@ -211,7 +224,7 @@ class VerificationMessageCandidateTests(unittest.TestCase):
                 {"supersedes": None, "superseded_by": None, "event_reference": None},
                 version["supersession"],
             )
-            self.assertEqual("NOT_WITHDRAWN", version["withdrawal"]["status"])
+            self.assertEqual("NOT_RECORDED", version["withdrawal"]["status"])
             self.assertIsNone(version["withdrawal"]["event_reference"])
             self.assertIsNone(version["withdrawal"]["effective_at"])
             self.assertIsNone(version["withdrawal"]["actor_identity_id"])
