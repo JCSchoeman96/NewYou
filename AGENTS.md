@@ -48,6 +48,22 @@ Load generated framework skills under `.agents/skills/` only when relevant.
 
 Use Igniter first for supported structural or package changes; hand-edit only where Igniter does not safely support the change.
 
+## Mandatory Ash Capability Evaluation
+
+Ash is the default application framework. Do not choose a bespoke Elixir, Ecto, OTP or infrastructure mechanism merely because an Ash capability or extension was not considered.
+
+For every Grill, `$to-spec`, implementation plan, and implementation ticket that touches business behavior, durable state, authorization, authentication, lifecycle, history, async work, audit/evidence, cross-Domain coordination, or an Ash-backed web flow:
+
+1. **Load the Ash skill first.** Read `.agents/skills/ash-framework/SKILL.md` and the relevant generated references before selecting the implementation mechanism.
+2. **Perform an explicit Ash capability/extension evaluation.** Do not limit the evaluation to packages already present in `mix.exs`. Use the current official Ash/HexDocs/Hex package documentation to identify capabilities and extensions whose purpose plausibly matches the requirement.
+3. **Record the decision in the Grill/spec.** For every plausible candidate record `USE`, `NOT APPLICABLE`, `DEFER`, or `BLOCKED / NEEDS AUTHORITY`, with the requirement it addresses, the reason for the decision, applicable authority, and the primary source checked. A ticket is not implementation-ready when a material Ash decision is missing or unresolved.
+4. **At minimum consider the relevant Ash surface.** This includes Ash Domains/Resources/actions/code interfaces, policies/authorization, identities and constraints, relationships, calculations/aggregates, changes/validations, **Ash Signals**, **Temporal Resources**, AshPostgres, AshAuthentication and its Phoenix integration, AshPhoenix, AshOban, AshStateMachine, AshCloak, AshArchival/AshPaperTrail, and any other current official Ash extension whose capability directly matches the ticket. This is a minimum review set, not permission to install every package.
+5. **Signals require an explicit decision.** For cross-Domain reactions, event-like coordination, or post-action reactions, explicitly evaluate Ash Signals. If Signals are not selected, state why. Signals are coordination only: they never become durable business authority, a universal event bus, or a substitute for the receiving Domain's owning Ash interface.
+6. **Temporal Resources require an explicit decision when time matters.** For historical/as-of truth, correction, reconstruction, or effective-period requirements, explicitly evaluate Ash Temporal Resources. Do not introduce Temporal merely as a second audit/history authority when the governed lifecycle/evidence model already owns that truth. If a real capability-specific temporal requirement conflicts with frozen authority, STOP and route the contradiction upward.
+7. **Prefer a fitting Ash mechanism over bespoke plumbing.** When an Ash capability or extension satisfies the requirement without violating Product, Architecture, Domain, security, privacy, or proof law, prefer it over parallel Ecto/Repo writes, custom event infrastructure, hand-rolled state machinery, or process-owned authority. If bespoke machinery is selected instead, the Grill/spec must explain why the Ash option is insufficient or forbidden.
+8. **Evaluation is not installation authority.** Do not add a package because it exists or looks convenient. A new dependency requires a concrete requirement, compatibility with the locked stack, current stable-version/API verification from primary sources, and any required Architecture/Security/Domain approval.
+9. **Re-evaluate at the implementation boundary.** If package versions, official capabilities, ticket scope, or governing authority changed since the Grill/spec, refresh the evaluation before coding rather than relying on stale conclusions.
+
 ## Engineering Invariants
 
 Every durable business truth has exactly one owning Domain. Mutations go through that owner.
