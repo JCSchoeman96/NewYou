@@ -1,18 +1,18 @@
 # 01_DECISIONS_v1.12.0.md
 
-- **Document status:** PROPOSED PRODUCT DECISION REGISTER v1.12.0 — PENDING MASTER GATE REVIEW
+- **Document status:** FROZEN PRODUCT DECISION REGISTER v1.12.0
 - **Document version:** v1.12.0
 - **Predecessor:** `archive/01_DECISIONS_v1.11.0.md`
 - **SemVer transition:** `v1.11.0 → v1.12.0`
 - **Authoritative for:** Locked, provisional and externally gated platform decisions
-- **Decision coverage:** GQ-001 through GQ-012 plus GQ-NY-001 and approved post-freeze DEC-292–DEC-318 decisions and proposed DEC-319 amendment
+- **Decision coverage:** GQ-001 through GQ-012 plus GQ-NY-001 and approved post-freeze DEC-292–DEC-319 decisions
 - **Last updated:** 2026-10-29
 - **Related documents:** `00_PLATFORM_v1.12.0.md`, `05_ROADMAP_v1.2.4.md`, `02_OPEN_WORK_v1.2.86.md`, `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`
 - **v1.2 amendment scope:** Preserve DEC-001 through DEC-291 history; append DEC-292 and DEC-293 for the approved Paystack launch-gateway promotion and first-party experimentation capability. DEC-047's historical provisional wording is superseded by DEC-292. Existing expert/vendor validation gates remain in force.
 
 ## v1.12.0 Amendment Scope
 
-This proposed successor appends DEC-319 for the narrow verification-message classification, bounded proof eligibility and Content & Media lifecycle role/scope. It consumes, and does not duplicate, DEC-317 and DEC-318. The decision takes effect only if this successor is independently reviewed and accepted on canonical main.
+This successor records DEC-319 for the narrow verification-message classification, bounded proof eligibility and Content & Media lifecycle role/scope. It consumes, and does not duplicate, DEC-317 and DEC-318.
 
 ## v1.11.0 Amendment Scope
 
@@ -1643,5 +1643,5 @@ Capabilities belong to governed roles/scopes and applicable relationships, never
 GOVERNED BOOTSTRAP AUTHORITY is the exceptional root-of-trust transition for initial explicit role/scope grants and is sealed after successful bootstrap. It is not a person, runtime role or business capability holder. Recovery is a separately governed exceptional ceremony. After bootstrap Super Admin independently approves classified platform-operational privileged grants to another identity; Domain-sensitive grants require their designated owner approval. Sensitive self-approval is prohibited. Product Law §15.1B governs evidence and bootstrap limits; §15.1A governs delegation, succession and expert boundaries.
 
 ## DEC-319 — Verification-message classification and bounded P8-05 eligibility
-**Status:** LOCKED ON ACCEPTANCE OF THIS PROPOSED SUCCESSOR
-`verification_message` is a narrow controlled Product content type for participant-facing address or comparable identity-claim verification only; it does not classify other transactional messages. The exact locale-specific immutable `ContentTranslationVersion` is delivery content, while an authoring template is not delivery authority. Each EN/AF version requires its separate exact-byte Content Approver and locale-reviewer approvals. Approval, publication, latest and proof eligibility remain distinct. For bounded local/test/development/P8-05 Phase-8 proof only, the ordinary non-sensitive `Content` + `verification_message_lifecycle` role/scope may record eligibility, withdrawal and supersession. DEC-319 adds this exact bounded scope to the Platform Administrator delegation catalogue under DEC-317; Identity & Access owns durable grant evidence under DEC-318 and Product §15.1B. This creates no production, public, real-participant or generic transactional-message authority. Content & Media ownership, Communications current-send/rebinding authority and Identity challenge authority remain separate. Broader OQ-013/OQ-016 questions remain open.
+**Status:** LOCKED
+`verification_message` is a narrow controlled Product content type for participant-facing address or comparable identity-claim verification only; it does not classify other transactional messages. The exact locale-specific immutable `ContentTranslationVersion` is delivery content, while an authoring template is not delivery authority. Each EN/AF version requires its separate exact-byte Content Approver and locale-reviewer approvals. Approval, publication, latest and proof eligibility remain distinct. For bounded local/test/development/P8-05 Phase-8 proof only, the ordinary non-sensitive `Content` + `verification_message_lifecycle` role/scope may record eligibility, withdrawal and supersession. DEC-319 adds this exact bounded scope to the Platform Administrator delegation catalogue under DEC-317. Identity & Access owns durable grant evidence under Product §15.1B. Ordinary delegation of this exact scope is governed by DEC-317. DEC-318 continues to govern bootstrap and privileged/sensitive approval. This creates no production, public, real-participant or generic transactional-message authority. Content & Media ownership, Communications current-send/rebinding authority and Identity challenge authority remain separate. Broader OQ-013/OQ-016 questions remain open.

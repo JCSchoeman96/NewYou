@@ -928,7 +928,8 @@ class RoleAuthorityRegressionTests(unittest.TestCase):
                        'unresolved approver authority is a STOP condition', 'Super Admin is break-glass'):
             self.assertIn(phrase, agents)
         self.assertIn('WELL-64 is COMPLETE', open_work)
-        self.assertIn('pending independent Master Gate review of its proposed authority amendment', open_work)
+        self.assertNotIn('pending independent Master Gate review', open_work)
+        self.assertIn('WELL-63 remains PLANNING / IN PROGRESS until PR #162 merges and resulting-main verification passes', open_work)
         self.assertIn('WELL-63 remains PLANNING / IN PROGRESS', open_work)
         self.assertIn('WELL-61 remains blocked by WELL-63', open_work)
         self.assertIn('WELL-65 owns later privileged-authentication implementation planning', open_work)

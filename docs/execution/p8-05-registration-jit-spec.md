@@ -13,7 +13,7 @@ P8-05 is the first production-path Phase 8 proof slice. Its bilingual browser pa
 
 The Account remains unverified and has no Session. The participant sees a localized verification-pending page. P8-05 does not consume verification proof, log the participant in, execute Communications or Audit durable workers, contact a provider, or certify the full TB-001 proof.
 
-The proposed current authority route is Product 00_PLATFORM_v1.12.0.md, Decision Register 01_DECISIONS_v1.12.0.md / DEC-316–DEC-319, and Open Work 02_OPEN_WORK_v1.2.86.md current P8-05 implementation authorization. This WELL-63 authority proposal takes effect only after independent review and acceptance on canonical main. PR #151 records Identity v0.2.0 as CERTIFIED / CURRENT and canonically records this reconciled owner contract. At the promotion base, main still routed v0.1.4. WELL-5 / P8-04 is complete, and the harness is available to later authorized Phase 8 slices. The current TB-001 proof remains `INCOMPLETE / COVERAGE-INCOMPLETE`, ten required business/browser manifests remain unavailable, and Phase 8 is not certified. Phase 9 remains `NOT STARTED / NOT AUTHORISED`.
+The current authority route is Product 00_PLATFORM_v1.12.0.md, Decision Register 01_DECISIONS_v1.12.0.md / DEC-316–DEC-319, and Open Work 02_OPEN_WORK_v1.2.86.md current P8-05 implementation authorization. Product §§21E.19–21E.20 and DEC-319 govern WELL-63 verification-message content and bounded proof eligibility; this specification records the corresponding P8-05 implementation contract. PR #151 records Identity v0.2.0 as CERTIFIED / CURRENT and canonically records this reconciled owner contract. At the promotion base, main still routed v0.1.4. WELL-5 / P8-04 is complete, and the harness is available to later authorized Phase 8 slices. The current TB-001 proof remains `INCOMPLETE / COVERAGE-INCOMPLETE`, ten required business/browser manifests remain unavailable, and Phase 8 is not certified. Phase 9 remains `NOT STARTED / NOT AUTHORISED`.
 
 This spec follows the outcome contract in Plane WELL-6. Live GitHub authority controls if a Plane description or this planning artifact becomes stale. It records the accepted WELL-48 owner decisions and reconciles them with the Identity v0.2.0 status successor; it changes no Product, Architecture, Domain, Roadmap, TB-001 or Domain ownership.
 
@@ -80,7 +80,7 @@ This section records the settled planning framework for WELL-45. It separates le
 
 ## WELL-63 bounded verification-message content eligibility
 
-This section records the proposed P8-05 implementation contract under Product Law §§21E.19–21E.20 and DEC-319. It becomes current only when the authority proposal is accepted on canonical main. It authorizes no Content & Media runtime work and creates no version identifiers, digests, approval records or message artifacts.
+This section records the current P8-05 implementation contract under Product Law §§21E.19–21E.20 and DEC-319. It authorizes no Content & Media runtime work and creates no version identifiers, digests, approval records or message artifacts.
 
 - **Type and authority:** Use only Product type `verification_message`, for address or comparable identity-claim verification. Content & Media owns content/translation/publication-version truth. Other transactional messages remain outside this type.
 - **Version reference:** Bind the MessageIntent to the exact immutable `ContentTranslationVersion` carrying the selected locale bytes, with parent ContentItem/ContentVersion provenance, locale and exact-byte digest. A mutable authoring template is not delivery authority. No latest lookup or silent fallback is allowed.
@@ -294,8 +294,8 @@ Independent planning review and implementation/JIT verification are complete. P8
 
 ## Source references
 
-- `docs/00_platform/README.md` and `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` for current authority routing; `docs/00_platform/00_PLATFORM_v1.12.0.md` §§21E.1, 21E.7, 21E.18–21E.20 for bilingual scope, translation fallback, legal-version rules and the proposed verification-message proof contract.
-- `docs/00_platform/02_OPEN_WORK_v1.2.86.md` §§12.39–12.40 for WELL-64 completion, current WELL-63 proposal and P8-05 status; §12.38 remains preserved predecessor context.
+- `docs/00_platform/README.md` and `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` for current authority routing; `docs/00_platform/00_PLATFORM_v1.12.0.md` §§21E.1, 21E.7, 21E.18–21E.20 for bilingual scope, translation fallback, legal-version rules and the verification-message proof contract.
+- `docs/00_platform/02_OPEN_WORK_v1.2.86.md` §§12.39–12.40 for WELL-64 completion, current WELL-63 authority and P8-05 status; §12.38 remains preserved predecessor context.
 - `docs/00_platform/working/content_media/LEGAL_BASELINE_CONTENT_MANIFEST_v0.1.0.json` for exact non-authoritative English development-baseline content IDs and provenance.
 - `docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` §§3–9 for the PostgreSQL acceptance boundary, `ash_oban`, E2, job-argument, and proof constraints.
 - `docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md` §§D.1, F.2, J.1, J.1a, O, R, T, and V for Account/PMR/Token ownership, delivery, resend, idempotency, security, frontend response, and tests.

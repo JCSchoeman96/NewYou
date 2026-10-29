@@ -37,6 +37,34 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
         ):
             self.assertIn(excluded, definition)
 
+    def test_current_successors_are_frozen_and_dec319_is_locked(self) -> None:
+        product_header = self.product.split("## v1.12.0 Amendment Scope", 1)[0]
+        decision_header = self.decisions.split("## v1.12.0 Amendment Scope", 1)[0]
+        self.assertIn("FROZEN PRODUCT BASELINE v1.12.0", product_header)
+        self.assertIn("FROZEN PRODUCT DECISION REGISTER v1.12.0", decision_header)
+        self.assertNotIn("PROPOSED", product_header)
+        self.assertNotIn("PENDING MASTER GATE", product_header)
+        self.assertNotIn("proposed for Master Gate review and not yet accepted on canonical main", self.product)
+        self.assertNotIn("PROPOSED", decision_header)
+        self.assertNotIn("PENDING MASTER GATE", decision_header)
+        decision = self.decisions.split("## DEC-319 —", 1)[1].split("\n## ", 1)[0]
+        self.assertIn("**Status:** LOCKED", decision)
+        self.assertNotIn("ON ACCEPTANCE", decision)
+        self.assertIn("Ordinary delegation of this exact scope is governed by DEC-317", decision)
+        self.assertIn("Identity & Access owns durable grant evidence under Product §15.1B", decision)
+        self.assertIn("DEC-318 continues to govern bootstrap and privileged/sensitive approval", decision)
+
+    def test_active_p805_contract_has_no_proposal_gate_language(self) -> None:
+        section = self.spec.split("## WELL-63 bounded verification-message content eligibility", 1)[1].split("## Registration and retry contract", 1)[0]
+        route = self.spec.split("## Purpose and current boundary", 1)[1].split("## Fixed design decisions", 1)[0]
+        self.assertIn("current P8-05 implementation contract", section)
+        self.assertNotIn("proposed", section.casefold())
+        self.assertNotIn("pending", section.casefold())
+        self.assertIn("current authority route is Product", route)
+        self.assertNotIn("authority proposal", route.casefold())
+        self.assertIn("verification-message proof contract", self.spec)
+        self.assertNotIn("proposed verification-message proof contract", self.spec)
+
     def test_locale_version_is_delivery_authority_not_mutable_authoring_template(self) -> None:
         definition = self.product.split("## 21E.19 Verification message content classification", 1)[1].split("## 21E.20", 1)[0]
         self.assertIn("ContentItem → ContentVersion → ContentTranslationVersion", definition)
@@ -134,6 +162,8 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
         self.assertEqual("01_DECISIONS_v1.12.0.md", next(x for x in MANIFEST["governing_documents"] if x["document_id"] == "DECISION_REGISTER")["canonical_filename"])
         self.assertEqual("02_OPEN_WORK_v1.2.86.md", next(x for x in MANIFEST["governing_documents"] if x["document_id"] == "OPEN_WORK")["canonical_filename"])
         self.assertIn("WELL-64 is COMPLETE", self.open_work)
+        self.assertNotIn("pending independent Master Gate review", self.open_work)
+        self.assertIn("WELL-63 remains PLANNING / IN PROGRESS until PR #162 merges and resulting-main verification passes", self.open_work)
         self.assertIn("resulting-main Foundation Integrity push run `40892033221` passed", self.open_work)
         self.assertIn("WELL-63 remains PLANNING / IN PROGRESS", self.open_work)
         self.assertIn("WELL-61 remains blocked by WELL-63", self.open_work)

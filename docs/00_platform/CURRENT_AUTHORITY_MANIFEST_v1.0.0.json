@@ -21,11 +21,11 @@
       "semver": "1.12.0",
       "repository_path": "docs/00_platform/00_PLATFORM_v1.12.0.md",
       "authority_class": "PLATFORM_PRODUCT_LAW",
-      "sha256": "5138a89497d0e9e319e974f791e5c13db62df16a4e981b1c3f652d1f3b847475",
+      "sha256": "d11e0b4ad627d8447817324686bba0bb6c7b5c30e91ae7aaedf06deccbf6a784",
       "superseded_version": "1.11.0",
       "lifecycle": "current",
       "graph_policy": "frozen_provenance",
-      "provenance_sha256": "5138a89497d0e9e319e974f791e5c13db62df16a4e981b1c3f652d1f3b847475"
+      "provenance_sha256": "d11e0b4ad627d8447817324686bba0bb6c7b5c30e91ae7aaedf06deccbf6a784"
     },
     {
       "document_id": "DECISION_REGISTER",
@@ -33,7 +33,7 @@
       "semver": "1.12.0",
       "repository_path": "docs/00_platform/01_DECISIONS_v1.12.0.md",
       "authority_class": "DECISION_REGISTER",
-      "sha256": "6a65211845b7934c24f41a4cfe55b6a7a79fb9f97764cbe6aad490650513ca45",
+      "sha256": "497fffc78451d9bb9531ddc697e27786d7b7c861402f066e3b515cb41cff38c8",
       "superseded_version": "1.11.0",
       "lifecycle": "current"
     },
@@ -103,7 +103,7 @@
       "semver": "1.2.86",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.86.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "16e36bed5a23845ecb68e0c316d1f72e99e14bffee4fdadc246635eff788bd1c",
+      "sha256": "26f761a7015e7c1820f5583503a6ff312348c7bd35bf3bb61ceb1a86220656e8",
       "superseded_version": "1.2.85",
       "lifecycle": "current"
     }
@@ -3026,7 +3026,7 @@
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
       },
       "current_route_sha256": {
-        "docs/00_platform/02_OPEN_WORK_v1.2.86.md": "16e36bed5a23845ecb68e0c316d1f72e99e14bffee4fdadc246635eff788bd1c",
+        "docs/00_platform/02_OPEN_WORK_v1.2.86.md": "26f761a7015e7c1820f5583503a6ff312348c7bd35bf3bb61ceb1a86220656e8",
         "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.27.md": "dd8ef3c0f9a252b213fb982337f420351efe555210be741dd8eba4d35cdfe219",
         "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.28.md": "052c64ec36647e4a9ca7b968e2eb8e8cdf4d412855fd136acfb8e66007636576",
         "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.29.md": "b756845c23bf1fedda7f43f722c2d50508d0230cdf71612172b3d9e729fcacba",

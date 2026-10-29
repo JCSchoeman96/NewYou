@@ -1,6 +1,6 @@
 # 00_PLATFORM_v1.12.0.md
 
-- **Document status:** PROPOSED PRODUCT LAW SUCCESSOR v1.12.0 — PENDING MASTER GATE REVIEW
+- **Document status:** FROZEN PRODUCT BASELINE v1.12.0
 - **Document version:** v1.12.0
 - **Predecessor:** `archive/00_PLATFORM_v1.11.0.md`
 - **SemVer transition:** `v1.11.0 → v1.12.0`
@@ -10,14 +10,14 @@
 - **Possible future structure:** A new dedicated company may be created
 - **Initial market:** Adult women, 18+
 - **Last updated:** 2026-10-29
-- **Decision coverage:** GQ-001 through GQ-012 plus GQ-NY-001 and approved post-freeze DEC-292–DEC-318 decisions and proposed DEC-319 amendment
+- **Decision coverage:** GQ-001 through GQ-012 plus GQ-NY-001 and approved post-freeze DEC-292–DEC-319 decisions
 - **Related documents:** `01_DECISIONS_v1.12.0.md`, `05_ROADMAP_v1.2.4.md`, `02_OPEN_WORK_v1.2.86.md`, `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`
 
 ---
 
 ## v1.12.0 Amendment Scope
 
-This proposed successor adds the narrow `verification_message` Product content type and defines a non-production P8-05 proof eligibility scope under DEC-319. It consumes DEC-317 and DEC-318 without duplicating their role-based authority rules, preserves Content & Media ownership, leaves OQ-013 and OQ-016 generally deferred, and authorises no runtime Content & Media implementation or production/real-participant use. The amendment becomes governing authority only after independent review and acceptance on canonical main.
+This frozen successor adds the narrow `verification_message` Product content type and defines a non-production P8-05 proof eligibility scope under DEC-319. It consumes DEC-317 and DEC-318 without duplicating their role-based authority rules, preserves Content & Media ownership, leaves OQ-013 and OQ-016 generally deferred, and authorises no runtime Content & Media implementation or production/real-participant use.
 
 ## v1.11.0 Amendment Scope
 
@@ -6796,7 +6796,7 @@ GQ-001 through GQ-012
 = CLOSED
 ```
 
-Current Product Law: v1.12.0 (`00_PLATFORM_v1.12.0.md`), proposed for Master Gate review and not yet accepted on canonical main. This successor does not execute HARDEN-02 or authorise runtime Content & Media implementation. README and current Open Work own current programme routing and lifecycle status. The Product Law Development Entry and executable-development stop conditions remain in force. Current Open Work v1.2.86 records Development Entry Hard Stop PASS and authorises only the bounded Phase 8 proof route; P8-05 remains subject to its own applicable gates and explicit authorization. Historical amendment text above remains preserved.
+Current Product Law is v1.12.0 (`00_PLATFORM_v1.12.0.md`). This successor does not execute HARDEN-02 or authorise runtime Content & Media implementation. README and current Open Work own current programme routing and lifecycle status. The Product Law Development Entry and executable-development stop conditions remain in force. Current Open Work v1.2.86 records Development Entry Hard Stop PASS and authorises only the bounded Phase 8 proof route; P8-05 remains subject to its own applicable gates and explicit authorization. Historical amendment text above remains preserved.
 
 The existing stop condition for executable development remains:
 
