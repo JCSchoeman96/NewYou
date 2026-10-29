@@ -60,6 +60,25 @@ Do not introduce Redis, extra services, extra Repos, ETS/process authority or sp
 
 Meaningful state transitions are intentional domain actions with appropriate guards, invariants, authorization, retries and idempotency.
 
+### Defect fixes and regression proof
+
+Every material bug, defect, security issue, or unintended behavioural regression discovered in implemented software MUST leave permanent automated regression coverage.
+
+Where technically possible, the implementing agent MUST:
+
+1. reproduce the defect with a focused automated test before changing the production implementation;
+2. demonstrate that the test fails against the defective behaviour;
+3. implement the smallest compliant fix;
+4. demonstrate that the regression test passes after the fix;
+5. retain that test in the permanent test suite; and
+6. run the applicable broader repository verification gates to prove the correction did not introduce regressions elsewhere.
+
+The regression test SHOULD exercise the affected behaviour or boundary as directly as practical. A test that merely asserts a configuration literal, implementation detail, or mock interaction is insufficient when the real defect can reasonably be exercised.
+
+If a defect genuinely cannot be reproduced with a deterministic automated test, the work MUST record why in Plane, provide the strongest repeatable alternative proof available, and receive explicit reviewer acceptance of that exception.
+
+A material defect fix without adequate regression proof is incomplete and MUST NOT receive implementation handoff or Master Gate PASS.
+
 ## Evidence
 
 Do not guess material framework or package APIs.
