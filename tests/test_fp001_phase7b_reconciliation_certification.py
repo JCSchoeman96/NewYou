@@ -217,14 +217,17 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             "bounded Phase 8 architectural proof",
             "WELL-45 remains a legal/privacy release gate",
             "NOT LEGALLY APPROVED",
-            "resulting-main verification",
-            "WELL-48",
-            "none is complete",
+            "WELL-48: COMPLETE",
+            "WELL-49: BLOCKED",
+            "WELL-60",
+            "WELL-61",
+            "WELL-50: BACKLOG",
         ):
             self.assertIn(required, next_stage.group(1))
         for required in (
-            "WELL-48",
-            "resulting-main verification",
+            "WELL-48: COMPLETE / MERGED VIA PR #156",
+            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-50: BACKLOG / NOT STARTED",
             "WELL-51 follows the required WELL-48–50 seams",
         ):
             self.assertIn(required, next_execution.group(1))
@@ -232,8 +235,11 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertIn("WELL-45 remains a legal/privacy release gate", current_state)
         for required in (
             "P8-05 IMPLEMENTATION AUTHORISED",
-            "WELL-48",
-            "RESULTING-MAIN VERIFICATION",
+            "WELL-48 COMPLETE",
+            "WELL-49 BLOCKED",
+            "WELL-60",
+            "WELL-61",
+            "WELL-50 BACKLOG",
         ):
             self.assertIn(required, lifecycle["next_governance_action"])
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)

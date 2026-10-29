@@ -103,7 +103,7 @@
       "semver": "1.2.85",
       "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.85.md",
       "authority_class": "PLANNING_TRACKER",
-      "sha256": "25a08fa73039380db7d397ebe4031d14dcc4a934e9b692038e2df69e95e3a4f8",
+      "sha256": "e2a2c62247fadea1d4d516ba94414c5e1bfb647ebfc9c95cc6b4cb6020d8a636",
       "superseded_version": "1.2.84",
       "lifecycle": "current"
     }
@@ -2950,12 +2950,12 @@
         "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
       },
       "current_route_sha256": {
-        "docs/00_platform/02_OPEN_WORK_v1.2.85.md": "25a08fa73039380db7d397ebe4031d14dcc4a934e9b692038e2df69e95e3a4f8",
+        "docs/00_platform/02_OPEN_WORK_v1.2.85.md": "e2a2c62247fadea1d4d516ba94414c5e1bfb647ebfc9c95cc6b4cb6020d8a636",
         "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md": "9b2c1a6c16df3a48f041403fd336df926132bba46168e07b55acce148c4f59c2",
         "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4",
-        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.26.md": "9c8df58a3edb99dc90c81918cb4e1155024c74e0e9c0edb04daf55c0338349db",
-        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.28.md": "fc23573a9fa86578ff02220c10c2656ce9f31cf4cb3e5f4a9c1369fb384e32e3",
-        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.27.md": "cdb1e3bf4f89d2e2aba491c4fba8233bd0ced950f5f65c5223926e009fe697e6"
+        "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.26.md": "de44bb7448de4fc5cd9db2aaf2f8e9177ceffd578b2762828f30d39544d7a3a4",
+        "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.28.md": "bf69e4cbf7562354f31c087bd2f80914aea75fee4ba090d39b374779123b954d",
+        "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.27.md": "d9514f70b206f181a8dcb5605aa9a38f8105612ce1d80a6d12931e66682421dd"
       },
       "candidate_sha256": "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
       "predecessor_archives_sha256": {
