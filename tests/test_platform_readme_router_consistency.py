@@ -65,14 +65,19 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             "PHASE 8: NOT CERTIFIED",
             "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
             "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
-            "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
+            "WELL-48: COMPLETE / MERGED VIA PR #156",
+            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-50: BACKLOG / NOT STARTED",
         ):
             self.assertIn(token, self.current_state)
         next_execution = re.search(r"(?m)^- NEXT EXECUTION ACTION: (.+)$", self.current_state)
         self.assertIsNotNone(next_execution)
         for token in (
-            "resulting-main verification",
-            "WELL-48",
+            "WELL-48: COMPLETE",
+            "WELL-49: BLOCKED",
+            "WELL-50: BACKLOG",
+            "WELL-60",
+            "WELL-61",
             "WELL-51 follows the required WELL-48–50 seams",
         ):
             self.assertIn(token, next_execution.group(1))
@@ -83,8 +88,11 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         for token in (
             "p8-05 implementation authorised",
             "bounded phase 8",
-            "well-48",
-            "resulting-main verification",
+            "well-48 complete",
+            "well-49 blocked",
+            "well-60",
+            "well-61",
+            "well-50 backlog",
         ):
             self.assertIn(token, self.open_work_state["next_governance_action"].casefold())
         self.assertEqual(

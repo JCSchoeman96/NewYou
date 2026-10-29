@@ -148,9 +148,11 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
             "bounded Phase 8 architectural proof",
             "WELL-45 remains a legal/privacy release gate",
             "NOT LEGALLY APPROVED",
-            "resulting-main verification",
-            "WELL-48",
-            "none is complete",
+            "WELL-48: COMPLETE",
+            "WELL-49: BLOCKED",
+            "WELL-60",
+            "WELL-61",
+            "WELL-50: BACKLOG",
         ):
             self.assertIn(required, next_stage.group(1))
         self.assertIn("P8-05 IMPLEMENTATION AUTHORISED", current_state["next_governance_action"])

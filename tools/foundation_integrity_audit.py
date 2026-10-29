@@ -233,9 +233,13 @@ def _p8_05_additive_contradiction_issues(surface: str, label: str) -> list[str]:
         re.I,
     ):
         issues.append(f"{label} contradicts Phase 9 stop state")
-    for well in ("well-48", "well-49", "well-50"):
-        if re.search(rf"(?m)^\s*{well}\s*:\s*complete", surface, re.I):
-            issues.append(f"{label} marks {well.upper()} complete in the current route")
+    for token in _P8_05_CURRENT_TICKET_STATUS_TOKENS:
+        if token.casefold() not in lowered:
+            issues.append(f"{label} omits current P8-05 ticket status {token!r}")
+    if re.search(r"(?i)WELL-48[–-]50:\s*NEXT PERMITTED IMPLEMENTATION FRONTIER", surface):
+        issues.append(f"{label} retains the stale WELL-48–50 implementation frontier")
+    if re.search(r"(?i)WELL-48, WELL-49 AND WELL-50 MAY BEGIN IN PARALLEL", surface):
+        issues.append(f"{label} retains the stale parallel-start status")
     if re.search(
         r"(?im)P8-05\s*/\s*WELL-6\s+IMPLEMENTATION:\s*AUTHORISED(?!\s*[—-]\s*BOUNDED)",
         surface,
@@ -259,9 +263,16 @@ _P8_05_PHASE8_EXECUTION_GATE_AUTHORISED = (
     "STARTED / BOUNDED PHASE 8 / P8-05 IMPLEMENTATION AUTHORISED"
 )
 _P8_05_NEXT_STAGE_AUTHORISED = (
-    "P8-05 IMPLEMENTATION AUTHORISED FOR BOUNDED PHASE 8 PROOF; WELL-48–50 MAY BEGIN AFTER RESULTING-MAIN VERIFICATION"
+    "P8-05 IMPLEMENTATION AUTHORISED FOR BOUNDED PHASE 8 PROOF; WELL-48 COMPLETE; "
+    "WELL-49 BLOCKED PENDING WELL-60 AND WELL-61; WELL-50 BACKLOG / NOT STARTED"
 )
 _P8_05_NEXT_GOVERNANCE_ACTION_AUTHORISED = _P8_05_NEXT_STAGE_AUTHORISED
+_P8_05_CURRENT_TICKET_STATUS_TOKENS = (
+    "WELL-48: COMPLETE / MERGED VIA PR #156",
+    "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+    "WELL-50: BACKLOG / NOT STARTED",
+)
+_P8_05_CURRENT_STATUS_SUMMARY = "; ".join(_P8_05_CURRENT_TICKET_STATUS_TOKENS)
 
 
 def _p8_05_current_authorization_section_tokens() -> tuple[str, ...]:
@@ -272,9 +283,7 @@ def _p8_05_current_authorization_section_tokens() -> tuple[str, ...]:
         "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
         "WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED",
         "NOT LEGALLY APPROVED",
-        "resulting-main verification",
-        "WELL-48",
-        "none is complete",
+        *_P8_05_CURRENT_TICKET_STATUS_TOKENS,
         "WELL-51 follows the required WELL-48–50 seams",
         "This authorization does not authorize production",
     )
@@ -284,7 +293,7 @@ def _p8_05_bounded_authorization_route_tokens() -> tuple[str, ...]:
     return _p8_05_current_authorization_section_tokens() + (
         "immutable English development baselines",
         "Approved English Terms and Privacy and approval evidence remain required",
-        "Product v1.10.0 / DEC-316",
+        "Current Product Law v1.11.0 continues to permit the immutable English development baselines under DEC-316",
         "This authorization does not authorize production",
     )
 
@@ -2099,6 +2108,12 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
         "phase8_execution_gate": _P8_05_PHASE8_EXECUTION_GATE_AUTHORISED,
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
         "next_governance_action": _P8_05_NEXT_GOVERNANCE_ACTION_AUTHORISED,
+        "well_48": _P8_05_CURRENT_TICKET_STATUS_TOKENS[0].removeprefix("WELL-48: "),
+        "well_48_merge_sha": "eb28943cd8353cdec6625a053e157af449587d2c",
+        "well_49": _P8_05_CURRENT_TICKET_STATUS_TOKENS[1].removeprefix("WELL-49: "),
+        "well_50": _P8_05_CURRENT_TICKET_STATUS_TOKENS[2].removeprefix("WELL-50: "),
+        "p8_05_status": "IMPLEMENTATION AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY; "
+        + _P8_05_CURRENT_STATUS_SUMMARY,
     }
     if any(state.get(key) != value for key, value in expected.items()):
         return False, "started Phase 8 proof route misstates the incomplete result or downstream stop"
@@ -2111,7 +2126,7 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
         "PROOF CERTIFICATION: NOT CERTIFIED",
         "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
         "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
-        "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
+        *_P8_05_CURRENT_TICKET_STATUS_TOKENS,
     )
     if any(token not in active_summary for token in required_status):
         return False, "Open Work active route omits WELL-5 completion or the incomplete proof boundary"
@@ -2123,10 +2138,10 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
     readme_current = _markdown_h2_section(readme, "Current State") or ""
     readme_status = required_status[1:] + (
         "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
-        "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION; NOT COMPLETE",
+        *_P8_05_CURRENT_TICKET_STATUS_TOKENS,
         "APPLICATION IMPLEMENTATION: AUTHORISED ONLY INSIDE BOUNDED PHASE 8 ARCHITECTURAL PROOF, INCLUDING P8-05",
         "WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED",
-        "NEXT EXECUTION ACTION: After this authorization is current and resulting-main verification succeeds",
+        "NEXT EXECUTION ACTION: WELL-48: COMPLETE / MERGED VIA PR #156",
         "WELL-45 remains a legal/privacy release gate",
     )
     if any(token.casefold() not in readme_current.casefold() for token in readme_status):
@@ -8161,6 +8176,12 @@ def _phase8_started_status_successor_issues(
         "current_fp001_skeleton": routes["fp001_skeleton"].removeprefix("docs/00_platform/"),
         "current_harden_02": routes["harden_02"].removeprefix("docs/00_platform/"),
         "proof_contract_path": Path(candidate_path).relative_to("docs/00_platform").as_posix(),
+        "well_48": _P8_05_CURRENT_TICKET_STATUS_TOKENS[0].removeprefix("WELL-48: "),
+        "well_48_merge_sha": "eb28943cd8353cdec6625a053e157af449587d2c",
+        "well_49": _P8_05_CURRENT_TICKET_STATUS_TOKENS[1].removeprefix("WELL-49: "),
+        "well_50": _P8_05_CURRENT_TICKET_STATUS_TOKENS[2].removeprefix("WELL-50: "),
+        "p8_05_status": "IMPLEMENTATION AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY; "
+        + _P8_05_CURRENT_STATUS_SUMMARY,
     }
     if state is None or any(state.get(key) != value for key, value in expected_state.items()):
         issues.append("Open Work lifecycle state disagrees with current Phase 8 routes or proof status")
@@ -8169,11 +8190,14 @@ def _phase8_started_status_successor_issues(
         required_next_action_tokens = (
             "p8-05 implementation authorised",
             "bounded phase 8",
-            "well-48",
-            "resulting-main verification",
+            "well-48 complete",
+            "well-49 blocked",
+            "well-60",
+            "well-61",
+            "well-50 backlog",
         )
         if any(token.casefold() not in next_action.casefold() for token in required_next_action_tokens):
-            issues.append("Open Work does not route bounded P8-05 authorization and the WELL-48–50 frontier")
+            issues.append("Open Work does not route bounded P8-05 authorization and the current WELL-48–50 states")
         if "unauthorised" in next_action.casefold() and "implementation authorised" not in next_action.casefold():
             issues.append("Open Work current action reverts bounded P8-05 implementation authorization")
         atlas_text = active_files.get("delivery_atlas", "")
@@ -8223,7 +8247,7 @@ def _phase8_started_status_successor_issues(
             "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
             "PROOF CERTIFICATION: NOT CERTIFIED",
             "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
-            "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
+            *_P8_05_CURRENT_TICKET_STATUS_TOKENS,
         )
         if any(token.casefold() not in active_summary.casefold() for token in programme_proof_tokens):
             issues.append("current Open Work programme state omits proof execution or authorization boundaries")
@@ -8260,10 +8284,10 @@ def _phase8_started_status_successor_issues(
         "Spec/ticket decomposition: COMPLETE",
         "Independent planning review: COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS",
         "WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED",
-        "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION; NOT COMPLETE",
+        *_P8_05_CURRENT_TICKET_STATUS_TOKENS,
         "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
         "APPLICATION IMPLEMENTATION: AUTHORISED ONLY INSIDE BOUNDED PHASE 8 ARCHITECTURAL PROOF, INCLUDING P8-05",
-        "NEXT EXECUTION ACTION: After this authorization is current and resulting-main verification succeeds",
+        "NEXT EXECUTION ACTION: WELL-48: COMPLETE / MERGED VIA PR #156",
         "WELL-45 remains a legal/privacy release gate",
         "both immutable English development baselines",
         "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
@@ -8823,14 +8847,14 @@ def _identity_v020_promotion_issues(
         "promoted/current v0.1.4 snapshot",
         "CERTIFIED / CURRENT",
         "WELL-45 is a legal/privacy release gate",
-        "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION; NOT COMPLETE",
+        "Current Open Work v1.2.85 records WELL-48: COMPLETE / MERGED VIA PR #156",
         "APPLICATION IMPLEMENTATION: AUTHORISED ONLY INSIDE BOUNDED PHASE 8 ARCHITECTURAL PROOF, INCLUDING P8-05",
         "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
     ):
         if token not in readme:
             issues.append(f"README Identity current route omits {token!r}")
 
-    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.84.md"
+    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.85.md"
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() and not open_work_path.is_symlink() else ""
     for token in (
         "PR #150",
@@ -8838,7 +8862,9 @@ def _identity_v020_promotion_issues(
         "40302375237",
         "Identity v0.2.0: COMPLETE / CERTIFIED / CURRENT under PR #151 status successor",
         "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
-        "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION; NOT COMPLETE",
+        "WELL-48: COMPLETE / MERGED VIA PR #156 at eb28943cd8353cdec6625a053e157af449587d2c",
+        "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+        "WELL-50: BACKLOG / NOT STARTED",
         "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
         "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION AUTHORISED",
         "PHASE 8: NOT CERTIFIED",

@@ -23,7 +23,7 @@ LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
 SUCCESSOR_CHECK = "phase8_approved_status_successor_current"
 PROVENANCE_CHECK = "phase8_status_successor_predecessor_provenance"
 CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.84.md"
+OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.85.md"
 PRE_AUTHORIZATION_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.83.md"
 HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
 APPROVAL_TIME_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.78.md"
@@ -109,8 +109,31 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertEqual("NOT CERTIFIED", state["proof_certification"])
         self.assertEqual("NOT STARTED / NOT AUTHORISED", state["phase9_vertical_slices"])
         self.assertIn("p8-05 implementation authorised", state["next_governance_action"].casefold())
-        self.assertIn("well-48", state["next_governance_action"].casefold())
-        self.assertIn("resulting-main verification", state["next_governance_action"].casefold())
+        self.assertEqual("COMPLETE / MERGED VIA PR #156", state["well_48"])
+        self.assertEqual("eb28943cd8353cdec6625a053e157af449587d2c", state["well_48_merge_sha"])
+        self.assertEqual("BLOCKED / WAITING ON WELL-60 AND WELL-61", state["well_49"])
+        self.assertEqual("BACKLOG / NOT STARTED", state["well_50"])
+        self.assertIn("well-48 complete", state["next_governance_action"].casefold())
+        self.assertIn("well-49 blocked", state["next_governance_action"].casefold())
+        self.assertIn("well-60", state["next_governance_action"].casefold())
+        self.assertIn("well-61", state["next_governance_action"].casefold())
+        self.assertIn("well-50 backlog", state["next_governance_action"].casefold())
+        current_authorization = open_work.split("## Current P8-05 implementation authorization", 1)[1].split("\n## ", 1)[0]
+        for token in (
+            "WELL-48: COMPLETE / MERGED VIA PR #156",
+            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-50: BACKLOG / NOT STARTED",
+        ):
+            self.assertIn(token, current_authorization)
+        predecessor = (ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.84.md").read_text(encoding="utf-8")
+        prior_section = predecessor.split("\n## Current P8-05 implementation authorization\n", 1)[1]
+        prior_section = prior_section.split("\n## ", 1)[0].strip()
+        historical_section = open_work.split(
+            "\n### Historical P8-05 implementation authorization (v1.2.84 snapshot)\n",
+            1,
+        )[1]
+        historical_section = historical_section.split("\n## ", 1)[0].strip()
+        self.assertEqual(prior_section, historical_section)
         self.assertIn("p8-05 implementation authorised", state["phase8_execution_gate"].casefold())
         self.assertEqual("AUTHORISED", state["phase8"])
         self.assertEqual(
@@ -126,8 +149,10 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             "Phase 8 is NOT CERTIFIED",
             "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
             "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
-            "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
-            "NEXT EXECUTION ACTION: After this authorization is current and resulting-main verification succeeds",
+            "WELL-48: COMPLETE / MERGED VIA PR #156",
+            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-50: BACKLOG / NOT STARTED",
+            "NEXT EXECUTION ACTION: WELL-48: COMPLETE / MERGED VIA PR #156",
         ):
             self.assertIn(token, readme)
 
@@ -372,7 +397,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
     def test_open_work_routes_to_p805_after_well5_without_certifying_tb001_or_phase9(self):
         self.assertTrue(OPEN_WORK.is_file(), "the Open Work status successor is missing")
         text = OPEN_WORK.read_text(encoding="utf-8")
-        self.assertIn('"status_successor_version": "1.2.84"', text)
+        self.assertIn('"status_successor_version": "1.2.85"', text)
         self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", text)
         self.assertIn("TB-001", text)
         self.assertIn("CONTRACT/DESIGN REVIEW: COMPLETE / PASS", text)
@@ -383,7 +408,13 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", text)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
         self.assertIn("P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY", text)
-        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.24.md`", text)
+        self.assertIn("## 12.39 — WELL-64 candidate status and current P8-05 boundary", text)
+        current_status = text.split("## 12.39 — WELL-64 candidate status and current P8-05 boundary", 1)[1]
+        self.assertIn("WELL-64 remains IN PROGRESS", current_status)
+        self.assertIn("WELL-63 remains BLOCKED", current_status)
+        self.assertIn("WELL-65 remains later privileged-authentication implementation planning", current_status)
+        self.assertIn("it is not merged, certified or resulting-main verified", current_status)
+        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.25.md`", text)
         self.assertFalse((ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.81.md").exists())
         archived_predecessor = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.81.md"
         self.assertEqual(
@@ -414,16 +445,16 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
 
         readme = (ROOT / "docs/00_platform/README.md").read_text(encoding="utf-8")
         current_state = readme.split("## Current State", 1)[1].split("## Historical status evidence", 1)[0]
-        self.assertIn("NEXT EXECUTION ACTION: After this authorization is current and resulting-main verification succeeds", current_state)
+        self.assertIn("NEXT EXECUTION ACTION: WELL-48: COMPLETE / MERGED VIA PR #156", current_state)
         self.assertIn("P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY", current_state)
         self.assertIn("PROOF EXECUTION: STARTED", current_state)
         self.assertIn("PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE", current_state)
         self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", current_state)
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", current_state)
         self.assertNotIn("NEXT GOVERNANCE ACTION: WELL-38", current_state)
-        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.25.md", readme)
-        self.assertIn("working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.26.md", readme)
-        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.27.md", readme)
+        self.assertIn("working/DELIVERY_ATLAS_WORKING_v0.4.26.md", readme)
+        self.assertIn("working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.27.md", readme)
+        self.assertIn("working/HARDEN-02_CONTRACT_WORKING_v0.5.28.md", readme)
         self.assertIn("archive/DELIVERY_ATLAS_WORKING_v0.4.24.md", readme)
         self.assertIn("archive/HARDEN-02_CONTRACT_WORKING_v0.5.26.md", readme)
 
@@ -596,9 +627,19 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
                 "PHASE 9 / VERTICAL SLICES: AUTHORISED / STARTED",
             ),
             (
-                "well-48 complete",
-                "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION; NOT COMPLETE",
-                "WELL-48: COMPLETE / CERTIFIED",
+                "well-48 regressed to incomplete",
+                '"well_48": "COMPLETE / MERGED VIA PR #156"',
+                '"well_48": "BACKLOG / NOT STARTED"',
+            ),
+            (
+                "well-49 advanced while blocked",
+                '"well_49": "BLOCKED / WAITING ON WELL-60 AND WELL-61"',
+                '"well_49": "COMPLETE"',
+            ),
+            (
+                "well-50 advanced from backlog",
+                '"well_50": "BACKLOG / NOT STARTED"',
+                '"well_50": "COMPLETE"',
             ),
             (
                 "well-45 legally approved",
@@ -680,31 +721,6 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
                     "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
                     "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED\n"
                     "PHASE 9 / VERTICAL SLICES: AUTHORISED / STARTED",
-                    1,
-                ),
-            ),
-            (
-                "additive well-48 complete",
-                lambda text: text.replace(
-                    "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION",
-                    "WELL-48–50: NEXT PERMITTED IMPLEMENTATION FRONTIER AFTER RESULTING-MAIN VERIFICATION\n"
-                    "WELL-48: COMPLETE",
-                    1,
-                ),
-            ),
-            (
-                "additive well-49 complete",
-                lambda text: text.replace(
-                    "none is complete",
-                    "none is complete\nWELL-49: COMPLETE",
-                    1,
-                ),
-            ),
-            (
-                "additive well-50 complete",
-                lambda text: text.replace(
-                    "none is complete",
-                    "none is complete\nWELL-50: COMPLETE",
                     1,
                 ),
             ),

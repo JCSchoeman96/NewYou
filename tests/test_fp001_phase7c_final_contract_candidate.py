@@ -529,16 +529,16 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         current_state = readme.split("## Current State", 1)[1].split("\n## ", 1)[0]
         next_execution = re.search(r"(?m)^- NEXT EXECUTION ACTION: (.+)$", current_state)
         self.assertIsNotNone(next_execution)
+        self.assertEqual(
+            "P8-05 IMPLEMENTATION AUTHORISED FOR BOUNDED PHASE 8 PROOF; "
+            "WELL-48 COMPLETE; WELL-49 BLOCKED PENDING WELL-60 AND WELL-61; "
+            "WELL-50 BACKLOG / NOT STARTED",
+            state["next_governance_action"],
+        )
         for required in (
-            "P8-05 IMPLEMENTATION AUTHORISED",
-            "BOUNDED PHASE 8",
-            "WELL-48",
-            "RESULTING-MAIN VERIFICATION",
-        ):
-            self.assertIn(required, state["next_governance_action"])
-        for required in (
-            "WELL-48",
-            "resulting-main verification",
+            "WELL-48: COMPLETE / MERGED VIA PR #156",
+            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-50: BACKLOG / NOT STARTED",
             "WELL-51 follows the required WELL-48–50 seams",
         ):
             self.assertIn(required, next_execution.group(1))
