@@ -1,9 +1,6 @@
 defmodule NewYou do
-  @moduledoc """
-  NewYou keeps the contexts that define your domain
-  and business logic.
+  @moduledoc "Application-wide configuration access."
 
-  Contexts are also responsible for managing your data, regardless
-  if it comes from the database, an external API or others.
-  """
+  @doc "Returns the configured participant-facing platform name."
+  def platform_name, do: Application.fetch_env!(:new_you, :platform_name)
 end

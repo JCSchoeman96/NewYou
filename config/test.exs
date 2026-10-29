@@ -1,5 +1,7 @@
 import Config
 
+config :new_you, :platform_name, "Test Platform"
+
 config :new_you, :identity_registration_legal_versions, %{
   terms_version_id: "NEWYOU-TERMS-EN-DEV-2026-10-27-001",
   privacy_version_id: "NEWYOU-PRIVACY-EN-DEV-2026-10-27-001"
