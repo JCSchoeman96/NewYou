@@ -127,7 +127,7 @@ class LegalDocumentBaselineGovernanceTests(unittest.TestCase):
         current_state = (DOCS / "README.md").read_text(encoding="utf-8").split("## Current State", 1)[1].split("## Historical status evidence", 1)[0]
         spec = (ROOT / "docs/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
         self.assertIn("WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED", open_work)
-        self.assertIn("Current Product Law v1.11.0 continues to permit the immutable English development baselines under DEC-316", open_work)
+        self.assertIn("Current Product Law v1.12.0 continues to permit the immutable English development baselines under DEC-316", open_work)
         self.assertIn("both immutable EN development baselines", open_work)
         self.assertIn("explicit P8-05 implementation authorization", open_work)
         self.assertIn("WELL-45 is now a release/legal-readiness gate", open_work)

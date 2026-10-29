@@ -1,0 +1,574 @@
+# FP-001 Feature Pack Skeleton and Preliminary Gate Manifest
+
+## Artifact status
+
+```text
+PHASE 7A WORKING ARTIFACT
+FEATURE PACK: FP-001
+NON-IMPLEMENTATION
+NOT DEVELOPMENT-ENTRY AUTHORITY
+DOES NOT REPLACE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
+```
+
+**Artifact version:** v0.1.28 - PATCH current authority routing. Direct predecessor v0.1.27 is preserved byte-identically at `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.27.md`.
+
+**Lifecycle status:** CERTIFIED / CURRENT as a Phase 7A skeleton and routing view. The normative PMR block and PR #67 reconciliation certification evidence below remain unchanged. FP001_RECONCILIATION_REQUIRED is COMPLETE / CERTIFIED. Identity & Access v0.2.0, Communications v0.1.0 and Audit & Evidence v0.1.0 remain REQUIRED / COMPLETE / CERTIFIED / CURRENT. The current Audit & Evidence dossier route is `working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`. Privacy & Consent, Content & Media and Analytics remain NOT_REQUIRED. The required dossier set is disposition-complete. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under completed tracker #120 (CLOSED / COMPLETED); its exact PR #121 candidate bytes remain preserved as immutable archive evidence. Programme router #111 remains OPEN. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT under closed tracker #124 (CLOSED / COMPLETED). Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. TB-001 contract/design review is COMPLETE / PASS; contract v0.1.2 is CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. Bounded Phase 8 proof execution is STARTED; the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE and proof certification is NOT CERTIFIED. Phase 8 is NOT CERTIFIED; Phase 9 remains NOT STARTED / NOT AUTHORISED. Development Entry Hard Stop is PASS / ALL 10 CONDITIONS SATISFIED. Phase 8 Architectural Proof is AUTHORISED only; bounded application implementation is AUTHORISED only for Phase 8 / NEW_TRACER_BULLET. This Phase 7A skeleton confers no authority for additional work; current Open Work v1.2.86 controls the bounded Phase 8 and P8-05 route.
+
+**Certification evidence:**
+
+| Evidence | Value |
+|---|---|
+| PR #67 candidate | `79d0540c66f0224ece0330181e61dfef8ab4b458` |
+| Prior main | `38022caea64cb2522ab8fc4db730099a94cd6600` |
+| Resulting main | `4000ae50660930114e3ad43108dc029fd0673d32` |
+| Candidate and resulting-main tree | `a71dbeb2cca79bea0013f9997e40f34769f262f3` |
+| Exact-head CI | [36991113390](https://github.com/JCSchoeman96/NewYou/actions/runs/36991113390), PASS |
+| Resulting-main CI | [37009244020](https://github.com/JCSchoeman96/NewYou/actions/runs/37009244020), PASS |
+| Pre-merge attestation | [PR #67 comment 5952693308](https://github.com/JCSchoeman96/NewYou/pull/67#issuecomment-5952693308) |
+| Post-merge attestation | [PR #67 comment 5955641536](https://github.com/JCSchoeman96/NewYou/pull/67#issuecomment-5955641536) |
+| Fresh independent post-merge review | `PASS` |
+
+This current routing view records P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY. WELL-48: COMPLETE / MERGED VIA PR #156; WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61; WELL-50: BACKLOG / NOT STARTED. WELL-50's agreed WELL-48 Account/PMR contract is complete; its own gates remain. WELL-51 follows the required WELL-48–50 seams and owns the first integrated acceptance boundary; WELL-52 follows WELL-51, and WELL-53 follows WELL-48–52 and closes the P8-05 proof outcome. TB-001 remains INCOMPLETE / COVERAGE-INCOMPLETE; Phase 8 remains NOT CERTIFIED; Phase 9 remains NOT STARTED / NOT AUTHORISED. WELL-45 remains a legal/privacy release gate and the development baselines are NOT LEGALLY APPROVED. This derived view confers no authority independently of Open Work.
+
+This is a Phase 7A discovery and preparation artifact. It is derived from the approved Roadmap outcome and current stronger authority. It does not resolve an upstream Product, Architecture, Domain or Roadmap question.
+
+```text
+Phase 7A Skeleton
+    -> Phase 7B required JIT Domain Dossiers
+    -> Phase 7B reconciliation
+    -> Phase 7C Final Feature Pack Contract
+```
+
+Only the approved Phase 7C Final Feature Pack Contract may become development-entry authority. Phase 7A does not authorise implementation, proof execution, a Tracer Bullet, a Vertical Slice, Horizontal Hardening or TOON work.
+
+## 1. Identity
+
+| Field | Value |
+|---|---|
+| Feature Pack ID | `FP-001` |
+| Name | Trusted bilingual entry and verified identity |
+| Roadmap position | Phase 1, Trusted entry and commercial truth; position 1 of 17; first node on the approved core path |
+| Delivery character | `FOUNDATIONAL` |
+| Selected status | `SELECTED FOR PHASE 7A PREPARATION` |
+| Approved dependencies | Frozen Product Law, Architecture Law and Domain Law only; no future Feature Pack is a prerequisite |
+| Known unlock | `FP-002` purchase, verified payment and entitlement, plus the protected identity boundary used by later core journeys |
+
+The Roadmap remains the authority for the Feature Pack identity, sequencing, outcome, dependencies, scope and gates. The Atlas is navigation only.
+
+## 2. Outcome
+
+The approved Roadmap outcome is preserved without broadening:
+
+<!-- NEWYOU:FP001-PMR-RECONCILIATION:START -->
+> A public visitor can choose Afrikaans or English, understand the launch-facing product and safety boundaries, create an individual 18+ account, receive that Account's required human-facing Platform Member Reference (PMR), verify email, recover access and use a controlled support/admin path without exposing unfinished product spaces.
+<!-- NEWYOU:FP001-PMR-RECONCILIATION:END -->
+
+This outcome establishes a trusted public-to-protected boundary. It does not make FP-001 a complete participant-ready MVP and does not pull later purchase, health, plan, community or event outcomes into this pack.
+
+## 3. Validation objective
+
+The approved Roadmap validation objective is:
+
+<!-- NEWYOU:FP001-PMR-RECONCILIATION:START -->
+> Prove that public-to-verified-account entry is understandable, privacy/age/terms gates are respected, identity/session authority is reconstructible, a successful individual Account creation assigns exactly one canonical active PMR under Identity & Access ownership, and operators can resolve ordinary account-access issues.
+<!-- NEWYOU:FP001-PMR-RECONCILIATION:END -->
+
+The product outcome is the participant and operator result. The technical proof question is whether the authoritative identity, session, policy, recovery, communication and evidence boundaries can support that result under the applicable gates. This skeleton records that distinction and does not select the eventual proof vehicle.
+
+## 4. Validation objective type
+
+The approved Roadmap types are:
+
+`PRODUCT`, `BEHAVIORAL`, `ARCHITECTURAL`, `SECURITY`, `PRIVACY`, `OPERATIONAL`.
+
+## 5. Scope
+
+### 5.1 In scope
+
+The smallest approved FP-001 planning boundary contains:
+
+- useful bilingual public entry in Afrikaans and English;
+- launch-facing product, Christian-positioning and safety-boundary understanding through governed public content;
+- an individual free account for a person aged 18 or older;
+- the frozen minimum registration boundary: first name, surname, email, authentication credential, preferred language, 18+ confirmation and terms/privacy acceptance; phone and city remain optional;
+- one canonical platform identity with email verification, sign-in/session authority and account recovery;
+- limited pre-verification activity only where current authority permits it, with protected capabilities blocked until the applicable verified-email gate is satisfied;
+- identity-side scoped role and privilege checks, while relationship-owned business access remains with the owning Domain;
+- purpose-specific privacy and consent boundaries for the entry/account journey;
+- governed launch-facing content, translation and publication obligations where the public boundary depends on them;
+- verification and recovery communication consequences, including delivery evidence and failure visibility, without choosing a provider or channel implementation;
+- a controlled ordinary support/admin path using named, scoped and auditable staff authority, without introducing a generic operator-work Domain or universal task system; and
+- Platform Member Reference Account truth owned by Identity & Access: assignment occurs only as part of successful individual Account creation, with one canonical active PMR, ordinary immutability, legitimate-reactivation continuity, permanent non-reuse after retirement/final deletion or duplicate-merge retirement, collision-safe/concurrency-correct/retry-safe allocation and merge, and purpose-scoped minimum-disclosure lookup; and
+- restricted security and audit evidence for identity, recovery, privilege, support and other sensitive actions.
+
+Analytics remains a consumer of approved derived evidence only. FP-001 does not introduce `CAP-027` or an Analytics-owned business truth.
+
+### 5.2 Out of scope
+
+- social login and passkeys, which remain deferred or future extensions;
+- advanced participant MFA configuration beyond the locked optional-participant and high-risk step-up boundary;
+- household accounts, generic tenancy and unrestricted multi-tenant behaviour;
+- native applications and unfinished or future product spaces;
+- purchase, payment, entitlement, assessment, health, safety, plan, programme, community, live-session or event outcomes belonging to later approved packs;
+- full data-rights, retention and deletion orchestration as a reusable capability (`CAP-004`, introduced by `FP-006`), except for the identity-side gates and distinctions needed to protect the entry boundary;
+- a reusable operator-work capability (`CAP-029`), generic admin lifecycle or dashboard; the controlled support/admin path is a bounded FP-001 use of source-owned actions;
+- `Commerce` participation, payment truth or commercial catalogue work; generic support listed by `CAP-005` does not override the explicit FP-001 Roadmap Domain set;
+- health, medical or full date-of-birth data collected merely for registration;
+- exact authentication packages, Resources, schemas, routes, components, deployment topology, queues, caches, workers or other implementation mechanisms;
+- implementation-grade lifecycle state machines, final acceptance, final proof classification, Architectural Proof, TB, VS, HH or TOON artifacts.
+
+## 6. Material capability input
+
+ATLAS-04 was checked against the current matrix and reverse summary. FP-001 has exactly seven material relationships, all `I` introductions. The reverse row has no `R`, `E` or `S` relationships:
+
+| CAP | Relationship | Capability | Authoritative boundary | Why material to FP-001 | Exact authority anchors | Phase 7B detail indication |
+|---|---|---|---|---|---|---|
+| `CAP-001` | `I` | Canonical identity and authentication | Identity & Access owns canonical identity, credentials, sessions, devices, recovery, account-closure state and PMR truth | The approved outcome requires one recoverable identity, one canonical active PMR after successful individual Account creation, verified email and an authenticated access boundary | `04_DOMAIN_MAP_v1.2.0.md §6.1`; `03_ARCHITECTURE_v1.1.1.md §§6.1, 6.6`; `05_ROADMAP_v1.2.4.md §6 FP-001` | `YES` for implementation-grade identity, PMR, verification, session, recovery and abuse-boundary detail |
+| `CAP-002` | `I` | Scoped authorisation and relationship access | Identity & Access owns identity-side grants; relationship-owning Domains retain relationship truth | The pack must protect current actor, scope, purpose, expiry and revocation without creating a shared access owner | `04_DOMAIN_MAP_v1.2.0.md §§3-5, 6.1`; `03_ARCHITECTURE_v1.1.1.md §6.2`; `05_ROADMAP_v1.2.4.md §1` | `YES` for exact policy composition, field projection and revocation behaviour where required |
+| `CAP-003` | `I` | Consent and purpose control | Privacy & Consent owns purpose-specific consent and lawful-basis state | Terms/privacy and purpose boundaries must be respected and remain distinct from identity and role authority | `04_DOMAIN_MAP_v1.2.0.md §§4, 6.2`; `03_ARCHITECTURE_v1.1.1.md §6.3`; `00_PLATFORM_v1.12.0.md §§21I.13, 21I.14`; `01_DECISIONS_v1.12.0.md DEC-027, DEC-094` | `NOT_REQUIRED`; current authority governs acceptance versus purpose consent, consent ownership/state, withdrawal and dependent invalidation for FP-001. |
+| `CAP-005` | `I` | Public discovery and acquisition | No single Domain owns CAP-005. Content & Media owns public content. Commerce owns product information. Communications owns subscriber/contact state. Analytics owns acquisition evidence. Each source Domain retains its own truth. | FP-001 introduces the public-to-account boundary and must keep useful public discovery separate from forced signup or protected access | `05_ROADMAP_v1.2.4.md §6 FP-001`; `00_PLATFORM_v1.12.0.md §§7.2-7.3`; `04_DOMAIN_MAP_v1.2.0.md §6.5`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md §§3.1, 5.1` | Exact public copy and acquisition configuration remain downstream; they do not change this Domain-dossier decision. |
+| `CAP-006` | `I` | Governed content, translation and publication | Content & Media owns content versions, locale branches, approval and publication | Launch-facing product, safety, terms and onboarding understanding depends on governed approved bilingual content | `04_DOMAIN_MAP_v1.2.0.md §6.7`; `00_PLATFORM_v1.12.0.md §§21E.1-21E.10`; `PLATFORM_OPERATING_MODEL_v1.2.0.md §§9-13` | `NOT_REQUIRED`; current law governs bilingual variants, approval/publication, provenance, correction and withdrawal. Exact launch copy and inventory remain content configuration. |
+| `CAP-017` | `I` | Communications and notification delivery | Communications owns subscriber contact, message intent, delivery status and provider evidence; it does not own canonical account email or originating business facts | Verification and recovery are part of the outcome and need durable, retry-aware, privacy-sensitive delivery consequences | `04_DOMAIN_MAP_v1.2.0.md §6.15`; `03_ARCHITECTURE_v1.1.1.md §10.4`; `PLATFORM_OPERATING_MODEL_v1.2.0.md §§7, 12, 21`; `01_DECISIONS_v1.12.0.md DEC-261-DEC-263` | `YES` for the domain contract around verification/recovery intent, deduplication, retry, failure and provider evidence; OQ-036 remains unresolved |
+| `CAP-028` | `I` | Audit and security evidence | Audit & Evidence owns restricted append-only evidence; source Domains retain business truth | Sensitive identity, recovery, privilege, support and security actions require minimised, auditable evidence | `04_DOMAIN_MAP_v1.2.0.md §6.18`; `03_ARCHITECTURE_v1.1.1.md §§6.3, 12.3-12.4, 14`; `00_PLATFORM_v1.12.0.md §§21I.14-21I.15`; `PLATFORM_OPERATING_MODEL_v1.2.0.md §§22, 25, 28` | `REQUIRED`; Phase 7C would otherwise invent FP-001 event selection, evidence acceptance, correlation/idempotency, access, correction and retention-category contracts. |
+
+No other capability is material to this Phase 7A boundary. In particular, `CAP-004`, `CAP-027` and `CAP-029` are not introduced by FP-001. The generic CAP support list does not convert a capability or Domain into active-FP materiality.
+
+## 7. Domain participation
+
+The approved starting set is the six Domains named by the Roadmap. The role, durable-consequence and dossier columns are separate decisions:
+
+| Domain | Phase 7A role | Durable consequence | Phase 7B dossier | Boundary and reason |
+|---|---|---|---|---|
+| Identity & Access | `PRIMARY` | `YES` | `REQUIRED` | Owns canonical identity/account, verification, session, recovery, device, identity-side grant and PMR truth. Dossier v0.2.0 is `COMPLETE / CERTIFIED / CURRENT` under the separate PR #151 status successor. |
+| Privacy & Consent | `SUPPORTING` | `YES` | `NOT_REQUIRED` | Owns purpose-specific consent state. Current authority governs terms/privacy acceptance versus purpose consent, active/withdrawn/superseded state and dependent invalidation for FP-001. |
+| Content & Media | `SUPPORTING` | `YES` | `NOT_REQUIRED` | Owns governed launch-facing content, bilingual variants and publication truth. The working Atlas compression of this involvement as `Consumer` does not override the Roadmap affected set or the material `CAP-006` relationship. |
+| Communications | `SUPPORTING` | `YES` | `REQUIRED` | Owns verification/recovery communication intent and delivery evidence, while Identity owns account email and verification truth. Dossier v0.1.0 is `COMPLETE / CERTIFIED / CURRENT`. |
+| Audit & Evidence | `SUPPORTING` | `YES` | `REQUIRED` | Owns restricted evidence and security-event linkage; it never owns identity, consent, communications or another source Domain's truth. Dossier v0.1.0 is `REQUIRED / COMPLETE / CERTIFIED / CURRENT` under the separate current-status promotion; PR #118 candidate certification and post-merge evidence are complete. |
+| Analytics | `CONSUMER` | `NO` | `NOT_REQUIRED` | May consume minimum governed derived entry evidence. It does not introduce `CAP-027`, source business truth or an Analytics architecture in FP-001. |
+
+`Affected Domain` is not the same as `Change Domain`, and neither implies a JIT dossier. The durable-consequence column identifies whether the Domain's own truth may change or be persisted by the outcome. A dossier is selected only where Phase 7C would otherwise need to invent implementation-grade Domain semantics.
+
+`NOT_REQUIRED` means that FP-001 does not need a separate dossier for that Domain. It does not remove the Domain from the approved affected set, transfer its ownership or remove the applicable law from Phase 7C.
+
+Commerce is deliberately absent. The permanent CAP-005 authority is federated, not FP-specific: no single Domain owns the composite. Content & Media owns public content; Commerce owns product information; Communications owns subscriber/contact state; Analytics owns acquisition evidence. For FP-001, the Roadmap affected-Domain set excludes Commerce. Generic CAP-005 Commerce authority therefore does not make Commerce an actual FP-001 participant.
+
+## 8. Phase 7B dossier discovery
+
+### Required dossiers
+
+1. **Identity & Access: `REQUIRED / COMPLETE / CERTIFIED / CURRENT`.** The current v0.2.0 dossier bounds the account/identity boundary, verification gate, session and device revocation, graduated recovery, scoped grants, duplicate/retry handling, authority reconstruction and abuse/security boundary. `OQ-034` architecture selection is resolved; Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET, while the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE and proof certification is NOT CERTIFIED.
+2. **Communications: `REQUIRED / COMPLETE / CERTIFIED / CURRENT`.** The current v0.1.0 dossier bounds verification/recovery message intent, destination distinction, privacy minimisation, retry/deduplication, terminal failure and provider evidence. It does not choose a provider/channel policy or resolve `OQ-036`.
+3. **Audit & Evidence: `REQUIRED / COMPLETE / CERTIFIED / CURRENT`.** Phase 7C needs an FP-001 contract for selected registration/PMR, verification/recovery/security, session/revocation/compromise, privileged/support, and applicable consent/governance evidence. The dossier must set the minimum event envelope, source-operation/correlation relationships, E1/E2 acceptance boundaries, privileged evidence access, append-only correction/supersession, and retention-category dependencies. It must keep source-business truth with each source Domain and must not invent legal retention periods. PR #118 candidate certification and post-merge evidence are COMPLETE; the separate current-status promotion records v0.1.0 as CERTIFIED / CURRENT.
+
+### Adjudicated not required
+
+- **Privacy & Consent: `NOT_REQUIRED`.** `DEC-027` separates terms/privacy acceptance from purpose-specific permissions in `DEC-094`. Architecture §6.3, Product §21I.13, and Domain Map §6.2 govern purpose ownership, versioned current state, withdrawal and invalidation. FP-001 excludes reusable export/deletion orchestration. #107 applies only if an FP-001 contract later freezes its pending-export × Full-Deletion participant promise. Privacy remains the consent and purpose owner.
+- **Content & Media: `NOT_REQUIRED`.** Product §21E, Domain Map §6.7, Operating Model §§9-13 and FES §§7.2-7.3 govern ownership, immutable/versioned shared and locale content, approval/publication, provenance, correction and withdrawal. Exact launch copy, wording, layout, content inventory and publication operations are configuration work. `CM-UPD-013` remains evidence for this adjudication, not a new Product requirement.
+
+### No dossier required
+
+- **Analytics: `NOT_REQUIRED`.** Analytics remains an affected consumer, not a material introduced capability. Minimum derived evidence can be confirmed at the later contract boundary without creating a separate Analytics dossier.
+
+The six affected Domains and seven material capability relationships remain unchanged. Domain participation, durable consequence and dossier selection remain distinct. Audit & Evidence v0.1.0 is COMPLETE / CERTIFIED / CURRENT. The required dossier set is disposition-complete. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under historical tracker #120 (CLOSED / COMPLETED). Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT under closed tracker #124 (CLOSED / COMPLETED). Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. Development Entry Hard Stop is PASS / ALL 10 CONDITIONS SATISFIED. TB-001 contract/design review is COMPLETE / PASS; its v0.1.2 contract is CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. Proof execution is STARTED. The current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE; proof certification and Phase 8 are NOT CERTIFIED. Phase 9 is NOT STARTED / NOT AUTHORISED.
+
+NEXT EXECUTION ACTION: WELL-48: COMPLETE / MERGED VIA PR #156; WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61. WELL-60 must define the real Communications job action and WELL-61 must supply an eligible verification content version. WELL-50: BACKLOG / NOT STARTED; its own gates remain. WELL-51 follows the required WELL-48–50 seams and owns the first integrated acceptance boundary; WELL-52 follows WELL-51; WELL-53 follows WELL-48–52 and closes the P8-05 proof outcome. WELL-45 remains a release gate.
+
+## 9. Lifecycle pressure
+
+Phase 7A records obligations, not an FP-001 state machine. The following are the independently owned truths that require lifecycle attention:
+
+| Truth and owner | Known lifecycle obligation from current authority | Guards, invalidation, concurrency and evidence pressure | Phase 7A route |
+|---|---|---|---|
+| Identity/account and PMR, Identity & Access | Account creation, verification, active/restricted/closed/recoverable account context; one canonical reconciled identity; exactly one canonical active PMR after successful individual Account creation; account closure remains distinct from full deletion | 18+ and entry-policy gates; PMR allocation/merge must be collision-safe, concurrency-correct and retry-safe; duplicate-account reconciliation permanently retires the non-surviving PMR; recovery cannot create other Domain authority; security evidence required | Phase 7A left exact PMR representation unresolved. The later WELL-48 Identity owner decision records the approved logical representation in the current Identity dossier and P8-05 specification; physical allocation/storage remains implementation-JIT. |
+| Email verification, Identity & Access with Communications consequence | Limited unverified onboarding, request/resend capability and verified email before protected capabilities | Server-authoritative proof; one-purpose replay-controlled verification; duplicate/reordered delivery must not create extra identity effects; delivery failure is not verification success; audit evidence required | `YES` dossier detail; no invented token or implementation state. |
+| Sessions and trusted devices, Identity & Access | Individually identifiable, role/risk-bounded, expiring and revocable sessions/devices; user-visible revocation | Current authority must be reconstructed after restart or reconnect; revocation and security changes invalidate stale assurance; concurrent sign-out, recovery and sensitive actions require current checks; audit required | `YES` dossier detail; exact expiry parameters remain downstream. |
+| Recovery, email change and compromise, Identity & Access | Graduated automated/manual recovery, security holds, verified-channel notification, reauthentication, old-address notice, session review/revocation and compromise containment | Recovery restores identity control only; privileged recovery has stronger review; duplicate/retry/replay and concurrent recovery must not weaken assurance; support action is scoped and audited | `YES` dossier detail; `OQ-035` thresholds remain open; `OQ-034` architecture selection is resolved and executable proof remains a Phase 8 obligation. |
+| Identity-side grants, Identity & Access plus relationship owners | Explicit, scoped, assignable, removable, auditable, time-bounded grants; relationship and purpose remain with their owners | Current role/relationship/purpose/expiry must be re-evaluated at protected action; revocation must not be bypassed by stale presentation; no shared grant owner | `YES` dossier detail for the exact policy boundary, not a new shared Domain. |
+| Consent, Privacy & Consent | Purpose-specific consent is versioned and may be active, withdrawn or superseded; withdrawal stops dependent future processing and invalidates derived authority | Consent cannot be inferred from account, language, support or participation; terms/privacy acceptance remains distinct from purpose-specific consent | `NOT_REQUIRED`; current authority supplies FP-001's consent and purpose semantics. Privacy remains the owner. |
+| Governed content/translation/publication, Content & Media | Governed variants move through the approved content and translation review/publication lifecycle; published versions are immutable and may be superseded or withdrawn | Approved bilingual content is required where the content risk demands it; source and locale changes invalidate stale approvals; publication/correction/withdrawal evidence is required | `NOT_REQUIRED`; current authority supplies the lifecycle. Exact launch copy and inventory remain configuration. |
+| Communication intent/delivery, Communications | Durable message intent and delivery may progress through created, queued, sent, delivered, failed, retried and terminal outcomes; preferences can change | Must-not-lose intent precedes delivery; duplicate execution cannot multiply logical messages; provider evidence is not source truth; outage degrades communication, not identity truth | `YES` dossier detail; provider policy remains `OQ-036`. |
+| Audit/security evidence, Audit & Evidence | Evidence is appended immutably, restricted and retained or lawfully expired/anonymised by category; corrections add evidence rather than rewrite history | Evidence absence cannot manufacture business success; access to evidence is privileged; event selection, acceptance, correlation, access and retention-category mapping remain material | `REQUIRED`; the next Phase 7B dossier must resolve FP-001 evidence semantics without taking source-business authority or inventing a legal retention schedule. |
+| Operator support projection, source-owning Domains and Operating Model | Work is attention over Domain-owned obligations, not a universal business lifecycle; support resolves permitted ordinary account-access issues | Queue/work visibility grants no business authority; sensitive actions require the owning policy, separation of duties and audit; no generic task state is created | No new Domain or lifecycle. Use scoped source-owned actions and projections. |
+
+Known lifecycle obligation is separate from implementation-grade lifecycle definition. Exact transition ordering, action contracts, resource representation, expiry values, retry budgets and storage/mechanism choices are not frozen by this Skeleton. No synthetic global FP-001 state machine is created.
+
+### 9.1 PMR reconciliation contract
+
+<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:START -->
+
+The Platform Member Reference is Identity & Access Account truth. A successful individual Account creation assigns exactly one canonical active PMR as part of the successful authoritative Account transition. Failed, partial or ambiguous Account creation does not create an externally usable PMR.
+
+The PMR is stable and human-facing. It is not database identity; it is not authentication; it is not authorisation; it is not verification assurance; it is not paid Membership; it is not subscription state; it is not entitlement; it is not payment authority; it is not a voucher/coupon/discount authority; and it is not a bearer credential. It is non-secret but private-by-default. Possession proves none of those authority concepts and does not grant rights belonging to the Account.
+
+Active PMR uniqueness is preserved. Ordinary PMR values are immutable. Legitimate reactivation retains the correct reference. Retired or finally deleted PMRs are never reassigned or reused. A governed duplicate-account reconciliation leaves one canonical active Account/reference and permanently retires the other. Exceptional retirement or replacement requires an already-approved security, privacy, integrity, reconciliation or equivalent operational-correctness reason. Allocation and merge remain collision-safe, concurrency-correct and retry-safe. Lookup and association use the PMR only as the approved beneficiary key for that purpose, remain purpose-scoped, minimum-disclosure and non-authoritative.
+
+Exact PMR representation remains unfrozen under `ARQ-IAM-013`: this reconciliation chooses no prefix, alphabet, grouping, length, checksum/check algorithm, generator, schema, index strategy or implementation package.
+
+<!-- NEWYOU:FP001-PMR-RECONCILIATION-CONTRACT:END -->
+
+The marked Phase 7A / Phase 7B PMR contract above preserves its original state, when the exact representation was unresolved. The subsequent WELL-48 Identity owner decision selects `PMR-<16 Base36 data characters><1 ISO/IEC 7064 MOD 37,2 check character>` as the logical representation, recorded in the current Identity dossier and P8-05 specification. Physical allocation and storage representation remain implementation-JIT.
+
+## 10. Preliminary Gate Manifest
+
+### 10.1 Authoritative Product Decisions
+
+Only the material Product/Decision surfaces are carried forward:
+
+- `DEC-017`, `DEC-018`, `DEC-019`, `DEC-027`, `DEC-028`: public/free entry, adult-only launch, individual-account model, minimum fields and Afrikaans/English launch.
+- `DEC-021`, `DEC-022`: multiple explicit auditable roles and the named staff categories used by a controlled support/admin path, including Platform Administrator, Developer and break-glass Super Admin.
+- `DEC-317`, `DEC-318`: role/scope-based capabilities, governed operational delegation, bootstrap root-of-trust and independent privileged/Domain approval.
+- `DEC-244` through `DEC-255`: participant authentication, verification gating, participant and privileged-user MFA boundaries, sessions, trusted devices, recovery, email change, duplicate reconciliation, compromise containment, scoped grants and break-glass access.
+- `DEC-256`: layered authentication abuse-control obligation; thresholds and concrete implementation remain gated/downstream.
+- `DEC-261` through `DEC-264`: notification channel, preference, delivery and graceful-degradation obligations relevant to verification/recovery consequences.
+- `DEC-267`: operational observability for material identity, delivery and provider-outage outcomes.
+- `DEC-268` through `DEC-270`: controlled product spaces, launch-facing scope and South Africa-first launch context.
+
+Product/Decision authority context: `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§5.1, 8, 10-12`; current Product Law `00_PLATFORM_v1.12.0.md §§7.2-7.3, 15.1A-15.1B, 21E, 21I, 21J, 21L, 21P`; current Decision Register `01_DECISIONS_v1.12.0.md`.
+
+### 10.2 Applicable Architecture Decisions
+
+The material Architecture Law surfaces are:
+
+- `03_ARCHITECTURE_v1.1.1.md §§4.1-4.2, 5, 6.1-6.4`: authoritative application boundaries, canonical identity, current authorisation, consent, revocation, recovery, compromise, abuse and non-enumerating behaviour;
+- `03_ARCHITECTURE_v1.1.1.md §§7.1-7.3`: durable authority and projection boundaries; no browser, process or acceleration state becomes business truth;
+- `03_ARCHITECTURE_v1.1.1.md §§8.1-8.4`: authoritative work, durable consequences, provider evidence, idempotency and external ambiguity;
+- `03_ARCHITECTURE_v1.1.1.md §§10.1, 10.4`: governed bilingual content and messaging/provider boundaries;
+- `03_ARCHITECTURE_v1.1.1.md §§12.1-12.4`: failure isolation, restart/recovery, observability, incident evidence and operational proof;
+- `03_ARCHITECTURE_v1.1.1.md §§13.1-13.5`: workload-specific scaling and adversarial proof obligations without premature infrastructure selection;
+- `03_ARCHITECTURE_v1.1.1.md §§14-15`: server-authoritative security, least privilege, revocable secrets/sessions, audit separation and enforceable boundaries; and
+- `FLOW-01` in `archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md §§2-3`: point-in-time conceptual registration-to-verification-to-login evidence used by the predecessor skeleton.
+
+This Skeleton selects no authentication package, Resource, schema, queue, cache, worker, topology or other implementation mechanism.
+
+### 10.3 Affected Domains
+
+The preliminary manifest carries exactly the six Roadmap Domains:
+
+`Identity & Access`; `Privacy & Consent`; `Content & Media`; `Communications`; `Audit & Evidence`; `Analytics`.
+
+Their role, durable-consequence and dossier decisions are recorded in §7. No Commerce Domain is added.
+
+### 10.4 Phase 7B dossier disposition
+
+| Domain | Decision | Reason and boundary |
+|---|---|---|
+| Identity & Access | `REQUIRED / COMPLETE / CERTIFIED / CURRENT` | Current dossier v0.2.0 under the separate PR #151 status successor. |
+| Communications | `REQUIRED / COMPLETE / CERTIFIED / CURRENT` | Current dossier v0.1.0. OQ-036 remains release-only. |
+| Privacy & Consent | `NOT_REQUIRED` | Current Product/Architecture/Domain law governs FP-001 purpose-specific consent and withdrawal boundaries. Privacy remains the owner. |
+| Content & Media | `NOT_REQUIRED` | Current Product/Domain/Operating/FES law governs the bilingual content lifecycle. Content remains the owner. |
+| Audit & Evidence | `REQUIRED / COMPLETE / CERTIFIED / CURRENT` | Required to set FP-001 evidence selection, event acceptance, minimisation, linkage, access, correction and retention-category contracts. Audit remains evidence only. |
+| Analytics | `NOT_REQUIRED` | Affected consumer only; no `CAP-027` or Analytics source truth is introduced. |
+
+The Audit dossier is current under its separate status successor. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT under closed tracker #124 (CLOSED / COMPLETED). The separate post-Phase-7C Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET; WELL-5 / P8-04 is COMPLETE, while the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE and proof certification is NOT CERTIFIED.
+
+### 10.5 Resolved architecture selection and proof obligation
+
+| OQ | Classification | Protected behaviour | Deciding authority and Phase 7A effect |
+|---|---|---|---|
+| `OQ-034` | `RESOLVED / ARCHITECTURE SELECTION; PHASE 8 PROOF REQUIRED` | The approved authentication architecture is selected; bounded Phase 8 proof execution is STARTED under current Open Work v1.2.86. WELL-5 / P8-04 is COMPLETE; the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE and proof certification is NOT CERTIFIED. Classification is complete as NEW_TRACER_BULLET. | Use the recorded architecture selection. Phase 8 proof remains downstream of the active Phase 7 route and its Development Entry Hard Stop. This skeleton does not execute, accept or classify proof. |
+
+### 10.6 Non-blocking / later gates
+
+| OQ | Classification | Why planning may continue |
+|---|---|---|
+| `OQ-035` | `BLOCKS_RELEASE_ONLY` | Internal account-flow preparation may proceed behind the platform-owned abuse boundary. Protected public or pilot release cannot proceed without approved thresholds and recovery behaviour. |
+| `OQ-036` | `BLOCKS_RELEASE_ONLY` | Identity planning and the Communications dossier may define the required delivery contract without choosing a provider/channel policy. Release of promised verification or mandatory-notice communication cannot proceed without the approved launch policy. |
+| `OQ-038` | `FUTURE_ONLY` | Named incident ownership is a later paid-pilot/release condition owned by `FP-006`; it does not delay safe internal FP-001 planning. |
+
+`OQ-001` and `OQ-004` are not FP-001 Roadmap gates. `OQ-039` remains a downstream implementation-grade performance/scaling mapping requirement where an affected action enters a later implementation boundary; it is not added as an FP-001 Roadmap classification here.
+
+### 10.7 Entry STOP condition
+
+OQ-034 architecture selection is resolved, but that selection does not satisfy its Phase 8 executable proof obligation. The proof is not complete. At the v1.2.74 predecessor point, this Skeleton did not authorise proof execution or implementation; that historical state is superseded by the bounded Phase 8 route in current Open Work v1.2.86, where proof execution is STARTED and the result remains INCOMPLETE / COVERAGE-INCOMPLETE.
+
+This current routing view records P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY. WELL-48: COMPLETE / MERGED VIA PR #156; WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61; WELL-50: BACKLOG / NOT STARTED. WELL-50's agreed WELL-48 Account/PMR contract is complete; its own gates remain. WELL-51 follows the required WELL-48–50 seams and owns the first integrated acceptance boundary; WELL-52 follows WELL-51, and WELL-53 follows WELL-48–52 and closes the P8-05 proof outcome. TB-001 remains INCOMPLETE / COVERAGE-INCOMPLETE; Phase 8 remains NOT CERTIFIED; Phase 9 remains NOT STARTED / NOT AUTHORISED. WELL-45 remains a legal/privacy release gate and the development baselines are NOT LEGALLY APPROVED. This derived view confers no authority independently of Open Work.
+
+Before any later development entry, the applicable approved Phase 7C contract and Development Entry Hard Stop must be complete, the proof vehicle must be classified, and the selected authentication architecture must pass its Phase 8 proof boundary. Failure or an upstream contradiction routes to the owning authority and stops work.
+
+Any new contradiction in Product, Architecture, Domain ownership or Roadmap truth is a STOP and must be routed to the owning authority rather than absorbed here.
+
+## 11. Preliminary performance and scaling review
+
+This is pressure identification only. It does not select a mechanism or create an OQ-039 implementation mapping.
+
+| Pressure area | Correctness/performance obligation | Downstream boundary |
+|---|---|---|
+| Password hashing | Cost must be benchmarked and bounded so registration/login remain safe under expected bursts without weakening credential protection | Architecture/JIT and later proof; no cost or package is selected here |
+| Registration/login bursts | Admission and abuse behaviour must remain non-enumerating, bounded and recoverable while identity authority remains correct | `OQ-035`; later performance evidence |
+| Verification delivery backlog | Must-not-lose verification intent, duplicate-safe resend and honest pending/failure visibility are required; delivery backlog must not be treated as verification truth | Communications dossier and `OQ-036` release boundary |
+| Abuse/rate pressure | Layered controls must preserve privacy, non-enumeration and multi-node correctness where required; thresholds remain unresolved | `DEC-256`, `OQ-035`, Architecture §6.4 |
+| Session authority reconstruction | Current session, role and revocation authority must be reconstructible after restart/reconnect and not depend on a local presentation state | Identity dossier and Architecture §§7, 12 |
+| Retry/idempotency | Repeated, reordered or replayed registration, verification, recovery, email-change and support actions must not multiply logical identity effects | Identity/Communications dossiers; exact operation contracts remain JIT |
+| PMR allocation and merge | Assignment follows successful individual Account creation; active uniqueness, collision safety, concurrency correctness, retry safety, duplicate merge and permanent non-reuse must hold | Identity dossier and P8-05 specification record the approved logical representation; physical allocation and storage remain implementation-JIT |
+| Account enumeration | Public responses must not reveal whether sensitive identities or recovery targets exist, while internal evidence remains precise | Identity dossier and Architecture §6.4 |
+| Support/recovery concurrency | Support cannot bypass current authority; concurrent participant and staff recovery actions require scoped review, safe holds and audit | Identity dossier, Operating Model and `OQ-034`/`OQ-035` |
+| Restart/reconnect and degraded dependencies | Communication or telemetry failure may degrade the dependent capability but cannot fabricate verification, access or recovery success | Architecture §§8, 12; FES §§4, 5.7 |
+
+Correctness invariants are recorded separately from candidate mechanisms. No cache, queue, worker, database setting, topology or package is frozen by this review.
+
+## 12. Security, privacy and safety
+
+The planning boundary preserves the following approved obligations:
+
+- the initial platform serves people aged 18 or older;
+- registration uses the minimum approved account fields, and health, medical and full date-of-birth information are not collected merely to create an account;
+- terms/privacy acceptance and purpose-specific consent remain distinct from authentication and role assignment;
+- email verification is server-authoritative and gates protected capabilities; limited unverified onboarding does not imply protected access;
+- participant authentication, session revocation, trusted-device expiry and high-risk step-up remain current-authority checks;
+- recovery is graduated, replay-controlled and auditable; it restores identity control but never manufactures entitlement, relationship, consent or other Domain authority;
+- duplicate-account reconciliation preserves immutable history and original provenance;
+- the Platform Member Reference is non-secret but private-by-default, is not authentication/authorisation/verification/Membership/subscription/entitlement/payment authority or a bearer credential, and possession proves none of those authority concepts;
+- privileged access uses MFA, named scoped grants, least privilege, separation of duties and governed break-glass evidence; there is no universal Super Admin bypass;
+- public authentication and recovery behaviour is non-enumerating;
+- Communications minimises sensitive payloads and rechecks applicable consent/preferences without changing the originating business truth;
+- Audit & Evidence receives restricted minimum-necessary evidence and never becomes identity, consent or communication truth; and
+- graceful degradation must not guess identity, payment, entitlement, health or safety truth.
+
+No new legal, clinical, Product or security rule is created here.
+
+## 13. Frontend and experience boundary
+
+The Phase 7C experience contract must preserve only these surface categories and obligations:
+
+- **Public entry:** useful launch-facing content, clear product/safety boundaries, visible Afrikaans/English switching and discoverable account entry; no blocking language modal before useful content;
+- **Participant identity/account:** minimal progressive registration, accessible bilingual fields, verification-pending visibility, resend/change-email recovery where permitted, sign-in/session and recovery feedback;
+- **Protected-access boundary:** protected capabilities remain blocked until authoritative verification and current permission are satisfied;
+- **Scoped support/admin:** a policy-aware staff projection for permitted account-access work, with minimum necessary context and no routine impersonation or universal task authority;
+- **State visibility:** honest loading, validating, pending, conflict, restricted, unavailable, degraded, error and requires-attention presentation where the frozen FES rules apply; and
+- **Accessibility and responsive behaviour:** semantic accessible forms, visible focus, long bilingual-label support, keyboard/screen-reader safety, responsive reflow and mobile-safe essential support actions.
+
+The frontend submits untrusted intent and reflects authoritative results. It never becomes authority for identity, verification, sessions, grants, consent or audit evidence. This section defines no routes, pages, components, layouts, tokens, exact forms or client-side implementation.
+
+Relevant frozen experience authority: `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md §§3.1, 4, 5.1-5.2, 5.7, 6.1-6.3, 7.2, 9, 10.2-10.4`.
+
+## 14. Data authority and projection boundary
+
+| Data relationship | Authoritative source truth | Consequence/projection/evidence boundary |
+|---|---|---|
+| Identity and account | Identity & Access owns canonical identity, individual account, account email, credentials, verification, sessions, trusted devices, recovery, identity-side grants and PMR | Other Domains read current actor context or use purpose-scoped minimum-disclosure PMR lookup. A support view or frontend is a projection, not authority. |
+| Consent and purpose | Privacy & Consent owns purpose-specific consent, withdrawal and current consent state | Identity and other Domains check it for their own actions; withdrawal can invalidate derived authority but does not transfer source ownership. |
+| Public governed content | Content & Media owns content identity, immutable versions, locale variants, approval and publication/withdrawal truth | Public/account surfaces receive approved projections. Communications may consume governed templates but does not own content body truth. |
+| Account communication | Communications owns subscriber/contact relationship where applicable, message intent, delivery status and provider evidence | `canonical account email != communications subscriber contact`; provider delivery/open/click evidence is not identity or business truth. |
+| Audit/security evidence | Audit & Evidence owns restricted append-only evidence and security/privilege linkage | `audit evidence != source business truth`; evidence can show what happened without authorising or rewriting the source transition. |
+| Analytics | Analytics owns governed derived measurement facts, projections and aggregates only | Analytics consumes approved facts; it does not own identity, consent, content, communication, payment or access truth. No `CAP-027` architecture is introduced. |
+| Temporary UI/read model | Browser, LiveView or support presentation holds temporary intent/projection state only | It may show pending or stale/requires-attention status and must re-read current authority where required; it cannot grant access or confirm verification. |
+
+No schema, table, Resource, index, cache, queue, worker, topic, TTL or provider configuration is selected.
+
+## 15. Proof pressure
+
+Existing evidence:
+
+- `FLOW-01` covers Registration -> verification -> login and is recorded as `PASS_WITH_DOWNSTREAM_GATES` with no architecture gap and no governing contradiction.
+- The existing evidence identifies password-hashing cost, login bursts, abuse controls, verification backlog, replay control and durable reconstruction after node/process loss as later proof obligations.
+- The authentication architecture selection is resolved by `OQ-034`; executable authentication proof remains a Phase 8 obligation. Abuse thresholds remain an `OQ-035` boundary.
+
+Roadmap anticipation:
+
+`PROBABLY_NEW_TRACER_BULLET` is recorded by the Roadmap because the first real authentication/session/recovery path materially exercises the identity boundary.
+
+Possible unproven execution pressure includes registration-to-verification-to-login, recovery and revocation under duplicate/reordered requests, session reconstruction after restart/reconnect, non-enumerating abuse bursts, consent changes during protected actions, communication provider ambiguity and restricted audit evidence. These are possible proof obligations, not a final proof classification.
+
+```text
+Final proof classification: NOT FINALISED IN PHASE 7A
+No REUSE_EXISTING_PROOF or NEW_TRACER_BULLET decision is made here.
+No TB ID or proof artifact is created.
+```
+
+## 16. Phase 7A handoff and provenance
+
+If later Phase 7B and Phase 7C work is separately authorised through current Open Work, Phase 7C may approve a Final Feature Pack Contract only after its required dossier and gate dispositions are complete. The selected `OQ-034` architecture is known, but its executable Phase 8 proof remains incomplete. They receive:
+
+- the approved Roadmap outcome and validation objective, including required PMR receipt and one canonical active assignment after successful individual Account creation;
+- exactly seven material introduced capabilities: `CAP-001`, `CAP-002`, `CAP-003`, `CAP-005`, `CAP-006`, `CAP-017`, `CAP-028`;
+- exactly six affected Domains and their separate role, durable-consequence and dossier decisions;
+- the known lifecycle obligations without invented implementation states, including PMR uniqueness, non-authority, non-reuse, reactivation, duplicate reconciliation, safe allocation and scoped lookup;
+- required/current Identity & Access and Communications dossiers; `NOT_REQUIRED` Privacy & Consent and Content & Media; and `REQUIRED / COMPLETE / CERTIFIED / CURRENT` Audit & Evidence;
+- the resolved `OQ-034` architecture selection and incomplete Phase 8 proof obligation, plus `OQ-035`, `OQ-036` and `OQ-038` classifications;
+- the preliminary performance, security, privacy, frontend and data-authority pressures;
+- the existing `FLOW-01` evidence and deferred proof pressure; and
+- the exact source trail below.
+
+### Source trail used
+
+| Source | Targeted use |
+|---|---|
+| `docs/00_platform/README.md` | Authority order, current-authority routing, Atlas non-authority status and selective Atlas sections |
+| `docs/00_platform/05_ROADMAP_v1.2.3.md §§1, 6 FP-001, 21` | Current route for the unchanged identity, PMR-inclusive outcome, objective, type, position, dependencies, affected Domains, gates and anticipated proof |
+| `docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.21.md` §§4-5, 6-12, 23-26 | Current derived FP-001 route, seven-CAP matrix/reverse row, capability authority anchors and active-FP lifecycle, dependency, participant, operator, frontend and data contracts |
+| `docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.2.1.md` portfolio/FP-001 view | Pinned source-at-freeze evidence for prior FP-001/HARDEN-02 artifacts; not the current derived route |
+| `docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md` portfolio/FP-001 view | Historical point-in-time Atlas source used by the predecessor skeleton; retained as provenance only |
+| `docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§5.1, 8, 10-12` | Public entry, adult individual account, minimum fields, bilingual launch and protected product boundary |
+| `docs/00_platform/00_PLATFORM_v1.8.0.md §§7.2-7.3, 21E, 21I, 21J, 21L, 21P` | Current public content, consent/data lifecycle, registration/language, authentication, verification, session, recovery, role, notification, PMR and controlled-product-space rules |
+| `docs/00_platform/01_DECISIONS_v1.8.0.md DEC-017-DEC-028, DEC-094, DEC-244-DEC-270, DEC-297-DEC-298, OQ-034-OQ-036` | Current account, purpose permission, language, role, identity, PMR, recovery, abuse, communication, resilience, launch-space and gate decisions |
+| `docs/00_platform/03_ARCHITECTURE_v1.1.1.md §§4-15 and Appendix C` | Authority, interaction, identity, recovery, consent, durability, provider evidence, failure, observability, scaling, security and enforcement boundaries |
+| `docs/00_platform/04_DOMAIN_MAP_v1.2.0.md §§3-5, 6.1, 6.2, 6.7, 6.15, 6.17, 6.18` | Domain ownership, PMR ownership, cross-domain doctrine, lifecycle and evidence boundaries |
+| `docs/00_platform/PLATFORM_OPERATING_MODEL_v1.2.0.md §§4-6, 9-13, 24-26` | Named staff roles, scoped support, content operations, communication/evidence separation, performance boundary and Phase 7 handoff |
+| `docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md §§3.1, 4, 5.1-5.2, 5.7, 6, 7.2, 9-10` | Public, registration, recovery, operator, bilingual, accessibility and presentation-state rules |
+| `docs/00_platform/02_OPEN_WORK_v1.2.81.md §9` | Current planning route, completed Phase 7C contract certification/current-status lifecycle, post-Phase-7C proof classification, dossier dispositions and downstream stops |
+| `docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md` | Current required/certified Identity dossier and source-domain authority boundary |
+| `docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` | Current required/certified Communications dossier and its limited Audit impact assessment |
+| `docs/00_platform/working/privacy_consent_data_lifecycle/README.md` and `NEWYOU_PRIVACY_PREJIT_CONTRACT_WORKING_v0.1.3.md` | Non-authoritative Privacy evidence; the pack expressly does not automatically require or authorise this FP-001 dossier, and #107 remains scoped to an activated pending-export × Full-Deletion promise |
+| `docs/00_platform/working/content_media/README.md`, `NEWYOU_CM_PREJIT_CONTRACT_WORKING_v0.1.0.md` and `NEWYOU_CM_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md` | Final compact non-authoritative Content evidence; `CM-UPD-013` is retained as evidence for this adjudication, not as Product Law |
+| `docs/00_platform/working/audit_evidence/README.md` and `NEWYOU_AUDIT_EVIDENCE_PREJIT_CONTRACT_WORKING_v0.1.3.md` | Non-authoritative Audit evidence; its `REQUIRED` working conclusion was checked against current authority and certified FP-001 dossiers and is confirmed here for the unresolved implementation-grade contracts |
+| `docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md §§5.6-5.7, 7, 8` | Historical OQ ownership/context, Phase 7A required fields, dossier boundary and development hard stop |
+| `docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md §§1.1, 2, 3` | Current FLOW-01 evidence and deferred executable proof pressure |
+
+Historical source artifacts are cited through their preserved archive paths. Current Roadmap, Product Law and Open Work remain controlling; the derived Atlas does not become authority. No global matrix, global journey, permanent FP-specific state machine or Atlas expansion was used.
+
+## 17. Scope audit and STOP review
+
+This working artifact contains planning categories only. It does not create:
+
+- a Phase 7B JIT Domain Dossier;
+- a Final Feature Pack Contract or development-entry authority;
+- an implementation Resource, schema, route, component, package or infrastructure decision;
+- a final proof classification, TB, VS, HH or TOON;
+- an Atlas correction, ATLAS-12 work, global matrix or new permanent derivation capability; or
+- any change to Product Law, Architecture Law, Domain Law, Roadmap, Decisions, Open Work or application code.
+
+The correct next action is independent review of this Phase 7A artifact. If review identifies an authority contradiction, ownership ambiguity, missing Product rule, unresolved blocking gate or requirement for implementation-grade semantics outside the selected dossiers, STOP and route it to the owning authority.
+
+## 18. Phase 7B reconciliation status snapshot (historical predecessor)
+
+The required dossier set remains disposition-complete: Identity & Access v0.2.0, Communications v0.1.0 and Audit & Evidence v0.1.0 are REQUIRED / COMPLETE / CERTIFIED / CURRENT; Privacy & Consent, Content & Media and Analytics are NOT_REQUIRED. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under completed tracker #120 (CLOSED / COMPLETED). The exact PR #121 candidate bytes remain in the immutable archive. The 15-pair result preserves the six affected Domains, seven capability relationships and prior PMR reconciliation.
+
+PR #121 candidate certification, unchanged merge, resulting-main verification and fresh independent post-merge review are recorded. Phase 7B reconciliation remains COMPLETE / CERTIFIED / CURRENT. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT under closed tracker #124 (CLOSED / COMPLETED). Open Work v1.2.74 recorded Architectural Proof Classification as COMPLETE / FINALISED and selected NEW_TRACER_BULLET at that status point. Development Entry Hard Stop evaluation is PASS. Phase 8 Architectural Proof is AUTHORISED; application implementation is AUTHORISED only inside that bounded proof stage.
+
+
+## v0.1.13 current-route status (historical predecessor)
+
+Open Work v1.2.69 records Phase 7B reconciliation as COMPLETE / CERTIFIED / CURRENT and issue #120 as CLOSED / COMPLETED historical evidence. Phase 7C is IN PROGRESS / CANDIDATE AUTHORED / NOT COMPLETE / CERTIFICATION PENDING under open tracker #124. The Final Feature Pack Contract v0.1.0 remains CANDIDATE / NOT CERTIFIED / NOT CURRENT, and fresh independent exact-head review is pending. Proof classification remains NOT FINALISED; Phase 8/application implementation remains UNAUTHORISED. This routing update changes no certified semantics.
+
+
+## v0.1.14 current-route status (historical predecessor)
+
+Open Work v1.2.70 routes Phase 7C and Final Feature Pack Contract v0.1.0 as COMPLETE / CERTIFIED / CURRENT after this separate status successor merges. Issue #124 remains OPEN through promotion merge and resulting-main verification. Architectural proof classification is the next governance action and remains NOT FINALISED; Phase 8/application implementation remains UNAUTHORISED. This routing successor preserves the six affected Domains, seven material capability relationships, certified Phase 7B reconciliation, dossier dispositions and PMR semantics.
+
+
+## v0.1.15 current-route status (historical predecessor)
+
+Phase 7A is COMPLETE. The required JIT dossier set is DISPOSITION-COMPLETE. Phase 7B reconciliation, Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after PR #126 resulting-main verification. PR #126 reviewed head `e7d5d3908bedf1a75c6627448c3ed0c067b076f8` merged as `69bef7bb2782cbff00a48505504ebd2686eb53d9` with identical reviewed-head and merge tree `f5586314db6c3addab6482e866b8d781faba75bc`. Exact-head run 39141076412 passed; resulting-main run 39143147487 passed with 455 tests, 728 Foundation Integrity assertions and 0 findings.
+
+PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED
+PROGRAMME ROUTER #111: OPEN
+ARCHITECTURAL PROOF CLASSIFICATION: NEXT / NOT PERFORMED
+PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED
+
+This status-only successor changes no Product, Architecture, Domain, Roadmap or PMR semantics. The six affected Domains, seven material capability relationships, certified Phase 7B pairings, dossier dispositions and PMR invariants remain unchanged.
+
+## v0.1.16 current-route status (historical pre-classification route)
+
+The Phase 7A skeleton remains CERTIFIED / CURRENT as a planning and routing view. Phase 7B reconciliation, Phase 7C and Final Feature Pack Contract v0.1.0 remain COMPLETE / CERTIFIED / CURRENT. Issue #124 remains CLOSED / COMPLETED.
+
+PROGRAMME ROUTER #111: OPEN
+
+This v0.1.16 status is the historical pre-classification route. Current Open Work v1.2.73 records classification as COMPLETE / FINALISED and selects NEW_TRACER_BULLET. Phase 8 and application implementation remain UNAUTHORISED. Current Roadmap is v1.2.3. This routing successor preserves the six affected Domains, seven material capability relationships, certified Phase 7B pairings, dossier dispositions and PMR semantics.
+
+PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED
+PROGRAMME ROUTER #111: OPEN
+ARCHITECTURAL PROOF CLASSIFICATION: NEXT / NOT PERFORMED
+PROOF CLASSIFICATION: NOT FINALISED
+PHASE 8 / APPLICATION IMPLEMENTATION: UNAUTHORISED
+
+
+## v0.1.17 current-route status (historical predecessor)
+
+The Phase 7A Skeleton remains COMPLETE / CERTIFIED / CURRENT as a planning and routing view. The required JIT dossier set is DISPOSITION-COMPLETE. Phase 7B reconciliation, Phase 7C and Final Feature Pack Contract v0.1.0 remain COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED, and programme router #111 remains OPEN.
+PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED
+
+ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED
+PROOF CLASSIFICATION: NEW_TRACER_BULLET
+ARCHITECTURAL PROOF REQUIREMENT / SELECTED PROOF VEHICLE: NEW_TRACER_BULLET
+REUSE_EXISTING_PROOF: NOT SELECTED
+TRACER BULLET: REQUIRED / NOT YET DEFINED
+TRACER BULLET ID: NONE / NOT CREATED
+ARCHITECTURAL PROOF EXECUTION: NOT STARTED
+DEVELOPMENT ENTRY HARD STOP CONDITION 9: SATISFIED
+REMAINING DEVELOPMENT ENTRY HARD STOP CONDITIONS: NOT EVALUATED / MUST PASS BEFORE PHASE 8
+PHASE 8: UNAUTHORISED
+APPLICATION IMPLEMENTATION: UNAUTHORISED
+NEXT GOVERNANCE ACTION: DEVELOPMENT ENTRY HARD STOP EVALUATION
+
+Classification satisfies only Development Entry Hard Stop condition 9. Phase 8 remains UNAUTHORISED until every other applicable condition is independently evaluated and satisfied. This Skeleton remains a planning and routing view and does not classify proof or authorise implementation. Current Roadmap is v1.2.3 and current Open Work is v1.2.73.
+
+
+## v0.1.18 current-route status (historical predecessor state)
+
+The Phase 7A Skeleton remains COMPLETE / CERTIFIED / CURRENT as a planning and routing view. The required JIT dossier set is DISPOSITION-COMPLETE. Phase 7B reconciliation, Phase 7C and Final Feature Pack Contract v0.1.0 remain COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED, and programme router #111 remains OPEN.
+PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED
+
+ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED
+PROOF CLASSIFICATION: NEW_TRACER_BULLET
+ARCHITECTURAL PROOF REQUIREMENT / SELECTED PROOF VEHICLE: NEW_TRACER_BULLET
+REUSE_EXISTING_PROOF: NOT SELECTED
+TRACER BULLET: REQUIRED / NOT YET DEFINED
+TRACER BULLET ID: NONE / NOT CREATED
+ARCHITECTURAL PROOF EXECUTION: NOT STARTED
+DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED
+DEVELOPMENT ENTRY HARD STOP CONDITIONS 1–10: SATISFIED
+PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)
+APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY)
+PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
+NEXT GOVERNANCE ACTION: NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION
+
+Development Entry Hard Stop evaluation independently satisfied all ten conditions. Phase 8 Architectural Proof is AUTHORISED only inside the bounded NEW_TRACER_BULLET stage. This Skeleton remains a planning and routing view and does not execute proof. Current Roadmap is v1.2.3 and current Open Work is v1.2.74.
+
+
+## v0.1.19 — TB-001 proof-contract candidate route (historical predecessor)
+
+At the Open Work v1.2.75 predecessor state, the accepted FP-001 Phase 8 proof design was represented by `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`, identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION. This Phase 7A Skeleton is a status route only; Open Work v1.2.75 owned the next action and bounded Phase 8 status. The contract predecessor is preserved at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`.
+
+## v0.1.20 — TB-001 proof-contract successor candidate route (historical predecessor)
+
+The accepted FP-001 Phase 8 proof design is represented by `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md`, identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED. The v0.1.0 predecessor is archived byte-identically. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION. This Phase 7A Skeleton is a status route only; current Open Work v1.2.76 owns the next action and bounded Phase 8 status.
+
+
+## v0.1.21 — TB-001 proof-contract successor candidate route (historical predecessor)
+
+The accepted FP-001 Phase 8 proof design is represented by `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`, identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED. Its v0.1.1 predecessor is archived byte-identically; v0.1.0 remains archived. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION. This Phase 7A Skeleton is a status route only; current Open Work v1.2.77 owns the next action and bounded Phase 8 status.
+
+## v0.1.22 — TB-001 approved proof-contract current-status route (historical predecessor)
+
+The accepted FP-001 Phase 8 proof design is represented by `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`, identifier TB-001. TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS. TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION; exact reviewed candidate bytes are preserved byte-identically at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: STARTED (BOUNDED; BASELINE MAIN SHA c91016ecb75ea29adc9cc21e4bf30bab51dcdc3c). PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT EXECUTION ACTION: FP-001 P8 04 — Build the deterministic Phase-8 proof harness (WELL-5). This Phase 7A Skeleton is a status route only; it confers no Phase 8 authority. Current Open Work v1.2.79 owns the bounded Phase 8 route. This successor changes no Product, Architecture, Domain, Roadmap or PMR semantics.
+
+
+## v0.1.23 — WELL-5 completion and P8-05 planning route (historical predecessor)
+
+WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE. PR [#141](https://github.com/JCSchoeman96/NewYou/pull/141) merged as `991a57ade059b9d9a2eaa8a788da8eeeee765d0e`; reviewed head `6186545eb0b8d8c59388e364ece72df743a0f635` reached main with an identical Git tree. Post-merge self-test run [40014798086](https://github.com/JCSchoeman96/NewYou/actions/runs/40014798086) passed. Current-state TB-001 run [40014798103](https://github.com/JCSchoeman96/NewYou/actions/runs/40014798103) returned INCOMPLETE / COVERAGE-INCOMPLETE because the ten required business/browser manifests remain unavailable. Full TB-001 architectural proof remains INCOMPLETE; proof certification and Phase 8 are NOT CERTIFIED.
+
+The harness is available to later authorised Phase-8 proof slices. P8-05 / WELL-6 is the next execution unit and remains in planning. Grill-Me/JIT planning, spec/ticket decomposition and independent planning review must precede implementation. Phase 9 remains NOT STARTED / NOT AUTHORISED. This status-only route changes no Product, Architecture, Domain, Roadmap or PMR semantics.
+
+
+## v0.1.24 — WELL-5 completion and P8-05 planning route (historical predecessor state; superseded by v0.1.25)
+
+WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE. Proof certification is not complete: the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE because ten required business/browser manifests remain unavailable. Full TB-001 architectural proof remains INCOMPLETE; Phase 8 is NOT CERTIFIED; Phase 9 / Vertical Slices remain NOT STARTED / NOT AUTHORISED.
+
+PR #150 certified and merged Identity v0.2.0 unchanged; PR #151 records it as CERTIFIED / CURRENT and canonically records the accepted email, PMR and request-binding decisions. At the promotion base, main still routed v0.1.4. RegistrationOperation is the eighth Identity Ash Resource; all prior seven Resource meanings and FP-001 boundaries remain unchanged.
+
+P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete. Independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. WELL-45 is the legal/privacy release gate and development baseline is permitted only under explicit non-production classification; WELL-48 remains Backlog / non-executable; P8-05 implementation remains UNAUTHORISED pending all other gates and explicit authorization. Applicable implementation/JIT verification and explicit P8-05 implementation authorization remain. Bounded Phase 8 proof application implementation remains AUTHORISED; Phase 8 remains NOT CERTIFIED and Phase 9 remains NOT STARTED / NOT AUTHORISED. This status view adds no Phase 8 authority.
+
+## v0.1.25 — WELL-5 completion and P8-05 planning route (historical predecessor state)
+
+Current Product Law v1.10.0 / DEC-316, Open Work v1.2.83, Delivery Atlas v0.4.24, HARDEN-02 v0.5.26 and Roadmap v1.2.4 are the active routes. Identity v0.2.0 remains COMPLETE / CERTIFIED / CURRENT under PR #151. The three accepted WELL-48 owner decisions remain canonically recorded; WELL-48 remains Backlog / non-executable.
+
+WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE. The current TB-001 result remains INCOMPLETE / COVERAGE-INCOMPLETE because ten required business/browser manifests remain unavailable; proof certification and Phase 8 remain NOT CERTIFIED, and Phase 9 remains NOT STARTED / NOT AUTHORISED. P8-05 / WELL-6 Grill-Me/JIT planning and spec/ticket decomposition are complete. Independent planning review is COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS.
+
+WELL-45 is LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; it is not legally approved and does not block development in explicitly permitted non-production contexts. P8-05 development requires current DEC-316, both immutable English development baselines, all other applicable JIT/implementation gates and explicit P8-05 implementation authorization. P8-05 implementation remains unauthorised unless all other gates pass and explicit authorization is granted. Production and applicable real-participant release require approved English Terms and Privacy versions and recorded legal/privacy approval evidence. This Skeleton grants no P8-05 implementation authorization or Phase 8 authority.
+
+
+## Current P8-05 implementation authorization
+
+P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY
+
+PHASE 8: NOT CERTIFIED
+
+TB-001 PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE
+
+PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
+
+WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED
+
+WELL-48: COMPLETE / MERGED VIA PR #156; WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61; WELL-50: BACKLOG / NOT STARTED. WELL-50's agreed WELL-48 Account/PMR contract is complete; its own gates remain. WELL-51 follows the required WELL-48–50 seams and owns the first integrated acceptance boundary; WELL-52 follows WELL-51, and WELL-53 follows WELL-48–52 and closes the P8-05 proof outcome.
+
+This authorization does not authorize production, public or applicable real-participant release, Phase 9, Phase 8 certification or legal approval. Current Product Law v1.12.0 continues to permit the immutable English development baselines under DEC-316 for governed non-production development; those baselines are not legally approved. Approved English Terms and Privacy and approval evidence remain required for production and applicable real-participant release.

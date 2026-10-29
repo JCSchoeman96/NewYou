@@ -910,8 +910,8 @@ class RoleAuthorityRegressionTests(unittest.TestCase):
         self.assertIn('Platform Administrator is the broad day-to-day platform administration role', decisions)
         self.assertIn('DEC-317', skeleton)
         self.assertIn('DEC-318', skeleton)
-        self.assertIn('00_PLATFORM_v1.11.0.md', skeleton)
-        self.assertIn('current Decision Register `01_DECISIONS_v1.11.0.md`', skeleton)
+        self.assertIn('00_PLATFORM_v1.12.0.md', skeleton)
+        self.assertIn('current Decision Register `01_DECISIONS_v1.12.0.md`', skeleton)
         identity = current_working_path(ROOT, 'FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_').read_text(encoding='utf-8')
         self.assertIn('role/capability', identity)
         self.assertIn('ordinary direct user-to-capability grant', product)
@@ -927,16 +927,20 @@ class RoleAuthorityRegressionTests(unittest.TestCase):
                        'bootstrap does not hold business capability',
                        'unresolved approver authority is a STOP condition', 'Super Admin is break-glass'):
             self.assertIn(phrase, agents)
-        self.assertIn('pending independent Master Gate review, merge and resulting-main verification', open_work)
-        self.assertIn('WELL-63 remains BLOCKED', open_work)
+        self.assertIn('WELL-64 is COMPLETE', open_work)
+        self.assertNotIn('pending independent Master Gate review', open_work)
+        self.assertIn('WELL-63 remains PLANNING / IN PROGRESS until PR #162 merges and resulting-main verification passes', open_work)
+        self.assertIn('WELL-63 remains PLANNING / IN PROGRESS', open_work)
+        self.assertIn('WELL-61 remains blocked by WELL-63', open_work)
         self.assertIn('WELL-65 owns later privileged-authentication implementation planning', open_work)
-        self.assertIn('No runtime RBAC, authentication or content implementation is authorised', open_work)
+        self.assertIn('No runtime RBAC, authentication or Content & Media implementation is authorized here', open_work)
 
     def test_readme_routes_current_manifest_documents(self):
         manifest = json.loads(MANIFEST.read_text(encoding='utf-8'))
         readme = (DOCS / 'README.md').read_text(encoding='utf-8')
         for item in manifest['governing_documents']:
             self.assertIn(item['canonical_filename'], readme)
-        self.assertIn('DEC-299 through DEC-318 record the current post-freeze Product decisions', readme)
+        self.assertIn('DEC-299 through DEC-319 record the current post-freeze Product decisions', readme)
         self.assertIn('DEC-317 locks role-based capability authority and ordinary operational delegation', readme)
         self.assertIn('DEC-318 locks governed bootstrap and privileged approval', readme)
+        self.assertIn('DEC-319 adds the narrow verification-message type and bounded proof eligibility', readme)
