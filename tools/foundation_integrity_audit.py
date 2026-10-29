@@ -293,7 +293,7 @@ def _p8_05_bounded_authorization_route_tokens() -> tuple[str, ...]:
     return _p8_05_current_authorization_section_tokens() + (
         "immutable English development baselines",
         "Approved English Terms and Privacy and approval evidence remain required",
-        "Current Product Law v1.11.0 continues to permit the immutable English development baselines under DEC-316",
+        "Current Product Law v1.12.0 continues to permit the immutable English development baselines under DEC-316",
         "This authorization does not authorize production",
     )
 
@@ -8847,14 +8847,14 @@ def _identity_v020_promotion_issues(
         "promoted/current v0.1.4 snapshot",
         "CERTIFIED / CURRENT",
         "WELL-45 is a legal/privacy release gate",
-        "Current Open Work v1.2.85 records WELL-48: COMPLETE / MERGED VIA PR #156",
+        "Current Open Work v1.2.86 records WELL-48: COMPLETE / MERGED VIA PR #156",
         "APPLICATION IMPLEMENTATION: AUTHORISED ONLY INSIDE BOUNDED PHASE 8 ARCHITECTURAL PROOF, INCLUDING P8-05",
         "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
     ):
         if token not in readme:
             issues.append(f"README Identity current route omits {token!r}")
 
-    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.85.md"
+    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.86.md"
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() and not open_work_path.is_symlink() else ""
     for token in (
         "PR #150",

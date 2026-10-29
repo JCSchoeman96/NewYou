@@ -168,7 +168,7 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
         self.assertIn("DEC-313 supersedes this first-answer consumption meaning", dec055)
         self.assertIn("Other right types remain governed by their applicable current Product authority", dec055)
         self.assertEqual("current", self.current["DECISION_REGISTER"]["lifecycle"])
-        self.assertTrue(self.current["DECISION_REGISTER"]["canonical_filename"].endswith("v1.11.0.md"))
+        self.assertTrue(self.current["DECISION_REGISTER"]["canonical_filename"].endswith("v1.12.0.md"))
 
         archived = self.history["DECISION_REGISTER_V1_6_0"]
         self.assertEqual("historical", archived["lifecycle"])
@@ -198,10 +198,10 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
         self.assertRegex(ownership, r"(?m)^\| Access redemption code/consumable credit \| \*\*Entitlements\*\*")
         self.assertRegex(ownership, r"(?m)^\| Purchase/payment/refund/dispute truth \| \*\*Commerce\*\*")
 
-        self.assertEqual("1.11.0", self.current["PLATFORM_BASELINE"]["semver"])
-        self.assertEqual("1.11.0", self.current["DECISION_REGISTER"]["semver"])
-        self.assertIn("00_PLATFORM_v1.11.0.md", self.open_work)
-        self.assertIn("01_DECISIONS_v1.11.0.md", self.open_work)
+        self.assertEqual("1.12.0", self.current["PLATFORM_BASELINE"]["semver"])
+        self.assertEqual("1.12.0", self.current["DECISION_REGISTER"]["semver"])
+        self.assertIn("00_PLATFORM_v1.12.0.md", self.open_work)
+        self.assertIn("01_DECISIONS_v1.12.0.md", self.open_work)
         archived_open_work = read(ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.65.md")
         self.assertIn("PR #113 completed OPS-UPD-002 / issue #98 and issue #98 is closed", archived_open_work)
         self.assertIn("#98 is closed", self.open_work)
