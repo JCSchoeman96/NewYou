@@ -839,3 +839,34 @@ class ProductLawHardeningTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class RoleAuthorityRegressionTests(unittest.TestCase):
+    def test_current_role_authority_and_agent_invariants(self):
+        product = current_document('PLATFORM_BASELINE')
+        decisions = current_document('DECISION_REGISTER')
+        operating = current_document('PLATFORM_OPERATING_MODEL')
+        agents = (ROOT / 'AGENTS.md').read_text(encoding='utf-8')
+        for phrase in (
+            'No ordinary direct user-to-capability grant is permitted',
+            'GOVERNED BOOTSTRAP AUTHORITY',
+            'sealed after successful bootstrap',
+            'approver identity must differ from the subject identity',
+            'Super Admin is not a universal bypass',
+            'Platform Administrator is the ordinary operational delegator',
+            'strong phishing-resistant authentication',
+            'Identity & Access owns the durable role grant',
+        ):
+            self.assertIn(phrase, product)
+        for phrase in ('DEC-021', 'DEC-317', 'DEC-318', 'Platform Administrator', 'Super Admin'):
+            self.assertIn(phrase, decisions)
+        for phrase in ('Platform Administrator', 'Developer', 'break-glass', 'role/scope'):
+            self.assertIn(phrase, operating)
+        for phrase in ('people are subjects of grants', 'bootstrap does not hold business capability',
+                       'unresolved approver authority is a STOP condition', 'Super Admin is break-glass'):
+            self.assertIn(phrase, agents)
+
+    def test_readme_routes_current_manifest_documents(self):
+        manifest = json.loads(MANIFEST.read_text(encoding='utf-8'))
+        readme = (DOCS / 'README.md').read_text(encoding='utf-8')
+        for item in manifest['governing_documents']:
+            self.assertIn(item['canonical_filename'], readme)

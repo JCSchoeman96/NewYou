@@ -64,6 +64,10 @@ For every Grill, `$to-spec`, implementation plan, and implementation ticket that
 8. **Evaluation is not installation authority.** Do not add a package because it exists or looks convenient. A new dependency requires a concrete requirement, compatibility with the locked stack, current stable-version/API verification from primary sources, and any required Architecture/Security/Domain approval.
 9. **Re-evaluate at the implementation boundary.** If package versions, official capabilities, ticket scope, or governing authority changed since the Grill/spec, refresh the evaluation before coding rather than relying on stale conclusions.
 
+## Authorization and capability authority
+
+Capabilities belong to governed roles/scopes/relationships; people are subjects of grants, never definitions of capability authority. Agents must not attach a business capability directly to a named user. A proposed direct user-to-capability shortcut is an authority contradiction: STOP and escalate. Governed bootstrap may establish the first role grants, but bootstrap does not hold business capability. After bootstrap, sensitive grants require the appropriate role-based independent approver, distinct from the subject. Platform Administrator does not imply expert authority. Developer, founder or administrator status alone does not create Domain authority. Multiple valid roles on one identity are expected and supported. Super Admin is break-glass and not a universal bypass. An unresolved approver authority is a STOP condition.
+
 ## Engineering Invariants
 
 Every durable business truth has exactly one owning Domain. Mutations go through that owner.
