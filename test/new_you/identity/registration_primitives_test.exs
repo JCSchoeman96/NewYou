@@ -295,8 +295,6 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
       {:account_password_hash, account.hashed_password},
       {:registration_password_verifier, operation.password_verifier},
       {:registration_request_fingerprint, operation.request_fingerprint},
-      {:registration_operation_id, operation.operation_id},
-      {:registration_binding_key_version, operation.fingerprint_key_version},
       {:registration_binding_key, binding_key},
       {:identity_token_signing_secret, token_signing_secret},
       {:verification_bearer, verification_proof}
