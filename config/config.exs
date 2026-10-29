@@ -34,6 +34,9 @@ config :spark,
     remove_parens?: true,
     "Ash.Resource": [
       section_order: [
+        :authentication,
+        :token,
+        :user_identity,
         :postgres,
         :resource,
         :code_interface,
@@ -56,7 +59,7 @@ config :spark,
 
 config :new_you,
   ecto_repos: [NewYou.Repo],
-  ash_domains: [],
+  ash_domains: [NewYou.Identity],
   generators: [timestamp_type: :utc_datetime]
 
 # Configure the endpoint

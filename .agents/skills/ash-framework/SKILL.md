@@ -1,6 +1,6 @@
 ---
 name: ash-framework
-description: "Use when working with Ash resources, domains, actions, changes, policies, data layers, or any Ash extension such as AshPostgres."
+description: "Use when working with Ash resources, domains, actions, changes, policies, data layers, or AshPostgres."
 metadata:
   managed-by: usage-rules
 ---
@@ -41,10 +41,14 @@ metadata:
 - [migrations](references/ash_postgres/migrations.md)
 - [multitenancy](references/ash_postgres/multitenancy.md)
 
+### ash_authentication
+
+- [ash_authentication](references/ash_authentication/ash_authentication.md)
+
 ## Searching Documentation
 
 ```sh
-mix usage_rules.search_docs "search term" -p ash -p ash_postgres
+mix usage_rules.search_docs "search term" -p ash -p ash_postgres -p ash_authentication
 ```
 
 ## Available Mix Tasks
@@ -86,4 +90,8 @@ mix usage_rules.search_docs "search term" -p ash -p ash_postgres
 - `mix ash_postgres.setup_vector` - Sets up pgvector for AshPostgres
 - `mix ash_postgres.setup_vector.docs`
 - `mix ash_postgres.squash_snapshots` - Cleans snapshots folder, leaving only one snapshot per resource
+- `mix ash_authentication.add_add_on` - Adds the provided add-on to your user resource
+- `mix ash_authentication.add_strategy` - Adds the provided strategy or strategies to your user resource
+- `mix ash_authentication.install` - Installs AshAuthentication. Invoke with `mix igniter.install ash_authentication`
+- `mix ash_authentication.upgrade`
 <!-- usage-rules-skill-end -->

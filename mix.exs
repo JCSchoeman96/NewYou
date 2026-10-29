@@ -54,7 +54,7 @@ defmodule NewYou.MixProject do
           "ash-framework": [
             description:
               "Use when working with Ash resources, domains, actions, changes, policies, data layers, or AshPostgres.",
-            usage_rules: [:ash, :ash_postgres]
+            usage_rules: [:ash, :ash_postgres, :ash_authentication]
           ],
           "phoenix-framework": [
             description:
@@ -83,9 +83,12 @@ defmodule NewYou.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:argon2_elixir, "== 4.1.3"},
+      {:picosat_elixir, "~> 0.2"},
+      {:ash_authentication, "== 4.15.0"},
       {:tidewave, "== 0.9.1", only: [:dev]},
-      {:ash_postgres, "== 2.15.1"},
-      {:ash, "== 3.37.0"},
+      {:ash_postgres, "== 2.15.2"},
+      {:ash, "== 3.37.2"},
       # Reactor >= 1.0.2 requires prerelease multigraph; keep the dependency tree stable.
       {:reactor, "== 1.0.1"},
       {:igniter, "~> 0.8.4", only: [:dev, :test]},
