@@ -52,9 +52,12 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
             "COMPLETE / CERTIFIED / CURRENT",
             state["phase_7c"],
         )
-        self.assertIn("P8-05 IMPLEMENTATION AUTHORISED", state["next_stage"])
-        self.assertIn("WELL-48", state["next_stage"])
-        self.assertIn("RESULTING-MAIN VERIFICATION", state["next_stage"])
+        self.assertEqual(
+            "P8-05 IMPLEMENTATION AUTHORISED FOR BOUNDED PHASE 8 PROOF; "
+            "WELL-48 COMPLETE; WELL-49 BLOCKED PENDING WELL-60 AND WELL-61; "
+            "WELL-50 BACKLOG / NOT STARTED",
+            state["next_stage"],
+        )
         self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
         self.assertEqual("NEW_TRACER_BULLET", state["proof_classification"])
