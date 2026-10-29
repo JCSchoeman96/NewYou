@@ -6796,7 +6796,7 @@ GQ-001 through GQ-012
 = CLOSED
 ```
 
-Current Product Law is v1.12.0 (`00_PLATFORM_v1.12.0.md`). This successor does not execute HARDEN-02 or authorise runtime Content & Media implementation. README and current Open Work own current programme routing and lifecycle status. The Product Law Development Entry and executable-development stop conditions remain in force. Current Open Work v1.2.86 records Development Entry Hard Stop PASS and authorises only the bounded Phase 8 proof route; P8-05 remains subject to its own applicable gates and explicit authorization. Historical amendment text above remains preserved.
+Current Product Law: v1.12.0 (`00_PLATFORM_v1.12.0.md`). This successor does not execute HARDEN-02 or authorise runtime Content & Media implementation. README and current Open Work own current programme routing and lifecycle status. The Product Law Development Entry and executable-development stop conditions remain in force. Current Open Work v1.2.86 records Development Entry Hard Stop PASS and authorises only the bounded Phase 8 proof route; P8-05 remains subject to its own applicable gates and explicit authorization. Historical amendment text above remains preserved.
 
 The existing stop condition for executable development remains:
 
