@@ -60,6 +60,11 @@ Do not introduce Redis, extra services, extra Repos, ETS/process authority or sp
 
 Meaningful state transitions are intentional domain actions with appropriate guards, invariants, authorization, retries and idempotency.
 
+## Defect fixes and regression proof
+
+Defect regression rule: 
+Every material bug, defect, security issue or behavioural regression must leave permanent regression coverage. Where technically possible, reproduce it with a focused failing automated test before changing production code, then implement the fix and prove that test passes. If deterministic automation is genuinely impossible, record the reason and strongest repeatable alternative proof in Plane for explicit reviewer acceptance. A material defect fix without adequate regression proof is not complete.
+
 ## Evidence
 
 Do not guess material framework or package APIs.
