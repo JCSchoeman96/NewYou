@@ -13,7 +13,7 @@ P8-05 is the first production-path Phase 8 proof slice. Its bilingual browser pa
 
 The Account remains unverified and has no Session. The participant sees a localized verification-pending page. P8-05 does not consume verification proof, log the participant in, execute Communications or Audit durable workers, contact a provider, or certify the full TB-001 proof.
 
-The current authority route is Product 00_PLATFORM_v1.10.0.md, Decision Register 01_DECISIONS_v1.10.0.md / DEC-316, and Open Work 02_OPEN_WORK_v1.2.84.md current P8-05 implementation authorization. PR #151 records Identity v0.2.0 as CERTIFIED / CURRENT and canonically records this reconciled owner contract. At the promotion base, main still routed v0.1.4. WELL-5 / P8-04 is complete, and the harness is available to later authorized Phase 8 slices. The current TB-001 proof remains `INCOMPLETE / COVERAGE-INCOMPLETE`, ten required business/browser manifests remain unavailable, and Phase 8 is not certified. Phase 9 remains `NOT STARTED / NOT AUTHORISED`.
+The current authority route is Product 00_PLATFORM_v1.11.0.md, Decision Register 01_DECISIONS_v1.11.0.md / DEC-316–DEC-318, and Open Work 02_OPEN_WORK_v1.2.85.md current P8-05 implementation authorization. PR #151 records Identity v0.2.0 as CERTIFIED / CURRENT and canonically records this reconciled owner contract. At the promotion base, main still routed v0.1.4. WELL-5 / P8-04 is complete, and the harness is available to later authorized Phase 8 slices. The current TB-001 proof remains `INCOMPLETE / COVERAGE-INCOMPLETE`, ten required business/browser manifests remain unavailable, and Phase 8 is not certified. Phase 9 remains `NOT STARTED / NOT AUTHORISED`.
 
 This spec follows the outcome contract in Plane WELL-6. Live GitHub authority controls if a Plane description or this planning artifact becomes stale. It records the accepted WELL-48 owner decisions and reconciles them with the Identity v0.2.0 status successor; it changes no Product, Architecture, Domain, Roadmap, TB-001 or Domain ownership.
 
@@ -279,15 +279,15 @@ Independent planning review and implementation/JIT verification are complete. P8
 
 ## Source references
 
-- `docs/00_platform/README.md` and `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` for current authority routing; `docs/00_platform/00_PLATFORM_v1.10.0.md` §§21E.1, 21E.7 and 21E.18 for bilingual scope, translation fallback and legal-version rules.
-- `docs/00_platform/02_OPEN_WORK_v1.2.83.md` §12.38 for P8-05 current status and development/release gates; §12.37 is historical predecessor context.
+- `docs/00_platform/README.md` and `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` for current authority routing; `docs/00_platform/00_PLATFORM_v1.11.0.md` §§21E.1, 21E.7 and 21E.18 for bilingual scope, translation fallback and legal-version rules.
+- `docs/00_platform/02_OPEN_WORK_v1.2.85.md` §12.39 for the current P8-05 status and development/release gates; §12.38 is preserved historical predecessor context.
 - `docs/00_platform/working/content_media/LEGAL_BASELINE_CONTENT_MANIFEST_v0.1.0.json` for exact non-authoritative English development-baseline content IDs and provenance.
 - `docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` §§3–9 for the PostgreSQL acceptance boundary, `ash_oban`, E2, job-argument, and proof constraints.
 - `docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md` §§D.1, F.2, J.1, J.1a, O, R, T, and V for Account/PMR/Token ownership, delivery, resend, idempotency, security, frontend response, and tests.
 - `docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` §§4–8 for MessageIntent authority, exact content/locale binding, resend, durable execution, and protected delivery.
 - `docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` §§5–6 for selected audit evidence and E2 boundaries.
 - `docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` §§5.2 and 7.2 for pending experience and approved bilingual content.
-- `docs/00_platform/01_DECISIONS_v1.10.0.md` OQ-035 for unresolved abuse thresholds.
+- `docs/00_platform/01_DECISIONS_v1.11.0.md` OQ-035 for unresolved abuse thresholds.
 - [ISO/IEC 7064:2003, Check character systems](https://www.iso.org/standard/31531.html) for check-character error-detection properties.
 - [RFC 5321 §2.4](https://www.rfc-editor.org/rfc/rfc5321.html) for mailbox local-part and domain comparison rules.
 

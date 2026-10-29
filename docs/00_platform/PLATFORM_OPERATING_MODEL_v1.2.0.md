@@ -3,6 +3,7 @@
 - **Document status:** FROZEN / COMPLETE PLATFORM OPERATING MODEL v1.2.0
 - **Document version:** v1.2.0
 - **Predecessor frozen version:** `archive/PLATFORM_OPERATING_MODEL_v1.1.0.md`
+- **Earlier frozen baseline:** `archive/PLATFORM_OPERATING_MODEL_v1.0.1.md`
 - **SemVer transition:** `v1.1.0 → v1.2.0` — role authority alignment.
 - **Date:** 2026-10-29
 - **Derived experience provenance:** `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` (working, non-authoritative)
@@ -11,6 +12,10 @@
 - **Implementation status:** NOT AUTHORISED
 - **Authority boundary:** Product Law → Architecture Law → Domain Law → Roadmap remain upstream. This document governs stable human/operating workflow beneath those authorities; it must not invent business truth, implementation schemas or unresolved expert policy.
 - **JIT boundary:** This document intentionally stops before exact Resource/action/schema/queue/topic/threshold/provider configuration. Those details belong to the affected Feature Pack and JIT dossiers/contracts.
+
+## v1.2.0 Amendment Scope
+
+This successor aligns staff-role operation with Product Law v1.11.0 and DEC-317/DEC-318. It defines the expected multi-role operator bundle, Platform Administrator's ordinary delegation boundary, Super Admin's exceptional approval role, governed bootstrap/recovery and the Domain-sensitive approval boundary. GOVERNED BOOTSTRAP AUTHORITY establishes the initial role/scope grants as a sealed root-of-trust transition; it is neither a person nor a capability holder. Identity & Access owns durable grants; Domain owners retain authority over business capabilities and approval requirements. This operating model does not authorise runtime implementation or create expert authority.
 
 ## v1.1.0 Amendment Scope
 
@@ -76,7 +81,7 @@ Initial staff categories remain:
 - Event Admin
 - Developer
 
-One identity may hold multiple explicit, removable and auditable roles.
+One identity may hold multiple explicit, removable and auditable roles. Platform Administrator is the broad day-to-day platform administration role and ordinary operational delegator.
 
 Clinical, methodology, practitioner, cohort/facilitation and other later authority is granted only through the relevant approved role/relationship/scope. There is no universal Super Admin bypass.
 
@@ -101,7 +106,7 @@ The staff application may organise work under experience groupings such as:
 - **Analytics**
 - **Platform / Audit / Configuration**
 
-These are navigation/operating groupings only. They do not amend the 18-domain ownership model.
+These are navigation/operating groupings only. They do not amend the 20-Domain ownership model in the current Domain Map.
 
 ---
 

@@ -845,28 +845,98 @@ class RoleAuthorityRegressionTests(unittest.TestCase):
         product = current_document('PLATFORM_BASELINE')
         decisions = current_document('DECISION_REGISTER')
         operating = current_document('PLATFORM_OPERATING_MODEL')
+        open_work = current_document('OPEN_WORK')
         agents = (ROOT / 'AGENTS.md').read_text(encoding='utf-8')
+        skeleton = current_working_path(ROOT, 'FP-001_FEATURE_PACK_SKELETON_WORKING_').read_text(encoding='utf-8')
         for phrase in (
+            'Capabilities belong to governed roles/scopes and applicable relationships',
             'No ordinary direct user-to-capability grant is permitted',
+            'A person is a subject of grants, never the definition of capability authority',
+            'Relationships constrain scope or applicability and do not create hidden per-user grants',
+            'An internal granular privilege must derive from a governed role/scope grant',
+            'no ordinary direct per-user capability API is authorised',
+            'One person may hold several roles',
+            'Platform Administrator is the broad day-to-day platform administration role and ordinary operational delegator',
+            'ordinary non-sensitive operational roles/scopes within its governed delegation catalogue',
+            'Sensitivity attaches to role and scope',
+            'Product authority may permit explicit, scoped, auditable and revocable self-assignment only for ordinary non-sensitive operational scopes',
+            'Sensitive roles cannot be self-approved',
+            'Super Admin is not a universal bypass',
+            'Super Admin is exceptional break-glass authority, not an everyday working role',
+            'Self-revocation is allowed',
+            "An existing Super Admin may approve another identity's Super Admin grant where policy permits",
+            'Developer role covers its defined technical work and alone grants no business-domain authority',
+            'Platform Administrator and Super Admin do not automatically confer clinical',
+            'JC is the expected initial subject of Platform Administrator, Developer and dormant break-glass Super Admin grants',
             'GOVERNED BOOTSTRAP AUTHORITY',
             'sealed after successful bootstrap',
+            'It is not a normal runtime endpoint',
+            'It establishes only explicit role/scope grants and never grants a capability directly to a person',
+            'subject identity',
+            'environment/applicability',
+            'environment/applicability, reason',
+            'governing Product/Decision authority version',
+            'effective time',
+            'execution evidence',
+            'expiry/review where applicable',
+            'subsequent revocation/supersession evidence',
             'approver identity must differ from the subject identity',
-            'Super Admin is not a universal bypass',
-            'Platform Administrator is the ordinary operational delegator',
+            'Do not remove the final valid privileged grant approver without a valid successor or the governed recovery ceremony',
+            'If no designated approver exists, STOP',
             'strong phishing-resistant authentication',
+            'passkey/WebAuthn-class credentials',
+            'WELL-65 owns later Identity & Access implementation planning',
             'Identity & Access owns the durable role grant',
+            'supersedes any interpretation of the certified Identity dossier',
+            'One identity may hold multiple explicit roles',
+            'Bootstrap cannot grant expert authority for convenience',
+            'environment/applicability',
+            'effective time',
+            'subsequent revocation/supersession evidence',
+            'The approval authority recorded for an initial bootstrap or recovery grant is the governed bootstrap authority, not the subject',
+            'strong MFA',
+            'step-up for sensitive actions',
+            'strong recovery',
+            'session/device revocation',
+            'no shared credentials',
+            'full privileged-action audit',
         ):
             self.assertIn(phrase, product)
-        for phrase in ('DEC-021', 'DEC-317', 'DEC-318', 'Platform Administrator', 'Super Admin'):
+        for phrase in ('DEC-021', 'DEC-317', 'DEC-318', 'Platform Administrator', 'Super Admin', 'Developer'):
             self.assertIn(phrase, decisions)
-        for phrase in ('Platform Administrator', 'Developer', 'break-glass', 'role/scope'):
+        self.assertIn('## DEC-021 — Multiple roles', decisions)
+        self.assertIn('## DEC-022 — Staff roles', decisions)
+        self.assertIn('Initial staff categories include Support, Finance, Platform Administrator, Super Admin', decisions)
+        self.assertIn('Platform Administrator is the broad day-to-day platform administration role', decisions)
+        self.assertIn('DEC-317', skeleton)
+        self.assertIn('DEC-318', skeleton)
+        self.assertIn('00_PLATFORM_v1.11.0.md', skeleton)
+        self.assertIn('current Decision Register `01_DECISIONS_v1.11.0.md`', skeleton)
+        identity = current_working_path(ROOT, 'FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_').read_text(encoding='utf-8')
+        self.assertIn('role/capability', identity)
+        self.assertIn('ordinary direct user-to-capability grant', product)
+        self.assertIn('Identity & Access owns the durable role grant', product)
+        for phrase in (
+            'Platform Administrator', 'Developer', 'break-glass', 'role/scope',
+            'JC is the expected initial subject', 'GOVERNED BOOTSTRAP AUTHORITY',
+            'Super Admin independently approves platform-operational privileged grants',
+            'Domain-sensitive grants require their designated Domain approval',
+        ):
             self.assertIn(phrase, operating)
-        for phrase in ('people are subjects of grants', 'bootstrap does not hold business capability',
+        for phrase in ('named people may be subjects of explicit role/scope grants',
+                       'bootstrap does not hold business capability',
                        'unresolved approver authority is a STOP condition', 'Super Admin is break-glass'):
             self.assertIn(phrase, agents)
+        self.assertIn('pending independent Master Gate review, merge and resulting-main verification', open_work)
+        self.assertIn('WELL-63 remains BLOCKED', open_work)
+        self.assertIn('WELL-65 owns later privileged-authentication implementation planning', open_work)
+        self.assertIn('No runtime RBAC, authentication or content implementation is authorised', open_work)
 
     def test_readme_routes_current_manifest_documents(self):
         manifest = json.loads(MANIFEST.read_text(encoding='utf-8'))
         readme = (DOCS / 'README.md').read_text(encoding='utf-8')
         for item in manifest['governing_documents']:
             self.assertIn(item['canonical_filename'], readme)
+        self.assertIn('DEC-299 through DEC-318 record the current post-freeze Product decisions', readme)
+        self.assertIn('DEC-317 locks role-based capability authority and ordinary operational delegation', readme)
+        self.assertIn('DEC-318 locks governed bootstrap and privileged approval', readme)

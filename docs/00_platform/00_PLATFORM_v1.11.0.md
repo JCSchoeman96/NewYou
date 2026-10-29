@@ -15,6 +15,10 @@
 
 ---
 
+## v1.11.0 Amendment Scope
+
+This successor locks role-based capability authority, operational delegation, governed bootstrap and privileged authentication policy in DEC-317 and DEC-318. It preserves Domain ownership and does not authorise runtime implementation.
+
 ## v1.10.0 Amendment Scope
 
 This substantive successor records the narrow legal-document language exception and the separation between development eligibility and legal release readiness. DEC-316 supersedes DEC-124 only for the governing Terms and Privacy document bodies: those governing documents are maintained as English-only immutable versions, while the broader bilingual platform commitment and DEC-027 acceptance requirement remain unchanged. Immutable English development baselines may support explicitly permitted non-production development and bounded proof; production and real-participant release require separate approved versions and recorded legal/privacy approval. This amendment makes no legal-sufficiency finding, grants no P8-05 implementation authorization, and changes no Architecture, Domain, schema, API, dependency or runtime enforcement.
@@ -923,7 +927,7 @@ Roles must be:
 
 Capabilities belong to governed roles/scopes and applicable relationships. A person is a subject of grants, never the definition of capability authority. No ordinary direct user-to-capability grant is permitted. Break-glass elevation also uses governed role/scope elevation. Relationships constrain scope or applicability and do not create hidden per-user grants. An internal granular privilege must derive from a governed role/scope grant; no ordinary direct per-user capability API is authorised.
 
-Platform Administrator is the ordinary operational delegator. It may exercise assigned operational capabilities and grant or revoke only ordinary non-sensitive operational roles/scopes within its governed delegation catalogue. Holding a capability personally does not confer delegation authority. Product authority may permit explicit, scoped, auditable and revocable self-assignment only for ordinary non-sensitive operational scopes. Sensitive roles cannot be self-approved. Sensitivity attaches to role and scope, and canonical authority must classify or route it. Stop when classification is materially ambiguous.
+Platform Administrator is the broad day-to-day platform administration role and ordinary operational delegator. It may exercise assigned operational capabilities and grant or revoke only ordinary non-sensitive operational roles/scopes within its governed delegation catalogue. Holding a capability personally does not confer delegation authority. Product authority may permit explicit, scoped, auditable and revocable self-assignment only for ordinary non-sensitive operational scopes. Sensitive roles cannot be self-approved. Sensitivity attaches to role and scope, and canonical authority must classify or route it. Stop when classification is materially ambiguous.
 
 Super Admin is exceptional break-glass authority, not an everyday working role. Super Admin is not a universal bypass and conveys no Domain business authority. A valid Super Admin may independently approve platform-operational privileged grants, including Platform Administrator, Super Admin, production-capable Developer and other classified privileged scopes. The approver identity must differ from the subject identity. An existing Super Admin may approve another identity's Super Admin grant where policy permits. Self-revocation is allowed. Do not remove the final valid privileged grant approver without a valid successor or the governed recovery ceremony.
 
@@ -939,7 +943,7 @@ Bootstrap evidence records subject identity, exact role and scope, environment/a
 
 Before production-grade privileged use, any identity holding a broad privileged operational role bundle requires strong phishing-resistant authentication. This policy includes passkey/WebAuthn-class credentials, strong MFA, step-up for sensitive actions, strong recovery, session/device revocation, no shared credentials and full privileged-action audit. WELL-65 owns later Identity & Access implementation planning.
 
-This Product authority supersedes any interpretation of the certified Identity dossier's `role/capability` attributes or typed capabilities as an ordinary direct user-to-capability grant. The certified dossier remains historical implementation evidence and does not override this rule.
+This Product authority supersedes any interpretation of the certified Identity dossier's `role/capability` attributes or typed capabilities as an ordinary direct user-to-capability grant. The certified dossier remains current lower-level implementation evidence, subject to this Product rule; its certified bytes remain unchanged.
 
 ## 15.2 Purchaser and participant separation
 
@@ -6760,7 +6764,7 @@ GQ-001 through GQ-012
 = CLOSED
 ```
 
-Current Product Law: v1.10.0 (`00_PLATFORM_v1.11.0.md`). This Product Law successor does not execute HARDEN-02 or itself authorise implementation. README and current Open Work own current programme routing and lifecycle status. The Product Law Development Entry and executable-development stop conditions remain in force. Current Open Work v1.2.83 records Development Entry Hard Stop PASS and authorises only the bounded Phase 8 proof route; P8-05 remains subject to its own applicable gates and explicit authorization. Historical amendment text above remains preserved.
+Current Product Law: v1.11.0 (`00_PLATFORM_v1.11.0.md`). This Product Law successor does not execute HARDEN-02 or itself authorise implementation. README and current Open Work own current programme routing and lifecycle status. The Product Law Development Entry and executable-development stop conditions remain in force. Current Open Work v1.2.85 records Development Entry Hard Stop PASS and authorises only the bounded Phase 8 proof route; P8-05 remains subject to its own applicable gates and explicit authorization. Historical amendment text above remains preserved.
 
 The existing stop condition for executable development remains:
 

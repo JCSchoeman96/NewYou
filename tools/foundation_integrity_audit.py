@@ -284,7 +284,7 @@ def _p8_05_bounded_authorization_route_tokens() -> tuple[str, ...]:
     return _p8_05_current_authorization_section_tokens() + (
         "immutable English development baselines",
         "Approved English Terms and Privacy and approval evidence remain required",
-        "Product v1.10.0 / DEC-316",
+        "Current Product Law v1.11.0 continues to permit the immutable English development baselines under DEC-316",
         "This authorization does not authorize production",
     )
 
@@ -8830,7 +8830,7 @@ def _identity_v020_promotion_issues(
         if token not in readme:
             issues.append(f"README Identity current route omits {token!r}")
 
-    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.84.md"
+    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.85.md"
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() and not open_work_path.is_symlink() else ""
     for token in (
         "PR #150",

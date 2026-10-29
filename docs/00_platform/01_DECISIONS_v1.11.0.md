@@ -10,6 +10,10 @@
 - **Related documents:** `00_PLATFORM_v1.11.0.md`, `05_ROADMAP_v1.2.4.md`, `02_OPEN_WORK_v1.2.85.md`, `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`
 - **v1.2 amendment scope:** Preserve DEC-001 through DEC-291 history; append DEC-292 and DEC-293 for the approved Paystack launch-gateway promotion and first-party experimentation capability. DEC-047's historical provisional wording is superseded by DEC-292. Existing expert/vendor validation gates remain in force.
 
+## v1.11.0 Amendment Scope
+
+This successor clarifies DEC-022 and adds DEC-317 and DEC-318 for role-based capabilities, operational delegation and governed bootstrap. DEC-021 remains unchanged.
+
 ## v1.2.2 Patch Scope
 
 This non-semantic governance correction formalises `OQ-040`, an already-consumed architecture/proof gate tied to `DEC-293`. It introduces no new Product Law semantics, changes no existing DEC status, meaning or numbering, and does not reopen Product Law.
@@ -162,7 +166,7 @@ One identity may hold multiple explicit, assignable, removable and auditable rol
 
 ## DEC-022 — Staff roles
 **Status:** LOCKED
-Initial staff categories include Support, Finance, Platform Administrator, Super Admin, Content, Moderator, Data Analyst, Event Admin and Developer. Platform Administrator is the ordinary operational role; Super Admin is exceptional break-glass and Developer is separate.
+Initial staff categories include Support, Finance, Platform Administrator, Super Admin, Content, Moderator, Data Analyst, Event Admin and Developer. Platform Administrator is the broad day-to-day platform administration role and ordinary operational role; Super Admin is exceptional break-glass and Developer is separate.
 
 ## DEC-023 — Founder access
 **Status:** LOCKED
