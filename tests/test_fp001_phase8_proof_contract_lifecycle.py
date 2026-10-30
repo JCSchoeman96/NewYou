@@ -23,7 +23,7 @@ LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
 SUCCESSOR_CHECK = "phase8_approved_status_successor_current"
 PROVENANCE_CHECK = "phase8_status_successor_predecessor_provenance"
 CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
-OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.89.md"
+OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.90.md"
 PRE_AUTHORIZATION_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.83.md"
 HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
 APPROVAL_TIME_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.78.md"
@@ -139,7 +139,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("p8-05 implementation authorised", state["next_governance_action"].casefold())
         self.assertEqual("COMPLETE / MERGED VIA PR #156", state["well_48"])
         self.assertEqual("eb28943cd8353cdec6625a053e157af449587d2c", state["well_48_merge_sha"])
-        self.assertEqual("BLOCKED / WAITING ON WELL-60 AND WELL-61", state["well_49"])
+        self.assertEqual("BLOCKED / WAITING ON WELL-61", state["well_49"])
         self.assertEqual("BACKLOG / NOT STARTED", state["well_50"])
         self.assertIn("well-48: complete", state["next_governance_action"].casefold())
         self.assertIn("well-49: blocked", state["next_governance_action"].casefold())
@@ -149,7 +149,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         current_authorization = open_work.split("## Current P8-05 implementation authorization", 1)[1].split("\n## ", 1)[0]
         for token in (
             "WELL-48: COMPLETE / MERGED VIA PR #156",
-            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-49: BLOCKED / WAITING ON WELL-61",
             "WELL-50: BACKLOG / NOT STARTED",
         ):
             self.assertIn(token, current_authorization)
@@ -178,7 +178,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
             "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
             "WELL-48: COMPLETE / MERGED VIA PR #156",
-            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-49: BLOCKED / WAITING ON WELL-61",
             "WELL-50: BACKLOG / NOT STARTED",
             "NEXT EXECUTION ACTION: WELL-48: COMPLETE / MERGED VIA PR #156",
         ):
@@ -430,7 +430,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
     def test_open_work_routes_to_p805_after_well5_without_certifying_tb001_or_phase9(self):
         self.assertTrue(OPEN_WORK.is_file(), "the Open Work status successor is missing")
         text = OPEN_WORK.read_text(encoding="utf-8")
-        self.assertIn('"status_successor_version": "1.2.89"', text)
+        self.assertIn('"status_successor_version": "1.2.90"', text)
         self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md", text)
         self.assertIn("TB-001", text)
         self.assertIn("CONTRACT/DESIGN REVIEW: COMPLETE / PASS", text)
@@ -442,6 +442,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", text)
         self.assertIn("P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY", text)
         self.assertIn("## 12.41 — WELL-63 completion and WELL-61 verification-message candidate evidence", text)
+        self.assertIn("historical status; superseded by §12.44", text.split("## 12.41 —", 1)[1].split("\n", 1)[0])
         current_status = text.split("## 12.41 — WELL-63 completion and WELL-61 verification-message candidate evidence", 1)[1]
         self.assertIn("WELL-63 is COMPLETE", current_status)
         self.assertIn("PR #162 merged certified head", current_status)
@@ -449,7 +450,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("WELL-49 remains BLOCKED / WAITING ON WELL-60 AND WELL-61", current_status)
         self.assertIn("WELL-60 remains a separate unresolved prerequisite", current_status)
         self.assertIn("WELL-64 is COMPLETE", text.split("## 12.39 — WELL-64 completion and P8-05 boundary", 1)[1])
-        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.29.md`", text)
+        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.30.md`", text)
         self.assertFalse((ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.81.md").exists())
         archived_predecessor = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.81.md"
         self.assertEqual(
@@ -668,7 +669,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             ),
             (
                 "well-49 advanced while blocked",
-                '"well_49": "BLOCKED / WAITING ON WELL-60 AND WELL-61"',
+                '"well_49": "BLOCKED / WAITING ON WELL-61"',
                 '"well_49": "COMPLETE"',
             ),
             (

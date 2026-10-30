@@ -530,14 +530,15 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         next_execution = re.search(r"(?m)^- NEXT EXECUTION ACTION: (.+)$", current_state)
         self.assertIsNotNone(next_execution)
         self.assertEqual(
-            "P8-05 IMPLEMENTATION AUTHORISED FOR BOUNDED PHASE 8 PROOF; "
-            "WELL-48 COMPLETE; WELL-49 BLOCKED PENDING WELL-60 AND WELL-61; "
-            "WELL-50 BACKLOG / NOT STARTED",
+            "P8-05 implementation authorised for bounded Phase 8 proof; "
+            "WELL-48: COMPLETE / MERGED VIA PR #156; WELL-49: BLOCKED / WAITING ON WELL-61; "
+            "WELL-60: COMPLETE / PR #165 RESULTING-MAIN VERIFIED; WELL-61 remains PLANNING / INCOMPLETE; "
+            "WELL-50: BACKLOG / NOT STARTED",
             state["next_governance_action"],
         )
         for required in (
             "WELL-48: COMPLETE / MERGED VIA PR #156",
-            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-49: BLOCKED / WAITING ON WELL-61",
             "WELL-50: BACKLOG / NOT STARTED",
             "WELL-51 follows the required WELL-48–50 seams",
         ):

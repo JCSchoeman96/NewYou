@@ -264,17 +264,17 @@ _P8_05_PHASE8_EXECUTION_GATE_AUTHORISED = (
 )
 _P8_05_NEXT_STAGE_AUTHORISED = (
     "P8-05 IMPLEMENTATION AUTHORISED FOR BOUNDED PHASE 8 PROOF; WELL-48 COMPLETE; "
-    "WELL-49 BLOCKED PENDING WELL-60 AND WELL-61; WELL-50 BACKLOG / NOT STARTED"
+    "WELL-49 BLOCKED PENDING WELL-61; WELL-60 COMPLETE; WELL-50 BACKLOG / NOT STARTED"
 )
 _P8_05_NEXT_GOVERNANCE_ACTION_AUTHORISED = _P8_05_NEXT_STAGE_AUTHORISED
 _WELL60_NEXT_GOVERNANCE_ACTION = (
     "P8-05 implementation authorised for bounded Phase 8 proof; WELL-48: COMPLETE / MERGED VIA PR #156; "
-    "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61; WELL-60 TB-001 v0.1.3 status-promotion candidate is ready for Master Gate review and remains OPEN; "
+    "WELL-49: BLOCKED / WAITING ON WELL-61; WELL-60: COMPLETE / PR #165 RESULTING-MAIN VERIFIED; "
     "WELL-61 remains PLANNING / INCOMPLETE; WELL-50: BACKLOG / NOT STARTED"
 )
 _P8_05_CURRENT_TICKET_STATUS_TOKENS = (
     "WELL-48: COMPLETE / MERGED VIA PR #156",
-    "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+    "WELL-49: BLOCKED / WAITING ON WELL-61",
     "WELL-50: BACKLOG / NOT STARTED",
 )
 _P8_05_CURRENT_STATUS_SUMMARY = "; ".join(_P8_05_CURRENT_TICKET_STATUS_TOKENS)
@@ -8918,7 +8918,7 @@ def _identity_v020_promotion_issues(
         "Identity v0.2.0: COMPLETE / CERTIFIED / CURRENT under PR #151 status successor",
         "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
         "WELL-48: COMPLETE / MERGED VIA PR #156 at eb28943cd8353cdec6625a053e157af449587d2c",
-        "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+        "WELL-49: BLOCKED / WAITING ON WELL-61",
         "WELL-50: BACKLOG / NOT STARTED",
         "PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)",
         "APPLICATION IMPLEMENTATION: AUTHORISED (BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY); P8-05 IMPLEMENTATION AUTHORISED",
@@ -12636,7 +12636,7 @@ def _well60_status_promotion_issues(
     manifest: dict[str, Any],
     integrity_rules: dict[str, Any],
 ) -> list[str]:
-    """Validate WELL-60's status-only promotion and immutable PR #164 candidate."""
+    """Validate WELL-60 closure, PR #165 evidence and immutable PR #164 candidate."""
 
     issues: list[str] = []
     candidate_path = "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
@@ -12650,6 +12650,9 @@ def _well60_status_promotion_issues(
     merge_sha = "429677295a396b8c78e9ab6b436a57d9249eaddc"
     merge_tree = "c947544000f66c104a51240e2aee3d0d123b23ec"
     promotion_base = "429677295a396b8c78e9ab6b436a57d9249eaddc"
+    closure_base = "ac8b7c7eeaddd2001c3ad3e2a8fbce46296b0a40"
+    closure_head = "98ad1ce5ef33cf10183cda68802b623afcf41378"
+    closure_tree = "8d98e9db1780cbd45885b5d0859ecf2987b57a28"
 
     rule = integrity_rules.get("well60_communications_handoff_candidate", {})
     phase8 = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {})
@@ -12679,7 +12682,7 @@ def _well60_status_promotion_issues(
         "resulting_main_ci_conclusion": "PASS",
         "resulting_main_foundation_full": "SKIPPED BY PUSH ROUTE",
         "status_promotion_base_main_sha": promotion_base,
-        "status_promotion": "CANDIDATE READY FOR MASTER GATE / OPEN",
+        "status_promotion": "COMPLETE / MERGED / RESULTING-MAIN VERIFIED; WELL-60 COMPLETE",
         "predecessor_archive_path": predecessor_snapshot,
         "predecessor_sha256": predecessor_snapshot_digest,
         "runtime_change": "NONE",
@@ -12689,6 +12692,49 @@ def _well60_status_promotion_issues(
     for key, expected in expected_rule.items():
         if rule.get(key) != expected:
             issues.append(f"WELL-60 manifest promotion field {key!r} is wrong")
+
+    expected_closure = {
+        "pr_number": 165,
+        "pr_url": "https://github.com/JCSchoeman96/NewYou/pull/165",
+        "master_gate_review": "PASS",
+        "reviewed_head_sha": closure_head,
+        "base_main_sha": promotion_base,
+        "merge_sha": closure_base,
+        "resulting_main_sha": closure_base,
+        "resulting_tree_sha": closure_tree,
+        "merge_second_parent_sha": closure_head,
+        "certified_head_to_resulting_main_changed_files": 0,
+        "exact_head_workflow_run": 41030195757,
+        "exact_head_required_checks": "PASS",
+        "exact_head_foundation_full": "NONBLOCKING",
+        "exact_head_application_ci": "SKIPPED BY ROUTE",
+        "resulting_main_workflow_run": 41031269566,
+        "resulting_main_workflow_conclusion": "PASS",
+        "resulting_main_required_checks": "PASS",
+        "resulting_main_route_ci_lanes": "PASS",
+        "resulting_main_foundation_smoke": "PASS",
+        "resulting_main_foundation_integrity": "PASS",
+        "resulting_main_application_ci": "SKIPPED BY ROUTE",
+        "resulting_main_foundation_full": "SKIPPED BY PUSH ROUTE",
+        "well_60_closure_status": "COMPLETE",
+        "well_49_status": "BLOCKED / WAITING ON WELL-61",
+        "well_49_execution_status": "NOT STARTED",
+        "well_61_status": "PLANNING / INCOMPLETE",
+        "proof_result": "INCOMPLETE / COVERAGE-INCOMPLETE",
+        "proof_certification": "NOT CERTIFIED",
+        "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
+        "application_source_paths_created": [],
+        "dependency_changes": "NONE",
+        "migration_changes": "NONE",
+        "runtime_behavior_changes": "NONE",
+    }
+    closure = rule.get("post_merge_tracker_closure", {})
+    if not isinstance(closure, dict) or any(
+        closure.get(key) != expected for key, expected in expected_closure.items()
+    ):
+        issues.append("WELL-60 post-merge tracker-closure provenance is missing or incorrect")
+    if phase8.get("post_merge_tracker_closure") != closure:
+        issues.append("Phase 8 lifecycle and WELL-60 closure provenance records disagree")
 
     expected_phase8 = {
         "candidate_path": candidate_path,
@@ -12792,8 +12838,15 @@ def _well60_status_promotion_issues(
 
     current_routes = phase8.get("current_routes", {})
     candidate_route_hash = phase8.get("current_route_sha256", {})
-    if not isinstance(current_routes, dict) or current_routes.get("open_work") != "docs/00_platform/02_OPEN_WORK_v1.2.89.md":
-        issues.append("Phase 8 current Open Work route is not v1.2.89")
+    expected_current_routes = {
+        "open_work": "docs/00_platform/02_OPEN_WORK_v1.2.90.md",
+        "delivery_atlas": "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.31.md",
+        "fp001_skeleton": "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.31.md",
+        "harden_02": "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.33.md",
+        "final_feature_pack_contract": "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
+    }
+    if current_routes != expected_current_routes:
+        issues.append("Phase 8 current routes do not match the WELL-60 closure successor set")
     for relative in current_routes.values() if isinstance(current_routes, dict) else ():
         path = root / relative
         if not path.is_file() or path.is_symlink():
@@ -12810,24 +12863,35 @@ def _well60_status_promotion_issues(
     if open_work is None or _relative_path(open_work_entry) != current_routes.get("open_work"):
         issues.append("active Open Work does not route the current TB-001 contract")
     for key, expected in {
-        "status_successor_base_sha": promotion_base,
-        "status_successor_version": "1.2.89",
+        "status_successor_base_sha": closure_base,
+        "status_successor_version": "1.2.90",
         "proof_contract_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
         "proof_contract_lifecycle": "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
         "contract_design_review": "COMPLETE / PASS",
         "proof_result": "INCOMPLETE / COVERAGE-INCOMPLETE",
         "proof_certification": "NOT CERTIFIED",
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-        "well_49": "BLOCKED / WAITING ON WELL-60 AND WELL-61",
-        "well_60": "PROMOTION CANDIDATE READY FOR MASTER GATE / OPEN",
+        "well_49": "BLOCKED / WAITING ON WELL-61",
+        "well_60": "COMPLETE / PR #165 RESULTING-MAIN VERIFIED",
         "well_61": "PLANNING / INCOMPLETE",
+        "pr165_master_gate_review": "PASS",
+        "pr165_reviewed_head_sha": closure_head,
+        "pr165_merge_sha": closure_base,
+        "pr165_resulting_tree_sha": closure_tree,
+        "pr165_resulting_main_workflow_run": 41031269566,
+        "pr165_resulting_main_workflow_conclusion": "PASS",
     }.items():
         if open_work_state is None or open_work_state.get(key) != expected:
             issues.append(f"current Open Work lifecycle field {key!r} is missing or wrong")
     if "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md" not in open_work_text:
         issues.append("current Open Work omits the promoted TB-001 v0.1.3 route")
-    if "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61" not in open_work_text:
-        issues.append("current Open Work does not preserve the WELL-49/WELL-61 blocker")
+    if "WELL-49: BLOCKED / WAITING ON WELL-61" not in open_work_text:
+        issues.append("current Open Work does not preserve the remaining WELL-61 blocker")
+    closure_section = open_work_text.split("## 12.44 — WELL-60 post-merge tracker closure", 1)
+    if len(closure_section) != 2 or "WELL-60: COMPLETE" not in closure_section[1]:
+        issues.append("current Open Work omits the WELL-60 post-merge closure record")
+    if "WELL-49 remains BLOCKED / WAITING ON WELL-60" in closure_section[-1]:
+        issues.append("current Open Work retains a stale WELL-60 blocker after closure")
     if "WELL-61 remains independently PLANNING / INCOMPLETE" not in open_work_text:
         issues.append("current Open Work does not preserve WELL-61's independent incomplete status")
 
@@ -12890,7 +12954,7 @@ def _well60_status_promotion_issues(
     if rule.get("application_source_paths_created") != [] or phase8.get("application_source_paths_created") != []:
         issues.append("status promotion records application source changes")
     diff = subprocess.run(
-        ["git", "-C", str(repository_root), "diff", "--name-only", promotion_base, "--"],
+        ["git", "-C", str(repository_root), "diff", "--name-only", closure_base, "--"],
         capture_output=True,
         text=True,
         check=False,

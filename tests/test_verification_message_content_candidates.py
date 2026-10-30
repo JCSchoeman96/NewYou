@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs/00_platform"
 EVIDENCE_DIR = DOCS / "working/content_media/verification_messages"
 PACKET_PATH = EVIDENCE_DIR / "VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.1.0.json"
-OPEN_WORK_PATH = DOCS / "02_OPEN_WORK_v1.2.88.md"
+OPEN_WORK_PATH = DOCS / "02_OPEN_WORK_v1.2.90.md"
 AUTHORITY_MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 CONTENT_ITEM_ID = "NEWYOU-CONTENTITEM-VERIFICATION-MESSAGE-EMAIL-ADDRESS"
@@ -251,6 +251,7 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         packet = self.packet()
         open_work = OPEN_WORK_PATH.read_text(encoding="utf-8")
         latest = open_work.split("## 12.41 —", 1)[1]
+        self.assertIn("historical status; superseded by §12.44", latest.split("\n", 1)[0])
         self.assertIn("WELL-63 is COMPLETE", latest)
         self.assertIn("PR #162", latest)
         self.assertIn("40916815095", latest)
@@ -258,6 +259,7 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         self.assertIn("e4bf8ded45a4842c3804728b062c0a94e39cda63", latest)
         self.assertIn("WELL-61 is PLANNING", latest)
         self.assertIn("WELL-49 remains BLOCKED / WAITING ON WELL-60 AND WELL-61", latest)
+        self.assertIn("WELL-49 remains BLOCKED / WAITING ON WELL-61", open_work)
         self.assertIn("WELL-60 remains a separate", latest)
         self.assertIn(packet["packet_path"], latest)
         for version in packet["locale_versions"]:
@@ -268,7 +270,7 @@ class VerificationMessageCandidateTests(unittest.TestCase):
 
         authority_manifest = json.loads(AUTHORITY_MANIFEST_PATH.read_text(encoding="utf-8"))
         current_open_work = next(item for item in authority_manifest["governing_documents"] if item["document_id"] == "OPEN_WORK")
-        self.assertEqual("02_OPEN_WORK_v1.2.88.md", current_open_work["canonical_filename"])
+        self.assertEqual("02_OPEN_WORK_v1.2.90.md", current_open_work["canonical_filename"])
         self.assertEqual(
             hashlib.sha256(OPEN_WORK_PATH.read_bytes()).hexdigest(),
             current_open_work["sha256"],
@@ -286,7 +288,7 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         self.assertEqual("frozen_provenance", predecessor_entry["graph_policy"])
         self.assertEqual(predecessor_entry["sha256"], predecessor_entry["provenance_sha256"])
         readme = (DOCS / "README.md").read_text(encoding="utf-8")
-        self.assertIn("02_OPEN_WORK_v1.2.88.md", readme)
+        self.assertIn("02_OPEN_WORK_v1.2.89.md", readme)
 
     def test_prejit_pack_remains_non_authoritative(self) -> None:
         pack = json.loads((DOCS / "working/content_media/PACK_MANIFEST_v0.1.0.json").read_text(encoding="utf-8"))

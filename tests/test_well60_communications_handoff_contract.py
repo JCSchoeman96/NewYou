@@ -16,7 +16,7 @@ REVIEWED_CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_TRACER_BULLET_CONTRACT_WORKI
 PROMOTED_CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
 JIT = ROOT / "docs/execution/p8-05-registration-jit-spec.md"
 MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.89.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.90.md"
 REVIEWED_CANDIDATE_SHA256 = "e4ad6fd47bb1a04cd299fd900c2757e075352235ca286b6f368637942ae3cf6d"
 
 
@@ -66,6 +66,14 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
         self.assertEqual(
             hashlib.sha256(CANDIDATE.read_bytes()).hexdigest(),
             phase8["current_contract_sha256"],
+        )
+        self.assertNotIn(
+            "The current status route uses Open Work v1.2.89, Delivery Atlas v0.4.30, FP-001 Skeleton v0.1.30 and HARDEN-02 v0.5.32.",
+            self.candidate,
+        )
+        self.assertIn(
+            "At PR #165 promotion time, the status route was Open Work v1.2.89, Delivery Atlas v0.4.30, FP-001 Skeleton v0.1.30 and HARDEN-02 v0.5.32",
+            self.candidate,
         )
         self.assertEqual(
             phase8["current_contract_sha256"],
@@ -168,7 +176,7 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
         for path in (
             "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
             "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
-            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-49: BLOCKED / WAITING ON WELL-61",
         ):
             self.assertIn(path, self.open_work)
         active_route = readme.split("## Active Working Artifacts", 1)[1].split("\n## ", 1)[0]
@@ -196,7 +204,8 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
         self.assertEqual("NONE", rule["dependency_change"])
         self.assertEqual("NONE", rule["migration_change"])
         self.assertEqual([], rule["application_source_paths_created"])
-        self.assertIn("WELL-49 remains BLOCKED / WAITING ON WELL-60 AND WELL-61", self.open_work)
+        self.assertIn("WELL-49 remains BLOCKED / WAITING ON WELL-61", self.open_work)
+        self.assertIn("WELL-60: COMPLETE / PR #165 RESULTING-MAIN VERIFIED", self.open_work)
 
     def test_identity_source_contract_uses_current_v020_route(self) -> None:
         current_identity_route = (

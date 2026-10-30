@@ -78,7 +78,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
             "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
             "WELL-48: COMPLETE / MERGED VIA PR #156",
-            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-49: BLOCKED / WAITING ON WELL-61",
             "WELL-50: BACKLOG / NOT STARTED",
         ):
             self.assertIn(token, self.current_state)
