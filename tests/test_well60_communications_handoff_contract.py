@@ -57,7 +57,14 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
             CANDIDATE.as_posix().replace(str(ROOT) + "/", ""),
             {entry["repository_path"] for entry in self.manifest["governing_documents"]},
         )
-        self.assertIn(CANDIDATE.name, (DOCS / "README.md").read_text(encoding="utf-8"))
+        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        self.assertIn(APPROVED.name, readme)
+        self.assertNotIn(CANDIDATE.name, readme)
+        self.assertIn(CANDIDATE.name, self.open_work)
+        self.assertNotIn(
+            CANDIDATE.as_posix().replace(str(ROOT) + "/", ""),
+            self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"],
+        )
 
     def test_no_lost_handoff_and_executor_boundary_are_explicit(self) -> None:
         candidate_clauses = (

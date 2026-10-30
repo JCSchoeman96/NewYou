@@ -12631,10 +12631,15 @@ def _check_well60_communications_handoff_candidate(
     ):
         issues.append("approved TB-001 v0.1.2 status changed before v0.1.3 successor review")
 
-    graph = integrity_rules.get("graph_rules", {})
-    navigation = graph.get("navigation_document_paths", []) if isinstance(graph, dict) else []
-    if candidate_path not in navigation:
-        issues.append("WELL-60 proposed contract is missing from navigation-only graph routes")
+    open_work_entry = _active_open_work_entry(manifest)
+    if open_work_entry is None:
+        issues.append("WELL-60 proposed contract has no active Open Work route")
+    else:
+        open_work_path = _entry_path(root, open_work_entry)
+        open_work_text = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
+        open_work_candidate_path = candidate_path.removeprefix("docs/00_platform/")
+        if open_work_candidate_path not in open_work_text:
+            issues.append("WELL-60 proposed contract is missing from the active Open Work route")
     if any(
         entry.get("repository_path") == candidate_path and entry.get("lifecycle", "current") != "historical"
         for entry in _all_entries(manifest)
