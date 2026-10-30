@@ -31,6 +31,18 @@ class DeliveryGovernanceTransitionTest(unittest.TestCase):
             },
         )
 
+        deep_reference_ids = {
+            entry["document_id"] for entry in router["deep_reference_documents"]
+        }
+        self.assertEqual(
+            deep_reference_ids,
+            {
+                "ARCHITECTURE_REQUIREMENTS",
+                "ARCHITECTURE_LAW",
+                "REFERENCE_FLOW_PRESSURE_TESTS",
+            },
+        )
+
         supporting_ids = {entry["document_id"] for entry in router["supporting_documents"]}
         self.assertIn("ENGINEERING_STANDARDS", supporting_ids)
         self.assertIn("DELIVERY_GOVERNANCE_STANDARD", supporting_ids)
@@ -80,6 +92,7 @@ class DeliveryGovernanceTransitionTest(unittest.TestCase):
     def test_readme_routes_current_authority_to_router_and_plane(self):
         readme = (PLATFORM / "README.md").read_text(encoding="utf-8")
         self.assertIn("CURRENT_AUTHORITY_ROUTER_v1.0.0.json", readme)
+        self.assertIn("ARCHITECTURE_LAW_WORKING_v0.36.0.md", readme)
         self.assertIn("Plane", readme)
         self.assertIn("Ready", readme)
         self.assertIn("02_OPEN_WORK_v1.2.90.md", readme)
