@@ -83,6 +83,8 @@ defmodule NewYou.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:oban, "== 2.24.2"},
+      {:ash_oban, "== 0.10.2"},
       {:argon2_elixir, "== 4.1.3"},
       {:picosat_elixir, "~> 0.2"},
       {:ash_authentication, "== 4.15.0"},

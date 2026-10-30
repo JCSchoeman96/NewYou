@@ -11,6 +11,11 @@ defmodule NewYou.Application do
       [
         NewYouWeb.Telemetry,
         NewYou.Repo,
+        {Oban,
+         AshOban.config(
+           Application.fetch_env!(:new_you, :ash_domains),
+           Application.fetch_env!(:new_you, Oban)
+         )},
         {DNSCluster, query: Application.get_env(:new_you, :dns_cluster_query) || :ignore},
         {Phoenix.PubSub, name: NewYou.PubSub}
       ] ++
