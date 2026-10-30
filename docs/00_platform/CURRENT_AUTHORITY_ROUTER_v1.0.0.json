@@ -1,0 +1,152 @@
+{
+  "router_id": "CURRENT_AUTHORITY_ROUTER",
+  "router_version": "1.0.0",
+  "status": "CURRENT",
+  "scope": "Current durable authority routing, current deep-reference evidence, and Plane execution-authority metadata. Historical/provenance certification remains in CURRENT_AUTHORITY_MANIFEST_v1.0.0.json.",
+  "governing_documents": [
+    {
+      "document_id": "PROJECT_NORTH_STAR_AND_MVP",
+      "canonical_filename": "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
+      "semver": "1.3.0",
+      "repository_path": "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
+      "sha256": "249f5985ff1e8971e1ac4437e4bbebd5a3db9254ab25a2238e135cb7a7ae5f4b"
+    },
+    {
+      "document_id": "PLATFORM_BASELINE",
+      "canonical_filename": "00_PLATFORM_v1.12.0.md",
+      "semver": "1.12.0",
+      "repository_path": "docs/00_platform/00_PLATFORM_v1.12.0.md",
+      "sha256": "f5e7ff76bd628fffb18e3925997dad38daa97649bb9b0ce37aaf55411caf87e3"
+    },
+    {
+      "document_id": "DECISION_REGISTER",
+      "canonical_filename": "01_DECISIONS_v1.12.0.md",
+      "semver": "1.12.0",
+      "repository_path": "docs/00_platform/01_DECISIONS_v1.12.0.md",
+      "sha256": "497fffc78451d9bb9531ddc697e27786d7b7c861402f066e3b515cb41cff38c8"
+    },
+    {
+      "document_id": "ARCHITECTURE_SYNTHESIS",
+      "canonical_filename": "03_ARCHITECTURE_v1.1.1.md",
+      "semver": "1.1.1",
+      "repository_path": "docs/00_platform/03_ARCHITECTURE_v1.1.1.md",
+      "sha256": "342d02a7946f99aca9e6683647fc3a2505901b3d0cc2d13c21d807442025f0b3"
+    },
+    {
+      "document_id": "DOMAIN_MAP",
+      "canonical_filename": "04_DOMAIN_MAP_v1.2.0.md",
+      "semver": "1.2.0",
+      "repository_path": "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md",
+      "sha256": "e09e14ee0a773c5855257c48685cf3a75d413c983a98d22a56b42af57dc2c078"
+    },
+    {
+      "document_id": "ROADMAP",
+      "canonical_filename": "05_ROADMAP_v1.2.4.md",
+      "semver": "1.2.4",
+      "repository_path": "docs/00_platform/05_ROADMAP_v1.2.4.md",
+      "sha256": "99ee1e6b5e0d23b12a877e17a001b6b92250248fe1b2ab9c1a12e1e5ff966b3e"
+    },
+    {
+      "document_id": "PLATFORM_OPERATING_MODEL",
+      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.2.0.md",
+      "semver": "1.2.0",
+      "repository_path": "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.2.0.md",
+      "sha256": "424dfdec6daeb8d8b37c760198b09f1aebfff2ae21503d3d1caeb3a174117e6f"
+    },
+    {
+      "document_id": "FRONTEND_EXPERIENCE_SYSTEM",
+      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
+      "semver": "1.0.1",
+      "repository_path": "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
+      "sha256": "58c733e8e0cc73c72b102b623cb756b60cbadb084f8cc710051be42d0877fdb4"
+    }
+  ],
+  "deep_reference_documents": [
+    {
+      "document_id": "ARCHITECTURE_REQUIREMENTS",
+      "canonical_filename": "ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
+      "sha256": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91"
+    },
+    {
+      "document_id": "ARCHITECTURE_LAW",
+      "canonical_filename": "ARCHITECTURE_LAW_WORKING_v0.36.0.md",
+      "semver": "0.36.0",
+      "repository_path": "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
+      "sha256": "26ff1e7a7e40945e501793c2bfb2ede9c01ae03f7949383ae724e3b031fa4faa"
+    },
+    {
+      "document_id": "REFERENCE_FLOW_PRESSURE_TESTS",
+      "canonical_filename": "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+      "semver": "0.3.0",
+      "repository_path": "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+      "sha256": "0d8e25170ae692df39f7f771189f95ab76ab64f2701823fb2cde214946650d3f"
+    }
+  ],
+  "supporting_documents": [
+    {
+      "document_id": "ENGINEERING_STANDARDS",
+      "canonical_filename": "ENGINEERING_STANDARDS_v1.0.1.md",
+      "semver": "1.0.1",
+      "repository_path": "docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md",
+      "sha256": "8c02f367c97b3b9f977eb1572e2af0bd29ee87112215989180ed1bd90d0fdd7f"
+    },
+    {
+      "document_id": "DELIVERY_GOVERNANCE_STANDARD",
+      "canonical_filename": "DELIVERY_GOVERNANCE_STANDARD_v1.0.0.md",
+      "semver": "1.0.0",
+      "repository_path": "docs/00_platform/reference/DELIVERY_GOVERNANCE_STANDARD_v1.0.0.md",
+      "sha256": "3b73135fb7af8e14b86f086f92e025372159d55ab0a901d8b26f577a518b9476"
+    }
+  ],
+  "execution_authority": {
+    "provider": "Plane",
+    "project_identifier": "WELL",
+    "project_id": "846031af-971b-4f08-92c3-7f008522a5ac",
+    "authority_scope": [
+      "current delivery roadmap projection",
+      "work item state and priority",
+      "blockers and dependencies",
+      "implementation sequencing",
+      "acceptance criteria",
+      "discovered and deferred work",
+      "review and merge state",
+      "implementation readiness"
+    ],
+    "agent_executable_state": "Ready",
+    "durable_governance_precedence": true,
+    "status_only_changes_are_plane_only": true,
+    "conflict_policy": "STOP affected work and reconcile the smallest correct upstream durable authority; Plane never silently overrides durable GitHub law.",
+    "symphony_note": "Symphony and local implementation agents consume focused Ready Plane work rather than infer scope from governance prose."
+  },
+  "legacy_snapshots": [
+    {
+      "document_id": "OPEN_WORK_FINAL_LEGACY_SNAPSHOT",
+      "canonical_filename": "02_OPEN_WORK_v1.2.90.md",
+      "repository_path": "docs/00_platform/02_OPEN_WORK_v1.2.90.md",
+      "sha256": "7ae61b682322628826d05e130546a644cb127baaf6f5fa737aa773aa19936ea5",
+      "lifecycle": "frozen_legacy",
+      "live_execution_authority": false,
+      "successor_required_for_status_changes": false,
+      "purpose": "Final pre-WELL-66 Open Work snapshot; historical planning evidence only."
+    }
+  ],
+  "working_semantic_routes": [
+    "docs/00_platform/working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md",
+    "docs/00_platform/working/DELIVERY_ATLAS_WORKING_v0.4.31.md",
+    "docs/00_platform/working/HARDEN-02_CONTRACT_WORKING_v0.5.33.md",
+    "docs/00_platform/working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.31.md",
+    "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+    "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
+    "docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md",
+    "docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+    "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+    "docs/00_platform/working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md"
+  ],
+  "historical_integrity_baseline": {
+    "repository_path": "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json",
+    "git_blob_sha": "2a8557193fc071996e23d9214980da22d48bdbf3",
+    "purpose": "Foundation Full historical/provenance certification"
+  }
+}

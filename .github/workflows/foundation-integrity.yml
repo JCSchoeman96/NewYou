@@ -1,16 +1,20 @@
 name: Foundation Integrity
 
 # Required entry point (repository ruleset "Protect main" requires the check
-# named "Foundation Integrity"). It owns routing and the always-on Foundation
-# Smoke safety net, and calls two reusable lanes:
+# named "Foundation Integrity"). It owns routing and the always-on current-state
+# Foundation Smoke safety net, and calls two reusable lanes:
 #
 #   Normal engineering PR -> Foundation Smoke + Application CI (mix check, mix check.deep)
-#   Governance-sensitive PR -> the same required fast gate + non-blocking Foundation Full evidence
+#   Durable-governance/provenance PR -> the same required fast gate + non-blocking
+#                                      Foundation Full historical evidence
 #
-# Foundation Full is intentionally not a dependency of the required aggregate.
-# It remains automatic for governance-sensitive PRs, while direct exact-SHA
-# certification is owned by foundation-full.yml. New PR heads cancel superseded
-# runs so obsolete cold verification does not queue behind current work.
+# Foundation Smoke validates CURRENT_AUTHORITY_ROUTER_v1.0.0.json. Foundation
+# Full validates the frozen pre-WELL-66 historical manifest and is intentionally
+# not a dependency of the required aggregate. Ordinary delivery-state changes
+# happen in Plane and therefore create no repository workflow run.
+#
+# New PR heads cancel superseded runs so obsolete cold verification does not
+# queue behind current work.
 
 on:
   pull_request:
@@ -65,7 +69,7 @@ jobs:
       - name: Verify merge-gate topology
         run: python -m unittest discover -s tests -p 'test_foundation_merge_gate.py' -v
       - name: Run current authority smoke audit
-        run: python -m tools.foundation_integrity_smoke --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+        run: python -m tools.foundation_integrity_smoke --router docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json --json
 
   application-ci:
     name: Application CI

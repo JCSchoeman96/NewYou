@@ -1,32 +1,24 @@
 #!/usr/bin/env python3
-"""Cheap fail-closed checks for current NewYou authority and working routes."""
+"""Fast fail-closed checks for NewYou's current durable-authority router.
+
+Foundation Smoke intentionally validates only live routing and execution-authority
+metadata. Historical/provenance graph certification remains the responsibility of
+Foundation Full and CURRENT_AUTHORITY_MANIFEST_v1.0.0.json.
+"""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
 from pathlib import Path
 from typing import Any
 
-from tools.foundation_integrity_audit import (
-    DEFAULT_MANIFEST,
-    VERSION_PATTERN,
-    _all_entries,
-    _check_current_authority_delegated_routing,
-    _check_current_authority_route_resolution,
-    _check_current_authority_self_versions,
-    _declared_document_version,
-    _default_root,
-    _load_integrity_rules,
-    _print_human_report,
-    _record_check,
-    load_manifest,
-    sha256_file,
-)
 
-CURRENT_AUTHORITY_ORDER = (
+DEFAULT_ROUTER = Path("docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json")
+EXPECTED_GOVERNING_ORDER = (
     "PROJECT_NORTH_STAR_AND_MVP",
     "PLATFORM_BASELINE",
     "DECISION_REGISTER",
@@ -35,54 +27,121 @@ CURRENT_AUTHORITY_ORDER = (
     "ROADMAP",
     "PLATFORM_OPERATING_MODEL",
     "FRONTEND_EXPERIENCE_SYSTEM",
-    "OPEN_WORK",
 )
-REQUIRED_CURRENT_AUTHORITIES = frozenset(CURRENT_AUTHORITY_ORDER)
+REQUIRED_DEEP_REFERENCES = frozenset(
+    {"ARCHITECTURE_REQUIREMENTS", "ARCHITECTURE_LAW", "REFERENCE_FLOW_PRESSURE_TESTS"}
+)
+REQUIRED_SUPPORTING = frozenset({"ENGINEERING_STANDARDS", "DELIVERY_GOVERNANCE_STANDARD"})
+DOCUMENT_VERSION_PATTERN = re.compile(
+    r"^-\s+\*\*Document version:\*\*\s+v?(\d+\.\d+\.\d+)\s*$", re.MULTILINE
+)
+STATUS_VERSION_PATTERN = re.compile(
+    r"^-\s+\*\*Document status:\*\*.*?\bv(\d+\.\d+\.\d+)\b", re.MULTILINE
+)
 
 
-def _default_agent_authority_routes(readme: str) -> list[str]:
-    marker = "## Default Agent Context"
-    if marker not in readme:
-        return []
-    section = readme.split(marker, 1)[1]
-    section = re.split(r"(?m)^##\s+", section, maxsplit=1)[0]
-    route_pattern = re.compile(
-        r"(?m)^\s*\d+\.\s+(?:`([^`\n]+)`|\[[^\]]+\]\(([^)\s]+)(?:\s+[^)]*)?\))"
+def _default_root() -> Path:
+    return Path(__file__).resolve().parents[1]
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _declared_document_version(text: str) -> str | None:
+    match = DOCUMENT_VERSION_PATTERN.search(text)
+    if match is not None:
+        return match.group(1)
+    match = STATUS_VERSION_PATTERN.search(text)
+    return match.group(1) if match is not None else None
+
+
+def _record(
+    report: dict[str, Any],
+    name: str,
+    ok: bool,
+    message: str,
+    *,
+    path: str | None = None,
+) -> None:
+    check: dict[str, Any] = {"name": name, "status": "PASS" if ok else "FAIL", "message": message}
+    if path is not None:
+        check["path"] = path
+    report["checks"].append(check)
+    if not ok:
+        finding = {"check": name, "message": message}
+        if path is not None:
+            finding["path"] = path
+        report["findings"].append(finding)
+
+
+def _safe_regular_file(root: Path, relative: str, *, allow_legacy_open_work: bool = False) -> tuple[bool, Path]:
+    route = Path(relative)
+    target = (root / route).resolve()
+    try:
+        resolved_relative = target.relative_to(root)
+    except ValueError:
+        return False, target
+
+    lexical_archive = "archive" in route.parts
+    resolved_archive = "archive" in resolved_relative.parts
+    if route.is_absolute() or ".." in route.parts or lexical_archive or resolved_archive:
+        return False, target
+    if not target.is_file():
+        return False, target
+    if not allow_legacy_open_work and (root / route).is_symlink():
+        return False, target
+    return True, target
+
+
+def _check_hashed_entry(root: Path, report: dict[str, Any], entry: dict[str, Any], kind: str) -> None:
+    document_id = str(entry.get("document_id", ""))
+    relative = str(entry.get("repository_path", ""))
+    canonical = str(entry.get("canonical_filename", ""))
+    semver = str(entry.get("semver", ""))
+    expected_hash = str(entry.get("sha256", ""))
+
+    safe, target = _safe_regular_file(root, relative)
+    filename_ok = safe and target.name == canonical
+    version_ok = bool(semver) and f"v{semver}" in canonical
+    actual_hash = _sha256_file(target) if safe else None
+    hash_ok = safe and len(expected_hash) == 64 and actual_hash == expected_hash
+    declared_version = None
+    if safe:
+        try:
+            declared_version = _declared_document_version(target.read_text(encoding="utf-8"))
+        except UnicodeDecodeError:
+            declared_version = None
+    metadata_ok = safe and declared_version == semver
+    ok = safe and filename_ok and version_ok and hash_ok and metadata_ok
+
+    _record(
+        report,
+        f"smoke_{kind}_route",
+        ok,
+        f"{kind} route/hash/version valid for {document_id}"
+        if ok
+        else (
+            f"invalid {kind} route/hash/version for {document_id}: safe={safe}, "
+            f"filename={filename_ok}, semver={version_ok}, hash={hash_ok}, "
+            f"declared_version={declared_version!r}, expected_version={semver!r}"
+        ),
+        path=relative,
     )
-    return [first or second for first, second in route_pattern.findall(section)]
 
 
-def _active_working_routes(readme: str) -> list[str]:
-    marker = "## Active Working Artifacts"
-    if marker not in readme:
-        return []
-    section = readme.split(marker, 1)[1]
-    section = re.split(r"(?m)^##\s+", section, maxsplit=1)[0]
-    route_pattern = re.compile(
-        r"(?m)^\s*[-*]\s+(?:`([^`\s]+\.md)`|\[[^\]]+\]\(([^)\s]+\.md)(?:\s+[^)]*)?\))"
-    )
-    return [first or second for first, second in route_pattern.findall(section)]
-
-
-def _route_resolves_outside_archive(root: Path, route: Path, target: Path) -> bool:
-    """Reject lexical archive routes and current paths that resolve through symlinks into archive."""
-
-    return (
-        not route.is_absolute()
-        and ".." not in route.parts
-        and "archive" not in route.parts
-        and target.is_relative_to(root)
-        and "archive" not in target.relative_to(root).parts
-    )
-
-
-def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[str, Any]:
-    """Validate active manifest entries and current README/Open Work routing only."""
+def run_smoke_audit(root: Path, router_path: Path = DEFAULT_ROUTER) -> dict[str, Any]:
+    """Validate the lean current router, README contract and semantic working routes."""
 
     root = Path(root).resolve()
-    manifest_path = Path(manifest_path)
-    if not manifest_path.is_absolute():
-        manifest_path = root / manifest_path
+    router_path = Path(router_path)
+    if not router_path.is_absolute():
+        router_path = root / router_path
+
     report: dict[str, Any] = {
         "status": "PASS",
         "assertion_count": 0,
@@ -92,262 +151,235 @@ def run_smoke_audit(root: Path, manifest_path: Path = DEFAULT_MANIFEST) -> dict[
     }
 
     try:
-        manifest = load_manifest(manifest_path)
+        router = json.loads(router_path.read_text(encoding="utf-8"))
     except (OSError, ValueError, json.JSONDecodeError) as error:
-        _record_check(report, "smoke_manifest_load", False, f"cannot load manifest: {error}", path=str(manifest_path))
-        report["assertion_count"] = len(report["checks"])
-        report["status"] = "FAIL"
-        return report
-
-    try:
-        integrity_rules = _load_integrity_rules(manifest)
-    except (KeyError, ValueError, TypeError) as error:
-        _record_check(report, "smoke_manifest_rules", False, f"manifest rules are invalid: {error}", path=str(manifest_path))
-        report["assertion_count"] = len(report["checks"])
-        report["status"] = "FAIL"
-        return report
-    _record_check(report, "smoke_manifest_rules", True, "manifest integrity rules parse")
-
-    expected_ids = REQUIRED_CURRENT_AUTHORITIES
-    entries = _all_entries(manifest)
-    active = [entry for entry in entries if entry.get("lifecycle", "current") != "historical"]
-    active_by_id: dict[str, list[dict[str, Any]]] = {}
-    for entry in active:
-        active_by_id.setdefault(str(entry.get("document_id", "")), []).append(entry)
-
-    missing_ids = sorted(expected_ids - active_by_id.keys())
-    duplicate_ids = sorted(document_id for document_id, matches in active_by_id.items() if len(matches) != 1)
-    _record_check(
-        report,
-        "smoke_current_authority_inventory",
-        not missing_ids and not duplicate_ids,
-        "each current authority has one active manifest entry"
-        if not missing_ids and not duplicate_ids
-        else f"missing current authorities={missing_ids}; duplicate active IDs={duplicate_ids}",
-        path=str(manifest_path),
-    )
-
-    current_entries = [
-        entry
-        for group in ("governing_documents", "reference_documents")
-        for entry in manifest.get(group, [])
-        if isinstance(entry, dict) and entry.get("lifecycle", "current") != "historical"
-    ]
-    for entry in current_entries:
-        relative = str(entry.get("repository_path", ""))
-        route = Path(relative)
-        target = (root / route).resolve()
-        safe = bool(relative) and not route.is_absolute() and ".." not in route.parts and target.is_relative_to(root)
-        not_archived = _route_resolves_outside_archive(root, route, target)
-        exists = safe and target.is_file()
-        expected_filename = str(entry.get("canonical_filename", ""))
-        filename_matches = target.name == expected_filename
-        version_match = VERSION_PATTERN.search(expected_filename)
-        semver_matches = version_match is not None and version_match.group(1) == str(entry.get("semver", ""))
-        actual_hash = sha256_file(target) if exists else None
-        hash_matches = exists and actual_hash == entry.get("sha256")
-        declared_version = _declared_document_version(target.read_text(encoding="utf-8")) if exists else None
-        metadata_matches = exists and declared_version == str(entry.get("semver", ""))
-        entry_ok = safe and not_archived and exists and filename_matches and semver_matches and hash_matches and metadata_matches
-        _record_check(
+        _record(
             report,
-            "smoke_current_manifest_path",
-            entry_ok,
-            f"current path resolves and matches its manifest route: {relative}"
-            if entry_ok
-            else f"invalid current path or manifest metadata for {relative!r}; archived={not not_archived}, exists={exists}, filename={filename_matches}, semver={semver_matches}, hash={hash_matches}, metadata={metadata_matches}",
-            path=relative,
+            "smoke_router_load",
+            False,
+            f"cannot load current authority router: {error}",
+            path=str(router_path),
         )
+        report["assertion_count"] = len(report["checks"])
+        report["status"] = "FAIL"
+        return report
 
-    readme_relative = Path(str(integrity_rules["document_roots"]["context_index"]))
-    readme_target = (root / readme_relative).resolve()
-    readme_path_valid = _route_resolves_outside_archive(root, readme_relative, readme_target)
-    readme_path = root / readme_relative
-    readme_exists = readme_path_valid and readme_target.is_file()
-    readme = readme_target.read_text(encoding="utf-8") if readme_exists else ""
-    _record_check(
+    _record(
         report,
-        "smoke_readme_exists",
-        readme_exists and bool(readme),
-        "current routing README is present"
-        if readme_exists and readme
-        else "current routing README is missing, empty, unsafe, or resolves into archive",
-        path=readme_relative.as_posix(),
+        "smoke_router_identity",
+        router.get("router_id") == "CURRENT_AUTHORITY_ROUTER" and router.get("status") == "CURRENT",
+        "current authority router identity/status valid"
+        if router.get("router_id") == "CURRENT_AUTHORITY_ROUTER" and router.get("status") == "CURRENT"
+        else "current authority router must identify CURRENT_AUTHORITY_ROUTER with CURRENT status",
+        path=str(router_path.relative_to(root)) if router_path.is_relative_to(root) else str(router_path),
     )
 
-    current_governing_entries = {
-        str(entry.get("document_id")): entry
-        for entry in manifest.get("governing_documents", [])
-        if isinstance(entry, dict) and entry.get("lifecycle", "current") != "historical"
+    governing = router.get("governing_documents", [])
+    governing_ids = tuple(entry.get("document_id") for entry in governing if isinstance(entry, dict))
+    governing_ok = governing_ids == EXPECTED_GOVERNING_ORDER and "OPEN_WORK" not in governing_ids
+    _record(
+        report,
+        "smoke_governing_inventory",
+        governing_ok,
+        "governing inventory is the eight durable authorities and excludes Open Work"
+        if governing_ok
+        else f"governing inventory must be {EXPECTED_GOVERNING_ORDER} and must not include OPEN_WORK; got {governing_ids}",
+    )
+    for entry in governing if isinstance(governing, list) else []:
+        if isinstance(entry, dict):
+            _check_hashed_entry(root, report, entry, "governing")
+
+    deep_references = router.get("deep_reference_documents", [])
+    deep_reference_ids = {
+        str(entry.get("document_id")) for entry in deep_references if isinstance(entry, dict)
     }
-    expected_authority_routes = []
-    for document_id in CURRENT_AUTHORITY_ORDER:
-        entry = current_governing_entries.get(document_id)
-        if entry is None:
-            continue
-        repository_path = Path(str(entry.get("repository_path", "")))
-        try:
-            expected_authority_routes.append(
-                repository_path.relative_to("docs/00_platform").as_posix()
-            )
-        except ValueError:
-            expected_authority_routes.append(repository_path.as_posix())
-    readme_authority_routes = _default_agent_authority_routes(readme)
-    authority_routes_match = readme_authority_routes == expected_authority_routes
-    _record_check(
+    deep_references_ok = deep_reference_ids == REQUIRED_DEEP_REFERENCES
+    _record(
         report,
-        "smoke_readme_authority_inventory",
-        authority_routes_match,
-        "README default context routes exactly the current authority manifest inventory"
-        if authority_routes_match
-        else f"README default authority routes differ from manifest routes: README={readme_authority_routes}, manifest={expected_authority_routes}",
-        path=readme_relative.as_posix(),
+        "smoke_deep_reference_inventory",
+        deep_references_ok,
+        "current deep Architecture evidence routes are complete"
+        if deep_references_ok
+        else f"deep references must be exactly {sorted(REQUIRED_DEEP_REFERENCES)}; got {sorted(deep_reference_ids)}",
+    )
+    for entry in deep_references if isinstance(deep_references, list) else []:
+        if isinstance(entry, dict):
+            _check_hashed_entry(root, report, entry, "deep_reference")
+
+    supporting = router.get("supporting_documents", [])
+    supporting_ids = {
+        str(entry.get("document_id")) for entry in supporting if isinstance(entry, dict)
+    }
+    supporting_ok = REQUIRED_SUPPORTING.issubset(supporting_ids)
+    _record(
+        report,
+        "smoke_supporting_inventory",
+        supporting_ok,
+        "required Engineering and Delivery Governance supporting authority is routed"
+        if supporting_ok
+        else f"supporting authority must include {sorted(REQUIRED_SUPPORTING)}; got {sorted(supporting_ids)}",
+    )
+    for entry in supporting if isinstance(supporting, list) else []:
+        if isinstance(entry, dict):
+            _check_hashed_entry(root, report, entry, "supporting")
+
+    execution = router.get("execution_authority", {})
+    plane_ok = execution.get("provider") == "Plane" and execution.get("project_identifier") == "WELL"
+    _record(
+        report,
+        "smoke_plane_execution_authority",
+        plane_ok,
+        "Plane WELL is the live execution authority"
+        if plane_ok
+        else "Plane project WELL must be the live execution authority",
+    )
+    ready_ok = execution.get("agent_executable_state") == "Ready"
+    _record(
+        report,
+        "smoke_ready_execution_boundary",
+        ready_ok,
+        "Ready is the only agent/Symphony executable state"
+        if ready_ok
+        else "Ready must be the agent/Symphony executable state",
+    )
+    flags_ok = (
+        execution.get("durable_governance_precedence") is True
+        and execution.get("status_only_changes_are_plane_only") is True
+    )
+    _record(
+        report,
+        "smoke_execution_precedence",
+        flags_ok,
+        "durable governance precedence and Plane-only status changes are locked"
+        if flags_ok
+        else "execution authority must preserve durable-governance precedence and Plane-only status changes",
     )
 
-    working_routes = _active_working_routes(readme)
-    manifest_working_routes = [
-        Path(str(route)).relative_to("docs/00_platform").as_posix()
-        for route in integrity_rules["graph_rules"].get("navigation_document_paths", [])
-        if Path(str(route)).is_relative_to("docs/00_platform/working")
-    ]
-    readme_routes_by_artifact: dict[str, list[str]] = {}
-    for route in working_routes:
-        match = re.match(r"^(.*)_v\d+\.\d+\.\d+\.md$", Path(route).name)
-        if match:
-            readme_routes_by_artifact.setdefault(match.group(1), []).append(route)
-    missing_or_stale_manifest_routes = []
-    for relative in manifest_working_routes:
-        match = re.match(r"^(.*)_v\d+\.\d+\.\d+\.md$", Path(relative).name)
-        if not match:
-            missing_or_stale_manifest_routes.append(relative)
-            continue
-        listed = readme_routes_by_artifact.get(match.group(1), [])
-        if listed != [relative]:
-            missing_or_stale_manifest_routes.append(f"{relative} (README lists {listed})")
-    _record_check(
+    legacy = router.get("legacy_snapshots", [])
+    open_work = next(
+        (
+            entry
+            for entry in legacy
+            if isinstance(entry, dict) and entry.get("document_id") == "OPEN_WORK_FINAL_LEGACY_SNAPSHOT"
+        ),
+        None,
+    )
+    legacy_shape_ok = bool(open_work) and (
+        open_work.get("repository_path") == "docs/00_platform/02_OPEN_WORK_v1.2.90.md"
+        and open_work.get("lifecycle") == "frozen_legacy"
+        and open_work.get("live_execution_authority") is False
+        and open_work.get("successor_required_for_status_changes") is False
+    )
+    legacy_hash_ok = False
+    if legacy_shape_ok:
+        safe, target = _safe_regular_file(root, str(open_work["repository_path"]), allow_legacy_open_work=True)
+        legacy_hash_ok = safe and _sha256_file(target) == open_work.get("sha256")
+    _record(
         report,
-        "smoke_readme_manifest_working_routes",
-        not missing_or_stale_manifest_routes,
-        "README and manifest agree on current working artifact routes"
-        if not missing_or_stale_manifest_routes
-        else f"README current working routes do not match manifest routes: {missing_or_stale_manifest_routes}",
+        "smoke_legacy_open_work",
+        legacy_shape_ok and legacy_hash_ok,
+        "legacy Open Work snapshot is frozen and hash-pinned"
+        if legacy_shape_ok and legacy_hash_ok
+        else "legacy Open Work snapshot must be frozen, non-authoritative, successor-free and hash-correct",
+        path="docs/00_platform/02_OPEN_WORK_v1.2.90.md",
     )
 
-    atlas_section = ""
-    if "## Delivery Atlas routing" in readme:
-        atlas_section = readme.split("## Delivery Atlas routing", 1)[1]
-        atlas_section = re.split(r"(?m)^##\s+", atlas_section, maxsplit=1)[0]
-    atlas_links = re.findall(r"\[Delivery Atlas\]\(([^)\s]+)\)", atlas_section)
-    atlas_manifest_routes = [
-        Path(str(route))
-        for route in integrity_rules["graph_rules"].get("navigation_document_paths", [])
-        if Path(str(route)).name.startswith("DELIVERY_ATLAS_WORKING_")
-    ]
-    expected_atlas_links = [
-        route.relative_to("docs/00_platform").as_posix()
-        for route in atlas_manifest_routes
-        if route.is_relative_to("docs/00_platform/working")
-    ]
-    atlas_targets_resolve = True
-    for link in atlas_links:
-        route = Path(link)
-        target = (root / "docs/00_platform" / route).resolve()
-        atlas_targets_resolve = atlas_targets_resolve and (
-            _route_resolves_outside_archive(root, route, target)
-            and target.is_file()
+    working_routes = router.get("working_semantic_routes", [])
+    working_inventory_ok = isinstance(working_routes, list) and bool(working_routes)
+    _record(
+        report,
+        "smoke_working_inventory",
+        working_inventory_ok,
+        "semantic working route inventory is present"
+        if working_inventory_ok
+        else "semantic working route inventory must be a non-empty list",
+    )
+    for relative in working_routes if isinstance(working_routes, list) else []:
+        route = Path(str(relative))
+        safe, _target = _safe_regular_file(root, str(relative))
+        under_working = route.is_relative_to(Path("docs/00_platform/working"))
+        ok = safe and under_working
+        _record(
+            report,
+            "smoke_working_semantic_route",
+            ok,
+            f"working semantic route resolves outside archive: {relative}"
+            if ok
+            else f"working semantic route is missing, unsafe or archived: {relative}",
+            path=str(relative),
         )
-    atlas_route_ok = (
-        len(expected_atlas_links) == 1
-        and atlas_links == expected_atlas_links
-        and atlas_targets_resolve
+
+    readme_safe, readme_target = _safe_regular_file(root, "docs/00_platform/README.md")
+    readme = readme_target.read_text(encoding="utf-8") if readme_safe else ""
+    readme_tokens = (
+        "CURRENT_AUTHORITY_ROUTER_v1.0.0.json",
+        "Plane",
+        "Ready",
+        "02_OPEN_WORK_v1.2.90.md",
+        "frozen legacy",
     )
-    _record_check(
+    readme_ok = readme_safe and all(token.lower() in readme.lower() for token in readme_tokens)
+    _record(
         report,
-        "smoke_delivery_atlas_route",
-        atlas_route_ok,
-        "README Delivery Atlas link resolves to the manifest current route"
-        if atlas_route_ok
-        else f"README Delivery Atlas link does not resolve to the single current manifest route: links={atlas_links}, expected={expected_atlas_links}, targets_resolve={atlas_targets_resolve}",
+        "smoke_readme_contract",
+        readme_ok,
+        "README routes current authority, Plane/Ready execution and frozen legacy Open Work"
+        if readme_ok
+        else "README must route CURRENT_AUTHORITY_ROUTER, Plane, Ready and frozen legacy Open Work",
         path="docs/00_platform/README.md",
     )
 
-    working_routes_valid = bool(working_routes)
-    for relative in working_routes:
-        working_relative = Path(relative)
-        route = Path("docs/00_platform") / working_relative
-        target = (root / route).resolve()
-        valid = (
-            bool(working_relative.parts)
-            and working_relative.parts[0] == "working"
-            and _route_resolves_outside_archive(root, working_relative, target)
-            and target.is_file()
-        )
-        working_routes_valid = working_routes_valid and valid
-        _record_check(
-            report,
-            "smoke_current_working_path",
-            valid,
-            f"active working path resolves: {route.as_posix()}"
-            if valid
-            else f"active working route is missing, unsafe, or archived: {route.as_posix()}",
-            path=route.as_posix(),
-        )
-
-    graph_rules = integrity_rules["graph_rules"]
-    navigation_paths = graph_rules.get("navigation_document_paths", [])
-    navigation_routes_valid = isinstance(navigation_paths, list) and bool(navigation_paths)
-    for relative in navigation_paths if isinstance(navigation_paths, list) else []:
-        route = Path(str(relative))
-        target = (root / route).resolve()
-        valid = (
-            _route_resolves_outside_archive(root, route, target)
-            and target.is_file()
-        )
-        navigation_routes_valid = navigation_routes_valid and valid
-        _record_check(
-            report,
-            "smoke_current_navigation_path",
-            valid,
-            f"current navigation path resolves: {relative}"
-            if valid
-            else f"current navigation path is missing, unsafe, or archived: {relative}",
-            path=str(relative),
-        )
-    _record_check(
+    historical = router.get("historical_integrity_baseline", {})
+    historical_path = str(historical.get("repository_path", ""))
+    historical_ok = (
+        historical_path == "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+        and historical.get("purpose") == "Foundation Full historical/provenance certification"
+        and len(str(historical.get("git_blob_sha", ""))) == 40
+        and (root / historical_path).is_file()
+    )
+    _record(
         report,
-        "smoke_current_navigation_inventory",
-        navigation_routes_valid,
-        "manifest current navigation paths resolve"
-        if navigation_routes_valid
-        else "manifest navigation_document_paths is missing or invalid",
+        "smoke_historical_integrity_baseline",
+        historical_ok,
+        "frozen historical manifest remains routed only as Foundation Full integrity baseline"
+        if historical_ok
+        else "historical integrity baseline must point to the frozen manifest for Foundation Full certification",
+        path=historical_path or None,
     )
 
-    _check_current_authority_self_versions(root, manifest, report)
-    _check_current_authority_route_resolution(root, manifest, integrity_rules, report)
-    _check_current_authority_delegated_routing(root, manifest, integrity_rules, report)
-
     report["counts"] = {
-        "current_manifest_entries": len(current_entries),
-        "current_working_routes": len(working_routes),
-        "current_navigation_routes": len(navigation_paths) if isinstance(navigation_paths, list) else 0,
+        "governing_documents": len(governing) if isinstance(governing, list) else 0,
+        "deep_reference_documents": len(deep_references) if isinstance(deep_references, list) else 0,
+        "supporting_documents": len(supporting) if isinstance(supporting, list) else 0,
+        "working_semantic_routes": len(working_routes) if isinstance(working_routes, list) else 0,
     }
     report["assertion_count"] = len(report["checks"])
     report["status"] = "PASS" if not report["findings"] else "FAIL"
     return report
 
 
+def _print_human(report: dict[str, Any]) -> None:
+    print(f"Foundation Smoke: {report['status']} ({report['assertion_count']} assertions)")
+    for finding in report["findings"]:
+        location = f" [{finding.get('path')}]" if finding.get("path") else ""
+        print(f"- {finding['check']}{location}: {finding['message']}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=None)
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--router", type=Path, default=DEFAULT_ROUTER)
+    # Temporary compatibility alias for callers while WELL-66 transitions the workflow.
+    parser.add_argument("--manifest", type=Path, default=None, help=argparse.SUPPRESS)
     parser.add_argument("--json", action="store_true", dest="as_json")
     args = parser.parse_args(argv)
     root = args.root or _default_root()
-    report = run_smoke_audit(root, args.manifest)
+    router = args.manifest if args.manifest is not None else args.router
+    report = run_smoke_audit(root, router)
     if args.as_json:
         print(json.dumps(report, indent=2, sort_keys=True))
     else:
-        _print_human_report(report)
+        _print_human(report)
     return 0 if report["status"] == "PASS" else 1
 
 
