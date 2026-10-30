@@ -6,13 +6,18 @@ Every changed path is classified into exactly one category:
 * ``application``: normal engineering files (application source, root
   engineering files, engineering skills and tooling). These run Application CI
   and never trigger Foundation Full on their own.
-* ``governance``: the governed authority tree and the historical governance
-  audit, test and workflow machinery. These trigger Foundation Full.
+* ``governance``: durable platform governance, semantic platform contracts,
+  provenance/history, and the governance audit/test/workflow machinery. These
+  trigger Foundation Full as non-blocking historical/provenance evidence.
 * ``unknown``: anything unclassified. Unknown paths fail closed to Full.
+
+Live delivery-state changes are not repository paths after WELL-66: Ready/In
+Progress/Blocked/Done, dependencies and sequencing live in Plane. Therefore the
+classifier does not need a special "status-only" GitHub lane.
 
 Pull requests are routed from their exact diff. A ``push`` to ``main`` never
 routes Foundation Full. Governance-sensitive PRs automatically start the cold
-Full lane as non-blocking historical evidence; the required Foundation
+Full lane as non-blocking historical/provenance evidence; the required Foundation
 Integrity merge gate does not wait for it. Ordinary application PRs run
 Application CI and Foundation Smoke without Full. Superseded PR workflow runs
 are cancelled by the workflow concurrency policy. Scheduled nightly hardening
@@ -62,7 +67,7 @@ APPLICATION_PREFIXES = (
     "tools/architecture/",
 )
 
-# --- Governance (historical authority and its audit machinery) -------------
+# --- Durable governance, semantic contracts and provenance machinery -------
 
 GOVERNANCE_FILES = frozenset(
     {
@@ -72,8 +77,12 @@ GOVERNANCE_FILES = frozenset(
     }
 )
 
-# `docs/00_platform/` is governed platform authority. `tests/` is the historical
-# Python governance suite; normal Elixir tests live under `test/`.
+# `docs/00_platform/` contains durable authority, semantic working contracts,
+# and frozen/archived provenance. Any repository change there is governance-
+# sensitive even though not every file is governing authority. Ordinary live
+# delivery-state movement belongs in Plane and should not edit this tree.
+# `tests/` is the Python governance/current-routing suite; normal Elixir tests
+# live under `test/`.
 GOVERNANCE_PREFIXES = (
     "docs/00_platform/",
     "tests/",
@@ -167,7 +176,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"foundation_full={str(decision['foundation_full']).lower()}")
     print(f"application_changes={str(decision['application_changes']).lower()}")
     if decision["foundation_full"]:
-        print("Foundation Full selected as non-blocking historical evidence.", file=sys.stderr)
+        print("Foundation Full selected as non-blocking historical/provenance evidence.", file=sys.stderr)
     return 0
 
 
