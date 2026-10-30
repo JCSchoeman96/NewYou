@@ -17,12 +17,19 @@ defmodule NewYou.Audit.Actions.MaterializeRegistrationEvidence do
     case NewYou.Audit.get_evidence_record_by_obligation(obligation.id, authorize?: false) do
       {:ok, nil} ->
         with {:ok, record} <-
-               NewYou.Audit.create_evidence_record(
+               Ash.create(
+                 NewYou.Audit.EvidenceRecord,
                  %{obligation_id: obligation.id},
+                 action: :materialize,
+                 domain: NewYou.Audit,
                  authorize?: false
                ),
              {:ok, _fulfilled} <-
-               NewYou.Audit.fulfill_evidence_obligation(obligation, %{}, authorize?: false) do
+               Ash.update(obligation, %{},
+                 action: :fulfill,
+                 domain: NewYou.Audit,
+                 authorize?: false
+               ) do
           {:ok, record}
         end
 

@@ -8,10 +8,20 @@ defmodule NewYou.Identity.Actions.AcceptRegistration do
 
   @impl true
   def run(input, _opts, _context) do
-    registration = input.arguments.registration_input
+    with {:ok, admission} <-
+           NewYou.Identity.validate_registration_acceptance(
+             input.arguments.registration_input,
+             input.arguments.pmr
+           ) do
+      accept(admission)
+    end
+  end
+
+  defp accept(admission) do
+    registration = admission.registration_input
     committed_at = NewYou.Identity.registration_now()
 
-    with {:ok, account} <- create_account(registration, input.arguments.pmr, committed_at),
+    with {:ok, account} <- create_account(registration, admission.pmr, committed_at),
          {:ok, verification_proof} <- issue_verification_proof(account),
          {:ok, _obligation} <-
            NewYou.Audit.establish_registration_obligation(
@@ -24,8 +34,8 @@ defmodule NewYou.Identity.Actions.AcceptRegistration do
          {:ok, _operation} <-
            create_operation(%{
              operation_id: registration.operation_id,
-             request_fingerprint: input.arguments.request_fingerprint,
-             fingerprint_key_version: input.arguments.fingerprint_key_version,
+             request_fingerprint: admission.request_fingerprint,
+             fingerprint_key_version: admission.fingerprint_key_version,
              password_verifier: account.hashed_password,
              verifier_provider: @verifier_provider,
              verifier_version: @verifier_version,
@@ -49,7 +59,7 @@ defmodule NewYou.Identity.Actions.AcceptRegistration do
       surname: input.surname,
       email: input.email,
       preferred_language: input.preferred_language,
-      confirmed_age_18?: true,
+      confirmed_age_18?: input.confirmed_age_18?,
       terms_version_id: input.terms_version_id,
       privacy_version_id: input.privacy_version_id,
       legal_accepted_at: committed_at,

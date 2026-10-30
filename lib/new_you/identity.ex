@@ -47,6 +47,29 @@ defmodule NewYou.Identity do
 
   def registration_now, do: now()
 
+  @doc false
+  @spec validate_registration_acceptance(map(), term()) ::
+          {:ok, map()} | {:error, :invalid_registration}
+  def validate_registration_acceptance(registration_input, pmr) when is_map(registration_input) do
+    with {:ok, operation_id} <- operation_id(registration_input),
+         {:ok, registration} <- validate_request(registration_input, operation_id),
+         true <- PMR.valid?(pmr),
+         {:ok, request_fingerprint, fingerprint_key_version} <-
+           RegistrationBinding.fingerprint(registration) do
+      {:ok,
+       %{
+         registration_input: registration,
+         request_fingerprint: request_fingerprint,
+         fingerprint_key_version: fingerprint_key_version,
+         pmr: pmr
+       }}
+    else
+      _ -> {:error, :invalid_registration}
+    end
+  end
+
+  def validate_registration_acceptance(_, _), do: {:error, :invalid_registration}
+
   @doc "Tombstone live registration bindings linked to an Account after an Identity invalidation."
   @spec invalidate_registration_operations(String.t()) :: :ok | {:error, atom()}
   def invalidate_registration_operations(account_id) when is_binary(account_id) do
@@ -171,8 +194,6 @@ defmodule NewYou.Identity do
       accept_new_registration(
         %{
           registration_input: input,
-          request_fingerprint: fingerprint,
-          fingerprint_key_version: key_version,
           pmr: pmr
         },
         authorize?: false

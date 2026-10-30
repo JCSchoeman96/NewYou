@@ -40,8 +40,6 @@ defmodule NewYou.Identity.RegistrationOperation do
 
     action :accept_registration, :map do
       argument :registration_input, :map, allow_nil?: false, sensitive?: true
-      argument :request_fingerprint, :binary, allow_nil?: false, sensitive?: true
-      argument :fingerprint_key_version, :string, allow_nil?: false, sensitive?: true
       argument :pmr, :string, allow_nil?: false, sensitive?: true
       public? false
       transaction? true

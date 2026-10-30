@@ -52,6 +52,54 @@ defmodule NewYou.Audit.RegistrationEvidenceTest do
            }
   end
 
+  test "the Identity owner action repeats registration admission and derives its binding" do
+    request = %{valid_request() | email: "Alice+campaign.Example@EXAMPLE.COM"}
+    pmr = valid_pmr()
+
+    assert {:ok, %{status: :verification_pending, account_id: account_id}} =
+             accept_registration_directly(request, pmr)
+
+    account =
+      Ash.get!(NewYou.Identity.Account, account_id, domain: NewYou.Identity, authorize?: false)
+
+    assert account.email == "Alice+campaign.Example@example.com"
+
+    assert {:ok, %{account_id: ^account_id, verification_proof: nil}} =
+             NewYou.Identity.register(request)
+
+    assert length(audit_records("EvidenceObligation")) == 1
+    assert length(scheduled_audit_jobs()) == 1
+  end
+
+  test "the Identity owner action rejects requests that fail registration admission" do
+    request = valid_request()
+    pmr = valid_pmr()
+
+    attacks = [
+      {%{request | operation_id: "not-a-uuid"}, pmr},
+      {%{request | operation_id: "018ecb40-c457-73e6-a400-000398daddd9"}, pmr},
+      {%{request | preferred_language: :fr}, pmr},
+      {%{request | terms_version_id: "unapproved-terms"}, pmr},
+      {%{request | privacy_version_id: "unapproved-privacy"}, pmr},
+      {Map.delete(request, :confirmed_age_18?), pmr},
+      {%{request | confirmed_age_18?: false}, pmr},
+      {request, "PMR-0123456789ABCDEFB"}
+    ]
+
+    for {input, assigned_pmr} <- attacks do
+      assert {:error, _} = accept_registration_directly(input, assigned_pmr)
+    end
+
+    assert NewYou.Identity.Account |> Ash.read!(domain: NewYou.Identity, authorize?: false) == []
+
+    assert NewYou.Identity.RegistrationOperation
+           |> Ash.read!(domain: NewYou.Identity, authorize?: false) == []
+
+    assert audit_records("EvidenceObligation") == []
+    assert scheduled_audit_jobs() == []
+    assert row_count("tokens") == 0
+  end
+
   test "an identical registration retry does not multiply the obligation or schedule" do
     request = valid_request()
 
@@ -148,10 +196,8 @@ defmodule NewYou.Audit.RegistrationEvidenceTest do
     assert length(audit_records("EvidenceRecord")) == 1
     assert identity_truth(account_id) == identity_before
 
-    assert {:error, _} =
-             NewYou.Audit.create_evidence_record(%{obligation_id: obligation.id},
-               authorize?: false
-             )
+    refute function_exported?(NewYou.Audit, :create_evidence_record, 2)
+    refute function_exported?(NewYou.Audit, :fulfill_evidence_obligation, 3)
 
     refute Ash.Resource.Info.action(NewYou.Audit.EvidenceRecord, :update)
     refute Ash.Resource.Info.action(NewYou.Audit.EvidenceRecord, :destroy)
@@ -162,6 +208,53 @@ defmodule NewYou.Audit.RegistrationEvidenceTest do
                domain: NewYou.Audit,
                authorize?: false
              )
+  end
+
+  test "an open obligation cannot be fulfilled until its EvidenceRecord exists" do
+    assert {:ok, _} = NewYou.Identity.register(valid_request())
+    [obligation] = audit_records("EvidenceObligation")
+
+    assert {:error, _} =
+             Ash.update(obligation, %{},
+               action: :fulfill,
+               domain: NewYou.Audit,
+               authorize?: false
+             )
+
+    refreshed =
+      Ash.get!(NewYou.Audit.EvidenceObligation, obligation.id,
+        domain: NewYou.Audit,
+        authorize?: false
+      )
+
+    assert refreshed.state == :open
+    assert audit_records("EvidenceRecord") == []
+  end
+
+  test "an open obligation cannot be stranded by standalone record creation" do
+    assert {:ok, _} = NewYou.Identity.register(valid_request())
+    [obligation] = audit_records("EvidenceObligation")
+
+    refute function_exported?(NewYou.Audit, :create_evidence_record, 2)
+
+    refreshed =
+      Ash.get!(NewYou.Audit.EvidenceObligation, obligation.id,
+        domain: NewYou.Audit,
+        authorize?: false
+      )
+
+    assert refreshed.state == :open
+    assert audit_records("EvidenceRecord") == []
+  end
+
+  test "Audit exposes only purpose-bound mutation and read interfaces" do
+    refute function_exported?(NewYou.Audit, :create_evidence_record, 2)
+    refute function_exported?(NewYou.Audit, :fulfill_evidence_obligation, 3)
+    refute function_exported?(NewYou.Audit, :list_evidence_obligations, 0)
+    refute function_exported?(NewYou.Audit, :list_evidence_obligations, 1)
+    refute function_exported?(NewYou.Audit, :list_evidence_records, 0)
+    refute function_exported?(NewYou.Audit, :list_evidence_records, 1)
+    assert function_exported?(NewYou.Audit, :materialize_registration_evidence, 2)
   end
 
   test "PostgreSQL rejects lifecycle values outside the EvidenceObligation contract" do
@@ -198,8 +291,9 @@ defmodule NewYou.Audit.RegistrationEvidenceTest do
              )
 
     assert {:error, _} =
-             NewYou.Audit.create_evidence_record(
-               %{obligation_id: Ecto.UUID.generate()},
+             Ash.create(NewYou.Audit.EvidenceRecord, %{obligation_id: Ecto.UUID.generate()},
+               action: :materialize,
+               domain: NewYou.Audit,
                authorize?: false
              )
 
@@ -221,6 +315,21 @@ defmodule NewYou.Audit.RegistrationEvidenceTest do
       terms_version_id: @terms_id,
       privacy_version_id: @privacy_id
     }
+  end
+
+  defp valid_pmr do
+    {:ok, pmr} = NewYou.Identity.PMR.generate()
+    pmr
+  end
+
+  defp accept_registration_directly(registration_input, pmr) do
+    NewYou.Identity.accept_new_registration(
+      %{
+        registration_input: registration_input,
+        pmr: pmr
+      },
+      authorize?: false
+    )
   end
 
   defp audit_records(resource_name) do
