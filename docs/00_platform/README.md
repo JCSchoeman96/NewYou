@@ -19,6 +19,12 @@ For durable governance, read only what the task requires in this order:
 7. `PLATFORM_OPERATING_MODEL_v1.2.0.md`
 8. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` when frontend/public-experience scope makes it relevant
 
+Current deep-reference evidence is also routed by the current router. Load these only when exact source tracing, identifier-level reasoning or legislative Architecture evidence is genuinely required; they are not additional default governing roots:
+
+- `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`
+- `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`
+- `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`
+
 Supporting authority is routed by the current router and presently includes:
 
 - `reference/ENGINEERING_STANDARDS_v1.0.1.md`
