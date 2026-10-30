@@ -2,19 +2,19 @@
 
 - **Artifact:** FP-001 Phase 8 proof contract and self-contained task definition
 - **Tracer Bullet:** `TB-001`
-- **Artifact version:** `v0.1.2`
-- **Candidate base main SHA:** `0972864ef7f4638c96198e19a13977e0151e9726`
-- **Lifecycle:** `CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION`
+- **Artifact version:** `v0.1.3`
+- **Candidate base main SHA:** `90fe6bc9bca6c0198527c4b8b253490f70e11798`
+- **Lifecycle:** `PROPOSED SUCCESSOR / REVIEW PENDING / NOT CERTIFIED / NOT CURRENT`
 - **Proof design:** FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS
-- **Contract/design review:** COMPLETE / PASS
-- **Proof execution:** NOT STARTED
+- **Contract/design review:** PENDING INDEPENDENT REVIEW
+- **Proof execution:** STARTED UNDER THE APPROVED v0.1.2 CONTRACT; THIS SUCCESSOR ADDS NO RUNTIME PROOF
 - **Proof certification:** NOT STARTED
 - **Phase 9 / Vertical Slices:** NOT STARTED / NOT AUTHORISED
 - **Authority class:** active working proof contract; derived under current authority; not Product, Architecture, Domain or Roadmap law
-- **Design predecessor:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.1.md` (direct predecessor; preserved byte-identically)
-- **Reviewed candidate:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` (exact PR #132 candidate; preserved byte-identically)
+- **Design predecessor:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md` (direct approved-current status snapshot; preserved byte-identically)
+- **Reviewed predecessor candidate:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` (exact PR #132 candidate; preserved byte-identically)
 
-This contract records the already-approved Phase 8 proof design for the materially unproven FP-001 authentication and durable-consequence path. `TB-001` is assigned at this routed task-definition stage: the route entering WELL-2, preserved at `archive/02_OPEN_WORK_v1.2.74.md`, uses `TB-nnn` for Phase 8 proof of materially unproven paths, places proof contract/task definition next, and records in §12.30 that no identifier was allocated in that prior promotion. WELL-2 performs that next definition action, and current Open Work v1.2.78 records the review-complete status route for the approved TB-001 contract. Atlas's Tracer Bullet lifecycle defines the proof boundary but explicitly does not create a contract, task or identifier; this separate routed task definition does. This is the first governed TB task in the repository. WELL-1's accepted Grill comments establish the source decisions; they did not allocate this identifier. Contract/design review is COMPLETE / PASS. The contract is current only after this status successor merges; approval does not certify architectural proof. This v0.1.2 successor corrects the authority order and strengthens the governance checks for Q61/Q66, the Q28–Q56 implementation and verification conditions, and Q79 machine-readable evidence. It preserves v0.1.1 as its direct predecessor and retains the archived v0.1.0 history.
+This v0.1.3 successor preserves the approved FP-001 Phase 8 proof design and changes only the Communications scheduling boundary under WELL-60. The prior approved contract v0.1.2 remains immutable and current until this exact successor is independently reviewed and promoted. Master Gate selected Model B as the proposed amendment direction: P8-05/WELL-49 commits the durable Communications `MessageIntent` and required protected envelope with source acceptance; P8-10/WELL-10 later discovers and schedules eligible intents through the real Communications executor. This candidate changes no Product, Decision, Architecture, Domain, or Roadmap authority. Its contract/design review is pending; it does not reset or claim new runtime proof, authorize implementation, or clear WELL-49.
 
 No application, proof harness, database, migration, dependency, provider integration, Phase 9 work or additional Plane ticket is created by this contract-authoring change.
 
@@ -22,11 +22,11 @@ No application, proof harness, database, migration, dependency, provider integra
 
 Apply the live authority hierarchy in this order:
 
-1. Product Law: `00_PLATFORM_v1.8.0.md` and `01_DECISIONS_v1.8.0.md`.
-2. Architecture Law and current synthesis: `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md` and `03_ARCHITECTURE_v1.1.1.md`.
+1. Product Law: `00_PLATFORM_v1.12.0.md` and `01_DECISIONS_v1.12.0.md`.
+2. Architecture Law and current synthesis: `03_ARCHITECTURE_v1.1.1.md`.
 3. Domain Law: `04_DOMAIN_MAP_v1.2.0.md`.
-4. Roadmap: `05_ROADMAP_v1.2.3.md`.
-5. Supporting operating, frontend and engineering contracts: `PLATFORM_OPERATING_MODEL_v1.0.1.md`, `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md`, and `reference/ENGINEERING_STANDARDS_v1.0.1.md`.
+4. Roadmap: `05_ROADMAP_v1.2.4.md`.
+5. Supporting operating, frontend and engineering contracts: `PLATFORM_OPERATING_MODEL_v1.2.0.md`, `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md`, and `reference/ENGINEERING_STANDARDS_v1.0.1.md`.
 6. Current Open Work.
 7. Approved FP-001 planning contracts listed below.
 8. This proof contract.
@@ -37,7 +37,7 @@ The accepted WELL-1 INTERNAL Q1–Q90 Grill comments are design provenance, not 
 
 Current FP-001 source contracts:
 
-- `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`
+- `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md`
 - `working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
 - `working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
 - `working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md`
@@ -53,7 +53,7 @@ The following WELL-1 INTERNAL comments identify the accepted Q1–Q90 source bat
 | Q7–Q11 | `e84a1ae5-8517-46c1-bb33-01d3fcc8b950` | §§4, 8: password established at registration, passive magic-link retrieval, supersession and one Identity Session model. |
 | Q12–Q16 | `60fba648-e589-4e67-a6e4-4dd3818e8115` | §§3–8: PMR allocation, idempotency, transactional consequence boundary, E1/E2, and deterministic seams over real PostgreSQL/Ash/Oban boundaries. |
 | Q17–Q21 | `b24f0a08-8493-4dc3-9885-b47be44eda0d` | §§3, 7, 10: `:new_you` / `NewYou` / `NewYouWeb`, one repo/database and root application shape. Version snapshots remain unpinned here and must be reverified before implementation. |
-| Q22 | `cc6d56dd-344f-41ff-8b2f-64246d7f1c5b` | §§3, 5, 7–9: AshOban durable execution, MessageIntent authority, atomic first scheduling proof, and STOP if the real PostgreSQL proof fails. |
+| Q22 | `cc6d56dd-344f-41ff-8b2f-64246d7f1c5b` | §§3, 5, 7–9: MessageIntent authority and no-lost handoff; P8-05 acceptance durability; P8-10 real AshOban executor scheduling; Audit E2 atomicity; and STOP if the real PostgreSQL proof fails. |
 | Q23 | `446a4cc7-d1b3-4a06-a0ea-3e25d8d3149f` | §§3, 7.1, 8–10: owning Ash mutation boundaries and only narrow, justified infrastructure escape hatches. |
 | Q24 | `e26ca691-0980-42de-80d0-3eec3d221d67` | §§3, 5, 7, 8: Ash Signals coordinate narrowly; receiving Domains use their owning interfaces; no universal event bus or signal-based authority. |
 | Q25 | `b468c38e-662a-43c0-a6a5-b3abbca72499` | §§3, 6, 10: historical reconstruction stays in the lifecycle/evidence model; Ash Temporal Resources are not introduced without a later capability-specific requirement. |
@@ -66,7 +66,7 @@ The following WELL-1 INTERNAL comments identify the accepted Q1–Q90 source bat
 | Q71–Q80 | `d55613cf-8026-44e3-8f90-0d7bf687231d` | §§7–10: real browser spine plus fault probes, production business path, deterministic cuts, genuine concurrency, restart/reconnect and proof separated from production completeness. |
 | Q81–Q90 | `b45e180f-180a-4126-b043-3f7d555517aa` | §§8–12: nine mandatory families, all-or-nothing exit, BLOCKED / STOP, no weighted pass, and the separate human review gate before proof execution. |
 
-At the declared base main SHA, the route entering WELL-2 was Open Work v1.2.74, Delivery Atlas v0.4.16, FP-001 Skeleton v0.1.18 and HARDEN-02 v0.5.18. Those route records remain preserved byte-identically in the archive. The first candidate route versions v1.2.75 / v0.4.17 / v0.1.19 / v0.5.19 and the v1.2.76 / v0.4.18 / v0.1.20 / v0.5.20 direct predecessors are also preserved byte-identically. The reviewed contract route was Open Work v1.2.77, Delivery Atlas v0.4.19, FP-001 Skeleton v0.1.21 and HARDEN-02 v0.5.21; those direct predecessors remain preserved byte-identically. The current status successor routes Open Work v1.2.78, Delivery Atlas v0.4.20, FP-001 Skeleton v0.1.22 and HARDEN-02 v0.5.22. This status successor changes no frozen Phase 7C contract or higher authority.
+At the declared base main SHA, the route entering WELL-2 was Open Work v1.2.74, Delivery Atlas v0.4.16, FP-001 Skeleton v0.1.18 and HARDEN-02 v0.5.18. Those route records remain preserved byte-identically in the archive. The first candidate route versions v1.2.75 / v0.4.17 / v0.1.19 / v0.5.19 and the v1.2.76 / v0.4.18 / v0.1.20 / v0.5.20 direct predecessors are also preserved byte-identically. The proposed successor route uses Open Work v1.2.88, Delivery Atlas v0.4.29, FP-001 Skeleton v0.1.29 and HARDEN-02 v0.5.31; their direct predecessors remain preserved byte-identically. This route does not promote the v0.1.3 contract candidate. The original approved-contract status route used Open Work v1.2.78, Delivery Atlas v0.4.20, FP-001 Skeleton v0.1.22 and HARDEN-02 v0.5.22; later routes are preserved in Open Work history. This status successor changes no frozen Phase 7C contract or higher authority.
 
 ## 2. Outcome and proof claim
 
@@ -81,7 +81,7 @@ The proof implementation, after this contract is approved, shall use:
 - **One modular Phoenix/Ash application**, with OTP app `:new_you`, application modules `NewYou` and `NewYouWeb`, and one `NewYou.Repo`.
 - PostgreSQL as durable business authority by default. Ash Domains, actions and code interfaces are ordinary business mutation boundaries. There is no ordinary direct Repo/Ecto/raw-SQL alternate business-write API. Infrastructure-only escape hatches are explicit, narrow, reviewed and preserve the same invariants.
 - Privileged MFA/step-up is limited to privileged paths; participant self-service MFA is deferred. Internal durable Resource keys default to server-generated UUIDv7; PMR remains a separate public reference.
-- Oban as the durable executor and `ash_oban` for the Phase 8 durable async integration. Ash Signals are narrow coordination only; they are never a universal event bus or business authority. Cross-Domain listeners call the receiving Domain's owning Ash interface.
+- Oban as executor machinery and `ash_oban` for the governed durable-async integration. P8-05 commits MessageIntent but does not require its Communications job; P8-10 owns later discovery/scheduling for the real Communications executor. Ash Signals are narrow coordination only; they are never a universal event bus or business authority. Cross-Domain listeners call the receiving Domain's owning Ash interface.
 - MessageIntent as Communications authority and Oban/job state as executor state. A job's presence, absence, retry count or completion cannot establish business success.
 - Deterministic proof seams for controlled failures and provider outcomes, while the transaction, Resource, Domain, action, policy and async boundaries remain the production path.
 
@@ -119,7 +119,17 @@ Do not add a separate PMR Resource or manufacture a Resource for a page, worker,
 - Identity supplies fresh source eligibility through its owning interface. Communications never issues, consumes, revives or reinterprets Identity proof.
 
 Communications physical Resources are exactly `MessageIntent` and `DeliveryAttempt`.
-`ash_state_machine` is used selectively for genuine single-dimension lifecycles only. `MessageIntent.dispatch_disposition` uses `ash_state_machine` for `open`, `held`, `reconciliation_required` and `closed`; source eligibility, content, capability and provider outcome remain separate. Account's orthogonal state dimensions remain outside this machine. `DeliveryAttempt` admission, invocation, provider observation and reconciliation conclusion remain separate dimensions outside that machine.
+`ash_state_machine` is used selectively for genuine single-dimension lifecycles only. `MessageIntent.dispatch_disposition` uses `ash_state_machine` for `open`, `held`, `reconciliation_required` and `closed`; source eligibility, content, capability and provider outcome remain separate. Account's orthogonal state dimensions remain outside this machine. `DeliveryAttempt` admission, invocation, provider observation and reconciliation conclusion remain separate dimensions outside that machine. No queue-mirroring state such as `queued`, `scheduled`, `ready`, or `preflighted` is added to MessageIntent. An eligible intent may remain `open` while awaiting P8-10 discovery/scheduling.
+
+### 5.1 P8-05 / P8-10 no-lost-handoff contract
+
+**P8-05/WELL-49 acceptance boundary.** A valid registration or resend commits its source transition, exact Communications `MessageIntent`, required source/provenance references, and required WELL-46 protected-delivery envelope in the same authoritative PostgreSQL transaction. Initial registration also commits the selected Audit `EvidenceObligation` and initial durable Audit schedule in that same boundary under the separate E2 contract. No Communications Oban job is required at registration/resend acceptance. Failure to create a later P8-10 Communications job never rolls back an otherwise valid committed registration/resend. The committed eligible open MessageIntent remains durably discoverable through the Communications owner interface when no job exists. P8-05 can complete this acceptance and discoverability proof without the P8-10 executor existing. P8-05 executes no Communications worker/provider.
+
+**P8-10/WELL-10 scheduling and execution boundary.** P8-10 discovers eligible committed open MessageIntents, recovers backlog after restart, and idempotently schedules their real Communications executor through the version-matched AshOban/Oban trigger/action API. The AshOban target is a real Communications-owned Ash action participating in the governed delivery lifecycle; no placeholder/no-op action, inert worker, generic dispatcher, generic queue/outbox, third Communications Resource, or new business authority is introduced. The action re-reads current source eligibility through its owner, exact Content & Media content/locale eligibility and binding, and protected capability authority before DeliveryAttempt admission. DeliveryAttempt admission commits before provider I/O; no authoritative transaction spans provider I/O.
+
+The Communications job business reference is only `MessageIntent.id`. Job arguments contain no verification bearer, protected capability, destination, rendered body, Account data, Identity payload, or other protected source data. Oban uniqueness is not business idempotency. Duplicate scheduling converges on the same logical intent, and concurrent discoverers/executors cannot multiply the business obligation or admit unsafe provider work. Lost, deleted, or failed executor work can be recreated from durable Communications authority. Failure before enqueue, after enqueue, or during execution leaves the committed MessageIntent discoverable and recoverable; retry, restart, and reconciliation follow existing Communications law. A failed current guard fails closed without adding a dispatch state.
+
+**Proof ownership.** P8-05 proves MessageIntent/envelope atomicity with source acceptance, initial Audit E2 schedule atomicity, discoverability with zero Communications jobs, and absence of Communications worker/provider execution. P8-10 proves restart/backlog discovery, job recreation, duplicate/concurrent scheduling safety, id-only arguments, current source/content/capability revalidation, DeliveryAttempt admission before provider I/O, and retry/ambiguity/reconciliation. P8-05 does not prove that a Communications job exists immediately after acceptance or that Communications job insertion failure rolls back registration.
 
 ## 6. Locked Audit acceptance
 
@@ -134,7 +144,7 @@ Audit physical Resources are exactly `EvidenceObligation` and `EvidenceRecord`.
 
 The proof consists of one real minimal browser spine plus focused architectural fault probes, all through the same production business path. It uses real PostgreSQL, deterministic failure injection, genuine concurrent transactions wherever concurrency is the claim, restart/reconnect proof, deterministic provider ambiguity/reconciliation, both E1 and E2 proof, and explicit authority-negative proof.
 
-Registration uses one authoritative PostgreSQL acceptance boundary: Account, PMR, verification Token, required Communications MessageIntent, selected Audit EvidenceObligation and initial durable scheduling commit together or are absent together.
+P8-05 registration uses one authoritative PostgreSQL acceptance boundary: Account, PMR, verification Token, exact Communications MessageIntent and required protected envelope, selected Audit EvidenceObligation, and initial Audit durable scheduling commit together or are absent together. A Communications Oban job may be absent. Its later P8-10 schedule is reconstructed from the committed MessageIntent.
 
 The later execution task must name one deterministic proof entrypoint that runs the complete required proof set, exits non-zero on invariant failure and emits concise machine-readable evidence suitable for CI/certification. It records the exact Git SHA, relevant runtime and dependency versions, PASS/FAIL for every mandatory proof family, and the failing invariant/cut-point where applicable. The exact Mix command name remains unfrozen until the scaffold establishes the supported entrypoint. Focused probes may run directly during diagnosis, but the governed result must include every required scenario; a green subset does not replace the proof.
 
@@ -172,10 +182,10 @@ All nine families are mandatory. Each result records the invariant, real boundar
 
 | # | Scenario family | Required proof |
 |---|---|---|
-| 1 | Registration / PMR / reconciliation | Account, password and PMR commit as one authoritative operation; verification Token, required Communications MessageIntent, selected Audit EvidenceObligation and initial durable scheduling commit together at the registration boundary or are absent together; idempotent retry converges; genuine same-email transactions and PMR collision pressure preserve one canonical result; duplicate-account reconciliation is Identity-owned; retired PMR never reuses. |
+| 1 | Registration / PMR / reconciliation | Account, password and PMR commit as one authoritative operation; verification Token, exact Communications MessageIntent and required protected envelope, selected Audit EvidenceObligation and initial Audit schedule commit together at the registration boundary or are absent together; no Communications job is required; committed open intents remain discoverable with zero jobs; idempotent retry converges; genuine same-email transactions and PMR collision pressure preserve one canonical result; duplicate-account reconciliation is Identity-owned; retired PMR never reuses. |
 | 2 | Proof capability / scanner / replay / supersession | Verify, reset, recovery and new-address confirmation retrieval through HEAD/GET/preview/scanner/prefetch consumes nothing; explicit purpose-specific consume is single-use; replay, expiry, revocation and supersession fail closed; newer magic-login proof replaces the prior current proof. |
 | 3 | Session / login / revocation / restart | Password and magic-link login share the Identity Session model; verification does not log in; current Session, credential and security checks govern; revocation survives restart/reconnect; stale UI cannot restore authority. |
-| 4 | Communications durability / backlog / provider ambiguity | Must-not-lose source handoff is durable before execution; `ash_oban`/Oban recover after restart and backlog; DeliveryAttempt commits before provider I/O; no transaction spans provider I/O; ambiguous outcome blocks retry and is reconciled deterministically; provider evidence never grants Identity authority. |
+| 4 | Communications durability / backlog / provider ambiguity | P8-05 commits durable MessageIntent authority without requiring a job; P8-10 discovers/recreates missing work after restart/backlog; duplicate scheduling converges and concurrent executors cannot admit unsafe duplicate work; job uniqueness is not business idempotency; only `MessageIntent.id` is the business job reference and no protected material enters args; current source/content/capability guards are re-read before DeliveryAttempt admission; admission commits before provider I/O; no transaction spans provider I/O; ambiguous outcome blocks retry and is reconciled deterministically; provider evidence never grants Identity authority. |
 | 5 | Audit E2 | Source transition, EvidenceObligation and initial scheduling share one acceptance boundary; failure rolls back the required boundary; replay materialises the same EvidenceRecord once; restart repairs materialisation without replaying the source transition. EvidenceRecord records only the restricted accepted source consequence, without secrets, excess payload or a second business truth. |
 | 6 | Audit E1 | Using security-hold release as the representative privileged effect: required admission commits before the effect; admission failure blocks it; source failure after accepted admission preserves the truthful attempt; a distinct attempt has distinct admission evidence. EvidenceRecord records only bounded admission evidence, without secrets, excess payload or a second business truth. |
 | 7 | Recovery / primary-email change | Identity owns cases, confirmation, canonical email and Session/credential consequences; Communications notices do not complete the change; duplicate, replay, expiry, restart and supersession cuts preserve old authority until an Identity apply transition commits. |
@@ -186,7 +196,7 @@ Where a scenario claims concurrency, use separate genuine PostgreSQL transaction
 
 ## 9. Failure, stop and evidence rules
 
-The required architecture is all-or-nothing for its invariants. A failure to preserve required PostgreSQL atomicity, identity ownership, must-not-lose consequences, E1/E2 acceptance, safe provider ambiguity or current authority is `BLOCKED / STOP`. It is not technical debt, a weighted pass, permission to weaken an invariant or a reason to start Phase 9.
+The required architecture is all-or-nothing for its invariants. A failure to preserve required PostgreSQL atomicity, Identity ownership, must-not-lose handoff, E1/E2 acceptance, safe provider ambiguity or current authority is `BLOCKED / STOP`. Failure to insert a future Communications job does not invalidate a valid P8-05 acceptance; the durable MessageIntent remains the recovery source. It is not technical debt, a weighted pass, permission to weaken an invariant or a reason to start Phase 9.
 
 The proof result must report each required scenario as pass or fail with its durable evidence. Unrun, flaky, mocked in place of a required real boundary, or otherwise unproven evidence is not a pass. Proof execution and proof certification remain separate lifecycle gates. This approved contract records neither a proof result nor proof certification.
 
@@ -202,7 +212,7 @@ The authoring tools for this documentation task are Git, the Foundation Integrit
 
 ## 11. Version, history and lifecycle
 
-`v0.1.0` is the initial proof-contract candidate. The `v0.1.1` PATCH successor first made accepted proof-design and implementation-foundation decisions explicit. This `v0.1.2` PATCH successor corrects the authority order and adds focused content guards for accepted conditions. It preserves the exact v0.1.1 predecessor byte-identically under `docs/00_platform/archive/` and updates the active manifest navigation and Open Work route. On later substantive change, create another explicit successor and preserve its exact predecessor. Do not rewrite an approved or historical contract in place. Current-status promotion and proof certification are separate from the contract design version, follow the repository's review/evidence and status-successor practice, and preserve the exact reviewed candidate.
+`v0.1.0` is the initial proof-contract candidate; `v0.1.1` and `v0.1.2` are preserved approved successors. This `v0.1.3` PATCH successor proposes the WELL-60 Communications scheduling correction and preserves the approved-current v0.1.2 status snapshot at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md`. The exact PR #132 v0.1.2 candidate remains separately preserved at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. It remains a review candidate, not current or approved, until independent exact-head review and the repository status/merge gates complete. Do not rewrite an approved or historical contract in place. This successor does not reset proof execution or certify proof.
 
 The governing Open Work, Atlas, Skeleton and HARDEN-02 documents use their established patch successors for this routing-only transition; their direct predecessors are archived byte-identically. This derived contract is listed by the manifest for navigation/integrity only and is not promoted to `governing_documents` or `reference_documents`.
 
@@ -212,17 +222,20 @@ The governing Open Work, Atlas, Skeleton and HARDEN-02 documents use their estab
 PROOF CLASSIFICATION: COMPLETE / FINALISED — NEW_TRACER_BULLET
 TRACER BULLET: REQUIRED / DEFINED
 TRACER BULLET ID: TB-001
-CONTRACT: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION
-PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS
-PROOF EXECUTION: NOT STARTED
-PROOF RESULT: NOT STARTED
-PROOF CERTIFICATION: NOT STARTED
-PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY); CONTRACT APPROVED; EXECUTION WAITS FOR A SEPARATE START
+APPROVED BASELINE CONTRACT v0.1.2: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION
+SUCCESSOR CONTRACT v0.1.3: PROPOSED / REVIEW PENDING / NOT CERTIFIED / NOT CURRENT
+PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS, WITH THE WELL-60 AMENDMENT PENDING REVIEW
+PROOF EXECUTION: STARTED UNDER THE APPROVED v0.1.2 CONTRACT; THIS SUCCESSOR ADDS NO RUNTIME PROOF
+PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE
+PROOF CERTIFICATION: NOT CERTIFIED
+PHASE 8: AUTHORISED FOR BOUNDED ARCHITECTURAL PROOF; THIS SUCCESSOR DOES NOT AUTHORISE NEW IMPLEMENTATION
 PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
 ```
 
 ## 13. Contract review and current-status promotion record
 
-Contract/design review is COMPLETE / PASS for the exact PR #132 head `5486c94c1b659dfeb026dcbe6abf91978655c535`. PR #132 merged that reviewed candidate unchanged as `4234965c8da20dbb4ef0a7128614a5070244619a`; the merge tree matches the independently reviewed candidate tree. Exact-head Foundation Integrity run [39484403424](https://github.com/JCSchoeman96/NewYou/actions/runs/39484403424) passed with 508 tests, 900 checks and no findings. Resulting-main Foundation Integrity run [39487861172](https://github.com/JCSchoeman96/NewYou/actions/runs/39487861172) passed.
+The following is immutable approval evidence for predecessor v0.1.2 only: contract/design review was COMPLETE / PASS for exact PR #132 head `5486c94c1b659dfeb026dcbe6abf91978655c535`. PR #132 merged that reviewed candidate unchanged as `4234965c8da20dbb4ef0a7128614a5070244619a`; exact-head Foundation Integrity run [39484403424](https://github.com/JCSchoeman96/NewYou/actions/runs/39484403424) passed with 508 tests, 900 checks and no findings, and resulting-main run [39487861172](https://github.com/JCSchoeman96/NewYou/actions/runs/39487861172) passed. This record does not approve v0.1.3.
 
-This current-status successor approves the frozen v0.1.2 contract for bounded Phase 8 proof execution. It does not certify architectural proof. PROOF EXECUTION, PROOF RESULT and PROOF CERTIFICATION remain NOT STARTED. A separate execution start is required. Phase 9 / Vertical Slices remain NOT STARTED / NOT AUTHORISED. This status change does not alter the design or any implementation decision.
+## 14. WELL-60 successor review state
+
+This v0.1.3 contract is a proposed successor for independent Master Gate review. The exact approved-current v0.1.2 status snapshot is preserved at its distinct archive path; the exact PR #132 candidate bytes remain separately archived. This successor does not claim current status. Approval of this successor must be against its exact reviewed head. No application code, dependency, migration, runtime configuration, provider adapter, Communications Resource, or job execution is created by this documentation change. WELL-49 remains blocked by WELL-60 and WELL-61 until their gates clear.

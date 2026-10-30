@@ -22,8 +22,8 @@ MANIFEST = ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
 SUCCESSOR_CHECK = "phase8_approved_status_successor_current"
 PROVENANCE_CHECK = "phase8_status_successor_predecessor_provenance"
-CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.88.md"
+CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
+OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.89.md"
 PRE_AUTHORIZATION_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.83.md"
 HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
 APPROVAL_TIME_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.78.md"
@@ -45,6 +45,34 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         manifest = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         refresh_manifest(root, manifest)
         return root, manifest
+
+    def test_immediate_archived_predecessors_keep_artifact_specific_lineage(self):
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        expected = {
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.88.md": (
+                "OPEN_WORK_V1_2_88",
+                "PLANNING_TRACKER_HISTORICAL",
+            ),
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.29.md": (
+                "DELIVERY_ATLAS_V0_4_29",
+                "DERIVED_DELIVERY_NAVIGATION_HISTORICAL",
+            ),
+            "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.29.md": (
+                "FP001_SKELETON_V0_1_29",
+                "DERIVED_FEATURE_PACK_NAVIGATION_HISTORICAL",
+            ),
+            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.31.md": (
+                "HARDEN_02_V0_5_31",
+                "DERIVED_GOVERNANCE_CONTRACT_HISTORICAL",
+            ),
+        }
+        actual = {
+            entry["repository_path"]: (entry["document_id"], entry["authority_class"])
+            for entry in manifest["historical_documents"]
+            if entry.get("repository_path") in expected
+        }
+
+        self.assertEqual(expected, actual)
 
     def test_current_successor_resolves_manifest_routes_and_preserves_lifecycle_boundaries(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
@@ -113,11 +141,11 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertEqual("eb28943cd8353cdec6625a053e157af449587d2c", state["well_48_merge_sha"])
         self.assertEqual("BLOCKED / WAITING ON WELL-60 AND WELL-61", state["well_49"])
         self.assertEqual("BACKLOG / NOT STARTED", state["well_50"])
-        self.assertIn("well-48 complete", state["next_governance_action"].casefold())
-        self.assertIn("well-49 blocked", state["next_governance_action"].casefold())
+        self.assertIn("well-48: complete", state["next_governance_action"].casefold())
+        self.assertIn("well-49: blocked", state["next_governance_action"].casefold())
         self.assertIn("well-60", state["next_governance_action"].casefold())
         self.assertIn("well-61", state["next_governance_action"].casefold())
-        self.assertIn("well-50 backlog", state["next_governance_action"].casefold())
+        self.assertIn("well-50: backlog", state["next_governance_action"].casefold())
         current_authorization = open_work.split("## Current P8-05 implementation authorization", 1)[1].split("\n## ", 1)[0]
         for token in (
             "WELL-48: COMPLETE / MERGED VIA PR #156",
@@ -207,7 +235,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
             self.assertIn("archived current-route successor chain", promotion_check["message"])
 
-    def test_contract_is_approved_without_claiming_executed_or_certified_proof(self):
+    def test_current_contract_is_approved_without_claiming_proof_certification_or_phase9(self):
         self.assertTrue(CONTRACT.is_file(), "the governed Phase 8 task contract is missing")
         text = CONTRACT.read_text(encoding="utf-8")
         for token in (
@@ -215,11 +243,12 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
             "**Contract/design review:** COMPLETE / PASS",
             "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS",
-            "PROOF EXECUTION: NOT STARTED",
-            "PROOF RESULT: NOT STARTED",
-            "PROOF CERTIFICATION: NOT STARTED",
+            "PROOF EXECUTION: STARTED UNDER THE APPROVED v0.1.2 CONTRACT; THIS SUCCESSOR ADDS NO RUNTIME PROOF",
+            "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
+            "PROOF CERTIFICATION: NOT CERTIFIED",
             "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
-            "0972864ef7f4638c96198e19a13977e0151e9726",
+            "PR #164's exact reviewed head was `73725a3d3339bf07fdcd44b9a7ec86026db3e984`",
+            "status promotion base main SHA `429677295a396b8c78e9ab6b436a57d9249eaddc`",
         ):
             self.assertIn(token, text)
         self.assertNotIn("mix fp001.proof", text)
@@ -236,9 +265,13 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         text = CONTRACT.read_text(encoding="utf-8")
         self.assertEqual([], _fp001_phase8_proof_contract_content_issues(text))
         self.assertIn(
-            "Account, PMR, verification Token, required Communications MessageIntent, selected Audit EvidenceObligation and initial durable scheduling commit together or are absent together.",
+            "A valid registration or resend commits its source transition, exact Communications `MessageIntent`, required source/provenance references, and required WELL-46 protected-delivery envelope in the same authoritative PostgreSQL transaction.",
             text,
         )
+        self.assertIn("No Communications Oban job is required at registration/resend acceptance.", text)
+        self.assertIn("The committed eligible open MessageIntent remains durably discoverable", text)
+        self.assertIn("P8-10 discovers eligible committed open MessageIntents, recovers backlog after restart", text)
+        self.assertIn("DeliveryAttempt admission commits before provider I/O", text)
         self.assertIn(
             "Using security-hold release as the representative privileged effect",
             text,
@@ -397,8 +430,8 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
     def test_open_work_routes_to_p805_after_well5_without_certifying_tb001_or_phase9(self):
         self.assertTrue(OPEN_WORK.is_file(), "the Open Work status successor is missing")
         text = OPEN_WORK.read_text(encoding="utf-8")
-        self.assertIn('"status_successor_version": "1.2.88"', text)
-        self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", text)
+        self.assertIn('"status_successor_version": "1.2.89"', text)
+        self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md", text)
         self.assertIn("TB-001", text)
         self.assertIn("CONTRACT/DESIGN REVIEW: COMPLETE / PASS", text)
         self.assertIn("CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", text)
@@ -416,7 +449,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("WELL-49 remains BLOCKED / WAITING ON WELL-60 AND WELL-61", current_status)
         self.assertIn("WELL-60 remains a separate unresolved prerequisite", current_status)
         self.assertIn("WELL-64 is COMPLETE", text.split("## 12.39 — WELL-64 completion and P8-05 boundary", 1)[1])
-        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.28.md`", text)
+        self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.29.md`", text)
         self.assertFalse((ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.81.md").exists())
         archived_predecessor = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.81.md"
         self.assertEqual(
@@ -507,7 +540,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             shutil.copytree(ROOT / "docs", root / "docs")
             readme = root / "docs/00_platform/README.md"
             text = readme.read_text(encoding="utf-8")
-            current = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+            current = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
             stale = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.0.9.md"
             self.assertIn(current, text)
             readme.write_text(text.replace(current, stale, 1), encoding="utf-8")

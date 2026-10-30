@@ -4,17 +4,18 @@
 - **Tracer Bullet:** `TB-001`
 - **Artifact version:** `v0.1.3`
 - **Candidate base main SHA:** `90fe6bc9bca6c0198527c4b8b253490f70e11798`
-- **Lifecycle:** `PROPOSED SUCCESSOR / REVIEW PENDING / NOT CERTIFIED / NOT CURRENT`
+- **Lifecycle:** `CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION`
 - **Proof design:** FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS
-- **Contract/design review:** PENDING INDEPENDENT REVIEW
+- **Contract/design review:** COMPLETE / PASS
 - **Proof execution:** STARTED UNDER THE APPROVED v0.1.2 CONTRACT; THIS SUCCESSOR ADDS NO RUNTIME PROOF
-- **Proof certification:** NOT STARTED
+- **Proof result:** INCOMPLETE / COVERAGE-INCOMPLETE
+- **Proof certification:** NOT CERTIFIED
 - **Phase 9 / Vertical Slices:** NOT STARTED / NOT AUTHORISED
 - **Authority class:** active working proof contract; derived under current authority; not Product, Architecture, Domain or Roadmap law
 - **Design predecessor:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md` (direct approved-current status snapshot; preserved byte-identically)
 - **Reviewed predecessor candidate:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` (exact PR #132 candidate; preserved byte-identically)
 
-This v0.1.3 successor preserves the approved FP-001 Phase 8 proof design and changes only the Communications scheduling boundary under WELL-60. The prior approved contract v0.1.2 remains immutable and current until this exact successor is independently reviewed and promoted. Master Gate selected Model B as the proposed amendment direction: P8-05/WELL-49 commits the durable Communications `MessageIntent` and required protected envelope with source acceptance; P8-10/WELL-10 later discovers and schedules eligible intents through the real Communications executor. This candidate changes no Product, Decision, Architecture, Domain, or Roadmap authority. Its contract/design review is pending; it does not reset or claim new runtime proof, authorize implementation, or clear WELL-49.
+This v0.1.3 successor preserves the approved FP-001 Phase 8 proof design and changes only the Communications scheduling boundary under WELL-60. Master Gate selected Model B: P8-05/WELL-49 commits the durable Communications `MessageIntent` and required protected envelope with source acceptance; P8-10/WELL-10 later discovers and schedules eligible intents through the real Communications executor. PR #164's exact reviewed candidate is preserved byte-identically at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md`. Its contract/design review is COMPLETE / PASS, and this status successor records it as CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. The promotion changes status, routing and provenance only. It does not reset or certify proof, authorize Phase 9, change higher authority, or clear WELL-49.
 
 No application, proof harness, database, migration, dependency, provider integration, Phase 9 work or additional Plane ticket is created by this contract-authoring change.
 
@@ -66,7 +67,7 @@ The following WELL-1 INTERNAL comments identify the accepted Q1–Q90 source bat
 | Q71–Q80 | `d55613cf-8026-44e3-8f90-0d7bf687231d` | §§7–10: real browser spine plus fault probes, production business path, deterministic cuts, genuine concurrency, restart/reconnect and proof separated from production completeness. |
 | Q81–Q90 | `b45e180f-180a-4126-b043-3f7d555517aa` | §§8–12: nine mandatory families, all-or-nothing exit, BLOCKED / STOP, no weighted pass, and the separate human review gate before proof execution. |
 
-At the declared base main SHA, the route entering WELL-2 was Open Work v1.2.74, Delivery Atlas v0.4.16, FP-001 Skeleton v0.1.18 and HARDEN-02 v0.5.18. Those route records remain preserved byte-identically in the archive. The first candidate route versions v1.2.75 / v0.4.17 / v0.1.19 / v0.5.19 and the v1.2.76 / v0.4.18 / v0.1.20 / v0.5.20 direct predecessors are also preserved byte-identically. The proposed successor route uses Open Work v1.2.88, Delivery Atlas v0.4.29, FP-001 Skeleton v0.1.29 and HARDEN-02 v0.5.31; their direct predecessors remain preserved byte-identically. This route does not promote the v0.1.3 contract candidate. The original approved-contract status route used Open Work v1.2.78, Delivery Atlas v0.4.20, FP-001 Skeleton v0.1.22 and HARDEN-02 v0.5.22; later routes are preserved in Open Work history. This status successor changes no frozen Phase 7C contract or higher authority.
+At the declared base main SHA, the route entering WELL-2 was Open Work v1.2.74, Delivery Atlas v0.4.16, FP-001 Skeleton v0.1.18 and HARDEN-02 v0.5.18. Those route records remain preserved byte-identically in the archive. The first candidate route versions v1.2.75 / v0.4.17 / v0.1.19 / v0.5.19 and the v1.2.76 / v0.4.18 / v0.1.20 / v0.5.20 direct predecessors are also preserved byte-identically. The current status route uses Open Work v1.2.89, Delivery Atlas v0.4.30, FP-001 Skeleton v0.1.30 and HARDEN-02 v0.5.32. Their direct predecessors are preserved byte-identically. The exact PR #164 candidate and the approved-current v0.1.2 predecessor snapshot remain at distinct archive paths. The original approved-contract status route used Open Work v1.2.78, Delivery Atlas v0.4.20, FP-001 Skeleton v0.1.22 and HARDEN-02 v0.5.22; later routes are preserved in Open Work history. This status successor changes no frozen Phase 7C contract or higher authority.
 
 ## 2. Outcome and proof claim
 
@@ -212,7 +213,7 @@ The authoring tools for this documentation task are Git, the Foundation Integrit
 
 ## 11. Version, history and lifecycle
 
-`v0.1.0` is the initial proof-contract candidate; `v0.1.1` and `v0.1.2` are preserved approved successors. This `v0.1.3` PATCH successor proposes the WELL-60 Communications scheduling correction and preserves the approved-current v0.1.2 status snapshot at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md`. The exact PR #132 v0.1.2 candidate remains separately preserved at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. It remains a review candidate, not current or approved, until independent exact-head review and the repository status/merge gates complete. Do not rewrite an approved or historical contract in place. This successor does not reset proof execution or certify proof.
+`v0.1.0` is the initial proof-contract candidate; `v0.1.1` and `v0.1.2` are preserved approved successors. This `v0.1.3` PATCH successor records the reviewed WELL-60 Communications scheduling correction. The approved-current v0.1.2 status snapshot remains at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md`; the exact PR #132 v0.1.2 candidate remains separately preserved at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. The exact PR #164 v0.1.3 candidate remains preserved at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md`. Do not rewrite an approved or historical contract in place. This status promotion does not reset proof execution or certify proof.
 
 The governing Open Work, Atlas, Skeleton and HARDEN-02 documents use their established patch successors for this routing-only transition; their direct predecessors are archived byte-identically. This derived contract is listed by the manifest for navigation/integrity only and is not promoted to `governing_documents` or `reference_documents`.
 
@@ -222,20 +223,22 @@ The governing Open Work, Atlas, Skeleton and HARDEN-02 documents use their estab
 PROOF CLASSIFICATION: COMPLETE / FINALISED — NEW_TRACER_BULLET
 TRACER BULLET: REQUIRED / DEFINED
 TRACER BULLET ID: TB-001
-APPROVED BASELINE CONTRACT v0.1.2: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION
-SUCCESSOR CONTRACT v0.1.3: PROPOSED / REVIEW PENDING / NOT CERTIFIED / NOT CURRENT
-PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS, WITH THE WELL-60 AMENDMENT PENDING REVIEW
+CONTRACT/DESIGN REVIEW: COMPLETE / PASS
+CONTRACT v0.1.3: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION
+PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS WITH THE REVIEWED WELL-60 AMENDMENT
 PROOF EXECUTION: STARTED UNDER THE APPROVED v0.1.2 CONTRACT; THIS SUCCESSOR ADDS NO RUNTIME PROOF
 PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE
 PROOF CERTIFICATION: NOT CERTIFIED
-PHASE 8: AUTHORISED FOR BOUNDED ARCHITECTURAL PROOF; THIS SUCCESSOR DOES NOT AUTHORISE NEW IMPLEMENTATION
+PHASE 8: AUTHORISED FOR BOUNDED ARCHITECTURAL PROOF
 PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED
 ```
 
 ## 13. Contract review and current-status promotion record
 
-The following is immutable approval evidence for predecessor v0.1.2 only: contract/design review was COMPLETE / PASS for exact PR #132 head `5486c94c1b659dfeb026dcbe6abf91978655c535`. PR #132 merged that reviewed candidate unchanged as `4234965c8da20dbb4ef0a7128614a5070244619a`; exact-head Foundation Integrity run [39484403424](https://github.com/JCSchoeman96/NewYou/actions/runs/39484403424) passed with 508 tests, 900 checks and no findings, and resulting-main run [39487861172](https://github.com/JCSchoeman96/NewYou/actions/runs/39487861172) passed. This record does not approve v0.1.3.
+The following records the predecessor v0.1.2 approval at the time: contract/design review was COMPLETE / PASS for exact PR #132 head `5486c94c1b659dfeb026dcbe6abf91978655c535`. PR #132 merged that reviewed candidate unchanged as `4234965c8da20dbb4ef0a7128614a5070244619a`; exact-head Foundation Integrity run [39484403424](https://github.com/JCSchoeman96/NewYou/actions/runs/39484403424) passed with 508 tests, 900 checks and no findings, and resulting-main run [39487861172](https://github.com/JCSchoeman96/NewYou/actions/runs/39487861172) passed. This predecessor record did not approve v0.1.3 at that time.
 
-## 14. WELL-60 successor review state
+## 14. WELL-60 review and status-promotion evidence
 
-This v0.1.3 contract is a proposed successor for independent Master Gate review. The exact approved-current v0.1.2 status snapshot is preserved at its distinct archive path; the exact PR #132 candidate bytes remain separately archived. This successor does not claim current status. Approval of this successor must be against its exact reviewed head. No application code, dependency, migration, runtime configuration, provider adapter, Communications Resource, or job execution is created by this documentation change. WELL-49 remains blocked by WELL-60 and WELL-61 until their gates clear.
+PR #164's exact reviewed head was `73725a3d3339bf07fdcd44b9a7ec86026db3e984`; exact-head workflow [41021446051](https://github.com/JCSchoeman96/NewYou/actions/runs/41021446051) passed Foundation Integrity, Foundation Smoke, Route CI lanes, `mix check` and `mix check.deep`. The nonblocking Foundation Full job later failed because `test_locale_separation_and_fail_closed_release_contract` in the pre-existing P8-05 JIT-spec regression suite expects an obsolete phrase in `docs/execution/p8-05-registration-jit-spec.md`; this is separate from the required merge gate.  PR #164 merged as resulting `main` `429677295a396b8c78e9ab6b436a57d9249eaddc`, with tree `c947544000f66c104a51240e2aee3d0d123b23ec`; resulting-main workflow [41022376748](https://github.com/JCSchoeman96/NewYou/actions/runs/41022376748) passed its required checks, with Foundation Full skipped by the push route. The reviewed candidate bytes are preserved at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md`, SHA-256 `e4ad6fd47bb1a04cd299fd900c2757e075352235ca286b6f368637942ae3cf6d`. The status promotion base main SHA `429677295a396b8c78e9ab6b436a57d9249eaddc` is the PR #164 resulting `main`. The approved-current v0.1.2 predecessor snapshot remains at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md`, SHA-256 `973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4`.
+
+This status successor records v0.1.3 as CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION and contract/design review as COMPLETE / PASS. It does not certify the incomplete TB-001 proof, change Model B, or authorize Phase 9. WELL-49 remains blocked pending WELL-60's promotion merge/resulting-main verification and the independent WELL-61 gate. No application code, dependency, migration, runtime configuration, provider adapter, Communications Resource, or job execution is created by this documentation change.
