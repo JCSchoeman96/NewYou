@@ -95,7 +95,7 @@
     "durable_governance_precedence": true,
     "status_only_changes_are_plane_only": true,
     "conflict_policy": "STOP affected work and reconcile the smallest correct upstream durable authority; Plane never silently overrides durable GitHub law.",
-    "sympony_note": "Symphony and local implementation agents consume focused Ready Plane work rather than infer scope from governance prose."
+    "symphony_note": "Symphony and local implementation agents consume focused Ready Plane work rather than infer scope from governance prose."
   },
   "legacy_snapshots": [
     {
