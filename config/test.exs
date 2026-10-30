@@ -1,5 +1,6 @@
 import Config
 
+config :new_you, Oban, testing: :manual
 config :new_you, :platform_name, "Test Platform"
 
 config :new_you, :identity_registration_legal_versions, %{

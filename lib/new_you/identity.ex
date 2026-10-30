@@ -15,7 +15,6 @@ defmodule NewYou.Identity do
 
   @operation_lifetime_seconds 24 * 60 * 60
   @registration_operation_expiry_batch_size 100
-  @verification_token_lifetime {24, :hours}
   @verifier_provider "AshAuthentication.Argon2Provider"
   @verifier_version "argon2_elixir-4.1.3"
   @development_terms_id "NEWYOU-TERMS-EN-DEV-2026-10-27-001"
@@ -24,7 +23,10 @@ defmodule NewYou.Identity do
   resources do
     resource Account
     resource Token
-    resource RegistrationOperation
+
+    resource RegistrationOperation do
+      define :accept_new_registration, action: :accept_registration
+    end
   end
 
   @doc "Accept a valid registration into Identity and return a neutral pending result."
@@ -42,6 +44,31 @@ defmodule NewYou.Identity do
   end
 
   def register(_), do: {:error, :invalid_registration}
+
+  def registration_now, do: now()
+
+  @doc false
+  @spec validate_registration_acceptance(map(), term()) ::
+          {:ok, map()} | {:error, :invalid_registration}
+  def validate_registration_acceptance(registration_input, pmr) when is_map(registration_input) do
+    with {:ok, operation_id} <- operation_id(registration_input),
+         {:ok, registration} <- validate_request(registration_input, operation_id),
+         true <- PMR.valid?(pmr),
+         {:ok, request_fingerprint, fingerprint_key_version} <-
+           RegistrationBinding.fingerprint(registration) do
+      {:ok,
+       %{
+         registration_input: registration,
+         request_fingerprint: request_fingerprint,
+         fingerprint_key_version: fingerprint_key_version,
+         pmr: pmr
+       }}
+    else
+      _ -> {:error, :invalid_registration}
+    end
+  end
+
+  def validate_registration_acceptance(_, _), do: {:error, :invalid_registration}
 
   @doc "Tombstone live registration bindings linked to an Account after an Identity invalidation."
   @spec invalidate_registration_operations(String.t()) :: :ok | {:error, atom()}
@@ -164,34 +191,22 @@ defmodule NewYou.Identity do
 
   defp create_registration_with_pmr(input, fingerprint, key_version, pmr, attempt) do
     result =
-      Ash.transaction([Account, Token, RegistrationOperation], fn ->
-        with {:ok, account} <- create_account(input, pmr),
-             {:ok, verification_proof} <- issue_verification_proof(account),
-             committed_at <- now(),
-             {:ok, _operation} <-
-               create_operation(%{
-                 operation_id: input.operation_id,
-                 request_fingerprint: fingerprint,
-                 fingerprint_key_version: key_version,
-                 password_verifier: account.hashed_password,
-                 verifier_provider: @verifier_provider,
-                 verifier_version: @verifier_version,
-                 outcome: :verification_pending,
-                 committed_at: committed_at,
-                 expires_at: DateTime.add(committed_at, @operation_lifetime_seconds, :second),
-                 created_account_id: account.id
-               }) do
-          %RegistrationResult{
-            status: :verification_pending,
-            account_id: account.id,
-            verification_proof: verification_proof
-          }
-        end
-      end)
+      accept_new_registration(
+        %{
+          registration_input: input,
+          pmr: pmr
+        },
+        authorize?: false
+      )
 
     case result do
-      {:ok, %RegistrationResult{} = accepted} ->
-        {:ok, accepted}
+      {:ok, %{status: :verification_pending} = accepted} ->
+        {:ok,
+         %RegistrationResult{
+           status: accepted.status,
+           account_id: accepted.account_id,
+           verification_proof: accepted.verification_proof
+         }}
 
       {:error, error} ->
         route_allocation_error(error, input, fingerprint, key_version, attempt)
@@ -288,50 +303,12 @@ defmodule NewYou.Identity do
     end
   end
 
-  defp create_account(input, pmr) do
-    attributes = %{
-      first_name: input.first_name,
-      surname: input.surname,
-      email: input.email,
-      preferred_language: input.preferred_language,
-      confirmed_age_18?: true,
-      terms_version_id: input.terms_version_id,
-      privacy_version_id: input.privacy_version_id,
-      legal_accepted_at: now(),
-      acceptance_locale: input.acceptance_locale,
-      pmr: pmr,
-      password: input.password
-    }
-
-    Ash.create(Account, attributes,
-      action: :register,
-      domain: __MODULE__,
-      authorize?: false
-    )
-  end
-
   defp create_operation(attributes) do
     Ash.create(RegistrationOperation, attributes,
       action: :bind,
       domain: __MODULE__,
       authorize?: false
     )
-  end
-
-  defp issue_verification_proof(account) do
-    case AshAuthentication.Jwt.token_for_user(
-           account,
-           %{"purpose" => "email_verification"},
-           purpose: :email_verification,
-           token_lifetime: @verification_token_lifetime,
-           domain: __MODULE__,
-           authorize?: false
-         ) do
-      {:ok, token, _claims} -> {:ok, token}
-      _ -> {:error, :token_creation_failed}
-    end
-  rescue
-    _ -> {:error, :token_creation_failed}
   end
 
   defp read_operation(operation_id) do

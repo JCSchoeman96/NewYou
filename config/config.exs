@@ -7,6 +7,17 @@
 # General application configuration
 import Config
 
+config :ash_oban, pro?: false
+
+config :new_you, Oban,
+  engine: Oban.Engines.Basic,
+  notifier: Oban.Notifiers.Postgres,
+  queues: [default: 10, audit: 10],
+  lifeline: [rescue_after: {2, :hours}],
+  pruner: [max_age: {1, :day}],
+  repo: NewYou.Repo,
+  cron: [crontab: []]
+
 # These enable behaviors that will become the default in the next major
 # version of Ash. Setting them now opts your application into the new
 # behavior and ensures a seamless upgrade. See the backwards compatibility
@@ -59,7 +70,7 @@ config :spark,
 
 config :new_you,
   ecto_repos: [NewYou.Repo],
-  ash_domains: [NewYou.Identity],
+  ash_domains: [NewYou.Identity, NewYou.Audit],
   generators: [timestamp_type: :utc_datetime]
 
 # SQL query parameters can contain Identity credential verifiers.

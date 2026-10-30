@@ -5,8 +5,13 @@ defmodule NewYou.BootstrapTest do
     assert {:new_you, _, _} = List.keyfind(Application.started_applications(), :new_you, 0)
     assert Process.whereis(NewYou.Supervisor)
     assert Process.whereis(NewYou.Repo)
+
+    assert {Oban, oban_pid, :supervisor, [Oban]} =
+             List.keyfind(Supervisor.which_children(NewYou.Supervisor), Oban, 0)
+
+    assert is_pid(oban_pid)
     assert Application.fetch_env!(:new_you, :ecto_repos) == [NewYou.Repo]
-    assert Application.fetch_env!(:new_you, :ash_domains) == [NewYou.Identity]
+    assert Application.fetch_env!(:new_you, :ash_domains) == [NewYou.Identity, NewYou.Audit]
   end
 
   test "the real connection uses the TEST cluster, role and database without CREATEDB" do
