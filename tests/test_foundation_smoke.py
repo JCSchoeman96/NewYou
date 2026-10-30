@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import re
 import shutil
 import tempfile
 import unittest
@@ -12,6 +14,9 @@ from tools.foundation_integrity_smoke import run_smoke_audit
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs/00_platform"
 ROUTER_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json")
+DOCUMENT_VERSION_PATTERN = re.compile(
+    r"^-\s+\*\*Document version:\*\*\s+v?\d+\.\d+\.\d+\s*$", re.MULTILINE
+)
 
 
 class FoundationSmokeTests(unittest.TestCase):
@@ -76,6 +81,28 @@ class FoundationSmokeTests(unittest.TestCase):
             report = run_smoke_audit(root, router_path)
             self.assertEqual("FAIL", report["status"])
             self.assertTrue(any("hash" in finding["message"].lower() for finding in report["findings"]))
+
+    def test_smoke_rejects_declared_version_drift_even_if_hash_is_updated(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root, router_path = self._fixture(directory)
+            router = json.loads(router_path.read_text(encoding="utf-8"))
+            entry = router["governing_documents"][0]
+            document_path = root / entry["repository_path"]
+            original = document_path.read_text(encoding="utf-8")
+            mutated, count = DOCUMENT_VERSION_PATTERN.subn(
+                "- **Document version:** v9.9.9", original, count=1
+            )
+            self.assertEqual(1, count, "fixture authority must expose one Document version line")
+            document_path.write_text(mutated, encoding="utf-8")
+            entry["sha256"] = hashlib.sha256(document_path.read_bytes()).hexdigest()
+            router_path.write_text(json.dumps(router, indent=2) + "\n", encoding="utf-8")
+
+            report = run_smoke_audit(root, router_path)
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any("declared_version" in finding["message"] for finding in report["findings"]),
+                report["findings"],
+            )
 
     def test_smoke_rejects_legacy_open_work_hash_drift(self):
         with tempfile.TemporaryDirectory() as directory:
