@@ -67,6 +67,14 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
             hashlib.sha256(CANDIDATE.read_bytes()).hexdigest(),
             phase8["current_contract_sha256"],
         )
+        self.assertNotIn(
+            "The current status route uses Open Work v1.2.89, Delivery Atlas v0.4.30, FP-001 Skeleton v0.1.30 and HARDEN-02 v0.5.32.",
+            self.candidate,
+        )
+        self.assertIn(
+            "At PR #165 promotion time, the status route was Open Work v1.2.89, Delivery Atlas v0.4.30, FP-001 Skeleton v0.1.30 and HARDEN-02 v0.5.32",
+            self.candidate,
+        )
         self.assertEqual(
             phase8["current_contract_sha256"],
             phase8["current_route_sha256"][phase8["candidate_path"]],
