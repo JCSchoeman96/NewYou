@@ -28,6 +28,9 @@ EXPECTED_GOVERNING_ORDER = (
     "PLATFORM_OPERATING_MODEL",
     "FRONTEND_EXPERIENCE_SYSTEM",
 )
+REQUIRED_DEEP_REFERENCES = frozenset(
+    {"ARCHITECTURE_REQUIREMENTS", "ARCHITECTURE_LAW", "REFERENCE_FLOW_PRESSURE_TESTS"}
+)
 REQUIRED_SUPPORTING = frozenset({"ENGINEERING_STANDARDS", "DELIVERY_GOVERNANCE_STANDARD"})
 DOCUMENT_VERSION_PATTERN = re.compile(
     r"^-\s+\*\*Document version:\*\*\s+v?(\d+\.\d+\.\d+)\s*$", re.MULTILINE
@@ -186,6 +189,23 @@ def run_smoke_audit(root: Path, router_path: Path = DEFAULT_ROUTER) -> dict[str,
         if isinstance(entry, dict):
             _check_hashed_entry(root, report, entry, "governing")
 
+    deep_references = router.get("deep_reference_documents", [])
+    deep_reference_ids = {
+        str(entry.get("document_id")) for entry in deep_references if isinstance(entry, dict)
+    }
+    deep_references_ok = deep_reference_ids == REQUIRED_DEEP_REFERENCES
+    _record(
+        report,
+        "smoke_deep_reference_inventory",
+        deep_references_ok,
+        "current deep Architecture evidence routes are complete"
+        if deep_references_ok
+        else f"deep references must be exactly {sorted(REQUIRED_DEEP_REFERENCES)}; got {sorted(deep_reference_ids)}",
+    )
+    for entry in deep_references if isinstance(deep_references, list) else []:
+        if isinstance(entry, dict):
+            _check_hashed_entry(root, report, entry, "deep_reference")
+
     supporting = router.get("supporting_documents", [])
     supporting_ids = {
         str(entry.get("document_id")) for entry in supporting if isinstance(entry, dict)
@@ -329,6 +349,7 @@ def run_smoke_audit(root: Path, router_path: Path = DEFAULT_ROUTER) -> dict[str,
 
     report["counts"] = {
         "governing_documents": len(governing) if isinstance(governing, list) else 0,
+        "deep_reference_documents": len(deep_references) if isinstance(deep_references, list) else 0,
         "supporting_documents": len(supporting) if isinstance(supporting, list) else 0,
         "working_semantic_routes": len(working_routes) if isinstance(working_routes, list) else 0,
     }
@@ -340,7 +361,7 @@ def run_smoke_audit(root: Path, router_path: Path = DEFAULT_ROUTER) -> dict[str,
 def _print_human(report: dict[str, Any]) -> None:
     print(f"Foundation Smoke: {report['status']} ({report['assertion_count']} assertions)")
     for finding in report["findings"]:
-        location = f" [{finding.get('path')}]" if finding.get("path") else ""
+        location = f" [{finding.get('path')} ]" if finding.get("path") else ""
         print(f"- {finding['check']}{location}: {finding['message']}")
 
 
