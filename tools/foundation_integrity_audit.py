@@ -8841,21 +8841,23 @@ def _identity_v020_promotion_issues(
 
     readme_path = root / "docs/00_platform/README.md"
     readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() and not readme_path.is_symlink() else ""
+    current_open_work_entry = _active_open_work_entry(manifest)
+    current_open_work_version = current_open_work_entry.get("semver", "") if current_open_work_entry else ""
     for token in (
         active_path.removeprefix("docs/00_platform/"),
         candidate_path.removeprefix("docs/00_platform/"),
         "promoted/current v0.1.4 snapshot",
         "CERTIFIED / CURRENT",
         "WELL-45 is a legal/privacy release gate",
-        "Current Open Work v1.2.87 records WELL-48: COMPLETE / MERGED VIA PR #156",
+        f"Current Open Work v{current_open_work_version} records WELL-48: COMPLETE / MERGED VIA PR #156",
         "APPLICATION IMPLEMENTATION: AUTHORISED ONLY INSIDE BOUNDED PHASE 8 ARCHITECTURAL PROOF, INCLUDING P8-05",
         "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
     ):
         if token not in readme:
             issues.append(f"README Identity current route omits {token!r}")
 
-    open_work_path = root / "docs/00_platform/02_OPEN_WORK_v1.2.87.md"
-    open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() and not open_work_path.is_symlink() else ""
+    open_work_path = root / _relative_path(current_open_work_entry) if current_open_work_entry else None
+    open_work = open_work_path.read_text(encoding="utf-8") if open_work_path and open_work_path.is_file() and not open_work_path.is_symlink() else ""
     for token in (
         "PR #150",
         "40299236086",
@@ -12575,6 +12577,123 @@ def _check_production_graph(
     )
 
 
+def _check_well60_communications_handoff_candidate(
+    root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+    report: dict[str, Any],
+) -> None:
+    """Check the proposed WELL-60 contract without promoting it to current law."""
+
+    rule_name = "well60_communications_handoff_candidate"
+    rule = integrity_rules.get(rule_name, {})
+    issues: list[str] = []
+    candidate_path = "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
+    predecessor_path = "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md"
+    expected = {
+        "candidate_path": candidate_path,
+        "candidate_version": "0.1.3",
+        "candidate_base_main_sha": "90fe6bc9bca6c0198527c4b8b253490f70e11798",
+        "candidate_lifecycle": "PROPOSED SUCCESSOR / REVIEW PENDING / NOT CERTIFIED / NOT CURRENT",
+        "predecessor_archive_path": predecessor_path,
+    }
+    if not isinstance(rule, dict):
+        rule = {}
+        issues.append("WELL-60 contract-candidate integrity rule is missing")
+    for key, value in expected.items():
+        if rule.get(key) != value:
+            issues.append(f"WELL-60 contract-candidate manifest field {key!r} is wrong")
+
+    candidate = root / candidate_path
+    predecessor = root / predecessor_path
+    if not candidate.is_file() or candidate.is_symlink():
+        issues.append("WELL-60 v0.1.3 contract candidate is missing or is a symlink")
+        text = ""
+    else:
+        text = candidate.read_text(encoding="utf-8")
+        if rule.get("candidate_sha256") != sha256_file(candidate):
+            issues.append("WELL-60 v0.1.3 contract-candidate SHA-256 differs from its bytes")
+    if not predecessor.is_file() or predecessor.is_symlink():
+        issues.append("approved v0.1.2 contract predecessor archive is missing or is a symlink")
+    else:
+        predecessor_digest = sha256_file(predecessor)
+        if rule.get("predecessor_sha256") != predecessor_digest:
+            issues.append("WELL-60 predecessor archive SHA-256 differs from its bytes")
+        active_predecessor = root / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+        if not active_predecessor.is_file() or active_predecessor.read_bytes() != predecessor.read_bytes():
+            issues.append("WELL-60 candidate does not preserve the approved v0.1.2 contract bytes")
+
+    phase8 = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {})
+    if (
+        not isinstance(phase8, dict)
+        or phase8.get("candidate_path") != "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+        or phase8.get("candidate_lifecycle") != "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION"
+    ):
+        issues.append("approved TB-001 v0.1.2 status changed before v0.1.3 successor review")
+
+    open_work_entry = _active_open_work_entry(manifest)
+    if open_work_entry is None:
+        issues.append("WELL-60 proposed contract has no active Open Work route")
+    else:
+        open_work_path = _entry_path(root, open_work_entry)
+        open_work_text = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
+        open_work_candidate_path = candidate_path.removeprefix("docs/00_platform/")
+        if open_work_candidate_path not in open_work_text:
+            issues.append("WELL-60 proposed contract is missing from the active Open Work route")
+    if any(
+        entry.get("repository_path") == candidate_path and entry.get("lifecycle", "current") != "historical"
+        for entry in _all_entries(manifest)
+    ):
+        issues.append("WELL-60 v0.1.3 candidate is incorrectly listed as governing or reference authority")
+
+    required_tokens = (
+        "P8-05/WELL-49 acceptance boundary",
+        "No Communications Oban job is required at registration/resend acceptance",
+        "Failure to create a later P8-10 Communications job never rolls back",
+        "durably discoverable through the Communications owner interface when no job exists",
+        "recovers backlog after restart",
+        "idempotently schedules",
+        "concurrent discoverers/executors cannot multiply",
+        "Oban uniqueness is not business idempotency",
+        "only `MessageIntent.id`",
+        "verification bearer, protected capability, destination, rendered body, Account data, Identity payload",
+        "exact Content & Media content/locale eligibility and binding",
+        "protected capability authority before DeliveryAttempt admission",
+        "Failure before enqueue, after enqueue, or during execution",
+        "DeliveryAttempt admission commits before provider I/O",
+        "P8-05 proves MessageIntent/envelope atomicity with source acceptance",
+        "P8-10 proves restart/backlog discovery",
+        "`open`, `held`, `reconciliation_required` and `closed`",
+        "`queued`, `scheduled`, `ready`, or `preflighted`",
+        "no placeholder/no-op action, inert worker, generic dispatcher",
+        "initial Audit E2 schedule atomicity",
+    )
+    folded = text.casefold()
+    for token in required_tokens:
+        if token.casefold() not in folded:
+            issues.append(f"WELL-60 contract candidate omits required handoff clause: {token}")
+
+    forbidden_old_claims = (
+        "communications job is inserted in the registration transaction",
+        "registration rolls back if communications job insertion fails",
+        "rollback between the communications and audit schedule insertions",
+        "immediate communications job presence after acceptance",
+    )
+    for token in forbidden_old_claims:
+        if token in folded:
+            issues.append(f"WELL-60 contract candidate retains superseded proof assertion: {token}")
+
+    _record_check(
+        report,
+        rule_name,
+        not issues,
+        "WELL-60 no-lost-handoff contract candidate is pinned and remains pending review"
+        if not issues
+        else "; ".join(issues),
+        path=candidate_path,
+    )
+
+
 def run_audit(
     root: Path,
     manifest_path: Path,
@@ -12660,6 +12779,8 @@ def run_audit(
     if _production_mode(expected_counts):
         _check_production_graph(root, manifest, integrity_rules, report)
         _check_product_semantics(root, entries, integrity_rules, report)
+        if "well60_communications_handoff_candidate" in integrity_rules:
+            _check_well60_communications_handoff_candidate(root, manifest, integrity_rules, report)
         if (
             _fp001_phase8_approved_status_successor_is_current(manifest)
             or _fp001_phase8_execution_status_successor_is_current(manifest)
