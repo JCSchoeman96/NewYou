@@ -2,7 +2,7 @@
   "router_id": "CURRENT_AUTHORITY_ROUTER",
   "router_version": "1.0.0",
   "status": "CURRENT",
-  "scope": "Current durable authority routing and Plane execution-authority metadata. Historical/provenance certification remains in CURRENT_AUTHORITY_MANIFEST_v1.0.0.json.",
+  "scope": "Current durable authority routing, current deep-reference evidence, and Plane execution-authority metadata. Historical/provenance certification remains in CURRENT_AUTHORITY_MANIFEST_v1.0.0.json.",
   "governing_documents": [
     {
       "document_id": "PROJECT_NORTH_STAR_AND_MVP",
@@ -59,6 +59,29 @@
       "semver": "1.0.1",
       "repository_path": "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
       "sha256": "58c733e8e0cc73c72b102b623cb756b60cbadb084f8cc710051be42d0877fdb4"
+    }
+  ],
+  "deep_reference_documents": [
+    {
+      "document_id": "ARCHITECTURE_REQUIREMENTS",
+      "canonical_filename": "ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
+      "sha256": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91"
+    },
+    {
+      "document_id": "ARCHITECTURE_LAW",
+      "canonical_filename": "ARCHITECTURE_LAW_WORKING_v0.36.0.md",
+      "semver": "0.36.0",
+      "repository_path": "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
+      "sha256": "26ff1e7a7e40945e501793c2bfb2ede9c01ae03f7949383ae724e3b031fa4faa"
+    },
+    {
+      "document_id": "REFERENCE_FLOW_PRESSURE_TESTS",
+      "canonical_filename": "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+      "semver": "0.3.0",
+      "repository_path": "docs/00_platform/reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+      "sha256": "0d8e25170ae692df39f7f771189f95ab76ab64f2701823fb2cde214946650d3f"
     }
   ],
   "supporting_documents": [
