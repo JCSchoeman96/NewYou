@@ -1,0 +1,11 @@
+subject: Verifieer jou e-posadres
+
+Daar is ’n versoek gemaak om hierdie e-posadres vir {{platform_name}} te verifieer.
+
+Gebruik die skakel hieronder om jou e-posadres te verifieer:
+
+{{verification_link}}
+
+Verifieer e-posadres
+
+{{platform_name}}

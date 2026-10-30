@@ -1,0 +1,11 @@
+subject: Verify your email address
+
+A request was made to verify this email address for {{platform_name}}.
+
+Use the link below to verify your email address:
+
+{{verification_link}}
+
+Verify email address
+
+{{platform_name}}
