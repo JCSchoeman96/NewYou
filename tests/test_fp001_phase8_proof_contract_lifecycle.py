@@ -46,6 +46,34 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         refresh_manifest(root, manifest)
         return root, manifest
 
+    def test_immediate_archived_predecessors_keep_artifact_specific_lineage(self):
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        expected = {
+            "docs/00_platform/archive/02_OPEN_WORK_v1.2.88.md": (
+                "OPEN_WORK_V1_2_88",
+                "PLANNING_TRACKER_HISTORICAL",
+            ),
+            "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.29.md": (
+                "DELIVERY_ATLAS_V0_4_29",
+                "DERIVED_DELIVERY_NAVIGATION_HISTORICAL",
+            ),
+            "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.29.md": (
+                "FP001_SKELETON_V0_1_29",
+                "DERIVED_FEATURE_PACK_NAVIGATION_HISTORICAL",
+            ),
+            "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.31.md": (
+                "HARDEN_02_V0_5_31",
+                "DERIVED_GOVERNANCE_CONTRACT_HISTORICAL",
+            ),
+        }
+        actual = {
+            entry["repository_path"]: (entry["document_id"], entry["authority_class"])
+            for entry in manifest["historical_documents"]
+            if entry.get("repository_path") in expected
+        }
+
+        self.assertEqual(expected, actual)
+
     def test_current_successor_resolves_manifest_routes_and_preserves_lifecycle_boundaries(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         rules = manifest["integrity_rules"]
