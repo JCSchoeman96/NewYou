@@ -17,6 +17,8 @@ For current durable routing, independently inspect:
 5. live Plane work, blockers, dependencies and acceptance criteria;
 6. actual code, tests, migrations and dependencies.
 
+When exact legislative/source tracing or identifier-level Architecture reasoning is required, load the router's current `deep_reference_documents`. They are evidence routes, not additional default governing roots.
+
 `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` is the frozen historical/provenance baseline for Foundation Full; it is not the live delivery router after WELL-66.
 
 `docs/00_platform/02_OPEN_WORK_v1.2.90.md` is the final frozen legacy Open Work snapshot. Never use it as live execution authority and never require a successor merely for status changes.
