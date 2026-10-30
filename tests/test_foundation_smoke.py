@@ -93,7 +93,7 @@ class FoundationSmokeTests(unittest.TestCase):
             root, router_path = self._fixture(directory)
             readme_path = root / "docs/00_platform/README.md"
             readme = readme_path.read_text(encoding="utf-8")
-            readme_path.write_text(readme.replace("Plane", "Delivery Ledger", 1), encoding="utf-8")
+            readme_path.write_text(readme.replace("Plane", "Delivery Ledger"), encoding="utf-8")
 
             report = run_smoke_audit(root, router_path)
             self.assertEqual("FAIL", report["status"])
