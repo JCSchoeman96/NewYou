@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -10,12 +11,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs/00_platform"
 CANDIDATE = DOCS / "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
-APPROVED = DOCS / "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
 APPROVED_ARCHIVE = DOCS / "archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md"
 REVIEWED_CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+PROMOTED_CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
 JIT = ROOT / "docs/execution/p8-05-registration-jit-spec.md"
 MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.88.md"
+OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.89.md"
+REVIEWED_CANDIDATE_SHA256 = "e4ad6fd47bb1a04cd299fd900c2757e075352235ca286b6f368637942ae3cf6d"
 
 
 class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
@@ -26,34 +28,97 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
         cls.manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
 
-    def test_candidate_is_exactly_pinned_and_not_promoted(self) -> None:
+    def test_reviewed_candidate_is_preserved_and_v013_is_current(self) -> None:
         rule = self.manifest["integrity_rules"]["well60_communications_handoff_candidate"]
+        phase8 = self.manifest["integrity_rules"]["fp001_phase8_proof_contract_lifecycle"]
         self.assertEqual("0.1.3", rule["candidate_version"])
         self.assertEqual(
-            "PROPOSED SUCCESSOR / REVIEW PENDING / NOT CERTIFIED / NOT CURRENT",
+            "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
             rule["candidate_lifecycle"],
         )
         self.assertEqual(
+            "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+            rule["reviewed_candidate_archive_path"],
+        )
+        self.assertEqual(REVIEWED_CANDIDATE_SHA256, rule["candidate_sha256"])
+        self.assertEqual(REVIEWED_CANDIDATE_SHA256, rule["reviewed_candidate_archive_sha256"])
+        self.assertEqual(REVIEWED_CANDIDATE_SHA256, hashlib.sha256(PROMOTED_CANDIDATE_ARCHIVE.read_bytes()).hexdigest())
+        reviewed_head = rule["reviewed_candidate_head_sha"]
+        reviewed_bytes = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{reviewed_head}:docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        self.assertEqual(reviewed_bytes, PROMOTED_CANDIDATE_ARCHIVE.read_bytes())
+        self.assertEqual(
+            "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+            phase8["candidate_lifecycle"],
+        )
+        self.assertEqual(
+            "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+            phase8["candidate_path"],
+        )
+        self.assertEqual(
             hashlib.sha256(CANDIDATE.read_bytes()).hexdigest(),
-            rule["candidate_sha256"],
-        )
-        self.assertEqual(APPROVED.read_bytes(), APPROVED_ARCHIVE.read_bytes())
-        self.assertNotEqual(APPROVED.read_bytes(), REVIEWED_CANDIDATE_ARCHIVE.read_bytes())
-        phase8 = self.manifest["integrity_rules"]["fp001_phase8_proof_contract_lifecycle"]
-        self.assertEqual(
-            hashlib.sha256(REVIEWED_CANDIDATE_ARCHIVE.read_bytes()).hexdigest(),
-            phase8["reviewed_candidate_archive_sha256"],
+            phase8["current_contract_sha256"],
         )
         self.assertEqual(
+            phase8["current_contract_sha256"],
+            phase8["current_route_sha256"][phase8["candidate_path"]],
+        )
+        self.assertEqual(
+            "73725a3d3339bf07fdcd44b9a7ec86026db3e984",
+            rule["reviewed_candidate_head_sha"],
+        )
+        self.assertEqual(
+            "429677295a396b8c78e9ab6b436a57d9249eaddc",
+            rule["candidate_merge_sha"],
+        )
+        self.assertEqual(
+            "c947544000f66c104a51240e2aee3d0d123b23ec",
+            rule["candidate_merge_tree_sha"],
+        )
+        self.assertEqual(41021446051, rule["candidate_exact_head_ci_run"])
+        self.assertEqual(41022376748, rule["resulting_main_ci_run"])
+        self.assertEqual(
+            "429677295a396b8c78e9ab6b436a57d9249eaddc",
+            rule["status_promotion_base_main_sha"],
+        )
+        self.assertFalse((DOCS / "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md").exists())
+        self.assertEqual(
+            "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4",
             hashlib.sha256(APPROVED_ARCHIVE.read_bytes()).hexdigest(),
-            rule["predecessor_sha256"],
         )
+        self.assertEqual(
+            "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
+            hashlib.sha256(REVIEWED_CANDIDATE_ARCHIVE.read_bytes()).hexdigest(),
+        )
+        previous_promotion = next(
+            item for item in phase8["promotion_history"] if item["artifact_version"] == "0.1.2"
+        )
+        self.assertEqual("5486c94c1b659dfeb026dcbe6abf91978655c535", previous_promotion["reviewed_candidate_head_sha"])
+        self.assertEqual("4234965c8da20dbb4ef0a7128614a5070244619a", previous_promotion["candidate_merge_sha"])
+        self.assertEqual("f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836", previous_promotion["reviewed_candidate_archive_sha256"])
+        self.assertEqual("973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4", previous_promotion["approved_current_snapshot_sha256"])
+        self.assertEqual("STARTED", phase8["proof_execution"])
+        self.assertEqual("INCOMPLETE / COVERAGE-INCOMPLETE", phase8["proof_result"])
+        self.assertEqual("NOT CERTIFIED", phase8["proof_certification"])
+        self.assertEqual("NOT STARTED / NOT AUTHORISED", phase8["phase9_vertical_slices"])
+        self.assertEqual([], phase8["application_source_paths_created"])
+        self.assertEqual("NONE", rule["runtime_change"])
+        self.assertEqual("NONE", rule["dependency_change"])
+        self.assertEqual("NONE", rule["migration_change"])
         predecessor_header = re.search(
             r"(?m)^- \*\*Design predecessor:\*\* `([^`]+)`",
             self.candidate,
         )
         predecessor_history = re.search(
-            r"approved-current v0\.1\.2 status snapshot at `([^`]+)`",
+            r"approved-current v0\.1\.2 status snapshot (?:remains at|at) `([^`]+)`",
             self.candidate,
         )
         self.assertIsNotNone(predecessor_header)
@@ -82,24 +147,56 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
                 hashlib.sha256(resolved_path.read_bytes()).hexdigest(),
                 rule["predecessor_sha256"],
             )
-        phase8 = self.manifest["integrity_rules"]["fp001_phase8_proof_contract_lifecycle"]
-        self.assertEqual(APPROVED.as_posix().replace(str(ROOT) + "/", ""), phase8["candidate_path"])
         self.assertEqual(
-            "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
-            phase8["candidate_lifecycle"],
+            "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md",
+            manifest_predecessor,
         )
         self.assertNotIn(
             CANDIDATE.as_posix().replace(str(ROOT) + "/", ""),
             {entry["repository_path"] for entry in self.manifest["governing_documents"]},
         )
         readme = (DOCS / "README.md").read_text(encoding="utf-8")
-        self.assertIn(APPROVED.name, readme)
-        self.assertNotIn(CANDIDATE.name, readme)
+        self.assertIn(CANDIDATE.name, readme)
+        self.assertNotIn("FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` — TB-001 proof-contract successor/task definition", readme)
         self.assertIn(CANDIDATE.name, self.open_work)
-        self.assertNotIn(
-            CANDIDATE.as_posix().replace(str(ROOT) + "/", ""),
-            self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"],
-        )
+        self.assertIn(CANDIDATE.as_posix().replace(str(ROOT) + "/", ""), self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"])
+        self.assertIn("CONTRACT/DESIGN REVIEW: COMPLETE / PASS", self.candidate)
+        self.assertIn("CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", self.candidate)
+        self.assertIn("INCOMPLETE / COVERAGE-INCOMPLETE", self.candidate)
+        self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", self.candidate)
+        self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", self.candidate)
+        for path in (
+            "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+            "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+        ):
+            self.assertIn(path, self.open_work)
+        active_route = readme.split("## Active Working Artifacts", 1)[1].split("\n## ", 1)[0]
+        self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md", active_route)
+        self.assertNotIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", active_route)
+        candidate_body = PROMOTED_CANDIDATE_ARCHIVE.read_text(encoding="utf-8")
+        candidate_contract = candidate_body.split("## 2. Outcome and proof claim", 1)[1].split("## 11. Version, history and lifecycle", 1)[0]
+        promoted_contract = self.candidate.split("## 2. Outcome and proof claim", 1)[1].split("## 11. Version, history and lifecycle", 1)[0]
+        self.assertEqual(candidate_contract, promoted_contract)
+
+    def test_status_promotion_keeps_model_b_boundaries_and_changes_no_runtime(self) -> None:
+        for clause in (
+            "A valid registration or resend commits its source transition, exact Communications `MessageIntent`, required source/provenance references, and required WELL-46 protected-delivery envelope in the same authoritative PostgreSQL transaction.",
+            "No Communications Oban job is required at registration/resend acceptance.",
+            "The committed eligible open MessageIntent remains durably discoverable through the Communications owner interface when no job exists.",
+            "P8-10 discovers eligible committed open MessageIntents, recovers backlog after restart, and idempotently schedules their real Communications executor",
+            "DeliveryAttempt admission commits before provider I/O; no authoritative transaction spans provider I/O.",
+            "P8-05 proves MessageIntent/envelope atomicity with source acceptance",
+            "P8-10 proves restart/backlog discovery",
+        ):
+            with self.subTest(clause=clause):
+                self.assertIn(clause.casefold(), self.candidate.casefold())
+        rule = self.manifest["integrity_rules"]["well60_communications_handoff_candidate"]
+        self.assertEqual("NONE", rule["runtime_change"])
+        self.assertEqual("NONE", rule["dependency_change"])
+        self.assertEqual("NONE", rule["migration_change"])
+        self.assertEqual([], rule["application_source_paths_created"])
+        self.assertIn("WELL-49 remains BLOCKED / WAITING ON WELL-60 AND WELL-61", self.open_work)
 
     def test_identity_source_contract_uses_current_v020_route(self) -> None:
         current_identity_route = (

@@ -267,6 +267,11 @@ _P8_05_NEXT_STAGE_AUTHORISED = (
     "WELL-49 BLOCKED PENDING WELL-60 AND WELL-61; WELL-50 BACKLOG / NOT STARTED"
 )
 _P8_05_NEXT_GOVERNANCE_ACTION_AUTHORISED = _P8_05_NEXT_STAGE_AUTHORISED
+_WELL60_NEXT_GOVERNANCE_ACTION = (
+    "P8-05 implementation authorised for bounded Phase 8 proof; WELL-48: COMPLETE / MERGED VIA PR #156; "
+    "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61; WELL-60 TB-001 v0.1.3 status-promotion candidate is ready for Master Gate review and remains OPEN; "
+    "WELL-61 remains PLANNING / INCOMPLETE; WELL-50: BACKLOG / NOT STARTED"
+)
 _P8_05_CURRENT_TICKET_STATUS_TOKENS = (
     "WELL-48: COMPLETE / MERGED VIA PR #156",
     "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
@@ -2099,7 +2104,7 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
         "architectural_proof_execution": "STARTED",
         "proof_result": "INCOMPLETE / COVERAGE-INCOMPLETE",
         "proof_certification": "NOT CERTIFIED",
-        "proof_contract_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md",
+        "proof_contract_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
         "proof_contract_lifecycle": "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
         "development_entry_hard_stop_status": "PASS / ALL 10 CONDITIONS SATISFIED",
         "development_entry_hard_stop_conditions_1_through_10": "SATISFIED",
@@ -2107,7 +2112,7 @@ def _h02_fp001_phase8_proof_execution_lifecycle_state(
         "application_implementation": _P8_05_BOUNDED_APPLICATION_IMPLEMENTATION,
         "phase8_execution_gate": _P8_05_PHASE8_EXECUTION_GATE_AUTHORISED,
         "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
-        "next_governance_action": _P8_05_NEXT_GOVERNANCE_ACTION_AUTHORISED,
+        "next_governance_action": _WELL60_NEXT_GOVERNANCE_ACTION,
         "well_48": _P8_05_CURRENT_TICKET_STATUS_TOKENS[0].removeprefix("WELL-48: "),
         "well_48_merge_sha": "eb28943cd8353cdec6625a053e157af449587d2c",
         "well_49": _P8_05_CURRENT_TICKET_STATUS_TOKENS[1].removeprefix("WELL-49: "),
@@ -6773,6 +6778,31 @@ def _fp001_phase8_proof_contract_content_issues(text: str) -> list[str]:
         "records the exact git sha, relevant runtime and dependency versions, pass/fail for every mandatory proof family, and the failing invariant/cut-point where applicable",
         "the exact mix command name remains unfrozen until the scaffold establishes the supported entrypoint",
     )
+    if "artifact version:** `v0.1.3`" in folded:
+        superseded_v012_clauses = {
+            "oban as the durable executor",
+            "`ash_oban` for the phase 8 durable async integration",
+            "failure to preserve required postgresql atomicity, identity ownership, must-not-lose consequences, e1/e2 acceptance, safe provider ambiguity or current authority is `blocked / stop`",
+            "registration uses one authoritative postgresql acceptance boundary: account, pmr, verification token, required communications messageintent, selected audit evidenceobligation and initial durable scheduling commit together or are absent together",
+        }
+        required_clauses = tuple(
+            clause for clause in required_clauses if clause not in superseded_v012_clauses
+        ) + (
+            "oban as executor machinery",
+            "p8-10 owns later discovery/scheduling for the real communications executor",
+            "failure to preserve required postgresql atomicity, identity ownership, must-not-lose handoff, e1/e2 acceptance, safe provider ambiguity or current authority is `blocked / stop`",
+            "p8-05/well-49 acceptance boundary",
+            "no communications oban job is required at registration/resend acceptance",
+            "failure to create a later p8-10 communications job never rolls back an otherwise valid committed registration/resend",
+            "the committed eligible open messageintent remains durably discoverable through the communications owner interface when no job exists",
+            "p8-10/well-10 scheduling and execution boundary",
+            "idempotently schedules their real communications executor",
+            "the action re-reads current source eligibility through its owner",
+            "deliveryattempt admission commits before provider i/o",
+            "p8-05 proves messageintent/envelope atomicity with source acceptance",
+            "p8-10 proves restart/backlog discovery",
+            "a communications oban job may be absent",
+        )
     issues.extend(
         f"TB-001 contract omits approved proof-design clause {clause!r}"
         for clause in required_clauses
@@ -6890,7 +6920,7 @@ def _fp001_phase8_proof_contract_content_issues(text: str) -> list[str]:
             "verification Token",
             "Communications MessageIntent",
             "Audit EvidenceObligation",
-            "initial durable scheduling commit together",
+            "no Communications job is required",
             "are absent together",
         ),
         "Audit E2": (
@@ -6936,6 +6966,28 @@ def _check_fp001_phase8_proof_contract_lifecycle(
 
     rule_name = "fp001_phase8_proof_contract_lifecycle"
     rule = integrity_rules.get(rule_name, {})
+    if (
+        isinstance(rule, dict)
+        and rule.get("candidate_version") == "0.1.3"
+        and rule.get("candidate_path")
+        == "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
+    ):
+        issues = _well60_status_promotion_issues(
+            root,
+            _default_root(),
+            manifest,
+            integrity_rules,
+        )
+        _record_check(
+            report,
+            rule_name,
+            not issues,
+            "WELL-60 promoted TB-001 v0.1.3 status, route, candidate bytes and proof boundary are pinned"
+            if not issues
+            else "; ".join(issues),
+            path=rule.get("candidate_path"),
+        )
+        return
     issues: list[str] = []
     candidate_path = "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
     candidate_rel = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
@@ -8190,11 +8242,11 @@ def _phase8_started_status_successor_issues(
         required_next_action_tokens = (
             "p8-05 implementation authorised",
             "bounded phase 8",
-            "well-48 complete",
-            "well-49 blocked",
+            "well-48: complete",
+            "well-49: blocked",
             "well-60",
             "well-61",
-            "well-50 backlog",
+            "well-50: backlog",
         )
         if any(token.casefold() not in next_action.casefold() for token in required_next_action_tokens):
             issues.append("Open Work does not route bounded P8-05 authorization and the current WELL-48–50 states")
@@ -8470,6 +8522,7 @@ def _phase8_phase7c_promotion_rule_issues(
     mutable_fields = {
         "current_paths",
         "current_route_status_successor_version",
+        "current_route_status_successor_base_sha",
         "predecessor_archives_sha256",
         "protected_current_artifacts_sha256",
     }
@@ -12577,120 +12630,311 @@ def _check_production_graph(
     )
 
 
+def _well60_status_promotion_issues(
+    root: Path,
+    repository_root: Path,
+    manifest: dict[str, Any],
+    integrity_rules: dict[str, Any],
+) -> list[str]:
+    """Validate WELL-60's status-only promotion and immutable PR #164 candidate."""
+
+    issues: list[str] = []
+    candidate_path = "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
+    archive_path = "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
+    predecessor_snapshot = "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md"
+    predecessor_candidate = "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+    candidate_digest = "e4ad6fd47bb1a04cd299fd900c2757e075352235ca286b6f368637942ae3cf6d"
+    predecessor_snapshot_digest = "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4"
+    predecessor_candidate_digest = "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836"
+    reviewed_head = "73725a3d3339bf07fdcd44b9a7ec86026db3e984"
+    merge_sha = "429677295a396b8c78e9ab6b436a57d9249eaddc"
+    merge_tree = "c947544000f66c104a51240e2aee3d0d123b23ec"
+    promotion_base = "429677295a396b8c78e9ab6b436a57d9249eaddc"
+
+    rule = integrity_rules.get("well60_communications_handoff_candidate", {})
+    phase8 = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {})
+    if not isinstance(rule, dict):
+        rule = {}
+        issues.append("WELL-60 status-promotion integrity rule is missing")
+    if not isinstance(phase8, dict):
+        phase8 = {}
+        issues.append("Phase 8 current-contract lifecycle rule is missing")
+
+    expected_rule = {
+        "candidate_path": candidate_path,
+        "candidate_version": "0.1.3",
+        "candidate_base_main_sha": "90fe6bc9bca6c0198527c4b8b253490f70e11798",
+        "candidate_lifecycle": "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "candidate_sha256": candidate_digest,
+        "reviewed_candidate_archive_path": archive_path,
+        "reviewed_candidate_archive_sha256": candidate_digest,
+        "reviewed_candidate_head_sha": reviewed_head,
+        "candidate_merge_sha": merge_sha,
+        "candidate_merge_tree_sha": merge_tree,
+        "candidate_exact_head_ci_run": 41021446051,
+        "candidate_exact_head_ci_conclusion": "OVERALL FAILURE / REQUIRED LANES PASS / NONBLOCKING FOUNDATION FULL FAIL",
+        "candidate_exact_head_required_ci": "PASS",
+        "candidate_exact_head_foundation_full": "FAIL / NONBLOCKING",
+        "resulting_main_ci_run": 41022376748,
+        "resulting_main_ci_conclusion": "PASS",
+        "resulting_main_foundation_full": "SKIPPED BY PUSH ROUTE",
+        "status_promotion_base_main_sha": promotion_base,
+        "status_promotion": "CANDIDATE READY FOR MASTER GATE / OPEN",
+        "predecessor_archive_path": predecessor_snapshot,
+        "predecessor_sha256": predecessor_snapshot_digest,
+        "runtime_change": "NONE",
+        "dependency_change": "NONE",
+        "migration_change": "NONE",
+    }
+    for key, expected in expected_rule.items():
+        if rule.get(key) != expected:
+            issues.append(f"WELL-60 manifest promotion field {key!r} is wrong")
+
+    expected_phase8 = {
+        "candidate_path": candidate_path,
+        "candidate_relative_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+        "candidate_version": "0.1.3",
+        "candidate_lifecycle": "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "candidate_sha256": candidate_digest,
+        "contract_design_review": "COMPLETE / PASS",
+        "reviewed_candidate_archive_path": archive_path,
+        "reviewed_candidate_archive_sha256": candidate_digest,
+        "reviewed_candidate_head_sha": reviewed_head,
+        "candidate_merge_sha": merge_sha,
+        "candidate_merge_tree_sha": merge_tree,
+        "candidate_exact_head_ci_run": 41021446051,
+        "candidate_exact_head_ci_conclusion": "OVERALL FAILURE / REQUIRED LANES PASS / NONBLOCKING FOUNDATION FULL FAIL",
+        "candidate_exact_head_required_ci": "PASS",
+        "candidate_exact_head_foundation_full": "FAIL / NONBLOCKING; test_locale_separation_and_fail_closed_release_contract expected an obsolete phrase in docs/execution/p8-05-registration-jit-spec.md",
+        "resulting_main_ci_run": 41022376748,
+        "resulting_main_ci_conclusion": "PASS",
+        "resulting_main_ci_required_aggregate": "PASS",
+        "resulting_main_foundation_full": "SKIPPED BY PUSH ROUTE",
+        "status_promotion_base_main_sha": promotion_base,
+        "proof_execution": "STARTED",
+        "proof_result": "INCOMPLETE / COVERAGE-INCOMPLETE",
+        "proof_certification": "NOT CERTIFIED",
+        "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
+        "dependency_changes": "NONE",
+        "migration_changes": "NONE",
+        "runtime_behavior_changes": "NONE",
+    }
+    for key, expected in expected_phase8.items():
+        if phase8.get(key) != expected:
+            issues.append(f"Phase 8 promotion manifest field {key!r} is wrong")
+
+    candidate = root / candidate_path
+    archive = root / archive_path
+    if not candidate.is_file() or candidate.is_symlink():
+        issues.append("promoted TB-001 v0.1.3 route is missing or is a symlink")
+        candidate_text = ""
+    else:
+        candidate_text = candidate.read_text(encoding="utf-8")
+        if phase8.get("current_contract_sha256") != sha256_file(candidate):
+            issues.append("promoted TB-001 v0.1.3 route hash differs from its manifest pin")
+    if not archive.is_file() or archive.is_symlink():
+        issues.append("exact PR #164 TB-001 v0.1.3 candidate archive is missing or is a symlink")
+        archive_bytes = b""
+        archive_text = ""
+    else:
+        archive_bytes = archive.read_bytes()
+        archive_text = archive_bytes.decode("utf-8")
+        if sha256_file(archive) != candidate_digest:
+            issues.append("exact PR #164 TB-001 v0.1.3 candidate archive SHA-256 is wrong")
+    reviewed_bytes = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repository_root),
+            "show",
+            f"{reviewed_head}:docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+        ],
+        capture_output=True,
+        check=False,
+    )
+    if reviewed_bytes.returncode != 0 or reviewed_bytes.stdout != archive_bytes:
+        issues.append("archived TB-001 v0.1.3 bytes differ from the exact PR #164 reviewed candidate")
+
+    def git_tree(revision: str) -> str | None:
+        result = subprocess.run(
+            ["git", "-C", str(repository_root), "rev-parse", f"{revision}^{{tree}}"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return result.stdout.strip() if result.returncode == 0 else None
+
+    if git_tree(reviewed_head) != merge_tree or git_tree(merge_sha) != merge_tree:
+        issues.append("PR #164 reviewed-head and merge tree provenance does not match the pinned tree")
+
+    body_start = "## 2. Outcome and proof claim"
+    body_end = "## 11. Version, history and lifecycle"
+    if body_start not in candidate_text or body_end not in candidate_text or body_start not in archive_text or body_end not in archive_text:
+        issues.append("TB-001 contract semantic body boundaries could not be isolated")
+    elif candidate_text.split(body_start, 1)[1].split(body_end, 1)[0] != archive_text.split(body_start, 1)[1].split(body_end, 1)[0]:
+        issues.append("promoted TB-001 v0.1.3 changed its reviewed contract body")
+
+    issues.extend(_fp001_phase8_proof_contract_content_issues(candidate_text))
+
+    for token in (
+        "Artifact version:** `v0.1.3`",
+        "Lifecycle:** `CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION`",
+        "Contract/design review:** COMPLETE / PASS",
+        "PROOF EXECUTION: STARTED UNDER THE APPROVED v0.1.2 CONTRACT",
+        "PROOF RESULT: INCOMPLETE / COVERAGE-INCOMPLETE",
+        "PROOF CERTIFICATION: NOT CERTIFIED",
+        "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+        "status promotion base main SHA `429677295a396b8c78e9ab6b436a57d9249eaddc`",
+        "e4ad6fd47bb1a04cd299fd900c2757e075352235ca286b6f368637942ae3cf6d",
+    ):
+        if token.casefold() not in candidate_text.casefold():
+            issues.append(f"promoted TB-001 contract omits lifecycle or evidence field {token!r}")
+
+    current_routes = phase8.get("current_routes", {})
+    candidate_route_hash = phase8.get("current_route_sha256", {})
+    if not isinstance(current_routes, dict) or current_routes.get("open_work") != "docs/00_platform/02_OPEN_WORK_v1.2.89.md":
+        issues.append("Phase 8 current Open Work route is not v1.2.89")
+    for relative in current_routes.values() if isinstance(current_routes, dict) else ():
+        path = root / relative
+        if not path.is_file() or path.is_symlink():
+            issues.append(f"current TB-001 supporting route is missing or is a symlink: {relative}")
+        elif candidate_route_hash.get(relative) != sha256_file(path):
+            issues.append(f"current TB-001 supporting route hash differs: {relative}")
+    if candidate_route_hash.get(candidate_path) != phase8.get("current_contract_sha256"):
+        issues.append("Phase 8 contract current-route hash differs from its current-contract pin")
+
+    open_work_entry = _active_open_work_entry(manifest)
+    open_work = _entry_path(root, open_work_entry) if open_work_entry is not None else None
+    open_work_text = open_work.read_text(encoding="utf-8") if open_work is not None and open_work.is_file() else ""
+    open_work_state = _open_work_lifecycle_state(open_work_text)
+    if open_work is None or _relative_path(open_work_entry) != current_routes.get("open_work"):
+        issues.append("active Open Work does not route the current TB-001 contract")
+    for key, expected in {
+        "status_successor_base_sha": promotion_base,
+        "status_successor_version": "1.2.89",
+        "proof_contract_path": "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+        "proof_contract_lifecycle": "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "contract_design_review": "COMPLETE / PASS",
+        "proof_result": "INCOMPLETE / COVERAGE-INCOMPLETE",
+        "proof_certification": "NOT CERTIFIED",
+        "phase9_vertical_slices": "NOT STARTED / NOT AUTHORISED",
+        "well_49": "BLOCKED / WAITING ON WELL-60 AND WELL-61",
+        "well_60": "PROMOTION CANDIDATE READY FOR MASTER GATE / OPEN",
+        "well_61": "PLANNING / INCOMPLETE",
+    }.items():
+        if open_work_state is None or open_work_state.get(key) != expected:
+            issues.append(f"current Open Work lifecycle field {key!r} is missing or wrong")
+    if "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md" not in open_work_text:
+        issues.append("current Open Work omits the promoted TB-001 v0.1.3 route")
+    if "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61" not in open_work_text:
+        issues.append("current Open Work does not preserve the WELL-49/WELL-61 blocker")
+    if "WELL-61 remains independently PLANNING / INCOMPLETE" not in open_work_text:
+        issues.append("current Open Work does not preserve WELL-61's independent incomplete status")
+
+    readme = root / "docs/00_platform/README.md"
+    readme_text = readme.read_text(encoding="utf-8") if readme.is_file() and not readme.is_symlink() else ""
+    active = _markdown_h2_section(readme_text, "Active Working Artifacts") or ""
+    current_state = _markdown_h2_section(readme_text, "Current State") or ""
+    if "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md" not in active:
+        issues.append("README active working artifacts omit the approved TB-001 contract")
+    if "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md" in active or "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md" in current_state:
+        issues.append("README current routes still label TB-001 v0.1.2 as active")
+    for token in (
+        "TB-001 CONTRACT LIFECYCLE: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION",
+        "CONTRACT/DESIGN REVIEW: COMPLETE / PASS",
+        "PROOF CERTIFICATION: NOT CERTIFIED",
+        "PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED",
+    ):
+        if token not in current_state:
+            issues.append(f"README current state omits {token!r}")
+
+    for path, expected_digest in (
+        (predecessor_snapshot, predecessor_snapshot_digest),
+        (predecessor_candidate, predecessor_candidate_digest),
+    ):
+        artifact = root / path
+        if not artifact.is_file() or artifact.is_symlink() or sha256_file(artifact) != expected_digest:
+            issues.append(f"v0.1.2 TB-001 predecessor archive is missing or changed: {path}")
+    history = phase8.get("promotion_history", [])
+    prior = next((item for item in history if isinstance(item, dict) and item.get("artifact_version") == "0.1.2"), None)
+    if not isinstance(prior, dict) or any(
+        prior.get(key) != expected
+        for key, expected in {
+            "reviewed_candidate_head_sha": "5486c94c1b659dfeb026dcbe6abf91978655c535",
+            "candidate_merge_sha": "4234965c8da20dbb4ef0a7128614a5070244619a",
+            "candidate_exact_head_ci_run": 39484403424,
+            "resulting_main_ci_run": 39487861172,
+            "reviewed_candidate_archive_path": predecessor_candidate,
+            "reviewed_candidate_archive_sha256": predecessor_candidate_digest,
+            "approved_current_snapshot_path": predecessor_snapshot,
+            "approved_current_snapshot_sha256": predecessor_snapshot_digest,
+            "status_promotion_pr": 133,
+            "status_promotion_head_sha": "c30388f8ae548040126483ec53957d0fc80b8246",
+            "status_promotion_merge_sha": "9e5bd3189aa5c79bbf128da464654c917def8a90",
+        }.items()
+    ):
+        issues.append("v0.1.2 approved-current and PR #132 predecessor evidence is not fully preserved")
+
+    required_model_b_clauses = (
+        "No Communications Oban job is required at registration/resend acceptance",
+        "initial Audit E2 schedule atomicity",
+        "DeliveryAttempt admission commits before provider I/O",
+        "P8-05 proves MessageIntent/envelope atomicity with source acceptance",
+        "P8-10 proves restart/backlog discovery",
+    )
+    folded_contract = candidate_text.casefold()
+    for clause in required_model_b_clauses:
+        if clause.casefold() not in folded_contract:
+            issues.append(f"promoted TB-001 contract omits reviewed Model B invariant: {clause}")
+
+    if rule.get("application_source_paths_created") != [] or phase8.get("application_source_paths_created") != []:
+        issues.append("status promotion records application source changes")
+    diff = subprocess.run(
+        ["git", "-C", str(repository_root), "diff", "--name-only", promotion_base, "--"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    untracked = subprocess.run(
+        ["git", "-C", str(repository_root), "ls-files", "--others", "--exclude-standard"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if diff.returncode != 0 or untracked.returncode != 0:
+        issues.append("cannot verify that the status promotion avoids application, dependency and migration changes")
+    else:
+        changed = set(diff.stdout.splitlines()) | set(untracked.stdout.splitlines())
+        forbidden = [
+            path
+            for path in changed
+            if path.startswith(("lib/", "config/", "priv/repo/migrations/", "priv/static/", "assets/"))
+            or path in {"mix.exs", "mix.lock"}
+        ]
+        if forbidden:
+            issues.append("status promotion changes application/runtime/dependency paths: " + ", ".join(sorted(forbidden)))
+
+    return issues
+
+
 def _check_well60_communications_handoff_candidate(
     root: Path,
     manifest: dict[str, Any],
     integrity_rules: dict[str, Any],
     report: dict[str, Any],
 ) -> None:
-    """Check the proposed WELL-60 contract without promoting it to current law."""
+    """Check that the reviewed WELL-60 candidate has only a lifecycle promotion."""
 
     rule_name = "well60_communications_handoff_candidate"
-    rule = integrity_rules.get(rule_name, {})
-    issues: list[str] = []
-    candidate_path = "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
-    predecessor_path = "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md"
-    expected = {
-        "candidate_path": candidate_path,
-        "candidate_version": "0.1.3",
-        "candidate_base_main_sha": "90fe6bc9bca6c0198527c4b8b253490f70e11798",
-        "candidate_lifecycle": "PROPOSED SUCCESSOR / REVIEW PENDING / NOT CERTIFIED / NOT CURRENT",
-        "predecessor_archive_path": predecessor_path,
-    }
-    if not isinstance(rule, dict):
-        rule = {}
-        issues.append("WELL-60 contract-candidate integrity rule is missing")
-    for key, value in expected.items():
-        if rule.get(key) != value:
-            issues.append(f"WELL-60 contract-candidate manifest field {key!r} is wrong")
-
-    candidate = root / candidate_path
-    predecessor = root / predecessor_path
-    if not candidate.is_file() or candidate.is_symlink():
-        issues.append("WELL-60 v0.1.3 contract candidate is missing or is a symlink")
-        text = ""
-    else:
-        text = candidate.read_text(encoding="utf-8")
-        if rule.get("candidate_sha256") != sha256_file(candidate):
-            issues.append("WELL-60 v0.1.3 contract-candidate SHA-256 differs from its bytes")
-    if not predecessor.is_file() or predecessor.is_symlink():
-        issues.append("approved v0.1.2 contract predecessor archive is missing or is a symlink")
-    else:
-        predecessor_digest = sha256_file(predecessor)
-        if rule.get("predecessor_sha256") != predecessor_digest:
-            issues.append("WELL-60 predecessor archive SHA-256 differs from its bytes")
-        active_predecessor = root / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-        if not active_predecessor.is_file() or active_predecessor.read_bytes() != predecessor.read_bytes():
-            issues.append("WELL-60 candidate does not preserve the approved v0.1.2 contract bytes")
-
-    phase8 = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {})
-    if (
-        not isinstance(phase8, dict)
-        or phase8.get("candidate_path") != "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-        or phase8.get("candidate_lifecycle") != "CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION"
-    ):
-        issues.append("approved TB-001 v0.1.2 status changed before v0.1.3 successor review")
-
-    open_work_entry = _active_open_work_entry(manifest)
-    if open_work_entry is None:
-        issues.append("WELL-60 proposed contract has no active Open Work route")
-    else:
-        open_work_path = _entry_path(root, open_work_entry)
-        open_work_text = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
-        open_work_candidate_path = candidate_path.removeprefix("docs/00_platform/")
-        if open_work_candidate_path not in open_work_text:
-            issues.append("WELL-60 proposed contract is missing from the active Open Work route")
-    if any(
-        entry.get("repository_path") == candidate_path and entry.get("lifecycle", "current") != "historical"
-        for entry in _all_entries(manifest)
-    ):
-        issues.append("WELL-60 v0.1.3 candidate is incorrectly listed as governing or reference authority")
-
-    required_tokens = (
-        "P8-05/WELL-49 acceptance boundary",
-        "No Communications Oban job is required at registration/resend acceptance",
-        "Failure to create a later P8-10 Communications job never rolls back",
-        "durably discoverable through the Communications owner interface when no job exists",
-        "recovers backlog after restart",
-        "idempotently schedules",
-        "concurrent discoverers/executors cannot multiply",
-        "Oban uniqueness is not business idempotency",
-        "only `MessageIntent.id`",
-        "verification bearer, protected capability, destination, rendered body, Account data, Identity payload",
-        "exact Content & Media content/locale eligibility and binding",
-        "protected capability authority before DeliveryAttempt admission",
-        "Failure before enqueue, after enqueue, or during execution",
-        "DeliveryAttempt admission commits before provider I/O",
-        "P8-05 proves MessageIntent/envelope atomicity with source acceptance",
-        "P8-10 proves restart/backlog discovery",
-        "`open`, `held`, `reconciliation_required` and `closed`",
-        "`queued`, `scheduled`, `ready`, or `preflighted`",
-        "no placeholder/no-op action, inert worker, generic dispatcher",
-        "initial Audit E2 schedule atomicity",
-    )
-    folded = text.casefold()
-    for token in required_tokens:
-        if token.casefold() not in folded:
-            issues.append(f"WELL-60 contract candidate omits required handoff clause: {token}")
-
-    forbidden_old_claims = (
-        "communications job is inserted in the registration transaction",
-        "registration rolls back if communications job insertion fails",
-        "rollback between the communications and audit schedule insertions",
-        "immediate communications job presence after acceptance",
-    )
-    for token in forbidden_old_claims:
-        if token in folded:
-            issues.append(f"WELL-60 contract candidate retains superseded proof assertion: {token}")
-
+    issues = _well60_status_promotion_issues(root, _default_root(), manifest, integrity_rules)
     _record_check(
         report,
         rule_name,
         not issues,
-        "WELL-60 no-lost-handoff contract candidate is pinned and remains pending review"
+        "WELL-60 TB-001 v0.1.3 candidate is current with exact review evidence preserved"
         if not issues
         else "; ".join(issues),
-        path=candidate_path,
+        path="docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
     )
 
 

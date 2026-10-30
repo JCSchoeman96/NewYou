@@ -53,6 +53,18 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         self.assertIn(current_route, self.atlas_routing)
         self.assertNotRegex(self.atlas_routing, r"\(working/DELIVERY_ATLAS_WORKING_v0\.4\.16\.md\)")
 
+    def test_tb001_current_status_route_is_v013_and_preserves_v012_history(self) -> None:
+        phase8 = self.manifest["integrity_rules"]["fp001_phase8_proof_contract_lifecycle"]
+        expected = "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
+        self.assertEqual(expected, phase8["candidate_path"])
+        self.assertEqual("CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", phase8["candidate_lifecycle"])
+        self.assertEqual("COMPLETE / PASS", phase8["contract_design_review"])
+        self.assertIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md", self.current_prose)
+        self.assertNotIn("working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md", self.current_prose)
+        self.assertIn("archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md", self.current_prose)
+        self.assertIn("PROOF CERTIFICATION: NOT CERTIFIED", self.current_state)
+        self.assertIn("PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED", self.current_state)
+
     def test_current_prose_agrees_with_open_work_classification(self) -> None:
         self.assertEqual("NEW_TRACER_BULLET", self.open_work_state.get("proof_classification"))
         self.assertEqual("COMPLETE / FINALISED", self.open_work_state.get("architectural_proof_classification_status"))
@@ -88,11 +100,11 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         for token in (
             "p8-05 implementation authorised",
             "bounded phase 8",
-            "well-48 complete",
-            "well-49 blocked",
+            "well-48: complete",
+            "well-49: blocked",
             "well-60",
             "well-61",
-            "well-50 backlog",
+            "well-50: backlog",
         ):
             self.assertIn(token, self.open_work_state["next_governance_action"].casefold())
         self.assertEqual(
