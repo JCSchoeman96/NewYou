@@ -280,7 +280,11 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         )
         self.assertEqual(predecessor, ROOT / predecessor_entry["repository_path"])
         self.assertEqual(hashlib.sha256(predecessor.read_bytes()).hexdigest(), predecessor_entry["sha256"])
+        self.assertEqual("PLANNING_TRACKER_HISTORICAL", predecessor_entry["authority_class"])
+        self.assertEqual("1.2.87", predecessor_entry["superseded_version"])
         self.assertEqual("historical", predecessor_entry["lifecycle"])
+        self.assertEqual("frozen_provenance", predecessor_entry["graph_policy"])
+        self.assertEqual(predecessor_entry["sha256"], predecessor_entry["provenance_sha256"])
         readme = (DOCS / "README.md").read_text(encoding="utf-8")
         self.assertIn("02_OPEN_WORK_v1.2.87.md", readme)
 

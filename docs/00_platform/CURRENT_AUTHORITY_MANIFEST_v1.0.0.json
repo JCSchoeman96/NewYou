@@ -2042,11 +2042,12 @@
       "canonical_filename": "02_OPEN_WORK_v1.2.86.md",
       "semver": "1.2.86",
       "repository_path": "docs/00_platform/archive/02_OPEN_WORK_v1.2.86.md",
-      "authority_class": "PLANNING_TRACKER",
+      "authority_class": "PLANNING_TRACKER_HISTORICAL",
       "sha256": "26f761a7015e7c1820f5583503a6ff312348c7bd35bf3bb61ceb1a86220656e8",
+      "superseded_version": "1.2.87",
       "lifecycle": "historical",
-      "provenance_sha256": "26f761a7015e7c1820f5583503a6ff312348c7bd35bf3bb61ceb1a86220656e8",
-      "superseded_version": "1.2.85"
+      "graph_policy": "frozen_provenance",
+      "provenance_sha256": "26f761a7015e7c1820f5583503a6ff312348c7bd35bf3bb61ceb1a86220656e8"
     }
   ],
   "integrity_rules": {
