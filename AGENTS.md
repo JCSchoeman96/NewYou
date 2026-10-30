@@ -25,6 +25,10 @@ Durable authority order is:
 
 Product Law → Architecture Law → Domain Law → governing Roadmap → applicable Operating/Frontend/Engineering/Delivery supporting authority → semantic Feature/JIT/proof contracts where required → implementation.
 
+The local agent is a planner and implementer, not a source of Product, Architecture, Domain or Roadmap law. It may make JIT implementation choices only where authority intentionally leaves them open. Never improvise missing product, architecture, domain, clinical, legal, commercial, safety or entitlement law.
+
+Durable governance is read-only during ordinary implementation. Update it only for a deliberate governed decision or when implementation supplies conclusive evidence of an upstream governance contradiction. Do not silently repair upstream law in implementation.
+
 Plane owns the active delivery-roadmap projection, work-item state/priority, blockers, dependencies, sequencing, acceptance criteria, discovered/deferred work, review/merge state and implementation readiness. Plane may not silently amend or override durable GitHub law. If they conflict, STOP the affected work, record the conflict in Plane and reconcile the smallest correct upstream authority.
 
 `docs/00_platform/02_OPEN_WORK_v1.2.90.md` is the final frozen legacy Open Work snapshot. It is historical evidence only after WELL-66; never use it as live execution authority and never create a successor merely to mirror ticket state.
@@ -69,6 +73,8 @@ Use the lightest process that safely resolves the work:
 
 Only dependency-cleared, adequately specified work should move to `Ready`.
 
+Use focused, test-first development and applicable repository checks for material implementation or behaviour work.
+
 ## Material question classification
 
 Classify material questions and discoveries before expanding scope:
@@ -98,11 +104,11 @@ For every Grill, `to-spec`, implementation plan and implementation ticket that t
 1. **Load the Ash skill first.** Read `.agents/skills/ash-framework/SKILL.md` and relevant generated references before selecting the mechanism.
 2. **Perform an explicit Ash capability/extension evaluation.** Do not limit it to packages already present in `mix.exs`. Verify plausible capabilities against current official Ash/HexDocs/Hex sources.
 3. **Record material decisions in the Grill/spec/ticket where needed.** Use `USE`, `NOT APPLICABLE`, `DEFER`, or `BLOCKED / NEEDS AUTHORITY` with the requirement, reason, governing authority and primary source checked. A ticket must not move to Ready while a material Ash decision is unresolved.
-4. **At minimum consider relevant Ash surfaces.** Domains/Resources/actions/code interfaces, policies/authorization, identities/constraints, relationships, calculations/aggregates, changes/validations, Ash Signals, Temporal Resources, AshPostgres, AshAuthentication/Phoenix integration, AshPhoenix, AshOban, AshStateMachine, AshCloak, AshArchival/AshPaperTrail and any other current official extension whose capability directly matches the ticket.
-5. **Signals require an explicit decision** for cross-Domain reactions, event-like coordination or post-action reactions. Signals are coordination only; they never become durable business authority or a universal event bus.
-6. **Temporal Resources require an explicit decision when time/history is material.** Do not introduce Temporal as a second audit/history authority when governed lifecycle/evidence already owns the truth.
+4. **At minimum consider relevant Ash surfaces.** Domains/Resources/actions/code interfaces, policies/authorization, identities/constraints, relationships, calculations/aggregates, changes/validations, Ash Signals, Temporal Resources, AshPostgres, AshAuthentication/Phoenix integration, AshPhoenix, AshOban, AshStateMachine, AshCloak, AshArchival/AshPaperTrail and any other current official extension whose capability directly matches the ticket. This is a minimum review set, not permission to install every package.
+5. **Signals require an explicit decision.** For cross-Domain reactions, event-like coordination or post-action reactions, explicitly evaluate Ash Signals. If Signals are not selected, state why. Signals are coordination only: they never become durable business authority, a universal event bus or a substitute for the receiving Domain's owning Ash interface.
+6. **Temporal Resources require an explicit decision when time/history is material.** For historical/as-of truth, correction, reconstruction or effective-period requirements, explicitly evaluate Ash Temporal Resources. Do not introduce Temporal merely as a second audit/history authority when the governed lifecycle/evidence model already owns that truth. If a real capability-specific temporal requirement conflicts with durable authority, STOP and route the contradiction upward.
 7. **Prefer a fitting Ash mechanism over bespoke plumbing** when it satisfies the requirement without violating governing law. If bespoke machinery is selected instead, document why the Ash option is insufficient or forbidden.
-8. **Evaluation is not installation authority.** A new dependency requires a concrete requirement, compatibility with the locked stack, current stable-version/API verification from primary sources and any required authority.
+8. **Evaluation is not installation authority.** Do not add a package because it exists or looks convenient. A new dependency requires a concrete requirement, compatibility with the locked stack, current stable-version/API verification from primary sources and any required Architecture/Security/Domain approval.
 9. **Re-evaluate at implementation boundary** when versions, capabilities, scope or authority changed since planning.
 
 ## Authorization and capability authority — mandatory STOP rule
@@ -110,7 +116,7 @@ For every Grill, `to-spec`, implementation plan and implementation ticket that t
 - Resolve authorization through governed roles, scopes and applicable relationships.
 - Capabilities belong to governed roles/scopes/relationships; named people may be subjects of explicit grants, never definitions of capability authority.
 - Agents MUST NOT attach a business capability directly to a named user. A proposed direct user-to-capability shortcut is an `UPSTREAM GOVERNANCE CONTRADICTION`: STOP and escalate.
-- Governed bootstrap may establish the first explicit role/scope grants, but bootstrap does not hold business capability.
+- Governed bootstrap may establish the first explicit role/scope grants, but bootstrap does not hold business capability. After bootstrap, sensitive grants require the appropriate role-based independent approver, distinct from the subject.
 - Platform Administrator does not imply expert authority. Developer, founder or administrator status alone does not create Domain authority.
 - Multiple valid roles on one identity are expected and supported.
 - Super Admin is break-glass and not a universal bypass.
@@ -130,7 +136,7 @@ Meaningful state transitions are intentional domain actions with appropriate sta
 
 ## Defect fixes and regression proof
 
-Every material bug, defect, security issue or behavioural regression must leave permanent regression coverage. Where technically possible, reproduce it with a focused failing automated test before changing production code, then implement the fix and prove that test passes. If deterministic automation is genuinely impossible, record the reason and strongest repeatable alternative proof in Plane for explicit reviewer acceptance.
+Every material bug, defect, security issue or behavioural regression must leave permanent regression coverage. Where technically possible, reproduce it with a focused failing automated test before changing production code, then implement the fix and prove that test passes. If deterministic automation is genuinely impossible, record the reason and strongest repeatable alternative proof in Plane for explicit reviewer acceptance. A material defect fix without adequate regression proof is not complete.
 
 ## Evidence
 
