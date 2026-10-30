@@ -226,7 +226,7 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             self.assertIn(required, next_stage.group(1))
         for required in (
             "WELL-48: COMPLETE / MERGED VIA PR #156",
-            "WELL-49: BLOCKED / WAITING ON WELL-60 AND WELL-61",
+            "WELL-49: BLOCKED / WAITING ON WELL-61",
             "WELL-50: BACKLOG / NOT STARTED",
             "WELL-51 follows the required WELL-48–50 seams",
         ):
@@ -234,14 +234,14 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         self.assertIn("bounded Phase 8 architectural proof", current_state)
         self.assertIn("WELL-45 remains a legal/privacy release gate", current_state)
         for required in (
-            "P8-05 IMPLEMENTATION AUTHORISED",
-            "WELL-48 COMPLETE",
-            "WELL-49 BLOCKED",
-            "WELL-60",
-            "WELL-61",
-            "WELL-50 BACKLOG",
+            "p8-05 implementation authorised",
+            "well-48: complete",
+            "well-49: blocked / waiting on well-61",
+            "well-60: complete / pr #165 resulting-main verified",
+            "well-61 remains planning / incomplete",
+            "well-50: backlog / not started",
         ):
-            self.assertIn(required, lifecycle["next_governance_action"])
+            self.assertIn(required, lifecycle["next_governance_action"].casefold())
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", current_state)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_state)
         self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", current_state)
