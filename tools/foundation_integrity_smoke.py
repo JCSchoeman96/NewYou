@@ -361,7 +361,7 @@ def run_smoke_audit(root: Path, router_path: Path = DEFAULT_ROUTER) -> dict[str,
 def _print_human(report: dict[str, Any]) -> None:
     print(f"Foundation Smoke: {report['status']} ({report['assertion_count']} assertions)")
     for finding in report["findings"]:
-        location = f" [{finding.get('path')} ]" if finding.get("path") else ""
+        location = f" [{finding.get('path')}]" if finding.get("path") else ""
         print(f"- {finding['check']}{location}: {finding['message']}")
 
 
