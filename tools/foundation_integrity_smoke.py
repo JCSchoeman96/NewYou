@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -28,6 +29,12 @@ EXPECTED_GOVERNING_ORDER = (
     "FRONTEND_EXPERIENCE_SYSTEM",
 )
 REQUIRED_SUPPORTING = frozenset({"ENGINEERING_STANDARDS", "DELIVERY_GOVERNANCE_STANDARD"})
+DOCUMENT_VERSION_PATTERN = re.compile(
+    r"^-\s+\*\*Document version:\*\*\s+v?(\d+\.\d+\.\d+)\s*$", re.MULTILINE
+)
+STATUS_VERSION_PATTERN = re.compile(
+    r"^-\s+\*\*Document status:\*\*.*?\bv(\d+\.\d+\.\d+)\b", re.MULTILINE
+)
 
 
 def _default_root() -> Path:
@@ -40,6 +47,14 @@ def _sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _declared_document_version(text: str) -> str | None:
+    match = DOCUMENT_VERSION_PATTERN.search(text)
+    if match is not None:
+        return match.group(1)
+    match = STATUS_VERSION_PATTERN.search(text)
+    return match.group(1) if match is not None else None
 
 
 def _record(
@@ -92,17 +107,25 @@ def _check_hashed_entry(root: Path, report: dict[str, Any], entry: dict[str, Any
     version_ok = bool(semver) and f"v{semver}" in canonical
     actual_hash = _sha256_file(target) if safe else None
     hash_ok = safe and len(expected_hash) == 64 and actual_hash == expected_hash
-    ok = safe and filename_ok and version_ok and hash_ok
+    declared_version = None
+    if safe:
+        try:
+            declared_version = _declared_document_version(target.read_text(encoding="utf-8"))
+        except UnicodeDecodeError:
+            declared_version = None
+    metadata_ok = safe and declared_version == semver
+    ok = safe and filename_ok and version_ok and hash_ok and metadata_ok
 
     _record(
         report,
         f"smoke_{kind}_route",
         ok,
-        f"{kind} route/hash valid for {document_id}"
+        f"{kind} route/hash/version valid for {document_id}"
         if ok
         else (
-            f"invalid {kind} route/hash for {document_id}: safe={safe}, "
-            f"filename={filename_ok}, semver={version_ok}, hash={hash_ok}"
+            f"invalid {kind} route/hash/version for {document_id}: safe={safe}, "
+            f"filename={filename_ok}, semver={version_ok}, hash={hash_ok}, "
+            f"declared_version={declared_version!r}, expected_version={semver!r}"
         ),
         path=relative,
     )
@@ -253,7 +276,7 @@ def run_smoke_audit(root: Path, router_path: Path = DEFAULT_ROUTER) -> dict[str,
     )
     for relative in working_routes if isinstance(working_routes, list) else []:
         route = Path(str(relative))
-        safe, target = _safe_regular_file(root, str(relative))
+        safe, _target = _safe_regular_file(root, str(relative))
         under_working = route.is_relative_to(Path("docs/00_platform/working"))
         ok = safe and under_working
         _record(
@@ -266,7 +289,6 @@ def run_smoke_audit(root: Path, router_path: Path = DEFAULT_ROUTER) -> dict[str,
             path=str(relative),
         )
 
-    readme_path = root / "docs/00_platform/README.md"
     readme_safe, readme_target = _safe_regular_file(root, "docs/00_platform/README.md")
     readme = readme_target.read_text(encoding="utf-8") if readme_safe else ""
     readme_tokens = (
