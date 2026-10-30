@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -47,6 +48,40 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
             hashlib.sha256(APPROVED_ARCHIVE.read_bytes()).hexdigest(),
             rule["predecessor_sha256"],
         )
+        predecessor_header = re.search(
+            r"(?m)^- \*\*Design predecessor:\*\* `([^`]+)`",
+            self.candidate,
+        )
+        predecessor_history = re.search(
+            r"approved-current v0\.1\.2 status snapshot at `([^`]+)`",
+            self.candidate,
+        )
+        self.assertIsNotNone(predecessor_header)
+        self.assertIsNotNone(predecessor_history)
+        stated_predecessors = (
+            predecessor_header.group(1),
+            predecessor_history.group(1),
+        )
+        manifest_predecessor = rule["predecessor_archive_path"]
+        self.assertEqual(
+            "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md",
+            manifest_predecessor,
+        )
+        manifest_predecessor_path = ROOT / manifest_predecessor
+        self.assertTrue(manifest_predecessor_path.is_file())
+        for stated_path in stated_predecessors:
+            resolved_path = (
+                ROOT / stated_path
+                if stated_path.startswith("docs/")
+                else DOCS / stated_path
+            )
+            self.assertEqual(manifest_predecessor_path, resolved_path)
+            self.assertTrue(resolved_path.is_file())
+            self.assertEqual(APPROVED_ARCHIVE.read_bytes(), resolved_path.read_bytes())
+            self.assertEqual(
+                hashlib.sha256(resolved_path.read_bytes()).hexdigest(),
+                rule["predecessor_sha256"],
+            )
         phase8 = self.manifest["integrity_rules"]["fp001_phase8_proof_contract_lifecycle"]
         self.assertEqual(APPROVED.as_posix().replace(str(ROOT) + "/", ""), phase8["candidate_path"])
         self.assertEqual(
@@ -65,6 +100,33 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
             CANDIDATE.as_posix().replace(str(ROOT) + "/", ""),
             self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"],
         )
+
+    def test_identity_source_contract_uses_current_v020_route(self) -> None:
+        current_identity_route = (
+            "docs/00_platform/working/"
+            "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+        )
+        graph_routes = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
+        identity_routes = [
+            route
+            for route in graph_routes
+            if "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_" in route
+        ]
+        self.assertEqual([current_identity_route], identity_routes)
+        self.assertTrue((ROOT / current_identity_route).is_file())
+
+        _, source_heading, source_contents = self.candidate.partition(
+            "Current FP-001 source contracts:"
+        )
+        self.assertTrue(source_heading)
+        current_sources = source_contents.split("\n## ", 1)[0]
+        current_identity_source = "working/" + current_identity_route.rsplit("/", 1)[1]
+        self.assertIn(f"`{current_identity_source}`", current_sources)
+        self.assertNotIn("FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md", current_sources)
+
+        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        active_working = readme.split("## Active Working Artifacts", 1)[1].split("\n## ", 1)[0]
+        self.assertIn(f"`{current_identity_source}`", active_working)
 
     def test_no_lost_handoff_and_executor_boundary_are_explicit(self) -> None:
         candidate_clauses = (

@@ -11,7 +11,7 @@
 - **Proof certification:** NOT STARTED
 - **Phase 9 / Vertical Slices:** NOT STARTED / NOT AUTHORISED
 - **Authority class:** active working proof contract; derived under current authority; not Product, Architecture, Domain or Roadmap law
-- **Design predecessor:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2_SUPERSEDED_APPROVED_CURRENT.md` (direct approved-current status snapshot; preserved byte-identically)
+- **Design predecessor:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md` (direct approved-current status snapshot; preserved byte-identically)
 - **Reviewed predecessor candidate:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` (exact PR #132 candidate; preserved byte-identically)
 
 This v0.1.3 successor preserves the approved FP-001 Phase 8 proof design and changes only the Communications scheduling boundary under WELL-60. The prior approved contract v0.1.2 remains immutable and current until this exact successor is independently reviewed and promoted. Master Gate selected Model B as the proposed amendment direction: P8-05/WELL-49 commits the durable Communications `MessageIntent` and required protected envelope with source acceptance; P8-10/WELL-10 later discovers and schedules eligible intents through the real Communications executor. This candidate changes no Product, Decision, Architecture, Domain, or Roadmap authority. Its contract/design review is pending; it does not reset or claim new runtime proof, authorize implementation, or clear WELL-49.
@@ -37,7 +37,7 @@ The accepted WELL-1 INTERNAL Q1–Q90 Grill comments are design provenance, not 
 
 Current FP-001 source contracts:
 
-- `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`
+- `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md`
 - `working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
 - `working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
 - `working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md`
@@ -212,7 +212,7 @@ The authoring tools for this documentation task are Git, the Foundation Integrit
 
 ## 11. Version, history and lifecycle
 
-`v0.1.0` is the initial proof-contract candidate; `v0.1.1` and `v0.1.2` are preserved approved successors. This `v0.1.3` PATCH successor proposes the WELL-60 Communications scheduling correction and preserves the approved-current v0.1.2 status snapshot at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2_SUPERSEDED_APPROVED_CURRENT.md`. The exact PR #132 v0.1.2 candidate remains separately preserved at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. It remains a review candidate, not current or approved, until independent exact-head review and the repository status/merge gates complete. Do not rewrite an approved or historical contract in place. This successor does not reset proof execution or certify proof.
+`v0.1.0` is the initial proof-contract candidate; `v0.1.1` and `v0.1.2` are preserved approved successors. This `v0.1.3` PATCH successor proposes the WELL-60 Communications scheduling correction and preserves the approved-current v0.1.2 status snapshot at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md`. The exact PR #132 v0.1.2 candidate remains separately preserved at `docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. It remains a review candidate, not current or approved, until independent exact-head review and the repository status/merge gates complete. Do not rewrite an approved or historical contract in place. This successor does not reset proof execution or certify proof.
 
 The governing Open Work, Atlas, Skeleton and HARDEN-02 documents use their established patch successors for this routing-only transition; their direct predecessors are archived byte-identically. This derived contract is listed by the manifest for navigation/integrity only and is not promoted to `governing_documents` or `reference_documents`.
 

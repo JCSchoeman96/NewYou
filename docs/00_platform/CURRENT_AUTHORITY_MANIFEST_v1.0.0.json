@@ -3217,7 +3217,7 @@
       "candidate_lifecycle": "PROPOSED SUCCESSOR / REVIEW PENDING / NOT CERTIFIED / NOT CURRENT",
       "predecessor_archive_path": "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md",
       "predecessor_sha256": "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4",
-      "candidate_sha256": "b25a9634c359cb8fc17ec5a0036650ee4349524e357c469035569e86d99c4c52"
+      "candidate_sha256": "e4ad6fd47bb1a04cd299fd900c2757e075352235ca286b6f368637942ae3cf6d"
     }
   }
 }
