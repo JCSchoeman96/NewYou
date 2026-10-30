@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs/00_platform"
 EVIDENCE_DIR = DOCS / "working/content_media/verification_messages"
 PACKET_PATH = EVIDENCE_DIR / "VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.1.0.json"
-OPEN_WORK_PATH = DOCS / "02_OPEN_WORK_v1.2.87.md"
+OPEN_WORK_PATH = DOCS / "02_OPEN_WORK_v1.2.88.md"
 AUTHORITY_MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 CONTENT_ITEM_ID = "NEWYOU-CONTENTITEM-VERIFICATION-MESSAGE-EMAIL-ADDRESS"
@@ -268,25 +268,25 @@ class VerificationMessageCandidateTests(unittest.TestCase):
 
         authority_manifest = json.loads(AUTHORITY_MANIFEST_PATH.read_text(encoding="utf-8"))
         current_open_work = next(item for item in authority_manifest["governing_documents"] if item["document_id"] == "OPEN_WORK")
-        self.assertEqual("02_OPEN_WORK_v1.2.87.md", current_open_work["canonical_filename"])
+        self.assertEqual("02_OPEN_WORK_v1.2.88.md", current_open_work["canonical_filename"])
         self.assertEqual(
             hashlib.sha256(OPEN_WORK_PATH.read_bytes()).hexdigest(),
             current_open_work["sha256"],
         )
-        predecessor = DOCS / "archive/02_OPEN_WORK_v1.2.86.md"
+        predecessor = DOCS / "archive/02_OPEN_WORK_v1.2.87.md"
         predecessor_entry = next(
             item for item in authority_manifest["historical_documents"]
-            if item["document_id"] == "OPEN_WORK_V1_2_86"
+            if item["document_id"] == "OPEN_WORK_V1_2_87"
         )
         self.assertEqual(predecessor, ROOT / predecessor_entry["repository_path"])
         self.assertEqual(hashlib.sha256(predecessor.read_bytes()).hexdigest(), predecessor_entry["sha256"])
         self.assertEqual("PLANNING_TRACKER_HISTORICAL", predecessor_entry["authority_class"])
-        self.assertEqual("1.2.87", predecessor_entry["superseded_version"])
+        self.assertEqual("1.2.88", predecessor_entry["superseded_version"])
         self.assertEqual("historical", predecessor_entry["lifecycle"])
         self.assertEqual("frozen_provenance", predecessor_entry["graph_policy"])
         self.assertEqual(predecessor_entry["sha256"], predecessor_entry["provenance_sha256"])
         readme = (DOCS / "README.md").read_text(encoding="utf-8")
-        self.assertIn("02_OPEN_WORK_v1.2.87.md", readme)
+        self.assertIn("02_OPEN_WORK_v1.2.88.md", readme)
 
     def test_prejit_pack_remains_non_authoritative(self) -> None:
         pack = json.loads((DOCS / "working/content_media/PACK_MANIFEST_v0.1.0.json").read_text(encoding="utf-8"))
