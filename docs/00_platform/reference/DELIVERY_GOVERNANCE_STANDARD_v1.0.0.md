@@ -103,7 +103,7 @@ Current agent routing is defined by:
 - `docs/00_platform/README.md`; and
 - `docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json`.
 
-The lean current router contains only current durable authority, current supporting authority, live execution-system metadata, the frozen legacy Open Work classification and the semantic working routes needed for delivery context.
+The lean current router contains current durable authority, current deep-reference evidence for exact source tracing, current supporting authority, live execution-system metadata, the frozen legacy Open Work classification and the semantic working routes needed for delivery context. Deep-reference evidence is not an additional default governing root.
 
 `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` is retained as the frozen pre-WELL-66 historical/provenance integrity baseline used by Foundation Full. It is not the live delivery router after this transition.
 
