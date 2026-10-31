@@ -41,10 +41,10 @@
     },
     {
       "document_id": "ROADMAP",
-      "canonical_filename": "05_ROADMAP_v1.2.4.md",
-      "semver": "1.2.4",
-      "repository_path": "docs/00_platform/05_ROADMAP_v1.2.4.md",
-      "sha256": "99ee1e6b5e0d23b12a877e17a001b6b92250248fe1b2ab9c1a12e1e5ff966b3e"
+      "canonical_filename": "05_ROADMAP_v1.2.5.md",
+      "semver": "1.2.5",
+      "repository_path": "docs/00_platform/05_ROADMAP_v1.2.5.md",
+      "sha256": "74f3a8de11127617b22b3d7b493fb664c7865a3a3737afcaa20a4c897a0e8b7b"
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",
