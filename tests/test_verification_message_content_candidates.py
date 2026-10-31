@@ -124,7 +124,12 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         }
         release = packet["runtime_release_eligibility"]
         slots = release["approval_slots"]
-        self.assertEqual(4, len(slots))
+        slots_by_locale = {
+            locale: {item["required_approver_role"] for item in slots if item["locale"] == locale}
+            for locale in ("en", "af")
+        }
+        self.assertEqual({"Content Approver", "English Language Reviewer"}, slots_by_locale["en"])
+        self.assertEqual({"Content Approver", "Afrikaans Language Reviewer"}, slots_by_locale["af"])
         self.assertEqual(expected, {(item["locale"], item["required_approver_role"], item["content_translation_version_id"]) for item in slots})
         for slot in slots:
             locale_version = next(i for i in packet["locale_versions"] if i["locale"] == slot["locale"])
@@ -177,7 +182,7 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         )
         self.assertEqual(
             [
-                "all four exact-byte role approvals",
+                "EN exact-byte Content Approver + English Language Reviewer approvals; AF exact-byte Content Approver + Afrikaans Language Reviewer approvals; two approvals per locale and four separate approval events across the paired EN/AF content",
                 "current Identity & Access grant for Content + verification_message_lifecycle",
                 "explicit Content & Media release/eligibility decision for each exact locale version and digest",
             ],

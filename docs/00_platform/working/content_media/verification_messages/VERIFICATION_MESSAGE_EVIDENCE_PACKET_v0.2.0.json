@@ -330,7 +330,7 @@
       "real-participant delivery"
     ],
     "required_conditions": [
-      "all four exact-byte role approvals",
+      "EN exact-byte Content Approver + English Language Reviewer approvals; AF exact-byte Content Approver + Afrikaans Language Reviewer approvals; two approvals per locale and four separate approval events across the paired EN/AF content",
       "current Identity & Access grant for Content + verification_message_lifecycle",
       "explicit Content & Media release/eligibility decision for each exact locale version and digest"
     ],

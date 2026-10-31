@@ -48,6 +48,32 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
         self.assertIn("DEC-319", self.decisions)
         self.assertIn("**Status:** LOCKED", self.decisions.split("## DEC-319 —", 1)[1].split("\n## ", 1)[0])
 
+    def test_superseded_routed_predecessors_are_archived_not_left_in_current_locations(self) -> None:
+        routed = ROUTER["governing_documents"] + ROUTER["supporting_documents"]
+        for route in routed:
+            current_path = ROOT / route["repository_path"]
+            name = current_path.name
+            if "_v" not in name:
+                continue
+            stem, current_version = name.rsplit("_v", 1)
+            current_version = current_version.removesuffix(current_path.suffix)
+            if not all(part.isdigit() for part in current_version.split(".")):
+                continue
+            current_tuple = tuple(int(part) for part in current_version.split("."))
+
+            for archived in (DOCS / "archive").glob(f"{stem}_v*{current_path.suffix}"):
+                archived_version = archived.name.rsplit("_v", 1)[1].removesuffix(current_path.suffix)
+                if not all(part.isdigit() for part in archived_version.split(".")):
+                    continue
+                archived_tuple = tuple(int(part) for part in archived_version.split("."))
+                if archived_tuple < current_tuple:
+                    former_current_path = current_path.parent / archived.name
+                    self.assertFalse(
+                        former_current_path.exists(),
+                        f"superseded authority predecessor remains in a current location: {former_current_path}",
+                    )
+                    self.assertTrue(archived.is_file(), f"archived predecessor is missing: {archived}")
+
     def test_active_p805_contract_is_current_and_separates_development_from_release(self) -> None:
         section = self.spec.split("## WELL-63 bounded verification-message content eligibility", 1)[1].split("## Registration and retry contract", 1)[0]
         route = self.spec.split("## Purpose and current boundary", 1)[1].split("## Fixed design decisions", 1)[0]
@@ -70,14 +96,15 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
         proof = self.product.split("## 21E.20", 1)[1].split("# 21F.", 1)[0]
         self.assertIn("development_approved != runtime_approved != published != latest != production_eligible", proof)
         for phrase in (
-            "English Content Approver and English Language Reviewer",
-            "Afrikaans Content Approver and Afrikaans Language Reviewer",
+            "Each EN locale version requires two approvals: Content Approver + English Language Reviewer",
+            "Each AF locale version requires two approvals: Content Approver + Afrikaans Language Reviewer",
+            "The paired EN/AF verification content therefore requires four separate approval events in total",
             "each role approval remains independently recorded",
-            "all four exact-byte role approvals",
             "current Identity & Access grant for Content + verification_message_lifecycle",
             "explicit Content & Media release/eligibility decision",
         ):
             self.assertIn(phrase, proof.replace("`", ""))
+        self.assertNotIn("requires all four exact-byte role approvals", proof)
 
     def test_content_and_release_authority_remain_separate(self) -> None:
         proof = self.product.split("## 21E.20", 1)[1].split("# 21F.", 1)[0]

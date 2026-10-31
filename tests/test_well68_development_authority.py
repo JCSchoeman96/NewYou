@@ -118,10 +118,18 @@ class WELL68DevelopmentAuthorityTests(unittest.TestCase):
             normalized = text.replace("`", "")
             self.assertIn("current Identity & Access grant for Content + verification_message_lifecycle", normalized)
         for requirement in (
-            "all four exact-byte role approvals",
+            "Each EN locale version requires two approvals: Content Approver + English Language Reviewer",
+            "Each AF locale version requires two approvals: Content Approver + Afrikaans Language Reviewer",
+            "The paired EN/AF verification content therefore requires four separate approval events in total",
             "explicit Content & Media release/eligibility decision",
         ):
             self.assertIn(requirement, self.product.replace("`", ""))
+        for requirement in (
+            "each EN locale version requires two exact-byte approvals: Content Approver + English Language Reviewer",
+            "each AF locale version requires two exact-byte approvals: Content Approver + Afrikaans Language Reviewer",
+            "paired EN/AF verification versions therefore require four separate approval events in total",
+            "explicit Content & Media release/eligibility decision",
+        ):
             self.assertIn(requirement, self.p8.replace("`", ""))
         self.assertIn("Before production, public release, paid-pilot or real-participant use", self.p8)
 
@@ -147,7 +155,13 @@ class WELL68DevelopmentAuthorityTests(unittest.TestCase):
         self.assertFalse(lifecycle["creates_runtime_or_production_authority"])
         self.assertEqual("PENDING_REQUIRED_EVIDENCE", self.packet["runtime_release_eligibility"]["status"])
         self.assertFalse(self.packet["runtime_release_eligibility"]["eligible"])
-        self.assertEqual(4, len(self.packet["runtime_release_eligibility"]["approval_slots"]))
+        slots = self.packet["runtime_release_eligibility"]["approval_slots"]
+        by_locale = {
+            locale: {slot["required_approver_role"] for slot in slots if slot["locale"] == locale}
+            for locale in ("en", "af")
+        }
+        self.assertEqual({"Content Approver", "English Language Reviewer"}, by_locale["en"])
+        self.assertEqual({"Content Approver", "Afrikaans Language Reviewer"}, by_locale["af"])
         self.assertEqual([], self.packet["runtime_release_eligibility"]["lifecycle_grant_evidence"])
         self.assertEqual([], self.packet["runtime_release_eligibility"]["content_release_decisions"])
         self.assertNotIn("governance_identity", json.dumps(self.packet).casefold())
