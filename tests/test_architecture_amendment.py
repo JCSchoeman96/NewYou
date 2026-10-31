@@ -12,6 +12,8 @@ from foundation_test_support import (
     git_snapshot_bytes,
     git_snapshot_path_exists,
     git_snapshot_directory_names,
+    historical_platform_readme_path,
+    historical_platform_readme_text,
 )
 
 
@@ -167,7 +169,7 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
         cls.flow = FLOW.read_text(encoding="utf-8")
         cls.flow_predecessor = FLOW_PREDECESSOR.read_text(encoding="utf-8")
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8")
-        cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        cls.readme = historical_platform_readme_text(ROOT)
         cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 
     def test_predecessors_are_immutable_and_successors_use_explicit_semver(self):

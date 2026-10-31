@@ -6,7 +6,7 @@ import re
 import unittest
 from pathlib import Path
 
-from foundation_test_support import current_document_path, current_working_path
+from foundation_test_support import current_document_path, current_working_path, historical_platform_readme_path, historical_platform_readme_text
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,7 +15,7 @@ ROADMAP = DOCS / "archive" / "05_ROADMAP_v1.2.3.md"
 ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.2.2.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.2.2.md"
 CURRENT_ROADMAP = current_document_path(ROOT, "ROADMAP")
-README = DOCS / "README.md"
+README = historical_platform_readme_path(ROOT)
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 ROADMAP_V1_1_4_SHA256 = "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
 ROADMAP_V1_2_0_SHA256 = "601172754e78f23df7d6b59e7c4eceb0aefa0b9e5bb65045dafeacd78b9d0fb0"

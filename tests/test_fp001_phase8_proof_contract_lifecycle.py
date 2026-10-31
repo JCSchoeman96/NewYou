@@ -1,20 +1,20 @@
 from __future__ import annotations
 
-import unittest
-import shutil
-import subprocess
-import tempfile
 import hashlib
 import json
 import re
+import shutil
+import subprocess
+import tempfile
+import unittest
 from pathlib import Path
 
+from foundation_test_support import historical_platform_readme_text, historical_snapshot_path
 from tools.foundation_integrity_audit import (
     _fp001_phase8_proof_contract_content_issues,
     refresh_manifest,
     run_audit,
 )
-from tests.foundation_test_support import historical_snapshot_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -95,8 +95,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         )
 
         route_hashes = phase8["current_route_sha256"]
-        README = ROOT / "docs/00_platform/README.md"
-        readme = README.read_text(encoding="utf-8")
+        readme = historical_platform_readme_text(ROOT)
         for relative in routes.values():
             path = ROOT / relative
             self.assertTrue(path.is_file(), f"current route is missing: {relative}")
@@ -479,8 +478,8 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("PROOF CERTIFICATION: NOT STARTED", approval_open_work)
         self.assertIn("NEXT GOVERNANCE ACTION: WELL-38", approval_open_work)
 
-        readme = (ROOT / "docs/00_platform/README.md").read_text(encoding="utf-8")
-        current_state = readme.split("## Current State", 1)[1].split("## Historical status evidence", 1)[0]
+        readme = historical_platform_readme_text(ROOT)
+        current_state = readme.split("## Current State", 1)[1].split("\n## ", 1)[0]
         self.assertIn("NEXT EXECUTION ACTION: WELL-48: COMPLETE / MERGED VIA PR #156", current_state)
         self.assertIn("P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY", current_state)
         self.assertIn("PROOF EXECUTION: STARTED", current_state)
@@ -539,7 +538,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             shutil.copytree(ROOT / "docs", root / "docs")
-            readme = root / "docs/00_platform/README.md"
+            readme = root / "docs/00_platform/archive/README_PRE_WELL66_2026-10-30.md"
             text = readme.read_text(encoding="utf-8")
             current = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
             stale = "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.0.9.md"

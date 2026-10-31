@@ -41,7 +41,13 @@ class FoundationFullHistoricalTests(unittest.TestCase):
     def test_full_audit_rejects_changed_governance_lifecycle_rule(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform")
+            copy_git_snapshot_tree(
+                ROOT,
+                WELL38_BASE_SHA,
+                root,
+                "docs/00_platform",
+                materialize_historical_readme=True,
+            )
             manifest_path = root / MANIFEST_RELATIVE
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             manifest["integrity_rules"]["roadmap_proof_classification_lifecycle"][

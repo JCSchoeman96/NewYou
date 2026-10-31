@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from foundation_test_support import historical_platform_readme_text, historical_platform_readme_path, live_platform_readme_text
 import hashlib
 import json
 import unittest
@@ -126,7 +127,7 @@ class LegalDocumentBaselineGovernanceTests(unittest.TestCase):
     def test_current_routes_separate_development_readiness_from_release_readiness(self) -> None:
         open_work_record = next(item for item in MANIFEST["governing_documents"] if item["document_id"] == "OPEN_WORK")
         open_work = (ROOT / open_work_record["repository_path"]).read_text(encoding="utf-8")
-        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        readme = live_platform_readme_text(ROOT)
         product = current_document("PLATFORM_BASELINE").read_text(encoding="utf-8")
         spec = (ROOT / "docs/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
         self.assertIn("WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED", open_work)

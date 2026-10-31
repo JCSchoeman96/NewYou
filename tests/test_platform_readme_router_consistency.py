@@ -8,12 +8,12 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
-from foundation_test_support import current_document_path, current_working_path
+from foundation_test_support import current_document_path, current_working_path, historical_platform_readme_path, historical_platform_readme_text
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-README = DOCS / "README.md"
+README = historical_platform_readme_path(ROOT)
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 STALE_PATTERNS = (
@@ -42,7 +42,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         cls.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         cls.open_work_path = current_document_path(ROOT, "OPEN_WORK")
         cls.atlas_path = current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_")
-        cls.readme = README.read_text(encoding="utf-8")
+        cls.readme = historical_platform_readme_text(ROOT)
         cls.current_prose = _current_readme_prose(cls.readme)
         cls.current_state = cls.readme.split("## Current State", 1)[1].split("\n## ", 1)[0]
         cls.atlas_routing = cls.readme.split("## Delivery Atlas routing", 1)[1].split("\n## ", 1)[0]
@@ -128,7 +128,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
             refresh_manifest(root, manifest_path)
 
-            readme = fixture_docs / "README.md"
+            readme = fixture_docs / "archive" / "README_PRE_WELL66_2026-10-30.md"
             text = readme.read_text(encoding="utf-8")
             prose = _current_readme_prose(text)
             atlas = prose.split("## Delivery Atlas routing", 1)[1].split("\n## ", 1)[0]
@@ -160,7 +160,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
             refresh_manifest(root, manifest_path)
 
-            readme = fixture_docs / "README.md"
+            readme = fixture_docs / "archive" / "README_PRE_WELL66_2026-10-30.md"
             readme.write_text(
                 readme.read_text(encoding="utf-8")
                 + "\n\n## Historical status evidence\n\nProof classification remains NOT FINALISED in this preserved snapshot only.\n",

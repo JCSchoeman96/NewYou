@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from foundation_test_support import historical_platform_readme_text, historical_platform_readme_path
 import hashlib
 import json
 import re
@@ -98,7 +99,7 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
         cls.contract = CURRENT_CONTRACT.read_text(encoding="utf-8") if CURRENT_CONTRACT.is_file() else ""
         cls.candidate = CANDIDATE_ARCHIVE.read_bytes() if CANDIDATE_ARCHIVE.is_file() else b""
         cls.open_work = OPEN_WORK.read_text(encoding="utf-8") if OPEN_WORK.is_file() else ""
-        cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        cls.readme = historical_platform_readme_text(ROOT)
         cls.manifest = json.loads((DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8"))
         cls.promotion = _json_marker(cls.contract, PROMOTION_START, PROMOTION_END)
         cls.open_work_state = _json_marker(

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from foundation_test_support import HISTORICAL_README_RELATIVE, historical_platform_readme_text, historical_platform_readme_path
 import hashlib
 import json
 import re
@@ -186,7 +187,7 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
         )
 
     def test_current_readme_does_not_project_phase7c_as_blocked(self):
-        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        readme = historical_platform_readme_text(ROOT)
         current_state = _markdown_h2_section(readme, "Current State")
         self.assertIsNotNone(current_state)
         current_state = current_state or ""
@@ -384,7 +385,7 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
             "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
             "HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
         ]
-        readme_path = DOCS / "README.md"
+        readme_path = historical_platform_readme_path(ROOT)
         original_readme = readme_path.read_text(encoding="utf-8")
         current_start = original_readme.index("## Current State")
         current_end = original_readme.find("\n## ", current_start + 1)
@@ -400,7 +401,8 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
                 ROOT / "docs/execution/p8-05-registration-jit-spec.md",
                 fixture_execution / "p8-05-registration-jit-spec.md",
             )
-            fixture_readme = fixture_docs / "README.md"
+            fixture_readme = root / HISTORICAL_README_RELATIVE
+            fixture_readme.parent.mkdir(parents=True, exist_ok=True)
             fixture_readme.write_text(
                 original_readme[:current_end]
                 + "\nUnarchived routes: " + ", ".join(names) + "\n"
@@ -429,7 +431,8 @@ class FP001Phase7BReconciliationCertificationTests(unittest.TestCase):
                 ROOT / "docs/execution/p8-05-registration-jit-spec.md",
                 fixture_execution / "p8-05-registration-jit-spec.md",
             )
-            fixture_readme = fixture_docs / "README.md"
+            fixture_readme = root / HISTORICAL_README_RELATIVE
+            fixture_readme.parent.mkdir(parents=True, exist_ok=True)
             fixture_readme.write_text(
                 original_readme[:current_end]
                 + "\nHistorical archives: " + ", ".join(f"archive/{name}" for name in names) + "\n"

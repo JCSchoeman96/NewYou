@@ -9,11 +9,17 @@ import unittest
 from pathlib import Path
 from typing import Callable
 
-from foundation_test_support import frozen_manifest_document_path, manifest_data
+from foundation_test_support import (
+    frozen_manifest_document_path,
+    git_show_text_at_revision,
+    historical_platform_readme_path,
+    historical_platform_readme_text,
+    manifest_data,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
-README = DOCS / "README.md"
+README = historical_platform_readme_path(ROOT)
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.64.md"
@@ -51,11 +57,7 @@ BASELINE_MAIN_SHA = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
 
 
 def _baseline_text(path: Path) -> str:
-    relative = path.relative_to(ROOT).as_posix()
-    return subprocess.check_output(
-        ["git", "show", f"{BASELINE_MAIN_SHA}:{relative}"],
-        cwd=ROOT,
-    ).decode("utf-8")
+    return git_show_text_at_revision(ROOT, BASELINE_MAIN_SHA, path)
 
 EXPECTED_ARCHIVE_SHA256 = {
     OPEN_WORK_PREDECESSOR: "525a56b72ecf92da15f51f41cf14e643b4029e203a3c3cf3bdeb85833aefd5ef",

@@ -10,7 +10,10 @@ from pathlib import Path
 from foundation_test_support import (
     FOUNDATION_WORKFLOW_BASELINE_SHA256,
     WELL38_BASE_SHA,
+    git_show_text_at_revision,
     git_snapshot_bytes,
+    historical_platform_readme_path,
+    historical_platform_readme_text,
 )
 
 
@@ -31,17 +34,13 @@ OPEN_WORK_V1_2_47_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.47.md"
 OPEN_WORK_V1_2_48_ARCHIVE = DOCS / "archive" / "02_OPEN_WORK_v1.2.48.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
-README = DOCS / "README.md"
+README = historical_platform_readme_path(ROOT)
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 BASELINE_MAIN_SHA = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
 
 
 def _baseline_text(path: Path) -> str:
-    relative = path.relative_to(ROOT).as_posix()
-    return subprocess.check_output(
-        ["git", "show", f"{BASELINE_MAIN_SHA}:{relative}"],
-        cwd=ROOT,
-    ).decode("utf-8")
+    return git_show_text_at_revision(ROOT, BASELINE_MAIN_SHA, path)
 
 EXPECTED_BASE_SHA = "6f9ce049616881805b1086d19ce747358de3c067"
 EXPECTED_RECOVERY_PR_NUMBER = 40

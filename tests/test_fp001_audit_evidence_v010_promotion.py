@@ -1,3 +1,4 @@
+from foundation_test_support import historical_platform_readme_text, historical_platform_readme_path
 import hashlib
 import json
 import re
@@ -87,7 +88,7 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
         cls.audit_candidate = cls.audit_archive.decode("utf-8")
         cls.lifecycle = _lifecycle_state(cls.audit_current) if cls.audit_current else {}
         cls.manifest = json.loads((DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8"))
-        cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        cls.readme = historical_platform_readme_text(ROOT)
         cls.open_work_path = DOCS / "archive/02_OPEN_WORK_v1.2.65.md"
         cls.open_work = cls.open_work_path.read_text(encoding="utf-8") if cls.open_work_path.exists() else ""
         cls.atlas_path = DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.7.md"

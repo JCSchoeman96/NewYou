@@ -204,7 +204,7 @@ class FP001Phase7BReconciliationCandidateTests(unittest.TestCase):
         for mutation in ("missing", "unclassified"):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
-                copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform")
+                copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform", materialize_historical_readme=True)
                 manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
                 rules = manifest["integrity_rules"]["fp001_phase7b_reconciliation_candidate"]

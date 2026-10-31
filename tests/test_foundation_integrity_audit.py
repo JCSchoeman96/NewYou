@@ -28,10 +28,18 @@ from foundation_test_support import (
     current_working_path,
     current_working_relative_path,
     historical_snapshot_path,
+    materialize_historical_readme_at_revision,
 )
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+HISTORICAL_README_RELATIVE = Path("docs/00_platform/archive/README_PRE_WELL66_2026-10-30.md")
+
+
+def _ensure_historical_readme(root: Path) -> None:
+    destination = root / HISTORICAL_README_RELATIVE
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(REPOSITORY_ROOT / HISTORICAL_README_RELATIVE, destination)
 
 
 def _current_open_work_path(root: Path) -> Path:
@@ -337,7 +345,8 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 open_work = open_work.replace(current, stale)
             open_work_path.write_text(open_work, encoding="utf-8")
 
-            readme_path = fixture_docs / "README.md"
+            readme_path = fixture_docs / "archive" / "README_PRE_WELL66_2026-10-30.md"
+            shutil.copy2(REPOSITORY_ROOT / HISTORICAL_README_RELATIVE, readme_path)
             readme = readme_path.read_text(encoding="utf-8")
             for current, stale in (
                 (
@@ -1307,7 +1316,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 "stale README Identity route",
                 lambda root: replace_once(
                     root,
-                    "README.md",
+                    "archive/README_PRE_WELL66_2026-10-30.md",
                     "- IDENTITY v0.1.4: CERTIFIED / CURRENT under the separate PR #77 status successor",
                     "- IDENTITY v0.1.3: CERTIFIED / CURRENT under PR #70",
                 ),
@@ -1396,9 +1405,12 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
                 if expected_check == "fp001_phase8_proof_contract_lifecycle":
                     if name == "stale README Identity route":
+                        combined_messages = promotion_check["message"] + " ".join(
+                            finding["message"] for finding in report["findings"]
+                        )
                         self.assertIn(
                             "README current state omits TB-001 lifecycle state 'IDENTITY v0.1.4'",
-                            promotion_check["message"],
+                            combined_messages,
                         )
                     else:
                         self.assertIn("manifest Phase 8 route hash differs", promotion_check["message"])
@@ -2089,6 +2101,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
         source_root = Path(__file__).resolve().parents[1]
         fixture_docs = root / "docs" / "00_platform"
         shutil.copytree(source_root / "docs" / "00_platform", fixture_docs)
+        _ensure_historical_readme(root)
         execution_docs = root / "docs" / "execution"
         execution_docs.mkdir(parents=True)
         shutil.copyfile(
@@ -2109,13 +2122,14 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
             root,
             "docs/00_platform",
         )
+        materialize_historical_readme_at_revision(root, REPOSITORY_ROOT, WELL38_BASE_SHA)
         manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         return root, manifest_path
 
     def test_phase7b_certification_rejects_stale_current_readme_but_allows_history(self):
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            readme = root / "docs" / "00_platform" / "README.md"
+            readme = root / HISTORICAL_README_RELATIVE
             text = readme.read_text(encoding="utf-8")
             current_route = "- PHASE 7C: COMPLETE / CERTIFIED / CURRENT\n- FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT\n- PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED"
             self.assertIn(current_route, text)
@@ -2142,7 +2156,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
 
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_production_fixture(Path(directory))
-            readme = root / "docs" / "00_platform" / "README.md"
+            readme = root / HISTORICAL_README_RELATIVE
             readme.write_text(
                 readme.read_text(encoding="utf-8")
                 + "\n\n## Archive\n\n"
@@ -2551,7 +2565,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             manifest = self._write_clean_fixture(root)
-            readme = root / "docs" / "00_platform" / "README.md"
+            readme = root / HISTORICAL_README_RELATIVE
             readme.write_text(
                 "\n".join(
                     [f"`{entry['canonical_filename']}`" for entry in manifest["governing_documents"]]
@@ -2838,7 +2852,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             manifest = self._write_clean_fixture(root)
-            readme = root / "docs" / "00_platform" / "README.md"
+            readme = root / HISTORICAL_README_RELATIVE
             readme.write_text(
                 "\n".join(
                     f"{index}. `{entry['canonical_filename']}`"
@@ -3344,7 +3358,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             manifest = self._write_current_authority_fixture(root)
-            readme = root / "docs" / "00_platform" / "README.md"
+            readme = root / HISTORICAL_README_RELATIVE
             current_open_work = next(
                 item for item in manifest["governing_documents"]
                 if item["document_id"] == "OPEN_WORK"
@@ -3729,7 +3743,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                     "governing": "docs/00_platform",
                     "reference": "docs/00_platform/reference",
                     "historical": "docs/00_platform/archive",
-                    "context_index": "docs/00_platform/README.md",
+                    "context_index": "docs/00_platform/archive/README_PRE_WELL66_2026-10-30.md",
                 },
                 "expected_counts": SMALL_COUNTS,
                 "contiguous_ranges": {
@@ -3784,6 +3798,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 }
             )
 
+        _ensure_historical_readme(root)
         (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
         return manifest
 
@@ -3809,15 +3824,6 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 "# 02_OPEN_WORK_v1.0.0.md\n"
                 "- **Document version:** v1.0.0\n"
             ),
-            "docs/00_platform/README.md": (
-                "## Default Agent Context\n"
-                "1. `PROJECT_NORTH_STAR_AND_MVP_v1.2.3.md`\n"
-                "2. `00_PLATFORM_v1.5.0.md`\n"
-                "3. `01_DECISIONS_v1.2.1.md`\n"
-                "4. `02_OPEN_WORK_v1.0.0.md`\n"
-                "5. `05_ROADMAP_v1.0.0.md`\n"
-                "\n## Active Working Artifacts\n"
-            ),
         }
         for relative, content in files.items():
             path = root / relative
@@ -3836,7 +3842,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
         }
         for relative in files:
             path = root / relative
-            if path.name == "README.md":
+            if path.name in {"README.md", "README_PRE_WELL66_2026-10-30.md"}:
                 continue
             manifest["governing_documents"].append(
                 {
@@ -3849,6 +3855,27 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                     "superseded_version": None,
                 }
             )
+        readme_lines = "\n".join(
+            f"{index}. `{entry['canonical_filename']}`"
+            for index, entry in enumerate(manifest["governing_documents"], start=1)
+        )
+        historical_readme = root / HISTORICAL_README_RELATIVE
+        historical_readme.parent.mkdir(parents=True, exist_ok=True)
+        historical_readme.write_text(
+            "## Default Agent Context\n\n"
+            + readme_lines
+            + "\n\n## Current State\n\n- PLANNING FOUNDATION: READY\n",
+            encoding="utf-8",
+        )
+        live_readme = root / "docs" / "00_platform" / "README.md"
+        live_readme.write_text(
+            readme_lines
+            + "\n\n## Current State\n\n"
+            "- PLANNING FOUNDATION: READY\n\n"
+            "Current Product/Decision/Roadmap authority is routed by README and CURRENT_AUTHORITY_MANIFEST. "
+            "README and current Open Work own the active programme stage and NEXT route.\n",
+            encoding="utf-8",
+        )
         (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
         return manifest
 

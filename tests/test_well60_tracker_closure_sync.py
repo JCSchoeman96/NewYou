@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from foundation_test_support import historical_platform_readme_text, historical_platform_readme_path
 import hashlib
 import json
 import re
@@ -43,7 +44,7 @@ PREDECESSORS = {
 class WELL60TrackerClosureSyncTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        cls.readme = historical_platform_readme_text(ROOT)
         cls.manifest = json.loads(
             (DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8")
         )

@@ -229,7 +229,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             shutil.copytree(ROOT / name, root / name, ignore=shutil.ignore_patterns("__pycache__"))
         if historical:
             shutil.rmtree(root / "docs" / "00_platform")
-            copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform")
+            copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform", materialize_historical_readme=True)
         for relative, content in SYNTHETIC_SOURCE_FILES.items():
             target = root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
