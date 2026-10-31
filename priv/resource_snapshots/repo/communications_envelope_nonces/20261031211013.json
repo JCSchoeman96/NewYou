@@ -1,0 +1,42 @@
+{
+  "attributes": [
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "precision": null,
+      "primary_key?": true,
+      "references": null,
+      "scale": null,
+      "size": null,
+      "source": "nonce",
+      "type": "binary"
+    }
+  ],
+  "base_filter": null,
+  "check_constraints": [
+    {
+      "attribute": [
+        "nonce"
+      ],
+      "base_filter": null,
+      "check": "octet_length(nonce) = 12",
+      "name": "communications_reserved_nonce_length"
+    }
+  ],
+  "create_table_options": null,
+  "custom_indexes": [],
+  "custom_statements": [],
+  "has_create_action": true,
+  "hash": "DACEED6173C2172BC942E77899F9827F1EE7DFBA182A0F8D8B5C59436241737D",
+  "identities": [],
+  "multitenancy": {
+    "attribute": null,
+    "global": null,
+    "strategy": null
+  },
+  "repo": "Elixir.NewYou.Repo",
+  "schema": null,
+  "table": "communications_envelope_nonces",
+  "temporal": null
+}

@@ -11,7 +11,12 @@ defmodule NewYou.BootstrapTest do
 
     assert is_pid(oban_pid)
     assert Application.fetch_env!(:new_you, :ecto_repos) == [NewYou.Repo]
-    assert Application.fetch_env!(:new_you, :ash_domains) == [NewYou.Identity, NewYou.Audit]
+
+    assert Application.fetch_env!(:new_you, :ash_domains) == [
+             NewYou.Communications,
+             NewYou.Identity,
+             NewYou.Audit
+           ]
   end
 
   test "the real connection uses the TEST cluster, role and database without CREATEDB" do
