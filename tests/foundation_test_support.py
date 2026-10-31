@@ -1,4 +1,4 @@
-"""Manifest-aware path helpers for current and historical governance tests."""
+"""Manifest-aware path helpers for historical and current governance certification."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import hashlib
 import io
 import json
 import re
+import shutil
 import subprocess
 import tarfile
 from pathlib import Path
@@ -13,6 +14,11 @@ from typing import Any
 
 
 MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
+ROUTER_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json")
+LIVE_README_RELATIVE = Path("docs/00_platform/README.md")
+HISTORICAL_README_RELATIVE = Path("docs/00_platform/archive/README_PRE_WELL66_2026-10-30.md")
+HISTORICAL_README_SHA256 = "1911f27b675aacae648f3c876361de28fb0a5b650262590aa5bb9ad4d1954649"
+
 WELL38_BASE_SHA = "4234965c8da20dbb4ef0a7128614a5070244619a"
 FOUNDATION_WORKFLOW_BASELINE_SHA256 = "5e63c77707fe767bbb89a38f4cfe1d9c972d4aefdcc13296bf5048cd4a3ae0f3"
 
@@ -80,12 +86,14 @@ def copy_git_snapshot_tree(
     revision: str,
     destination: Path,
     *repository_paths: str,
+    materialize_historical_readme: bool = False,
 ) -> None:
     """Materialize committed paths as a content fixture without a .git directory."""
 
+    repository_root = Path(repository_root)
     result = subprocess.run(
         ["git", "archive", "--format=tar", revision, *repository_paths],
-        cwd=Path(repository_root),
+        cwd=repository_root,
         capture_output=True,
         check=True,
     )
@@ -93,10 +101,122 @@ def copy_git_snapshot_tree(
     destination.mkdir(parents=True, exist_ok=True)
     with tarfile.open(fileobj=io.BytesIO(result.stdout), mode="r:") as archive:
         archive.extractall(destination, filter="data")
+    if materialize_historical_readme:
+        materialize_historical_platform_readme(destination, source_root=repository_root)
+
+
+def git_repository_path_for_revision(path: Path, root: Path) -> str:
+    """Map a fixture path to the git object path at an immutable revision."""
+
+    relative = path.relative_to(root).as_posix()
+    if relative == HISTORICAL_README_RELATIVE.as_posix():
+        return LIVE_README_RELATIVE.as_posix()
+    return relative
+
+
+def git_show_text_at_revision(root: Path, revision: str, path: Path) -> str:
+    """Read committed file text; archived historical README uses live README at that revision."""
+
+    repository_path = git_repository_path_for_revision(path, root)
+    return subprocess.check_output(
+        ["git", "show", f"{revision}:{repository_path}"],
+        cwd=Path(root),
+    ).decode("utf-8")
+
+
+def materialize_historical_readme_at_revision(
+    root: Path,
+    repository_root: Path,
+    revision: str,
+) -> Path:
+    """Write the README bytes from an immutable revision into the archived historical README path."""
+
+    text = git_show_text_at_revision(
+        repository_root,
+        revision,
+        repository_root / HISTORICAL_README_RELATIVE,
+    )
+    destination = Path(root) / HISTORICAL_README_RELATIVE
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(text, encoding="utf-8")
+    return destination
+
+
+def materialize_historical_platform_readme(
+    root: Path,
+    *,
+    source_root: Path | None = None,
+) -> Path:
+    """Copy the byte-pinned pre-WELL-66 README into a fixture tree."""
+
+    source_root = Path(source_root or root)
+    destination = Path(root) / HISTORICAL_README_RELATIVE
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    source = source_root / HISTORICAL_README_RELATIVE
+    _assert_pinned_regular_file(
+        source,
+        HISTORICAL_README_SHA256,
+        label="historical platform README source",
+    )
+    shutil.copy2(source, destination)
+    return destination
 
 
 def manifest_data(root: Path) -> dict[str, Any]:
     return json.loads((Path(root) / MANIFEST_RELATIVE).read_text(encoding="utf-8"))
+
+
+def current_router_data(root: Path) -> dict[str, Any]:
+    return json.loads((Path(root) / ROUTER_RELATIVE).read_text(encoding="utf-8"))
+
+
+def _assert_pinned_regular_file(path: Path, expected_sha256: str, *, label: str) -> None:
+    if not path.is_file() or path.is_symlink():
+        raise AssertionError(f"{label} is missing or not a regular file: {path}")
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if digest != expected_sha256:
+        raise AssertionError(
+            f"{label} digest mismatch: expected {expected_sha256}, got {digest}"
+        )
+
+
+def historical_platform_readme_path(root: Path) -> Path:
+    """Byte-pinned pre-WELL-66 README used for frozen-manifest historical certification."""
+
+    path = Path(root) / HISTORICAL_README_RELATIVE
+    _assert_pinned_regular_file(path, HISTORICAL_README_SHA256, label="historical platform README")
+    return path
+
+
+def historical_platform_readme_text(root: Path) -> str:
+    return historical_platform_readme_path(root).read_text(encoding="utf-8")
+
+
+def live_platform_readme_path(root: Path) -> Path:
+    path = Path(root) / LIVE_README_RELATIVE
+    if not path.is_file() or path.is_symlink():
+        raise AssertionError(f"live platform README is missing: {path}")
+    return path
+
+
+def live_platform_readme_text(root: Path) -> str:
+    return live_platform_readme_path(root).read_text(encoding="utf-8")
+
+
+def frozen_open_work_path(root: Path) -> Path:
+    """Frozen legacy Open Work snapshot from the current router (not live execution authority)."""
+
+    router = current_router_data(root)
+    entry = next(
+        item
+        for item in router["legacy_snapshots"]
+        if item.get("document_id") == "OPEN_WORK_FINAL_LEGACY_SNAPSHOT"
+    )
+    path = Path(root) / entry["repository_path"]
+    _assert_pinned_regular_file(path, str(entry["sha256"]), label="frozen Open Work snapshot")
+    if entry.get("live_execution_authority"):
+        raise AssertionError("frozen Open Work must not be live execution authority")
+    return path
 
 
 def frozen_manifest_document_path(root: Path, entry: dict[str, Any]) -> Path:
@@ -127,10 +247,14 @@ def frozen_manifest_document_path(root: Path, entry: dict[str, Any]) -> Path:
     ):
         return archived
 
-    raise AssertionError(f"frozen manifest document is missing or does not match its pinned bytes: {repository_path}")
+    raise AssertionError(
+        f"frozen manifest document is missing or does not match its pinned bytes: {repository_path}"
+    )
 
 
-def current_document_path(root: Path, document_id: str) -> Path:
+def frozen_manifest_document_by_id(root: Path, document_id: str) -> Path:
+    """Resolve a non-historical manifest document route in frozen-manifest certification context."""
+
     root = Path(root)
     manifest = manifest_data(root)
     matches = [
@@ -141,17 +265,38 @@ def current_document_path(root: Path, document_id: str) -> Path:
         and entry.get("lifecycle", "current") != "historical"
     ]
     if len(matches) != 1:
-        raise AssertionError(f"expected one current manifest route for {document_id}, found {len(matches)}")
-    return root / matches[0]["repository_path"]
+        raise AssertionError(
+            f"expected one frozen-manifest route for {document_id}, found {len(matches)}"
+        )
+    return frozen_manifest_document_path(root, matches[0])
+
+
+def current_document_path(root: Path, document_id: str) -> Path:
+    """Alias: manifest-current route in historical Foundation certification context."""
+
+    return frozen_manifest_document_by_id(root, document_id)
 
 
 def current_document_relative_path(root: Path, document_id: str) -> str:
-    """Return a current manifest route relative to the repository root."""
+    return frozen_manifest_document_by_id(root, document_id).relative_to(
+        Path(root).resolve()
+    ).as_posix()
 
-    return current_document_path(root, document_id).relative_to(Path(root).resolve()).as_posix()
+
+def _historical_readme_working_routes(text: str, filename_prefix: str) -> list[Path]:
+    if "## Active Working Artifacts" not in text:
+        return []
+    section = text.split("## Active Working Artifacts", 1)[-1].split("\n## ", 1)[0]
+    return [
+        Path("docs/00_platform") / route
+        for route in re.findall(r"`(working/[^`\s]+\.md)`", section)
+        if Path(route).name.startswith(filename_prefix)
+    ]
 
 
-def current_working_path(root: Path, filename_prefix: str) -> Path:
+def frozen_manifest_working_path(root: Path, filename_prefix: str) -> Path:
+    """Working artifact route according to the frozen manifest and historical README."""
+
     root = Path(root)
     manifest = manifest_data(root)
     graph_rules = manifest.get("integrity_rules", {}).get("graph_rules", {})
@@ -161,28 +306,53 @@ def current_working_path(root: Path, filename_prefix: str) -> Path:
         if Path(route).name.startswith(filename_prefix)
     ]
     if not routes:
-        readme = (root / "docs/00_platform/README.md").read_text(encoding="utf-8")
-        section = readme.split("## Active Working Artifacts", 1)[-1].split("\n## ", 1)[0]
-        routes = [
-            Path("docs/00_platform") / route
-            for route in re.findall(r"`(working/[^`\s]+\.md)`", section)
-            if Path(route).name.startswith(filename_prefix)
-        ]
+        routes = _historical_readme_working_routes(
+            historical_platform_readme_text(root),
+            filename_prefix,
+        )
     if len(routes) != 1:
-        raise AssertionError(f"expected one current working route for {filename_prefix}, found {routes}")
+        raise AssertionError(
+            f"expected one frozen-manifest working route for {filename_prefix}, found {routes}"
+        )
     route = routes[0]
     if "archive" in route.parts:
-        raise AssertionError(f"current working route points into archive: {route}")
+        raise AssertionError(f"frozen-manifest working route points into archive: {route}")
     path = root / route
     if not path.is_file():
-        raise AssertionError(f"current working route does not exist: {path}")
+        raise AssertionError(f"frozen-manifest working route does not exist: {path}")
+    return path
+
+
+def current_working_path(root: Path, filename_prefix: str) -> Path:
+    """Alias: frozen-manifest working route for historical Foundation certification."""
+
+    return frozen_manifest_working_path(root, filename_prefix)
+
+
+def current_router_working_path(root: Path, filename_prefix: str) -> Path:
+    """Working artifact route from the post-WELL-66 current authority router."""
+
+    root = Path(root)
+    router = current_router_data(root)
+    routes = [
+        Path(route)
+        for route in router.get("working_semantic_routes", [])
+        if Path(route).name.startswith(filename_prefix)
+    ]
+    if len(routes) != 1:
+        raise AssertionError(
+            f"expected one current-router working route for {filename_prefix}, found {routes}"
+        )
+    path = root / routes[0]
+    if not path.is_file() or path.is_symlink():
+        raise AssertionError(f"current-router working route does not exist: {path}")
     return path
 
 
 def current_working_relative_path(root: Path, filename_prefix: str) -> str:
-    """Return a current working route relative to the repository root."""
-
-    return current_working_path(root, filename_prefix).relative_to(Path(root).resolve()).as_posix()
+    return frozen_manifest_working_path(root, filename_prefix).relative_to(
+        Path(root).resolve()
+    ).as_posix()
 
 
 def historical_snapshot_path(root: Path, filename: str) -> Path:
@@ -216,7 +386,9 @@ def historical_snapshot_path(root: Path, filename: str) -> Path:
                 matching[0].get("provenance_sha256"),
             }
         ):
-            raise AssertionError(f"historical archive is not uniquely pinned by the manifest: {relative}")
+            raise AssertionError(
+                f"historical archive is not uniquely pinned by the manifest: {relative}"
+            )
         return archived
 
     candidates = [
@@ -236,5 +408,7 @@ def historical_snapshot_path(root: Path, filename: str) -> Path:
     )
     candidates = list(dict.fromkeys(candidates))
     if len(candidates) != 1 or not candidates[0].is_file():
-        raise AssertionError(f"historical snapshot is not archived or active at baseline: {filename}")
+        raise AssertionError(
+            f"historical snapshot is not archived or active at baseline: {filename}"
+        )
     return candidates[0]
