@@ -6,7 +6,7 @@ import re
 import unittest
 from pathlib import Path
 
-from foundation_test_support import current_document_path
+from foundation_test_support import current_document_path, historical_platform_readme_path, historical_platform_readme_text
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -522,7 +522,7 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
         self.assertEqual("CLOSED / COMPLETED", state["phase_7b_reconciliation_execution_tracker_state"])
         self.assertEqual(120, state["phase_7b_reconciliation_execution_tracker_issue"])
         self.assertEqual("OPEN", state["programme_router_issue_111_state"])
-        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        readme = historical_platform_readme_text(ROOT)
         self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", readme)
         self.assertIn("ARCHITECTURAL PROOF CLASSIFICATION: COMPLETE / FINALISED", readme)
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", readme)

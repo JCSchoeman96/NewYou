@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+from foundation_test_support import (
+    git_show_text_at_revision,
+    historical_platform_readme_text,
+    historical_platform_readme_path,
+)
 import hashlib
 import json
 import re
@@ -29,7 +34,7 @@ OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.42.md"
 OPEN_WORK_OLDER_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.41.md"
 OPEN_WORK_V1_2_40 = DOCS / "archive" / "02_OPEN_WORK_v1.2.40.md"
 ATLAS_STAGE_OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.39.md"
-README = DOCS / "README.md"
+README = historical_platform_readme_path(ROOT)
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 BASELINE_MAIN_SHA = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
 MOVED_PREDECESSORS = {
@@ -41,11 +46,7 @@ MOVED_PREDECESSORS = {
 
 
 def _baseline_text(path: Path) -> str:
-    relative = path.relative_to(ROOT).as_posix()
-    return subprocess.check_output(
-        ["git", "show", f"{BASELINE_MAIN_SHA}:{relative}"],
-        cwd=ROOT,
-    ).decode("utf-8")
+    return git_show_text_at_revision(ROOT, BASELINE_MAIN_SHA, path)
 
 PROTECTED_HASHES = {
     "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md": "5bf5a8582d5ada7c7c39d937a6730e29d219c11b688a31fb763e439047d89a20",

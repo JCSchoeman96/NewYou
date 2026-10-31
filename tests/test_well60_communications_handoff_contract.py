@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from foundation_test_support import historical_platform_readme_text, historical_platform_readme_path
 import hashlib
 import json
 import re
@@ -163,7 +164,7 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
             CANDIDATE.as_posix().replace(str(ROOT) + "/", ""),
             {entry["repository_path"] for entry in self.manifest["governing_documents"]},
         )
-        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        readme = historical_platform_readme_text(ROOT)
         self.assertIn(CANDIDATE.name, readme)
         self.assertNotIn("FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` — TB-001 proof-contract successor/task definition", readme)
         self.assertIn(CANDIDATE.name, self.open_work)
@@ -230,7 +231,7 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
         self.assertIn(f"`{current_identity_source}`", current_sources)
         self.assertNotIn("FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md", current_sources)
 
-        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        readme = historical_platform_readme_text(ROOT)
         active_working = readme.split("## Active Working Artifacts", 1)[1].split("\n## ", 1)[0]
         self.assertIn(f"`{current_identity_source}`", active_working)
 

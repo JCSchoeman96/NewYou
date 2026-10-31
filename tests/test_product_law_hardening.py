@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 from tools import foundation_integrity_audit
-from foundation_test_support import current_document_path, current_working_path, frozen_manifest_document_path
+from foundation_test_support import current_document_path, current_working_path, frozen_manifest_document_path, historical_platform_readme_path, historical_platform_readme_text, live_platform_readme_text
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -61,7 +61,7 @@ class ProductLawHardeningTests(unittest.TestCase):
         cls.decisions = frozen_manifest_document("DECISION_REGISTER")
         cls.open_work = frozen_manifest_document("OPEN_WORK")
         cls.roadmap = frozen_manifest_document("ROADMAP")
-        cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        cls.readme = historical_platform_readme_text(ROOT)
         cls.architecture = (DOCS / "03_ARCHITECTURE_v1.1.1.md").read_text(encoding="utf-8")
         cls.domain_map = frozen_manifest_document("DOMAIN_MAP")
         cls.operating_model = frozen_manifest_document("PLATFORM_OPERATING_MODEL")
@@ -941,7 +941,7 @@ class RoleAuthorityRegressionTests(unittest.TestCase):
 
     def test_readme_routes_current_platform_roots_and_tracks_decision_head(self):
         router = json.loads(ROUTER.read_text(encoding="utf-8"))
-        readme = (DOCS / 'README.md').read_text(encoding='utf-8')
+        readme = live_platform_readme_text(ROOT)
         routed_documents = {
             item["document_id"]: item["canonical_filename"]
             for item in router["governing_documents"]

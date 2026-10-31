@@ -12,6 +12,8 @@ from foundation_test_support import (
     git_snapshot_bytes,
     git_snapshot_path_exists,
     git_snapshot_directory_names,
+    historical_platform_readme_path,
+    historical_platform_readme_text,
 )
 
 
@@ -26,7 +28,7 @@ DOMAIN_MAP_V1_1_0_PREDECESSOR = DOCS / "archive" / "04_DOMAIN_MAP_v1.1.0.md"
 EVIDENCE = DOCS / "working" / "TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md"
 OPEN_WORK = DOCS / "archive" / "02_OPEN_WORK_v1.2.37.md"
 OPEN_WORK_PREDECESSOR = DOCS / "archive" / "02_OPEN_WORK_v1.2.36.md"
-README = DOCS / "README.md"
+README = historical_platform_readme_path(ROOT)
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 HISTORICAL_DOMAINS = (

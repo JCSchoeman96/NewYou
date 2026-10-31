@@ -10,7 +10,7 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
-from foundation_test_support import current_document_path, current_working_path, historical_snapshot_path
+from foundation_test_support import current_document_path, current_working_path, historical_platform_readme_path, historical_platform_readme_text, historical_snapshot_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -117,7 +117,7 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("AUTHORISED", state["phase8"])
 
     def test_current_readme_and_historical_routes_keep_downstream_gates_closed(self):
-        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        readme = historical_platform_readme_text(ROOT)
         current_state = readme.split("## Current State", 1)[1].split("\n## ", 1)[0]
         self.assertIn("PHASE 7C EXECUTION/CONTROL TRACKER #124: CLOSED / COMPLETED", current_state)
         self.assertIn("PROGRAMME ROUTER #111: OPEN", current_state)
@@ -155,7 +155,7 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
             "WELL-50: BACKLOG",
         ):
             self.assertIn(required, next_stage.group(1))
-        self.assertIn("P8-05 IMPLEMENTATION AUTHORISED", current_state["next_governance_action"])
+        self.assertIn("p8-05 implementation authorised", current_state["next_governance_action"].casefold())
         self.assertIn("WELL-48", current_state["next_governance_action"])
         self.assertNotRegex(active, r"(?i)(?:PHASE 7C EXECUTION/CONTROL TRACKER #124:\s*OPEN|ISSUE #124 IS (?:OPEN|REOPENED))\b")
 

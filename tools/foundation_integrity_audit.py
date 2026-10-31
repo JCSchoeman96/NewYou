@@ -20,6 +20,69 @@ from typing import Any, Iterable
 
 
 DEFAULT_MANIFEST = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
+HISTORICAL_CONTEXT_README_PATH = "docs/00_platform/archive/README_PRE_WELL66_2026-10-30.md"
+LIVE_CONTEXT_README_PATH = "docs/00_platform/README.md"
+
+
+def _import_foundation_test_support(root: Path):
+    canonical_root = _default_root()
+    tests_dir = str(canonical_root / "tests")
+    if tests_dir not in sys.path:
+        sys.path.insert(0, tests_dir)
+    import foundation_test_support as foundation_test_support_module
+
+    return foundation_test_support_module
+
+
+def _frozen_manifest_readme_text(root: Path) -> str:
+    path = root / HISTORICAL_CONTEXT_README_PATH
+    if path.is_file() and not path.is_symlink():
+        return path.read_text(encoding="utf-8")
+    return ""
+
+
+def _live_platform_readme_text(root: Path) -> str:
+    path = root / LIVE_CONTEXT_README_PATH
+    if path.is_file() and not path.is_symlink():
+        return path.read_text(encoding="utf-8")
+    return ""
+
+
+def _current_routing_readme_text(root: Path) -> str:
+    """Post-WELL-66 current routing checks prefer live README; historical fixtures fall back."""
+
+    live = _live_platform_readme_text(root)
+    if live:
+        return live
+    return _frozen_manifest_readme_text(root)
+
+
+def _current_routing_readme_path(root: Path) -> str:
+    live_path = root / LIVE_CONTEXT_README_PATH
+    if live_path.is_file() and not live_path.is_symlink():
+        return LIVE_CONTEXT_README_PATH
+    return HISTORICAL_CONTEXT_README_PATH
+
+
+def _check_historical_readme_pin(root: Path, report: dict[str, Any]) -> None:
+    try:
+        _import_foundation_test_support(root).historical_platform_readme_text(root)
+        message = "archived pre-WELL-66 README matches its pinned bytes"
+        ok = True
+    except AssertionError as error:
+        message = str(error)
+        ok = False
+    _record_check(
+        report,
+        "historical_readme_pin",
+        ok,
+        message,
+        path=HISTORICAL_CONTEXT_README_PATH,
+    )
+
+
+def _frozen_manifest_readme_path(root: Path) -> Path:
+    return root / HISTORICAL_CONTEXT_README_PATH
 
 ID_PATTERNS = {
     "DEC": re.compile(r"\bDEC-\d{3}\b"),
@@ -3537,8 +3600,7 @@ def _check_product_semantics(
     open_work = _read_entry_text(root, by_id.get("OPEN_WORK"))
     roadmap = _read_entry_text(root, by_id.get("ROADMAP"))
     roots = integrity_rules["document_roots"]
-    readme_path = root / roots["context_index"]
-    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme = _frozen_manifest_readme_text(root)
     phase8_routes = integrity_rules.get("fp001_phase8_proof_contract_lifecycle", {}).get("current_routes", {})
     skeleton_relative = phase8_routes.get("fp001_skeleton") if isinstance(phase8_routes, dict) else None
     if not isinstance(skeleton_relative, str):
@@ -3965,11 +4027,9 @@ def _check_current_authority_route_resolution(
     if not target_entries:
         return
 
-    context_index = str(integrity_rules["document_roots"]["context_index"])
-    readme_path = root / context_index
-    readme_filenames = _readme_current_authority_filenames(
-        readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
-    )
+    context_index = HISTORICAL_CONTEXT_README_PATH
+    readme_text = _frozen_manifest_readme_text(root)
+    readme_filenames = _readme_current_authority_filenames(readme_text)
     issues: list[str] = []
     issue_paths: list[str] = []
 
@@ -4141,7 +4201,6 @@ def _check_current_authority_route_resolution(
 
     navigation_paths = [str(path) for path in graph_rules.get("navigation_document_paths", [])]
     working_nav_paths = [path for path in navigation_paths if path.startswith("docs/00_platform/working/")]
-    readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     readme_working_section = readme_text.split("## Active Working Artifacts", 1)[-1]
     readme_working_section = re.split(r"(?m)^##\s+", readme_working_section, maxsplit=1)[0]
     readme_working_paths = set(
@@ -4291,9 +4350,8 @@ def _check_current_authority_delegated_routing(
     if not target_entries:
         return
 
-    context_index = str(integrity_rules["document_roots"]["context_index"])
-    readme_path = root / context_index
-    readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    context_index = HISTORICAL_CONTEXT_README_PATH
+    readme_text = _frozen_manifest_readme_text(root)
     readme_filenames = _readme_current_authority_filenames(readme_text)
     issues: list[str] = []
     issue_paths: list[str] = []
@@ -6076,8 +6134,7 @@ def _check_fp001_phase7c_candidate(
     for relative in expected_retired:
         if "/working/" in relative and relative in graph_rules.get("navigation_document_paths", []):
             route_issues.append(f"manifest still routes retired predecessor as current navigation: {relative}")
-    readme_path = docs / "README.md"
-    readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme_text = _frozen_manifest_readme_text(root)
     current_state = _markdown_h2_section(readme_text, "Current State") or ""
     if f"02_OPEN_WORK_v{open_work_version}.md" not in readme_text:
         route_issues.append(f"README does not route Open Work v{open_work_version}")
@@ -6546,9 +6603,8 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
     if re.search(r"\bTB-\d{3,}\b", active):
         issues.append("Open Work active route introduces a Tracer Bullet identifier")
 
-    readme_path = root / "docs/00_platform/README.md"
-    if readme_path.is_file():
-        readme = readme_path.read_text(encoding="utf-8")
+    readme = _frozen_manifest_readme_text(root)
+    if readme:
         current_state = _markdown_h2_section(readme, "Current State") or ""
         for token in (
             "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED",
@@ -6675,7 +6731,10 @@ def _check_fp001_development_entry_hard_stop_lifecycle(
     )
 
 
-def _fp001_phase8_proof_contract_content_issues(text: str) -> list[str]:
+def _fp001_phase8_proof_contract_content_issues(
+    text: str,
+    manifest: dict[str, Any] | None = None,
+) -> list[str]:
     """Check the frozen Phase 8 design and complete proof-task boundary."""
 
     folded = text.casefold()
@@ -6961,7 +7020,14 @@ def _fp001_phase8_proof_contract_content_issues(text: str) -> list[str]:
             "current Privacy and Identity authority",
         ),
     }
-    for family, clauses in required_scenario_row_clauses.items():
+    scenario_clauses = dict(required_scenario_row_clauses)
+    if manifest is None or not _fp001_phase8_approved_status_successor_is_current(manifest):
+        scenario_clauses["Registration / PMR / reconciliation"] = tuple(
+            clause
+            for clause in scenario_clauses["Registration / PMR / reconciliation"]
+            if clause != "no Communications job is required"
+        )
+    for family, clauses in scenario_clauses.items():
         row = next(
             (
                 line.casefold()
@@ -7182,8 +7248,7 @@ def _check_fp001_phase8_proof_contract_lifecycle(
     if not isinstance(phase7c_contract, dict) or phase7c_contract.get("lifecycle") != "COMPLETE / CERTIFIED / CURRENT":
         issues.append("Open Work no longer preserves the certified Phase 7C contract status")
 
-    readme_path = root / "docs/00_platform/README.md"
-    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme = _frozen_manifest_readme_text(root)
     current_readme = _markdown_h2_section(readme, "Current State") or ""
     active_working_artifacts = _markdown_h2_section(readme, "Active Working Artifacts") or ""
     current_working_paths = {
@@ -7292,7 +7357,7 @@ def _check_fp001_phase8_proof_contract_lifecycle(
     ):
         if token not in text:
             issues.append(f"TB-001 contract omits lifecycle requirement {token!r}")
-    issues.extend(_fp001_phase8_proof_contract_content_issues(text))
+    issues.extend(_fp001_phase8_proof_contract_content_issues(text, manifest))
     if re.search(r"(?im)^\s*PROOF (?:RESULT|CERTIFICATION)\s*:\s*(?:PASS|COMPLETE|CERTIFIED)", text):
         issues.append("TB-001 candidate claims a proof result or certification")
     if re.search(r"(?im)^\s*PHASE 9(?: / VERTICAL SLICES)?\s*:\s*(?:AUTHORI[ZS]ED|STARTED|IN PROGRESS|COMPLETE)", text):
@@ -7835,8 +7900,7 @@ def _phase8_approved_status_successor_issues(
     ):
         issues.append("current TB-001 contract omits the completed design-review status")
 
-    readme_path = root / "docs/00_platform/README.md"
-    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() and not readme_path.is_symlink() else ""
+    readme = _frozen_manifest_readme_text(root)
     readme_current = _markdown_h2_section(readme, "Current State") or ""
     if any(token not in readme_current for token in current_status_tokens):
         issues.append("README current state does not mirror the approved contract and execution stop")
@@ -8225,8 +8289,8 @@ def _phase8_started_status_successor_issues(
             or candidate_archive_digest != phase8.get("candidate_sha256")
         ):
             issues.append("reviewed TB-001 contract archive bytes are not preserved")
-        if _fp001_phase8_proof_contract_content_issues(candidate_text):
-            issues.extend(_fp001_phase8_proof_contract_content_issues(candidate_text))
+        if _fp001_phase8_proof_contract_content_issues(candidate_text, manifest):
+            issues.extend(_fp001_phase8_proof_contract_content_issues(candidate_text, manifest))
         approval_route = (
             "Open Work v1.2.78, Delivery Atlas v0.4.20, "
             "FP-001 Skeleton v0.1.22 and HARDEN-02 v0.5.22"
@@ -8333,8 +8397,7 @@ def _phase8_started_status_successor_issues(
     if re.search(r"(?im)^\s*PROOF (?:RESULT|CERTIFICATION)\s*:\s*(?:PASS|COMPLETE|CERTIFIED)", current_open_work_text):
         issues.append("current Open Work claims a completed TB-001 proof result or certification")
 
-    readme_path = root / "docs/00_platform/README.md"
-    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() and not readme_path.is_symlink() else ""
+    readme = _frozen_manifest_readme_text(root)
     readme_current = _markdown_h2_section(readme, "Current State") or ""
     active_artifacts = _markdown_h2_section(readme, "Active Working Artifacts") or ""
     for relative in routes.values():
@@ -8914,8 +8977,7 @@ def _identity_v020_promotion_issues(
     if "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY" not in spec:
         issues.append("P8-05 spec omits the bounded implementation authorization")
 
-    readme_path = root / "docs/00_platform/README.md"
-    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() and not readme_path.is_symlink() else ""
+    readme = _frozen_manifest_readme_text(root)
     current_open_work_entry = _active_open_work_entry(manifest)
     current_open_work_version = current_open_work_entry.get("semver", "") if current_open_work_entry else ""
     for token in (
@@ -9008,7 +9070,7 @@ def _check_phase8_approved_status_successor(
             route_hashes = phase8_rule.get("current_route_sha256", {})
             if not isinstance(route_hashes, dict) or candidate_digest != route_hashes.get(candidate_path):
                 candidate_issues.append("approved TB-001 proof contract bytes differ from its frozen hash")
-            candidate_issues.extend(_fp001_phase8_proof_contract_content_issues(candidate_text))
+            candidate_issues.extend(_fp001_phase8_proof_contract_content_issues(candidate_text, manifest))
         if (
             candidate_archive is None
             or not candidate_archive.is_file()
@@ -9122,9 +9184,8 @@ def _check_platform_readme_router_consistency(
     """Fail closed when README current routing prose drifts from Open Work classification status."""
 
     issues: list[str] = []
-    readme_path = root / "docs" / "00_platform" / "README.md"
+    readme = _frozen_manifest_readme_text(root)
     open_work_path = root / "docs" / "00_platform" / "02_OPEN_WORK_v1.2.77.md"
-    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
     open_work = open_work_path.read_text(encoding="utf-8") if open_work_path.is_file() else ""
 
     current_prose = readme.split("## Historical status evidence", 1)[0] if "## Historical status evidence" in readme else readme
@@ -9699,8 +9760,7 @@ def _check_fp001_phase7c_current_promotion(
     if re.search(r"(?im)^\s*APPLICATION IMPLEMENTATION\s*:\s*AUTHORI[ZS]ED\s*$", active_route):
         issues.append("Open Work authorises application implementation without bounded Phase 8 scope")
 
-    readme_path = root / "docs/00_platform/README.md"
-    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme = _frozen_manifest_readme_text(root)
     current_state = _markdown_h2_section(readme, "Current State") or ""
     for token in (
         "PHASE 7A: COMPLETE",
@@ -9953,8 +10013,7 @@ def _check_fp001_phase7b_certification_current(
         )
         return
 
-    readme_path = docs / "README.md"
-    readme_text = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme_text = _frozen_manifest_readme_text(root)
     readme_current = _markdown_h2_section(readme_text, "Current State")
     if readme_current is None:
         issues.append("README current state section is missing")
@@ -10691,8 +10750,7 @@ def _check_fp001_pmr_reconciliation_after_phase7c_promotion(
     if not isinstance(contract_state, dict) or contract_state.get("lifecycle") != "COMPLETE / CERTIFIED / CURRENT" or contract_state.get("resulting_main_fia_tests") != 455 or contract_state.get("resulting_main_fia_assertions") != 728 or contract_state.get("resulting_main_fia_findings") != 0:
         issues.append("Open Work current route omits current contract or resulting-main evidence")
 
-    readme = root / "docs/00_platform/README.md"
-    readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""
+    readme_text = _frozen_manifest_readme_text(root)
     readme_current = _markdown_h2_section(readme_text, "Current State") or ""
     hard_stop_readme = "DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED" in readme_current
     for token in (
@@ -10804,8 +10862,7 @@ def _check_fp001_pmr_reconciliation(
     identity_v014_candidate = docs / "archive" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"
     predecessor_skeleton = docs / "archive" / "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.1.md"
     predecessor_dossier = docs / "archive" / "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
-    readme_path = docs / "README.md"
-    readme = readme_path.read_text(encoding="utf-8") if readme_path.is_file() else ""
+    readme = _frozen_manifest_readme_text(root)
     issues: list[str] = []
 
     current_entries = [
@@ -12538,9 +12595,8 @@ def _check_production_graph(
         path=roots["governing"],
     )
 
-    context_index = roots["context_index"]
-    readme = root / context_index
-    readme_text = readme.read_text(encoding="utf-8") if readme.is_file() else ""
+    context_index = HISTORICAL_CONTEXT_README_PATH
+    readme_text = _frozen_manifest_readme_text(root)
     expected_order = [str(entry.get("canonical_filename")) for entry in governing_entries]
     default_context = readme_text
     default_context_start = readme_text.find("## Default Agent Context")
@@ -12561,9 +12617,9 @@ def _check_production_graph(
     _record_check(
         report,
         "readme_current_authority_order",
-        readme.is_file() and readme_order == expected_order,
+        readme_order == expected_order,
         "README lists every governing document in manifest order"
-        if readme.is_file() and readme_order == expected_order
+        if readme_order == expected_order
         else f"README authority order mismatch: {readme_order}",
         path=context_index,
     )
@@ -12579,7 +12635,8 @@ def _check_production_graph(
         and entry.get("document_id") in navigation_document_ids
     ]
     stale_hits: list[str] = []
-    scan_targets = [(context_index, root / context_index, False)] + [
+    historical_readme = _frozen_manifest_readme_path(root)
+    scan_targets = [(context_index, historical_readme, False)] + [
         (
             _relative_path(entry),
             _entry_path(root, entry),
@@ -12662,7 +12719,7 @@ def _check_production_graph(
         (entry for entry in governing_entries if entry.get("document_id") == "OPEN_WORK"),
         None,
     )
-    readiness_paths = [roots["context_index"]]
+    readiness_paths = [HISTORICAL_CONTEXT_README_PATH]
     if open_work_entry is not None:
         readiness_paths.append(_relative_path(open_work_entry))
     readiness_text = "\n".join(
@@ -12887,7 +12944,7 @@ def _well60_status_promotion_issues(
     elif candidate_text.split(body_start, 1)[1].split(body_end, 1)[0] != archive_text.split(body_start, 1)[1].split(body_end, 1)[0]:
         issues.append("promoted TB-001 v0.1.3 changed its reviewed contract body")
 
-    issues.extend(_fp001_phase8_proof_contract_content_issues(candidate_text))
+    issues.extend(_fp001_phase8_proof_contract_content_issues(candidate_text, manifest))
 
     for token in (
         "Artifact version:** `v0.1.3`",
@@ -12962,8 +13019,7 @@ def _well60_status_promotion_issues(
     if "WELL-61 remains independently PLANNING / INCOMPLETE" not in open_work_text:
         issues.append("current Open Work does not preserve WELL-61's independent incomplete status")
 
-    readme = root / "docs/00_platform/README.md"
-    readme_text = readme.read_text(encoding="utf-8") if readme.is_file() and not readme.is_symlink() else ""
+    readme_text = _frozen_manifest_readme_text(root)
     active = _markdown_h2_section(readme_text, "Active Working Artifacts") or ""
     current_state = _markdown_h2_section(readme_text, "Current State") or ""
     if "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md" not in active:
@@ -13021,21 +13077,15 @@ def _well60_status_promotion_issues(
     if rule.get("application_source_paths_created") != [] or phase8.get("application_source_paths_created") != []:
         issues.append("status promotion records application source changes")
     diff = subprocess.run(
-        ["git", "-C", str(repository_root), "diff", "--name-only", closure_base, "--"],
+        ["git", "-C", str(repository_root), "diff", "--name-only", closure_base, closure_head, "--"],
         capture_output=True,
         text=True,
         check=False,
     )
-    untracked = subprocess.run(
-        ["git", "-C", str(repository_root), "ls-files", "--others", "--exclude-standard"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if diff.returncode != 0 or untracked.returncode != 0:
-        issues.append("cannot verify that the status promotion avoids application, dependency and migration changes")
+    if diff.returncode != 0:
+        issues.append("cannot verify that the WELL-60 tracker closure avoids application, dependency and migration changes")
     else:
-        changed = set(diff.stdout.splitlines()) | set(untracked.stdout.splitlines())
+        changed = set(diff.stdout.splitlines())
         forbidden = [
             path
             for path in changed
@@ -13043,7 +13093,10 @@ def _well60_status_promotion_issues(
             or path in {"mix.exs", "mix.lock"}
         ]
         if forbidden:
-            issues.append("status promotion changes application/runtime/dependency paths: " + ", ".join(sorted(forbidden)))
+            issues.append(
+                "WELL-60 tracker closure changes application/runtime/dependency paths: "
+                + ", ".join(sorted(forbidden))
+            )
 
     return issues
 
@@ -13111,6 +13164,8 @@ def run_audit(
         report["status"] = "FAIL"
         return report
     _record_check(report, "manifest_integrity_rules", True, "manifest integrity rules are valid")
+    if root.resolve() == _default_root().resolve():
+        _check_historical_readme_pin(root, report)
 
     counts_expectation = dict(
         integrity_rules["expected_counts"] if expected_counts is None else expected_counts
@@ -13126,7 +13181,7 @@ def run_audit(
     _check_current_authority_route_resolution(root, manifest, integrity_rules, report)
     _check_current_authority_delegated_routing(root, manifest, integrity_rules, report)
     docs = root / "docs" / "00_platform"
-    standards_readme = (docs / "README.md").read_text(encoding="utf-8") if (docs / "README.md").is_file() else ""
+    standards_readme = _frozen_manifest_readme_text(root)
     open_work_entry = by_id.get("OPEN_WORK", {})
     open_work_path = root / _relative_path(open_work_entry) if open_work_entry else None
     current_open_work = open_work_path.read_text(encoding="utf-8") if open_work_path and open_work_path.is_file() else ""

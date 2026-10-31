@@ -7,6 +7,8 @@ from collections import Counter
 from pathlib import Path
 
 
+from foundation_test_support import historical_platform_readme_path
+
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACT = (
     ROOT
@@ -23,7 +25,7 @@ STAGE_3B_ARTIFACT = (
     / "TARGETED_ARCHITECTURE_ENGINEERING_CLASSIFICATION_WORKING_v0.1.0.md"
 )
 OPEN_WORK = ROOT / "docs" / "00_platform" / "archive" / "02_OPEN_WORK_v1.2.34.md"
-README = ROOT / "docs" / "00_platform" / "README.md"
+README = historical_platform_readme_path(ROOT)
 MANIFEST = ROOT / "docs" / "00_platform" / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 EXPECTED_ARQS = [

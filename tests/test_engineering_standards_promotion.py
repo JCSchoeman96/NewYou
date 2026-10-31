@@ -20,7 +20,7 @@ MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.jso
 CURRENT_STANDARDS_RELATIVE = Path("docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md")
 ARCHIVED_CANDIDATE_RELATIVE = Path("docs/00_platform/archive/ENGINEERING_STANDARDS_v1.0.0.md")
 OPEN_WORK_RELATIVE = Path(current_document_relative_path(ROOT, "OPEN_WORK"))
-README_RELATIVE = Path("docs/00_platform/README.md")
+README_RELATIVE = Path("docs/00_platform/archive/README_PRE_WELL66_2026-10-30.md")
 
 
 Mutation = Callable[[Path, dict], None]

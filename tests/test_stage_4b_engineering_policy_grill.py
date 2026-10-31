@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 
-from tests.foundation_test_support import git_snapshot_directory_names, git_snapshot_path_exists
+from tests.foundation_test_support import git_snapshot_directory_names, git_snapshot_path_exists, historical_platform_readme_path
 
 # Exact Stage 4B completion commit that introduced this test and its artifact.
 HISTORICAL_SCOPE_SHA = "cc91dd74915bb9b9ce2027ef8ee8939db816f616"
@@ -34,7 +34,7 @@ STAGE_4A_ARTIFACT = (
     / "TARGETED_ARCHITECTURE_GRILL_WORKING_v0.1.0.md"
 )
 OPEN_WORK = ROOT / "docs" / "00_platform" / "archive" / "02_OPEN_WORK_v1.2.35.md"
-README = ROOT / "docs" / "00_platform" / "README.md"
+README = historical_platform_readme_path(ROOT)
 MANIFEST = ROOT / "docs" / "00_platform" / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 POLICY_KEYS = ("A-08", "B-09", "D-02", "D-03", "D-04", "D-05", "D-07")

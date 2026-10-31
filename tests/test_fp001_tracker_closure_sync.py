@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
-from foundation_test_support import current_working_path
+from foundation_test_support import HISTORICAL_README_RELATIVE, current_working_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,8 +54,8 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         )
         self.assertEqual(
             "P8-05 IMPLEMENTATION AUTHORISED FOR BOUNDED PHASE 8 PROOF; "
-            "WELL-48 COMPLETE; WELL-49 BLOCKED PENDING WELL-60 AND WELL-61; "
-            "WELL-50 BACKLOG / NOT STARTED",
+            "WELL-48 COMPLETE; WELL-49 BLOCKED PENDING WELL-61; "
+            "WELL-60 COMPLETE; WELL-50 BACKLOG / NOT STARTED",
             state["next_stage"],
         )
         self.assertEqual("CLOSED / COMPLETED", state["phase_7c_execution_tracker_state"])
@@ -157,7 +157,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         for section_name, anchor, replacement in cases:
             with self.subTest(section=section_name), tempfile.TemporaryDirectory() as directory:
                 root, manifest_path = self._copy_fixture(directory)
-                readme_path = root / "docs/00_platform/README.md"
+                readme_path = root / HISTORICAL_README_RELATIVE
                 readme = readme_path.read_text(encoding="utf-8")
                 section_start = readme.index(f"## {section_name}")
                 next_heading = readme.find("\n## ", section_start + 1)
@@ -277,7 +277,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as directory:
             root, manifest_path = self._copy_fixture(directory)
-            readme_path = root / "docs/00_platform/README.md"
+            readme_path = root / HISTORICAL_README_RELATIVE
             original_readme = readme_path.read_text(encoding="utf-8")
             readme = original_readme
             current_start = readme.index("## Current State")

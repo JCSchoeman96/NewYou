@@ -17,13 +17,13 @@ ROOT = Path(__file__).resolve().parents[1]
 PROMOTION_RULE = "fp001_phase7c_final_contract_current_promotion"
 CONTRACT_REL = "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 OPEN_WORK_REL = "docs/00_platform/archive/02_OPEN_WORK_v1.2.74.md"
-README_REL = "docs/00_platform/README.md"
+README_REL = "docs/00_platform/archive/README_PRE_WELL66_2026-10-30.md"
 ARCHIVE_REL = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 
 
 class FP001Phase7CCurrentPromotionAuditTests(unittest.TestCase):
     def _copy_fixture(self, root: Path) -> tuple[Path, dict]:
-        copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform")
+        copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform", materialize_historical_readme=True)
         manifest_path = root / "docs" / "00_platform" / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         return root, json.loads(manifest_path.read_text(encoding="utf-8"))
 
