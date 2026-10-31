@@ -99,6 +99,37 @@ def manifest_data(root: Path) -> dict[str, Any]:
     return json.loads((Path(root) / MANIFEST_RELATIVE).read_text(encoding="utf-8"))
 
 
+def frozen_manifest_document_path(root: Path, entry: dict[str, Any]) -> Path:
+    """Resolve a frozen manifest document at its original or byte-pinned archive path."""
+
+    root = Path(root)
+    repository_path = Path(str(entry.get("repository_path", "")))
+    path = root / repository_path
+    canonical_filename = str(entry.get("canonical_filename", ""))
+    expected_hash = entry.get("sha256")
+    expected_provenance_hash = entry.get("provenance_sha256")
+
+    def matches_frozen_bytes(candidate: Path) -> bool:
+        if not candidate.is_file() or candidate.is_symlink() or not isinstance(expected_hash, str):
+            return False
+        digest = hashlib.sha256(candidate.read_bytes()).hexdigest()
+        return digest == expected_hash and (
+            expected_provenance_hash is None or digest == expected_provenance_hash
+        )
+
+    if matches_frozen_bytes(path):
+        return path
+
+    archived = root / "docs/00_platform/archive" / canonical_filename
+    if (
+        repository_path.name == canonical_filename
+        and matches_frozen_bytes(archived)
+    ):
+        return archived
+
+    raise AssertionError(f"frozen manifest document is missing or does not match its pinned bytes: {repository_path}")
+
+
 def current_document_path(root: Path, document_id: str) -> Path:
     root = Path(root)
     manifest = manifest_data(root)
@@ -167,14 +198,23 @@ def historical_snapshot_path(root: Path, filename: str) -> Path:
             entry
             for group in ("governing_documents", "reference_documents", "historical_documents")
             for entry in manifest.get(group, [])
-            if entry.get("repository_path") == relative
-            and entry.get("lifecycle") == "historical"
+            if (
+                entry.get("repository_path") == relative
+                and entry.get("lifecycle") == "historical"
+            )
+            or (
+                Path(entry.get("repository_path", "")).name == archived.name
+                and entry.get("canonical_filename") == archived.name
+                and entry.get("lifecycle", "current") != "historical"
+            )
         ]
         digest = hashlib.sha256(archived.read_bytes()).hexdigest()
         if (
             len(matching) != 1
-            or matching[0].get("sha256") != digest
-            or matching[0].get("provenance_sha256") != digest
+            or digest not in {
+                matching[0].get("sha256"),
+                matching[0].get("provenance_sha256"),
+            }
         ):
             raise AssertionError(f"historical archive is not uniquely pinned by the manifest: {relative}")
         return archived
@@ -194,6 +234,7 @@ def historical_snapshot_path(root: Path, filename: str) -> Path:
         .get("navigation_document_paths", [])
         if Path(route).name == Path(filename).name
     )
+    candidates = list(dict.fromkeys(candidates))
     if len(candidates) != 1 or not candidates[0].is_file():
         raise AssertionError(f"historical snapshot is not archived or active at baseline: {filename}")
     return candidates[0]

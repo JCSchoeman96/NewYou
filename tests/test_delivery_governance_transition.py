@@ -7,7 +7,13 @@ ROOT = Path(__file__).resolve().parents[1]
 PLATFORM = ROOT / "docs" / "00_platform"
 CURRENT_ROUTER = PLATFORM / "CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
 LEGACY_OPEN_WORK = PLATFORM / "02_OPEN_WORK_v1.2.90.md"
-DELIVERY_STANDARD = PLATFORM / "reference" / "DELIVERY_GOVERNANCE_STANDARD_v1.0.0.md"
+ROUTER_PATH = PLATFORM / "CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
+
+
+def routed_delivery_standard():
+    router = json.loads(ROUTER_PATH.read_text(encoding="utf-8"))
+    entry = next(item for item in router["supporting_documents"] if item["document_id"] == "DELIVERY_GOVERNANCE_STANDARD")
+    return ROOT / entry["repository_path"]
 
 
 class DeliveryGovernanceTransitionTest(unittest.TestCase):
@@ -17,19 +23,17 @@ class DeliveryGovernanceTransitionTest(unittest.TestCase):
 
         governing_ids = {entry["document_id"] for entry in router["governing_documents"]}
         self.assertNotIn("OPEN_WORK", governing_ids)
-        self.assertEqual(
-            governing_ids,
-            {
-                "PROJECT_NORTH_STAR_AND_MVP",
-                "PLATFORM_BASELINE",
-                "DECISION_REGISTER",
-                "ARCHITECTURE_SYNTHESIS",
-                "DOMAIN_MAP",
-                "ROADMAP",
-                "PLATFORM_OPERATING_MODEL",
-                "FRONTEND_EXPERIENCE_SYSTEM",
-            },
-        )
+        expected_governing_ids = {
+            "PROJECT_NORTH_STAR_AND_MVP",
+            "PLATFORM_BASELINE",
+            "DECISION_REGISTER",
+            "ARCHITECTURE_SYNTHESIS",
+            "DOMAIN_MAP",
+            "ROADMAP",
+            "PLATFORM_OPERATING_MODEL",
+            "FRONTEND_EXPERIENCE_SYSTEM",
+        }
+        self.assertEqual(governing_ids, expected_governing_ids)
 
         deep_reference_ids = {
             entry["document_id"] for entry in router["deep_reference_documents"]
@@ -69,7 +73,7 @@ class DeliveryGovernanceTransitionTest(unittest.TestCase):
         self.assertTrue(LEGACY_OPEN_WORK.is_file())
 
     def test_delivery_standard_and_agent_contract_lock_plane_ready_boundary(self):
-        standard = DELIVERY_STANDARD.read_text(encoding="utf-8")
+        standard = routed_delivery_standard().read_text(encoding="utf-8")
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
         project_instructions = (
             ROOT / "docs" / "development" / "chatgpt-project-master-gate-instructions.md"
@@ -88,6 +92,10 @@ class DeliveryGovernanceTransitionTest(unittest.TestCase):
         self.assertIn("semantic", standard.lower())
         self.assertIn("JIT IMPLEMENTATION CHOICE", standard)
         self.assertIn("UPSTREAM GOVERNANCE CONTRADICTION", standard)
+        self.assertIn("Durable authority plus a dependency-cleared Plane `Ready` ticket is sufficient permission to implement", standard)
+        self.assertIn("runtime grants do not separately block ordinary implementation", standard.casefold())
+        self.assertIn("only an explicit, narrowly scoped external real-world requirement", standard.casefold())
+        self.assertIn("must not be treated as pre-existing entry prerequisites", standard.casefold())
 
     def test_readme_routes_current_authority_to_router_and_plane(self):
         readme = (PLATFORM / "README.md").read_text(encoding="utf-8")

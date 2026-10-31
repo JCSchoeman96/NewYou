@@ -7,12 +7,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs/00_platform"
+ROUTER_PATH = DOCS / "CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
 MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+ROUTER = json.loads(ROUTER_PATH.read_text(encoding="utf-8"))
 MANIFEST = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
 
 
 def current(document_id: str) -> str:
-    entry = next(item for item in MANIFEST["governing_documents"] if item["document_id"] == document_id)
+    entries = ROUTER["governing_documents"] + ROUTER["supporting_documents"]
+    entry = next(item for item in entries if item["document_id"] == document_id)
     return (ROOT / entry["repository_path"]).read_text(encoding="utf-8")
 
 
@@ -21,7 +24,6 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.product = current("PLATFORM_BASELINE")
         cls.decisions = current("DECISION_REGISTER")
-        cls.open_work = current("OPEN_WORK")
         cls.spec = (ROOT / "docs/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
         cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
 
@@ -37,33 +39,50 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
         ):
             self.assertIn(excluded, definition)
 
-    def test_current_successors_are_frozen_and_dec319_is_locked(self) -> None:
-        product_header = self.product.split("## v1.12.0 Amendment Scope", 1)[0]
-        decision_header = self.decisions.split("## v1.12.0 Amendment Scope", 1)[0]
-        self.assertIn("FROZEN PRODUCT BASELINE v1.12.0", product_header)
-        self.assertIn("FROZEN PRODUCT DECISION REGISTER v1.12.0", decision_header)
-        self.assertNotIn("PROPOSED", product_header)
-        self.assertNotIn("PENDING MASTER GATE", product_header)
-        self.assertNotIn("proposed for Master Gate review and not yet accepted on canonical main", self.product)
-        self.assertNotIn("PROPOSED", decision_header)
-        self.assertNotIn("PENDING MASTER GATE", decision_header)
-        decision = self.decisions.split("## DEC-319 —", 1)[1].split("\n## ", 1)[0]
-        self.assertIn("**Status:** LOCKED", decision)
-        self.assertNotIn("ON ACCEPTANCE", decision)
-        self.assertIn("Ordinary delegation of this exact scope is governed by DEC-317", decision)
-        self.assertIn("Identity & Access owns durable grant evidence under Product §15.1B", decision)
-        self.assertIn("DEC-318 continues to govern bootstrap and privileged/sensitive approval", decision)
+    def test_current_authority_successors_and_decisions_are_routed(self) -> None:
+        routes = {row["document_id"]: row for row in ROUTER["governing_documents"]}
+        self.assertEqual("00_PLATFORM_v1.13.0.md", routes["PLATFORM_BASELINE"]["canonical_filename"])
+        self.assertEqual("01_DECISIONS_v1.13.0.md", routes["DECISION_REGISTER"]["canonical_filename"])
+        self.assertEqual("PLATFORM_OPERATING_MODEL_v1.3.0.md", routes["PLATFORM_OPERATING_MODEL"]["canonical_filename"])
+        self.assertIn("DEC-320", self.decisions)
+        self.assertIn("DEC-319", self.decisions)
+        self.assertIn("**Status:** LOCKED", self.decisions.split("## DEC-319 —", 1)[1].split("\n## ", 1)[0])
 
-    def test_active_p805_contract_has_no_proposal_gate_language(self) -> None:
+    def test_superseded_routed_predecessors_are_archived_not_left_in_current_locations(self) -> None:
+        routed = ROUTER["governing_documents"] + ROUTER["supporting_documents"]
+        for route in routed:
+            current_path = ROOT / route["repository_path"]
+            name = current_path.name
+            if "_v" not in name:
+                continue
+            stem, current_version = name.rsplit("_v", 1)
+            current_version = current_version.removesuffix(current_path.suffix)
+            if not all(part.isdigit() for part in current_version.split(".")):
+                continue
+            current_tuple = tuple(int(part) for part in current_version.split("."))
+
+            for archived in (DOCS / "archive").glob(f"{stem}_v*{current_path.suffix}"):
+                archived_version = archived.name.rsplit("_v", 1)[1].removesuffix(current_path.suffix)
+                if not all(part.isdigit() for part in archived_version.split(".")):
+                    continue
+                archived_tuple = tuple(int(part) for part in archived_version.split("."))
+                if archived_tuple < current_tuple:
+                    former_current_path = current_path.parent / archived.name
+                    self.assertFalse(
+                        former_current_path.exists(),
+                        f"superseded authority predecessor remains in a current location: {former_current_path}",
+                    )
+                    self.assertTrue(archived.is_file(), f"archived predecessor is missing: {archived}")
+
+    def test_active_p805_contract_is_current_and_separates_development_from_release(self) -> None:
         section = self.spec.split("## WELL-63 bounded verification-message content eligibility", 1)[1].split("## Registration and retry contract", 1)[0]
         route = self.spec.split("## Purpose and current boundary", 1)[1].split("## Fixed design decisions", 1)[0]
-        self.assertIn("current P8-05 implementation contract", section)
-        self.assertNotIn("proposed", section.casefold())
-        self.assertNotIn("pending", section.casefold())
-        self.assertIn("current authority route is Product", route)
-        self.assertNotIn("authority proposal", route.casefold())
+        self.assertIn("current P8-05 verification-message proof contract", section)
+        self.assertNotIn("proposed for Master Gate review", section)
+        self.assertIn("live authority route is", route)
         self.assertIn("verification-message proof contract", self.spec)
-        self.assertNotIn("proposed verification-message proof contract", self.spec)
+        self.assertIn("development_approved", section)
+        self.assertIn("runtime_release_eligibility", section)
 
     def test_locale_version_is_delivery_authority_not_mutable_authoring_template(self) -> None:
         definition = self.product.split("## 21E.19 Verification message content classification", 1)[1].split("## 21E.20", 1)[0]
@@ -72,56 +91,38 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
         self.assertIn("exact `ContentTranslationVersion`", definition)
         self.assertIn("immutable bytes/digest", definition)
         self.assertIn("no `latest` lookup or silent locale fallback", definition)
-        self.assertIn("`approved != published != latest`", self.product)
 
-    def test_proof_eligibility_is_non_public_non_production_and_scope_bound(self) -> None:
-        proof = self.product.split("## 21E.20 Bounded P8-05 verification-message eligibility", 1)[1].split("# 21F.", 1)[0]
-        for permitted in ("local development", "automated tests", "development environments", "bounded P8-05 Phase-8 architectural proof"):
-            self.assertIn(permitted, proof)
-        for prohibited in ("production", "public release", "paid-pilot use", "real-participant delivery"):
-            self.assertIn(prohibited, proof)
-        self.assertIn("not public publication", proof)
-        self.assertIn("repository-held file or queued job cannot create or preserve eligibility", proof)
-
-    def test_content_lifecycle_scope_and_dec317_delegation_are_explicit(self) -> None:
-        proof = self.product.split("## 21E.20 Bounded P8-05 verification-message eligibility", 1)[1].split("# 21F.", 1)[0]
-        self.assertIn("governed `Content` role with scope `verification_message_lifecycle`", proof)
-        self.assertIn("ordinary / non-sensitive", proof)
-        self.assertIn("does not replace the content risk classification", proof)
-        self.assertIn("Platform Administrator may grant or revoke", proof)
-        self.assertIn("delegation catalogue under DEC-317", proof)
-        self.assertIn("Identity & Access owns and durably evidences the grant", proof)
-        self.assertIn("No named person defines the capability", proof)
-        self.assertIn("Self-assignment is prohibited", proof)
-        self.assertIn("Expiry, overdue review, revocation or supersession ends authority for future lifecycle actions", proof)
-        self.assertIn("does not rewrite prior owner evidence or silently withdraw eligibility", proof)
-        self.assertIn("Sensitive self-approval remains prohibited under DEC-318", self.product)
-        self.assertIn("Super Admin", self.product.split("## 15.1A Role-based capability and delegation authority", 1)[1].split("## 15.1B", 1)[0])
-        self.assertIn("Super Admin is not a universal bypass and conveys no Domain business authority", self.product)
-
-    def test_grant_evidence_and_locale_approvals_are_separate(self) -> None:
-        proof = self.product.split("## 21E.20 Bounded P8-05 verification-message eligibility", 1)[1].split("# 21F.", 1)[0]
-        for item in (
-            "the subject", "exact role and scope", "bounded applicability", "reason",
-            "governing authority", "effective time", "execution evidence", "expiry or review",
-            "revocation/supersession",
+    def test_approval_publication_latest_and_runtime_eligibility_are_distinct(self) -> None:
+        proof = self.product.split("## 21E.20", 1)[1].split("# 21F.", 1)[0]
+        self.assertIn("development_approved != runtime_approved != published != latest != production_eligible", proof)
+        for phrase in (
+            "Each EN locale version requires two approvals: Content Approver + English Language Reviewer",
+            "Each AF locale version requires two approvals: Content Approver + Afrikaans Language Reviewer",
+            "The paired EN/AF verification content therefore requires four separate approval events in total",
+            "each role approval remains independently recorded",
+            "current Identity & Access grant for Content + verification_message_lifecycle",
+            "explicit Content & Media release/eligibility decision",
         ):
-            self.assertIn(item, proof)
-        for item in (
-            "subject identity", "exact role and scope", "environment/applicability", "reason",
-            "governing Product/Decision authority version", "effective time", "granting identity",
-            "expiry/review", "revocation or supersession",
+            self.assertIn(phrase, proof.replace("`", ""))
+        self.assertNotIn("requires all four exact-byte role approvals", proof)
+
+    def test_content_and_release_authority_remain_separate(self) -> None:
+        proof = self.product.split("## 21E.20", 1)[1].split("# 21F.", 1)[0]
+        for phrase in (
+            "production", "public release", "paid-pilot use", "real-participant delivery",
+            "identity & access owns durable grant evidence", "sensitive self-approval remains prohibited",
+            "content & media owns each such release/eligibility decision", "communications owns current delivery", "identity owns challenge validity",
         ):
-            self.assertIn(item, self.spec)
-        self.assertIn("English: `Content Approver` and `English Language Reviewer`", proof)
-        self.assertIn("Afrikaans: `Content Approver` and `Afrikaans Language Reviewer`", proof)
-        self.assertIn("each role approval remains independently recorded", proof)
-        self.assertIn("Wording acceptance, lifecycle authority and Identity & Access grant evidence satisfy none", proof)
-        self.assertIn("Content Approver, language reviewer, responsible-editor status", proof)
-        self.assertIn("does not grant it", proof)
+            self.assertIn(phrase, proof.casefold())
+        spec = self.spec.casefold().replace("`", "")
+        for phrase in (
+            "no production authority", "public release", "paid-pilot", "real-participant",
+            "fail closed", "current identity & access grant for content + verification_message_lifecycle",
+        ):
+            self.assertIn(phrase, spec)
 
     def test_withdrawal_supersession_and_retry_preserve_each_domain_authority(self) -> None:
-        proof = self.product.split("## 21E.20 Bounded P8-05 verification-message eligibility", 1)[1].split("# 21F.", 1)[0]
+        proof = self.product.split("## 21E.20", 1)[1].split("# 21F.", 1)[0]
         for phrase in (
             "A material wording change requires a new immutable locale version",
             "New MessageIntents may bind only an eligible exact locale version",
@@ -136,10 +137,8 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
             "successor existence alone does not bar a retry while the original remains eligible",
             "Withdrawal before intent creation bars new binding",
             "withdrawal before a provider submission or retry requires Communications to hold",
-            "Before every provider submission",
-            "current Content & Media eligibility",
-            "Identity independently revalidates challenge eligibility",
-            "A queued job grants no authority",
+            "Before every provider submission", "current Content & Media eligibility",
+            "Identity independently revalidates challenge eligibility", "A queued job grants no authority",
             "Any successor rebind must be permitted by Communications’ owner contract",
             "Ambiguous provider outcome never silently rebinds or resubmits",
             "Already-admitted provider operations follow the existing Communications admission contract",
@@ -148,35 +147,26 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
 
     def test_platform_name_snapshot_does_not_mutate_content_version(self) -> None:
         for phrase in (
-            "Preserve literal `{{platform_name}}`",
-            "snapshotted for each new MessageIntent",
+            "Preserve literal `{{platform_name}}`", "snapshotted for each new MessageIntent",
             "A platform-name configuration change does not create a content version",
-            "a literal copy change around the token does",
-            "`{{verification_link}}` remains only a literal token",
+            "a literal copy change around the token does", "`{{verification_link}}` remains only a literal token",
             "no bearer is created or persisted here",
         ):
             self.assertIn(phrase, self.spec)
 
-    def test_current_route_and_well64_closure_do_not_regress(self) -> None:
-        self.assertEqual("00_PLATFORM_v1.12.0.md", next(x for x in MANIFEST["governing_documents"] if x["document_id"] == "PLATFORM_BASELINE")["canonical_filename"])
-        self.assertEqual("01_DECISIONS_v1.12.0.md", next(x for x in MANIFEST["governing_documents"] if x["document_id"] == "DECISION_REGISTER")["canonical_filename"])
-        self.assertEqual("02_OPEN_WORK_v1.2.90.md", next(x for x in MANIFEST["governing_documents"] if x["document_id"] == "OPEN_WORK")["canonical_filename"])
-        self.assertIn("WELL-64 is COMPLETE", self.open_work)
-        self.assertNotIn("pending independent Master Gate review", self.open_work)
-        self.assertIn("resulting-main Foundation Integrity push run `40892033221` passed", self.open_work)
-        current_status = self.open_work.split("## 12.41 — WELL-63 completion and WELL-61 verification-message candidate evidence", 1)[1]
-        self.assertIn("historical status; superseded by §12.44", self.open_work.split("## 12.41 —", 1)[1].split("\n", 1)[0])
-        self.assertIn("WELL-63 is COMPLETE", current_status)
-        self.assertIn("WELL-61 is PLANNING and unblocked by WELL-63", current_status)
-        self.assertIn("WELL-49 remains BLOCKED / WAITING ON WELL-60 AND WELL-61", current_status)
-        self.assertIn("WELL-49 remains BLOCKED / WAITING ON WELL-61", self.open_work)
-        self.assertIn("DEC-299 through DEC-319", self.readme)
+    def test_frozen_open_work_and_manifest_are_not_live_execution_authority(self) -> None:
+        legacy = next(row for row in ROUTER["legacy_snapshots"] if row["document_id"] == "OPEN_WORK_FINAL_LEGACY_SNAPSHOT")
+        self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.90.md", legacy["repository_path"])
+        self.assertFalse(legacy["live_execution_authority"])
+        self.assertEqual("2a8557193fc071996e23d9214980da22d48bdbf3", ROUTER["historical_integrity_baseline"]["git_blob_sha"])
+        self.assertIn("through DEC-320", self.readme)
+        self.assertIn("not live execution authority", self.readme)
+        self.assertEqual("02_OPEN_WORK_v1.2.90.md", next(row for row in MANIFEST["governing_documents"] if row["document_id"] == "OPEN_WORK")["canonical_filename"])
 
-    def test_prior_current_authority_snapshots_remain_byte_identifiable(self) -> None:
+    def test_prior_frozen_authority_snapshots_remain_byte_identifiable(self) -> None:
         for entry_id, path in (
             ("PLATFORM_BASELINE_V1_11_0", "docs/00_platform/archive/00_PLATFORM_v1.11.0.md"),
             ("DECISION_REGISTER_V1_11_0", "docs/00_platform/archive/01_DECISIONS_v1.11.0.md"),
-            ("OPEN_WORK_V1_2_85", "docs/00_platform/archive/02_OPEN_WORK_v1.2.85.md"),
         ):
             entry = next(item for item in MANIFEST["historical_documents"] if item["document_id"] == entry_id)
             data = (ROOT / path).read_bytes()

@@ -9,12 +9,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 MANIFEST = json.loads((DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8"))
+ROUTER = json.loads((DOCS / "CURRENT_AUTHORITY_ROUTER_v1.0.0.json").read_text(encoding="utf-8"))
 CONTENT_MANIFEST_PATH = DOCS / "working/content_media/LEGAL_BASELINE_CONTENT_MANIFEST_v0.1.0.json"
 CONTENT_MANIFEST = json.loads(CONTENT_MANIFEST_PATH.read_text(encoding="utf-8"))
 
 
 def current_document(document_id: str) -> Path:
-    record = next(item for item in MANIFEST["governing_documents"] if item["document_id"] == document_id)
+    record = next(item for item in ROUTER["governing_documents"] if item["document_id"] == document_id)
     return ROOT / record["repository_path"]
 
 
@@ -123,8 +124,10 @@ class LegalDocumentBaselineGovernanceTests(unittest.TestCase):
         self.assertIn("DEC-124 is superseded in part only", decisions)
 
     def test_current_routes_separate_development_readiness_from_release_readiness(self) -> None:
-        open_work = current_document("OPEN_WORK").read_text(encoding="utf-8")
-        current_state = (DOCS / "README.md").read_text(encoding="utf-8").split("## Current State", 1)[1].split("## Historical status evidence", 1)[0]
+        open_work_record = next(item for item in MANIFEST["governing_documents"] if item["document_id"] == "OPEN_WORK")
+        open_work = (ROOT / open_work_record["repository_path"]).read_text(encoding="utf-8")
+        readme = (DOCS / "README.md").read_text(encoding="utf-8")
+        product = current_document("PLATFORM_BASELINE").read_text(encoding="utf-8")
         spec = (ROOT / "docs/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
         self.assertIn("WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED", open_work)
         self.assertIn("Current Product Law v1.12.0 continues to permit the immutable English development baselines under DEC-316", open_work)
@@ -133,11 +136,13 @@ class LegalDocumentBaselineGovernanceTests(unittest.TestCase):
         self.assertIn("WELL-45 is now a release/legal-readiness gate", open_work)
         self.assertIn("It is not legally approved", open_work)
         self.assertIn("Production, public release, paid pilot and applicable real-participant flows remain fail-closed", open_work)
-        self.assertIn("WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED", current_state)
-        self.assertIn("both immutable English development baselines", current_state)
-        self.assertIn("approved English Terms/Privacy", current_state)
+        self.assertIn("00_PLATFORM_v1.13.0.md", readme)
+        self.assertIn("01_DECISIONS_v1.13.0.md", readme)
+        self.assertIn("`02_OPEN_WORK_v1.2.90.md` is the final **frozen legacy** Open Work snapshot", readme)
+        self.assertIn("It is not live execution authority", readme)
+        self.assertIn("runtime authorization", product.casefold())
         self.assertIn(
-            "WELL-45 alone no longer blocks bounded development with the immutable English baselines",
+            "WELL-45 is a release/legal-readiness gate, not a blanket development blocker",
             spec,
         )
 

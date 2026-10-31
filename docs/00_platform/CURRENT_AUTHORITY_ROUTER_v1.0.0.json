@@ -13,17 +13,17 @@
     },
     {
       "document_id": "PLATFORM_BASELINE",
-      "canonical_filename": "00_PLATFORM_v1.12.0.md",
-      "semver": "1.12.0",
-      "repository_path": "docs/00_platform/00_PLATFORM_v1.12.0.md",
-      "sha256": "f5e7ff76bd628fffb18e3925997dad38daa97649bb9b0ce37aaf55411caf87e3"
+      "canonical_filename": "00_PLATFORM_v1.13.0.md",
+      "semver": "1.13.0",
+      "repository_path": "docs/00_platform/00_PLATFORM_v1.13.0.md",
+      "sha256": "d640412e970e3ac3ec3a1c6aebb8a184e83d83d3a14b570ed179f9bfc0c6f515"
     },
     {
       "document_id": "DECISION_REGISTER",
-      "canonical_filename": "01_DECISIONS_v1.12.0.md",
-      "semver": "1.12.0",
-      "repository_path": "docs/00_platform/01_DECISIONS_v1.12.0.md",
-      "sha256": "497fffc78451d9bb9531ddc697e27786d7b7c861402f066e3b515cb41cff38c8"
+      "canonical_filename": "01_DECISIONS_v1.13.0.md",
+      "semver": "1.13.0",
+      "repository_path": "docs/00_platform/01_DECISIONS_v1.13.0.md",
+      "sha256": "42800dc154c2f59120569b7b27c4f9652e5209c18efd44f257a585b7a3dccc1d"
     },
     {
       "document_id": "ARCHITECTURE_SYNTHESIS",
@@ -48,10 +48,10 @@
     },
     {
       "document_id": "PLATFORM_OPERATING_MODEL",
-      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.2.0.md",
-      "semver": "1.2.0",
-      "repository_path": "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.2.0.md",
-      "sha256": "424dfdec6daeb8d8b37c760198b09f1aebfff2ae21503d3d1caeb3a174117e6f"
+      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.3.0.md",
+      "semver": "1.3.0",
+      "repository_path": "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.3.0.md",
+      "sha256": "5a365f6516514c2d9d76a7b68bc6a21db4f4198832f2d1e585312904868e87f6"
     },
     {
       "document_id": "FRONTEND_EXPERIENCE_SYSTEM",
@@ -94,10 +94,10 @@
     },
     {
       "document_id": "DELIVERY_GOVERNANCE_STANDARD",
-      "canonical_filename": "DELIVERY_GOVERNANCE_STANDARD_v1.0.0.md",
-      "semver": "1.0.0",
-      "repository_path": "docs/00_platform/reference/DELIVERY_GOVERNANCE_STANDARD_v1.0.0.md",
-      "sha256": "3b73135fb7af8e14b86f086f92e025372159d55ab0a901d8b26f577a518b9476"
+      "canonical_filename": "DELIVERY_GOVERNANCE_STANDARD_v1.1.0.md",
+      "semver": "1.1.0",
+      "repository_path": "docs/00_platform/reference/DELIVERY_GOVERNANCE_STANDARD_v1.1.0.md",
+      "sha256": "938323bfb7788adc2cc88640fc672c841a396e88677dfee3c066b15b57ae0192"
     }
   ],
   "execution_authority": {

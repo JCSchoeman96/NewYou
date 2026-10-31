@@ -215,7 +215,7 @@ defmodule NewYou.Identity.RegistrationPrimitivesTest do
     assert token.account_id == account.id
     assert token.purpose == "email_verification"
     assert is_binary(token.jti)
-    assert token.expires_at > DateTime.utc_now()
+    assert DateTime.compare(token.expires_at, DateTime.utc_now()) == :gt
     refute Map.has_key?(Map.from_struct(token), :token)
     assert :binary.match(:erlang.term_to_binary(token), verification_proof) == :nomatch
 

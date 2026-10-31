@@ -7,11 +7,21 @@ import subprocess
 import unittest
 from pathlib import Path
 
+from foundation_test_support import frozen_manifest_document_path
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 BASELINE_MAIN_SHA = "3566f1353ef34af58773aa13c6f5bd61d2613d96"
+WELL68_BASE_SHA = "206277ce6afa7c70f7b4af653b286b5cb4b7ae44"
+
+RETIRED_CURRENT_AUTHORITY_PATHS = (
+    "docs/00_platform/00_PLATFORM_v1.12.0.md",
+    "docs/00_platform/01_DECISIONS_v1.12.0.md",
+    "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.2.0.md",
+    "docs/00_platform/reference/DELIVERY_GOVERNANCE_STANDARD_v1.0.0.md",
+)
 
 PREDECESSORS = {
     "PROJECT_NORTH_STAR_AND_MVP": (
@@ -721,7 +731,7 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
             entry = self.governing[document_id]
             self.assertEqual(filename, entry["canonical_filename"])
             self.assertEqual(f"docs/00_platform/{filename}", entry["repository_path"])
-            self.assertEqual(_sha256(ROOT / entry["repository_path"]), entry["sha256"])
+            self.assertEqual(_sha256(frozen_manifest_document_path(ROOT, entry)), entry["sha256"])
         self.assertNotIn("provenance_sha256", self.governing["OPEN_WORK"])
 
     def test_roadmap_product_authority_fields_route_to_current_product_documents(self):
@@ -813,6 +823,21 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
                 self.assertEqual(new_version, entry["superseded_version"])
                 self.assertEqual(expected_hash, entry["sha256"])
                 self.assertIn(f"archive/{filename}", self.readme)
+
+    def test_superseded_current_authority_paths_are_retired_and_archives_match_base(self):
+        for relative in RETIRED_CURRENT_AUTHORITY_PATHS:
+            with self.subTest(path=relative):
+                original = ROOT / relative
+                archived = DOCS / "archive" / Path(relative).name
+                self.assertFalse(original.exists(), f"superseded current path remains: {relative}")
+                self.assertTrue(archived.is_file(), f"predecessor archive is missing: {archived}")
+                baseline_bytes = subprocess.run(
+                    ["git", "show", f"{WELL68_BASE_SHA}:{relative}"],
+                    cwd=ROOT,
+                    check=True,
+                    capture_output=True,
+                ).stdout
+                self.assertEqual(baseline_bytes, archived.read_bytes())
 
     def test_six_current_predecessors_match_the_starting_main_git_blobs(self):
         for filename, (expected_blob, expected_sha256) in ARCHIVED_STARTING_MAIN_BLOBS.items():
@@ -1118,7 +1143,10 @@ class AuthorityRoutingSuccessorTests(unittest.TestCase):
 
         active_paths = [
             self.readme,
-            *(_read(ROOT / entry["repository_path"]) for entry in self.governing.values()),
+            *(
+                _read(frozen_manifest_document_path(ROOT, entry))
+                for entry in self.governing.values()
+            ),
             _read(DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.4.6.md"),
             _read(DOCS / "working" / "HARDEN-02_CONTRACT_WORKING_v0.5.8.md"),
         ]
