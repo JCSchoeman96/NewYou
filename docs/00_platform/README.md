@@ -15,7 +15,7 @@ For durable governance, read only what the task requires in this order:
 3. `01_DECISIONS_v1.13.0.md`
 4. `03_ARCHITECTURE_v1.1.1.md`
 5. `04_DOMAIN_MAP_v1.2.0.md`
-6. `05_ROADMAP_v1.2.4.md`
+6. `05_ROADMAP_v1.2.5.md`
 7. `PLATFORM_OPERATING_MODEL_v1.3.0.md`
 8. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` when frontend/public-experience scope makes it relevant
 

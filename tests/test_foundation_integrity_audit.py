@@ -2814,6 +2814,8 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
 
             relative = "docs/00_platform/05_ROADMAP_v1.2.4.md"
             roadmap = root / relative
+            if not roadmap.is_file():
+                shutil.copy(root / "docs/00_platform/archive/05_ROADMAP_v1.2.4.md", roadmap)
             roadmap.write_text(
                 roadmap.read_text(encoding="utf-8") + "\nUnexpected route mutation.\n",
                 encoding="utf-8",
