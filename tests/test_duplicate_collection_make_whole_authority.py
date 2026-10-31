@@ -6,6 +6,8 @@ import re
 import unittest
 from pathlib import Path
 
+from foundation_test_support import frozen_manifest_document_path
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -14,8 +16,8 @@ CURRENT = {entry["document_id"]: entry for entry in MANIFEST["governing_document
 
 
 def read_current(document_id: str) -> str:
-    filename = CURRENT[document_id]["canonical_filename"]
-    return (DOCS / filename).read_text(encoding="utf-8")
+    entry = CURRENT[document_id]
+    return frozen_manifest_document_path(ROOT, entry).read_text(encoding="utf-8")
 
 
 def section(text: str, start: str, end: str) -> str:
@@ -193,7 +195,10 @@ class DuplicateCollectionMakeWholeAuthorityTests(unittest.TestCase):
             entry = reference_routes[document_id]
             self.assertTrue(entry["repository_path"].endswith(filename))
             self.assertEqual(digest, entry["sha256"])
-            self.assertEqual(digest, hashlib.sha256((ROOT / entry["repository_path"]).read_bytes()).hexdigest())
+            self.assertEqual(
+                digest,
+                hashlib.sha256(frozen_manifest_document_path(ROOT, entry).read_bytes()).hexdigest(),
+            )
         self.assertEqual(17, len(re.findall(r"(?m)^## FP-\d{3}\b", self.roadmap)))
         self.assertIn("no architecture, domain ownership, shared-write authority", self.decisions.lower())
 

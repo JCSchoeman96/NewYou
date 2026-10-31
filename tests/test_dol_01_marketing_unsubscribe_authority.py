@@ -6,7 +6,7 @@ import re
 import unittest
 from pathlib import Path
 
-from foundation_test_support import current_working_path, historical_snapshot_path
+from foundation_test_support import current_working_path, frozen_manifest_document_path, historical_snapshot_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -73,7 +73,7 @@ def _table_rows(text: str, start: str, end: str) -> list[dict[str, str]]:
 
 def _current_document(manifest: dict, document_id: str) -> tuple[dict, str]:
     entry = next(row for row in manifest["governing_documents"] if row["document_id"] == document_id)
-    return entry, _read(ROOT / entry["repository_path"])
+    return entry, _read(frozen_manifest_document_path(ROOT, entry))
 
 
 def _gate_lines(text: str) -> list[str]:
@@ -262,12 +262,15 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             self.assertEqual(filename, entry["canonical_filename"])
             self.assertEqual(version, entry["semver"])
             self.assertEqual(f"docs/00_platform/{filename}", entry["repository_path"])
-            self.assertEqual(_sha256(ROOT / entry["repository_path"]), entry["sha256"])
+            self.assertEqual(_sha256(frozen_manifest_document_path(ROOT, entry)), entry["sha256"])
 
         open_work = governing["OPEN_WORK"]
         self.assertEqual(Path(open_work["repository_path"]).name, open_work["canonical_filename"])
         self.assertRegex(open_work["semver"], r"^\d+\.\d+\.\d+$")
-        self.assertEqual(_sha256(ROOT / open_work["repository_path"]), open_work["sha256"])
+        self.assertEqual(
+            _sha256(frozen_manifest_document_path(ROOT, open_work)),
+            open_work["sha256"],
+        )
 
         all_entries = (
             self.manifest["governing_documents"]
@@ -323,11 +326,17 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             PREDECESSOR_SHA256["DELIVERY_ATLAS_WORKING_v0.2.3.md"],
             _sha256(DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.3.md"),
         )
-        current_section = self.readme.split("## Default Agent Context", 1)[1].split("## Active Working Artifacts", 1)[0]
-        current_filenames = [filename for filename, _version in EXPECTED_CURRENT.values()]
-        current_filenames.append(self.open_work_entry["canonical_filename"])
+        router = json.loads((DOCS / "CURRENT_AUTHORITY_ROUTER_v1.0.0.json").read_text(encoding="utf-8"))
+        current_section = self.readme.split("## Current routing", 1)[1].split("## Plane is live execution authority", 1)[0]
+        current_filenames = [
+            entry["canonical_filename"]
+            for group in ("governing_documents", "supporting_documents")
+            for entry in router[group]
+        ]
         for filename in current_filenames:
             self.assertIn(filename, current_section)
+        frozen_open_work_section = self.readme.split("## Open Work is frozen legacy", 1)[1].split("## Semantic working artifacts", 1)[0]
+        self.assertIn(self.open_work_entry["canonical_filename"], frozen_open_work_section)
 
         for stale_name in (
             "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
@@ -342,6 +351,8 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             "04_DOMAIN_MAP_v1.1.1.md",
             "05_ROADMAP_v1.1.5.md",
             "05_ROADMAP_v1.1.4.md",
+            "00_PLATFORM_v1.12.0.md",
+            "01_DECISIONS_v1.12.0.md",
         ):
             self.assertNotIn(stale_name, current_section)
         immediate_next_action = self.open_work.split("# 9. Immediate Next Action", 1)[1].split("```text", 1)[0]
@@ -362,8 +373,11 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
             "DELIVERY_ATLAS_WORKING_v0.3.1.md",
         ):
             self.assertNotIn(stale_name, immediate_next_action)
+        historical_section = self.readme.split("## Historical evidence and Foundation Full", 1)[1].split("## CI and review", 1)[0]
+        self.assertIn("`archive/` remains historical evidence", historical_section)
         for filename in PREDECESSOR_SHA256:
-            self.assertIn(f"archive/{filename}", self.readme)
+            self.assertTrue((DOCS / "archive" / filename).is_file(), filename)
+            self.assertNotIn(filename, current_section)
 
         source_table = self.atlas.split("## 1.1 Authority hierarchy", 1)[1].split("## 1.2 Purpose", 1)[0]
         for document_id in ("PLATFORM_BASELINE", "DECISION_REGISTER", "OPEN_WORK", "DOMAIN_MAP"):

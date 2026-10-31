@@ -6,6 +6,8 @@ import re
 import unittest
 from pathlib import Path
 
+from foundation_test_support import frozen_manifest_document_path
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
@@ -45,8 +47,12 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
             entry["document_id"]: entry
             for entry in cls.manifest["historical_documents"]
         }
-        cls.product = read(DOCS / cls.current["PLATFORM_BASELINE"]["canonical_filename"])
-        cls.decisions = read(DOCS / cls.current["DECISION_REGISTER"]["canonical_filename"])
+        cls.product = read(
+            frozen_manifest_document_path(ROOT, cls.current["PLATFORM_BASELINE"])
+        )
+        cls.decisions = read(
+            frozen_manifest_document_path(ROOT, cls.current["DECISION_REGISTER"])
+        )
         cls.roadmap = read(DOCS / cls.current["ROADMAP"]["canonical_filename"])
         cls.previous_roadmap = read(DOCS / "archive" / "05_ROADMAP_v1.2.3.md")
         cls.domain_map = read(DOCS / cls.current["DOMAIN_MAP"]["canonical_filename"])
@@ -249,7 +255,7 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
             entry = self.current[document_id]
             self.assertEqual(version, entry["semver"])
             self.assertEqual(digest, entry["sha256"])
-            self.assertEqual(digest, sha256(ROOT / entry["repository_path"]))
+            self.assertEqual(digest, sha256(frozen_manifest_document_path(ROOT, entry)))
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
 
 

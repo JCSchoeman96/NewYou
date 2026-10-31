@@ -94,7 +94,8 @@ class DeliveryGovernanceTransitionTest(unittest.TestCase):
         self.assertIn("UPSTREAM GOVERNANCE CONTRADICTION", standard)
         self.assertIn("Durable authority plus a dependency-cleared Plane `Ready` ticket is sufficient permission to implement", standard)
         self.assertIn("runtime grants do not separately block ordinary implementation", standard.casefold())
-        self.assertIn("genuine external real-world gate", standard)
+        self.assertIn("only an explicit, narrowly scoped external real-world requirement", standard.casefold())
+        self.assertIn("must not be treated as pre-existing entry prerequisites", standard.casefold())
 
     def test_readme_routes_current_authority_to_router_and_plane(self):
         readme = (PLATFORM / "README.md").read_text(encoding="utf-8")

@@ -75,6 +75,20 @@ def _sync_integrity_route_pin(root: Path, manifest_path: Path, relative: str) ->
     manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def _refresh_frozen_fixture_entry_hash(manifest_path: Path, document_id: str, path: Path) -> None:
+    """Refresh only the mutable fixture digest so pinned archive resolution can inspect a test mutation."""
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    entry = next(
+        item
+        for group in ("governing_documents", "reference_documents", "historical_documents")
+        for item in manifest.get(group, [])
+        if item.get("document_id") == document_id
+    )
+    entry["sha256"] = sha256_file(path)
+    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
 SMALL_COUNTS = {
     "decisions": 1,
     "open_questions": 1,
@@ -114,6 +128,53 @@ IDENTITY_LIFECYCLE_STATE = {
 
 
 class FoundationIntegrityAuditTests(unittest.TestCase):
+    def test_frozen_manifest_path_resolves_only_a_byte_identical_archived_copy(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            filename = "00_PLATFORM_v1.12.0.md"
+            archived_path = root / "docs/00_platform/archive" / filename
+            archived_path.parent.mkdir(parents=True)
+            archived_bytes = b"# Frozen Product baseline\n"
+            archived_path.write_bytes(archived_bytes)
+            digest = hashlib.sha256(archived_bytes).hexdigest()
+            entry = {
+                "canonical_filename": filename,
+                "repository_path": f"docs/00_platform/{filename}",
+                "sha256": digest,
+                "provenance_sha256": digest,
+            }
+
+            resolved = foundation_integrity_audit._entry_path(root, entry)
+
+            self.assertEqual(archived_path, resolved)
+            report = {"checks": [], "findings": []}
+            foundation_integrity_audit._check_manifest_entries(root, [entry], report)
+            checks = {check["name"]: check for check in report["checks"]}
+            self.assertEqual("PASS", checks["manifest_path_exists"]["status"])
+            self.assertEqual("PASS", checks["manifest_hash_parity"]["status"])
+            self.assertIn("archive/00_PLATFORM_v1.12.0.md", checks["manifest_path_exists"]["message"])
+
+    def test_frozen_manifest_path_does_not_resolve_an_unpinned_archive_copy(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            filename = "00_PLATFORM_v1.12.0.md"
+            archived_path = root / "docs/00_platform/archive" / filename
+            archived_path.parent.mkdir(parents=True)
+            archived_path.write_bytes(b"# Modified Product baseline\n")
+            entry = {
+                "canonical_filename": filename,
+                "repository_path": f"docs/00_platform/{filename}",
+                "sha256": hashlib.sha256(b"# Frozen Product baseline\n").hexdigest(),
+            }
+
+            resolved = foundation_integrity_audit._entry_path(root, entry)
+
+            self.assertEqual(root / entry["repository_path"], resolved)
+            report = {"checks": [], "findings": []}
+            foundation_integrity_audit._check_manifest_entries(root, [entry], report)
+            checks = {check["name"]: check for check in report["checks"]}
+            self.assertEqual("FAIL", checks["manifest_path_exists"]["status"])
+
     def test_phase8_archive_provenance_cache_tracks_current_head(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -2602,11 +2663,12 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                     item for item in manifest["governing_documents"]
                     if item["document_id"] == document_id
                 )
-                path = root / entry["repository_path"]
+                path = foundation_integrity_audit._entry_path(root, entry)
                 path.write_text(
                     path.read_text(encoding="utf-8") + "\nStale route: 02_OPEN_WORK_v1.2.44.md\n",
                     encoding="utf-8",
                 )
+                _refresh_frozen_fixture_entry_hash(manifest_path, document_id, path)
             refresh_manifest(root, manifest_path)
 
             report = run_audit(root, manifest_path)
@@ -2632,11 +2694,12 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 item for item in manifest["governing_documents"]
                 if item["document_id"] == "PLATFORM_BASELINE"
             )
-            path = root / product_entry["repository_path"]
+            path = foundation_integrity_audit._entry_path(root, product_entry)
             path.write_text(
                 path.read_text(encoding="utf-8") + "\nHistorical source: archive/02_OPEN_WORK_v1.2.44.md\n",
                 encoding="utf-8",
             )
+            _refresh_frozen_fixture_entry_hash(manifest_path, "PLATFORM_BASELINE", path)
             refresh_manifest(root, manifest_path)
 
             report = run_audit(root, manifest_path)
@@ -2655,12 +2718,13 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 item for item in json.loads(manifest_path.read_text(encoding="utf-8"))["governing_documents"]
                 if item["document_id"] == "PLATFORM_BASELINE"
             )
-            path = root / product_entry["repository_path"]
+            path = foundation_integrity_audit._entry_path(root, product_entry)
             path.write_text(
                 path.read_text(encoding="utf-8")
                 + "\nStale route: reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md\n",
                 encoding="utf-8",
             )
+            _refresh_frozen_fixture_entry_hash(manifest_path, "PLATFORM_BASELINE", path)
             refresh_manifest(root, manifest_path)
 
             report = run_audit(root, manifest_path)
@@ -2681,12 +2745,13 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 item for item in json.loads(manifest_path.read_text(encoding="utf-8"))["governing_documents"]
                 if item["document_id"] == "PLATFORM_BASELINE"
             )
-            path = root / product_entry["repository_path"]
+            path = foundation_integrity_audit._entry_path(root, product_entry)
             path.write_text(
                 path.read_text(encoding="utf-8")
                 + "\nHistorical evidence: archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md\n",
                 encoding="utf-8",
             )
+            _refresh_frozen_fixture_entry_hash(manifest_path, "PLATFORM_BASELINE", path)
             refresh_manifest(root, manifest_path)
 
             report = run_audit(root, manifest_path)
@@ -3002,7 +3067,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                         item for item in manifest["governing_documents"]
                         if item["document_id"] == document_id
                     )
-                    path = root / entry["repository_path"]
+                    path = foundation_integrity_audit._entry_path(root, entry)
                     path.write_text(
                         path.read_text(encoding="utf-8").replace(
                             f"**Document version:** v{old_version}",
@@ -3045,7 +3110,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 item for item in manifest["governing_documents"]
                 if item["document_id"] == "PROJECT_NORTH_STAR_AND_MVP"
             )
-            path = root / north_star["repository_path"]
+            path = foundation_integrity_audit._entry_path(root, north_star)
             path.write_text(
                 path.read_text(encoding="utf-8").replace(
                     "governance-alignment condition: MET (v1.2.3)",
@@ -3079,7 +3144,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                     item for item in manifest["governing_documents"]
                     if item["document_id"] == "PLATFORM_BASELINE"
                 )
-                path = root / product["repository_path"]
+                path = foundation_integrity_audit._entry_path(root, product)
                 with path.open("a", encoding="utf-8") as file:
                     file.write(f"HARDEN-02 execution is {lifecycle}.\n")
                 refresh_manifest(root, root / "manifest.json")
@@ -3123,7 +3188,7 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 item for item in manifest["governing_documents"]
                 if item["document_id"] == "PROJECT_NORTH_STAR_AND_MVP"
             )
-            path = root / north_star["repository_path"]
+            path = foundation_integrity_audit._entry_path(root, north_star)
             path.write_text(
                 path.read_text(encoding="utf-8").replace(
                     "CURRENT_AUTHORITY_MANIFEST",
@@ -3164,6 +3229,20 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
                 ),
                 report["findings"],
             )
+
+    def test_current_router_successors_are_allowed_beside_frozen_manifest_predecessors(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
+            shutil.copytree(source_docs, root / "docs" / "00_platform")
+            manifest_path = root / "docs" / "00_platform" / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+
+            report = run_audit(root, manifest_path)
+
+            root_check = next(
+                check for check in report["checks"] if check["name"] == "governing_root_exclusivity"
+            )
+            self.assertEqual("PASS", root_check["status"], root_check["message"])
 
     def test_explicit_current_routes_in_roadmap_atlas_and_harden_resolve_relationally(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"

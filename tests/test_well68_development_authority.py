@@ -66,8 +66,11 @@ class WELL68DevelopmentAuthorityTests(unittest.TestCase):
         self.assertIn("A runtime authorization mechanism, real operator identity, runtime role grant or production capability assignment must not be required to exist before development of that authorization mechanism or its dependent feature may proceed", rule)
         self.assertIn("implementation permission", self.delivery.casefold())
         self.assertIn("runtime grants do not separately block ordinary implementation", self.delivery.casefold())
-        self.assertIn("the ticket specifically implements or proves the real authorization/provisioning mechanism", self.delivery)
+        self.assertIn("implementing or proving the real authorization/provisioning mechanism may include creating or validating real grants as the ticket's deliverable", self.delivery.casefold())
+        self.assertIn("those grants must not be treated as pre-existing entry prerequisites", self.delivery.casefold())
         self.assertIn("intrinsically necessary even for the bounded development action", self.delivery)
+        self.assertNotIn("runtime grants may block implementation only when the ticket", self.delivery.casefold())
+        self.assertIn("a future production role or grant requirement alone is not an implementation prerequisite", self.delivery.casefold())
 
     def test_synthetic_authorization_proof_is_allowed_and_keeps_runtime_design_intact(self) -> None:
         for text in (self.product, self.operating_model):
@@ -148,9 +151,35 @@ class WELL68DevelopmentAuthorityTests(unittest.TestCase):
         self.assertEqual(["candidate", "development_approved", "superseded", "withdrawn"], lifecycle["states"])
         self.assertEqual("development_approved", lifecycle["status"])
         self.assertEqual("APPEND_ONLY", lifecycle["recording"])
-        self.assertIn("same exact decision/version/digest is idempotent", lifecycle["idempotency"])
+        guards = lifecycle["transition_guards"]
+        effects = lifecycle["side_effects"]
+        supersede = "development_approved → superseded"
+        withdraw = "development_approved → withdrawn"
+        self.assertIn("current state is development_approved", guards[supersede])
+        self.assertIn("authorised owner/governance decision exists", guards[supersede])
+        self.assertIn("successor immutable version identity and exact digest are pinned", guards[supersede])
+        self.assertTrue(any("successor has a fresh development_approved decision" in item for item in guards[supersede]))
+        self.assertIn("old version is unavailable for new development consumption", effects[supersede])
+        self.assertIn("append-only event records superseded_by and decision provenance", effects[supersede])
+        self.assertIn("old immutable bytes and history remain", effects[supersede])
+        self.assertIn("current state is development_approved", guards[withdraw])
+        self.assertIn("authorised owner/governance withdrawal decision and reason exist", guards[withdraw])
+        self.assertIn("new development consumption stops immediately", effects[withdraw])
+        self.assertIn("append-only withdrawal evidence records reason and decision provenance", effects[withdraw])
+        self.assertIn("old immutable bytes and history remain", effects[withdraw])
         self.assertIn("conflicting decisions for the same immutable version STOP and reconcile", lifecycle["conflict_policy"])
         self.assertEqual(["superseded", "withdrawn"], lifecycle["terminal_for_new_consumption"])
+        self.assertEqual(["superseded", "withdrawn"], lifecycle["no_outgoing_transitions"])
+        self.assertIn("same exact transition/decision/version/digest is idempotent", lifecycle["idempotency"])
+        self.assertEqual(
+            ["transition", "decision", "content_translation_version_id", "exact_source_sha256"],
+            lifecycle["decision_key"],
+        )
+        self.assertTrue(
+            all(event["transition"] == "candidate → development_approved" for event in lifecycle["development_decision_events"])
+        )
+        self.assertIn("competing supersede/withdraw decisions fail closed and STOP for reconciliation", lifecycle["concurrency_and_retry"]["competing_terminal_decisions"])
+        self.assertIn("same exact transition/decision/version/digest is idempotent", lifecycle["concurrency_and_retry"]["identical_transition_retry"])
         self.assertFalse(lifecycle["runtime_identity_or_grant_required"])
         self.assertFalse(lifecycle["creates_runtime_or_production_authority"])
         self.assertEqual("PENDING_REQUIRED_EVIDENCE", self.packet["runtime_release_eligibility"]["status"])

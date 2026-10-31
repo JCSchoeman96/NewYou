@@ -407,7 +407,23 @@ def _relative_path(entry: dict[str, Any]) -> str:
 
 
 def _entry_path(root: Path, entry: dict[str, Any]) -> Path:
-    return root / _relative_path(entry)
+    path = root / _relative_path(entry)
+    if path.is_file():
+        return path
+
+    canonical_filename = str(entry.get("canonical_filename", ""))
+    expected_hash = entry.get("sha256")
+    archive_path = root / "docs/00_platform/archive" / canonical_filename
+    if (
+        path.name == canonical_filename
+        and isinstance(expected_hash, str)
+        and archive_path.is_file()
+        and not archive_path.is_symlink()
+        and sha256_file(archive_path) == expected_hash
+    ):
+        return archive_path
+
+    return path
 
 
 def _find_entry(entries: Iterable[dict[str, Any]], authority_class: str) -> dict[str, Any] | None:
@@ -4399,13 +4415,19 @@ def _check_manifest_entries(root: Path, entries: list[dict[str, Any]], report: d
     for entry in entries:
         path = _entry_path(root, entry)
         repository_path = _relative_path(entry)
+        original_path = root / repository_path
         canonical_filename = str(entry.get("canonical_filename", ""))
         exists = path.is_file()
+        resolved_from_archive = exists and path != original_path
         _record_check(
             report,
             "manifest_path_exists",
             exists,
-            f"{repository_path} exists" if exists else f"missing manifest path {repository_path}",
+            (
+                f"byte-identical archive {path.relative_to(root).as_posix()} resolves frozen manifest path {repository_path}"
+                if resolved_from_archive
+                else f"{repository_path} exists" if exists else f"missing manifest path {repository_path}"
+            ),
             path=repository_path,
         )
         filename_matches = path.name == canonical_filename
@@ -12407,6 +12429,45 @@ def _check_fp001_pmr_reconciliation(
         path="docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
     )
 
+def _current_router_governing_root_filenames(root: Path, governing_root: str) -> set[str]:
+    """Return current-router root documents whose exact path and digest are valid."""
+
+    router_path = root / governing_root / "CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
+    if not router_path.is_file():
+        return set()
+    try:
+        router = load_manifest(router_path)
+    except (OSError, ValueError, json.JSONDecodeError):
+        return set()
+    if router.get("status") != "CURRENT":
+        return set()
+
+    routed_filenames: set[str] = set()
+    for group in ("governing_documents", "supporting_documents"):
+        entries = router.get(group, [])
+        if not isinstance(entries, list):
+            continue
+        for entry in entries:
+            if not isinstance(entry, dict):
+                continue
+            relative = Path(str(entry.get("repository_path", "")))
+            canonical_filename = entry.get("canonical_filename")
+            expected_hash = entry.get("sha256")
+            if (
+                relative.is_absolute()
+                or ".." in relative.parts
+                or relative.parent.as_posix() != governing_root
+                or relative.name != canonical_filename
+                or not isinstance(canonical_filename, str)
+                or not isinstance(expected_hash, str)
+            ):
+                continue
+            path = root / relative
+            if path.is_file() and sha256_file(path) == expected_hash:
+                routed_filenames.add(canonical_filename)
+    return routed_filenames
+
+
 def _check_production_graph(
     root: Path,
     manifest: dict[str, Any],
@@ -12449,6 +12510,9 @@ def _check_production_graph(
         for entry in governing_entries
         if entry.get("canonical_filename")
     }
+    allowed_governing_filenames.update(
+        _current_router_governing_root_filenames(root, roots["governing"])
+    )
     governing_root = root / roots["governing"]
     extra_governing_artifacts: list[str] = []
     if governing_root.is_dir():
@@ -12468,7 +12532,7 @@ def _check_production_graph(
         report,
         "governing_root_exclusivity",
         governing_root_ok,
-        "governing root contains only manifest-listed current authority versioned documents"
+        "governing root contains only frozen-manifest or digest-pinned current-router authority documents"
         if governing_root_ok
         else f"unregistered versioned authority documents in governing root: {extra_governing_artifacts}",
         path=roots["governing"],
@@ -12515,18 +12579,22 @@ def _check_production_graph(
         and entry.get("document_id") in navigation_document_ids
     ]
     stale_hits: list[str] = []
-    scan_targets = [(context_index, False)] + [
-        (_relative_path(entry), _path_is_under(_relative_path(entry), roots["reference"]))
+    scan_targets = [(context_index, root / context_index, False)] + [
+        (
+            _relative_path(entry),
+            _entry_path(root, entry),
+            _path_is_under(_relative_path(entry), roots["reference"]),
+        )
         for entry in navigation_entries
     ] + [
-        (relative, _path_is_under(relative, roots["reference"]))
+        (relative, root / relative, _path_is_under(relative, roots["reference"]))
         for relative in navigation_paths
     ]
     source_at_freeze_exceptions = graph_rules.get("source_at_freeze_reference_exceptions", {})
     if not isinstance(source_at_freeze_exceptions, dict):
         stale_hits.append("graph rule source_at_freeze_reference_exceptions is not an object")
         source_at_freeze_exceptions = {}
-    scan_paths = {relative for relative, _is_reference in scan_targets}
+    scan_paths = {relative for relative, _path, _is_reference in scan_targets}
     approved_source_exceptions: dict[str, set[str]] = {}
     stale_pattern_sources = set(graph_rules.get("stale_reference_patterns", []))
     for relative, exception in source_at_freeze_exceptions.items():
@@ -12551,8 +12619,7 @@ def _check_production_graph(
             stale_hits.append(f"invalid or changed source-at-freeze exception: {relative}")
             continue
         approved_source_exceptions[relative] = set(exception_patterns)
-    for relative, is_reference in scan_targets:
-        path = root / relative
+    for relative, path, is_reference in scan_targets:
         if not path.is_file():
             if relative in navigation_paths:
                 stale_hits.append(f"{relative}: missing active navigation document")

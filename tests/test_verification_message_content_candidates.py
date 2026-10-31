@@ -158,14 +158,14 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         )
         self.assertFalse(lifecycle["runtime_identity_or_grant_required"])
         self.assertEqual("APPEND_ONLY", lifecycle["recording"])
-        self.assertEqual("candidate", lifecycle["transition_guards"]["from"])
-        self.assertIn("immutable version identity", lifecycle["transition_guards"]["development_approved"])
-        self.assertIn("exact digest pinned", lifecycle["transition_guards"]["development_approved"])
-        self.assertIn("owner/governance development decision", lifecycle["transition_guards"]["development_approved"])
-        self.assertIn("bounded to approved non-production environments", lifecycle["transition_guards"]["development_approved"])
-        self.assertIn("no production authority", lifecycle["side_effects"]["development_approved"])
+        approval_transition = "candidate → development_approved"
+        self.assertIn("immutable version identity", lifecycle["transition_guards"][approval_transition])
+        self.assertIn("exact digest pinned", lifecycle["transition_guards"][approval_transition])
+        self.assertIn("owner/governance development decision", lifecycle["transition_guards"][approval_transition])
+        self.assertIn("bounded to approved non-production environments", lifecycle["transition_guards"][approval_transition])
+        self.assertIn("no production authority", lifecycle["side_effects"][approval_transition])
         self.assertEqual(["superseded", "withdrawn"], lifecycle["terminal_for_new_consumption"])
-        self.assertIn("same exact decision/version/digest is idempotent", lifecycle["idempotency"])
+        self.assertIn("same exact transition/decision/version/digest is idempotent", lifecycle["idempotency"])
         self.assertIn("conflicting decisions for the same immutable version STOP and reconcile", lifecycle["conflict_policy"])
         self.assertIn("WELL-61", packet["provenance"]["wording_approval_reference"])
         self.assertIn("WELL-68", packet["provenance"]["development_decision_reference"])
@@ -199,6 +199,28 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         self.assertEqual("successor version required; old bytes remain immutable", lifecycle["superseded_semantics"])
         self.assertEqual("no new development use; historical evidence remains", lifecycle["withdrawn_semantics"])
         self.assertEqual("new immutable version and fresh development approval", lifecycle["wording_or_byte_change"])
+
+        supersede = "development_approved → superseded"
+        withdraw = "development_approved → withdrawn"
+        self.assertIn("current state is development_approved", lifecycle["transition_guards"][supersede])
+        self.assertIn("authorised owner/governance decision exists", lifecycle["transition_guards"][supersede])
+        self.assertIn("successor immutable version identity and exact digest are pinned", lifecycle["transition_guards"][supersede])
+        self.assertTrue(any("successor has a fresh development_approved decision" in item for item in lifecycle["transition_guards"][supersede]))
+        self.assertIn("old version is unavailable for new development consumption", lifecycle["side_effects"][supersede])
+        self.assertIn("append-only event records superseded_by and decision provenance", lifecycle["side_effects"][supersede])
+        self.assertIn("old immutable bytes and history remain", lifecycle["side_effects"][supersede])
+        self.assertIn("current state is development_approved", lifecycle["transition_guards"][withdraw])
+        self.assertIn("authorised owner/governance withdrawal decision and reason exist", lifecycle["transition_guards"][withdraw])
+        self.assertIn("new development consumption stops immediately", lifecycle["side_effects"][withdraw])
+        self.assertIn("append-only withdrawal evidence records reason and decision provenance", lifecycle["side_effects"][withdraw])
+        self.assertIn("old immutable bytes and history remain", lifecycle["side_effects"][withdraw])
+        self.assertEqual(["superseded", "withdrawn"], lifecycle["no_outgoing_transitions"])
+        self.assertIn("same exact transition/decision/version/digest is idempotent", lifecycle["idempotency"])
+        self.assertEqual(
+            ["transition", "decision", "content_translation_version_id", "exact_source_sha256"],
+            lifecycle["decision_key"],
+        )
+        self.assertIn("competing supersede/withdraw decisions fail closed and STOP for reconciliation", lifecycle["concurrency_and_retry"]["competing_terminal_decisions"])
 
     def test_v010_packet_is_preserved_and_no_second_canonical_identity_is_introduced(self) -> None:
         previous = json.loads((EVIDENCE_DIR / "VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.1.0.json").read_text(encoding="utf-8"))

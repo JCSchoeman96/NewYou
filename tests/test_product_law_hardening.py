@@ -6,18 +6,19 @@ import unittest
 from pathlib import Path
 
 from tools import foundation_integrity_audit
-from foundation_test_support import current_document_path, current_working_path
+from foundation_test_support import current_document_path, current_working_path, frozen_manifest_document_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs" / "00_platform"
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+ROUTER = DOCS / "CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
 
 
-def current_document(document_id: str) -> str:
+def frozen_manifest_document(document_id: str) -> str:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     entry = next(item for item in manifest["governing_documents"] if item["document_id"] == document_id)
-    return (ROOT / entry["repository_path"]).read_text(encoding="utf-8")
+    return frozen_manifest_document_path(ROOT, entry).read_text(encoding="utf-8")
 
 
 def matrix_rows(text: str, name: str) -> list[dict[str, str]]:
@@ -56,14 +57,14 @@ def document_section(document: str, heading: str) -> str:
 class ProductLawHardeningTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.product = current_document("PLATFORM_BASELINE")
-        cls.decisions = current_document("DECISION_REGISTER")
-        cls.open_work = current_document("OPEN_WORK")
-        cls.roadmap = current_document("ROADMAP")
+        cls.product = frozen_manifest_document("PLATFORM_BASELINE")
+        cls.decisions = frozen_manifest_document("DECISION_REGISTER")
+        cls.open_work = frozen_manifest_document("OPEN_WORK")
+        cls.roadmap = frozen_manifest_document("ROADMAP")
         cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
         cls.architecture = (DOCS / "03_ARCHITECTURE_v1.1.1.md").read_text(encoding="utf-8")
-        cls.domain_map = current_document("DOMAIN_MAP")
-        cls.operating_model = current_document_path(ROOT, "PLATFORM_OPERATING_MODEL").read_text(encoding="utf-8")
+        cls.domain_map = frozen_manifest_document("DOMAIN_MAP")
+        cls.operating_model = frozen_manifest_document("PLATFORM_OPERATING_MODEL")
         cls.fes = (DOCS / "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md").read_text(encoding="utf-8")
         cls.atlas = current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").read_text(encoding="utf-8")
         cls.harden02 = current_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_").read_text(encoding="utf-8")
@@ -842,10 +843,10 @@ if __name__ == "__main__":
 
 class RoleAuthorityRegressionTests(unittest.TestCase):
     def test_current_role_authority_and_agent_invariants(self):
-        product = current_document('PLATFORM_BASELINE')
-        decisions = current_document('DECISION_REGISTER')
-        operating = current_document('PLATFORM_OPERATING_MODEL')
-        open_work = current_document('OPEN_WORK')
+        product = frozen_manifest_document('PLATFORM_BASELINE')
+        decisions = frozen_manifest_document('DECISION_REGISTER')
+        operating = frozen_manifest_document('PLATFORM_OPERATING_MODEL')
+        open_work = frozen_manifest_document('OPEN_WORK')
         agents = (ROOT / 'AGENTS.md').read_text(encoding='utf-8')
         skeleton = current_working_path(ROOT, 'FP-001_FEATURE_PACK_SKELETON_WORKING_').read_text(encoding='utf-8')
         for phrase in (
@@ -923,7 +924,7 @@ class RoleAuthorityRegressionTests(unittest.TestCase):
             'Domain-sensitive grants require their designated Domain approval',
         ):
             self.assertIn(phrase, operating)
-        for phrase in ('named people may be subjects of explicit role/scope grants',
+        for phrase in ('named people may be subjects of explicit grants',
                        'bootstrap does not hold business capability',
                        'unresolved approver authority is a STOP condition', 'Super Admin is break-glass'):
             self.assertIn(phrase, agents)
@@ -938,12 +939,24 @@ class RoleAuthorityRegressionTests(unittest.TestCase):
         self.assertIn('WELL-65 owns later privileged-authentication implementation planning', open_work)
         self.assertIn('No runtime RBAC, authentication or Content & Media implementation is authorized here', open_work)
 
-    def test_readme_routes_current_manifest_documents(self):
-        manifest = json.loads(MANIFEST.read_text(encoding='utf-8'))
+    def test_readme_routes_current_platform_roots_and_tracks_decision_head(self):
+        router = json.loads(ROUTER.read_text(encoding="utf-8"))
         readme = (DOCS / 'README.md').read_text(encoding='utf-8')
-        for item in manifest['governing_documents']:
-            self.assertIn(item['canonical_filename'], readme)
-        self.assertIn('DEC-299 through DEC-319 record the current post-freeze Product decisions', readme)
-        self.assertIn('DEC-317 locks role-based capability authority and ordinary operational delegation', readme)
-        self.assertIn('DEC-318 locks governed bootstrap and privileged approval', readme)
-        self.assertIn('DEC-319 adds the narrow verification-message type and bounded proof eligibility', readme)
+        routed_documents = {
+            item["document_id"]: item["canonical_filename"]
+            for item in router["governing_documents"]
+        }
+        for document_id in (
+            "PROJECT_NORTH_STAR_AND_MVP",
+            "PLATFORM_BASELINE",
+            "DECISION_REGISTER",
+            "ARCHITECTURE_SYNTHESIS",
+            "DOMAIN_MAP",
+            "ROADMAP",
+            "PLATFORM_OPERATING_MODEL",
+            "FRONTEND_EXPERIENCE_SYSTEM",
+        ):
+            self.assertIn(routed_documents[document_id], readme)
+        self.assertIn("The current Product/Decision successors include approved decisions through DEC-320.", readme)
+        self.assertNotIn("00_PLATFORM_v1.12.0.md", readme)
+        self.assertNotIn("01_DECISIONS_v1.12.0.md", readme)
