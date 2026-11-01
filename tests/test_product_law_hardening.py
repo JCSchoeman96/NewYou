@@ -570,8 +570,12 @@ class ProductLawHardeningTests(unittest.TestCase):
                     )
 
         self.assertIn(
-            "docs/history/platform/archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+            "docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
             source_trails["FP-001"],
+        )
+        self.assertIn(
+            "| `docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md §§1.1, 2, 3` |",
+            self.fp001,
         )
         self.assertIn(
             "docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md",

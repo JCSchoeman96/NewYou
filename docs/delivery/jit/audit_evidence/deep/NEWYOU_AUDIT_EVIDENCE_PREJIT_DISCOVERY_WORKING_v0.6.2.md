@@ -68,8 +68,8 @@ Current live authority reviewed for this stream includes:
 - `docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md`
 - `docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`
 - `docs/governance/supporting/ENGINEERING_STANDARDS_v1.0.1.md`
-- `docs/delivery/feature-contracts/fp-001/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md`
-- `docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`
+- `docs/history/platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md`
+- `docs/history/platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`
 - `docs/delivery/jit/communications/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
 
 Relevant non-authoritative cross-stream working packs consulted:

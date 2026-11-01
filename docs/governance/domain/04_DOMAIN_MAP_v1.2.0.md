@@ -3,13 +3,13 @@
 
 - **Document status:** FROZEN / AMENDED DOMAIN MAP + DOMAIN ARCHITECTURE PROFILE BASELINE
 - **Document version:** v1.2.0
-- **Predecessor frozen version:** `archive/04_DOMAIN_MAP_v1.1.1.md`
+- **Predecessor frozen version:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.1.1.md`
 - **SemVer transition:** `v1.1.1 → v1.2.0` — substantive Domain-law clarification implementing Product Law §21S and DEC-304; owner boundaries remain unchanged.
 - **Started:** 2026-08-17
 - **Last updated:** 2026-09-26
 - **Authority:** Implements current Product Law §21S and DEC-304 while preserving `03_ARCHITECTURE_v1.1.1.md`; it defines owner boundaries and request direction without implementation mechanics.
 - **Primary inputs — current semantic authority for the v1.2.0 DOL-01 amendment:** Product Law `00_PLATFORM_v1.5.0.md` §21S and Decision Register `01_DECISIONS_v1.5.0.md` DEC-304.
-- **Historical/base inputs inherited from earlier Domain Map construction:** `archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `archive/00_PLATFORM_v1.3.0.md`, `archive/01_DECISIONS_v1.3.0.md`, `archive/02_OPEN_WORK_v1.2.37.md`, `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md`.
+- **Historical/base inputs inherited from earlier Domain Map construction:** `docs/history/platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `docs/history/platform/archive/00_PLATFORM_v1.3.0.md`, `docs/history/platform/archive/01_DECISIONS_v1.3.0.md`, `docs/history/platform/archive/02_OPEN_WORK_v1.2.37.md`, `working/TARGETED_DOMAIN_PRESSURE_TEST_WORKING_v0.1.0.md`.
 - **Current Architecture inputs:** `03_ARCHITECTURE_v1.1.1.md`, `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`.
 - **Architecture deep reference:** `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md` only where the frozen synthesis needs deeper legislative detail
 - **Governance boundary:** This document decides **WHO owns durable business truth**. It does not invent new platform mechanisms, implementation schemas or source code.
@@ -1957,7 +1957,7 @@ The interaction table is intentionally architectural/domain-level. It does not d
 
 ### 6.19 — Research & Feedback
 
-**Product Law basis:** `DEC-294; DEC-298; archive/00_PLATFORM_v1.3.0.md §21M; ARC-328; ARC-329; ARC-331`
+**Product Law basis:** `DEC-294; DEC-298; docs/history/platform/archive/00_PLATFORM_v1.3.0.md §21M; ARC-328; ARC-329; ARC-331`
 
 **Purpose:** Own the durable truth required to conduct bounded lightweight feedback and governed Research activities: campaign/study identity, declared purpose, participation identity/uniqueness contract, published instrument versions, participant submissions, correction/withdrawal/de-link and distinguishable staff annotation. This Domain is not a generic survey-builder, forms platform or shared Interactive Evidence store.
 
@@ -2061,7 +2061,7 @@ Authority ≠ acceleration. A new Domain does not justify Redis, ETS, GenServers
 
 ### 6.20 — Voting & Balloting
 
-**Product Law basis:** `DEC-295; DEC-298; archive/00_PLATFORM_v1.3.0.md §21N; ARC-328; ARC-329; ARC-332`
+**Product Law basis:** `DEC-295; DEC-298; docs/history/platform/archive/00_PLATFORM_v1.3.0.md §21N; ARC-328; ARC-329; ARC-332`
 
 **Purpose:** Own the governed voting/balloting lifecycle required where eligibility, integrity, opening/closing, finality, official result or adjudication matter. The Domain name is **Voting & Balloting**. It does not own competitions as a whole, Community participation, Programme completion, Research polls, rewards or entitlements.
 
@@ -2353,7 +2353,7 @@ New platform mechanisms invented:          0
 Owner questions requiring Grill-Me:        0
 ```
 
-The Phase-5 v1.0.0 mechanical closure (18 domains / 48 ownership rows) remains historical in `archive/04_DOMAIN_MAP_v1.0.0.md`.
+The Phase-5 v1.0.0 mechanical closure (18 domains / 48 ownership rows) remains historical in `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md`.
 
 ### 12.2 Phase-5 verdict
 
@@ -2378,10 +2378,10 @@ Do **not** stop over naming preferences, fields, Ash Resource names, schemas, in
 
 ### 14.1 Predecessor preservation
 
-- Predecessor: `archive/04_DOMAIN_MAP_v1.0.0.md`
-- Archived predecessor path: `archive/04_DOMAIN_MAP_v1.0.0.md`
+- Predecessor: `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md`
+- Archived predecessor path: `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md`
 - Predecessor SHA-256: `f31223f7159732d368667145522704bb7c584316af540fb1e5e048ddbc26e70a`
-- Successor from the v1.0.0 baseline: `archive/04_DOMAIN_MAP_v1.1.0.md`
+- Successor from the v1.0.0 baseline: `docs/history/platform/archive/04_DOMAIN_MAP_v1.1.0.md`
 - Historical SemVer transition: `v1.0.0 → v1.1.0` because this amendment adds approved durable-truth ownership without invalidating the original 18 Domain histories.
 
 ### 14.2 Amendment scope

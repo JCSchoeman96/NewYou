@@ -2,7 +2,7 @@
 
 - **Document status:** FROZEN PRODUCT NORTH STAR / MVP BASELINE v1.3.0
 - **Document version:** v1.3.0
-- **Predecessor:** `archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md`
+- **Predecessor:** `docs/history/platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md`
 - **SemVer transition:** `v1.2.4 → v1.3.0`
 - **Authoritative for:** The absolute long-term outcome, the smallest viable product slice, the intended product journey, MVP boundaries, and handoff context
 - **Not authoritative for:** Final launch pricing, legal conclusions, clinical thresholds, Ash Resources, database schemas, technical architecture, or implementation sequencing

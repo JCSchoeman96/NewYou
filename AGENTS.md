@@ -21,7 +21,7 @@ For current durable routing start with:
 1. "docs/README.md"
 2. "docs/governance/CURRENT_GOVERNANCE_ROUTER.json"
 
-Use router "deep_reference_documents" only when exact source or identifier tracing is required.
+Use the governance router's `architecture_references` only when exact source, identifier-level reasoning or deep Architecture tracing is required.
 
 "docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json" is frozen historical/provenance input for Foundation Full, not a current router.
 

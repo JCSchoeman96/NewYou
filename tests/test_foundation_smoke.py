@@ -17,6 +17,7 @@ DELIVERY_ROUTER = Path("docs/delivery/CURRENT_DELIVERY_ROUTER.json")
 class FoundationSmokeTests(unittest.TestCase):
     def _fixture(self, directory: str) -> Path:
         root = Path(directory)
+        shutil.copy2(ROOT / "AGENTS.md", root / "AGENTS.md")
         for relative in ("docs/governance", "docs/delivery", "docs/history"):
             shutil.copytree(ROOT / relative, root / relative)
         (root / "docs").mkdir(parents=True, exist_ok=True)
@@ -48,6 +49,38 @@ class FoundationSmokeTests(unittest.TestCase):
             report = run_smoke_audit(root)
             self.assertEqual("FAIL", report["status"])
             self.assertTrue(any("delivery router" in item["message"].lower() for item in report["findings"]))
+
+    def test_smoke_rejects_unresolved_rooted_document_reference(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._fixture(directory)
+            readme = root / "docs/delivery/README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\nBroken current link: `docs/history/missing-evidence.md`.\n",
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root)
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(item["check"] == "smoke_active_document_references" for item in report["findings"])
+            )
+
+    def test_smoke_rejects_document_reference_path_escape(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._fixture(directory)
+            readme = root / "docs/delivery/README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\nEscaping path: `docs/delivery/../history/02_OPEN_WORK_v1.2.90.md`.\n",
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root)
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(item["check"] == "smoke_active_document_references" for item in report["findings"])
+            )
 
     def test_governance_router_cannot_route_into_delivery_or_history(self):
         for forbidden in ("docs/delivery/feature-contracts/example.md", "docs/history/example.md"):
@@ -164,6 +197,60 @@ class FoundationSmokeTests(unittest.TestCase):
 
             report = run_smoke_audit(root)
             self.assertEqual("PASS", report["status"], report["findings"])
+
+    def test_smoke_rejects_stale_router_instructions_and_delivery_standard(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._fixture(directory)
+            agents = root / "AGENTS.md"
+            agents.write_text(
+                agents.read_text(encoding="utf-8").replace(
+                    "architecture_references", "deep_reference_documents"
+                ),
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root)
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(item["check"] == "smoke_agents_architecture_references" for item in report["findings"])
+            )
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._fixture(directory)
+            standard = root / "docs/governance/supporting/DELIVERY_GOVERNANCE_STANDARD_v1.2.0.md"
+            standard.write_text(
+                standard.read_text(encoding="utf-8").replace(
+                    "docs/delivery/CURRENT_DELIVERY_ROUTER.json", "docs/governance/CURRENT_GOVERNANCE_ROUTER.json"
+                ),
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root)
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(item["check"] == "smoke_delivery_governance_router_model" for item in report["findings"])
+            )
+
+    def test_smoke_rejects_broken_current_identity_history_references(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._fixture(directory)
+            identity = root / (
+                "docs/delivery/jit/identity/"
+                "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
+            )
+            identity.write_text(
+                identity.read_text(encoding="utf-8").replace(
+                    "docs/history/platform/archive/identity_promotions/",
+                    "archive/identity_promotions/",
+                ),
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root)
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(item["check"] == "smoke_identity_historical_routes" for item in report["findings"])
+            )
 
 
 if __name__ == "__main__":

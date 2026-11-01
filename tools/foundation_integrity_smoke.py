@@ -62,6 +62,9 @@ FORBIDDEN_DELIVERY_KEYS = frozenset(
 DOCUMENT_VERSION_PATTERN = re.compile(
     r"^[-*]\s+\*\*Document version:\*\*\s+v?(\d+\.\d+\.\d+)\s*$", re.MULTILINE
 )
+ROOTED_DOCUMENT_REFERENCE_PATTERN = re.compile(
+    r"`(docs/(?:governance|delivery|development|history)/[^`\s)]+?\.(?:md|json))(?=\s*(?:§|`))"
+)
 STATUS_VERSION_PATTERN = re.compile(
     r"^[-*]\s+\*\*Document status:\*\*.*?\bv(\d+\.\d+\.\d+)\b", re.MULTILINE
 )
@@ -204,6 +207,159 @@ def _check_router_boundary(
     )
 
 
+def _check_current_routing_guidance(
+    root: Path,
+    report: dict[str, Any],
+    governance: dict[str, Any] | None,
+    delivery: dict[str, Any] | None,
+) -> None:
+    guidance_files = (
+        ("AGENTS.md", "smoke_agents_architecture_references"),
+        (
+            "docs/development/chatgpt-project-master-gate-instructions.md",
+            "smoke_master_gate_architecture_references",
+        ),
+    )
+    for relative, check in guidance_files:
+        path = root / relative
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            text = ""
+        valid = "architecture_references" in text and "deep_reference_documents" not in text
+        _record(
+            report,
+            check,
+            valid,
+            f"{relative} names the current architecture_references field"
+            if valid
+            else f"{relative} must route deep Architecture/source tracing through architecture_references",
+            path=relative,
+        )
+
+    supporting = governance.get("supporting_documents", []) if governance else []
+    standard_route = next(
+        (
+            entry
+            for entry in supporting
+            if isinstance(entry, dict)
+            and entry.get("document_id") == "DELIVERY_GOVERNANCE_STANDARD"
+        ),
+        None,
+    )
+    standard_path = root / str(standard_route.get("repository_path", "")) if standard_route else None
+    try:
+        standard = standard_path.read_text(encoding="utf-8") if standard_path else ""
+    except OSError:
+        standard = ""
+    routing_section = standard.partition("## 8. Current routing and historical integrity")[2].partition("## 9.")[0]
+    ci_section = standard.partition("## 9. CI topology")[2].partition("## 10.")[0]
+    routing_valid = all(
+        token in routing_section
+        for token in (
+            "docs/governance/CURRENT_GOVERNANCE_ROUTER.json",
+            "docs/delivery/CURRENT_DELIVERY_ROUTER.json",
+            "docs/history/",
+            "Plane",
+        )
+    ) and "deep_reference_documents" not in routing_section
+    ci_valid = all(
+        token in ci_section
+        for token in (
+            "both current routers",
+            "docs/governance/**",
+            "docs/history/**",
+            "docs/delivery/**",
+            "Foundation Full",
+        )
+    )
+    _record(
+        report,
+        "smoke_delivery_governance_router_model",
+        routing_valid and ci_valid,
+        "current Delivery Governance Standard describes separate routers, Plane/history boundaries and CI lanes"
+        if routing_valid and ci_valid
+        else "current Delivery Governance Standard must describe separate governance/delivery routers, Plane/history boundaries and current CI lanes",
+        path=standard_route.get("repository_path") if standard_route else "docs/governance/CURRENT_GOVERNANCE_ROUTER.json",
+    )
+
+    identity_route = next(
+        (
+            entry
+            for entry in (delivery.get("delivery_contracts", []) if delivery else [])
+            if isinstance(entry, dict) and entry.get("document_id") == "FP001_IDENTITY_ACCESS_JIT"
+        ),
+        None,
+    )
+    identity_path = root / str(identity_route.get("repository_path", "")) if identity_route else None
+    try:
+        identity = identity_path.read_text(encoding="utf-8") if identity_path else ""
+    except OSError:
+        identity = ""
+    historical_identity_paths = (
+        "docs/history/platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md",
+        "docs/history/platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md",
+    )
+    identity_links_valid = bool(identity_route) and all(
+        reference in identity and (root / reference).is_file()
+        for reference in historical_identity_paths
+    )
+    _record(
+        report,
+        "smoke_identity_historical_routes",
+        identity_links_valid,
+        "current Identity JIT dossier resolves its preserved historical candidates"
+        if identity_links_valid
+        else "current Identity JIT dossier must point to both preserved candidates under docs/history",
+        path=identity_route.get("repository_path") if identity_route else "docs/delivery/CURRENT_DELIVERY_ROUTER.json",
+    )
+
+
+def _check_active_document_references(root: Path, report: dict[str, Any]) -> None:
+    missing: list[str] = []
+    for semantic_root in ("docs/governance", "docs/delivery", "docs/development"):
+        directory = root / semantic_root
+        if not directory.is_dir():
+            missing.append(f"{semantic_root}/ (semantic root is missing)")
+            continue
+        for source in directory.rglob("*.md"):
+            try:
+                text = source.read_text(encoding="utf-8")
+            except OSError:
+                missing.append(f"{source.relative_to(root)} (could not be read)")
+                continue
+            for reference in sorted(set(ROOTED_DOCUMENT_REFERENCE_PATTERN.findall(text))):
+                route = Path(reference)
+                target = root / route
+                try:
+                    resolved = target.resolve(strict=True)
+                    resolved.relative_to(root)
+                    contained = (
+                        not route.is_absolute()
+                        and ".." not in route.parts
+                        and resolved.is_file()
+                    )
+                except (OSError, ValueError):
+                    contained = False
+                cursor = root
+                for part in route.parts:
+                    cursor = cursor / part
+                    if cursor.is_symlink():
+                        contained = False
+                        break
+                if not contained:
+                    missing.append(f"{source.relative_to(root)} → {reference}")
+
+    _record(
+        report,
+        "smoke_active_document_references",
+        not missing,
+        "rooted documentation file references resolve in current semantic roots"
+        if not missing
+        else "current documentation contains unresolved rooted file references: " + "; ".join(missing[:8]),
+    )
+
+
 def run_smoke_audit(
     root: Path,
     governance_router_path: Path = DEFAULT_GOVERNANCE_ROUTER,
@@ -296,7 +452,11 @@ def run_smoke_audit(
             if isinstance(entry, dict):
                 _check_hashed_route(root, report, entry, kind="delivery", required_root="docs/delivery")
 
+    _check_active_document_references(root, report)
+    _check_current_routing_guidance(root, report, governance, delivery)
+
     required_paths = (
+        "AGENTS.md",
         "docs/README.md",
         "docs/governance/README.md",
         "docs/delivery/README.md",

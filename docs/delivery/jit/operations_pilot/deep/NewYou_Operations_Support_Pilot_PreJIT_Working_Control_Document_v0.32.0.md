@@ -254,8 +254,8 @@ behind = 0
 
 The candidate commit adds exactly three paths:
 
-1. `docs/delivery/jit/operations_pilot/authority_candidates/00_PLATFORM_v1.7.0.md`;
-2. `docs/delivery/jit/operations_pilot/authority_candidates/01_DECISIONS_v1.7.0.md`;
+1. `docs/history/platform/archive/00_PLATFORM_v1.7.0.md`;
+2. `docs/history/platform/archive/01_DECISIONS_v1.7.0.md`;
 3. `tests/test_ops_upd_004_authority_materialization.py`.
 
 No README, authority manifest, current Product/Decision path, Roadmap, Architecture or Domain file is changed in this candidate.
@@ -384,8 +384,8 @@ submitted PR reviews = none
 
 The exact three changed paths remain:
 
-1. `docs/delivery/jit/operations_pilot/authority_candidates/00_PLATFORM_v1.7.0.md`
-2. `docs/delivery/jit/operations_pilot/authority_candidates/01_DECISIONS_v1.7.0.md`
+1. `docs/history/platform/archive/00_PLATFORM_v1.7.0.md`
+2. `docs/history/platform/archive/01_DECISIONS_v1.7.0.md`
 3. `tests/test_ops_upd_004_authority_materialization.py`
 
 No README/current-authority routing change is part of PR #90.
@@ -539,8 +539,8 @@ changed paths = exactly 3
 
 The three changed paths remain:
 
-1. `docs/delivery/jit/operations_pilot/authority_candidates/00_PLATFORM_v1.7.0.md`
-2. `docs/delivery/jit/operations_pilot/authority_candidates/01_DECISIONS_v1.7.0.md`
+1. `docs/history/platform/archive/00_PLATFORM_v1.7.0.md`
+2. `docs/history/platform/archive/01_DECISIONS_v1.7.0.md`
 3. `tests/test_ops_upd_004_authority_materialization.py`
 
 Current README routing remains on Product `v1.6.0` and Decisions `v1.6.0`; the `v1.7.0` files remain working authority candidates only.
@@ -1409,8 +1409,8 @@ changed paths = 3
 
 The three changed paths remain exactly:
 
-1. `docs/delivery/jit/operations_pilot/authority_candidates/00_PLATFORM_v1.7.0.md`
-2. `docs/delivery/jit/operations_pilot/authority_candidates/01_DECISIONS_v1.7.0.md`
+1. `docs/history/platform/archive/00_PLATFORM_v1.7.0.md`
+2. `docs/history/platform/archive/01_DECISIONS_v1.7.0.md`
 3. `tests/test_ops_upd_004_authority_materialization.py`
 
 No README, manifest, Roadmap, Architecture, Domain Map or current-authority-path change was made.
@@ -1766,8 +1766,8 @@ The PR remains explicitly review-only and **DO NOT MERGE**.
 
 The three PR paths remain:
 
-1. `docs/delivery/jit/operations_pilot/authority_candidates/00_PLATFORM_v1.7.0.md`
-2. `docs/delivery/jit/operations_pilot/authority_candidates/01_DECISIONS_v1.7.0.md`
+1. `docs/history/platform/archive/00_PLATFORM_v1.7.0.md`
+2. `docs/history/platform/archive/01_DECISIONS_v1.7.0.md`
 3. `tests/test_ops_upd_004_authority_materialization.py`
 
 No README, authority manifest, Roadmap, Architecture, Domain Map or current-authority route was changed.

@@ -10,7 +10,7 @@ NOT DEVELOPMENT-ENTRY AUTHORITY
 DOES NOT REPLACE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 ```
 
-**Artifact version:** v0.1.31 - PATCH current status routing. Direct predecessor v0.1.30 is preserved byte-identically at `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.30.md`.
+**Artifact version:** v0.1.31 - PATCH current status routing. Direct predecessor v0.1.30 is preserved byte-identically at `docs/history/platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.30.md`.
 
 **Lifecycle status:** CERTIFIED / CURRENT as a Phase 7A skeleton and routing view. The normative PMR block and PR #67 reconciliation certification evidence below remain unchanged. FP001_RECONCILIATION_REQUIRED is COMPLETE / CERTIFIED. Identity & Access v0.2.0, Communications v0.1.0 and Audit & Evidence v0.1.0 remain REQUIRED / COMPLETE / CERTIFIED / CURRENT. The current Audit & Evidence dossier route is `docs/delivery/jit/audit-evidence/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`. Privacy & Consent, Content & Media and Analytics remain NOT_REQUIRED. The required dossier set is disposition-complete. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under completed tracker #120 (CLOSED / COMPLETED); its exact PR #121 candidate bytes remain preserved as immutable archive evidence. Programme router #111 remains OPEN. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT under closed tracker #124 (CLOSED / COMPLETED). Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET. TB-001 contract/design review is COMPLETE / PASS; contract v0.1.3 is CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. Bounded Phase 8 proof execution is STARTED; the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE and proof certification is NOT CERTIFIED. Phase 8 is NOT CERTIFIED; Phase 9 remains NOT STARTED / NOT AUTHORISED. Development Entry Hard Stop is PASS / ALL 10 CONDITIONS SATISFIED. Phase 8 Architectural Proof is AUTHORISED only; bounded application implementation is AUTHORISED only for Phase 8 / NEW_TRACER_BULLET. This Phase 7A skeleton confers no authority for additional work; current contracts resolve through `docs/delivery/CURRENT_DELIVERY_ROUTER.json`. WELL-60 is COMPLETE after PR #165 resulting-main verification; WELL-49 remains blocked by WELL-61, and WELL-49 execution has not started.
 
@@ -236,7 +236,7 @@ The material Architecture Law surfaces are:
 - `03_ARCHITECTURE_v1.1.1.md §§12.1-12.4`: failure isolation, restart/recovery, observability, incident evidence and operational proof;
 - `03_ARCHITECTURE_v1.1.1.md §§13.1-13.5`: workload-specific scaling and adversarial proof obligations without premature infrastructure selection;
 - `03_ARCHITECTURE_v1.1.1.md §§14-15`: server-authoritative security, least privilege, revocable secrets/sessions, audit separation and enforceable boundaries; and
-- `FLOW-01` in `archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md §§2-3`: point-in-time conceptual registration-to-verification-to-login evidence used by the predecessor skeleton.
+- `FLOW-01` in `docs/history/platform/archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.2.0.md §§2-3`: point-in-time conceptual registration-to-verification-to-login evidence used by the predecessor skeleton.
 
 This Skeleton selects no authentication package, Resource, schema, queue, cache, worker, topology or other implementation mechanism.
 
@@ -394,16 +394,16 @@ If later Phase 7B and Phase 7C work is separately authorised through current Ope
 | Source | Targeted use |
 |---|---|
 | `docs/README.md` | Authority order, current-authority routing, Atlas non-authority status and selective Atlas sections |
-| `docs/governance/roadmap/05_ROADMAP_v1.2.3.md §§1, 6 FP-001, 21` | Current route for the unchanged identity, PMR-inclusive outcome, objective, type, position, dependencies, affected Domains, gates and anticipated proof |
-| `docs/delivery/execution/DELIVERY_ATLAS_WORKING_v0.4.21.md` §§4-5, 6-12, 23-26 | Current derived FP-001 route, seven-CAP matrix/reverse row, capability authority anchors and active-FP lifecycle, dependency, participant, operator, frontend and data contracts |
+| `docs/history/platform/archive/05_ROADMAP_v1.2.3.md §§1, 6 FP-001, 21` | Current route for the unchanged identity, PMR-inclusive outcome, objective, type, position, dependencies, affected Domains, gates and anticipated proof |
+| `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.4.21.md` §§4-5, 6-12, 23-26 | Current derived FP-001 route, seven-CAP matrix/reverse row, capability authority anchors and active-FP lifecycle, dependency, participant, operator, frontend and data contracts |
 | `docs/history/platform/superseded-delivery/DELIVERY_ATLAS_WORKING_v0.2.1.md` portfolio/FP-001 view | Pinned source-at-freeze evidence for prior FP-001/HARDEN-02 artifacts; not the current derived route |
 | `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md` portfolio/FP-001 view | Historical point-in-time Atlas source used by the predecessor skeleton; retained as provenance only |
 | `docs/governance/product/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§5.1, 8, 10-12` | Public entry, adult individual account, minimum fields, bilingual launch and protected product boundary |
-| `docs/governance/product/00_PLATFORM_v1.8.0.md §§7.2-7.3, 21E, 21I, 21J, 21L, 21P` | Current public content, consent/data lifecycle, registration/language, authentication, verification, session, recovery, role, notification, PMR and controlled-product-space rules |
+| `docs/history/platform/archive/00_PLATFORM_v1.8.0.md §§7.2-7.3, 21E, 21I, 21J, 21L, 21P` | Current public content, consent/data lifecycle, registration/language, authentication, verification, session, recovery, role, notification, PMR and controlled-product-space rules |
 | `docs/governance/product/01_DECISIONS_v1.8.0.md DEC-017-DEC-028, DEC-094, DEC-244-DEC-270, DEC-297-DEC-298, OQ-034-OQ-036` | Current account, purpose permission, language, role, identity, PMR, recovery, abuse, communication, resilience, launch-space and gate decisions |
 | `docs/governance/architecture/03_ARCHITECTURE_v1.1.1.md §§4-15 and Appendix C` | Authority, interaction, identity, recovery, consent, durability, provider evidence, failure, observability, scaling, security and enforcement boundaries |
 | `docs/governance/domain/04_DOMAIN_MAP_v1.2.0.md §§3-5, 6.1, 6.2, 6.7, 6.15, 6.17, 6.18` | Domain ownership, PMR ownership, cross-domain doctrine, lifecycle and evidence boundaries |
-| `docs/governance/supporting/PLATFORM_OPERATING_MODEL_v1.2.0.md §§4-6, 9-13, 24-26` | Named staff roles, scoped support, content operations, communication/evidence separation, performance boundary and Phase 7 handoff |
+| `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.2.0.md §§4-6, 9-13, 24-26` | Named staff roles, scoped support, content operations, communication/evidence separation, performance boundary and Phase 7 handoff |
 | `docs/governance/supporting/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md §§3.1, 4, 5.1-5.2, 5.7, 6, 7.2, 9-10` | Public, registration, recovery, operator, bilingual, accessibility and presentation-state rules |
 | `docs/history/platform/archive/02_OPEN_WORK_v1.2.81.md §9` | Current planning route, completed Phase 7C contract certification/current-status lifecycle, post-Phase-7C proof classification, dossier dispositions and downstream stops |
 | `docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md` | Current required/certified Identity dossier and source-domain authority boundary |
@@ -412,7 +412,7 @@ If later Phase 7B and Phase 7C work is separately authorised through current Ope
 | `docs/delivery/content-evidence/content_media/README.md`, `NEWYOU_CM_PREJIT_CONTRACT_WORKING_v0.1.0.md` and `NEWYOU_CM_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md` | Final compact non-authoritative Content evidence; `CM-UPD-013` is retained as evidence for this adjudication, not as Product Law |
 | `docs/delivery/jit/audit_evidence/README.md` and `NEWYOU_AUDIT_EVIDENCE_PREJIT_CONTRACT_WORKING_v0.1.3.md` | Non-authoritative Audit evidence; its `REQUIRED` working conclusion was checked against current authority and certified FP-001 dossiers and is confirmed here for the unresolved implementation-grade contracts |
 | `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §§5.6-5.7, 7, 8` | Historical OQ ownership/context, Phase 7A required fields, dossier boundary and development hard stop |
-| `docs/history/platform/archive/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md §§1.1, 2, 3` | Current FLOW-01 evidence and deferred executable proof pressure |
+| `docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md §§1.1, 2, 3` | Current FLOW-01 evidence and deferred executable proof pressure |
 
 Historical source artifacts are cited through their preserved archive paths. Current Roadmap, Product Law and Open Work remain controlling; the derived Atlas does not become authority. No global matrix, global journey, permanent FP-specific state machine or Atlas expansion was used.
 
@@ -517,7 +517,7 @@ Development Entry Hard Stop evaluation independently satisfied all ten condition
 
 ## v0.1.19 — TB-001 proof-contract candidate route (historical predecessor)
 
-At the Open Work v1.2.75 predecessor state, the accepted FP-001 Phase 8 proof design was represented by `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`, identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION. This Phase 7A Skeleton is a status route only; Open Work v1.2.75 owned the next action and bounded Phase 8 status. The contract predecessor is preserved at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`.
+At the Open Work v1.2.75 predecessor state, the accepted FP-001 Phase 8 proof design was represented by `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`, identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION. This Phase 7A Skeleton is a status route only; Open Work v1.2.75 owned the next action and bounded Phase 8 status. The contract predecessor is preserved at `docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`.
 
 ## v0.1.20 — TB-001 proof-contract successor candidate route (historical predecessor)
 
@@ -530,7 +530,7 @@ The accepted FP-001 Phase 8 proof design is represented by `working/FP-001_TRACE
 
 ## v0.1.22 — TB-001 approved proof-contract current-status route (historical predecessor)
 
-The accepted FP-001 Phase 8 proof design is represented by `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`, identifier TB-001. TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS. TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION; exact reviewed candidate bytes are preserved byte-identically at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: STARTED (BOUNDED; BASELINE MAIN SHA c91016ecb75ea29adc9cc21e4bf30bab51dcdc3c). PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT EXECUTION ACTION: FP-001 P8 04 — Build the deterministic Phase-8 proof harness (WELL-5). This Phase 7A Skeleton is a status route only; it confers no Phase 8 authority. Current Open Work v1.2.79 owns the bounded Phase 8 route. This successor changes no Product, Architecture, Domain, Roadmap or PMR semantics.
+The accepted FP-001 Phase 8 proof design is represented by `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`, identifier TB-001. TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS. TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION; exact reviewed candidate bytes are preserved byte-identically at `docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: STARTED (BOUNDED; BASELINE MAIN SHA c91016ecb75ea29adc9cc21e4bf30bab51dcdc3c). PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT EXECUTION ACTION: FP-001 P8 04 — Build the deterministic Phase-8 proof harness (WELL-5). This Phase 7A Skeleton is a status route only; it confers no Phase 8 authority. Current Open Work v1.2.79 owns the bounded Phase 8 route. This successor changes no Product, Architecture, Domain, Roadmap or PMR semantics.
 
 
 ## v0.1.23 — WELL-5 completion and P8-05 planning route (historical predecessor)

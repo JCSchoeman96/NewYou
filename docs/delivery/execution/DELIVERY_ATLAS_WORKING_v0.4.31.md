@@ -7,7 +7,7 @@
 - **Implementation boundary:** **DOES NOT AUTHORISE IMPLEMENTATION**
 - **Purpose:** Keep medium-resolution delivery navigation aligned with current Product, Architecture, Domain and Roadmap authority after the completed targeted amendment programme, and preserve the just-in-time routing required to prepare an active outcome safely.
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
-- **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.30.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.
+- **Predecessor:** `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.4.30.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.
 - **SemVer transition:** `v0.4.30 → v0.4.31` (PATCH current routing).
 - **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. Current Product, Decision, Architecture, Domain, Roadmap and supporting authority resolve through `docs/governance/CURRENT_GOVERNANCE_ROUTER.json`; current Feature, JIT, proof and execution contracts resolve through `docs/delivery/CURRENT_DELIVERY_ROUTER.json`. Open Work v1.2.90 is retained at `docs/history/02_OPEN_WORK_v1.2.90.md` as a frozen snapshot; Plane project `WELL` remains the live execution authority. This derived route changes no authority, Model B semantics or implementation state.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
@@ -46,7 +46,7 @@ This successor updates current-source routes and FP-001 status navigation from O
 
 ## v0.4.3 Patch Scope
 
-This routing-only predecessor pointed current-source tables and current planning references to Product v1.8.0, Decisions v1.8.0, Roadmap v1.2.2 and archived Open Work `archive/02_OPEN_WORK_v1.2.61.md` after the OPS-UPD-002 authority candidate. It did not change any Feature Pack, capability, Domain, gate, stage or delivery-content meaning.
+This routing-only predecessor pointed current-source tables and current planning references to Product v1.8.0, Decisions v1.8.0, Roadmap v1.2.2 and archived Open Work `docs/history/platform/archive/02_OPEN_WORK_v1.2.61.md` after the OPS-UPD-002 authority candidate. It did not change any Feature Pack, capability, Domain, gate, stage or delivery-content meaning.
 
 ## v0.4.2 Patch Scope
 
@@ -663,7 +663,7 @@ This creates the commercial prerequisite for assessment, plan and purchased-libr
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-002`, with dependency and phase context in §§3.2, 5, 7 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `archive/05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-002`, with dependency and phase context in §§3.2, 5, 7 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-003 — Temperament provenance, assessment and immutable report
 
@@ -710,7 +710,7 @@ This is the assessment product capability and a required input to personalised p
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-003`, with dependency and phase context in §§3.2, 5 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-003`, with dependency and phase context in §§3.2, 5 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-004 — Safe health onboarding and deterministic eligibility
 
@@ -759,7 +759,7 @@ This unlocks safe plan generation and a lawful General Wellness fallback. It kee
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-004`, with dependency and phase context in §§3.2, 5 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-004`, with dependency and phase context in §§3.2, 5 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-005 — Safe seven-day plan, purchased library and basic feedback
 
@@ -807,7 +807,7 @@ This completes the participant-facing paid core journey. `FP-006` remains necess
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-005`, with dependency and phase context in §§3.2, 5 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-005`, with dependency and phase context in §§3.2, 5 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-006 — Controlled core operations and staged paid release
 
@@ -855,7 +855,7 @@ This is the operational boundary for internal validation, the first 10 paid part
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-006`, with dependency and phase context in §§3.2, 5, 7, 8 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §§5 and 7`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-006`, with dependency and phase context in §§3.2, 5, 7, 8 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §§5 and 7`.
 
 ## FP-007 — Governed live sessions and replay
 
@@ -904,7 +904,7 @@ This unlocks governed live and replay value for Nuwe Jy and early Membership. It
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-007`, with dependency and phase context in §§3.2, 5, 12 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-007`, with dependency and phase context in §§3.2, 5, 12 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-008 — Native Nuwe Jy flagship edition
 
@@ -956,7 +956,7 @@ This is the first native flagship edition and the concrete acceptance path for r
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-008`, with dependency and phase context in §§3.2, 5, 9, 12 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-008`, with dependency and phase context in §§3.2, 5, 9, 12 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-009 — Basic Membership recurring value
 
@@ -1006,7 +1006,7 @@ This enables Basic Membership only after its promised recurring value is operati
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-009`, with dependency and phase context in §§3.2, 5, 10, 12 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `archive/05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-009`, with dependency and phase context in §§3.2, 5, 10, 12 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-010 — Recurring plan review and governed adjustment
 
@@ -1056,7 +1056,7 @@ This unlocks the plan-adjustment add-on and provides the capability prerequisite
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-010`, with dependency and phase context in §§3.2, 5, 10 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-010`, with dependency and phase context in §§3.2, 5, 10 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-011 — Premium bundle around proven capability
 
@@ -1106,7 +1106,7 @@ This enables a validated higher-value commercial tier only after its component c
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-011`, with dependency and phase context in §§3.2, 5, 10 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `archive/05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-011`, with dependency and phase context in §§3.2, 5, 10 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; gate context in `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §14` and current unresolved-work context in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-012 — Controlled practitioner review pilot
 
@@ -1154,7 +1154,7 @@ This enables a limited, priced and capacity-controlled practitioner-review pilot
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-012`, with dependency and phase context in §§3.2, 5, 11 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-012`, with dependency and phase context in §§3.2, 5, 11 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-013 — First-party community and governed challenges
 
@@ -1204,7 +1204,7 @@ This enables first-party community and governed challenges only when external an
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-013`, with dependency and phase context in §§3.2, 5, 12 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-013`, with dependency and phase context in §§3.2, 5, 12 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-014 — Foundation programme, habits and reflective progress
 
@@ -1253,7 +1253,7 @@ This enables the longer foundation programme and durable habit and reflective-pr
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-014`, with dependency and phase context in §§3.2, 5, 12 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-014`, with dependency and phase context in §§3.2, 5, 12 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-015 — Event commerce and scarce capacity
 
@@ -1301,7 +1301,7 @@ This enables paid events with capacity and ticket truth. It is intentionally lat
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-015`, with dependency and phase context in §§3.2, 5, 12 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-015`, with dependency and phase context in §§3.2, 5, 12 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-016 — First-party experimentation and learning
 
@@ -1349,7 +1349,7 @@ This enables auditable product learning after a real decision surface exists. It
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-016`, with dependency and phase context in §§3.2, 5, 13 and 14; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-016`, with dependency and phase context in §§3.2, 5, 13 and 14; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ## FP-017 — Approved product-space or market expansion
 
@@ -1399,7 +1399,7 @@ This is the controlled path for a future product-space or market activation. It 
 
 ### Authority Anchors
 
-`archive/05_ROADMAP_v1.0.0.md §6 FP-017`, with dependency and phase context in §§3.2, 5, 13, 14 and 16; `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `archive/02_OPEN_WORK_v1.2.28.md §5`.
+`docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-017`, with dependency and phase context in §§3.2, 5, 13, 14 and 16; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5`; current gate definitions in `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md §5`.
 
 ---
 
@@ -1486,7 +1486,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Privacy & Consent`; `Communications`; `Audit & Evidence`; all protected business Domains consume current actor context. Later Commerce/Entitlements/Events may consume minimum-disclosure PMR lookup as candidate identity only.
 
-**Authority Anchors:** `04_DOMAIN_MAP_v1.2.0.md §6.1`; `03_ARCHITECTURE_v1.1.1.md §§6 and 6.6`; `archive/05_ROADMAP_v1.1.0.md §6 FP-001`; `archive/00_PLATFORM_v1.3.0.md §21P`; `ARC-330`; `DEC-297`. Source-at-freeze ATLAS-03 provenance also referenced `archive/04_DOMAIN_MAP_v1.0.0.md §6.1` / `archive/03_ARCHITECTURE_v1.0.0.md §6.1` / `archive/05_ROADMAP_v1.0.0.md §6 FP-001`.
+**Authority Anchors:** `04_DOMAIN_MAP_v1.2.0.md §6.1`; `03_ARCHITECTURE_v1.1.1.md §§6 and 6.6`; `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §6 FP-001`; `docs/history/platform/archive/00_PLATFORM_v1.3.0.md §21P`; `ARC-330`; `DEC-297`. Source-at-freeze ATLAS-03 provenance also referenced `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.1` / `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §6.1` / `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-001`.
 
 **Lifecycle Relevance:** `YES` — protected identity lifecycle including PMR assignment at successful individual Account creation; `Identity & Access`; earliest full specification point is `FP-001`. Exact PMR encoding remains unfrozen.
 
@@ -1516,7 +1516,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Privacy & Consent`; `Professional Care`; `Commerce`; `Entitlements`; `Programmes & Challenges`; `Community`; `Events & Live`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §§3–5, 6.1 and 4.1`; `archive/03_ARCHITECTURE_v1.0.0.md §6.2`; `archive/05_ROADMAP_v1.0.0.md §1.1`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§3–5, 6.1 and 4.1`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §6.2`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §1.1`.
 
 **Lifecycle Relevance:** `YES` — scoped-access lifecycle; `Identity & Access` governs identity-side grants and relationship-owning Domains govern their relationship truth; earliest full specification point is `FP-001`.
 
@@ -1546,7 +1546,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Identity & Access`; `Health Records`; `Safety & Eligibility`; `Professional Care`; `Communications`; `Analytics`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.2 and §4`; `archive/03_ARCHITECTURE_v1.0.0.md §6.3`; `archive/00_PLATFORM_v1.2.1.md §§21C.19 and 21I.13`; `archive/05_ROADMAP_v1.0.0.md §6 FP-001`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.2 and §4`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §6.3`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21C.19 and 21I.13`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-001`.
 
 **Lifecycle Relevance:** `YES` — consent lifecycle; `Privacy & Consent`; earliest full specification point is `FP-001`.
 
@@ -1576,7 +1576,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Identity & Access`; `Temperament`; `Health Records`; `Plans & Nutrition`; `Commerce`; `Entitlements`; `Professional Care`; `Analytics`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.2, §4 and §5`; `archive/03_ARCHITECTURE_v1.0.0.md §11`; `archive/00_PLATFORM_v1.2.1.md §21I`; `archive/05_ROADMAP_v1.0.0.md §6 FP-006`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.2, §4 and §5`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §11`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §21I`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-006`.
 
 **Lifecycle Relevance:** `YES` — data-rights request lifecycle; `Privacy & Consent` coordinates and data-owning Domains fulfil their contracts; earliest full specification point is `FP-006`.
 
@@ -1606,7 +1606,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Content & Media`; `Commerce`; `Communications`; `Analytics`; `Privacy & Consent`; `Identity & Access`.
 
-**Authority Anchors:** `archive/05_ROADMAP_v1.0.0.md §§2, 6 FP-001 and 13`; `archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §15`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md §§3.1 and 5.1`; `archive/04_DOMAIN_MAP_v1.0.0.md §7`.
+**Authority Anchors:** `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §§2, 6 FP-001 and 13`; `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §15`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md §§3.1 and 5.1`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §7`.
 
 **Lifecycle Relevance:** `CONDITIONAL` — subscriber-contact lifecycle only where this acquisition boundary includes a governed mailing-list relationship; `Communications`; earliest full specification point is `FP-001`.
 
@@ -1636,7 +1636,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Privacy & Consent`; `Health Records`; `Safety & Eligibility`; `Plans & Nutrition`; `Programmes & Challenges`; `Communications`; `Events & Live`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.7`; `archive/00_PLATFORM_v1.2.1.md §§21E.1–21E.10`; `archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§9–13`; `archive/05_ROADMAP_v1.0.0.md §§2 and 6 FP-005`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.7`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21E.1–21E.10`; `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§9–13`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §§2 and 6 FP-005`.
 
 **Lifecycle Relevance:** `YES` — governed-content lifecycle; `Content & Media`; earliest full specification point is `FP-001`.
 
@@ -1666,7 +1666,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Temperament`; `Health Records`; `Safety & Eligibility`; `Plans & Nutrition`; `Entitlements`; `Experimentation`; `Analytics`; `Privacy & Consent`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §§6.7 and 9`; `archive/00_PLATFORM_v1.2.1.md §§21E.5–21E.7 and 21E.12`; `archive/03_ARCHITECTURE_v1.0.0.md §§10.2 and 10.5`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md §§5.1 and 12`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§6.7 and 9`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21E.5–21E.7 and 21E.12`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §§10.2 and 10.5`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md §§5.1 and 12`.
 
 **Lifecycle Relevance:** `NO` — no independent lifecycle is asserted; source content and relevance-signal lifecycles remain with their owning Domains.
 
@@ -1696,7 +1696,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Entitlements`; `Privacy & Consent`; `Events & Live`; `Commerce`; `Professional Care`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.7`; `archive/03_ARCHITECTURE_v1.0.0.md §§7.4 and 10.3`; `archive/00_PLATFORM_v1.2.1.md §21E.15`; `archive/05_ROADMAP_v1.0.0.md §§6 FP-003 and FP-007`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.7`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §§7.4 and 10.3`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §21E.15`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §§6 FP-003 and FP-007`.
 
 **Lifecycle Relevance:** `YES` — protected-media lifecycle; `Content & Media`; earliest full specification point is `FP-003`.
 
@@ -1726,7 +1726,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Entitlements`; `Identity & Access`; `Content & Media`; `Events & Live`; `Privacy & Consent`; `Analytics`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.10`; `archive/00_PLATFORM_v1.2.1.md §§21A.1, 21A.5, 21A.9 and 21A.13`; `archive/05_ROADMAP_v1.0.0.md §§3.2 and 6 FP-002`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.10`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21A.1, 21A.5, 21A.9 and 21A.13`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §§3.2 and 6 FP-002`.
 
 **Lifecycle Relevance:** `YES` — commercial-offer lifecycle; `Commerce`; earliest full specification point is `FP-002`.
 
@@ -1756,7 +1756,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Identity & Access`; `Privacy & Consent`; `Entitlements`; `Events & Live`; `Audit & Evidence`; `Analytics`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.10`; `archive/03_ARCHITECTURE_v1.0.0.md §§8.1–8.3`; `archive/00_PLATFORM_v1.2.1.md §§21A.6, 21A.8, 21A.10 and 21A.12`; `archive/05_ROADMAP_v1.0.0.md §6 FP-002`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.10`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §§8.1–8.3`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21A.6, 21A.8, 21A.10 and 21A.12`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-002`.
 
 **Lifecycle Relevance:** `YES` — payment-reconciliation lifecycle; `Commerce`; earliest full specification point is `FP-002`.
 
@@ -1786,7 +1786,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Commerce`; `Identity & Access`; `Privacy & Consent`; `Temperament`; `Plans & Nutrition`; `Programmes & Challenges`; `Community`; `Events & Live`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.11`; `archive/00_PLATFORM_v1.2.1.md §§21A.5, 21A.9 and 21A.13`; `archive/05_ROADMAP_v1.0.0.md §§3.2 and 6 FP-002`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.11`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21A.5, 21A.9 and 21A.13`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §§3.2 and 6 FP-002`.
 
 **Lifecycle Relevance:** `YES` — entitlement lifecycle; `Entitlements`; earliest full specification point is `FP-002`.
 
@@ -1816,7 +1816,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Content & Media`; `Entitlements`; `Privacy & Consent`; `Plans & Nutrition`; `Programmes & Challenges`; `Analytics`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.3`; `archive/00_PLATFORM_v1.2.1.md §§21B.1–21B.15`; `archive/05_ROADMAP_v1.0.0.md §6 FP-003`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.3`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21B.1–21B.15`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-003`.
 
 **Lifecycle Relevance:** `YES` — temperament-assessment lifecycle; `Temperament`; earliest full specification point is `FP-003`.
 
@@ -1846,7 +1846,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Privacy & Consent`; `Safety & Eligibility`; `Plans & Nutrition`; `Professional Care`; `Analytics`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.4`; `archive/00_PLATFORM_v1.2.1.md §§21C.1–21C.4 and 21C.13–21C.14`; `archive/05_ROADMAP_v1.0.0.md §6 FP-004`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.4`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21C.1–21C.4 and 21C.13–21C.14`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-004`.
 
 **Lifecycle Relevance:** `YES` — health-record lifecycle; `Health Records`; earliest full specification point is `FP-004`.
 
@@ -1876,7 +1876,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Health Records`; `Plans & Nutrition`; `Professional Care`; `Temperament`; `Privacy & Consent`; `Content & Media`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.5`; `archive/00_PLATFORM_v1.2.1.md §§21C.5–21C.20`; `archive/03_ARCHITECTURE_v1.0.0.md §§5, 6 and 14`; `archive/05_ROADMAP_v1.0.0.md §6 FP-004`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.5`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21C.5–21C.20`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §§5, 6 and 14`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-004`.
 
 **Lifecycle Relevance:** `YES` — safety-evaluation lifecycle; `Safety & Eligibility`; earliest full specification point is `FP-004`.
 
@@ -1906,7 +1906,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Safety & Eligibility`; `Health Records`; `Temperament`; `Content & Media`; `Entitlements`; `Habits, Journals & Progress`; `Privacy & Consent`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.6`; `archive/00_PLATFORM_v1.2.1.md §§21D.1–21D.8 and 21D.12–21D.13`; `archive/05_ROADMAP_v1.0.0.md §6 FP-005`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.6`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21D.1–21D.8 and 21D.12–21D.13`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-005`.
 
 **Lifecycle Relevance:** `YES` — plan-version lifecycle; `Plans & Nutrition`; earliest full specification point is `FP-005`.
 
@@ -1936,7 +1936,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Habits, Journals & Progress`; `Safety & Eligibility`; `Health Records`; `Temperament`; `Entitlements`; `Commerce`; `Privacy & Consent`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §§6.6 and 5`; `archive/00_PLATFORM_v1.2.1.md §§21D.9–21D.11`; `archive/05_ROADMAP_v1.0.0.md §6 FP-010`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§6.6 and 5`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21D.9–21D.11`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-010`.
 
 **Lifecycle Relevance:** `YES` — governed-plan-adjustment lifecycle; `Plans & Nutrition`; earliest full specification point is `FP-010`.
 
@@ -1966,7 +1966,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Content & Media`; `Privacy & Consent`; `Identity & Access`; `Commerce`; `Programmes & Challenges`; `Events & Live`; `Analytics`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.15`; `archive/03_ARCHITECTURE_v1.0.0.md §10.4`; `archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§7, 12 and 21`; `archive/05_ROADMAP_v1.0.0.md §§6 FP-001 and FP-007`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.15`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §10.4`; `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§7, 12 and 21`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §§6 FP-001 and FP-007`.
 
 **Lifecycle Relevance:** `YES` — communication-delivery lifecycle; `Communications`; earliest full specification point is `FP-001`.
 
@@ -1996,7 +1996,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Content & Media`; `Entitlements`; `Habits, Journals & Progress`; `Temperament`; `Safety & Eligibility`; `Plans & Nutrition`; `Community`; `Events & Live`; `Communications`; `Privacy & Consent`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.8`; `archive/00_PLATFORM_v1.2.1.md §§21F.1–21F.10 and 21H.2–21H.5`; `archive/05_ROADMAP_v1.0.0.md §6 FP-008`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.8`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21F.1–21F.10 and 21H.2–21H.5`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-008`.
 
 **Lifecycle Relevance:** `YES` — programme-delivery lifecycle; `Programmes & Challenges`; earliest full specification point is `FP-008`.
 
@@ -2026,7 +2026,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Plans & Nutrition`; `Programmes & Challenges`; `Safety & Eligibility`; `Analytics`; `Privacy & Consent`; `Audit & Evidence`.
 
-**Authority Anchors:** `04_DOMAIN_MAP_v1.2.0.md §6.9 and §4`; `archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md §§5.3–5.4`; `archive/05_ROADMAP_v1.1.0.md §§6 FP-005 and FP-010` (including the Research classification guardrail). Source-at-freeze ATLAS-03 provenance also referenced `archive/04_DOMAIN_MAP_v1.0.0.md` / `archive/05_ROADMAP_v1.0.0.md`.
+**Authority Anchors:** `04_DOMAIN_MAP_v1.2.0.md §6.9 and §4`; `docs/history/platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md §§5.3–5.4`; `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §§6 FP-005 and FP-010` (including the Research classification guardrail). Source-at-freeze ATLAS-03 provenance also referenced `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md` / `docs/history/platform/archive/05_ROADMAP_v1.0.0.md`.
 
 **Lifecycle Relevance:** `YES` — participant-progress lifecycle; `Habits, Journals & Progress`; earliest full specification point is `FP-005`.
 
@@ -2056,7 +2056,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Programmes & Challenges`; `Plans & Nutrition`; `Professional Care` only for explicitly shared information; `Privacy & Consent`; `Communications`; `Analytics`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.9`; `archive/00_PLATFORM_v1.2.1.md §§21F.12–21F.22`; `archive/05_ROADMAP_v1.0.0.md §6 FP-014`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.9`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21F.12–21F.22`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-014`.
 
 **Lifecycle Relevance:** `YES` — private-reflection lifecycle; `Habits, Journals & Progress`; earliest full specification point is `FP-014`.
 
@@ -2086,7 +2086,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Entitlements`; `Identity & Access`; `Content & Media`; `Communications`; `Privacy & Consent`; `Programmes & Challenges`; `Audit & Evidence`; `Analytics`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.13`; `archive/00_PLATFORM_v1.2.1.md §§21G.14–21G.16`; `archive/03_ARCHITECTURE_v1.0.0.md §10.3`; `archive/05_ROADMAP_v1.0.0.md §6 FP-007`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.13`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21G.14–21G.16`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §10.3`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-007`.
 
 **Lifecycle Relevance:** `YES` — live-session lifecycle; `Events & Live`; earliest full specification point is `FP-007`.
 
@@ -2116,7 +2116,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Content & Media`; `Community`; `Events & Live`; `Communications`; `Plans & Nutrition`; `Privacy & Consent`; `Audit & Evidence`; `Analytics`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §§6.10–6.11`; `archive/00_PLATFORM_v1.2.1.md §§21A.5–21A.8 and 21A.11`; `archive/05_ROADMAP_v1.0.0.md §6 FP-009`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§6.10–6.11`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21A.5–21A.8 and 21A.11`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-009`.
 
 **Lifecycle Relevance:** `YES` — recurring-access lifecycle; `Commerce` and `Entitlements`; earliest full specification point is `FP-009`.
 
@@ -2146,7 +2146,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Identity & Access`; `Privacy & Consent`; `Health Records`; `Safety & Eligibility`; `Plans & Nutrition`; `Commerce`; `Entitlements`; `Communications`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.14`; `archive/00_PLATFORM_v1.2.1.md §§21C.17–21C.18`; `archive/05_ROADMAP_v1.0.0.md §6 FP-012`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.14`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21C.17–21C.18`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-012`.
 
 **Lifecycle Relevance:** `YES` — professional-review lifecycle; `Professional Care`; earliest full specification point is `FP-012`.
 
@@ -2176,7 +2176,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Programmes & Challenges`; `Entitlements`; `Identity & Access`; `Privacy & Consent`; `Content & Media`; `Communications`; `Safety & Eligibility`; `Audit & Evidence`; `Analytics`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.12`; `archive/00_PLATFORM_v1.2.1.md §§21G.1–21G.13`; `archive/05_ROADMAP_v1.0.0.md §6 FP-013`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.12`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21G.1–21G.13`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-013`.
 
 **Lifecycle Relevance:** `YES` — community-participation lifecycle; `Community`; earliest full specification point is `FP-013`.
 
@@ -2206,7 +2206,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Commerce`; `Entitlements`; `Identity & Access`; `Privacy & Consent`; `Communications`; `Content & Media`; `Audit & Evidence`; `Analytics`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.13`; `archive/00_PLATFORM_v1.2.1.md §§21G.17–21G.21`; `archive/03_ARCHITECTURE_v1.0.0.md §10.3`; `archive/05_ROADMAP_v1.0.0.md §6 FP-015`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.13`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21G.17–21G.21`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §10.3`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-015`.
 
 **Lifecycle Relevance:** `YES` — event-capacity lifecycle; `Events & Live`; earliest full specification point is `FP-015`.
 
@@ -2236,7 +2236,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Analytics`; `Content & Media`; `Communications`; `Commerce`; `Identity & Access`; `Privacy & Consent`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.16`; `archive/03_ARCHITECTURE_v1.0.0.md §§10.4–10.5`; `archive/00_PLATFORM_v1.2.1.md §§21K.6A, 21L.13 and 21L.23`; `archive/05_ROADMAP_v1.0.0.md §6 FP-016`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.16`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §§10.4–10.5`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21K.6A, 21L.13 and 21L.23`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-016`.
 
 **Lifecycle Relevance:** `YES` — experiment lifecycle; `Experimentation`; earliest full specification point is `FP-016`.
 
@@ -2266,7 +2266,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** All authoritative Domains contribute approved minimum facts; `Privacy & Consent`; `Experimentation`; `Audit & Evidence`; `Communications`.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.17 and §5`; `archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§17–20`; `archive/03_ARCHITECTURE_v1.0.0.md §§8.4, 10.4 and 13`; `archive/05_ROADMAP_v1.0.0.md §§6 FP-006 and FP-016`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.17 and §5`; `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§17–20`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §§8.4, 10.4 and 13`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §§6 FP-006 and FP-016`.
 
 **Lifecycle Relevance:** `YES` — analytics-evidence lifecycle; `Analytics`; earliest full specification point is `FP-006`.
 
@@ -2296,7 +2296,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Identity & Access`; `Privacy & Consent`; `Commerce`; `Entitlements`; `Safety & Eligibility`; `Professional Care`; `Community`; `Analytics`; all sensitive Domains.
 
-**Authority Anchors:** `archive/04_DOMAIN_MAP_v1.0.0.md §6.18`; `archive/03_ARCHITECTURE_v1.0.0.md §§12.3, 12.4 and 14`; `archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§22, 25 and 28`; `archive/05_ROADMAP_v1.0.0.md §6 FP-006`.
+**Authority Anchors:** `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.18`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §§12.3, 12.4 and 14`; `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§22, 25 and 28`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-006`.
 
 **Lifecycle Relevance:** `YES` — audit-evidence lifecycle; `Audit & Evidence`; earliest full specification point is `FP-001`.
 
@@ -2326,7 +2326,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Identity & Access`; `Commerce`; `Entitlements`; `Content & Media`; `Communications`; `Professional Care`; `Community`; `Events & Live`; `Analytics`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§5–8 and 22`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md §6`; `archive/04_DOMAIN_MAP_v1.0.0.md §4.1`; `archive/05_ROADMAP_v1.0.0.md §6 FP-006`.
+**Authority Anchors:** `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§5–8 and 22`; `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md §6`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §4.1`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-006`.
 
 **Lifecycle Relevance:** `YES` — operator-work lifecycle; source workflow owners govern the underlying work and the Operating Model supplies the presentation boundary; earliest full specification point is `FP-006`.
 
@@ -2356,7 +2356,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Identity & Access`; `Privacy & Consent`; `Commerce`; `Entitlements`; `Safety & Eligibility`; `Plans & Nutrition`; `Communications`; `Analytics`; `Audit & Evidence`.
 
-**Authority Anchors:** `archive/03_ARCHITECTURE_v1.0.0.md §§12–14`; `archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§21–28`; `archive/04_DOMAIN_MAP_v1.0.0.md §6.18`; `archive/05_ROADMAP_v1.0.0.md §§6 FP-006 and 8`.
+**Authority Anchors:** `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §§12–14`; `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md §§21–28`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.18`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §§6 FP-006 and 8`.
 
 **Lifecycle Relevance:** `YES` — release-control lifecycle; Architecture/Operations governs control and `Audit & Evidence` records evidence; earliest full specification point is `FP-006`.
 
@@ -2386,7 +2386,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Identity & Access`; `Privacy & Consent`; `Commerce`; `Entitlements`; `Content & Media`; `Safety & Eligibility`; `Plans & Nutrition`; `Communications`; `Analytics`; `Audit & Evidence`; any later affected Domain.
 
-**Authority Anchors:** `archive/00_PLATFORM_v1.2.1.md §§21L.1–21L.3`; `archive/03_ARCHITECTURE_v1.0.0.md §§3.1–3.3 and 17`; `archive/04_DOMAIN_MAP_v1.0.0.md §9`; `archive/05_ROADMAP_v1.0.0.md §6 FP-017`.
+**Authority Anchors:** `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21L.1–21L.3`; `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md §§3.1–3.3 and 17`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §9`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-017`.
 
 **Lifecycle Relevance:** `CONDITIONAL` — product-space activation lifecycle; Product Law/Architecture and affected Domain owners govern it; earliest full specification point is `FP-017` after a concrete approved direction exists.
 
@@ -2416,7 +2416,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Content & Media`; `Identity & Access`; `Communications`; `Privacy & Consent`; `Analytics`; `Audit & Evidence`; owner-mediated Safety/Professional Care/Commerce/Entitlements consequences where separately authorised.
 
-**Authority Anchors:** `04_DOMAIN_MAP_v1.2.0.md §6.19`; `archive/05_ROADMAP_v1.1.0.md §§1.3, 3.4 and 6`; `archive/00_PLATFORM_v1.3.0.md §21M`; `DEC-294`.
+**Authority Anchors:** `04_DOMAIN_MAP_v1.2.0.md §6.19`; `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §§1.3, 3.4 and 6`; `docs/history/platform/archive/00_PLATFORM_v1.3.0.md §21M`; `DEC-294`.
 
 **Lifecycle Relevance:** `YES` — Research campaign/instrument/response lifecycle; earliest full specification point is **FEATURE-PACK-UNASSIGNED** until Roadmap assigns an activating pack.
 
@@ -2446,7 +2446,7 @@ Interactive Tools / calculators / decision aids are **not** allocated a CAP ID: 
 
 **Supporting Domains:** `Identity & Access`; `Entitlements`; `Programmes & Challenges`; `Community`; `Commerce`; `Analytics`; `Audit & Evidence`; `Communications` where separately authorised.
 
-**Authority Anchors:** `04_DOMAIN_MAP_v1.2.0.md §6.20`; `archive/05_ROADMAP_v1.1.0.md §§1.3, 3.4, 6 FP-008 and FP-013`; `archive/00_PLATFORM_v1.3.0.md §21N`; `DEC-295`.
+**Authority Anchors:** `04_DOMAIN_MAP_v1.2.0.md §6.20`; `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §§1.3, 3.4, 6 FP-008 and FP-013`; `docs/history/platform/archive/00_PLATFORM_v1.3.0.md §21N`; `DEC-295`.
 
 **Lifecycle Relevance:** `YES` — voting/balloting lifecycle; earliest full specification point is **FEATURE-PACK-UNASSIGNED** until Roadmap assigns an activating pack.
 
@@ -2562,7 +2562,7 @@ ATLAS-04 connects the 33 canonical capabilities to the 17 frozen Feature Packs. 
 
 ### Source boundary and matrix rule
 
-The matrix uses the Feature Pack identities, names and order in `archive/05_ROADMAP_v1.1.0.md §6` and the merged ATLAS-02 portfolio register above. Capability IDs, canonical names, classifications and ownership statements come from §5.2. Domain ownership remains governed by `04_DOMAIN_MAP_v1.2.0.md §§3–5` and the authoritative Domain named by each CAP entry. FUTURE-GATED / FEATURE-PACK-UNASSIGNED approved capabilities may appear in the inventory with zero material FP cells; that is intentional and must not be “fixed” by inventing an introduction Feature Pack.
+The matrix uses the Feature Pack identities, names and order in `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §6` and the merged ATLAS-02 portfolio register above. Capability IDs, canonical names, classifications and ownership statements come from §5.2. Domain ownership remains governed by `04_DOMAIN_MAP_v1.2.0.md §§3–5` and the authoritative Domain named by each CAP entry. FUTURE-GATED / FEATURE-PACK-UNASSIGNED approved capabilities may appear in the inventory with zero material FP cells; that is intentional and must not be “fixed” by inventing an introduction Feature Pack.
 
 Only one dominant relationship is recorded in a cell. `E` and `S` already imply reuse of the established capability. A dash is intentional where the capability may exist elsewhere in the platform but is not material to the Feature Pack outcome at Atlas resolution. No Resource, schema, action, API, component, technology or lifecycle state is defined here.
 
@@ -2682,28 +2682,28 @@ Only non-routine decisions are noted below. Routine `R` cells remain intentional
 
 | CAP | FP | Relationship | Why this classification matters | Authority Anchor |
 |---|---|---|---|---|
-| CAP-004 | FP-006 | `I` | FP-006 is the first outcome that explicitly requires pilot deletion/export, retention, restore and operational handling. Earlier privacy participation does not establish the complete orchestration capability. | `archive/05_ROADMAP_v1.0.0.md §6 FP-006`; `archive/04_DOMAIN_MAP_v1.0.0.md §4` |
-| CAP-005 | FP-001 | `I` | Public discovery is introduced by the public-to-account boundary. Later live and event discovery reuse it; it is not a universal acquisition dependency for every protected pack. | `archive/05_ROADMAP_v1.0.0.md §6 FP-001, §6 FP-007 and §6 FP-015`; `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-005` |
-| CAP-008 | FP-003 | `I` | The protected bilingual assessment report is the first material protected-content delivery outcome. This does not make Content & Media an entitlement owner. | `archive/05_ROADMAP_v1.0.0.md §6 FP-003`; `archive/04_DOMAIN_MAP_v1.0.0.md §4` |
-| CAP-015 | FP-012 | `R` | A practitioner outcome may request an approved plan modification, but Plans & Nutrition owns any resulting plan version. Professional Care does not write plan truth. | `archive/05_ROADMAP_v1.0.0.md §6 FP-012`; `archive/04_DOMAIN_MAP_v1.0.0.md §§4–5` |
-| CAP-018 | FP-014 | `E` | FP-014 explicitly extends the concrete Nuwe Jy programme evidence into a broader foundation programme. Programmes & Challenges remains the sole programme/cohort authority. | `archive/05_ROADMAP_v1.0.0.md §6 FP-014`; `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-018`; `archive/04_DOMAIN_MAP_v1.0.0.md §4` |
-| CAP-020 | FP-014 | `I` | FP-008's habits/check-ins are represented by CAP-019 at Atlas resolution. FP-014 is the first outcome that explicitly requires private reflections and the broader habit/journal boundary. | `archive/05_ROADMAP_v1.0.0.md §6 FP-008 and §6 FP-014`; `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-019 and CAP-020` |
-| CAP-022 | FP-009 | `I` | Basic Membership is the first approved recurring commercial outcome. FP-011 reuses the recurring contract boundary rather than creating a second Premium billing capability. | `archive/05_ROADMAP_v1.0.0.md §6 FP-009 and §6 FP-011`; `archive/04_DOMAIN_MAP_v1.0.0.md §4` |
-| CAP-023 | FP-012 | `I` | The practitioner-review service is intentionally introduced as a limited, capacity-controlled pilot. It does not take ownership of Health, Safety or Plans truth. | `archive/05_ROADMAP_v1.0.0.md §6 FP-012`; `archive/04_DOMAIN_MAP_v1.0.0.md §§4–5` |
-| CAP-024 | FP-013 | `I` | FP-009's governed community evidence may use the approved external path. First-party community participation and moderation begin only when FP-013 is approved, so no first-party authority is inferred earlier. | `archive/05_ROADMAP_v1.0.0.md §6 FP-009 and §6 FP-013`; `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-024` |
-| CAP-025 | FP-015 | `I` | FP-015 is the first approved scarce-capacity outcome. FP-007 live registration does not introduce holds, tickets or capacity authority. | `archive/05_ROADMAP_v1.0.0.md §6 FP-007, §6 FP-015 and §12.3`; `archive/04_DOMAIN_MAP_v1.0.0.md §4` |
-| CAP-027 | FP-006 | `I` | FP-006 is the first outcome that requires controlled pilot observation and evidence. Earlier packs do not receive a generic analytics mark merely because their facts may later be measured. | `archive/05_ROADMAP_v1.0.0.md §6 FP-006 and §§7–8`; `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-027` |
-| CAP-027 | FP-008, FP-013, FP-014 | `R` | These programme and challenge outcomes explicitly require approved completion or participation metrics through `OQ-019`; Analytics remains measurement authority and source Domains retain business truth. | `archive/05_ROADMAP_v1.0.0.md §6 FP-008, §6 FP-013 and §6 FP-014`; `archive/04_DOMAIN_MAP_v1.0.0.md §6.17` |
-| CAP-027 | FP-016 | `R` | Experiment exposure, conversion/income reconciliation and durable learning evidence make Analytics materially central to the approved experimentation outcome. | `archive/05_ROADMAP_v1.0.0.md §6 FP-016`; `archive/04_DOMAIN_MAP_v1.0.0.md §§6.16–6.17`; `OQ-040` |
-| CAP-028 | FP-001 | `I` | The protected identity boundary is the first material audit/security-evidence outcome. Later marks occur where payment, safety, release, moderation, professional or event evidence is part of the approved outcome. | `archive/05_ROADMAP_v1.0.0.md §6 FP-001 and §6 FP-006`; `archive/04_DOMAIN_MAP_v1.0.0.md §4` |
-| CAP-028 | FP-011, FP-014 | `R` | Premium's sensitive commercial/release boundary and the foundation programme's private-data, retention, completion and recovery obligations require the minimum audit/security evidence owned by Audit & Evidence. | `archive/05_ROADMAP_v1.0.0.md §6 FP-011 and §6 FP-014`; `archive/00_PLATFORM_v1.2.1.md §§21H, 21I`; `archive/04_DOMAIN_MAP_v1.0.0.md §6.18` |
-| CAP-029 | FP-006 | `I` | FP-001's controlled support path does not establish a reusable operator-work capability. FP-006 first requires named staff to run, correct, reconcile and support the core journey. | `archive/05_ROADMAP_v1.0.0.md §6 FP-001 and §6 FP-006`; `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-029` |
-| CAP-030 | FP-006 | `I` | FP-006 is the first release, stop, rollback and recovery boundary. Later event, experiment and future-activation marks reuse that control without moving business truth into platform operations. | `archive/05_ROADMAP_v1.0.0.md §6 FP-006, §6 FP-015, §6 FP-016 and §6 FP-017`; `archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-030` |
-| CAP-031 | FP-017 | `I` | The capability remains conditional and is introduced only by a concrete separately approved product-space or market direction. No hypothetical market, tenancy or specialist product is mapped earlier. | `archive/05_ROADMAP_v1.1.0.md §6 FP-017 and §16`; `archive/DELIVERY_ATLAS_WORKING_v0.2.0.md §5.2 CAP-031` |
-| CAP-032 | — | FUTURE-GATED / FEATURE-PACK-UNASSIGNED | Product-approved Domain 19 capability with zero current material FP cells. Not CAP-019, not FP-005, not automatically FP-006/008/009, and not assigned to FP-017. | `archive/05_ROADMAP_v1.1.0.md §§3.4 and 6`; `04_DOMAIN_MAP_v1.2.0.md §6.19` |
-| CAP-033 | — | FUTURE-GATED / FEATURE-PACK-UNASSIGNED | Product-approved Domain 20 capability with zero current material FP cells. Not required by FP-008 or FP-013; no Voting/Competitions FP; not assigned to FP-017. | `archive/05_ROADMAP_v1.1.0.md §§3.4, 6 FP-008 and FP-013`; `04_DOMAIN_MAP_v1.2.0.md §6.20` |
-| CAP-001 | FP-001 | `I` | FP-001 material identity includes the certified IAM-owned PMR reconciliation. Encoding remains unfrozen; Communications JIT Domain Dossier work is the current in-progress task. | `archive/05_ROADMAP_v1.1.0.md §6 FP-001`; `04_DOMAIN_MAP_v1.2.0.md §6.1` |
-| — (no CAP) | — | purpose-distributed | Interactive Tools have no CAP, Domain or generic introduction FP. Calculation is not authority; delivery remains owner/outcome-specific. | `archive/05_ROADMAP_v1.1.0.md §§1.3 and 3.4`; `04_DOMAIN_MAP_v1.2.0.md` Interactive Tools doctrine |
+| CAP-004 | FP-006 | `I` | FP-006 is the first outcome that explicitly requires pilot deletion/export, retention, restore and operational handling. Earlier privacy participation does not establish the complete orchestration capability. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-006`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-005 | FP-001 | `I` | Public discovery is introduced by the public-to-account boundary. Later live and event discovery reuse it; it is not a universal acquisition dependency for every protected pack. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-001, §6 FP-007 and §6 FP-015`; `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-005` |
+| CAP-008 | FP-003 | `I` | The protected bilingual assessment report is the first material protected-content delivery outcome. This does not make Content & Media an entitlement owner. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-003`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-015 | FP-012 | `R` | A practitioner outcome may request an approved plan modification, but Plans & Nutrition owns any resulting plan version. Professional Care does not write plan truth. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-012`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| CAP-018 | FP-014 | `E` | FP-014 explicitly extends the concrete Nuwe Jy programme evidence into a broader foundation programme. Programmes & Challenges remains the sole programme/cohort authority. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-014`; `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-018`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-020 | FP-014 | `I` | FP-008's habits/check-ins are represented by CAP-019 at Atlas resolution. FP-014 is the first outcome that explicitly requires private reflections and the broader habit/journal boundary. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-008 and §6 FP-014`; `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-019 and CAP-020` |
+| CAP-022 | FP-009 | `I` | Basic Membership is the first approved recurring commercial outcome. FP-011 reuses the recurring contract boundary rather than creating a second Premium billing capability. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-009 and §6 FP-011`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-023 | FP-012 | `I` | The practitioner-review service is intentionally introduced as a limited, capacity-controlled pilot. It does not take ownership of Health, Safety or Plans truth. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-012`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| CAP-024 | FP-013 | `I` | FP-009's governed community evidence may use the approved external path. First-party community participation and moderation begin only when FP-013 is approved, so no first-party authority is inferred earlier. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-009 and §6 FP-013`; `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-024` |
+| CAP-025 | FP-015 | `I` | FP-015 is the first approved scarce-capacity outcome. FP-007 live registration does not introduce holds, tickets or capacity authority. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-007, §6 FP-015 and §12.3`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-027 | FP-006 | `I` | FP-006 is the first outcome that requires controlled pilot observation and evidence. Earlier packs do not receive a generic analytics mark merely because their facts may later be measured. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-006 and §§7–8`; `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-027` |
+| CAP-027 | FP-008, FP-013, FP-014 | `R` | These programme and challenge outcomes explicitly require approved completion or participation metrics through `OQ-019`; Analytics remains measurement authority and source Domains retain business truth. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-008, §6 FP-013 and §6 FP-014`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.17` |
+| CAP-027 | FP-016 | `R` | Experiment exposure, conversion/income reconciliation and durable learning evidence make Analytics materially central to the approved experimentation outcome. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-016`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§6.16–6.17`; `OQ-040` |
+| CAP-028 | FP-001 | `I` | The protected identity boundary is the first material audit/security-evidence outcome. Later marks occur where payment, safety, release, moderation, professional or event evidence is part of the approved outcome. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-001 and §6 FP-006`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §4` |
+| CAP-028 | FP-011, FP-014 | `R` | Premium's sensitive commercial/release boundary and the foundation programme's private-data, retention, completion and recovery obligations require the minimum audit/security evidence owned by Audit & Evidence. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-011 and §6 FP-014`; `docs/history/platform/archive/00_PLATFORM_v1.2.1.md §§21H, 21I`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.18` |
+| CAP-029 | FP-006 | `I` | FP-001's controlled support path does not establish a reusable operator-work capability. FP-006 first requires named staff to run, correct, reconcile and support the core journey. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-001 and §6 FP-006`; `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-029` |
+| CAP-030 | FP-006 | `I` | FP-006 is the first release, stop, rollback and recovery boundary. Later event, experiment and future-activation marks reuse that control without moving business truth into platform operations. | `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-006, §6 FP-015, §6 FP-016 and §6 FP-017`; `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md §5.2 CAP-030` |
+| CAP-031 | FP-017 | `I` | The capability remains conditional and is introduced only by a concrete separately approved product-space or market direction. No hypothetical market, tenancy or specialist product is mapped earlier. | `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §6 FP-017 and §16`; `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.2.0.md §5.2 CAP-031` |
+| CAP-032 | — | FUTURE-GATED / FEATURE-PACK-UNASSIGNED | Product-approved Domain 19 capability with zero current material FP cells. Not CAP-019, not FP-005, not automatically FP-006/008/009, and not assigned to FP-017. | `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §§3.4 and 6`; `04_DOMAIN_MAP_v1.2.0.md §6.19` |
+| CAP-033 | — | FUTURE-GATED / FEATURE-PACK-UNASSIGNED | Product-approved Domain 20 capability with zero current material FP cells. Not required by FP-008 or FP-013; no Voting/Competitions FP; not assigned to FP-017. | `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §§3.4, 6 FP-008 and FP-013`; `04_DOMAIN_MAP_v1.2.0.md §6.20` |
+| CAP-001 | FP-001 | `I` | FP-001 material identity includes the certified IAM-owned PMR reconciliation. Encoding remains unfrozen; Communications JIT Domain Dossier work is the current in-progress task. | `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §6 FP-001`; `04_DOMAIN_MAP_v1.2.0.md §6.1` |
+| — (no CAP) | — | purpose-distributed | Interactive Tools have no CAP, Domain or generic introduction FP. Calculation is not authority; delivery remains owner/outcome-specific. | `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §§1.3 and 3.4`; `04_DOMAIN_MAP_v1.2.0.md` Interactive Tools doctrine |
 
 ### ATLAS-04 consistency and density audit
 
@@ -2796,19 +2796,19 @@ The register keeps only relationship cases that need an explicit reminder becaus
 
 | Exception | Feature Pack / CAP | Domain issue | Why it matters | JIT action | Status | Authority anchor |
 |---|---|---|---|---|---|---|
-| EX-001 | FP-001 through FP-015, FP-017 / CAP-002 | Cross-domain access relationship | Identity & Access owns identity-side grants. Each relationship-owning Domain keeps its own relationship or assignment truth. | Name the relationship owner for the active Feature Pack. Do not create a shared access owner. | REVIEWED / JIT_CONFIRM | §5.2 CAP-002; `archive/04_DOMAIN_MAP_v1.0.0.md §§4–5` |
-| EX-002 | FP-001, FP-007, FP-015 / CAP-005; CAP-007 deferred | Public discovery and relevance have no single funnel owner; relevance has no independent current lifecycle. | Content, Commerce, Communications, source Domains and Analytics retain their own authority. A projection must not become a new acquisition or ranking authority. CAP-007 is not permanently assigned to FP-007 or FP-015. | Confirm only the source facts and affected Domain work for the selected public or live outcome. Route richer search/relevance through a later concrete approved Feature Pack. | REVIEWED / JIT_CONFIRM | §5.2 CAP-005 and CAP-007; `archive/05_ROADMAP_v1.0.0.md §§6 FP-001, FP-007 and FP-015` |
-| EX-003 | FP-006, FP-007, FP-013, FP-014, FP-016, FP-017 / CAP-004 | Cross-domain privacy and deletion orchestration | Privacy & Consent owns the request and policy. Data-owning Domains fulfil record-level deletion, correction or export. | Map only the affected record owners for the active Feature Pack. Do not centralise their writes in the orchestration capability. | REVIEWED / JIT_CONFIRM | §5.2 CAP-004; `archive/04_DOMAIN_MAP_v1.0.0.md §§4–5` |
-| EX-004 | FP-003, FP-005, FP-007, FP-008, FP-009, FP-011 / CAP-008; FP-015 only if a live/recorded variant is approved | Protected media crosses content, access, consent and event boundaries. | Content & Media owns media truth. Entitlements and source Domains retain access and sharing truth. FP-015 scarce-capacity commerce does not intrinsically require protected media. | Confirm protected-delivery consequences only for the selected outcome and approved media variant, without transferring authority to Content & Media or Entitlements. | REVIEWED / JIT_CONFIRM | §5.2 CAP-008; `archive/04_DOMAIN_MAP_v1.0.0.md §§4–5`; `archive/05_ROADMAP_v1.0.0.md §6 FP-015` |
-| EX-005 | FP-009, FP-011 / CAP-022 | Recurring commercial access crosses Commerce and Entitlements. | Commerce owns the recurring contract and billing state. Entitlements owns the resulting access rights. | Keep contract, billing, cancellation and access-rights consequences separate in the active Feature Pack plan. | REVIEWED / JIT_CONFIRM | §5.2 CAP-022; `archive/04_DOMAIN_MAP_v1.0.0.md §§6.10–6.11` |
-| EX-006 | FP-012 / CAP-023 | Professional review has a platform case owner but unresolved final professional-record authority. | Professional Care must not silently become the legal or external professional record authority. | Apply `OQ-033` before the active Feature Pack fixes professional record, access, addendum or disposition semantics. STOP if that authority is required and unresolved. | GATED / OQ-033 | §5.2 CAP-023; `archive/05_ROADMAP_v1.0.0.md §6 FP-012`; `archive/04_DOMAIN_MAP_v1.0.0.md §6.14` |
-| EX-007 | FP-015 / CAP-025 | Scarce event capacity crosses Events & Live and Commerce. | Events & Live owns capacity, reservations, tickets and attendance. Commerce owns payment and refund truth. | Confirm capacity and payment consequences together while preserving separate authoritative owners. Apply `OQ-022` and `OQ-004` at the affected boundary. | GATED / OQ-022, OQ-004 | §5.2 CAP-025; `archive/05_ROADMAP_v1.0.0.md §6 FP-015`; `archive/04_DOMAIN_MAP_v1.0.0.md §6.13` |
-| EX-008 | FP-006, FP-008, FP-009, FP-013, FP-014, FP-017 / CAP-027; FP-016 / CAP-026, CAP-027 | Analytics, experimentation and source outcomes have different authority. | Analytics owns measurement evidence, Experimentation owns assignment and learning decisions, and source Domains own business outcomes. `OQ-019` makes completion/participation metrics material for the named programme and challenge packs; `OQ-040` governs experimentation. | Identify the real decision surface and minimum source facts for the active Feature Pack. Do not treat measurement or assignment as source-domain authority. Apply the named OQ at the affected boundary. | GATED / OQ-019 or OQ-040 where applicable | §5.2 CAP-026 and CAP-027; `archive/05_ROADMAP_v1.0.0.md §§6 FP-008, FP-013, FP-014 and FP-016`; `archive/04_DOMAIN_MAP_v1.0.0.md §§6.16–6.17` |
-| EX-009 | FP-006, FP-007, FP-008, FP-009, FP-012, FP-013, FP-015, FP-016, FP-017 / CAP-029; FP-006, FP-015, FP-016, FP-017 / CAP-030 | Operator, release, incident and recovery controls have no single business-truth owner. | Platform control governs work and release decisions. Affected Domains retain business truth, and Audit & Evidence retains central evidence. | Keep operator and release actions owner-controlled and identify only the evidence and recovery work required by the active Feature Pack. | REVIEWED / JIT_CONFIRM | §5.2 CAP-029 and CAP-030; `archive/04_DOMAIN_MAP_v1.0.0.md §6.18` |
-| EX-010 | FP-017 / CAP-031 | Conditional future ownership is not yet assigned. | No concrete product or market direction exists from which the affected Domain set can be determined. | STOP until Product Law names the approved direction and its affected Domain owners. Do not infer a market, tenancy or specialist product boundary. FP-017 does not automatically own Research or Voting. | CONDITIONAL / STOP | §5.2 CAP-031; `archive/05_ROADMAP_v1.1.0.md §6 FP-017`; `04_DOMAIN_MAP_v1.2.0.md §9` |
-| EX-011 | CAP-032 / Domain 19 | Research & Feedback is Product-approved but Feature-Pack-unassigned. | Ownership is visible in Domain/capability navigation, but no current FP introduces Research. CAP-019 progress feedback is not Research. | Keep zero material matrix cells until a governed Roadmap decision assigns an activating outcome. Do not assign FP-005/006/008/009/017. | FUTURE-GATED / FEATURE-PACK-UNASSIGNED | §5.2 CAP-032; `archive/05_ROADMAP_v1.1.0.md §§3.4 and 6`; `04_DOMAIN_MAP_v1.2.0.md §6.19` |
-| EX-012 | CAP-033 / Domain 20 | Voting & Balloting is Product-approved but Feature-Pack-unassigned. | Ownership is visible in Domain/capability navigation, but no current FP introduces Voting. FP-008 and FP-013 do not require it. | Keep zero material matrix cells until a governed Roadmap decision assigns an activating outcome. Do not invent a Voting/Competitions FP or assign FP-017. | FUTURE-GATED / FEATURE-PACK-UNASSIGNED | §5.2 CAP-033; `archive/05_ROADMAP_v1.1.0.md §§3.4, 6 FP-008 and FP-013`; `04_DOMAIN_MAP_v1.2.0.md §6.20` |
-| EX-013 | Interactive Tools doctrine | Tools have no Domain, CAP or generic activation point. | A delivery mechanism must not become a hidden authority layer. | Sequence tools only inside the Feature Pack whose approved outcome requires them; retain owner Domain consequence authority; preserve `calculation != authority`. | REVIEWED / DOCTRINE | `archive/05_ROADMAP_v1.1.0.md §§1.3 and 3.4`; `04_DOMAIN_MAP_v1.2.0.md`; `archive/00_PLATFORM_v1.3.0.md §21O` |
+| EX-001 | FP-001 through FP-015, FP-017 / CAP-002 | Cross-domain access relationship | Identity & Access owns identity-side grants. Each relationship-owning Domain keeps its own relationship or assignment truth. | Name the relationship owner for the active Feature Pack. Do not create a shared access owner. | REVIEWED / JIT_CONFIRM | §5.2 CAP-002; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| EX-002 | FP-001, FP-007, FP-015 / CAP-005; CAP-007 deferred | Public discovery and relevance have no single funnel owner; relevance has no independent current lifecycle. | Content, Commerce, Communications, source Domains and Analytics retain their own authority. A projection must not become a new acquisition or ranking authority. CAP-007 is not permanently assigned to FP-007 or FP-015. | Confirm only the source facts and affected Domain work for the selected public or live outcome. Route richer search/relevance through a later concrete approved Feature Pack. | REVIEWED / JIT_CONFIRM | §5.2 CAP-005 and CAP-007; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §§6 FP-001, FP-007 and FP-015` |
+| EX-003 | FP-006, FP-007, FP-013, FP-014, FP-016, FP-017 / CAP-004 | Cross-domain privacy and deletion orchestration | Privacy & Consent owns the request and policy. Data-owning Domains fulfil record-level deletion, correction or export. | Map only the affected record owners for the active Feature Pack. Do not centralise their writes in the orchestration capability. | REVIEWED / JIT_CONFIRM | §5.2 CAP-004; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§4–5` |
+| EX-004 | FP-003, FP-005, FP-007, FP-008, FP-009, FP-011 / CAP-008; FP-015 only if a live/recorded variant is approved | Protected media crosses content, access, consent and event boundaries. | Content & Media owns media truth. Entitlements and source Domains retain access and sharing truth. FP-015 scarce-capacity commerce does not intrinsically require protected media. | Confirm protected-delivery consequences only for the selected outcome and approved media variant, without transferring authority to Content & Media or Entitlements. | REVIEWED / JIT_CONFIRM | §5.2 CAP-008; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§4–5`; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-015` |
+| EX-005 | FP-009, FP-011 / CAP-022 | Recurring commercial access crosses Commerce and Entitlements. | Commerce owns the recurring contract and billing state. Entitlements owns the resulting access rights. | Keep contract, billing, cancellation and access-rights consequences separate in the active Feature Pack plan. | REVIEWED / JIT_CONFIRM | §5.2 CAP-022; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§6.10–6.11` |
+| EX-006 | FP-012 / CAP-023 | Professional review has a platform case owner but unresolved final professional-record authority. | Professional Care must not silently become the legal or external professional record authority. | Apply `OQ-033` before the active Feature Pack fixes professional record, access, addendum or disposition semantics. STOP if that authority is required and unresolved. | GATED / OQ-033 | §5.2 CAP-023; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-012`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.14` |
+| EX-007 | FP-015 / CAP-025 | Scarce event capacity crosses Events & Live and Commerce. | Events & Live owns capacity, reservations, tickets and attendance. Commerce owns payment and refund truth. | Confirm capacity and payment consequences together while preserving separate authoritative owners. Apply `OQ-022` and `OQ-004` at the affected boundary. | GATED / OQ-022, OQ-004 | §5.2 CAP-025; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §6 FP-015`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.13` |
+| EX-008 | FP-006, FP-008, FP-009, FP-013, FP-014, FP-017 / CAP-027; FP-016 / CAP-026, CAP-027 | Analytics, experimentation and source outcomes have different authority. | Analytics owns measurement evidence, Experimentation owns assignment and learning decisions, and source Domains own business outcomes. `OQ-019` makes completion/participation metrics material for the named programme and challenge packs; `OQ-040` governs experimentation. | Identify the real decision surface and minimum source facts for the active Feature Pack. Do not treat measurement or assignment as source-domain authority. Apply the named OQ at the affected boundary. | GATED / OQ-019 or OQ-040 where applicable | §5.2 CAP-026 and CAP-027; `docs/history/platform/archive/05_ROADMAP_v1.0.0.md §§6 FP-008, FP-013, FP-014 and FP-016`; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §§6.16–6.17` |
+| EX-009 | FP-006, FP-007, FP-008, FP-009, FP-012, FP-013, FP-015, FP-016, FP-017 / CAP-029; FP-006, FP-015, FP-016, FP-017 / CAP-030 | Operator, release, incident and recovery controls have no single business-truth owner. | Platform control governs work and release decisions. Affected Domains retain business truth, and Audit & Evidence retains central evidence. | Keep operator and release actions owner-controlled and identify only the evidence and recovery work required by the active Feature Pack. | REVIEWED / JIT_CONFIRM | §5.2 CAP-029 and CAP-030; `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md §6.18` |
+| EX-010 | FP-017 / CAP-031 | Conditional future ownership is not yet assigned. | No concrete product or market direction exists from which the affected Domain set can be determined. | STOP until Product Law names the approved direction and its affected Domain owners. Do not infer a market, tenancy or specialist product boundary. FP-017 does not automatically own Research or Voting. | CONDITIONAL / STOP | §5.2 CAP-031; `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §6 FP-017`; `04_DOMAIN_MAP_v1.2.0.md §9` |
+| EX-011 | CAP-032 / Domain 19 | Research & Feedback is Product-approved but Feature-Pack-unassigned. | Ownership is visible in Domain/capability navigation, but no current FP introduces Research. CAP-019 progress feedback is not Research. | Keep zero material matrix cells until a governed Roadmap decision assigns an activating outcome. Do not assign FP-005/006/008/009/017. | FUTURE-GATED / FEATURE-PACK-UNASSIGNED | §5.2 CAP-032; `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §§3.4 and 6`; `04_DOMAIN_MAP_v1.2.0.md §6.19` |
+| EX-012 | CAP-033 / Domain 20 | Voting & Balloting is Product-approved but Feature-Pack-unassigned. | Ownership is visible in Domain/capability navigation, but no current FP introduces Voting. FP-008 and FP-013 do not require it. | Keep zero material matrix cells until a governed Roadmap decision assigns an activating outcome. Do not invent a Voting/Competitions FP or assign FP-017. | FUTURE-GATED / FEATURE-PACK-UNASSIGNED | §5.2 CAP-033; `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §§3.4, 6 FP-008 and FP-013`; `04_DOMAIN_MAP_v1.2.0.md §6.20` |
+| EX-013 | Interactive Tools doctrine | Tools have no Domain, CAP or generic activation point. | A delivery mechanism must not become a hidden authority layer. | Sequence tools only inside the Feature Pack whose approved outcome requires them; retain owner Domain consequence authority; preserve `calculation != authority`. | REVIEWED / DOCTRINE | `docs/history/platform/archive/05_ROADMAP_v1.1.0.md §§1.3 and 3.4`; `04_DOMAIN_MAP_v1.2.0.md`; `docs/history/platform/archive/00_PLATFORM_v1.3.0.md §21O` |
 
 The register is not a substitute for a dependency map or JIT Domain Dossier. It records why a future derivation needs care. It does not define reads, commands, consequences, projections, schemas or implementation behaviour.
 
@@ -5245,7 +5245,7 @@ Reconciliation is ready for review only when the evidence shows all of the follo
 
 | Requirement | Evidence in this artifact |
 |---|---|
-| Versioned predecessor | Archived routing predecessor is `archive/DELIVERY_ATLAS_WORKING_v0.3.8.md`; its predecessor v0.2.3 remains preserved byte-identically at `archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`. |
+| Versioned predecessor | Archived routing predecessor is `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.3.8.md`; its predecessor v0.2.3 remains preserved byte-identically at `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.2.3.md`. |
 | Non-authority preserved | Artifact remains DERIVED / WORKING / NON-AUTHORITATIVE and outside authority-document records; its path is listed only under graph/navigation paths. |
 | Current-source routing | §1.1 points to North Star/MVP `v1.3.0`, Product `v1.6.0`, Decisions `v1.6.0`, Architecture `v1.1.1`, Domain Map `v1.2.0`, Roadmap `v1.2.0` and current Open Work `v1.2.59`. |
 | Feature Pack set | Exactly 17 Feature Packs `FP-001`–`FP-017`; no Research/Voting/Tools/PMR/Competitions Feature Pack. |
@@ -5335,7 +5335,7 @@ Development Entry Hard Stop evaluation independently satisfied all ten condition
 
 ## 26.23 FP-001 Phase 8 TB-001 candidate route (historical predecessor)
 
-At the Open Work v1.2.75 predecessor state, FP-001 Architectural Proof Classification was COMPLETE / FINALISED as NEW_TRACER_BULLET. The proof contract was `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`, identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. This Atlas remains derived navigation and does not authorize implementation. Current Open Work was v1.2.75. The contract predecessor is preserved at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`.
+At the Open Work v1.2.75 predecessor state, FP-001 Architectural Proof Classification was COMPLETE / FINALISED as NEW_TRACER_BULLET. The proof contract was `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`, identifier TB-001, CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. This Atlas remains derived navigation and does not authorize implementation. Current Open Work was v1.2.75. The contract predecessor is preserved at `docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`.
 
 ## 26.24 FP-001 Phase 8 TB-001 successor candidate route (historical predecessor)
 
@@ -5348,7 +5348,7 @@ FP-001 Architectural Proof Classification remains COMPLETE / FINALISED as NEW_TR
 
 ## 26.26 FP-001 Phase 8 TB-001 approved contract route (historical predecessor)
 
-FP-001 Architectural Proof Classification remains COMPLETE / FINALISED as NEW_TRACER_BULLET. TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS. TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION; exact reviewed candidate bytes are preserved at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: STARTED (BOUNDED; BASELINE MAIN SHA `c91016ecb75ea29adc9cc21e4bf30bab51dcdc3c`). PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT EXECUTION ACTION: FP-001 P8 04 — Build the deterministic Phase-8 proof harness (WELL-5). This Atlas remains derived navigation and does not authorize implementation. Current Open Work is v1.2.79.
+FP-001 Architectural Proof Classification remains COMPLETE / FINALISED as NEW_TRACER_BULLET. TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS. TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION; exact reviewed candidate bytes are preserved at `docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: STARTED (BOUNDED; BASELINE MAIN SHA `c91016ecb75ea29adc9cc21e4bf30bab51dcdc3c`). PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT EXECUTION ACTION: FP-001 P8 04 — Build the deterministic Phase-8 proof harness (WELL-5). This Atlas remains derived navigation and does not authorize implementation. Current Open Work is v1.2.79.
 
 
 ## 26.27 WELL-5 completion and P8-05 planning route (historical predecessor)
@@ -5369,7 +5369,7 @@ The approved TB-001 contract remains CURRENT / APPROVED FOR BOUNDED PHASE 8 PROO
 
 ## 26.29 WELL-5 completion and P8-05 planning route (historical predecessor state; superseded by v0.4.24)
 
-Current Open Work v1.2.82, FP-001 Skeleton v0.1.24 and HARDEN-02 v0.5.25 are the active status routes. Identity v0.2.0 is COMPLETE / CERTIFIED / CURRENT under PR #151. Its exact PR #150 candidate remains at `archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md`; the promoted/current v0.1.4 snapshot remains separately preserved at `archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`.
+Current Open Work v1.2.82, FP-001 Skeleton v0.1.24 and HARDEN-02 v0.5.25 are the active status routes. Identity v0.2.0 is COMPLETE / CERTIFIED / CURRENT under PR #151. Its exact PR #150 candidate remains at `docs/history/platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md`; the promoted/current v0.1.4 snapshot remains separately preserved at `docs/history/platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`.
 
 WELL-5 / P8-04 deterministic proof harness implementation is COMPLETE. Proof certification is not complete: the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE because ten required business/browser manifests remain unavailable. Full TB-001 architectural proof remains INCOMPLETE; Phase 8 is NOT CERTIFIED and Phase 9 / Vertical Slices remain NOT STARTED / NOT AUTHORISED.
 
@@ -5413,7 +5413,7 @@ WELL-60 has prepared a proposed Model B successor. P8-05 commits `MessageIntent`
 
 ## 26.32 WELL-60 TB-001 v0.1.3 current-status promotion route (historical predecessor state)
 
-WELL-60 is OPEN with its status-promotion candidate ready for independent Master Gate review. TB-001 v0.1.3 is CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION, with contract/design review COMPLETE / PASS. PR #164 reviewed head `73725a3d3339bf07fdcd44b9a7ec86026db3e984` merged as `429677295a396b8c78e9ab6b436a57d9249eaddc`; resulting tree `c947544000f66c104a51240e2aee3d0d123b23ec`. Exact candidate bytes remain pinned at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md`. TB-001 proof remains INCOMPLETE / COVERAGE-INCOMPLETE; Phase 8 is NOT CERTIFIED and Phase 9 is NOT AUTHORISED. WELL-49 remains blocked by WELL-60 and WELL-61; WELL-61 remains PLANNING / INCOMPLETE. This route changes status, routing and evidence only and changes no authority or Model B semantics.
+WELL-60 is OPEN with its status-promotion candidate ready for independent Master Gate review. TB-001 v0.1.3 is CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION, with contract/design review COMPLETE / PASS. PR #164 reviewed head `73725a3d3339bf07fdcd44b9a7ec86026db3e984` merged as `429677295a396b8c78e9ab6b436a57d9249eaddc`; resulting tree `c947544000f66c104a51240e2aee3d0d123b23ec`. Exact candidate bytes remain pinned at `docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md`. TB-001 proof remains INCOMPLETE / COVERAGE-INCOMPLETE; Phase 8 is NOT CERTIFIED and Phase 9 is NOT AUTHORISED. WELL-49 remains blocked by WELL-60 and WELL-61; WELL-61 remains PLANNING / INCOMPLETE. This route changes status, routing and evidence only and changes no authority or Model B semantics.
 
 
 ## 26.33 WELL-60 post-merge tracker closure

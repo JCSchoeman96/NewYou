@@ -4541,7 +4541,7 @@ A compact current projection is created alongside this pass with:
 - `NEWYOU_PAYSTACK_GAP_REGISTER_WORKING_v1.0.0.md` — open items only;
 - `NEWYOU_PAYSTACK_EVIDENCE_INDEX_WORKING_v1.0.0.md` — current source index and evidence classes;
 - `deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md` — full append-only provenance ledger;
-- `deep/archive/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.10.0.md` — explicit immediate predecessor snapshot.
+- `deep/docs/history/delivery-packs/paystack_validation/deep/archive/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.10.0.md` — explicit immediate predecessor snapshot.
 
 The compact projection is **derived working context**, not authority. Where it conflicts with the deep ledger, live governed GitHub or newer provider evidence, the stronger/current source wins.
 

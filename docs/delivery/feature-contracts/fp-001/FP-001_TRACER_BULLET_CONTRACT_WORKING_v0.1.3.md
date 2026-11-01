@@ -12,8 +12,8 @@
 - **Proof certification:** NOT CERTIFIED
 - **Phase 9 / Vertical Slices:** NOT STARTED / NOT AUTHORISED
 - **Authority class:** active working proof contract; derived under current authority; not Product, Architecture, Domain or Roadmap law
-- **Design predecessor:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md` (direct approved-current status snapshot; preserved byte-identically)
-- **Reviewed predecessor candidate:** `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` (exact PR #132 candidate; preserved byte-identically)
+- **Design predecessor:** `docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md` (direct approved-current status snapshot; preserved byte-identically)
+- **Reviewed predecessor candidate:** `docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` (exact PR #132 candidate; preserved byte-identically)
 
 This v0.1.3 successor preserves the approved FP-001 Phase 8 proof design and changes only the Communications scheduling boundary under WELL-60. Master Gate selected Model B: P8-05/WELL-49 commits the durable Communications `MessageIntent` and required protected envelope with source acceptance; P8-10/WELL-10 later discovers and schedules eligible intents through the real Communications executor. PR #164's exact reviewed candidate is preserved byte-identically at `docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md`. Its contract/design review is COMPLETE / PASS, and this status successor records it as CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. The promotion changes status, routing and provenance only. It does not reset or certify proof, authorize Phase 9, change higher authority, or clear WELL-49.
 

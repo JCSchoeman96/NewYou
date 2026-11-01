@@ -8,7 +8,7 @@
 - **Not authoritative for:** Product Law, Architecture Law, Domain Law, Roadmap Law, Operating Model freeze meaning, Feature Pack capability content, OQ resolution, Horizontal Hardening (`HH-nnn`), Store Blueprint / CER reuse, Commerce/Entitlements semantics, or implementation
 - **Conflict rule:** Live Product / Architecture / Domain / Roadmap / Operating Model / current Open Work authority wins. This contract may not invent Product or Architecture law. Atlas remains derived navigation only and does not create HARDEN-02 law.
 - **Baseline repository:** `https://github.com/JCSchoeman96/NewYou`
-- **Immediate predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.32.md` (direct predecessor; preserved byte-identically)
+- **Immediate predecessor:** `docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.32.md` (direct predecessor; preserved byte-identically)
 - **v0.5.15 current-status successor base main SHA:** `69bef7bb2782cbff00a48505504ebd2686eb53d9`
 - **v0.5.18 status successor base main SHA:** `675a8c50ac53a995a48e4d262df42065f8ccd412`
 - **v0.5.19 routing successor base main SHA:** `0972864ef7f4638c96198e19a13977e0151e9726`
@@ -26,8 +26,8 @@
 - **v0.5.23 routing scope:** Current status routes Open Work v1.2.80, Delivery Atlas v0.4.21, FP-001 Skeleton v0.1.23 and TB-001 proof contract v0.1.2.
 - **v0.5.24 routing scope:** Current authority routes Product v1.9.0, Decision Register v1.9.0, Roadmap v1.2.4 and Open Work v1.2.81; current derived navigation routes Delivery Atlas v0.4.22. Certified HARDEN-02 semantics, execution evidence, downstream status and implementation gates remain unchanged. WELL-5 / P8-04 is COMPLETE. The harness self-test passed; the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE, with ten required business/browser manifests unavailable. Proof certification and Phase 8 are NOT CERTIFIED. P8-05 / WELL-6 planning is next. This routing status changes no HARDEN-02 contract semantics or Phase 7 evidence.
 - **Current phase route:** Phase 7B reconciliation v0.1.0, Phase 7C and Final Feature Pack Contract v0.1.0 remain COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED. Development Entry Hard Stop evaluation is PASS. TB-001 contract/design review is COMPLETE / PASS; bounded proof execution is STARTED; the current TB-001 result is INCOMPLETE / COVERAGE-INCOMPLETE; proof certification and Phase 8 are NOT CERTIFIED. P8-05 / WELL-6 planning, spec/ticket decomposition and independent planning review are COMPLETE / PASS WITH NON-BLOCKING CORRECTIONS. WELL-45 is LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; it is NOT LEGALLY APPROVED. P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY. WELL-45 remains a release gate; development baselines are NOT LEGALLY APPROVED. WELL-48: COMPLETE / MERGED VIA PR #156; WELL-49: BLOCKED / WAITING ON WELL-61; WELL-50: BACKLOG / NOT STARTED. WELL-50's agreed WELL-48 Account/PMR contract is complete; its own gates remain. WELL-51 follows the required WELL-48–50 seams and owns the first integrated acceptance boundary; WELL-52 follows WELL-51, and WELL-53 follows WELL-48–52 and closes the P8-05 proof outcome. Phase 8 remains NOT CERTIFIED and Phase 9 remains NOT STARTED / NOT AUTHORISED.
-- **Historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` — preserved byte-identically as an earlier current-status snapshot
-- **Earlier historical status predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.5.2.md` — byte-identical prior current-status snapshot
+- **Historical predecessor:** `docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.4.9.md` — preserved byte-identically as an earlier current-status snapshot
+- **Earlier historical status predecessor:** `docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.2.md` — byte-identical prior current-status snapshot
 - **v0.4.7 status-successor base main SHA:** `d4e7390b71cdf61b649b534e1080102a044efe63`
 - **v0.4.8 status-successor base main SHA:** `596d9560aa2b3b3cb941560b01bdc6c8ba7c525a`
 - **v0.5.0 status-successor base main SHA:** `df6190a06bdc8aa4b99f6ed3a18cb9e3e12e22fb`
@@ -42,9 +42,9 @@
 - **v0.5.11 current-status successor base main SHA:** `f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3`
 - **v0.5.8 routing-successor base main SHA:** `5f5a994e48d9458aaa6397044b3af4d72c5d5e81`
 - **v0.5.7 routing-successor base main SHA:** `332d51f19d77430fe4e95911920fe0c87cab524a`
-- **Certified contract semantics:** `archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.5.19 successor preserves them and records current routing
-- **Historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — merged through PR #39; v0.3.0 GitHub-identity independence mechanism not satisfied for solo-maintainer workflow; not retroactively certified
-- **Earlier historical predecessor:** `archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — previous contract attempt; not certified
+- **Certified contract semantics:** `docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.4.0.md` — the original v0.4.0 semantics are certified; this v0.5.19 successor preserves them and records current routing
+- **Historical predecessor:** `docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.3.0.md` — merged through PR #39; v0.3.0 GitHub-identity independence mechanism not satisfied for solo-maintainer workflow; not retroactively certified
+- **Earlier historical predecessor:** `docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.2.0.md` — previous contract attempt; not certified
 - **Accepted human scope decisions:** `H02-1`, `H02-2`, `H02-3` (2026-09-09), `H02-3R` (2026-09-23; routing refinement)
 - **Last updated:** 2026-10-27
 
@@ -68,9 +68,9 @@
 - v0.5.2 — PATCH status and routing successor from main `0473cd69416f72fd94f2cee24a4d02c7f4fe0992`. Records Communications JIT Domain Dossier work as IN PROGRESS / NOT COMPLETE / CERTIFICATION PENDING under Open Work v1.2.58. Communications finalisation remains BLOCKED / STOP; HARDEN-02 semantics, conditional-dossier dispositions and later gates remain unchanged.
 - v0.5.3 — PATCH status and routing successor from main `a062bd56e3ae94e815e2991ee00bf133ee9f3b56`. Records PR #78 Communications dossier certification and the separate PR #81 current-status promotion under Open Work v1.2.59. Communications dossier v0.1.0 is CERTIFIED / CURRENT; finalisation remains BLOCKED / STOP; HARDEN-02 semantics, conditional-dossier dispositions and later gates remain unchanged.
 - v0.5.4 — PATCH current-authority and current-derived routing only from main `3de114fef1961abebd3bfc9c057ef6366e14624f`. Updates the live Product, Decision, Open Work, Roadmap and Delivery Atlas routes after the OPS-UPD-004 authority successor. Certified v0.4.0 semantics, HARDEN-02 execution evidence, later-stage status and implementation gates remain unchanged.
-- v0.5.5 — PATCH current-authority and current-derived routing only from main `3f09bc91199e74d27645ebbb37d45c4831340952`. Updates Product v1.8.0, Decision Register v1.8.0, archived Open Work `archive/02_OPEN_WORK_v1.2.61.md`, Roadmap v1.2.2 and archived Delivery Atlas `archive/DELIVERY_ATLAS_WORKING_v0.4.3.md` routes after the OPS-UPD-002 authority candidate. Certified v0.4.0 semantics, HARDEN-02 execution evidence, later-stage status, proof boundary and implementation gates remain unchanged.
+- v0.5.5 — PATCH current-authority and current-derived routing only from main `3f09bc91199e74d27645ebbb37d45c4831340952`. Updates Product v1.8.0, Decision Register v1.8.0, archived Open Work `docs/history/platform/archive/02_OPEN_WORK_v1.2.61.md`, Roadmap v1.2.2 and archived Delivery Atlas `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.4.3.md` routes after the OPS-UPD-002 authority candidate. Certified v0.4.0 semantics, HARDEN-02 execution evidence, later-stage status, proof boundary and implementation gates remain unchanged.
 - v0.5.6 — PATCH current Open Work and derived navigation routes from main `6036491dfbda0a311b8fcd0ddcdc3af5c3f11ac3`. Records the FP-001 Phase 7A/7B conditional-dossier adjudication as Privacy & Consent NOT_REQUIRED, Content & Media NOT_REQUIRED, and Audit & Evidence REQUIRED / NEXT / NOT_STARTED. Phase 7C remains blocked pending the Audit dossier and subsequent Phase 7B reconciliation. Certified v0.4.0 semantics, HARDEN-02 execution evidence and all other gates remain unchanged.
-- v0.5.8 — PATCH candidate-existence and current-source routing successor from main `5f5a994e48d9458aaa6397044b3af4d72c5d5e81`. Records the PR #118 candidate as authored and review-ready before certification. This state is historical and is preserved at `archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md`.
+- v0.5.8 — PATCH candidate-existence and current-source routing successor from main `5f5a994e48d9458aaa6397044b3af4d72c5d5e81`. Records the PR #118 candidate as authored and review-ready before certification. This state is historical and is preserved at `docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md`.
 - v0.5.9 — PATCH Audit dossier current-status and current-source routing successor from main `3566f1353ef34af58773aa13c6f5bd61d2613d96`. Records PR #118 candidate certification and post-merge evidence as COMPLETE, Audit & Evidence v0.1.0 as REQUIRED / COMPLETE / CERTIFIED / CURRENT under the separate PR #119 STATUS SUCCESSOR, and Phase 7B reconciliation as NEXT / NOT_STARTED. Phase 7C remains blocked until successful Phase 7B reconciliation; proof classification and Phase 8/application implementation remain unauthorised. Certified v0.4.0 semantics and HARDEN-02 execution evidence are unchanged.
 - v0.5.10 — PATCH Phase 7B reconciliation candidate-status routing from main `5d282ecca4e13b621c7f96c05c47d6fac43ec1bd`. Records the v0.1.0 candidate as review-ready, NOT CERTIFIED / NOT CURRENT, under tracker #120; Phase 7C remains BLOCKED / NOT_STARTED.
 - v0.5.11 — PATCH certification/current-status routing from main `f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3`. Phase 7B reconciliation is COMPLETE / CERTIFIED / CURRENT; Phase 7C is NEXT / NOT_STARTED and remains unstarted; proof classification remains NOT FINALISED; Phase 8/application implementation remains UNAUTHORISED. The certified contract semantics remain unchanged.
@@ -108,10 +108,10 @@ HARDEN-02 exists to prove and harden Phase-7 delivery-pipeline governance integr
 
 | Source | Class | Recovered meaning |
 |---|---|---|
-| `archive/02_OPEN_WORK_v1.2.29.md` | HISTORICAL AUTHORITY | HARDEN-02 is governance sequencing, not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ; next FP-001 domain task after HARDEN-02 was Communications |
+| `docs/history/platform/archive/02_OPEN_WORK_v1.2.29.md` | HISTORICAL AUTHORITY | HARDEN-02 is governance sequencing, not an FP-001 dependency, Roadmap gate, Product requirement or blocking OQ; next FP-001 domain task after HARDEN-02 was Communications |
 | PR #24 (`docs/resolve-oq034-and-sync-fp001-state`) | HISTORICAL COMPLETION EVIDENCE | HARDEN-01 / OQ-034 state sync complete on canonical GitHub; left HARDEN-02 as next governance / delivery-pipeline task without starting Communications, Phase 7C or implementation |
-| `archive/02_OPEN_WORK_v1.2.30.md` … `v1.2.38.md` | HISTORICAL AUTHORITY | HARDEN-02 suspended through targeted amendment programme until Atlas reconciliation |
-| `archive/02_OPEN_WORK_v1.2.39.md` | HISTORICAL AUTHORITY (this PR) | Post-Atlas routing: `HARDEN-02_CONTRACT_REQUIRED` |
+| `docs/history/platform/archive/02_OPEN_WORK_v1.2.30.md` … `v1.2.38.md` | HISTORICAL AUTHORITY | HARDEN-02 suspended through targeted amendment programme until Atlas reconciliation |
+| `docs/history/platform/archive/02_OPEN_WORK_v1.2.39.md` | HISTORICAL AUTHORITY (this PR) | Post-Atlas routing: `HARDEN-02_CONTRACT_REQUIRED` |
 
 Historical material recovers intended HARDEN-02 semantics. It does not override current Roadmap/Domain PMR reconciliation requirements or current Open Work routing.
 
@@ -186,9 +186,9 @@ HARDEN-02 proves governance integrity. It does not build a new product capabilit
 
 Canonical, independently retrievable evidence used for HARDEN-02 structural intent:
 
-- `archive/02_OPEN_WORK_v1.2.29.md` — HARDEN-02 as Phase 7B pipeline-governance sequencing, not Product/Roadmap/OQ/FP dependency; Communications as the then-next FP-001 domain task after HARDEN-02;
+- `docs/history/platform/archive/02_OPEN_WORK_v1.2.29.md` — HARDEN-02 as Phase 7B pipeline-governance sequencing, not Product/Roadmap/OQ/FP dependency; Communications as the then-next FP-001 domain task after HARDEN-02;
 - PR #24 completion state on canonical GitHub — HARDEN-01 / OQ-034 routing sync completed without starting Communications, Phase 7C, proof or implementation;
-- `archive/PLATFORM_OPERATING_MODEL_v1.0.1.md` — Phase 7 handoff shape: Skeleton + Gate Manifest → required JIT Domain Dossiers → Final Feature Pack Contract;
+- `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md` — Phase 7 handoff shape: Skeleton + Gate Manifest → required JIT Domain Dossiers → Final Feature Pack Contract;
 - current Open Work successor — Development Entry Hard Stop and post-amendment programme routing;
 - accepted human decisions H02-1 / H02-2 / historical H02-3 / routing refinement H02-3R.
 
@@ -786,13 +786,13 @@ Current live main d4e7390b71cdf61b649b534e1080102a044efe63 passed Foundation Int
 
 ## 22. Phase 7B reconciliation candidate route (historical predecessor record)
 
-At the v0.5.10 predecessor state, the completed dossier set composed into the FP-001 Phase 7B cross-Domain reconciliation candidate at archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md. It recorded PASS / READY FOR INDEPENDENT REVIEW and remained NOT CERTIFIED / NOT CURRENT.
+At the v0.5.10 predecessor state, the completed dossier set composed into the FP-001 Phase 7B cross-Domain reconciliation candidate at docs/history/platform/archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md. It recorded PASS / READY FOR INDEPENDENT REVIEW and remained NOT CERTIFIED / NOT CURRENT.
 
 This historical v0.5.10 status successor recorded no reconciliation completion and did not alter HARDEN-02 semantics, Product, Architecture, Domain, Roadmap or dossier semantics.
 
 ## 23. FP-001 Phase 7B reconciliation and current proof route
 
-The PR #121 candidate merged unchanged, resulting-main CI passed, and fresh independent post-merge review accepted the repository-hosted evidence. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT. The exact Phase 7B candidate bytes remain preserved at archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md. Issue #120 is CLOSED / COMPLETED under the PR #122 status-successor merge; the execution history remains recorded.
+The PR #121 candidate merged unchanged, resulting-main CI passed, and fresh independent post-merge review accepted the repository-hosted evidence. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT. The exact Phase 7B candidate bytes remain preserved at docs/history/platform/archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md. Issue #120 is CLOSED / COMPLETED under the PR #122 status-successor merge; the execution history remains recorded.
 
 The required dossier set remains disposition-complete. Identity & Access, Communications and Audit & Evidence remain REQUIRED / COMPLETE / CERTIFIED / CURRENT. Privacy & Consent, Content & Media and Analytics remain NOT_REQUIRED. The six affected Domains and seven material capability relationships remain unchanged. Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Architectural proof classification is COMPLETE / FINALISED as NEW_TRACER_BULLET.
 
@@ -864,7 +864,7 @@ Development Entry Hard Stop evaluation independently satisfied all ten condition
 
 ## v0.5.19 — FP-001 TB-001 proof-contract candidate route (historical predecessor)
 
-Open Work v1.2.75 routed the Phase 8 NEW_TRACER_BULLET candidate contract at `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`. TB-001 was CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. The next governance action was TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. This HARDEN-02 status successor changes no frozen HARDEN-02 semantics and grants no Phase 9 authority. Its direct predecessor v0.5.18 is archived byte-identically. The contract predecessor is preserved at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`.
+Open Work v1.2.75 routed the Phase 8 NEW_TRACER_BULLET candidate contract at `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`. TB-001 was CANDIDATE / REVIEW PENDING / NOT CERTIFIED. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: NOT STARTED. PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. The next governance action was TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. This HARDEN-02 status successor changes no frozen HARDEN-02 semantics and grants no Phase 9 authority. Its direct predecessor v0.5.18 is archived byte-identically. The contract predecessor is preserved at `docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.0.md`.
 
 ## v0.5.20 — FP-001 TB-001 proof-contract successor candidate route (historical predecessor)
 
@@ -877,7 +877,7 @@ Open Work v1.2.77 routes the Phase 8 NEW_TRACER_BULLET contract at `working/FP-0
 
 ## v0.5.22 — FP-001 TB-001 approved contract route (historical predecessor)
 
-Open Work v1.2.79 routes the approved Phase 8 NEW_TRACER_BULLET proof contract at `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS. TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. Exact reviewed candidate bytes are preserved at `archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: STARTED (BOUNDED; BASELINE MAIN SHA c91016ecb75ea29adc9cc21e4bf30bab51dcdc3c). PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT EXECUTION ACTION: FP-001 P8 04 — Build the deterministic Phase-8 proof harness (WELL-5). This routing status changes no HARDEN-02 contract semantics or Phase 7 evidence.
+Open Work v1.2.79 routes the approved Phase 8 NEW_TRACER_BULLET proof contract at `working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. TB-001 CONTRACT/DESIGN REVIEW: COMPLETE / PASS. TB-001 CONTRACT STATUS: CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION. Exact reviewed candidate bytes are preserved at `docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md`. PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. PROOF EXECUTION: STARTED (BOUNDED; BASELINE MAIN SHA c91016ecb75ea29adc9cc21e4bf30bab51dcdc3c). PROOF RESULT: NOT STARTED. PROOF CERTIFICATION: NOT STARTED. PHASE 9 / VERTICAL SLICES: NOT STARTED / NOT AUTHORISED. NEXT EXECUTION ACTION: FP-001 P8 04 — Build the deterministic Phase-8 proof harness (WELL-5). This routing status changes no HARDEN-02 contract semantics or Phase 7 evidence.
 
 
 ## v0.5.23 — WELL-5 completion and P8-05 planning route (historical predecessor)

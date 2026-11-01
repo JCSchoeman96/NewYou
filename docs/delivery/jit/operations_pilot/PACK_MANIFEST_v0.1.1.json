@@ -329,52 +329,52 @@
       }
     ],
     "previous_compressed_candidate": {
-      "path": "deep/archive/NewYou_Operations_Support_Pilot_PreJIT_Compressed_Candidate_v0.1.0.md",
+      "path": "deep/docs/history/delivery-packs/operations_pilot/deep/archive/NewYou_Operations_Support_Pilot_PreJIT_Compressed_Candidate_v0.1.0.md",
       "bytes": 26721,
       "sha256": "1a32ba7edac94fc561bf0e76d50f6dbf698484ca5b05e0362a07e510a2249a12",
       "git_blob_sha": "f74a8c23d089530af689a79fa9d8077dc5dc80c2"
     },
     "previous_compact_pack": {
-      "path": "deep/archive/compact_pack_v0.1.0",
+      "path": "deep/docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0",
       "files": [
         {
-          "path": "deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_COMPRESSION_AUDIT_WORKING_v0.1.0.md",
+          "path": "deep/docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_COMPRESSION_AUDIT_WORKING_v0.1.0.md",
           "bytes": 7275,
           "sha256": "00e022190619751131d6a3d41e8aa39b1ba7928674d40c4798ccf714f91bd885",
           "git_blob_sha": "f9e9e5344f4079fabc16ccc02667273512ac1ba2"
         },
         {
-          "path": "deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_EVIDENCE_INDEX_WORKING_v0.1.0.md",
+          "path": "deep/docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_EVIDENCE_INDEX_WORKING_v0.1.0.md",
           "bytes": 15762,
           "sha256": "727077d51404193eeeef0661d108c7c94561ac9da42f8772ac84309ca357f533",
           "git_blob_sha": "ac001c409c12141d552a25ae7b7f3b6f54d434c2"
         },
         {
-          "path": "deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+          "path": "deep/docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTRACT_WORKING_v0.1.0.md",
           "bytes": 18654,
           "sha256": "0a6283b6f0819e4cd12dbbe93169567c3b1fb61ceda93fb4bb5d72d2fdf7aa86",
           "git_blob_sha": "88b7f3196071405037f3a2e8af74aa01bfbe3a3e"
         },
         {
-          "path": "deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md",
+          "path": "deep/docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md",
           "bytes": 4950,
           "sha256": "725c1cd138449349245eac1efc2e2f271e23a555abe7949b16f004cae3effab3",
           "git_blob_sha": "27ff414b2845cf1ac8374471b5d3250a6773d8dd"
         },
         {
-          "path": "deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md",
+          "path": "deep/docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md",
           "bytes": 8247,
           "sha256": "9ee85ffcd3344b33e3b5dbe8b2440d446976c0bee8fbfff4830318abe19f6638",
           "git_blob_sha": "96c36a1a39264f1cd905eb4d7d1d31df28f9de66"
         },
         {
-          "path": "deep/archive/compact_pack_v0.1.0/PACK_MANIFEST_v0.1.0.json",
+          "path": "deep/docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/PACK_MANIFEST_v0.1.0.json",
           "bytes": 19654,
           "sha256": "bf10653e7e52221f565a84d76e1551f345332f28b0f6c19e62381f4fc4f973dc",
           "git_blob_sha": "a15b5cdff4c00e2d03cdc9754184761b0f83cd4b"
         },
         {
-          "path": "deep/archive/compact_pack_v0.1.0/README.md",
+          "path": "deep/docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/README.md",
           "bytes": 2884,
           "sha256": "f200f503a5bcf04fd965d8f2d1e1facacd51b28061574af3c526c47ea5b05416",
           "git_blob_sha": "fcf9c9085dd5190de1c1e5c7647b6ac3f7a25eb9"

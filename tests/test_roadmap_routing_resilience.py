@@ -100,6 +100,11 @@ def _feature_pack_sections(text: str) -> dict[str, str]:
     return sections
 
 
+def _normalise_historical_archive_routes(text: str) -> str:
+    """Ignore only the repository-prefix change for relocated historical links."""
+    return re.sub(r"(?:docs/history/(?:platform/)?)?archive/", "archive/", text)
+
+
 def _section_bytes(source: Path | bytes, heading: str, next_heading_prefix: str) -> bytes:
     content = source.read_bytes() if isinstance(source, Path) else source
     lines = content.splitlines(keepends=True)
@@ -246,7 +251,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         new_packs = _feature_pack_sections(self.current_roadmap)
         self.assertEqual(old_packs.keys(), new_packs.keys())
         for pack_id in old_packs:
-            expected = old_packs[pack_id]
+            expected = _normalise_historical_archive_routes(old_packs[pack_id])
             if pack_id in {"FP-002", "FP-003"}:
                 expected = expected.replace("00_PLATFORM_v1.8.0.md", "00_PLATFORM_v1.9.0.md", 1)
             if pack_id == "FP-009":
@@ -255,7 +260,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
                     "`00_PLATFORM_v1.9.0.md §§8, 21A.6, 21G, 21L.8, 21L.11–21L.18, 21T.9`; `DEC-039...DEC-043`, `DEC-045`, `DEC-170...DEC-190`, `DEC-275`, `DEC-278`, `DEC-283...DEC-285`, `DEC-312`, `DEC-315`.",
                     1,
                 )
-            self.assertEqual(expected, new_packs[pack_id], pack_id)
+            self.assertEqual(expected, _normalise_historical_archive_routes(new_packs[pack_id]), pack_id)
         for heading, next_heading in (("# 21. Phase 7 handoff", ""),):
             current = _section_bytes(CURRENT_ROADMAP, heading, next_heading)
             predecessor = _section_bytes(
@@ -267,7 +272,11 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
                 heading,
                 next_heading,
             )
-            self.assertEqual(predecessor, current, heading)
+            self.assertEqual(
+                _normalise_historical_archive_routes(predecessor.decode("utf-8")),
+                _normalise_historical_archive_routes(current.decode("utf-8")),
+                heading,
+            )
 
     def test_patch_scope_is_narrow_and_stage_neutral(self):
         self.assertIn(PATCH_SCOPE.strip(), self.roadmap)

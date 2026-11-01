@@ -6734,7 +6734,7 @@ The final routing audit mechanically reproduced **321 frozen ARQs whose `Primary
 
 # 6. Architecture amendment supplement
 
-This supplement is the additive successor to `ARCHITECTURE_LAW_WORKING_v0.35.0.md`. The predecessor is preserved byte-for-byte at `archive/ARCHITECTURE_LAW_WORKING_v0.35.0.md`. ARC-001 through ARC-327 remain accepted history. No existing ARC is deleted, renumbered, silently rewritten, weakened or assigned a new source. The five records below are the only new Architecture decisions in this amendment.
+This supplement is the additive successor to `ARCHITECTURE_LAW_WORKING_v0.35.0.md`. The predecessor is preserved byte-for-byte at `docs/history/platform/archive/ARCHITECTURE_LAW_WORKING_v0.35.0.md`. ARC-001 through ARC-327 remain accepted history. No existing ARC is deleted, renumbered, silently rewritten, weakened or assigned a new source. The five records below are the only new Architecture decisions in this amendment.
 
 ## 6.1 Allocation audit and legislative grouping
 

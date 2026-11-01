@@ -2,7 +2,7 @@
 
 - **Document status:** FROZEN PRODUCT BASELINE v1.13.0
 - **Document version:** v1.13.0
-- **Predecessor:** `archive/00_PLATFORM_v1.12.0.md`
+- **Predecessor:** `docs/history/platform/archive/00_PLATFORM_v1.12.0.md`
 - **SemVer transition:** `v1.12.0 → v1.13.0`
 - **Authoritative for:** Platform purpose, product direction, users, commercial model, personalisation principles, clinical boundaries, membership direction, community direction, ownership intent, and platform-wide non-negotiables
 - **Not authoritative for:** Ash resources, database schemas, technical architecture, implementation sequencing, pricing implementation, or legal advice

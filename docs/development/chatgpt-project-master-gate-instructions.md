@@ -17,7 +17,7 @@ For current durable routing, independently inspect:
 5. live Plane work, blockers, dependencies and acceptance criteria;
 6. actual code, tests, migrations and dependencies.
 
-When exact legislative/source tracing or identifier-level Architecture reasoning is required, load the router's current `deep_reference_documents`. They are evidence routes, not additional default governing roots.
+When exact source tracing, identifier-level reasoning or deep Architecture tracing is required, load the governance router's current `architecture_references`. They are evidence routes, not additional default governing roots.
 
 `docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` is the frozen historical/provenance baseline for Foundation Full; it is not a current router.
 

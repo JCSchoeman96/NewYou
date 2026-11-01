@@ -124,7 +124,7 @@ Exact strings, worker mapping tables, event grammar, CI job lists and implementa
 
 ## Certification lifecycle and preserved downstream state
 
-The v1.0.0 promotion candidate is preserved byte-identically at `archive/ENGINEERING_STANDARDS_v1.0.0.md`. This v1.0.1 status successor records the accepted candidate as certified/current without changing the EP-Q1…EP-Q5 normative body. Both manifest records remain under the reference classification; only v1.0.1 is active, and Engineering Standards is not governing-root authority.
+The v1.0.0 promotion candidate is preserved byte-identically at `docs/history/platform/archive/ENGINEERING_STANDARDS_v1.0.0.md`. This v1.0.1 status successor records the accepted candidate as certified/current without changing the EP-Q1…EP-Q5 normative body. Both manifest records remain under the reference classification; only v1.0.1 is active, and Engineering Standards is not governing-root authority.
 
 The sole normative source remains the accepted Stage 4B Engineering-Policy Grill at `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`, SHA-256 `27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017`. Stage 4A Architecture Grill evidence remains constraint context only.
 

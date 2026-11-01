@@ -10,7 +10,7 @@ NOT PHASE 7C DEVELOPMENT-ENTRY AUTHORITY
 DOES NOT OVERRIDE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 ```
 
-**Artifact version:** v0.1.0 narrow status successor. Exact PR #78 candidate bytes are preserved byte-identically at `archive/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` (SHA-256 `039f1b0e249f62dfd606fc6484681d4e821077fb4c89eba65c4f33eb752277a9`).
+**Artifact version:** v0.1.0 narrow status successor. Exact PR #78 candidate bytes are preserved byte-identically at `docs/history/platform/archive/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` (SHA-256 `039f1b0e249f62dfd606fc6484681d4e821077fb4c89eba65c4f33eb752277a9`).
 
 **Status:** `CERTIFIED / CURRENT`; PR #78 candidate certification is `COMPLETE`; PR #78 post-merge certification evidence is `COMPLETE`; current-status promotion is `PR #81 STATUS SUCCESSOR`. PR #78 certified the candidate and merged it unchanged but did not perform the dossier current-status promotion. This separate status successor records the current Communications dossier lifecycle state. Communications finalisation remains `BLOCKED / STOP` pending applicable gates and conditional-dossier adjudication. No Phase 7C work, proof classification or implementation starts here.
 

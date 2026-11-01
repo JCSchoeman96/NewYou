@@ -18,7 +18,7 @@ NOT DEVELOPMENT-ENTRY AUTHORITY
 
 **PR #121 candidate result:** `PASS / READY FOR INDEPENDENT REVIEW`.
 
-**Lifecycle:** `COMPLETE / CERTIFIED / CURRENT`. This status-only successor certifies and routes the exact PR #121 candidate preserved at `archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md`. The reconciliation remains v0.1.0; its semantic body is unchanged.
+**Lifecycle:** `COMPLETE / CERTIFIED / CURRENT`. This status-only successor certifies and routes the exact PR #121 candidate preserved at `docs/history/platform/archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md`. The reconciliation remains v0.1.0; its semantic body is unchanged.
 
 This is a semantic and governance reconciliation of the selected FP-001 scope. It determines whether Phase 7C can state the approved outcome using current authority and the complete, certified, current required dossiers. It does not amend Product, Architecture, Domain or Roadmap authority. It does not create a Domain, capability, Feature Pack or shared-write owner. It does not begin Phase 7C, proof classification, Phase 8 or application implementation.
 
@@ -33,15 +33,15 @@ The reconciliation uses the exact current versions in the baseline authority man
 | Project North Star and MVP | `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`, §§5, 10-13 |
 | Product Law | `00_PLATFORM_v1.8.0.md`, §§7.2-7.3, 21E, 21I, 21J, 21P |
 | Decision Register | `01_DECISIONS_v1.8.0.md`, DEC-027, DEC-028, DEC-094, DEC-232-234, DEC-253-256, DEC-261-263, DEC-297-298, OQ-029, OQ-034-038 |
-| Open Work | `archive/02_OPEN_WORK_v1.2.65.md` (current on the baseline), §§9, 12.19-12.22 and structured FP-001 lifecycle state |
+| Open Work | `docs/history/platform/archive/02_OPEN_WORK_v1.2.65.md` (current on the baseline), §§9, 12.19-12.22 and structured FP-001 lifecycle state |
 | Architecture | `03_ARCHITECTURE_v1.1.1.md`, §§4-6, 6.1-6.6, 8, 10.1, 10.4, 11-12, 14-15 |
 | Domain Map | `04_DOMAIN_MAP_v1.2.0.md`, §§3-5, 6.1, 6.2, 6.7, 6.15, 6.17-6.18, 8-10 |
 | Roadmap | `05_ROADMAP_v1.2.2.md`, §6 FP-001 and current gate-routing table |
 | Platform Operating Model | `PLATFORM_OPERATING_MODEL_v1.0.1.md`, §§4-6, 9-13, 22, 25-28 |
 | Frontend Experience System | `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md`, §§3.1-3.3, 4, 5.1-5.2, 5.7, 6.1-6.3, 7.2-7.3, 9-10 |
-| Delivery Atlas | `archive/DELIVERY_ATLAS_WORKING_v0.4.7.md` (current on the baseline), §§4-6 and FP-001 view. Derived navigation only. |
-| HARDEN-02 | `archive/HARDEN-02_CONTRACT_WORKING_v0.5.9.md` (current on the baseline), §§2, 18-21. Governance route only. |
-| FP-001 Skeleton | `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md` (current on the baseline), §§1-17 |
+| Delivery Atlas | `docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.4.7.md` (current on the baseline), §§4-6 and FP-001 view. Derived navigation only. |
+| HARDEN-02 | `docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.9.md` (current on the baseline), §§2, 18-21. Governance route only. |
+| FP-001 Skeleton | `docs/history/platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md` (current on the baseline), §§1-17 |
 | Identity dossier | `docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md`, §§A-C, E-I, J.1-J.1a, K, L, N-O, R-U, X-AA |
 | Communications dossier | `docs/delivery/jit/communications/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`, §§1-20 |
 | Audit & Evidence dossier | `docs/delivery/jit/audit-evidence/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`, §§1-18 |
@@ -209,7 +209,7 @@ PR #122 supplied the current-status successor merge after PR #121 certified the 
 | Pre-candidate main | `5d282ecca4e13b621c7f96c05c47d6fac43ec1bd` |
 | Resulting main and PR #121 merge | `f24786eec8ff4d60f6f8cdf9dbe7947556fe87c3` |
 | Candidate/resulting-main tree | `98e553d45006136277e4b2aa629c97c31f7742e2` |
-| Archived candidate path | `archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md` |
+| Archived candidate path | `docs/history/platform/archive/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md` |
 | Archived candidate SHA-256 | `274306e73e2450806516a5b76ca96f1a768af7824ba823cca6c9371c58e65401` |
 | Exact-head run | [39035622705](https://github.com/JCSchoeman96/NewYou/actions/runs/39035622705) — PASS |
 | Resulting-main run | [39041010709](https://github.com/JCSchoeman96/NewYou/actions/runs/39041010709) — PASS |

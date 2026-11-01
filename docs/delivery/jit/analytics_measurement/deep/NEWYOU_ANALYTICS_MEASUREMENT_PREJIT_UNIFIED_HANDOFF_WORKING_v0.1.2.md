@@ -12,7 +12,7 @@ NO DEFAULT PASS 15
 - **Branch:** `prejit/analytics-measurement`
 - **Verified live-main baseline before correction:** `086ade7b28c000de1c387acb9760e5eb08bb0413`
 - **Verified pre-correction Analytics branch head:** `aa9ac8dd817cec855d80dc9abec7de6d56b5d8c2`
-- **Packaging predecessor:** `deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_UNIFIED_HANDOFF_WORKING_v0.1.1.md` — semantic predecessor preserved byte-identically.
+- **Packaging predecessor:** `deep/docs/history/delivery-packs/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_UNIFIED_HANDOFF_WORKING_v0.1.1.md` — semantic predecessor preserved byte-identically.
 - **Packaging/finalisation baseline:** live `main` `086ade7b28c000de1c387acb9760e5eb08bb0413`; pre-finalisation branch head `8ed7bc679caf2071cd7059bb4579898230bfdcf7`.
 - **Purpose:** preserve the complete corrected Pre-JIT semantics as the canonical deep source behind compact pack v0.1.1; this v0.1.2 successor changes routing/provenance only.
 - **Authority status:** this document is working evidence only. It does not amend Product Law, Architecture Law, Domain Law, Roadmap, Open Work, any Feature Pack contract or implementation authority.

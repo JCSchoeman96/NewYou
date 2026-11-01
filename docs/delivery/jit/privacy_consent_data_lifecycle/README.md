@@ -37,7 +37,7 @@ Live repository authority always wins.
 
 The detailed cumulative discovery source for this pack is:
 
-`../../archive/PRIVACY_CONSENT_PREJIT_DISCOVERY_WORKING_v0.12.1.md`
+`docs/history/platform/archive/PRIVACY_CONSENT_PREJIT_DISCOVERY_WORKING_v0.12.1.md`
 
 It is historical / working evidence and should not be loaded by default.
 Use it only when exact pressure-test, working-doctrine, upstream-delta or
@@ -45,7 +45,7 @@ decision provenance is required.
 
 The predecessor remains:
 
-`../../archive/PRIVACY_CONSENT_PREJIT_DISCOVERY_WORKING_v0.12.0.md`
+`docs/history/platform/archive/PRIVACY_CONSENT_PREJIT_DISCOVERY_WORKING_v0.12.0.md`
 
 It is preserved historical working evidence and does not override v0.12.1
 or live governed repository authority.

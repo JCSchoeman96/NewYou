@@ -22,6 +22,16 @@ from typing import Any, Iterable
 
 
 DEFAULT_MANIFEST = Path("docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
+# Exact current-file digests after the semantic-root migration corrected only
+# relative provenance paths. The pinned pre-migration bytes remain the primary
+# baseline; these narrowly allowlisted successors keep that history auditable.
+CURRENT_PATH_REFERENCE_SUCCESSOR_SHA256 = {
+    "docs/00_platform/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md": "fae39c9c18247498b658452a9b68504d1bd7f295a6d31daea594547ac3c1b035",
+    "docs/00_platform/03_ARCHITECTURE_v1.1.1.md": "45661285206fc84225531ea88adf32572a9fec0ab1c3e9b6a15ea0353454e0d2",
+    "docs/00_platform/04_DOMAIN_MAP_v1.2.0.md": "05aec0197262f0b659472ffc2bdc3c5baaa665b20f05de23b3bd8002ce0126d7",
+    "docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md": "6f9d7b594df696d2968324c1dd8e445c53166d853595d7dd6f5566d43faa5e97",
+    "docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md": "501bac77debf4f145d7d57f87029e0be22febcee17e8f368fb4473a2c9fc7342",
+}
 FROZEN_PRE_MIGRATION_MANIFEST = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
 PRE_MIGRATION_LAYOUT_BASE_SHA = "a2dfeff5d6cf88d7534cd100c28f39d3045bc814"
 HISTORICAL_CONTEXT_README_PATH = "docs/00_platform/archive/README_PRE_WELL66_2026-10-30.md"
@@ -150,6 +160,16 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _matches_pinned_or_path_reference_successor(root: Path, relative: str, pinned_digest: str) -> bool:
+    """Accept the frozen baseline or its exact migration-only path correction."""
+
+    path = root / relative
+    if not path.is_file():
+        return False
+    actual = sha256_file(path)
+    return actual == pinned_digest or actual == CURRENT_PATH_REFERENCE_SUCCESSOR_SHA256.get(relative)
 
 
 def load_manifest(path: Path) -> dict[str, Any]:
@@ -6389,7 +6409,7 @@ def _check_roadmap_proof_classification_lifecycle(
 
     for relative, digest in expected_upstream.items():
         path = root / relative
-        if not path.is_file() or sha256_file(path) != digest:
+        if not _matches_pinned_or_path_reference_successor(root, relative, digest):
             issues.append(f"protected Product, Decision, Architecture or Domain authority changed: {relative}")
     for relative, digest in expected_jit.items():
         path = root / relative
@@ -7204,7 +7224,7 @@ def _check_fp001_phase8_proof_contract_lifecycle(
 
     for relative, digest in expected_fixed["frozen_source_sha256"].items():
         path = root / relative
-        if not path.is_file() or sha256_file(path) != digest:
+        if not _matches_pinned_or_path_reference_successor(root, relative, digest):
             if relative.endswith("FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md"):
                 issues.append(
                     "certified Identity & Access dossier changed from its Phase 7B baseline; "
@@ -13255,7 +13275,7 @@ def _materialize_legacy_audit_layout(source_root: Path, legacy_root: Path) -> No
         ("docs/governance/supporting/PLATFORM_OPERATING_MODEL_v1.3.0.md", "docs/00_platform/PLATFORM_OPERATING_MODEL_v1.3.0.md"),
         ("docs/governance/supporting/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md", "docs/00_platform/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md"),
         ("docs/governance/supporting/ENGINEERING_STANDARDS_v1.0.1.md", "docs/00_platform/reference/ENGINEERING_STANDARDS_v1.0.1.md"),
-        ("docs/governance/supporting/DELIVERY_GOVERNANCE_STANDARD_v1.1.0.md", "docs/00_platform/reference/DELIVERY_GOVERNANCE_STANDARD_v1.1.0.md"),
+        ("docs/governance/supporting/DELIVERY_GOVERNANCE_STANDARD_v1.2.0.md", "docs/00_platform/reference/DELIVERY_GOVERNANCE_STANDARD_v1.2.0.md"),
     ):
         source_path = source_root / source
         if source_path.is_dir():

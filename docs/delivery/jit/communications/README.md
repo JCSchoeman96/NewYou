@@ -13,7 +13,7 @@
 1. Read the live governed platform authority and the current certified FP-001 Identity & Access JIT Domain Dossier first.
 2. Read `NEWYOU_COMMUNICATIONS_PREJIT_DISCOVERY_WORKING_v0.10.0.md` as the compact reviewer-facing Communications Pre-JIT conclusion.
 3. Consult the detailed predecessor ledger only when exact scenario/provenance evidence is needed:
-   `../../archive/NEWYOU_COMMUNICATIONS_PREJIT_DISCOVERY_WORKING_v0.9.0.md`.
+   `docs/history/platform/archive/NEWYOU_COMMUNICATIONS_PREJIT_DISCOVERY_WORKING_v0.9.0.md`.
 
 The archived v0.9.0 ledger remains the detailed evidence record. The v0.10.0 file is a compact consolidation and does not replace live authority.
 

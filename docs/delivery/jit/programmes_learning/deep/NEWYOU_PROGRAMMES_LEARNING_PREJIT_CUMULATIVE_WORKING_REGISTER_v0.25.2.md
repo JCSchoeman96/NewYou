@@ -3936,7 +3936,7 @@ No new Product, Architecture or Domain law is created. No new `PRG-GAP` or `PRG-
 
 The user identified the completed Analytics & Measurement Pre-JIT as relevant. Live GitHub inspection found the corrected unified handoff at `prejit/analytics-measurement` head `8ed7bc679caf2071cd7059bb4579898230bfdcf7`:
 
-`docs/delivery/jit/analytics_measurement/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_UNIFIED_HANDOFF_WORKING_v0.1.0.md`
+`docs/history/delivery-packs/analytics_measurement/deep/archive/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_UNIFIED_HANDOFF_WORKING_v0.1.0.md`
 
 That artifact explicitly remains WORKING / NON-AUTHORITATIVE, marks core Analytics discovery HANDOFF-READY / STOP AT JIT BOUNDARY, preserves Analytics as derived authority only, requires source-authoritative membership and prospective/versioned metric definitions, distinguishes occurrence/ingestion/correction time, and keeps `ANL-GAP-003` as FP-006 JIT work. Pass 21 reuses those conclusions but does not promote them to Product law or import FP-006 metric policy into Programmes.
 

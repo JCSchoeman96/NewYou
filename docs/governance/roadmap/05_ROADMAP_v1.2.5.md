@@ -2,7 +2,7 @@
 
 - **Document status:** FROZEN / AMENDED ROADMAP v1.2.5
 - **Document version:** v1.2.5
-- **Predecessor frozen version:** `archive/05_ROADMAP_v1.2.4.md`
+- **Predecessor frozen version:** `docs/history/platform/archive/05_ROADMAP_v1.2.4.md`
 - **SemVer transition:** `v1.2.4 → v1.2.5`
 - **Last updated:** 2026-10-31
 - **Authority:** sequences approved Product Law under frozen Architecture and Domain Law, including the Targeted Product Amendment sequencing decisions
@@ -12,10 +12,10 @@
 - **Current repository routing:** `docs/governance/CURRENT_GOVERNANCE_ROUTER.json`, `docs/delivery/CURRENT_DELIVERY_ROUTER.json` and `docs/README.md` (durable orientation; not a live task/status ledger).
 - **Live execution state:** Plane project `WELL` beneath durable GitHub law; only dependency-cleared Plane **`Ready`** authorises fresh implementation.
 - **Frozen Open Work (historical only):** `02_OPEN_WORK_v1.2.90.md` — final pre-WELL-66 planning snapshot; not current execution authority.
-- **Roadmap-freeze provenance (v1.1.2 source-at-freeze):** `archive/00_PLATFORM_v1.4.1.md`, `archive/01_DECISIONS_v1.4.1.md`, `archive/04_DOMAIN_MAP_v1.1.1.md`, `archive/02_OPEN_WORK_v1.2.45.md`
+- **Roadmap-freeze provenance (v1.1.2 source-at-freeze):** `docs/history/platform/archive/00_PLATFORM_v1.4.1.md`, `docs/history/platform/archive/01_DECISIONS_v1.4.1.md`, `docs/history/platform/archive/04_DOMAIN_MAP_v1.1.1.md`, `docs/history/platform/archive/02_OPEN_WORK_v1.2.45.md`
 - **Roadmap Sequencing Grill evidence:** `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` (non-authoritative)
-- **Historical working draft:** `archive/05_ROADMAP_WORKING_v0.1.0.md`
-- **Historical frozen predecessor:** `archive/05_ROADMAP_v1.0.0.md`
+- **Historical working draft:** `docs/history/platform/archive/05_ROADMAP_WORKING_v0.1.0.md`
+- **Historical frozen predecessor:** `docs/history/platform/archive/05_ROADMAP_v1.0.0.md`
 - **Implementation status:** STOPPED; this document does not authorise Feature Pack preparation, JIT Domain Dossiers, Architectural Proof, Vertical Slices, TOON generation or implementation
 
 ## Routing amendment (v1.2.4)
@@ -608,7 +608,7 @@ The following packs are stable Roadmap containers. Their names and boundaries ar
 
 **Affected Domains:** `Identity & Access`; `Privacy & Consent`; `Commerce`; `Entitlements`; `Temperament`; `Health Records`; `Safety & Eligibility`; `Plans & Nutrition`; `Content & Media`; `Communications`; `Analytics`; `Audit & Evidence`.
 
-**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§15–17A, 19A–24`; `00_PLATFORM_v1.6.0.md §§21L.13–21L.24, 21T.4–21T.9`; `DEC-280...DEC-291`, `DEC-307...DEC-312`; source-at-freeze tracker `archive/02_OPEN_WORK_v1.2.45.md §§8, 11`.
+**Product Authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md §§15–17A, 19A–24`; `00_PLATFORM_v1.6.0.md §§21L.13–21L.24, 21T.4–21T.9`; `DEC-280...DEC-291`, `DEC-307...DEC-312`; source-at-freeze tracker `docs/history/platform/archive/02_OPEN_WORK_v1.2.45.md §§8, 11`.
 
 **Architecture Authority:** `03_ARCHITECTURE_v1.1.1.md §§7–15`; `FLOW-01...FLOW-06`, `FLOW-08`, `FLOW-11`; release/degradation, deletion/recovery, observability, audit and staged performance-proof themes.
 

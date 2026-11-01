@@ -4,7 +4,7 @@
 - **Pack version:** `v0.1.0`
 - **Implementation:** NOT AUTHORISED
 - **Authority:** NONE
-- **Deep source:** `../../archive/BEACON_REUSE_GRILL_AND_EXTRACTION_WORKING_v0.42.1.md`
+- **Deep source:** `docs/history/platform/archive/BEACON_REUSE_GRILL_AND_EXTRACTION_WORKING_v0.42.1.md`
 - **Deep-source SHA-256:** `08823adec046ae7222aff83725ded76a0bed68f629a1b7466a18acdc8efc4291`
 - **Semantic stabilisation audit:** `NEWYOU_CM_PREJIT_STABILISATION_AUDIT_WORKING_v0.1.0.md`
 - **Mechanical recertification:** `NEWYOU_CM_PREJIT_STABILISATION_MECHANICAL_RECERTIFICATION_v0.1.1.md`
@@ -28,7 +28,7 @@ It does not amend Product Law, Architecture Law, Domain Law, Roadmap, Open Work,
 
 Detailed source:
 
-`../../archive/BEACON_REUSE_GRILL_AND_EXTRACTION_WORKING_v0.42.1.md`
+`docs/history/platform/archive/BEACON_REUSE_GRILL_AND_EXTRACTION_WORKING_v0.42.1.md`
 
 Do not load the deep source by default. Use it when exact pressure-test reasoning, historical supersession/refinement, donor blob provenance or accepted-decision wording is required.
 

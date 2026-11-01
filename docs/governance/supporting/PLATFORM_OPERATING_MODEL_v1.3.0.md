@@ -2,12 +2,12 @@
 
 - **Document status:** FROZEN / COMPLETE PLATFORM OPERATING MODEL v1.3.0
 - **Document version:** v1.3.0
-- **Predecessor frozen version:** `archive/PLATFORM_OPERATING_MODEL_v1.2.0.md`
-- **Earlier frozen baseline:** `archive/PLATFORM_OPERATING_MODEL_v1.0.1.md`
+- **Predecessor frozen version:** `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.2.0.md`
+- **Earlier frozen baseline:** `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md`
 - **SemVer transition:** `v1.2.0 → v1.3.0` — development execution authority separation.
 - **Date:** 2026-10-31
 - **Derived experience provenance:** `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md` (working, non-authoritative)
-- **Authority basis at this model's freeze:** `archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `archive/00_PLATFORM_v1.2.1.md`, `archive/01_DECISIONS_v1.2.2.md`, `archive/02_OPEN_WORK_v1.2.28.md`, `archive/03_ARCHITECTURE_v1.0.0.md`, `archive/04_DOMAIN_MAP_v1.0.0.md`, `archive/05_ROADMAP_v1.0.0.md`
+- **Authority basis at this model's freeze:** `docs/history/platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `docs/history/platform/archive/00_PLATFORM_v1.2.1.md`, `docs/history/platform/archive/01_DECISIONS_v1.2.2.md`, `docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md`, `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md`, `docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md`, `docs/history/platform/archive/05_ROADMAP_v1.0.0.md`
 - **Upstream authority order:** Product Law → Architecture Law → Domain Law → Roadmap
 - **Implementation status:** this model grants no runtime business capability or production/release authority.
 - **Authority boundary:** Product Law → Architecture Law → Domain Law → Roadmap remain upstream. This document governs stable human/operating workflow beneath those authorities; it must not invent business truth, implementation schemas or unresolved expert policy. Durable authority plus dependency-cleared Plane `Ready` governs implementation permission; that permission is separate from runtime role/grant authority.

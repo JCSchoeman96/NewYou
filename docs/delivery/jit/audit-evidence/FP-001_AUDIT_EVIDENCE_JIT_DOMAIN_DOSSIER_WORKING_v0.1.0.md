@@ -10,7 +10,7 @@ NOT PHASE 7C DEVELOPMENT-ENTRY AUTHORITY
 DOES NOT OVERRIDE PRODUCT / ARCHITECTURE / DOMAIN / ROADMAP LAW
 ```
 
-**Artifact version:** v0.1.0 narrow status successor. The exact PR #118 candidate bytes remain at `archive/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` (SHA-256 `0b0a8fb64a3ac602ebb81a7ab957a9dd075412350c818e4c6e5f13f667f7daea`).
+**Artifact version:** v0.1.0 narrow status successor. The exact PR #118 candidate bytes remain at `docs/history/platform/archive/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` (SHA-256 `0b0a8fb64a3ac602ebb81a7ab957a9dd075412350c818e4c6e5f13f667f7daea`).
 
 **Status:** `CERTIFIED / CURRENT`. PR #118 candidate certification is `COMPLETE`; PR #118 post-merge certification evidence is `COMPLETE`; current-status promotion is `PR #119 STATUS SUCCESSOR`. PR #118 certified and merged the reviewed candidate unchanged. This separate status successor records v0.1.0 as current. Phase 7B reconciliation is `NEXT / NOT_STARTED`. Phase 7C remains `BLOCKED / NOT_STARTED` until successful Phase 7B reconciliation. Proof classification remains `NOT FINALISED`. Phase 8/application implementation remains `UNAUTHORISED`.
 
@@ -426,8 +426,8 @@ This candidate is submitted for fresh independent exact-head review. It claims n
 
 ### Current FP-001 contracts read and revalidated
 
-- `docs/delivery/feature-contracts/fp-001/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md`
-- `docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`
+- `docs/history/platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.7.md`
+- `docs/history/platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`
 - `docs/delivery/jit/communications/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
 
 ### Non-authoritative Audit evidence read

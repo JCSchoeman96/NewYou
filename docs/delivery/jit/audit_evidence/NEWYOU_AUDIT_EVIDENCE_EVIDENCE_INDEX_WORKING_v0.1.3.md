@@ -36,8 +36,8 @@ The v0.1.0 compact Evidence Index incorrectly omitted the `reference/` path segm
 
 ## 3. Current FP-001 working sources checked
 
-- `docs/delivery/feature-contracts/fp-001/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md`
-- `docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`
+- `docs/history/platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.5.md`
+- `docs/history/platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`
 - `docs/delivery/jit/communications/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
 
 Key boundary:
