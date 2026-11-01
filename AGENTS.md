@@ -1,176 +1,399 @@
-# NewYou Engineering Contract
+NewYou Engineering Contract
 
 This file is manually owned by NewYou. Generated framework documentation never replaces it.
 
-## Development Workflow
+Development workflow
 
-- ALWAYS make changes and implementations on a git branch.
-- ALWAYS create a PR after work and implementations so the work can be reviewed.
-- When a PR is merged and local state is synced, leave the repository clean and ready for the next agent.
-- Use a worktree when needed and available.
+- Make all changes on a git branch.
+- Use an isolated worktree where appropriate.
+- Create a PR for implementation or repository changes so they can be reviewed.
 - Do not merge unless explicitly authorised.
+- After merge and local sync, leave the repository clean and ready for the next agent.
 
-## Authority split
+Authority and execution sources
 
-The live GitHub repository is canonical for **durable governance and implementation evidence**. Plane is canonical for **live execution state beneath that durable law**.
+GitHub is canonical for durable governance and implementation evidence.
 
-For current durable routing, start with:
+Plane project "WELL" is canonical for live execution state beneath that law: work-item state, priority, blockers, dependencies, sequencing, acceptance criteria, discovered work and review/merge readiness.
 
-1. `docs/00_platform/README.md`; and
-2. `docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json`.
+For current durable routing start with:
 
-Do not use `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` as the live delivery router. It is the frozen pre-WELL-66 historical/provenance baseline used by Foundation Full.
+1. "docs/00_platform/README.md"
+2. "docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
+
+Use router "deep_reference_documents" only when exact source or identifier tracing is required.
+
+"CURRENT_AUTHORITY_MANIFEST_v1.0.0.json" is frozen historical/provenance input for Foundation Full, not the live delivery router.
+
+"docs/00_platform/02_OPEN_WORK_v1.2.90.md" is frozen legacy evidence, not live execution authority.
 
 Durable authority order is:
 
-Product Law → Architecture Law → Domain Law → governing Roadmap → applicable Operating/Frontend/Engineering/Delivery supporting authority → semantic Feature/JIT/proof contracts where required → implementation.
+Product Law → Architecture Law → Domain Law → governing Roadmap → applicable supporting authority → semantic Feature/JIT/proof contracts where required → implementation.
 
-The local agent is a planner and implementer, not a source of Product, Architecture, Domain or Roadmap law. It may make JIT implementation choices only where authority intentionally leaves them open. Never improvise missing product, architecture, domain, clinical, legal, commercial, safety or entitlement law.
+Plane never overrides durable GitHub law. If Plane and durable authority conflict, STOP only the affected work, record the evidence in Plane and reconcile the smallest correct upstream authority.
 
-Durable governance is read-only during ordinary implementation. Update it only for a deliberate governed decision or when implementation supplies conclusive evidence of an upstream governance contradiction. Do not silently repair upstream law in implementation.
+Working or derived artifacts such as Delivery Atlas, Skeleton, HARDEN, JIT dossiers and proof contracts change only when their semantic contract changes. Status-only changes belong in Plane.
 
-Plane owns the active delivery-roadmap projection, work-item state/priority, blockers, dependencies, sequencing, acceptance criteria, discovered/deferred work, review/merge state and implementation readiness. Plane may not silently amend or override durable GitHub law. If they conflict, STOP the affected work, record the conflict in Plane and reconcile the smallest correct upstream authority.
+Durable governance is read-only during ordinary implementation. Amend it only for a deliberate durable semantic change or a proven upstream governance contradiction.
 
-`docs/00_platform/02_OPEN_WORK_v1.2.90.md` is the final frozen legacy Open Work snapshot. It is historical evidence only after WELL-66; never use it as live execution authority and never create a successor merely to mirror ticket state.
+Delivery modes
 
-Working/derived artifacts such as Delivery Atlas, Skeleton, HARDEN, JIT dossiers and proof contracts change when their **semantic contract** changes. Existing ticket/status prose in them is freeze-time/historical context unless the semantic contract itself makes it durable. Live execution status comes from Plane.
+NewYou has two distinct delivery modes.
 
-## Plane and Symphony execution boundary
+New vertical slice or substantial feature
 
-Plane project `WELL` is the authoritative execution ledger and delivery roadmap beneath durable GitHub law.
+Use proportional planning:
 
-The only state that authorises a fresh Symphony/local implementation agent to begin a ticket is **`Ready`**. The existing Ready state is the Symphony-routable implementation state.
+"reconnaissance → /grilling when materially needed → to-spec only when durable semantics are missing → to-tickets when decomposition helps → Plane"
 
-- `Backlog`, `Planning` and `Blocked` are not executable.
-- `In Progress`, `In Review`, `Changes Requested`, `Ready to Merge` and `Merging` describe work already in the delivery/review lifecycle; they are not permission to pull unrelated scope.
-- `Done` is terminal execution state after required post-merge/resulting-main reconciliation.
+Do not force every slice through every ceremony.
 
-Search Plane before creating work. Do not create duplicates. All material delivery work belongs in Plane: active slice/Feature Pack work, executable tickets, blockers, dependencies, bugs/defects, security/privacy/architecture issues, discovered/deferred work, test/proof gaps and release blockers.
+A "/grilling" may conclude that current authority is sufficient and the remaining decisions are JIT implementation choices.
 
-Keep Plane focused. Do not pre-create every speculative future implementation task. Maintain the active delivery projection and near-term decomposition needed to identify exact next work.
+Ready implementation ticket
 
-Do not leave delivery-affecting work only in chat, PR comments, TODO comments, handoff notes or memory.
+Fresh implementation starts only from a dependency-cleared Plane ticket in "Ready".
 
-## Reconnaissance and proportional planning
+"Ready" means there is sufficient durable direction and executable acceptance criteria to implement, while leaving normal engineering design to JIT development.
 
-Before `/grilling`, `to-spec`, `to-tickets` or material implementation, inspect the relevant live state:
+It does not mean every Resource, table, field, action, constraint, transaction mechanism or internal representation has already been designed.
 
-1. `docs/00_platform/README.md` and `CURRENT_AUTHORITY_ROUTER_v1.0.0.json`;
-2. applicable Product/Decision, Architecture, Domain, Roadmap, Operating, Frontend, Engineering and Delivery authority;
-3. the relevant semantic Feature Pack/JIT/proof contracts;
-4. live Plane work, blockers, dependencies and ticket acceptance criteria;
-5. actual code, tests, migrations and dependencies.
+Before implementing a Ready ticket use:
 
-Follow evidence only as far as the task requires; do not load the entire historical archive by default.
+".agents/skills/ticket-implement/SKILL.md"
 
-Use the lightest process that safely resolves the work:
+Do not routinely invoke "/grilling", "to-spec" or "to-tickets" again inside a Ready ticket.
 
-- Narrow, settled single-purpose work: one focused Plane ticket.
-- Major slice with material ambiguity: repository reconnaissance → `/grilling`.
-- `to-spec`: only when reconnaissance/grilling proves a durable implementation contract is genuinely missing.
-- `to-tickets`: only when decomposition creates independent testable/reviewable parts, necessary sequencing or materially safer delivery.
-- Do not re-grill, re-spec or re-ticket settled decisions without new evidence, contradiction or changed scope.
+A Ready ticket can still uncover genuinely new information. Discovery alone does not make the ticket blocked.
 
-Only dependency-cleared, adequately specified work should move to `Ready`.
+Plane execution boundary
 
-Use focused, test-first development and applicable repository checks for material implementation or behaviour work.
+Only "Ready" authorises a fresh implementation agent to begin a ticket.
 
-## Material question classification
+- "Backlog", "Planning" and "Blocked" are not executable.
+- "In Progress", "In Review", "Changes Requested", "Ready to Merge" and "Merging" describe work already in progress.
+- "Done" is terminal only after required post-merge/resulting-main reconciliation.
 
-Classify material questions and discoveries before expanding scope:
+Before dispatch or implementation, reverify:
 
-- `LOCKED`: current authority already answers it; follow it.
-- `JIT IMPLEMENTATION CHOICE`: authority intentionally leaves it open; choose the simplest compliant implementation and test it.
-- `UPSTREAM GOVERNANCE CONTRADICTION`: implementation conclusively exposes missing/conflicting Product, Architecture, Domain, Roadmap, ownership, lifecycle, security, privacy, safety, entitlement or another expensive-to-reverse governed semantic. STOP the affected work, record the blocker/evidence in Plane and amend the smallest correct upstream authority before continuing.
+- the ticket is still "Ready";
+- blockers and dependencies are resolved;
+- acceptance criteria remain coherent and executable;
+- current "main" has not invalidated the ticket;
+- no already-known upstream contradiction exists.
 
-Ordinary implementation learning does not become governance merely because it was discovered during coding.
+After the readiness gate passes and immediately before implementation begins, move the ticket:
 
-## Required Skills
+"Ready → In Progress"
 
-Before implementation, use `.agents/skills/project-implementation/SKILL.md`.
+When the implementation PR is opened and ready for independent review, move it:
 
-Before handoff or merge recommendation, use `.agents/skills/code-change-verification/SKILL.md`.
+"In Progress → In Review"
 
-Load generated framework skills under `.agents/skills/` only when relevant.
+Search Plane before creating work. Do not create duplicates.
 
-Use Igniter first for supported structural or package changes; hand-edit only where Igniter does not safely support the change.
+All material delivery work belongs in Plane, including executable work, blockers/dependencies, defects, discovered work, security/privacy concerns and release/proof gaps.
 
-## Mandatory Ash Capability Evaluation
+Do not leave delivery-affecting work only in chat, PR comments, TODOs, handoff notes or memory.
 
-Ash is the default application framework. Do not choose bespoke Elixir, Ecto, OTP or infrastructure mechanisms merely because an Ash capability or extension was not considered.
+Keep Plane focused on active delivery and near-term executable work. Do not pre-create speculative future tasks.
 
-For every Grill, `to-spec`, implementation plan and implementation ticket that touches business behaviour, durable state, authorization, authentication, lifecycle, history, async work, audit/evidence, cross-Domain coordination or an Ash-backed web flow:
+Reconnaissance
 
-1. **Load the Ash skill first.** Read `.agents/skills/ash-framework/SKILL.md` and relevant generated references before selecting the mechanism.
-2. **Perform an explicit Ash capability/extension evaluation.** Do not limit it to packages already present in `mix.exs`. Verify plausible capabilities against current official Ash/HexDocs/Hex sources.
-3. **Record material decisions in the Grill/spec/ticket where needed.** Use `USE`, `NOT APPLICABLE`, `DEFER`, or `BLOCKED / NEEDS AUTHORITY` with the requirement, reason, governing authority and primary source checked. A ticket must not move to Ready while a material Ash decision is unresolved.
-4. **At minimum consider relevant Ash surfaces.** Domains/Resources/actions/code interfaces, policies/authorization, identities/constraints, relationships, calculations/aggregates, changes/validations, Ash Signals, Temporal Resources, AshPostgres, AshAuthentication/Phoenix integration, AshPhoenix, AshOban, AshStateMachine, AshCloak, AshArchival/AshPaperTrail and any other current official extension whose capability directly matches the ticket. This is a minimum review set, not permission to install every package.
-5. **Signals require an explicit decision.** For cross-Domain reactions, event-like coordination or post-action reactions, explicitly evaluate Ash Signals. If Signals are not selected, state why. Signals are coordination only: they never become durable business authority, a universal event bus or a substitute for the receiving Domain's owning Ash interface.
-6. **Temporal Resources require an explicit decision when time/history is material.** For historical/as-of truth, correction, reconstruction or effective-period requirements, explicitly evaluate Ash Temporal Resources. Do not introduce Temporal merely as a second audit/history authority when the governed lifecycle/evidence model already owns that truth. If a real capability-specific temporal requirement conflicts with durable authority, STOP and route the contradiction upward.
-7. **Prefer a fitting Ash mechanism over bespoke plumbing** when it satisfies the requirement without violating governing law. If bespoke machinery is selected instead, document why the Ash option is insufficient or forbidden.
-8. **Evaluation is not installation authority.** Do not add a package because it exists or looks convenient. A new dependency requires a concrete requirement, compatibility with the locked stack, current stable-version/API verification from primary sources and any required Architecture/Security/Domain approval.
-9. **Re-evaluate at implementation boundary** when versions, capabilities, scope or authority changed since planning.
+Before "/grilling", "to-spec", "to-tickets" or material implementation, inspect the relevant live state:
 
-## Authorization and capability authority — mandatory STOP rule
+1. "docs/00_platform/README.md" and the current authority router;
+2. applicable durable Product/Decision, Architecture, Domain, Roadmap and supporting authority;
+3. relevant semantic Feature/JIT/proof contracts;
+4. live Plane work, blockers, dependencies and acceptance criteria;
+5. actual code, tests, migrations and dependency versions.
 
-- Resolve authorization through governed roles, scopes and applicable relationships.
-- Capabilities belong to governed roles/scopes/relationships; named people may be subjects of explicit grants, never definitions of capability authority.
-- Agents MUST NOT attach a business capability directly to a named user. A proposed direct user-to-capability shortcut is an `UPSTREAM GOVERNANCE CONTRADICTION`: STOP and escalate.
-- Governed bootstrap may establish the first explicit role/scope grants, but bootstrap does not hold business capability. After bootstrap, sensitive grants require the appropriate role-based independent approver, distinct from the subject.
-- Platform Administrator does not imply expert authority. Developer, founder or administrator status alone does not create Domain authority.
-- Multiple valid roles on one identity are expected and supported.
-- Super Admin is break-glass and not a universal bypass.
-- An unresolved approver authority is a STOP condition.
+Follow evidence only as far as the task requires. Do not load the entire historical archive by default.
 
-## Engineering Invariants
+Do not re-grill, re-spec or re-ticket settled decisions without new evidence, changed scope or a proven contradiction.
 
-Every durable business truth has exactly one owning Domain. Mutations go through that owner.
+JIT implementation decision model
 
-Derived state, caches, analytics, PubSub, provider state and UI projections are never business authority.
+NewYou deliberately uses just-in-time implementation design.
 
-Business writes use the owning Ash interface. Controllers, LiveViews and workers call the owning Domain/application interface; owning application code may implement those interfaces with Ash actions. Do not use `NewYou.Repo`, raw SQL or `Ecto.Multi` write/run operations as parallel business-write paths. `mix check.architecture` enforces these boundaries (ARC-029).
+Governance defines durable outcomes, ownership, invariants, externally meaningful lifecycle semantics, security/privacy/safety boundaries, cross-Domain rules and explicit prohibitions.
 
-Do not introduce Redis, extra services, extra Repos, ETS/process authority or speculative infrastructure without a demonstrated requirement.
+It is not expected to pre-specify every internal engineering mechanism.
 
-Meaningful state transitions are intentional domain actions with appropriate states, guards, invariants, side effects, terminal states, authorization, concurrency behaviour, idempotency, retries and recovery/reconciliation.
+Classify material questions as follows.
 
-## Defect fixes and regression proof
+"LOCKED"
 
-Every material bug, defect, security issue or behavioural regression must leave permanent regression coverage. Where technically possible, reproduce it with a focused failing automated test before changing production code, then implement the fix and prove that test passes. If deterministic automation is genuinely impossible, record the reason and strongest repeatable alternative proof in Plane for explicit reviewer acceptance. A material defect fix without adequate regression proof is not complete.
+Current durable authority answers the material business or architectural question.
 
-## Evidence
+Follow it.
+
+"JIT IMPLEMENTATION CHOICE"
+
+This is the default classification for implementation detail not fixed by durable authority.
+
+When authority defines the required outcome and boundaries but leaves the mechanism open, choose the simplest compliant implementation, test it and continue.
+
+Examples include, where not otherwise locked:
+
+- a private Domain-owned Resource or extension to an existing Resource;
+- tables, fields and internal attributes;
+- Ash actions, changes, validations and code interfaces;
+- identities, indexes and database constraints;
+- transaction composition;
+- concurrency/arbitration mechanisms;
+- idempotency implementation;
+- retention or tombstone mechanisms required to satisfy an existing invariant;
+- internal modules and helper boundaries;
+- migration shape;
+- internal result/error representation;
+- selection among compliant framework mechanisms.
+
+A private implementation Resource does not become new business authority merely because it is durable.
+
+The absence of an implementation detail from governance does not mean governance is incomplete.
+
+Material JIT choices become durable through code, migrations and constraints where applicable, tests, and Plane/PR evidence.
+
+Do not amend Product, Architecture, Domain, Roadmap or semantic contracts merely to record an implementation choice.
+
+"UPSTREAM GOVERNANCE CONTRADICTION"
+
+This classification is exceptional.
+
+Use it only when implementation cannot proceed correctly without changing or inventing a material durable semantic such as:
+
+- Domain/business ownership;
+- externally meaningful lifecycle behaviour;
+- authorization or entitlement;
+- security/privacy/safety requirements;
+- legal, clinical or commercial policy;
+- cross-Domain authority;
+- another expensive-to-reverse invariant that belongs above implementation.
+
+A missing Resource, table, field, action, index, retention mechanism, transaction strategy or framework choice is not by itself an upstream contradiction.
+
+Before blocking for governance, demonstrate all three:
+
+1. the exact governing statements that conflict or are insufficient;
+2. why no reasonable compliant JIT implementation can satisfy them;
+3. the material durable semantic that would otherwise have to be invented or changed.
+
+If all three cannot be demonstrated, continue as a "JIT IMPLEMENTATION CHOICE".
+
+When a genuine contradiction exists, STOP only the affected work, record exact evidence in Plane and escalate the smallest correct upstream authority.
+
+Implementation presumption
+
+For a dependency-cleared "Ready" ticket:
+
+Prefer implementation over governance amendment.
+
+Do not re-grill, re-spec, create governance successors, block a ticket or wait for Foundation Full merely because implementation revealed an unspecified engineering detail.
+
+Do not ask the human to choose between ordinary compliant implementation alternatives. Evaluate the alternatives and select the simplest compliant design.
+
+Ask or escalate only when the unresolved choice would materially change a durable or expensive-to-reverse semantic.
+
+Implementation discipline
+
+For a Ready ticket:
+
+1. reverify Plane state and dependencies;
+2. inspect relevant authority and actual code/tests/migrations/dependencies;
+3. identify the existing implementation seam;
+4. classify unresolved questions as "LOCKED", "JIT IMPLEMENTATION CHOICE" or "UPSTREAM GOVERNANCE CONTRADICTION";
+5. make the necessary JIT engineering decisions;
+6. create a focused implementation plan against actual code;
+7. implement ticket scope using test-first development;
+8. run applicable repository verification;
+9. update Plane and open a PR with exact evidence.
+
+Stay inside ticket scope. Do not opportunistically implement adjacent features or Domains.
+
+Use Igniter first for supported structural or package changes. Hand-edit where Igniter does not safely support the change.
+
+Use Tidewave/runtime evidence where it answers development questions better than static reading. Tidewave is diagnostic tooling, never business authority.
+
+Required skills
+
+Before implementing a Ready ticket use:
+
+".agents/skills/ticket-implement/SKILL.md"
+
+Before implementation involving Ash-backed behaviour or durable state, load the relevant Ash skill/reference.
+
+Before handoff or merge recommendation use:
+
+".agents/skills/code-change-verification/SKILL.md"
+
+Load other generated framework skills only when relevant.
+
+The legacy ".agents/skills/project-implementation/SKILL.md" may remain only as a compatibility shim for existing references. It must delegate to "ticket-implement", not define a competing workflow.
+
+Ash-first mechanism selection
+
+Ash is the default application framework.
+
+For implementation involving business behaviour, durable state, authorization, authentication, lifecycle, history, async work, audit/evidence, cross-Domain coordination or Ash-backed web flows:
+
+1. load ".agents/skills/ash-framework/SKILL.md" and relevant generated references;
+2. evaluate the Ash capabilities that materially match the requirement;
+3. verify current APIs and compatibility against official primary sources;
+4. prefer a fitting Ash mechanism over bespoke Elixir/Ecto/OTP plumbing when it satisfies the requirement without violating authority;
+5. record material selections where useful as "USE", "NOT APPLICABLE", "DEFER" or "BLOCKED / NEEDS AUTHORITY".
+
+Evaluate relevant core Resources/actions/interfaces, policies, identities/constraints and applicable extensions such as AshPostgres, AshAuthentication, AshPhoenix, AshOban, AshStateMachine, Signals, Temporal Resources, Cloak or history/archive tooling only when their capability materially matches the ticket.
+
+For cross-Domain reactions or event-like coordination, explicitly consider Ash Signals.
+
+For historical/as-of/effective-period requirements, explicitly consider Temporal Resources.
+
+Neither Signals nor Temporal Resources becomes business authority merely because it is technically useful.
+
+Evaluation is not installation authority. A new dependency requires a concrete need, compatibility with the current stack, current stable-version/API verification and any required Architecture/Security/Domain approval.
+
+Re-evaluate material framework choices at implementation time when versions, capabilities, scope or authority have changed since planning.
+
+Domain and persistence invariants
+
+Every durable business truth has exactly one authoritative Domain owner.
+
+Cross-Domain mutation goes through the owning Domain/Ash interface.
+
+Derived state, caches, Analytics, search indexes, provider state, PubSub and UI projections never become business authority.
+
+Business writes use owning Ash interfaces. Controllers, LiveViews and workers call the owning Domain/application interface.
+
+Do not introduce parallel ordinary "NewYou.Repo", raw SQL or "Ecto.Multi" business-write APIs. "mix check.architecture" enforces these boundaries.
+
+Do not introduce Redis, extra services, extra Repos, ETS/process authority, replicas, Rust/Rustler, microservices or speculative infrastructure without demonstrated need and authority.
+
+Authorization and capability authority
+
+Resolve authorization through governed roles, scopes and applicable relationships.
+
+Capabilities belong to governed roles/scopes/relationships. Named people may receive explicit grants; they never define capability authority.
+
+Do not attach a business capability directly to a named user as a shortcut. Treat that as an upstream governance contradiction.
+
+Governed bootstrap may establish initial explicit role/scope grants, but bootstrap itself holds no business capability. After bootstrap, sensitive grants require the appropriate role-based independent approver, distinct from the subject.
+
+Multiple valid roles on one identity are expected and supported.
+
+Platform Administrator, developer or founder status does not imply expert Domain authority.
+
+Super Admin is break-glass, not a universal bypass.
+
+An unresolved required approver authority is a STOP condition.
+
+Lifecycle requirements
+
+Every meaningful lifecycle must explicitly cover, as applicable:
+
+- states;
+- transitions;
+- guards and invariants;
+- side effects;
+- terminal states;
+- authorization;
+- concurrency;
+- idempotency;
+- retries;
+- failure behaviour;
+- restart/recovery/reconciliation.
+
+Lifecycle correctness must be enforced by the owning durable authority, not process-local state.
+
+Defects and regression proof
+
+Every material bug, security issue or behavioural regression must leave permanent regression coverage.
+
+Where technically possible:
+
+1. reproduce it with a focused failing automated test;
+2. implement the fix;
+3. prove the regression test passes;
+4. run applicable wider verification.
+
+If deterministic automation is genuinely impossible, record the reason and strongest repeatable alternative proof in Plane.
+
+A material defect fix without adequate regression proof is not complete.
+
+Evidence
 
 Do not guess material framework or package APIs.
 
-Prefer, in order: current repository authority; relevant generated framework skills; Tidewave/runtime evidence; version-matched official HexDocs/source; model memory last.
+Prefer evidence in this order:
 
-Tidewave is development-only diagnostic tooling and never business authority.
+1. current repository authority and implementation;
+2. relevant generated framework skills;
+3. runtime/Tidewave evidence;
+4. version-matched official HexDocs/source;
+5. model memory last.
 
-## CI and verification
+Verify current stable package/API facts and distinguish stable releases from prerelease or main-branch documentation.
 
-`mix check` is the canonical fast engineering gate. `mix check.deep` is the slower engineering gate.
+Verification, review and merge
 
-Foundation Smoke runs on every PR and validates `CURRENT_AUTHORITY_ROUTER_v1.0.0.json` plus merge-gate topology. Application CI runs for routed engineering changes.
+"mix check" is the canonical fast engineering gate.
 
-Foundation Full is historical/provenance evidence: it validates the historical Python governance suite and the frozen `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Material governance/provenance/workflow PRs start Full automatically as non-blocking evidence; nightly/manual exact-SHA certification also runs it. Ordinary Plane status changes produce no repository PR and therefore no Full run.
+"mix check.deep" is the slower engineering gate.
 
-The operational CI topology is `docs/development/foundation-integrity-merge-gate.md`.
+Foundation Smoke runs on every PR and validates current routing and merge-gate topology.
 
-Before handoff, verify the exact diff, exact head SHA, relevant required checks/tests and current Plane state. Do not wait for non-blocking Foundation Full unless the task or governing authority explicitly requires full certification, but investigate any WELL-66-caused Full regression rather than dismissing it.
+Application CI runs for routed engineering changes.
 
-The implementing agent implements the authorised Ready ticket, verifies it, updates Plane, creates the PR and provides exact evidence. It does not self-certify integration authority or silently merge.
+Foundation Full is historical/provenance certification for applicable governance/provenance/workflow changes plus nightly/manual exact-SHA certification. It is not a routine implementation gate.
 
-Final Master Gate review independently verifies the exact PR head, complete diff, durable authority, Plane acceptance contract, relevant lifecycle/ownership/security/privacy/persistence behaviour and exact-head CI before recommending merge. Any head change invalidates prior exact-head certification.
+The operational CI topology is documented in:
 
-Merge alone does not complete delivery. Verify resulting-main SHA/tree, candidate integration/no drift and required resulting-main CI/proof before moving work to Done or opening dependent work.
+"docs/development/foundation-integrity-merge-gate.md"
 
-## Local DevCore Credentials
+Do not wait for non-blocking Foundation Full unless explicitly required.
+
+Ordinary JIT implementation choices do not justify governance amendments merely to obtain Foundation Full evidence.
+
+Investigate any material CI or Foundation Full failure caused by the current PR even when that lane is non-blocking.
+
+Before handoff:
+
+- verify the complete diff;
+- verify the exact head SHA;
+- run applicable tests/checks;
+- verify current Plane state;
+- create or update the PR;
+- provide exact evidence for independent review.
+
+The implementing agent does not self-certify merge authority and does not silently merge.
+
+Master Gate independently verifies the exact PR head, complete diff, durable authority, live Plane acceptance contract, scope, ownership, lifecycle, persistence, concurrency/idempotency, retries/failure/recovery, security/privacy/safety, dependency/API correctness, tests and exact-head CI.
+
+Master Gate reviews JIT implementation choices for correctness and compliance. It must not reject a compliant internal engineering choice merely because governance did not pre-specify it.
+
+A reviewer claiming an upstream governance contradiction must satisfy the same three-part contradiction test before blocking integration.
+
+Any reviewed-head change invalidates prior certification.
+
+Merge alone does not complete delivery. Verify resulting-main SHA/tree, candidate integration/no drift and required resulting-main CI/proof before moving Plane to "Done" or opening dependent work.
+
+Local DevCore credentials
 
 DO NOT ASK THE USER FOR LOCAL DB PASSWORDS OR DEVCORE-MANAGED DB VARIABLES.
 
-If `.devcore/project.conf` exists, local DEV and TEST DB credentials are managed by DevCore:
+If ".devcore/project.conf" exists:
 
-1. Run `devcore-project doctor`; if state is missing or stale, run `devcore-project activate`.
-2. Run DB-dependent commands with `devcore-project run dev -- <command>` or `devcore-project run test -- <command>`.
+1. run "devcore-project doctor";
+2. if state is missing or stale, run "devcore-project activate";
+3. run DB-dependent commands with:
+   - "devcore-project run dev -- <command>"
+   - "devcore-project run test -- <command>"
 
-Never request or print a password value. The repository must not start, stop, recreate or delete shared DevCore services or volumes. Redis is not used by NewYou. Both PostgreSQL roles must remain NOCREATEDB.
+Never request or print password values.
+
+The repository must not start, stop, recreate or delete shared DevCore services or volumes.
+
+Redis is not used by NewYou.
+
+Both PostgreSQL roles must remain "NOCREATEDB".
