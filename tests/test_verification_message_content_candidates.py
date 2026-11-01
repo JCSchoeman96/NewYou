@@ -8,8 +8,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ROOT / "docs/00_platform"
-EVIDENCE_DIR = DOCS / "working/content_media/verification_messages"
+DOCS = ROOT / "docs"
+EVIDENCE_DIR = DOCS / "delivery/content-evidence/content_media/verification_messages"
 PACKET_PATH = EVIDENCE_DIR / "VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.2.0.json"
 CONTENT_ITEM_ID = "NEWYOU-CONTENTITEM-VERIFICATION-MESSAGE-EMAIL-ADDRESS"
 CONTENT_VERSION_ID = "NEWYOU-CONTENTVERSION-VERIFICATION-MESSAGE-EMAIL-ADDRESS-V1"
@@ -231,9 +231,9 @@ class VerificationMessageCandidateTests(unittest.TestCase):
         self.assertIn("newyou.identity.account", serialized)
 
     def test_prejit_pack_remains_non_authoritative(self) -> None:
-        pack = json.loads((DOCS / "working/content_media/PACK_MANIFEST_v0.1.0.json").read_text(encoding="utf-8"))
+        pack = json.loads((DOCS / "delivery/content-evidence/content_media/PACK_MANIFEST_v0.1.0.json").read_text(encoding="utf-8"))
         self.assertEqual("NONE", pack["implementation_authority"])
-        readme = (DOCS / "working/content_media/README.md").read_text(encoding="utf-8")
+        readme = (DOCS / "delivery/content-evidence/content_media/README.md").read_text(encoding="utf-8")
         self.assertIn("NON-AUTHORITATIVE", readme)
         self.assertIn("does not amend Product Law, Architecture Law, Domain Law", readme)
 

@@ -545,7 +545,7 @@ class FP001Phase7CFinalContractCandidateTests(unittest.TestCase):
             self.assertIn(required, next_execution.group(1))
         self.assertIn("P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED", current_state)
         self.assertIn("WELL-45 remains a legal/privacy release gate", current_state)
-        p8_spec = (ROOT / "docs/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
+        p8_spec = (ROOT / "docs/delivery/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
         self.assertIn(
             "P8-05 / WELL-6 IMPLEMENTATION: AUTHORISED — BOUNDED PHASE 8 ARCHITECTURAL PROOF ONLY",
             p8_spec,

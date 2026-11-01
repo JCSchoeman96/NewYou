@@ -124,7 +124,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             shutil.copytree(DOCS, fixture_docs)
             fixture_execution = root / "docs" / "execution"
             fixture_execution.mkdir(parents=True)
-            shutil.copy2(ROOT / "docs/execution/p8-05-registration-jit-spec.md", fixture_execution)
+            shutil.copy2(ROOT / "docs/delivery/execution/p8-05-registration-jit-spec.md", fixture_execution)
             manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
             refresh_manifest(root, manifest_path)
 
@@ -156,7 +156,7 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             shutil.copytree(DOCS, fixture_docs)
             fixture_execution = root / "docs" / "execution"
             fixture_execution.mkdir(parents=True)
-            shutil.copy2(ROOT / "docs/execution/p8-05-registration-jit-spec.md", fixture_execution)
+            shutil.copy2(ROOT / "docs/delivery/execution/p8-05-registration-jit-spec.md", fixture_execution)
             manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
             refresh_manifest(root, manifest_path)
 

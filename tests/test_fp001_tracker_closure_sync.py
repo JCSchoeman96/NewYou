@@ -309,7 +309,7 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         fixture_execution = root / "docs" / "execution"
         fixture_execution.mkdir(parents=True, exist_ok=True)
         shutil.copy2(
-            ROOT / "docs/execution/p8-05-registration-jit-spec.md",
+            ROOT / "docs/delivery/execution/p8-05-registration-jit-spec.md",
             fixture_execution / "p8-05-registration-jit-spec.md",
         )
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"

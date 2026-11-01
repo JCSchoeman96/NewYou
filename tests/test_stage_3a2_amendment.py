@@ -9,17 +9,17 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SUCCESSOR = ROOT / "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"
-ARQ_HISTORY = ROOT / "docs/00_platform/archive/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md"
+SUCCESSOR = ROOT / "docs/governance/architecture/references/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"
+ARQ_HISTORY = ROOT / "docs/history/platform/archive/ARCHITECTURE_REQUIREMENTS_WORKING_v1.0.0.md"
 ANALYSIS_ARCHIVE = (
     ROOT
-    / "docs/00_platform/archive/TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md"
+    / "docs/history/platform/archive/TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md"
 )
 ANALYSIS_WORKING = (
     ROOT
-    / "docs/00_platform/working/TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md"
+    / "docs/history/platform/superseded-delivery/TARGETED_PRODUCT_AMENDMENT_AR000_DELTA_ANALYSIS_WORKING_v0.1.0.md"
 )
-MANIFEST = ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+MANIFEST = ROOT / "docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 
 ARQ_HEADING = re.compile(r"^#{1,6} (ARQ-[A-Z]+-\d{3}) — (.+)$", re.MULTILINE)
 ARQ_TOKEN = re.compile(r"ARQ-[A-Z]+-\d{3}\b")

@@ -10,15 +10,16 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ROOT / "docs/00_platform"
-CANDIDATE = DOCS / "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
-APPROVED_ARCHIVE = DOCS / "archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md"
-REVIEWED_CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
-PROMOTED_CANDIDATE_ARCHIVE = DOCS / "archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
-JIT = ROOT / "docs/execution/p8-05-registration-jit-spec.md"
-MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-OPEN_WORK = DOCS / "02_OPEN_WORK_v1.2.90.md"
+DOCS = ROOT / "docs"
+CANDIDATE = DOCS / "delivery/feature-contracts/fp-001/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
+APPROVED_ARCHIVE = DOCS / "history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md"
+REVIEWED_CANDIDATE_ARCHIVE = DOCS / "history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+PROMOTED_CANDIDATE_ARCHIVE = DOCS / "history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
+JIT = ROOT / "docs/delivery/execution/p8-05-registration-jit-spec.md"
+MANIFEST_PATH = DOCS / "history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+OPEN_WORK = DOCS / "history/02_OPEN_WORK_v1.2.90.md"
 REVIEWED_CANDIDATE_SHA256 = "e4ad6fd47bb1a04cd299fd900c2757e075352235ca286b6f368637942ae3cf6d"
+MIGRATION_BASE_SHA = "a2dfeff5d6cf88d7534cd100c28f39d3045bc814"
 
 
 class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
@@ -64,9 +65,32 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
             "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
             phase8["candidate_path"],
         )
+        delivery_router = json.loads(
+            (DOCS / "delivery/CURRENT_DELIVERY_ROUTER.json").read_text(encoding="utf-8")
+        )
+        current_route = next(
+            entry
+            for entry in delivery_router["delivery_contracts"]
+            if entry["document_id"] == "FP001_TRACER_BULLET"
+        )
+        self.assertEqual(CANDIDATE.relative_to(ROOT).as_posix(), current_route["repository_path"])
         self.assertEqual(
+            current_route["sha256"],
             hashlib.sha256(CANDIDATE.read_bytes()).hexdigest(),
+        )
+        base_candidate = subprocess.run(
+            [
+                "git",
+                "show",
+                f"{MIGRATION_BASE_SHA}:docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        self.assertEqual(
             phase8["current_contract_sha256"],
+            hashlib.sha256(base_candidate).hexdigest(),
         )
         self.assertNotIn(
             "The current status route uses Open Work v1.2.89, Delivery Atlas v0.4.30, FP-001 Skeleton v0.1.30 and HARDEN-02 v0.5.32.",
@@ -98,7 +122,9 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
             "429677295a396b8c78e9ab6b436a57d9249eaddc",
             rule["status_promotion_base_main_sha"],
         )
-        self.assertFalse((DOCS / "working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md").exists())
+        self.assertFalse(
+            (DOCS / "delivery/feature-contracts/fp-001/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md").exists()
+        )
         self.assertEqual(
             "973503deee2ec86f182cd7239ffe4360cd5abe92d22eee3148f472d66d11f3b4",
             hashlib.sha256(APPROVED_ARCHIVE.read_bytes()).hexdigest(),
@@ -141,14 +167,10 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
             "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_APPROVED_CURRENT_v0.1.2.md",
             manifest_predecessor,
         )
-        manifest_predecessor_path = ROOT / manifest_predecessor
+        manifest_predecessor_path = DOCS / "history/platform/archive" / Path(manifest_predecessor).name
         self.assertTrue(manifest_predecessor_path.is_file())
         for stated_path in stated_predecessors:
-            resolved_path = (
-                ROOT / stated_path
-                if stated_path.startswith("docs/")
-                else DOCS / stated_path
-            )
+            resolved_path = DOCS / "history/platform/archive" / Path(stated_path).name
             self.assertEqual(manifest_predecessor_path, resolved_path)
             self.assertTrue(resolved_path.is_file())
             self.assertEqual(APPROVED_ARCHIVE.read_bytes(), resolved_path.read_bytes())
@@ -168,7 +190,10 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
         self.assertIn(CANDIDATE.name, readme)
         self.assertNotIn("FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md` — TB-001 proof-contract successor/task definition", readme)
         self.assertIn(CANDIDATE.name, self.open_work)
-        self.assertIn(CANDIDATE.as_posix().replace(str(ROOT) + "/", ""), self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"])
+        self.assertIn(
+            phase8["candidate_path"],
+            self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"],
+        )
         self.assertIn("CONTRACT/DESIGN REVIEW: COMPLETE / PASS", self.candidate)
         self.assertIn("CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION", self.candidate)
         self.assertIn("INCOMPLETE / COVERAGE-INCOMPLETE", self.candidate)
@@ -220,7 +245,15 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
             if "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_" in route
         ]
         self.assertEqual([current_identity_route], identity_routes)
-        self.assertTrue((ROOT / current_identity_route).is_file())
+        delivery_router = json.loads(
+            (DOCS / "delivery/CURRENT_DELIVERY_ROUTER.json").read_text(encoding="utf-8")
+        )
+        current_identity_entry = next(
+            entry
+            for entry in delivery_router["delivery_contracts"]
+            if entry["document_id"] == "FP001_IDENTITY_ACCESS_JIT"
+        )
+        self.assertTrue((ROOT / current_identity_entry["repository_path"]).is_file())
 
         _, source_heading, source_contents = self.candidate.partition(
             "Current FP-001 source contracts:"

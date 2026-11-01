@@ -1,0 +1,110 @@
+{
+  "router_id": "CURRENT_GOVERNANCE_ROUTER",
+  "router_version": "1.0.0",
+  "status": "CURRENT",
+  "scope": "Current durable Product, Architecture, Domain and Roadmap law and genuine supporting authority only.",
+  "authority_precedence": [
+    "product",
+    "architecture",
+    "domain",
+    "roadmap",
+    "supporting"
+  ],
+  "governing_documents": [
+    {
+      "document_id": "NORTH_STAR_AND_MVP",
+      "canonical_filename": "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
+      "repository_path": "docs/governance/product/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
+      "sha256": "249f5985ff1e8971e1ac4437e4bbebd5a3db9254ab25a2238e135cb7a7ae5f4b",
+      "semver": "1.3.0"
+    },
+    {
+      "document_id": "PLATFORM_PRODUCT_LAW",
+      "canonical_filename": "00_PLATFORM_v1.13.0.md",
+      "repository_path": "docs/governance/product/00_PLATFORM_v1.13.0.md",
+      "sha256": "d640412e970e3ac3ec3a1c6aebb8a184e83d83d3a14b570ed179f9bfc0c6f515",
+      "semver": "1.13.0"
+    },
+    {
+      "document_id": "PRODUCT_DECISIONS",
+      "canonical_filename": "01_DECISIONS_v1.13.0.md",
+      "repository_path": "docs/governance/product/01_DECISIONS_v1.13.0.md",
+      "sha256": "42800dc154c2f59120569b7b27c4f9652e5209c18efd44f257a585b7a3dccc1d",
+      "semver": "1.13.0"
+    },
+    {
+      "document_id": "ARCHITECTURE_LAW",
+      "canonical_filename": "03_ARCHITECTURE_v1.1.1.md",
+      "repository_path": "docs/governance/architecture/03_ARCHITECTURE_v1.1.1.md",
+      "sha256": "342d02a7946f99aca9e6683647fc3a2505901b3d0cc2d13c21d807442025f0b3",
+      "semver": "1.1.1"
+    },
+    {
+      "document_id": "DOMAIN_LAW",
+      "canonical_filename": "04_DOMAIN_MAP_v1.2.0.md",
+      "repository_path": "docs/governance/domain/04_DOMAIN_MAP_v1.2.0.md",
+      "sha256": "e09e14ee0a773c5855257c48685cf3a75d413c983a98d22a56b42af57dc2c078",
+      "semver": "1.2.0"
+    },
+    {
+      "document_id": "GOVERNING_ROADMAP",
+      "canonical_filename": "05_ROADMAP_v1.2.5.md",
+      "repository_path": "docs/governance/roadmap/05_ROADMAP_v1.2.5.md",
+      "sha256": "fdb707140a28ed0939e5f5d900e2ce1b48babde2ab9e69ab47fcbea96096bd7f",
+      "semver": "1.2.5"
+    }
+  ],
+  "architecture_references": [
+    {
+      "document_id": "ARCHITECTURE_REQUIREMENTS",
+      "canonical_filename": "ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
+      "repository_path": "docs/governance/architecture/references/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md",
+      "sha256": "069f5ec120218fe9c3046d0c330a649b5351e896b70938fb8714b7602e5d82dc",
+      "semver": "1.1.0"
+    },
+    {
+      "document_id": "ARCHITECTURE_LAW_REFERENCE",
+      "canonical_filename": "ARCHITECTURE_LAW_WORKING_v0.36.0.md",
+      "repository_path": "docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
+      "sha256": "26ff1e7a7e40945e501793c2bfb2ede9c01ae03f7949383ae724e3b031fa4faa",
+      "semver": "0.36.0"
+    },
+    {
+      "document_id": "REFERENCE_FLOW_PRESSURE_TESTS",
+      "canonical_filename": "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+      "repository_path": "docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+      "sha256": "0d8e25170ae692df39f7f771189f95ab76ab64f2701823fb2cde214946650d3f",
+      "semver": "0.3.0"
+    }
+  ],
+  "supporting_documents": [
+    {
+      "document_id": "PLATFORM_OPERATING_MODEL",
+      "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.3.0.md",
+      "repository_path": "docs/governance/supporting/PLATFORM_OPERATING_MODEL_v1.3.0.md",
+      "sha256": "eb2502f1f54bff129584991717d058c42d06454b54bfb8a776fb9ed75097d699",
+      "semver": "1.3.0"
+    },
+    {
+      "document_id": "FRONTEND_EXPERIENCE_SYSTEM",
+      "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
+      "repository_path": "docs/governance/supporting/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
+      "sha256": "58c733e8e0cc73c72b102b623cb756b60cbadb084f8cc710051be42d0877fdb4",
+      "semver": "1.0.1"
+    },
+    {
+      "document_id": "ENGINEERING_STANDARDS",
+      "canonical_filename": "ENGINEERING_STANDARDS_v1.0.1.md",
+      "repository_path": "docs/governance/supporting/ENGINEERING_STANDARDS_v1.0.1.md",
+      "sha256": "8c02f367c97b3b9f977eb1572e2af0bd29ee87112215989180ed1bd90d0fdd7f",
+      "semver": "1.0.1"
+    },
+    {
+      "document_id": "DELIVERY_GOVERNANCE_STANDARD",
+      "canonical_filename": "DELIVERY_GOVERNANCE_STANDARD_v1.1.0.md",
+      "repository_path": "docs/governance/supporting/DELIVERY_GOVERNANCE_STANDARD_v1.1.0.md",
+      "sha256": "57d31d08fe39d094eb5027dd5f3bcecfedf831bd6f4066012f960dc52fe7fed3",
+      "semver": "1.1.0"
+    }
+  ]
+}

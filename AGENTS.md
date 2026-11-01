@@ -18,14 +18,14 @@ Plane project "WELL" is canonical for live execution state beneath that law: wor
 
 For current durable routing start with:
 
-1. "docs/00_platform/README.md"
-2. "docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
+1. "docs/README.md"
+2. "docs/governance/CURRENT_GOVERNANCE_ROUTER.json"
 
 Use router "deep_reference_documents" only when exact source or identifier tracing is required.
 
-"CURRENT_AUTHORITY_MANIFEST_v1.0.0.json" is frozen historical/provenance input for Foundation Full, not the live delivery router.
+"docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json" is frozen historical/provenance input for Foundation Full, not a current router.
 
-"docs/00_platform/02_OPEN_WORK_v1.2.90.md" is frozen legacy evidence, not live execution authority.
+"docs/history/02_OPEN_WORK_v1.2.90.md" is frozen legacy evidence, not live execution authority.
 
 Durable authority order is:
 
@@ -103,7 +103,7 @@ Reconnaissance
 
 Before "/grilling", "to-spec", "to-tickets" or material implementation, inspect the relevant live state:
 
-1. "docs/00_platform/README.md" and the current authority router;
+1. "docs/README.md", "docs/governance/CURRENT_GOVERNANCE_ROUTER.json" and, where relevant, "docs/delivery/CURRENT_DELIVERY_ROUTER.json";
 2. applicable durable Product/Decision, Architecture, Domain, Roadmap and supporting authority;
 3. relevant semantic Feature/JIT/proof contracts;
 4. live Plane work, blockers, dependencies and acceptance criteria;

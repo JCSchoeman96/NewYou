@@ -108,7 +108,7 @@ class FP001Phase7CCurrentPromotionAuditTests(unittest.TestCase):
         path.write_text(text, encoding="utf-8")
 
     def test_current_successor_and_pinned_predecessor_pass_foundation_integrity(self):
-        report = run_audit(ROOT, ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
+        report = run_audit(ROOT, ROOT / "docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
         checks = {item["name"]: item for item in report["checks"]}
         for name in (
             "phase8_approved_status_successor_current",

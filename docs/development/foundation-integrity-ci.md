@@ -10,20 +10,28 @@ Run the always-on Smoke lane from the repository root:
 
 ```bash
 python -m unittest discover -s tests -p 'test_foundation_smoke.py' -v
-python -m tools.foundation_integrity_smoke --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+python -m tools.foundation_integrity_smoke --governance-router docs/governance/CURRENT_GOVERNANCE_ROUTER.json --delivery-router docs/delivery/CURRENT_DELIVERY_ROUTER.json --json
 ```
 
 Run the complete governance and historical certification lane for an exact
 checkout:
 
 ```bash
-python -m unittest discover -s tests -v
-python tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+python tools/run_foundation_full_tests.py
+python tools/foundation_integrity_audit.py --manifest docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
 ```
 
 Foundation Full runs all discovered tests. No historical test is excluded from
-the full command. The manifest-backed full audit continues to check historical
-hashes, archive provenance, transition rules and current governance.
+the full command. The manifest-backed full audit checks the pinned pre-migration
+document tree, historical hashes, archive provenance and transition rules.
+Foundation Smoke checks the current governance and delivery routers against the
+semantic roots.
+
+The test runner temporarily exposes the pinned pre-migration tree at its old
+paths while the frozen suite runs. The audit builds the same pinned view and
+overlays `docs/history/` evidence so later provenance changes remain visible.
+Temporary links are removed when the suite exits; the repository and both
+current routers use only the semantic roots.
 
 For an exact commit on GitHub Actions, run **Foundation Integrity** with the
 `workflow_dispatch` input `sha` set to the full 40-character commit SHA and use
@@ -38,21 +46,16 @@ does not use path filters, so the required status check cannot disappear when
 files change.
 
 The route job compares the pull request base to its head, or the push's `before`
-to its head. It selects Foundation Full for any non-application path, mixed
-application and governance changes, unknown paths, unavailable Git history, or
-a manual dispatch. An empty or unresolvable change range also selects Full. An
-application-only change is limited to these roots and files:
+to its head. `docs/governance/**`, `docs/history/**` and explicit Foundation
+Full/provenance machinery select Full. `docs/delivery/**`,
+`docs/development/**`, `.agents/**`, application source and tests select
+Application CI as appropriate. Unknown paths and unresolvable pull-request
+diffs fail closed to Full. Python language and the generic `tests/**` root do
+not select Full by themselves. Git rename detection is disabled for path
+classification, so both source and destination are considered.
 
-- `apps/`, `assets/`, `config/`, `lib/`, `priv/`, and `test/`;
-- `mix.exs`, `mix.lock`, and `.formatter.exs`.
-
-All other paths, including Python tests under `tests/`, require Foundation
-Full. If route calculation fails, the workflow selects Full. The
-`foundation-integrity` aggregation job keeps the existing required check
-context **Foundation Integrity**: Smoke must pass, and Full must either pass or
-be skipped by the route decision. Git rename detection is disabled for path
-classification, so both the source and destination count; moving a governance
-artifact into an application root still selects Full.
+Foundation Smoke always runs. The required **Foundation Integrity** aggregate
+waits for Smoke and routed Application CI, but not for Full.
 
 This ticket does not create an Elixir project or run Mix commands. The
 application path classification is the routing boundary for later governed
@@ -63,16 +66,18 @@ historical governance suite.
 
 ## Lane responsibilities
 
-**Foundation Smoke** checks the active authority inventory, current manifest
-paths and metadata, current README and working-artifact routes, navigation
-paths, and current authority routing. A current route into `archive/`, a
-missing current file, a stale README route, or an invalid manifest fails this
-lane.
+**Foundation Smoke** checks both current routers and their semantic boundaries,
+route hashes and targets, required governance inventories, the root README,
+history file presence and merge-gate topology. A governance route into delivery
+or history, a delivery route into governance or history, a missing file or an
+archive route fails this lane.
 
 **Foundation Full** runs the complete unit suite and full audit. It retains
 historical certification, immutable hash, archive provenance, lifecycle,
-transition and fail-closed mutation checks. Smoke does not replace any of
-these checks.
+transition and fail-closed mutation checks. The frozen manifest is located at
+`docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. The audit builds a
+temporary legacy-path view so its historical checks can continue without
+restoring a mixed current documentation root.
 
 ## Baseline evidence
 
@@ -84,7 +89,7 @@ python3 -m unittest discover -s tests -v
 Ran 508 tests in 883.353s
 OK
 
-python3 tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+python3 tools/foundation_integrity_audit.py --manifest docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
 PASS — 900 assertions, 0 findings
 ```
 
@@ -107,10 +112,10 @@ python3 -m unittest discover -s tests -p 'test_foundation_smoke.py' -v
 Ran 22 tests
 OK
 
-python3 tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+python3 tools/foundation_integrity_audit.py --manifest docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
 PASS — 900 assertions, 0 findings
 
-python3 -m tools.foundation_integrity_smoke --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+python3 -m tools.foundation_integrity_smoke --governance-router docs/governance/CURRENT_GOVERNANCE_ROUTER.json --delivery-router docs/delivery/CURRENT_DELIVERY_ROUTER.json --json
 PASS — 47 assertions, 0 findings
 
 git diff --check 4234965c8da20dbb4ef0a7128614a5070244619a
@@ -121,10 +126,10 @@ The read-only successor check used PR #133 at head
 `4b920180bca39ffa369579776335a6fd61885efd` as the current tree:
 
 ```text
-python3 tools/foundation_integrity_audit.py --root <PR #133 checkout> --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+python3 tools/foundation_integrity_audit.py --root <PR #133 checkout> --manifest docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
 PASS — 928 assertions, 0 findings
 
-python3 -m tools.foundation_integrity_smoke --root <PR #133 checkout> --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+python3 -m tools.foundation_integrity_smoke --root <PR #133 checkout> --governance-router docs/governance/CURRENT_GOVERNANCE_ROUTER.json --delivery-router docs/delivery/CURRENT_DELIVERY_ROUTER.json --json
 PASS — 47 assertions, 0 findings
 ```
 

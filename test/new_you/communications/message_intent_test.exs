@@ -91,7 +91,7 @@ defmodule NewYou.Communications.MessageIntentTest do
 
   test "development binding references match the approved immutable packet and bytes" do
     packet =
-      "docs/00_platform/working/content_media/verification_messages/VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.2.0.json"
+      "docs/delivery/content-evidence/content_media/verification_messages/VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.2.0.json"
       |> File.read!()
       |> Jason.decode!()
 

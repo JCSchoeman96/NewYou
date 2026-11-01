@@ -1,0 +1,169 @@
+{
+  "router_id": "CURRENT_DELIVERY_ROUTER",
+  "router_version": "1.0.0",
+  "status": "CURRENT",
+  "scope": "Current Feature, JIT, proof, execution and content-evidence contracts beneath durable governance.",
+  "delivery_contracts": [
+    {
+      "document_id": "EXPERIENCE_DECISIONS",
+      "canonical_filename": "EXPERIENCE_DECISIONS_WORKING_v0.7.0.md",
+      "repository_path": "docs/delivery/feature-contracts/experience/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md",
+      "sha256": "eff83ed09ebc0f7d713b0b21c8d88d6a84b6b4258d5e7f83fba6054c4208a34d",
+      "contract_type": "feature_contract"
+    },
+    {
+      "document_id": "FP001_FEATURE_PACK_SKELETON",
+      "canonical_filename": "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.31.md",
+      "repository_path": "docs/delivery/feature-contracts/fp-001/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.31.md",
+      "sha256": "4d071543076aaf717964862ce48697854b6c10ad188ab37ee062787c02a73b60",
+      "contract_type": "feature_contract"
+    },
+    {
+      "document_id": "FP001_TRACER_BULLET",
+      "canonical_filename": "FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+      "repository_path": "docs/delivery/feature-contracts/fp-001/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md",
+      "sha256": "01838a237f60e3eccd4b4e9cf7c1306b125c7bc43c58e784c3f8a6157ed6f425",
+      "contract_type": "feature_contract"
+    },
+    {
+      "document_id": "FP001_FINAL_FEATURE_PACK",
+      "canonical_filename": "FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
+      "repository_path": "docs/delivery/feature-contracts/fp-001/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md",
+      "sha256": "5535a9c8cf59ab498595e6247bd2e2d5dda369ba0cc6fc8789b491200e3102fb",
+      "contract_type": "feature_contract"
+    },
+    {
+      "document_id": "DELIVERY_ATLAS",
+      "canonical_filename": "DELIVERY_ATLAS_WORKING_v0.4.31.md",
+      "repository_path": "docs/delivery/execution/DELIVERY_ATLAS_WORKING_v0.4.31.md",
+      "sha256": "8cd20baf5bff003ca1e97b906109926d9cde1a2b4bc1d7d416598dab928acbec",
+      "contract_type": "execution"
+    },
+    {
+      "document_id": "HARDEN_02_CONTRACT",
+      "canonical_filename": "HARDEN-02_CONTRACT_WORKING_v0.5.33.md",
+      "repository_path": "docs/delivery/execution/HARDEN-02_CONTRACT_WORKING_v0.5.33.md",
+      "sha256": "edd7eb18904aa71c846b6074ebc57c89ab7d5c103d3810d8d47e19c2aa32c3a0",
+      "contract_type": "execution"
+    },
+    {
+      "document_id": "P8_05_REGISTRATION",
+      "canonical_filename": "p8-05-registration-jit-spec.md",
+      "repository_path": "docs/delivery/execution/p8-05-registration-jit-spec.md",
+      "sha256": "3db061b3942651df012e9eb633f2536eb6e3aaf2ef95444469d528ff073f6f0b",
+      "contract_type": "execution"
+    },
+    {
+      "document_id": "FP001_PHASE_7B_RECONCILIATION",
+      "canonical_filename": "FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md",
+      "repository_path": "docs/delivery/proof/fp-001/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md",
+      "sha256": "d6fb70a9a19286263404d191a60447158c1ccf8097c8be35465def37046169c6",
+      "contract_type": "proof"
+    },
+    {
+      "document_id": "FP001_IDENTITY_ACCESS_JIT",
+      "canonical_filename": "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md",
+      "repository_path": "docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md",
+      "sha256": "1affc96f0d80c65b18bfc495d4426ac49dafb7a3389b00dee8efa6e48cf39a01",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "FP001_COMMUNICATIONS_JIT",
+      "canonical_filename": "FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+      "repository_path": "docs/delivery/jit/communications/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+      "sha256": "88bde6f7b630b453daab1f211c9767f61f3e2fcf4fdfbb95f9dad7e8f923bfdb",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "FP001_AUDIT_EVIDENCE_JIT",
+      "canonical_filename": "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+      "repository_path": "docs/delivery/jit/audit-evidence/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
+      "sha256": "f17c9cefdfdd233b628d11bd08b924a575f328743c8b1aa27a5698d8fba238b0",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "ANALYTICS_MEASUREMENT_JIT",
+      "canonical_filename": "NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+      "repository_path": "docs/delivery/jit/analytics_measurement/NEWYOU_ANALYTICS_MEASUREMENT_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+      "sha256": "a7cf03d551c99177486cf182febd0c306a22c2b93ac37b91d157d910e63a8726",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "AUDIT_EVIDENCE_JIT",
+      "canonical_filename": "NEWYOU_AUDIT_EVIDENCE_PREJIT_CONTRACT_WORKING_v0.1.3.md",
+      "repository_path": "docs/delivery/jit/audit_evidence/NEWYOU_AUDIT_EVIDENCE_PREJIT_CONTRACT_WORKING_v0.1.3.md",
+      "sha256": "fbf19d0ab24bdf9150aa4c4e715877914746fc8fd9eeb2678526036c52081c3a",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "COMMERCE_ENTITLEMENTS_JIT",
+      "canonical_filename": "NEWYOU_CER_PREJIT_CONTRACT_WORKING_v0.2.1.md",
+      "repository_path": "docs/delivery/jit/commerce_entitlements/NEWYOU_CER_PREJIT_CONTRACT_WORKING_v0.2.1.md",
+      "sha256": "e825d5beeb98d4a46bd863840f21b54bfa89fd026d8beecf8c4db007a3cdf193",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "HEALTH_SAFETY_PLANS_JIT",
+      "canonical_filename": "NEWYOU_HSP_PREJIT_CONTRACT_WORKING_v0.1.2.md",
+      "repository_path": "docs/delivery/jit/health_safety_plans/NEWYOU_HSP_PREJIT_CONTRACT_WORKING_v0.1.2.md",
+      "sha256": "db4ad7f0a6980225cc6ce628a248c1f17b213d0f4d2752aefbbd7a0383ee2423",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "LIVE_REPLAY_JIT",
+      "canonical_filename": "NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+      "repository_path": "docs/delivery/jit/live_replay/NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+      "sha256": "c1ccc0ec9ae202c7c4f2d084a51951166df927df9679fb3cdd8acb3e11da8b56",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "OPERATIONS_PILOT_JIT",
+      "canonical_filename": "NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+      "repository_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+      "sha256": "57b6b379f427d31a1f5d5f3a7f536bd453b33748e2a4615bb0f5bced629dfc66",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "PAYSTACK_VALIDATION_JIT",
+      "canonical_filename": "NEWYOU_PAYSTACK_PREJIT_CONTRACT_WORKING_v1.0.0.md",
+      "repository_path": "docs/delivery/jit/paystack_validation/NEWYOU_PAYSTACK_PREJIT_CONTRACT_WORKING_v1.0.0.md",
+      "sha256": "1ba714b884fd8952f0c3f92157ce9bc0ca9b353db2f33cf613bc75ef34e5e44e",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "PRIVACY_CONSENT_JIT",
+      "canonical_filename": "NEWYOU_PRIVACY_PREJIT_CONTRACT_WORKING_v0.1.3.md",
+      "repository_path": "docs/delivery/jit/privacy_consent_data_lifecycle/NEWYOU_PRIVACY_PREJIT_CONTRACT_WORKING_v0.1.3.md",
+      "sha256": "75b35ea64ef1d6a1e6f5765aadbca0f6c3eabd49e1757d59769418be68b19ebe",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "PROGRAMMES_LEARNING_JIT",
+      "canonical_filename": "NEWYOU_PROGRAMMES_LEARNING_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+      "repository_path": "docs/delivery/jit/programmes_learning/NEWYOU_PROGRAMMES_LEARNING_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+      "sha256": "2f5059b3e32ca612c6c0918ed96d277b0a5bb0c879ced0d82ee0c6e77179052a",
+      "contract_type": "jit"
+    },
+    {
+      "document_id": "CONTENT_MEDIA_JIT",
+      "canonical_filename": "NEWYOU_CM_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+      "repository_path": "docs/delivery/content-evidence/content_media/NEWYOU_CM_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+      "sha256": "91b9c9b470adabae43aa9e64c5b114c85b052b68147c825125365c19fa7a1c8f",
+      "contract_type": "content_evidence"
+    },
+    {
+      "document_id": "CONTENT_MEDIA_LEGAL_BASELINE",
+      "canonical_filename": "LEGAL_BASELINE_CONTENT_MANIFEST_v0.1.0.json",
+      "repository_path": "docs/delivery/content-evidence/content_media/LEGAL_BASELINE_CONTENT_MANIFEST_v0.1.0.json",
+      "sha256": "47f3ace307d20c8e8d1142477521a228853d7af94de23f22eaada8412db9e104",
+      "contract_type": "content_evidence"
+    },
+    {
+      "document_id": "VERIFICATION_MESSAGE_EVIDENCE",
+      "canonical_filename": "VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.2.0.json",
+      "repository_path": "docs/delivery/content-evidence/content_media/verification_messages/VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.2.0.json",
+      "sha256": "2cbcab1256c4b0adab53189d31941ab926e0649dff6878e39558297b5221053c",
+      "contract_type": "content_evidence"
+    }
+  ]
+}

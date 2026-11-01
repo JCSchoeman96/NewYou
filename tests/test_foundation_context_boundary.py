@@ -13,6 +13,7 @@ from foundation_test_support import (
     HISTORICAL_README_SHA256,
     current_router_data,
     current_router_working_path,
+    frozen_router_data,
     frozen_manifest_document_by_id,
     frozen_manifest_working_path,
     frozen_open_work_path,
@@ -41,6 +42,7 @@ class FoundationContextBoundaryTest(unittest.TestCase):
             root = Path(tmp)
             (root / "docs" / "00_platform" / "archive").mkdir(parents=True)
             path = root / HISTORICAL_README_RELATIVE
+            path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("corrupted historical readme\n", encoding="utf-8")
             with self.assertRaises(AssertionError):
                 historical_platform_readme_path(root)
@@ -55,7 +57,7 @@ class FoundationContextBoundaryTest(unittest.TestCase):
     def test_frozen_open_work_is_pinned_legacy_not_live_execution(self):
         path = frozen_open_work_path(ROOT)
         self.assertEqual(path.name, "02_OPEN_WORK_v1.2.90.md")
-        router = current_router_data(ROOT)
+        router = frozen_router_data(ROOT)
         snapshot = next(
             entry
             for entry in router["legacy_snapshots"]
@@ -85,7 +87,8 @@ class FoundationContextBoundaryTest(unittest.TestCase):
     def test_current_router_working_path_matches_router_only(self):
         path = current_router_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_")
         self.assertTrue(path.name.startswith("HARDEN-02_CONTRACT_WORKING_"))
-        self.assertIn(str(path.relative_to(ROOT)), current_router_data(ROOT)["working_semantic_routes"])
+        routes = [entry["repository_path"] for entry in current_router_data(ROOT)["delivery_contracts"]]
+        self.assertIn(str(path.relative_to(ROOT)), routes)
 
     def test_frozen_manifest_working_path_does_not_depend_on_live_readme_sections(self):
         live = live_platform_readme_text(ROOT)

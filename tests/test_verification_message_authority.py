@@ -6,16 +6,24 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ROOT / "docs/00_platform"
-ROUTER_PATH = DOCS / "CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
-MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+DOCS = ROOT / "docs"
+ROUTER_PATH = DOCS / "governance/CURRENT_GOVERNANCE_ROUTER.json"
+FROZEN_ROUTER_PATH = DOCS / "history/platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
+MANIFEST_PATH = DOCS / "history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 ROUTER = json.loads(ROUTER_PATH.read_text(encoding="utf-8"))
+FROZEN_ROUTER = json.loads(FROZEN_ROUTER_PATH.read_text(encoding="utf-8"))
 MANIFEST = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
 
 
 def current(document_id: str) -> str:
-    entries = ROUTER["governing_documents"] + ROUTER["supporting_documents"]
-    entry = next(item for item in entries if item["document_id"] == document_id)
+    aliases = {"PLATFORM_BASELINE": "PLATFORM_PRODUCT_LAW", "DECISION_REGISTER": "PRODUCT_DECISIONS"}
+    target_id = aliases.get(document_id, document_id)
+    entries = [
+        item
+        for collection in ("governing_documents", "architecture_references", "supporting_documents")
+        for item in ROUTER[collection]
+    ]
+    entry = next(item for item in entries if item["document_id"] == target_id)
     return (ROOT / entry["repository_path"]).read_text(encoding="utf-8")
 
 
@@ -24,7 +32,7 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.product = current("PLATFORM_BASELINE")
         cls.decisions = current("DECISION_REGISTER")
-        cls.spec = (ROOT / "docs/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
+        cls.spec = (ROOT / "docs/delivery/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
         cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
 
     def test_controlled_type_is_narrow_and_does_not_authorize_other_messages(self) -> None:
@@ -40,16 +48,16 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
             self.assertIn(excluded, definition)
 
     def test_current_authority_successors_and_decisions_are_routed(self) -> None:
-        routes = {row["document_id"]: row for row in ROUTER["governing_documents"]}
-        self.assertEqual("00_PLATFORM_v1.13.0.md", routes["PLATFORM_BASELINE"]["canonical_filename"])
-        self.assertEqual("01_DECISIONS_v1.13.0.md", routes["DECISION_REGISTER"]["canonical_filename"])
+        routes = {row["document_id"]: row for row in ROUTER["governing_documents"] + ROUTER["supporting_documents"]}
+        self.assertEqual("00_PLATFORM_v1.13.0.md", routes["PLATFORM_PRODUCT_LAW"]["canonical_filename"])
+        self.assertEqual("01_DECISIONS_v1.13.0.md", routes["PRODUCT_DECISIONS"]["canonical_filename"])
         self.assertEqual("PLATFORM_OPERATING_MODEL_v1.3.0.md", routes["PLATFORM_OPERATING_MODEL"]["canonical_filename"])
         self.assertIn("DEC-320", self.decisions)
         self.assertIn("DEC-319", self.decisions)
         self.assertIn("**Status:** LOCKED", self.decisions.split("## DEC-319 —", 1)[1].split("\n## ", 1)[0])
 
     def test_superseded_routed_predecessors_are_archived_not_left_in_current_locations(self) -> None:
-        routed = ROUTER["governing_documents"] + ROUTER["supporting_documents"]
+        routed = ROUTER["governing_documents"] + ROUTER["architecture_references"] + ROUTER["supporting_documents"]
         for route in routed:
             current_path = ROOT / route["repository_path"]
             name = current_path.name
@@ -61,7 +69,7 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
                 continue
             current_tuple = tuple(int(part) for part in current_version.split("."))
 
-            for archived in (DOCS / "archive").glob(f"{stem}_v*{current_path.suffix}"):
+            for archived in (DOCS / "history/platform/archive").glob(f"{stem}_v*{current_path.suffix}"):
                 archived_version = archived.name.rsplit("_v", 1)[1].removesuffix(current_path.suffix)
                 if not all(part.isdigit() for part in archived_version.split(".")):
                     continue
@@ -155,10 +163,10 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
             self.assertIn(phrase, self.spec)
 
     def test_frozen_open_work_and_manifest_are_not_live_execution_authority(self) -> None:
-        legacy = next(row for row in ROUTER["legacy_snapshots"] if row["document_id"] == "OPEN_WORK_FINAL_LEGACY_SNAPSHOT")
+        legacy = next(row for row in FROZEN_ROUTER["legacy_snapshots"] if row["document_id"] == "OPEN_WORK_FINAL_LEGACY_SNAPSHOT")
         self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.90.md", legacy["repository_path"])
         self.assertFalse(legacy["live_execution_authority"])
-        self.assertEqual("2a8557193fc071996e23d9214980da22d48bdbf3", ROUTER["historical_integrity_baseline"]["git_blob_sha"])
+        self.assertEqual("2a8557193fc071996e23d9214980da22d48bdbf3", FROZEN_ROUTER["historical_integrity_baseline"]["git_blob_sha"])
         self.assertIn("through DEC-320", self.readme)
         self.assertIn("not live execution authority", self.readme)
         self.assertEqual("02_OPEN_WORK_v1.2.90.md", next(row for row in MANIFEST["governing_documents"] if row["document_id"] == "OPEN_WORK")["canonical_filename"])
@@ -169,7 +177,8 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
             ("DECISION_REGISTER_V1_11_0", "docs/00_platform/archive/01_DECISIONS_v1.11.0.md"),
         ):
             entry = next(item for item in MANIFEST["historical_documents"] if item["document_id"] == entry_id)
-            data = (ROOT / path).read_bytes()
+            physical_path = path.replace("docs/00_platform/archive/", "docs/history/platform/archive/")
+            data = (ROOT / physical_path).read_bytes()
             self.assertEqual(path, entry["repository_path"])
             self.assertEqual(entry["sha256"], hashlib.sha256(data).hexdigest())
             self.assertEqual(entry["sha256"], entry["provenance_sha256"])

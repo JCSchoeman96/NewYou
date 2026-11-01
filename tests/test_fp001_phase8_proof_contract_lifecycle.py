@@ -18,18 +18,18 @@ from tools.foundation_integrity_audit import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+MANIFEST = ROOT / "docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 LIFECYCLE_CHECK = "fp001_phase8_proof_contract_lifecycle"
 SUCCESSOR_CHECK = "phase8_approved_status_successor_current"
 PROVENANCE_CHECK = "phase8_status_successor_predecessor_provenance"
-CONTRACT = ROOT / "docs/00_platform/working/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
-OPEN_WORK = ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.90.md"
-PRE_AUTHORIZATION_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.83.md"
+CONTRACT = ROOT / "docs/delivery/feature-contracts/fp-001/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
+OPEN_WORK = ROOT / "docs/history/02_OPEN_WORK_v1.2.90.md"
+PRE_AUTHORIZATION_OPEN_WORK = ROOT / "docs/history/platform/archive/02_OPEN_WORK_v1.2.83.md"
 HISTORICAL_OPEN_WORK = historical_snapshot_path(ROOT, "02_OPEN_WORK_v1.2.77.md")
-APPROVAL_TIME_OPEN_WORK = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.78.md"
-APPROVAL_TIME_ATLAS = ROOT / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.20.md"
-APPROVAL_TIME_SKELETON = ROOT / "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md"
-APPROVAL_TIME_HARDEN = ROOT / "docs/00_platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.22.md"
+APPROVAL_TIME_OPEN_WORK = ROOT / "docs/history/platform/archive/02_OPEN_WORK_v1.2.78.md"
+APPROVAL_TIME_ATLAS = ROOT / "docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.4.20.md"
+APPROVAL_TIME_SKELETON = ROOT / "docs/history/platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.22.md"
+APPROVAL_TIME_HARDEN = ROOT / "docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.22.md"
 FROZEN_ROUTE_ARCHIVE_SHA256 = {
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.78.md": "7ab24ce13ba37306c78cd795f3bb308c75a8d6627aa5ea8780bd2b162f013770",
     "docs/00_platform/archive/02_OPEN_WORK_v1.2.79.md": "f08b6c9cd8685bb4f5df7cebf36476e4fcdd8e07eb0d2b148cb39baf95bca24a",
@@ -152,7 +152,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
             "WELL-50: BACKLOG / NOT STARTED",
         ):
             self.assertIn(token, current_authorization)
-        predecessor = (ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.84.md").read_text(encoding="utf-8")
+        predecessor = (ROOT / "docs/history/platform/archive/02_OPEN_WORK_v1.2.84.md").read_text(encoding="utf-8")
         prior_section = predecessor.split("\n## Current P8-05 implementation authorization\n", 1)[1]
         prior_section = prior_section.split("\n## ", 1)[0].strip()
         historical_section = open_work.split(
@@ -253,7 +253,7 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertNotIn("mix fp001.proof", text)
         self.assertNotIn("lib/new_you/", text)
         self.assertNotIn("test/fp001/proof/", text)
-        reviewed_candidate = ROOT / "docs/00_platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
+        reviewed_candidate = ROOT / "docs/history/platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.2.md"
         self.assertEqual(
             "f071d9edae90e3d5ae2030a98f79d9d1698aa68bf90ed9ce474a4f9120f82836",
             hashlib.sha256(reviewed_candidate.read_bytes()).hexdigest(),
@@ -451,12 +451,12 @@ class FP001Phase8ProofContractLifecycleTests(unittest.TestCase):
         self.assertIn("WELL-64 is COMPLETE", text.split("## 12.39 — WELL-64 completion and P8-05 boundary", 1)[1])
         self.assertIn("immediate routing predecessor `archive/DELIVERY_ATLAS_WORKING_v0.4.30.md`", text)
         self.assertFalse((ROOT / "docs/00_platform/02_OPEN_WORK_v1.2.81.md").exists())
-        archived_predecessor = ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.81.md"
+        archived_predecessor = ROOT / "docs/history/platform/archive/02_OPEN_WORK_v1.2.81.md"
         self.assertEqual(
             "ddffe1b32b42e6132ec855ad6bc6234aabff6b01b36fc60f60e1e94f16d9df56",
             hashlib.sha256(archived_predecessor.read_bytes()).hexdigest(),
         )
-        prior_atlas = ROOT / "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.4.22.md"
+        prior_atlas = ROOT / "docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.4.22.md"
         self.assertIn(
             "**Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.21.md` (direct routing predecessor",
             prior_atlas.read_text(encoding="utf-8"),

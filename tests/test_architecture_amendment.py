@@ -361,15 +361,15 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
             self.assertNotIn("static analysis", section.lower())
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md"],
-            _sha256(ROOT / "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md"),
+            _sha256(ROOT / "docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md"),
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/05_ROADMAP_v1.0.0.md"],
-            _sha256(ROOT / "docs/00_platform/archive/05_ROADMAP_v1.0.0.md"),
+            _sha256(ROOT / "docs/history/platform/archive/05_ROADMAP_v1.0.0.md"),
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"],
-            _sha256(ROOT / "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"),
+            _sha256(ROOT / "docs/governance/architecture/references/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"),
         )
 
 

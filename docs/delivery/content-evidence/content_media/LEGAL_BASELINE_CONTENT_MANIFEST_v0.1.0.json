@@ -1,0 +1,91 @@
+{
+  "manifest_id": "NEWYOU_LEGAL_DEVELOPMENT_BASELINES",
+  "manifest_version": "0.1.0",
+  "status": "NON-AUTHORITATIVE CONTENT VERSION RECORD",
+  "warning": "NOT LEGALLY APPROVED FOR PRODUCTION OR REAL-PARTICIPANT RELEASE",
+  "purpose": "Pins exact English source snapshots permitted for explicitly classified NewYou development and bounded proof work.",
+  "versions": [
+    {
+      "content_version_id": "NEWYOU-TERMS-EN-DEV-2026-10-27-001",
+      "artifact_path": "docs/delivery/content-evidence/content_media/legal_baselines/NEWYOU-TERMS-EN-DEV-BASELINE-2026-10-27-001.html",
+      "document_type": "terms",
+      "document_locale": "en",
+      "exact_content_sha256": "8d54af7ac0c2a68d3d100cca987551877f4f89ca231ae95254cd1903a2eca062",
+      "applicability_status": "DEVELOPMENT_ONLY_CURRENT",
+      "effective_for_participants": false,
+      "approval_state": "NOT_LEGALLY_APPROVED",
+      "approval_reference": null,
+      "approval_date": null,
+      "supersession": {
+        "supersedes": null,
+        "superseded_by": null
+      },
+      "withdrawal": {
+        "status": "NOT_WITHDRAWN",
+        "reference": null,
+        "date": null
+      },
+      "allowed_contexts": [
+        "local_development",
+        "automated_tests",
+        "development_environments",
+        "bounded_phase_8_architectural_proof"
+      ],
+      "prohibited_contexts": [
+        "production",
+        "public_release",
+        "paid_pilot",
+        "real_participant_use"
+      ],
+      "source": {
+        "url": "https://voelgoed.co.za/terme-en-voorwaardes/",
+        "page_id": 58214,
+        "page_modified_at": "2026-09-09T13:05:31",
+        "captured_at": "2026-10-27T05:58:18Z",
+        "extraction": "Exact published English Terms widget snapshot. Removed one Afrikaans notice paragraph and the separate Afrikaans campaign-specific terms block; no translation or clause edits.",
+        "source_page_is_mutable": true
+      }
+    },
+    {
+      "content_version_id": "NEWYOU-PRIVACY-EN-DEV-2026-10-27-001",
+      "artifact_path": "docs/delivery/content-evidence/content_media/legal_baselines/NEWYOU-PRIVACY-EN-DEV-BASELINE-2026-10-27-001.html",
+      "document_type": "privacy",
+      "document_locale": "en",
+      "exact_content_sha256": "21aecdf9fafe95f513de2ce04a266e8e7726efb406aabae0bbd4d0e19f6ba333",
+      "applicability_status": "DEVELOPMENT_ONLY_CURRENT",
+      "effective_for_participants": false,
+      "approval_state": "NOT_LEGALLY_APPROVED",
+      "approval_reference": null,
+      "approval_date": null,
+      "supersession": {
+        "supersedes": null,
+        "superseded_by": null
+      },
+      "withdrawal": {
+        "status": "NOT_WITHDRAWN",
+        "reference": null,
+        "date": null
+      },
+      "allowed_contexts": [
+        "local_development",
+        "automated_tests",
+        "development_environments",
+        "bounded_phase_8_architectural_proof"
+      ],
+      "prohibited_contexts": [
+        "production",
+        "public_release",
+        "paid_pilot",
+        "real_participant_use"
+      ],
+      "source": {
+        "url": "https://voelgoed.co.za/privaatheidsbeleid/",
+        "page_id": 3,
+        "page_modified_at": "2026-07-28T10:22:54",
+        "captured_at": "2026-10-27T05:58:18Z",
+        "extraction": "Exact English policy widget snapshot. The public page heading in Afrikaans is outside this English body and is excluded; all source blanks and wording remain unchanged.",
+        "source_page_is_mutable": true
+      }
+    }
+  ]
+}

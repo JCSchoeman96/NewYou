@@ -1,6 +1,6 @@
 defmodule NewYou.Architecture.AshWriteBoundary do
   @moduledoc """
-  Mechanical enforcement of ARC-029 (`docs/00_platform/reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`):
+  Mechanical enforcement of ARC-029 (`docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md`):
   ordinary business code does not use `Ecto.Repo` as a second business API.
 
   This is deliberately narrow. It rejects only the clear persistence bypasses

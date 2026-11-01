@@ -8,8 +8,8 @@ name: Foundation Integrity
 #   Durable-governance/provenance PR -> the same required fast gate + non-blocking
 #                                      Foundation Full historical evidence
 #
-# Foundation Smoke validates CURRENT_AUTHORITY_ROUTER_v1.0.0.json. Foundation
-# Full validates the frozen pre-WELL-66 historical manifest and is intentionally
+# Foundation Smoke validates the current Governance and Delivery routers.
+# Foundation Full validates the frozen historical manifest and is intentionally
 # not a dependency of the required aggregate. Ordinary delivery-state changes
 # happen in Plane and therefore create no repository workflow run.
 #
@@ -69,7 +69,7 @@ jobs:
       - name: Verify merge-gate topology
         run: python -m unittest discover -s tests -p 'test_foundation_merge_gate.py' -v
       - name: Run current authority smoke audit
-        run: python -m tools.foundation_integrity_smoke --router docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json --json
+        run: python -m tools.foundation_integrity_smoke --governance-router docs/governance/CURRENT_GOVERNANCE_ROUTER.json --delivery-router docs/delivery/CURRENT_DELIVERY_ROUTER.json --json
 
   application-ci:
     name: Application CI
