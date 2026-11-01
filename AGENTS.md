@@ -59,9 +59,7 @@ Fresh implementation starts only from a dependency-cleared Plane ticket in "Read
 
 It does not mean every Resource, table, field, action, constraint, transaction mechanism or internal representation has already been designed.
 
-Before implementing a Ready ticket use:
-
-".agents/skills/ticket-implement/SKILL.md"
+Before implementing a Ready ticket, invoke the packaged `$ticket-implement` skill, then identify the NewYou Plane ticket to implement.
 
 Do not routinely invoke "/grilling", "to-spec" or "to-tickets" again inside a Ready ticket.
 
@@ -218,9 +216,11 @@ Use Tidewave/runtime evidence where it answers development questions better than
 
 Required skills
 
-Before implementing a Ready ticket use:
+Use the installed `$ticket-implement` skill before fresh Ready-ticket implementation. The package also provides `project-implementation` as a compatibility skill for existing references.
 
-".agents/skills/ticket-implement/SKILL.md"
+The repo-local `project-implementation` path remains only as a thin shim for the pinned TB-001 reference. It must delegate to the packaged workflow.
+
+Do not add repo-local copies of the packaged workflows or define a competing implementation procedure.
 
 Before implementation involving Ash-backed behaviour or durable state, load the relevant Ash skill/reference.
 
@@ -229,8 +229,6 @@ Before handoff or merge recommendation use:
 ".agents/skills/code-change-verification/SKILL.md"
 
 Load other generated framework skills only when relevant.
-
-The legacy ".agents/skills/project-implementation/SKILL.md" may remain only as a compatibility shim for existing references. It must delegate to "ticket-implement", not define a competing workflow.
 
 Ash-first mechanism selection
 
