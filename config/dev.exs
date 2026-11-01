@@ -1,5 +1,7 @@
 import Config
 
+config :new_you, :verification_development_fixtures, true
+
 config :new_you, :platform_name, "Development Platform"
 
 config :new_you, :identity_registration_legal_versions, %{

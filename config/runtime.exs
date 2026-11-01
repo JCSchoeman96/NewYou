@@ -148,3 +148,12 @@ if config_env() == :prod do
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.
 end
+
+# Envelope keys are injected by the environment and are never written to the database.
+case NewYou.Communications.Keyring.from_environment(
+       System.get_env("COMMUNICATIONS_ENVELOPE_ACTIVE_KEY_VERSION"),
+       System.get_env("COMMUNICATIONS_ENVELOPE_KEYS_JSON")
+     ) do
+  {:ok, keyring} -> config :new_you, :communications_keyring, keyring
+  :error -> :ok
+end
