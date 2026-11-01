@@ -7,7 +7,7 @@
 - **Formal Product promotion:** outstanding
 - **Empirical stage results recorded:** **NONE**
 - **Execution summary:** cases with any executed stage `0 / 59`; fully satisfied cases `0 / 59`; executed stage slots `0 / 85`
-- **Deep provenance ledger:** `deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md`
+- **Deep provenance ledger:** `docs/delivery/jit/paystack_validation/deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md`
 
 ## Start here
 
@@ -80,5 +80,5 @@ The v1.0.1 compact pack remains preserved separately, and v1.0.0 remains preserv
 | `NEWYOU_PAYSTACK_GAP_REGISTER_WORKING_v1.0.2.md` | `abfb419ad00fc848cb6c8f32166b1902a1a719110c2c1fb0e8e0164274c835f2` |
 | `NEWYOU_PAYSTACK_EMPIRICAL_MANIFEST_WORKING_v1.0.2.md` | `efb9cec5b2875eea53bd6023ddeadba7f3e5fe5b46722a8e2695a6fd29192b96` |
 | `NEWYOU_PAYSTACK_EVIDENCE_INDEX_WORKING_v1.0.2.md` | `6d25e419d6c20ea0aa8d2218def381ba679c2dbc1430b6441594ee1dae5b0764` |
-| `deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md` | `8399645c5c7f8ecb4e5d263b3c37379e7d710262ad9b7b388929bca3c54d0a6d` |
-| `deep/docs/history/delivery-packs/paystack_validation/deep/archive/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.10.0.md` | `770a32bc3217443c2fbcbd47fe1919de027226fc078f83f2a556f79972814aaa` |
+| `docs/delivery/jit/paystack_validation/deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md` | `8399645c5c7f8ecb4e5d263b3c37379e7d710262ad9b7b388929bca3c54d0a6d` |
+| `docs/history/delivery-packs/paystack_validation/deep/archive/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.10.0.md` | `770a32bc3217443c2fbcbd47fe1919de027226fc078f83f2a556f79972814aaa` |

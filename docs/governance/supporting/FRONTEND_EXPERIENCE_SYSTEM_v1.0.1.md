@@ -8,7 +8,7 @@
 - **Frozen working source SHA-256:** `635cd997641409f876e9d6d5ff00b61aecffef8d75d310bec24f2e897f286aa4`
 - **Previous source:** `docs/history/platform/archive/FRONTEND_EXPERIENCE_SYSTEM_WORKING_v0.1.0.md`
 - **Previous source SHA-256:** `05ca75c89d12f9de1704f452be45edd07263a3c7fc9e6b4f176732e9cd91009a`
-- **Derived from:** `working/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md`
+- **Derived from:** `docs/delivery/feature-contracts/experience/EXPERIENCE_DECISIONS_WORKING_v0.7.0.md`
 - **Current authority basis:** Product Law, Architecture, Domain Law, Roadmap and the frozen `PLATFORM_OPERATING_MODEL_v1.0.1.md`
 - **Authority boundary:** Subordinate to Product Law, Architecture, Domain Law, Roadmap and the frozen Platform Operating Model. The Experience Decision Register is cumulative working provenance and does not override upstream authority.
 - **Governs:** frontend-experience, design-system and interaction contracts for in-scope frontend, UI and public-experience planning.

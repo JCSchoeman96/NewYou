@@ -87,7 +87,7 @@ Live NewYou authority wins over every statement in this pack. The current live r
 7. `05_ROADMAP_v1.2.0.md`
 8. `PLATFORM_OPERATING_MODEL_v1.0.1.md`
 9. `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` when UI/public experience is relevant
-10. Current reference evidence, including `REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md` and certified `reference/ENGINEERING_STANDARDS_v1.0.1.md`.
+10. Current reference evidence, including `REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md` and certified `docs/governance/supporting/ENGINEERING_STANDARDS_v1.0.1.md`.
 
 Current Product Law locks Paystack as the first/launch gateway but leaves provider retry, subscription, webhook, proration, refund, dispute/chargeback and related provider behaviour gated. Commerce remains payment/refund/dispute authority; Entitlements remains access authority.
 
@@ -733,10 +733,10 @@ A mechanism-level mismatch exists **if** NewYou were to adopt Paystack-managed S
 | `05_ROADMAP_v1.2.0.md` | FP-002 exact outcome/gates/exit; recurring deferred; FP-006 operational/release needs. |
 | `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` | PAYMENT_PENDING/VERIFYING and browser return non-authority. |
 | `PLATFORM_OPERATING_MODEL_v1.0.1.md` | Finance/support reconciliation workflow, work-not-authority. |
-| `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md` FLOW-02 | End-to-end payment/provider/reconciliation pressure test. |
-| `reference/ENGINEERING_STANDARDS_v1.0.1.md` | HIGH financial/provider-reconciliation proof rules; timeout/unknown no blind retry. |
-| `working/commerce_entitlements/NEWYOU_CER_PREJIT_CONTRACT_WORKING_v0.2.1.md` | Non-authoritative recurring/provider evidence layering and duplicate/reversal pressure. |
-| `working/privacy_consent_data_lifecycle/NEWYOU_PRIVACY_PREJIT_CONTRACT_WORKING_v0.1.3.md` | Non-authoritative privacy/provider-retention/deletion seam. |
+| `docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md` FLOW-02 | End-to-end payment/provider/reconciliation pressure test. |
+| `docs/governance/supporting/ENGINEERING_STANDARDS_v1.0.1.md` | HIGH financial/provider-reconciliation proof rules; timeout/unknown no blind retry. |
+| `docs/delivery/jit/commerce_entitlements/NEWYOU_CER_PREJIT_CONTRACT_WORKING_v0.2.1.md` | Non-authoritative recurring/provider evidence layering and duplicate/reversal pressure. |
+| `docs/delivery/jit/privacy_consent_data_lifecycle/NEWYOU_PRIVACY_PREJIT_CONTRACT_WORKING_v0.1.3.md` | Non-authoritative privacy/provider-retention/deletion seam. |
 
 ## B. Current OQ/gate facts
 
@@ -4540,8 +4540,8 @@ A compact current projection is created alongside this pass with:
 - `NEWYOU_PAYSTACK_EMPIRICAL_MANIFEST_WORKING_v1.0.0.md` — waves/cases/evidence/status;
 - `NEWYOU_PAYSTACK_GAP_REGISTER_WORKING_v1.0.0.md` — open items only;
 - `NEWYOU_PAYSTACK_EVIDENCE_INDEX_WORKING_v1.0.0.md` — current source index and evidence classes;
-- `deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md` — full append-only provenance ledger;
-- `deep/docs/history/delivery-packs/paystack_validation/deep/archive/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.10.0.md` — explicit immediate predecessor snapshot.
+- `docs/delivery/jit/paystack_validation/deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md` — full append-only provenance ledger;
+- `docs/history/delivery-packs/paystack_validation/deep/archive/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.10.0.md` — explicit immediate predecessor snapshot.
 
 The compact projection is **derived working context**, not authority. Where it conflicts with the deep ledger, live governed GitHub or newer provider evidence, the stronger/current source wins.
 

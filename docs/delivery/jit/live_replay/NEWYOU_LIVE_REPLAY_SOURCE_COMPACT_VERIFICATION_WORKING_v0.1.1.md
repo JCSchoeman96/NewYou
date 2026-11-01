@@ -92,7 +92,7 @@ The compact Contract explicitly preserves:
 
 - The 34 historical discovery/register files relocated at `baa848e8283677b784578105fe75f12184f07685` retain identical Git blob identity at archive paths.
 - Accepted status successor `NEWYOU_LIVE_REPLAY_PREJIT_WORKING_REGISTER_v0.12.1.md` remains intact under `deep/`.
-- Superseded compact-pack v0.1.0 files are to be archived under `deep/docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0` using their existing Git blob objects in the hardening commit.
+- Superseded compact-pack v0.1.0 files are to be archived under `docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0` using their existing Git blob objects in the hardening commit.
 - The local 83,103-byte v0.12.0 human-review Markdown source is referenced by SHA-256 only and is not falsely represented as a repository archive file.
 
 ## 8. Required pack checks before completion claim
@@ -103,7 +103,7 @@ Completion requires all of the following after the hardening manifest commit:
 2. `PACK_MANIFEST_v0.1.1.json` parses as valid JSON;
 3. manifest byte counts/SHA-256 values match the generated hardened files;
 4. deep ledger v0.12.2 hash/bytes match Evidence Index/manifest;
-5. v0.1.0 compact predecessors are present under `deep/docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0` with original Git blob SHA identity;
+5. v0.1.0 compact predecessors are present under `docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0` with original Git blob SHA identity;
 6. main is unchanged from the verified baseline or, if changed, authority is re-resolved before certification;
 7. branch remains ahead with merge base at the verified main baseline and diff remains confined to `docs/delivery/jit/live_replay/**`;
 8. guard searches confirm no UPD-007/GAP-015/Phase-7 or implementation-authority promotion.

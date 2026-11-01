@@ -20,7 +20,7 @@
 | `05_ROADMAP_v1.2.0.md` | FP-002 outcome, OQ-004 gate, recurring deferral, release gates |
 | `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` | pending/verifying UX; browser non-authority |
 | `PLATFORM_OPERATING_MODEL_v1.0.1.md` | Finance/support work vs business authority |
-| `reference/ENGINEERING_STANDARDS_v1.0.1.md` | high-risk financial/provider proof rules |
+| `docs/governance/supporting/ENGINEERING_STANDARDS_v1.0.1.md` | high-risk financial/provider proof rules |
 | FLOW-02 pressure test | end-to-end payment/reconciliation failure model |
 | Commerce/Entitlements Pre-JIT | supporting non-authoritative lifecycle pressure evidence |
 | Privacy Pre-JIT | provider-retention/disclosure minimisation seams |
@@ -92,4 +92,4 @@ The v1.0.2 stage-result recording patch adds no new Paystack documentary claim. 
 - **Execution Stage** — where the case can truthfully execute;
 - **Gate Effect** — what the result can block.
 
-`NEWYOU_PAYSTACK_EMPIRICAL_MANIFEST_WORKING_v1.0.2.md` is the current operational routing/result projection. It records current disposition per execution stage; it does not collapse multi-stage cases into one status. `deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md` remains the detailed case-definition/provenance source. A provider-only harness result cannot satisfy an `PHASE8_*` or `RELEASE_*` stage.
+`NEWYOU_PAYSTACK_EMPIRICAL_MANIFEST_WORKING_v1.0.2.md` is the current operational routing/result projection. It records current disposition per execution stage; it does not collapse multi-stage cases into one status. `docs/delivery/jit/paystack_validation/deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md` remains the detailed case-definition/provenance source. A provider-only harness result cannot satisfy an `PHASE8_*` or `RELEASE_*` stage.

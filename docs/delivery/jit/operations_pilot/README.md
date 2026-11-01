@@ -23,7 +23,7 @@ This directory is the frozen normal-context working pack for NewYou Operations, 
 5. `NEWYOU_OPERATIONS_SUPPORT_PILOT_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.1.md` — fresh mechanical/source-semantic verification.
 6. `PACK_MANIFEST_v0.1.1.json` — file/hash inventory and deep/history routing.
 
-Deep source/history is not default context. Load `deep/NewYou_Operations_Support_Pilot_PreJIT_Working_Control_Document_v0.32.0.md` when exact pressure-test reasoning or supersession history is required. `deep/docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0` preserves the pre-hardening compact pack.
+Deep source/history is not default context. Load `deep/NewYou_Operations_Support_Pilot_PreJIT_Working_Control_Document_v0.32.0.md` when exact pressure-test reasoning or supersession history is required. `docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0` preserves the pre-hardening compact pack.
 
 
 ## Packaging provenance — complete
@@ -37,7 +37,7 @@ Verified final-tree facts:
 - all 30 have independently computed local SHA-256 values;
 - `deep/NewYou_Operations_Support_Pilot_PreJIT_Working_Control_Document_v0.32.0.md` remains byte/hash exact;
 - the historical compressed candidate remains byte/hash exact;
-- `deep/docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0` is physically present;
+- `docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0` is physically present;
 - the physical source lineage defines exactly `OPS-PT-001...470`, each once, with no gaps or unexpected IDs;
 - every pack-local deep/archive reference resolves;
 - the compact root contains only the intended normal-context pack files.

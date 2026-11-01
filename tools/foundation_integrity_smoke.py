@@ -62,9 +62,11 @@ FORBIDDEN_DELIVERY_KEYS = frozenset(
 DOCUMENT_VERSION_PATTERN = re.compile(
     r"^[-*]\s+\*\*Document version:\*\*\s+v?(\d+\.\d+\.\d+)\s*$", re.MULTILINE
 )
-ROOTED_DOCUMENT_REFERENCE_PATTERN = re.compile(
-    r"`(docs/(?:governance|delivery|development|history)/[^`\s)]+?\.(?:md|json))(?=\s*(?:§|`))"
+DOCUMENT_FILE_REFERENCE_PATTERN = re.compile(
+    r"(?<![A-Za-z0-9_])((?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+\.(?:md|json))"
 )
+MARKDOWN_LINK_DESTINATION_PATTERN = re.compile(r"\]\(\s*<?([^\s)>]+)>?")
+DOCUMENT_LOCATION_FIELDS = frozenset({"path", "archive_path", "repository_path", "target_path"})
 STATUS_VERSION_PATTERN = re.compile(
     r"^[-*]\s+\*\*Document status:\*\*.*?\bv(\d+\.\d+\.\d+)\b", re.MULTILINE
 )
@@ -315,48 +317,130 @@ def _check_current_routing_guidance(
     )
 
 
+def _without_fenced_code_blocks(text: str) -> str:
+    visible: list[str] = []
+    fence_character: str | None = None
+    fence_length = 0
+
+    for line in text.splitlines(keepends=True):
+        fence = re.match(r"^\s{0,3}(`{3,}|~{3,})", line)
+        if fence_character is None:
+            if fence:
+                marker = fence.group(1)
+                fence_character = marker[0]
+                fence_length = len(marker)
+                visible.append("\n" if line.endswith("\n") else "")
+            else:
+                visible.append(line)
+            continue
+
+        if fence:
+            marker = fence.group(1)
+            if marker[0] == fence_character and len(marker) >= fence_length:
+                fence_character = None
+                fence_length = 0
+        visible.append("\n" if line.endswith("\n") else "")
+
+    return "".join(visible)
+
+
+def _json_document_references(value: Any, key: str = "") -> list[str]:
+    references: list[str] = []
+    if isinstance(value, dict):
+        for child_key, child in value.items():
+            if child_key in DOCUMENT_LOCATION_FIELDS and isinstance(child, str):
+                references.append(child)
+            elif child_key != "original_path":
+                references.extend(_json_document_references(child, child_key))
+    elif isinstance(value, list):
+        for child in value:
+            references.extend(_json_document_references(child, key))
+    return references
+
+
+def _document_reference_resolves(root: Path, source: Path, reference: str) -> bool:
+    route = Path(reference)
+    if route.is_absolute() or reference.startswith(("http://", "https://", "mailto:", "#")):
+        return False
+
+    # These are command-generated outputs, not links into the checked-in repository.
+    if route.parts and route.parts[0] == "tmp":
+        return True
+
+    repository_rooted = "docs" in route.parts
+    if repository_rooted:
+        if ".." in route.parts:
+            return False
+        candidates = (root / route,)
+    else:
+        candidates = (source.parent / route, root / route)
+
+    for target in candidates:
+        try:
+            resolved = target.resolve(strict=True)
+            resolved.relative_to(root)
+        except (OSError, ValueError):
+            continue
+        if not resolved.exists():
+            continue
+
+        if repository_rooted:
+            cursor = root
+            for part in route.parts:
+                cursor = cursor / part
+                if cursor.is_symlink():
+                    break
+            else:
+                return True
+        else:
+            return True
+
+    return False
+
+
 def _check_active_document_references(root: Path, report: dict[str, Any]) -> None:
-    missing: list[str] = []
+    missing: set[str] = set()
     for semantic_root in ("docs/governance", "docs/delivery", "docs/development"):
         directory = root / semantic_root
         if not directory.is_dir():
-            missing.append(f"{semantic_root}/ (semantic root is missing)")
+            missing.add(f"{semantic_root}/ (semantic root is missing)")
             continue
-        for source in directory.rglob("*.md"):
+        sources = sorted((*directory.rglob("*.md"), *directory.rglob("*.json")))
+        for source in sources:
             try:
                 text = source.read_text(encoding="utf-8")
             except OSError:
-                missing.append(f"{source.relative_to(root)} (could not be read)")
+                missing.add(f"{source.relative_to(root)} (could not be read)")
                 continue
-            for reference in sorted(set(ROOTED_DOCUMENT_REFERENCE_PATTERN.findall(text))):
-                route = Path(reference)
-                target = root / route
+
+            if source.suffix == ".json":
                 try:
-                    resolved = target.resolve(strict=True)
-                    resolved.relative_to(root)
-                    contained = (
-                        not route.is_absolute()
-                        and ".." not in route.parts
-                        and resolved.is_file()
-                    )
-                except (OSError, ValueError):
-                    contained = False
-                cursor = root
-                for part in route.parts:
-                    cursor = cursor / part
-                    if cursor.is_symlink():
-                        contained = False
-                        break
-                if not contained:
-                    missing.append(f"{source.relative_to(root)} → {reference}")
+                    payload = json.loads(text)
+                except json.JSONDecodeError:
+                    missing.add(f"{source.relative_to(root)} (invalid JSON)")
+                    continue
+                references = _json_document_references(payload)
+            else:
+                navigable_text = _without_fenced_code_blocks(text)
+                references = DOCUMENT_FILE_REFERENCE_PATTERN.findall(navigable_text)
+                references.extend(
+                    destination
+                    for destination in MARKDOWN_LINK_DESTINATION_PATTERN.findall(navigable_text)
+                    if destination.lower().endswith((".md", ".json"))
+                )
+
+            for reference in sorted(set(references)):
+                if not _document_reference_resolves(root, source, reference):
+                    missing.add(f"{source.relative_to(root)} → {reference}")
 
     _record(
         report,
         "smoke_active_document_references",
         not missing,
-        "rooted documentation file references resolve in current semantic roots"
+        "repository document references resolve in current semantic roots"
         if not missing
-        else "current documentation contains unresolved rooted file references: " + "; ".join(missing[:8]),
+        else "current documentation contains unresolved repository file references: "
+        + "; ".join(sorted(missing)[:8]),
     )
 
 

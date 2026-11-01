@@ -7,13 +7,13 @@
 - **Last updated:** 2026-10-31
 - **Authority:** sequences approved Product Law under frozen Architecture and Domain Law, including the Targeted Product Amendment sequencing decisions
 - **Current Product authority:** `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`, `00_PLATFORM_v1.9.0.md`, `01_DECISIONS_v1.9.0.md`
-- **Current Architecture authority:** `03_ARCHITECTURE_v1.1.1.md` and accepted Architecture Law (`reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md` where exact legislative evidence is required)
+- **Current Architecture authority:** `03_ARCHITECTURE_v1.1.1.md` and accepted Architecture Law (`docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md` where exact legislative evidence is required)
 - **Current Domain authority:** `04_DOMAIN_MAP_v1.2.0.md`
 - **Current repository routing:** `docs/governance/CURRENT_GOVERNANCE_ROUTER.json`, `docs/delivery/CURRENT_DELIVERY_ROUTER.json` and `docs/README.md` (durable orientation; not a live task/status ledger).
 - **Live execution state:** Plane project `WELL` beneath durable GitHub law; only dependency-cleared Plane **`Ready`** authorises fresh implementation.
 - **Frozen Open Work (historical only):** `02_OPEN_WORK_v1.2.90.md` — final pre-WELL-66 planning snapshot; not current execution authority.
 - **Roadmap-freeze provenance (v1.1.2 source-at-freeze):** `docs/history/platform/archive/00_PLATFORM_v1.4.1.md`, `docs/history/platform/archive/01_DECISIONS_v1.4.1.md`, `docs/history/platform/archive/04_DOMAIN_MAP_v1.1.1.md`, `docs/history/platform/archive/02_OPEN_WORK_v1.2.45.md`
-- **Roadmap Sequencing Grill evidence:** `working/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` (non-authoritative)
+- **Roadmap Sequencing Grill evidence:** `docs/history/platform/analysis/TARGETED_ROADMAP_SEQUENCING_GRILL_WORKING_v0.1.0.md` (non-authoritative)
 - **Historical working draft:** `docs/history/platform/archive/05_ROADMAP_WORKING_v0.1.0.md`
 - **Historical frozen predecessor:** `docs/history/platform/archive/05_ROADMAP_v1.0.0.md`
 - **Implementation status:** STOPPED; this document does not authorise Feature Pack preparation, JIT Domain Dossiers, Architectural Proof, Vertical Slices, TOON generation or implementation

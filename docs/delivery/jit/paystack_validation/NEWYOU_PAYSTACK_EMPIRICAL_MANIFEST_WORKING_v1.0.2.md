@@ -6,7 +6,7 @@
 - **Stage-result summary:** cases with any executed stage `0 / 59`; fully satisfied cases `0 / 59`; executed stage slots `0 / 85`.
 - **Routing predecessor:** `NEWYOU_PAYSTACK_EMPIRICAL_MANIFEST_WORKING_v1.0.1.md`
 - **Semantic contract:** `NEWYOU_PAYSTACK_PREJIT_CONTRACT_WORKING_v1.0.0.md` (unchanged by this stage-result recording patch)
-- **Detailed case-definition source:** `deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md`
+- **Detailed case-definition source:** `docs/delivery/jit/paystack_validation/deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md`
 
 ## 1. Routing model: Wave ≠ Execution Stage ≠ Gate Effect
 
@@ -28,7 +28,7 @@ Allowed execution-stage labels used here:
 
 ## 2. Exact case-definition locator rule
 
-Before executing any case, load its exact `### PAYSTACK-EV-...` definition from `deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md` **unless the full setup/PASS/FAIL definition has been promoted into this manifest**. Do not invent a setup from the one-line purpose.
+Before executing any case, load its exact `### PAYSTACK-EV-...` definition from `docs/delivery/jit/paystack_validation/deep/NEWYOU_PAYSTACK_VALIDATION_PREJIT_WORKING_v0.11.0.md` **unless the full setup/PASS/FAIL definition has been promoted into this manifest**. Do not invent a setup from the one-line purpose.
 
 Routing precedence for execution is:
 

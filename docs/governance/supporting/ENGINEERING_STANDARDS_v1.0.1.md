@@ -5,9 +5,9 @@
 - **Authority class:** SUPPORTING AUTHORITY / ENGINEERING STANDARDS
 - **Promotion baseline main SHA:** `73eca9d9148a82cab8ae988c5950539bfee0d7f9`
 - **Certification status successor base main SHA:** `596d9560aa2b3b3cb941560b01bdc6c8ba7c525a`
-- **Source Grill:** `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`
+- **Source Grill:** `docs/history/platform/analysis/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`
 - **Source Grill SHA-256:** `27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017`
-- **HARDEN-02 authority basis:** `working/HARDEN-02_CONTRACT_WORKING_v0.4.8.md`, H02-3R and I-12
+- **HARDEN-02 authority basis:** `docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.4.8.md`, H02-3R and I-12
 - **Authority classification:** current supporting authority registered under `reference_documents`, not `governing_documents`
 
 ## Boundary
@@ -126,7 +126,7 @@ Exact strings, worker mapping tables, event grammar, CI job lists and implementa
 
 The v1.0.0 promotion candidate is preserved byte-identically at `docs/history/platform/archive/ENGINEERING_STANDARDS_v1.0.0.md`. This v1.0.1 status successor records the accepted candidate as certified/current without changing the EP-Q1…EP-Q5 normative body. Both manifest records remain under the reference classification; only v1.0.1 is active, and Engineering Standards is not governing-root authority.
 
-The sole normative source remains the accepted Stage 4B Engineering-Policy Grill at `working/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`, SHA-256 `27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017`. Stage 4A Architecture Grill evidence remains constraint context only.
+The sole normative source remains the accepted Stage 4B Engineering-Policy Grill at `docs/history/platform/analysis/TARGETED_ENGINEERING_POLICY_GRILL_WORKING_v0.1.0.md`, SHA-256 `27bc75f1e17ca88922005374cc6643e0896ec40d477b87ac8b5e6b3c08ba2017`. Stage 4A Architecture Grill evidence remains constraint context only.
 
 ### PR #65 candidate certification evidence
 

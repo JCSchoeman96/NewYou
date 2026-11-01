@@ -20,9 +20,11 @@ class FoundationSmokeTests(unittest.TestCase):
         shutil.copy2(ROOT / "AGENTS.md", root / "AGENTS.md")
         for relative in ("docs/governance", "docs/delivery", "docs/history"):
             shutil.copytree(ROOT / relative, root / relative)
+        shutil.copytree(ROOT / "docs/superpowers", root / "docs/superpowers")
         (root / "docs").mkdir(parents=True, exist_ok=True)
         shutil.copy2(ROOT / "docs/README.md", root / "docs/README.md")
         shutil.copytree(ROOT / "docs/development", root / "docs/development")
+        shutil.copytree(ROOT / ".agents/skills", root / ".agents/skills")
         (root / ".github/workflows").mkdir(parents=True, exist_ok=True)
         shutil.copy2(
             ROOT / ".github/workflows/foundation-integrity.yml",
@@ -57,6 +59,38 @@ class FoundationSmokeTests(unittest.TestCase):
             readme.write_text(
                 readme.read_text(encoding="utf-8")
                 + "\nBroken current link: `docs/history/missing-evidence.md`.\n",
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root)
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(item["check"] == "smoke_active_document_references" for item in report["findings"])
+            )
+
+    def test_smoke_rejects_prefixed_repository_document_reference(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._fixture(directory)
+            readme = root / "docs/delivery/README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\nMalformed migration path: `deep/docs/history/example.md`.\n",
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root)
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(item["check"] == "smoke_active_document_references" for item in report["findings"])
+            )
+
+    def test_smoke_rejects_unresolved_relative_markdown_link(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._fixture(directory)
+            readme = root / "docs/delivery/README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\nBroken relative link: [missing evidence](deep/missing-evidence.md).\n",
                 encoding="utf-8",
             )
 

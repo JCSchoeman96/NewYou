@@ -39,10 +39,10 @@ The root is intentionally small. Historical ledgers remain byte-preserved under 
 Deep-source roles are intentionally distinct:
 
 ```text
-deep/...v0.25.1.md
+docs/delivery/jit/programmes_learning/deep/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.25.1.md
 = exact frozen semantic correction source ledger
 
-deep/...v0.25.2.md
+docs/delivery/jit/programmes_learning/deep/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.25.2.md
 = exact freeze-acceptance / provenance source ledger
 
 deep/NEWYOU_PROGRAMMES_LEARNING_PREJIT_CUMULATIVE_WORKING_REGISTER_v0.25.2.md

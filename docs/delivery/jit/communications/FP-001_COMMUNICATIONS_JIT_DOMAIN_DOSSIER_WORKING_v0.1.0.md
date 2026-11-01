@@ -75,13 +75,13 @@ The live README and manifest identify these current sources and versions:
 | Authority | Current source | Material use in this dossier |
 |---|---|---|
 | Product direction | docs/governance/product/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md | §§5.1, 8, 10-13 for bilingual entry, account scope and first-launch boundaries |
-| Product Law | docs/governance/product/00_PLATFORM_v1.6.0.md | §21I.24; §§21E.1-21E.10; §§21J.1-21J.2, 21J.7-21J.8, 21J.10, 21J.18-21J.20, 21J.24 |
-| Decision Register | docs/governance/product/01_DECISIONS_v1.6.0.md | DEC-017-028; DEC-244-267; DEC-297-298; OQ-034-036 |
+| Product Law | docs/history/platform/archive/00_PLATFORM_v1.6.0.md | §21I.24; §§21E.1-21E.10; §§21J.1-21J.2, 21J.7-21J.8, 21J.10, 21J.18-21J.20, 21J.24 |
+| Decision Register | docs/history/platform/archive/01_DECISIONS_v1.6.0.md | DEC-017-028; DEC-244-267; DEC-297-298; OQ-034-036 |
 | Open Work | docs/history/platform/archive/02_OPEN_WORK_v1.2.58.md | §§7B, 7C, 9, 12.14-12.15; Communications work-start status and conditional-dossier status |
 | Architecture | docs/governance/architecture/03_ARCHITECTURE_v1.1.1.md | §§4-8, 10.1, 10.4, 11.1-11.2, 12.1-12.4, 13, 14-16 |
 | Domain Law | docs/governance/domain/04_DOMAIN_MAP_v1.2.0.md | §§4-5; §§6.1, 6.2, 6.7, 6.15, 6.18 |
-| Roadmap | docs/governance/roadmap/05_ROADMAP_v1.2.0.md | §6 FP-001 |
-| Operating Model | docs/governance/supporting/PLATFORM_OPERATING_MODEL_v1.0.1.md | §§2-6, 8, 12-13 |
+| Roadmap | docs/history/platform/archive/05_ROADMAP_v1.2.0.md | §6 FP-001 |
+| Operating Model | docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.0.1.md | §§2-6, 8, 12-13 |
 | Frontend contract | docs/governance/supporting/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md | §§3.2-3.3, 4, 5.2, 5.7, 6, 10.2-10.4 |
 
 docs/README.md identifies these as current. docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json records current authority paths, versions and integrity metadata. The manifest is an inventory, not a new authority layer.
@@ -90,8 +90,8 @@ docs/README.md identifies these as current. docs/history/CURRENT_AUTHORITY_MANIF
 
 | Contract | Current source | Material use |
 |---|---|---|
-| Phase 7A Skeleton | docs/delivery/feature-contracts/fp-001/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md | §§5-8, 10, 12-17; FP-001 scope, required Communications dossier, conditional candidates and Phase 7C stop |
-| Identity & Access dossier | docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md | §§I-J, J.1, J.1a, R-U, X-AA; ownership, atomic handoff, protected capability and proof consumption |
+| Phase 7A Skeleton | docs/history/platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md | §§5-8, 10, 12-17; FP-001 scope, required Communications dossier, conditional candidates and Phase 7C stop |
+| Identity & Access dossier | docs/history/platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md | §§I-J, J.1, J.1a, R-U, X-AA; ownership, atomic handoff, protected capability and proof consumption |
 
 Open Work v1.2.58 §12.14 and the current Identity dossier record Identity v0.1.4 as CERTIFIED / CURRENT under the separate PR #77 status successor. Open Work §12.15 records that Communications JIT Domain Dossier work has begun. The archived Open Work v1.2.57 and current Identity dossier preserve the earlier PR #77 NOT_STARTED state as history. The dossier preserves the completed PR #76 candidate certification and post-merge evidence. Identity remains the sole authority for proof and primary-email-change truth.
 
@@ -560,8 +560,8 @@ The current authority files and exact versions are listed in §1.2. Their materi
 
 #### Certified FP-001 working contracts
 
-- docs/delivery/feature-contracts/fp-001/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md, §§5-8, 10, 12-17.
-- docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md, §§I-J, J.1, J.1a, R-U, X-AA.
+- docs/history/platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.4.md, §§5-8, 10, 12-17.
+- docs/history/platform/archive/identity_promotions/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md, §§I-J, J.1, J.1a, R-U, X-AA.
 - Current lifecycle and certification route: docs/history/platform/archive/02_OPEN_WORK_v1.2.58.md, §§12.14-12.15.
 
 #### Non-authoritative Communications evidence

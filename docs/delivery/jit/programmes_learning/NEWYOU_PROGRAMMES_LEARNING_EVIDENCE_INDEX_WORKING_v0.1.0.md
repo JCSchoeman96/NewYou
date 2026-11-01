@@ -15,32 +15,32 @@ This index deliberately keeps the semantic/pass map in normal context. Byte coun
 
 | Version | Semantic role | Intended compact location | Current semantic status |
 |---|---|---|---|
-| `v0.1.0` | Bootstrap / orientation | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.1.0.md` | historical provenance |
-| `v0.2.0` | Pass 1 — participant journey & vocabulary | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.2.0.md` | historical provenance |
-| `v0.3.0` | Pass 2 — Programme / ProgrammeVersion | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.3.0.md` | historical provenance |
-| `v0.4.0` | Pass 3 — ContentVersion / translation binding | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.4.0.md` | historical provenance |
-| `v0.5.0` | Pass 4 — Edition / Cohort | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.5.0.md` | historical provenance |
-| `v0.6.0` | Pass 5 — Entitlement vs Enrolment / access | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.6.0.md` | historical provenance |
-| `v0.7.0` | Pass 6 — delivery / availability / sequencing | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.7.0.md` | historical provenance |
-| `v0.8.0` | Pass 7 — activity ownership / evidence | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.8.0.md` | historical provenance |
-| `v0.9.0` | Pass 8 — completion semantics | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.9.0.md` | historical provenance |
-| `v0.10.0` | Pass 9 — requirements / exceptions / substitution | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.10.0.md` | historical provenance |
-| `v0.11.0` | Pass 10 — recovery / catch-up | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.11.0.md` | historical provenance |
-| `v0.12.0` | Pass 11 — live-session / replay | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.12.0.md` | historical provenance |
-| `v0.12.1` | Pass 11 corrective successor | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.12.1.md` | historical provenance |
-| `v0.13.0` | Pass 12 — Community participation / moderation / evidence | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.13.0.md` | historical provenance |
-| `v0.14.0` | Pass 13 — Safety / clinical / professional boundary | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.14.0.md` | historical provenance |
-| `v0.15.0` | Pass 14 — journals / habits / private reflection | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.15.0.md` | historical provenance |
-| `v0.16.0` | Pass 15 — translation / version localisation | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.16.0.md` | historical provenance |
-| `v0.17.0` | Pass 16 — communications orchestration | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.17.0.md` | historical provenance |
-| `v0.18.0` | Pass 17 — operator correction / source authority | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.18.0.md` | historical provenance |
-| `v0.19.0` | Pass 18 — concurrency / retry / reordering | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.19.0.md` | historical provenance |
-| `v0.20.0` | Pass 19 — cancellation / transfer | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.20.0.md` | historical provenance |
-| `v0.21.0` | Pass 20 — historical reproducibility / replay provenance | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.21.0.md` | historical provenance |
-| `v0.22.0` | Pass 21 — Analytics / measurement | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.22.0.md` | historical provenance |
-| `v0.23.0` | Pass 22 — FP-014 second-lens pressure test | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.23.0.md` | historical provenance |
-| `v0.24.0` | Pass 23 — adversarial final convergence candidate | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.24.0.md` | historical provenance |
-| `v0.25.0` | Pass 24 first corrective candidate — superseded lifecycle overreach | `deep/docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.25.0.md` | SUPERSEDED where corrected by v0.25.1 |
+| `v0.1.0` | Bootstrap / orientation | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.1.0.md` | historical provenance |
+| `v0.2.0` | Pass 1 — participant journey & vocabulary | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.2.0.md` | historical provenance |
+| `v0.3.0` | Pass 2 — Programme / ProgrammeVersion | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.3.0.md` | historical provenance |
+| `v0.4.0` | Pass 3 — ContentVersion / translation binding | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.4.0.md` | historical provenance |
+| `v0.5.0` | Pass 4 — Edition / Cohort | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.5.0.md` | historical provenance |
+| `v0.6.0` | Pass 5 — Entitlement vs Enrolment / access | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.6.0.md` | historical provenance |
+| `v0.7.0` | Pass 6 — delivery / availability / sequencing | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.7.0.md` | historical provenance |
+| `v0.8.0` | Pass 7 — activity ownership / evidence | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.8.0.md` | historical provenance |
+| `v0.9.0` | Pass 8 — completion semantics | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.9.0.md` | historical provenance |
+| `v0.10.0` | Pass 9 — requirements / exceptions / substitution | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.10.0.md` | historical provenance |
+| `v0.11.0` | Pass 10 — recovery / catch-up | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.11.0.md` | historical provenance |
+| `v0.12.0` | Pass 11 — live-session / replay | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.12.0.md` | historical provenance |
+| `v0.12.1` | Pass 11 corrective successor | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.12.1.md` | historical provenance |
+| `v0.13.0` | Pass 12 — Community participation / moderation / evidence | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.13.0.md` | historical provenance |
+| `v0.14.0` | Pass 13 — Safety / clinical / professional boundary | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.14.0.md` | historical provenance |
+| `v0.15.0` | Pass 14 — journals / habits / private reflection | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.15.0.md` | historical provenance |
+| `v0.16.0` | Pass 15 — translation / version localisation | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.16.0.md` | historical provenance |
+| `v0.17.0` | Pass 16 — communications orchestration | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.17.0.md` | historical provenance |
+| `v0.18.0` | Pass 17 — operator correction / source authority | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.18.0.md` | historical provenance |
+| `v0.19.0` | Pass 18 — concurrency / retry / reordering | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.19.0.md` | historical provenance |
+| `v0.20.0` | Pass 19 — cancellation / transfer | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.20.0.md` | historical provenance |
+| `v0.21.0` | Pass 20 — historical reproducibility / replay provenance | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.21.0.md` | historical provenance |
+| `v0.22.0` | Pass 21 — Analytics / measurement | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.22.0.md` | historical provenance |
+| `v0.23.0` | Pass 22 — FP-014 second-lens pressure test | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.23.0.md` | historical provenance |
+| `v0.24.0` | Pass 23 — adversarial final convergence candidate | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.24.0.md` | historical provenance |
+| `v0.25.0` | Pass 24 first corrective candidate — superseded lifecycle overreach | `docs/history/delivery-packs/programmes_learning/deep/archive/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.25.0.md` | SUPERSEDED where corrected by v0.25.1 |
 | `v0.25.1` | Pass 24 corrective semantic freeze target | `deep/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.25.1.md` | FROZEN SEMANTIC HANDOFF |
 | `v0.25.2` | Freeze acceptance / current gap map / provenance hygiene | `deep/NEWYOU_PROGRAMMES_LEARNING_PREJIT_DISCOVERY_WORKING_v0.25.2.md` | freeze acceptance / retrieval hygiene |
 

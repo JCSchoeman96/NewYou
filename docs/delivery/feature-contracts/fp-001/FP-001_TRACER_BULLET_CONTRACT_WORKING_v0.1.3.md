@@ -27,7 +27,7 @@ Apply the live authority hierarchy in this order:
 2. Architecture Law and current synthesis: `03_ARCHITECTURE_v1.1.1.md`.
 3. Domain Law: `04_DOMAIN_MAP_v1.2.0.md`.
 4. Roadmap: `05_ROADMAP_v1.2.4.md`.
-5. Supporting operating, frontend and engineering contracts: `PLATFORM_OPERATING_MODEL_v1.2.0.md`, `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md`, and `reference/ENGINEERING_STANDARDS_v1.0.1.md`.
+5. Supporting operating, frontend and engineering contracts: `PLATFORM_OPERATING_MODEL_v1.2.0.md`, `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md`, and `docs/governance/supporting/ENGINEERING_STANDARDS_v1.0.1.md`.
 6. Current Open Work.
 7. Approved FP-001 planning contracts listed below.
 8. This proof contract.

@@ -120,7 +120,7 @@ Implementation          NOT AUTHORISED
 
 - Historical Pass A–M discovery and historical register sources remain byte-preserved under `deep/archive/` by identical Git blob identity from the prior compression relocation.
 - Accepted Pass-M status successor v0.12.1 remains under `deep/` and is not rewritten.
-- Superseded compact-pack v0.1.0 files are archived under `deep/docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0` in the hardening commit using their existing Git blob objects.
+- Superseded compact-pack v0.1.0 files are archived under `docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0` in the hardening commit using their existing Git blob objects.
 - The local 83,103-byte cumulative v0.12.0 review copy is identified by SHA-256 `e12f757253dea14738cc87d9254ffb9f2e1d001c925897a16fc55dbadce2ce3d` but is not falsely claimed to be a repository archive file.
 
 ## 7. Audit outcome

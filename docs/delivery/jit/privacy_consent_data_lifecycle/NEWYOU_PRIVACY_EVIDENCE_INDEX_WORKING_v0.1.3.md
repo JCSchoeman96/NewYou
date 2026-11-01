@@ -36,10 +36,10 @@ The compact artifacts are navigation/planning evidence only.
 
 Deep references only when exact source tracing is needed:
 
-- `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`
-- `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`
-- `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`
-- `reference/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`
+- `docs/governance/architecture/references/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`
+- `docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md`
+- `docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`
+- `docs/history/platform/archive/FOUNDATION_INTEGRITY_AUDIT_v1.0.0.md`
 
 ## 3. Pressure-test index
 

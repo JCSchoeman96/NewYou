@@ -6,7 +6,7 @@
 - **SemVer transition:** `v1.1.0 → v1.1.1` — source-path correction only; Architecture Law meaning is unchanged.
 - **Last updated:** 2026-09-25
 - **Purpose:** Synthesize accepted Product/Requirement/Architecture Law into a concise engineering architecture that can govern Domain Map and later delivery planning.
-- **Derived from:** `docs/history/platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `docs/history/platform/archive/00_PLATFORM_v1.3.0.md`, `docs/history/platform/archive/01_DECISIONS_v1.3.0.md`, `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`, `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`, `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`, `docs/history/platform/archive/02_OPEN_WORK_v1.2.36.md`
+- **Derived from:** `docs/history/platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.1.md`, `docs/history/platform/archive/00_PLATFORM_v1.3.0.md`, `docs/history/platform/archive/01_DECISIONS_v1.3.0.md`, `docs/governance/architecture/references/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`, `docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md`, `docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`, `docs/history/platform/archive/02_OPEN_WORK_v1.2.36.md`
 - **Architecture Law coverage:** `ARC-001...ARC-332` — 332/332 contiguous and represented
 - **Frozen ARQ coverage:** 433/433 requirements preserved through the accepted Architecture Law; all 10 requirement families represented in this synthesis
 - **Reference Flow coverage:** `FLOW-01...FLOW-12` — 12/12 traceability PASS; seven required targeted reviews incorporated; FLOW-09 remains conditional and was not included
@@ -18,7 +18,7 @@
 
 # 1. Document Authority & Purpose
 
-`03_ARCHITECTURE` is the platform's operating architecture constitution. It turns the detailed legislative record in `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md` into a usable set of doctrines and boundaries.
+`03_ARCHITECTURE` is the platform's operating architecture constitution. It turns the detailed legislative record in `docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md` into a usable set of doctrines and boundaries.
 
 The governing chain remains:
 
@@ -843,7 +843,7 @@ Review findings were classified under the governed Phase 4 taxonomy:
 - `REAL_ARC_CONFLICT`: **0**.
 - `DOWNSTREAM_DETAIL`: remains explicitly deferred in Section 16 and Appendix B.
 
-The Architecture amendment is the explicit successor governed by `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`; no Product Law, Decision Register or AR-000 amendment was made.
+The Architecture amendment is the explicit successor governed by `docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md`; no Product Law, Decision Register or AR-000 amendment was made.
 
 ## 19.2 Mechanical coverage audit
 
@@ -898,9 +898,9 @@ The seven required flow reviews pressure-tested the new participation identity, 
 
 The detailed supporting records remain preserved:
 
-- `reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`;
-- `reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`;
-- `reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`;
+- `docs/governance/architecture/references/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md`;
+- `docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md`;
+- `docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md`;
 - `docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md` remains the immutable predecessor.
 
 Normal downstream work should consume this frozen successor first and consult exact `ARC-*` entries when deeper legislative rationale/evidence is required. Engineering Standards and Domain pressure testing/amendment are downstream and are not started by this artifact.

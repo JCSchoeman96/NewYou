@@ -36,21 +36,21 @@
       "document_id": "ARCHITECTURE_LAW",
       "canonical_filename": "03_ARCHITECTURE_v1.1.1.md",
       "repository_path": "docs/governance/architecture/03_ARCHITECTURE_v1.1.1.md",
-      "sha256": "45661285206fc84225531ea88adf32572a9fec0ab1c3e9b6a15ea0353454e0d2",
+      "sha256": "1d2995a613a4d15ca3ea7d578dca83c87e18962213e939159e5cb506089c0e44",
       "semver": "1.1.1"
     },
     {
       "document_id": "DOMAIN_LAW",
       "canonical_filename": "04_DOMAIN_MAP_v1.2.0.md",
       "repository_path": "docs/governance/domain/04_DOMAIN_MAP_v1.2.0.md",
-      "sha256": "05aec0197262f0b659472ffc2bdc3c5baaa665b20f05de23b3bd8002ce0126d7",
+      "sha256": "bde3f815e0af025ec473c6bfbb314d12586a080404b967d05a285c8e2f8fc0ed",
       "semver": "1.2.0"
     },
     {
       "document_id": "GOVERNING_ROADMAP",
       "canonical_filename": "05_ROADMAP_v1.2.5.md",
       "repository_path": "docs/governance/roadmap/05_ROADMAP_v1.2.5.md",
-      "sha256": "c4afc18584cacfdeb9a002dce764b4dfed731022f1098c5055cbc66fbebdf4b9",
+      "sha256": "8af6ae36979bbbcf9f1cf5b65fcf7043d66bc638807cbdb74c22ea99046c428c",
       "semver": "1.2.5"
     }
   ],
@@ -82,21 +82,21 @@
       "document_id": "PLATFORM_OPERATING_MODEL",
       "canonical_filename": "PLATFORM_OPERATING_MODEL_v1.3.0.md",
       "repository_path": "docs/governance/supporting/PLATFORM_OPERATING_MODEL_v1.3.0.md",
-      "sha256": "e59b39efbf36e81c92f1762f24e793371a93dfcc774defbc0b96938989c5d631",
+      "sha256": "437938bf0cdbb823b393304fba8099742c4273ef53914d24f7cde2042859c775",
       "semver": "1.3.0"
     },
     {
       "document_id": "FRONTEND_EXPERIENCE_SYSTEM",
       "canonical_filename": "FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
       "repository_path": "docs/governance/supporting/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md",
-      "sha256": "2a4d292a305a94633c0f03d56835aba80bf8c233f46725fa5854aba9ae591188",
+      "sha256": "4b600169a15eaa1e20c3c085478c455402042a2b4e36fdffeca930b8a2c8efa3",
       "semver": "1.0.1"
     },
     {
       "document_id": "ENGINEERING_STANDARDS",
       "canonical_filename": "ENGINEERING_STANDARDS_v1.0.1.md",
       "repository_path": "docs/governance/supporting/ENGINEERING_STANDARDS_v1.0.1.md",
-      "sha256": "501bac77debf4f145d7d57f87029e0be22febcee17e8f368fb4473a2c9fc7342",
+      "sha256": "5fcca7b53613d0f0116dbd17dc488c2a047201094bc7327b9c3663e87321ebed",
       "semver": "1.0.1"
     },
     {

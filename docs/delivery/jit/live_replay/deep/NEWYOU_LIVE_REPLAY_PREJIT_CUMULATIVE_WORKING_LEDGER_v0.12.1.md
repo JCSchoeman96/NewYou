@@ -20,9 +20,9 @@ Read order for ordinary future work remains:
 ```text
 current governed NewYou authority
 → ../README.md
-→ ../NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.0.md
-→ ../NEWYOU_LIVE_REPLAY_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md when an unresolved rule matters
-→ ../NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.0.md when provenance/provider evidence matters
+→ docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_PREJIT_CONTRACT_WORKING_v0.1.0.md
+→ docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md when an unresolved rule matters
+→ docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.0.md when provenance/provider evidence matters
 → this cumulative deep ledger only when exact cumulative reasoning is required
 → archive/ only for exact historical PT narrative or supersession audit
 ```
@@ -393,9 +393,9 @@ Historical discovery/register chronology is preserved byte-identically under `ar
 
 Detailed provenance/indexing lives in:
 
-- `../NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.0.md`;
-- `../NEWYOU_LIVE_REPLAY_COMPRESSION_AUDIT_WORKING_v0.1.0.md`;
-- `../NEWYOU_LIVE_REPLAY_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md`.
+- `docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_EVIDENCE_INDEX_WORKING_v0.1.0.md`;
+- `docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_COMPRESSION_AUDIT_WORKING_v0.1.0.md`;
+- `docs/history/delivery-packs/live_replay/deep/archive/compact_v0.1.0/NEWYOU_LIVE_REPLAY_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md`.
 
 The Compression Audit mechanically accounts for all accepted numbered conclusion series (179 cumulative numbered conclusions) and maps them to compact destinations. Exact PT scenario narrative remains recoverable from the historical Pass A–M discovery files.
 

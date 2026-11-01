@@ -157,7 +157,7 @@
     }
   ],
   "historical_discovery_register_archive": {
-    "path": "docs/delivery/jit/live_replay/deep/archive/",
+    "path": "docs/history/delivery-packs/live_replay/deep/archive/",
     "relocation_commit": "baa848e8283677b784578105fe75f12184f07685",
     "file_count": 34,
     "byte_identity_proof": "same Git blob SHA before and after relocation",
