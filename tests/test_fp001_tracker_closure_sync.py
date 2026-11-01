@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 from tools.foundation_integrity_audit import refresh_manifest, run_audit
-from foundation_test_support import HISTORICAL_README_RELATIVE, current_working_path
+from foundation_test_support import current_working_path, materialize_historical_platform_readme
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -141,42 +141,18 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         report = run_audit(ROOT, manifest_path)
         self.assertEqual("PASS", report["status"], report["findings"])
 
-    def test_readme_current_route_rejects_open_tracker_projection(self):
-        cases = (
-            (
-                "Current State",
-                "PHASE 7B EXECUTION/CONTROL TRACKER #120: CLOSED / COMPLETED",
-                "PHASE 7B EXECUTION/CONTROL TRACKER #120: OPEN",
-            ),
-            (
-                "Current State",
-                "TRACER BULLET ID: TB-001",
-                "TRACER BULLET ID: NONE / NOT CREATED",
-            ),
+    def test_current_documentation_does_not_mirror_plane_tracker_state(self):
+        readme = (ROOT / "docs/README.md").read_text(encoding="utf-8")
+        governance = json.loads(
+            (ROOT / "docs/governance/CURRENT_GOVERNANCE_ROUTER.json").read_text(encoding="utf-8")
         )
-        for section_name, anchor, replacement in cases:
-            with self.subTest(section=section_name), tempfile.TemporaryDirectory() as directory:
-                root, manifest_path = self._copy_fixture(directory)
-                readme_path = root / HISTORICAL_README_RELATIVE
-                readme = readme_path.read_text(encoding="utf-8")
-                section_start = readme.index(f"## {section_name}")
-                next_heading = readme.find("\n## ", section_start + 1)
-                section_end = next_heading if next_heading >= 0 else len(readme)
-                section = readme[section_start:section_end]
-                self.assertIn(anchor, section)
-                readme_path.write_text(
-                    readme[:section_start] + section.replace(anchor, replacement, 1) + readme[section_end:],
-                    encoding="utf-8",
-                )
-                refresh_manifest(root, manifest_path)
+        delivery = json.loads(
+            (ROOT / "docs/delivery/CURRENT_DELIVERY_ROUTER.json").read_text(encoding="utf-8")
+        )
 
-                report = run_audit(root, manifest_path)
-
-                self.assertEqual("FAIL", report["status"])
-                self.assertTrue(
-                    any(finding["check"] == "phase8_approved_status_successor_current" for finding in report["findings"]),
-                    report["findings"],
-                )
+        self.assertNotIn("PHASE 7B EXECUTION/CONTROL TRACKER #120", readme)
+        self.assertNotIn("OPEN_WORK", {item["document_id"] for item in governance["governing_documents"]})
+        self.assertNotIn("WELL-49", json.dumps(delivery))
 
     def test_current_reconciliation_header_rejects_open_tracker_projection(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -268,38 +244,12 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
                 self.assertEqual("FAIL", report["status"])
                 self.assertTrue(report["findings"], report["findings"])
 
-    def test_retired_predecessor_guards_allow_only_archive_qualified_paths(self):
-        retired = (
-            "02_OPEN_WORK_v1.2.74.md",
-            "DELIVERY_ATLAS_WORKING_v0.4.16.md",
-            "FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.18.md",
-            "HARDEN-02_CONTRACT_WORKING_v0.5.18.md",
+    def test_delivery_router_owns_current_paths_and_history_is_not_current(self):
+        router = json.loads(
+            (ROOT / "docs/delivery/CURRENT_DELIVERY_ROUTER.json").read_text(encoding="utf-8")
         )
-        with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_fixture(directory)
-            readme_path = root / HISTORICAL_README_RELATIVE
-            original_readme = readme_path.read_text(encoding="utf-8")
-            readme = original_readme
-            current_start = readme.index("## Current State")
-            next_heading = readme.find("\n## ", current_start + 1)
-            current_end = next_heading if next_heading >= 0 else len(readme)
-            current = readme[current_start:current_end]
-            with_unqualified = current + "\n" + "\n".join(f"Historical source: `{name}`" for name in retired)
-            readme_path.write_text(readme[:current_start] + with_unqualified + readme[current_end:], encoding="utf-8")
-            refresh_manifest(root, manifest_path)
-            rejected = run_audit(root, manifest_path)
-            self.assertEqual("FAIL", rejected["status"])
-
-            readme = original_readme
-            current_start = readme.index("## Current State")
-            next_heading = readme.find("\n## ", current_start + 1)
-            current_end = next_heading if next_heading >= 0 else len(readme)
-            current = readme[current_start:current_end]
-            archived = current + "\n" + "\n".join(f"Historical source: `archive/{name}`" for name in retired)
-            readme_path.write_text(readme[:current_start] + archived + readme[current_end:], encoding="utf-8")
-            refresh_manifest(root, manifest_path)
-            accepted = run_audit(root, manifest_path)
-            self.assertEqual("PASS", accepted["status"], accepted["findings"])
+        for route in router["delivery_contracts"]:
+            self.assertTrue(route["repository_path"].startswith("docs/delivery/"), route)
 
     @staticmethod
     def _copy_fixture(directory: str) -> tuple[Path, Path]:
@@ -309,9 +259,10 @@ class FP001TrackerClosureSyncTests(unittest.TestCase):
         fixture_execution = root / "docs" / "execution"
         fixture_execution.mkdir(parents=True, exist_ok=True)
         shutil.copy2(
-            ROOT / "docs/execution/p8-05-registration-jit-spec.md",
+            ROOT / "docs/delivery/execution/p8-05-registration-jit-spec.md",
             fixture_execution / "p8-05-registration-jit-spec.md",
         )
+        materialize_historical_platform_readme(root, source_root=ROOT)
         manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
         return root, manifest_path
 

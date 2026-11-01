@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 from tests.foundation_test_support import (
-    current_document_relative_path,
+    current_router_data,
     current_working_relative_path,
     git_changed_paths,
 )
@@ -235,23 +235,24 @@ class FP001Phase7CCurrentPromotionTests(unittest.TestCase):
         self.assertIn("PROOF CLASSIFICATION: NEW_TRACER_BULLET", current_lifecycle)
         self.assertIn("PHASE 8: AUTHORISED (ARCHITECTURAL PROOF ONLY)", self.open_work)
 
-    def test_readme_and_manifest_route_current_lower_level_artifacts_without_new_root_authority(self):
+    def test_delivery_router_routes_current_lower_level_artifacts_without_new_root_authority(self):
         current_routes = (
             current_working_relative_path(ROOT, "FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_"),
             current_working_relative_path(ROOT, "DELIVERY_ATLAS_WORKING_"),
             current_working_relative_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_"),
             current_working_relative_path(ROOT, "HARDEN-02_CONTRACT_WORKING_"),
-            current_document_relative_path(ROOT, "OPEN_WORK"),
         )
+        router_paths = {
+            entry["repository_path"]
+            for entry in current_router_data(ROOT)["delivery_contracts"]
+        }
+        documentation_entrypoint = (ROOT / "docs/README.md").read_text(encoding="utf-8")
+        self.assertIn("delivery/CURRENT_DELIVERY_ROUTER.json", documentation_entrypoint)
         for route in current_routes:
-            path = route.removeprefix("docs/00_platform/")
-            with self.subTest(path=path):
-                self.assertIn(path, self.readme)
-        self.assertIn("PHASE 7C: COMPLETE / CERTIFIED / CURRENT", self.readme)
-        self.assertIn("FP-001 FINAL FEATURE PACK CONTRACT v0.1.0: COMPLETE / CERTIFIED / CURRENT", self.readme)
-        self.assertIn("DEVELOPMENT ENTRY HARD STOP: PASS / ALL 10 CONDITIONS SATISFIED", self.readme)
-        historical = self.readme.split("## Historical status evidence", 1)[1]
-        self.assertIn("Phase 8 and executable implementation remain UNAUTHORISED", historical)
+            with self.subTest(path=route):
+                self.assertIn(route, router_paths)
+
+        self.assertNotIn("docs/history/02_OPEN_WORK_v1.2.90.md", router_paths)
 
         authorities = self.manifest["governing_documents"] + self.manifest["reference_documents"]
         self.assertNotIn(

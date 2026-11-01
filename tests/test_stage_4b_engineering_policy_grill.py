@@ -203,7 +203,7 @@ class Stage4BEngineeringPolicyGrillIntegrityTests(unittest.TestCase):
             self.assertEqual(expected_hash, _sha256(ROOT / relative_path), relative_path)
         self.assertEqual(
             "87dd7d21714d751069bdbe72547c3500fbcbc8ccd747c003faf350fa953c9d4b",
-            _sha256(ROOT / "docs/00_platform/archive/03_ARCHITECTURE_v1.0.0.md"),
+            _sha256(ROOT / "docs/history/platform/archive/03_ARCHITECTURE_v1.0.0.md"),
         )
         self.assertIn("Engineering-Policy Grill begun: **no**", self.stage_4a)
         queue_c = self.stage_3b[

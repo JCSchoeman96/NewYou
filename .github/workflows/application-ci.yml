@@ -11,6 +11,12 @@ name: Application CI
 
 on:
   workflow_call:
+    inputs:
+      deep_application_changes:
+        description: Whether the change affects application source, migrations, or dependency/toolchain inputs.
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -75,6 +81,7 @@ jobs:
 
   mix-check-deep:
     name: mix check.deep
+    if: inputs.deep_application_changes
     runs-on: ubuntu-latest
     timeout-minutes: 35
     services:

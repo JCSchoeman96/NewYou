@@ -5,7 +5,7 @@ import subprocess
 import unittest
 from pathlib import Path
 
-from tests.foundation_test_support import current_document_path
+from tests.foundation_test_support import current_document_path, frozen_manifest_document_path, historical_snapshot_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,11 +55,11 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
         )
         cls.open_work_entry = open_work_entry
         cls.current_open_work_entry = current_open_work_entry
-        cls.open_work_path = ROOT / open_work_entry["repository_path"]
+        cls.open_work_path = frozen_manifest_document_path(ROOT, open_work_entry)
         cls.open_work = cls.open_work_path.read_text(encoding="utf-8")
-        cls.atlas_path = DOCS / "archive/DELIVERY_ATLAS_WORKING_v0.4.6.md"
-        cls.skeleton_path = DOCS / "archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
-        cls.harden_path = DOCS / "archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md"
+        cls.atlas_path = ROOT / "docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.4.6.md"
+        cls.skeleton_path = ROOT / "docs/history/platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md"
+        cls.harden_path = ROOT / "docs/history/platform/archive/HARDEN-02_CONTRACT_WORKING_v0.5.8.md"
         cls.atlas = cls.atlas_path.read_text(encoding="utf-8")
         cls.skeleton = cls.skeleton_path.read_text(encoding="utf-8")
         cls.harden = cls.harden_path.read_text(encoding="utf-8")
@@ -80,19 +80,16 @@ class Fp001AuditDossierWorkStartTests(unittest.TestCase):
         self.assertEqual("FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.8.md", self.skeleton_path.name)
         self.assertEqual("HARDEN-02_CONTRACT_WORKING_v0.5.8.md", self.harden_path.name)
         current_path = current_document_path(ROOT, "OPEN_WORK")
-        self.assertEqual(
-            current_path.relative_to(ROOT).as_posix(),
-            self.current_open_work_entry["repository_path"],
-        )
+        self.assertEqual("02_OPEN_WORK_v1.2.90.md", current_path.name)
+        self.assertEqual(self.current_open_work_entry["sha256"], hashlib.sha256(current_path.read_bytes()).hexdigest())
         self.assertEqual("current", self.current_open_work_entry["lifecycle"])
         self.assertEqual(current_path.name, self.current_open_work_entry["canonical_filename"])
 
     def test_open_work_manifest_lineage_registers_its_immediate_predecessor(self):
         current = self.current_open_work_entry
-        self.assertEqual(
-            current_document_path(ROOT, "OPEN_WORK").relative_to(ROOT).as_posix(),
-            current["repository_path"],
-        )
+        current_path = current_document_path(ROOT, "OPEN_WORK")
+        self.assertEqual("02_OPEN_WORK_v1.2.90.md", current_path.name)
+        self.assertEqual(current["sha256"], hashlib.sha256(current_path.read_bytes()).hexdigest())
         immediate_predecessor = next(
             entry
             for entry in self.manifest["historical_documents"]

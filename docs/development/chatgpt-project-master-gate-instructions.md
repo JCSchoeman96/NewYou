@@ -10,18 +10,18 @@ GitHub is canonical for **durable governance and implementation evidence**. Plan
 
 For current durable routing, independently inspect:
 
-1. `docs/00_platform/README.md`;
-2. `docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json`;
+1. `docs/README.md`;
+2. `docs/governance/CURRENT_GOVERNANCE_ROUTER.json` and `docs/delivery/CURRENT_DELIVERY_ROUTER.json`;
 3. current Product/Decision, Architecture, Domain, governing Roadmap and applicable Operating/Frontend/Engineering/Delivery authority routed there;
 4. relevant semantic Feature Pack/JIT/proof contracts;
 5. live Plane work, blockers, dependencies and acceptance criteria;
 6. actual code, tests, migrations and dependencies.
 
-When exact legislative/source tracing or identifier-level Architecture reasoning is required, load the router's current `deep_reference_documents`. They are evidence routes, not additional default governing roots.
+When exact source tracing, identifier-level reasoning or deep Architecture tracing is required, load the governance router's current `architecture_references`. They are evidence routes, not additional default governing roots.
 
-`docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` is the frozen historical/provenance baseline for Foundation Full; it is not the live delivery router after WELL-66.
+`docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` is the frozen historical/provenance baseline for Foundation Full; it is not a current router.
 
-`docs/00_platform/02_OPEN_WORK_v1.2.90.md` is the final frozen legacy Open Work snapshot. Never use it as live execution authority and never require a successor merely for status changes.
+`docs/history/02_OPEN_WORK_v1.2.90.md` is the final frozen legacy Open Work snapshot. Never use it as live execution authority and never require a successor merely for status changes.
 
 ## Authority hierarchy
 
@@ -136,11 +136,11 @@ Do not accept a coding agent's summary as proof.
 
 ## CI model
 
-Foundation Smoke is the always-on current-routing safety net and validates `CURRENT_AUTHORITY_ROUTER_v1.0.0.json` plus merge-gate topology.
+Foundation Smoke is the always-on current-routing safety net and validates both current routers, their semantic boundaries, and merge-gate topology.
 
 Application CI runs for routed engineering changes.
 
-Foundation Full verifies the historical Python governance suite and frozen `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`. Material governance/provenance/workflow PRs may start it automatically as non-blocking evidence; nightly/manual exact-SHA certification also runs it. Ordinary Plane status changes never touch the repository and therefore never invoke Full.
+Foundation Full verifies governance, frozen history/provenance and the historical Python suite. Changes under `docs/governance/**` and `docs/history/**`, Full machinery, or unclassifiable paths start it automatically as non-blocking evidence; delivery contracts and ordinary application work do not select Full. Nightly/manual exact-SHA certification also runs it.
 
 Do not wait for non-blocking Foundation Full unless the affected contract explicitly requires Full certification, but investigate a material failure caused by the PR rather than dismissing it.
 

@@ -9,6 +9,7 @@ from pathlib import Path
 from tests.foundation_test_support import (
     current_document_path,
     git_changed_paths,
+    current_router_data,
     current_working_path,
 )
 
@@ -173,7 +174,7 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
         self.assertNotIn("AUDIT & EVIDENCE DOSSIER: REQUIRED / IN PROGRESS / NOT COMPLETE", self.open_work)
         self.assertNotIn("PHASE 7B RECONCILIATION: COMPLETE", self.open_work)
 
-    def test_routing_successors_and_manifest_agree(self):
+    def test_current_delivery_router_and_artifact_references_agree(self):
         current_routes = (
             current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_"),
             current_working_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_"),
@@ -181,26 +182,27 @@ class Fp001AuditEvidenceV010PromotionTests(unittest.TestCase):
             current_working_path(ROOT, "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_"),
             current_working_path(ROOT, "FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_"),
         )
-        current_open_work = current_document_path(ROOT, "OPEN_WORK")
-        self.assertIn(current_open_work.relative_to(ROOT / "docs/00_platform").as_posix(), self.readme)
+        delivery_router = current_router_data(ROOT)
+        routed_paths = {
+            entry["repository_path"] for entry in delivery_router["delivery_contracts"]
+        }
         for route in current_routes:
             with self.subTest(route=route):
-                path = route.relative_to(ROOT / "docs/00_platform").as_posix()
-                self.assertIn(path, self.readme)
-        self.assertIn("FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md", self.readme)
-        audit_route = "working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md"
-        for artifact in (self.atlas, self.skeleton, self.harden):
+                self.assertIn(route.relative_to(ROOT).as_posix(), routed_paths)
+        audit_route = current_working_path(
+            ROOT, "FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_"
+        ).relative_to(ROOT).as_posix()
+        current_artifacts = (
+            current_working_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_").read_text(encoding="utf-8"),
+            current_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_").read_text(encoding="utf-8"),
+        )
+        for artifact in current_artifacts:
             with self.subTest(artifact=artifact[:40]):
                 self.assertIn(audit_route, artifact)
-        open_work = next(row for row in self.manifest["governing_documents"] if row["document_id"] == "OPEN_WORK")
-        current_open_work = current_document_path(ROOT, "OPEN_WORK")
-        self.assertEqual(current_open_work.name, open_work["canonical_filename"])
-        self.assertEqual(current_open_work.relative_to(ROOT).as_posix(), open_work["repository_path"])
-        navigation = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
-        for path in [route.relative_to(ROOT).as_posix() for route in current_routes] + [
-            "docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md",
-        ]:
-            self.assertIn(path, navigation)
+        self.assertEqual(
+            "docs/history/02_OPEN_WORK_v1.2.90.md",
+            current_document_path(ROOT, "OPEN_WORK").relative_to(ROOT).as_posix(),
+        )
         historical = json.dumps(self.manifest["historical_documents"])
         self.assertIn("FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md", historical)
         self.assertNotIn("FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md", json.dumps(self.manifest["governing_documents"]))

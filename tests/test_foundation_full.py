@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import shutil
 import tempfile
 import unittest
@@ -8,17 +9,40 @@ from pathlib import Path
 
 from tools.foundation_integrity_audit import (
     PHASE8_APPROVED_STATUS_SUCCESSOR_BASE_SHA,
+    PRE_MIGRATION_LAYOUT_BASE_SHA,
     _audit_exact_predecessor_commit,
     run_audit,
 )
-from tests.foundation_test_support import WELL38_BASE_SHA, copy_git_snapshot_tree
+from tools.run_foundation_full_tests import PRE_MIGRATION_BASE_SHA
+from tests.foundation_test_support import (
+    WELL38_BASE_SHA,
+    copy_git_snapshot_tree,
+    frozen_manifest_document_path,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ROOT / "docs/00_platform"
-MANIFEST_RELATIVE = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
+DOCS = ROOT / "docs"
+MANIFEST_RELATIVE = Path("docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
 
 
 class FoundationFullHistoricalTests(unittest.TestCase):
+    def test_full_audit_and_test_runner_share_the_pinned_migration_base(self):
+        self.assertEqual(PRE_MIGRATION_BASE_SHA, PRE_MIGRATION_LAYOUT_BASE_SHA)
+
+    def test_semantic_root_migration_resolves_the_frozen_roadmap_source_at_freeze(self):
+        report = run_audit(ROOT, MANIFEST_RELATIVE)
+        self.assertEqual("PASS", report["status"], report["findings"])
+        self.assertEqual([], report["findings"])
+
+        manifest = json.loads((ROOT / MANIFEST_RELATIVE).read_text(encoding="utf-8"))
+        relative = "docs/00_platform/05_ROADMAP_v1.2.4.md"
+        exception = manifest["integrity_rules"]["graph_rules"][
+            "source_at_freeze_reference_exceptions"
+        ][relative]
+        archived = ROOT / "docs/history/platform/archive/05_ROADMAP_v1.2.4.md"
+        self.assertEqual(exception["sha256"], hashlib.sha256(archived.read_bytes()).hexdigest())
+        self.assertFalse((ROOT / relative).exists())
+
     def test_successor_full_audit_uses_the_exact_historical_base_sha(self):
         passes, message = _audit_exact_predecessor_commit(
             ROOT,
@@ -48,7 +72,7 @@ class FoundationFullHistoricalTests(unittest.TestCase):
                 "docs/00_platform",
                 materialize_historical_readme=True,
             )
-            manifest_path = root / MANIFEST_RELATIVE
+            manifest_path = root / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             manifest["integrity_rules"]["roadmap_proof_classification_lifecycle"][
                 "selected_proof_vehicle"
@@ -69,11 +93,11 @@ class FoundationFullHistoricalTests(unittest.TestCase):
     def test_full_audit_rejects_changed_historical_certification_evidence(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            shutil.copytree(DOCS, root / "docs/00_platform")
+            shutil.copytree(DOCS, root / "docs", ignore=shutil.ignore_patterns("00_platform"))
             manifest_path = root / MANIFEST_RELATIVE
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             historical = manifest["historical_documents"][0]
-            historical_path = root / historical["repository_path"]
+            historical_path = frozen_manifest_document_path(root, historical)
             historical_path.write_bytes(historical_path.read_bytes() + b"\n")
 
             report = run_audit(root, manifest_path)

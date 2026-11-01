@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from foundation_test_support import historical_platform_readme_text, historical_platform_readme_path, live_platform_readme_text
+from foundation_test_support import current_governance_router_data, historical_platform_readme_text, historical_platform_readme_path, live_platform_readme_text
 import hashlib
 import json
 import unittest
@@ -88,7 +88,7 @@ class LegalDocumentBaselineGovernanceTests(unittest.TestCase):
     def test_locale_separation_and_fail_closed_release_contract(self) -> None:
         product = current_document("PLATFORM_BASELINE").read_text(encoding="utf-8")
         decisions = current_document("DECISION_REGISTER").read_text(encoding="utf-8")
-        spec = (ROOT / "docs/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
+        spec = (ROOT / "docs/delivery/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
         legal_contract = product.split("## 21E.18 Governing Terms and Privacy documents", 1)[1].split("# 21F", 1)[0]
 
         self.assertIn("participant interaction/preferred locale", legal_contract)
@@ -129,7 +129,7 @@ class LegalDocumentBaselineGovernanceTests(unittest.TestCase):
         open_work = (ROOT / open_work_record["repository_path"]).read_text(encoding="utf-8")
         readme = live_platform_readme_text(ROOT)
         product = current_document("PLATFORM_BASELINE").read_text(encoding="utf-8")
-        spec = (ROOT / "docs/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
+        spec = (ROOT / "docs/delivery/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
         self.assertIn("WELL-45: LEGAL/PRIVACY RELEASE GATE OPEN — DEVELOPMENT BASELINE PERMITTED; NOT LEGALLY APPROVED", open_work)
         self.assertIn("Current Product Law v1.12.0 continues to permit the immutable English development baselines under DEC-316", open_work)
         self.assertIn("both immutable EN development baselines", open_work)
@@ -137,10 +137,14 @@ class LegalDocumentBaselineGovernanceTests(unittest.TestCase):
         self.assertIn("WELL-45 is now a release/legal-readiness gate", open_work)
         self.assertIn("It is not legally approved", open_work)
         self.assertIn("Production, public release, paid pilot and applicable real-participant flows remain fail-closed", open_work)
-        self.assertIn("00_PLATFORM_v1.13.0.md", readme)
-        self.assertIn("01_DECISIONS_v1.13.0.md", readme)
-        self.assertIn("`02_OPEN_WORK_v1.2.90.md` is the final **frozen legacy** Open Work snapshot", readme)
-        self.assertIn("It is not live execution authority", readme)
+        routed_governance = {
+            entry["canonical_filename"]
+            for collection in ("governing_documents", "architecture_references", "supporting_documents")
+            for entry in current_governance_router_data(ROOT).get(collection, [])
+        }
+        self.assertIn("00_PLATFORM_v1.13.0.md", routed_governance)
+        self.assertIn("01_DECISIONS_v1.13.0.md", routed_governance)
+        self.assertIn("Plane project `WELL` remains the live execution authority", readme)
         self.assertIn("runtime authorization", product.casefold())
         self.assertIn(
             "WELL-45 is a release/legal-readiness gate, not a blanket development blocker",

@@ -7,10 +7,11 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ROOT / "docs/00_platform"
-ROUTER_PATH = DOCS / "CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
-PACKET_PATH = DOCS / "working/content_media/verification_messages/VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.2.0.json"
-SOURCE_DIR = DOCS / "working/content_media/verification_messages"
+DOCS = ROOT / "docs"
+ROUTER_PATH = DOCS / "governance/CURRENT_GOVERNANCE_ROUTER.json"
+FROZEN_ROUTER_PATH = DOCS / "history/platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
+PACKET_PATH = DOCS / "delivery/content-evidence/content_media/verification_messages/VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.2.0.json"
+SOURCE_DIR = DOCS / "delivery/content-evidence/content_media/verification_messages"
 
 EXPECTED_VERSIONS = {
     "en": (
@@ -29,8 +30,17 @@ EXPECTED_VERSIONS = {
 
 
 def routed_document(router: dict, document_id: str) -> str:
-    entries = router["governing_documents"] + router["supporting_documents"]
-    entry = next(item for item in entries if item["document_id"] == document_id)
+    aliases = {
+        "PLATFORM_BASELINE": "PLATFORM_PRODUCT_LAW",
+        "DECISION_REGISTER": "PRODUCT_DECISIONS",
+    }
+    target_id = aliases.get(document_id, document_id)
+    entries = [
+        item
+        for collection in ("governing_documents", "architecture_references", "supporting_documents")
+        for item in router[collection]
+    ]
+    entry = next(item for item in entries if item["document_id"] == target_id)
     return (ROOT / entry["repository_path"]).read_text(encoding="utf-8")
 
 
@@ -38,26 +48,27 @@ class WELL68DevelopmentAuthorityTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.router = json.loads(ROUTER_PATH.read_text(encoding="utf-8"))
+        cls.frozen_router = json.loads(FROZEN_ROUTER_PATH.read_text(encoding="utf-8"))
         cls.product = routed_document(cls.router, "PLATFORM_BASELINE")
         cls.decisions = routed_document(cls.router, "DECISION_REGISTER")
         cls.operating_model = routed_document(cls.router, "PLATFORM_OPERATING_MODEL")
         cls.delivery = routed_document(cls.router, "DELIVERY_GOVERNANCE_STANDARD")
-        cls.p8 = (ROOT / "docs/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
-        packet_path = PACKET_PATH if PACKET_PATH.is_file() else DOCS / "working/content_media/verification_messages/VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.1.0.json"
+        cls.p8 = (ROOT / "docs/delivery/execution/p8-05-registration-jit-spec.md").read_text(encoding="utf-8")
+        packet_path = PACKET_PATH if PACKET_PATH.is_file() else SOURCE_DIR / "VERIFICATION_MESSAGE_EVIDENCE_PACKET_v0.1.0.json"
         cls.packet = json.loads(packet_path.read_text(encoding="utf-8"))
 
     def test_current_route_is_authoritative_and_frozen_status_sources_stay_historical(self) -> None:
         self.assertEqual("CURRENT", self.router["status"])
-        product_route = next(row for row in self.router["governing_documents"] if row["document_id"] == "PLATFORM_BASELINE")
-        decisions_route = next(row for row in self.router["governing_documents"] if row["document_id"] == "DECISION_REGISTER")
+        product_route = next(row for row in self.router["governing_documents"] if row["document_id"] == "PLATFORM_PRODUCT_LAW")
+        decisions_route = next(row for row in self.router["governing_documents"] if row["document_id"] == "PRODUCT_DECISIONS")
         self.assertEqual("00_PLATFORM_v1.13.0.md", product_route["canonical_filename"])
         self.assertEqual("01_DECISIONS_v1.13.0.md", decisions_route["canonical_filename"])
-        self.assertEqual("PLATFORM_OPERATING_MODEL_v1.3.0.md", next(row for row in self.router["governing_documents"] if row["document_id"] == "PLATFORM_OPERATING_MODEL")["canonical_filename"])
+        self.assertEqual("PLATFORM_OPERATING_MODEL_v1.3.0.md", next(row for row in self.router["supporting_documents"] if row["document_id"] == "PLATFORM_OPERATING_MODEL")["canonical_filename"])
         self.assertNotIn("OPEN_WORK", {row["document_id"] for row in self.router["governing_documents"]})
-        legacy = next(row for row in self.router["legacy_snapshots"] if row["document_id"] == "OPEN_WORK_FINAL_LEGACY_SNAPSHOT")
+        legacy = next(row for row in self.frozen_router["legacy_snapshots"] if row["document_id"] == "OPEN_WORK_FINAL_LEGACY_SNAPSHOT")
         self.assertFalse(legacy["live_execution_authority"])
         self.assertEqual("7ae61b682322628826d05e130546a644cb127baaf6f5fa737aa773aa19936ea5", legacy["sha256"])
-        historical = json.loads((DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8"))
+        historical = json.loads((DOCS / "history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json").read_text(encoding="utf-8"))
         self.assertEqual("OPEN_WORK", next(row for row in historical["governing_documents"] if row["document_id"] == "OPEN_WORK")["document_id"])
 
     def test_ready_and_durable_authority_are_sufficient_for_implementation(self) -> None:

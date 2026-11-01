@@ -1,0 +1,394 @@
+{
+  "pack_id": "NEWYOU_OPERATIONS_SUPPORT_PILOT_FROZEN_WORKING_PACK",
+  "pack_version": "0.1.1",
+  "status": "FROZEN_WORKING_SEMANTIC_PACK_PHYSICAL_PROVENANCE_VERIFIED_NON_AUTHORITATIVE",
+  "authority": "NONE",
+  "implementation_authority": "NONE",
+  "independent_post_repair_certification": "NOT_CLAIMED",
+  "baselines": {
+    "semantic_authority_baseline_main": "086ade7b28c000de1c387acb9760e5eb08bb0413",
+    "current_main_reverified_at_packaging": "21d60ede9028b0b3da03f16cb783700742f0fc75",
+    "operations_branch_prepackaging_head": "00919a1234056ede7eb9f6d5e366e8bf22b188c0",
+    "authority_drift_since_semantic_baseline": false,
+    "intervening_main_scope": [
+      "docs/delivery/jit/live_replay/",
+      "docs/delivery/jit/programmes_learning/"
+    ]
+  },
+  "coverage": {
+    "ops_pt": "OPS-PT-001...470",
+    "ops_pt_definition_count": 470,
+    "ops_pt_missing": [],
+    "ops_pt_unexpected": [],
+    "ops_pt_duplicate_definitions": 0,
+    "ops_upd": "OPS-UPD-001...007",
+    "ops_upd_008": "absent",
+    "ops_gap": "OPS-GAP-001...025",
+    "broad_discovery": "frozen",
+    "implementation": "not_authorised"
+  },
+  "verification": {
+    "semantic_source_compact_checks": "PASS_57_OF_57",
+    "historical_archive_files": "PASS_30_OF_30",
+    "historical_byte_counts": "PASS_30_OF_30",
+    "historical_git_blob_identity": "PASS_30_OF_30",
+    "historical_local_sha256": "COMPUTED_30_OF_30",
+    "ops_pt_lineage": "PASS_EXACT_001_TO_470",
+    "pack_local_references": "PASS",
+    "compact_root_shape": "PASS",
+    "authority_drift_check": "PASS_NO_RELEVANT_GOVERNED_DRIFT",
+    "repository_tests": "RUN_BEFORE_COMMIT",
+    "foundation_integrity": "RUN_BEFORE_COMMIT",
+    "final_staged_diff_review": "RUN_BEFORE_COMMIT"
+  },
+  "files": [
+    {
+      "path": "docs/delivery/jit/operations_pilot/README.md",
+      "bytes": 5659,
+      "sha256": "0c5ae56017ad8248f4c8917a91764a612ffd58a8afdd8ef907e454addd41abe4",
+      "git_blob_sha": "42bdef0f644df36d401f9a46137b4e807af3744c"
+    },
+    {
+      "path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTRACT_WORKING_v0.1.1.md",
+      "bytes": 32882,
+      "sha256": "57b6b379f427d31a1f5d5f3a7f536bd453b33748e2a4615bb0f5bced629dfc66",
+      "git_blob_sha": "d5d123154111d63d50fe2890f4ae699a56f76539"
+    },
+    {
+      "path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.1.md",
+      "bytes": 9099,
+      "sha256": "df4e468c1168ad62bd65dd2e844f857c9eb0a335e416cabb07dd587e32a50a67",
+      "git_blob_sha": "cb77c8ef5d592324b5391ab461789328b7f434e2"
+    },
+    {
+      "path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_EVIDENCE_INDEX_WORKING_v0.1.1.md",
+      "bytes": 18415,
+      "sha256": "5bb56d91a43805464382f1aa2ec3cee5358b0df8c19ed5f3a51db0b25210c9a3",
+      "git_blob_sha": "743934381e0b4f05e58e75c9c33f36aa4a0801ae"
+    },
+    {
+      "path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_COMPRESSION_AUDIT_WORKING_v0.1.1.md",
+      "bytes": 8716,
+      "sha256": "8b749cee4b866fa78255fb7386c6909f8a9abc4cb0acd78e70101721e0c43d28",
+      "git_blob_sha": "b5f0be55bf27a918cb168254e18e09095f82aded"
+    },
+    {
+      "path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.1.md",
+      "bytes": 4940,
+      "sha256": "2704108a4ae6166ea843268bce3456ecc105d242e4b356d252c3270456f8f0f9",
+      "git_blob_sha": "7dff4aeec035e1deca248637a69d9616112b552d"
+    }
+  ],
+  "deep_source": {
+    "path": "docs/delivery/jit/operations_pilot/deep/NewYou_Operations_Support_Pilot_PreJIT_Working_Control_Document_v0.32.0.md",
+    "bytes": 442866,
+    "sha256": "9d7895b6db1b9b2eb12b3c7c0ff38c16f29915ea730967e2a7c514c8c40fb518",
+    "git_blob_sha": "56d9ca74367c6d75fc7107d0883e7d3aea5f1e4b"
+  },
+  "deep_archive": {
+    "historical_branch_artifacts": [
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.1.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.1.0.md",
+        "bytes": 16383,
+        "sha256": "e5164064c92c15282a9db02aaabdaa95b0aa553a393fcb2b58928196bd39b438",
+        "git_blob_sha": "b64e1899eb045b13772bb7b4dcc2307b83793f53",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.2.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.2.0.md",
+        "bytes": 20449,
+        "sha256": "601b078bc4c6e36d56ff709566a82dfdc78f9a03d83c510c52c849bb435e65a1",
+        "git_blob_sha": "4ac119f6bfbfd1afea548c1d804061da84567e64",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.3.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.3.0.md",
+        "bytes": 27273,
+        "sha256": "e2a5be085eca52ac935ae1a1669940f7312621a93dc539b1cdd544f6b0ba79cc",
+        "git_blob_sha": "70e701cdf61d799a5b773d87bfbd02fcb682bc3c",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.4.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.4.0.md",
+        "bytes": 34041,
+        "sha256": "05484cfd78862f0669dfc4a9f9d8edea10627026c50b9afa6e8c414f1d9fbf49",
+        "git_blob_sha": "c29b7f4ce276359f0eac4a05163d6296ee47be96",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.5.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.5.0.md",
+        "bytes": 19537,
+        "sha256": "f60759b4f5bab250b553d7562693e80d95bf0d1ee6f237327e2599439f27ab3a",
+        "git_blob_sha": "938f7a70b7acf8b65e120ee48fb01c96e54f9abd",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.6.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.6.0.md",
+        "bytes": 26759,
+        "sha256": "1a6d746944c472c5f6e33342872473d1fe1f9ade3f4a5b8d0a9ee068fa8362cb",
+        "git_blob_sha": "88005a053343933dfbc269393f6b611828671a9e",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.7.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.7.0.md",
+        "bytes": 18715,
+        "sha256": "685fc4c1b0ae4ded79b00ad53a3eb2f66b363a414132b9a99ed53dc77f024303",
+        "git_blob_sha": "a40ff2560d98b144f7571d26e1293628ac8f1b42",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.8.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.8.0.md",
+        "bytes": 31218,
+        "sha256": "e09178b6deb91519097986e748253d68342b4681b703edd6cfb63b02e317298c",
+        "git_blob_sha": "7a1705a574a8edc6a0850a474cac1ccfad157e27",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.9.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.9.0.md",
+        "bytes": 15751,
+        "sha256": "0efce3b04cd05cbb253ec91b1cdd46db917e2da4e2c6a0b194ca921bf474cd9d",
+        "git_blob_sha": "1af6b5ce537205b8a8e9e13fe5e6f5b08bf5cca2",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.10.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.10.0.md",
+        "bytes": 9329,
+        "sha256": "199787dcb318ba96c3a77ae3d5c6d56b0450426887129b1d8b673ceebfe56db6",
+        "git_blob_sha": "2dbfb336c0f6e840872a0d436b7be2b9360dabd6",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.11.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTROL_REGISTER_WORKING_v0.11.0.md",
+        "bytes": 5967,
+        "sha256": "16eaa4d50e9be2e6c319c61f4228fc4ec79059f958cd01244d09e76111a45891",
+        "git_blob_sha": "78f1fc79b4935855502ab91b5c44e6ca4ae4876e",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.1.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.1.0.md",
+        "bytes": 53320,
+        "sha256": "a2927b80bedffd2126bc1b82f244d4321628a34a3161d90d3be29dbbd2983923",
+        "git_blob_sha": "dfafa3a172f5836aa851a513adb4ecdd55accc16",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.2.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.2.0.md",
+        "bytes": 46258,
+        "sha256": "a530647048a9d88f831fab7c65e1e8ddd6e0667f6635ba0254167e84f22f0cec",
+        "git_blob_sha": "708eeacb727233472e02535b06783b9ec0b05929",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.3.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.3.0.md",
+        "bytes": 59262,
+        "sha256": "9480667e0bc3cd7c978048adb28bf2baae41bbf01314f0a5b80bf509e59a9e8b",
+        "git_blob_sha": "c476bbcb5e2dd8487fcae8c13155c5d3db538a86",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.4.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.4.0.md",
+        "bytes": 55667,
+        "sha256": "0577cad21daaa151f1a8706e643534013d561fd89790551c16828d33697cc86c",
+        "git_blob_sha": "261d3173e77eec15dc3bc1496dbdfb3a30a0724b",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.5.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.5.0.md",
+        "bytes": 54219,
+        "sha256": "25abbd378d7eea5c2ec051fcb64b0cd4ccafa76f8fd52381d69711a639c84da7",
+        "git_blob_sha": "17cfc349a29c2e504336333f223c2c71ffca7dcf",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.6.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.6.0.md",
+        "bytes": 33834,
+        "sha256": "34662c35f93b0738a43bb9b58209d8a46bb244a909871d60199133f9de6c43fd",
+        "git_blob_sha": "7d7faeae8849093a40aaf988bcba908e791617bb",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.7.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.7.0.md",
+        "bytes": 13999,
+        "sha256": "7de2717ac670ffe646d797f6dc9e02a6df7e47df6bbe9162254f4a4d752fc83c",
+        "git_blob_sha": "6853ae1aab4911191580a2773c7bcf295f4fcded",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.8.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.8.0.md",
+        "bytes": 39738,
+        "sha256": "19f0663503bfe756ae19b0ae8abc1191936beba9a7a0dec78afd16b242201c67",
+        "git_blob_sha": "1f1f1c6878e562e088ad45fe1832b47efe0278c5",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.9.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.9.0.md",
+        "bytes": 23394,
+        "sha256": "a95ee17d072f65c48e15b03d5b06bfbf3317b9118d8deffd99abe28e807bcc6a",
+        "git_blob_sha": "fd579e24a083240da23f8d71eff5a5e0fe1d1f64",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.10.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.10.0.md",
+        "bytes": 26148,
+        "sha256": "ab035cf20e7ce9ee1d7505cbc4af7adc8743a9cd1a34c6530504f5fe9aa20be7",
+        "git_blob_sha": "0359f24e3284b7c548b98b1354d9fb1571e44494",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.11.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.11.0.md",
+        "bytes": 24241,
+        "sha256": "86f1b1a107c4dd455d3bf4c858c3f0a0fbb4b27e244dc237833473b821e0c9c0",
+        "git_blob_sha": "3b2cfd55bd880e07cd1d0147540360c4507a74a6",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.12.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.12.0.md",
+        "bytes": 28335,
+        "sha256": "1e7c3e50ae03da40c213241d3b29049da087957bb96d7145cbff224980bd734a",
+        "git_blob_sha": "4afccfdc967180f1d0a6faa39e2d9fe1ea19e4b0",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.13.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.13.0.md",
+        "bytes": 26231,
+        "sha256": "592a5dca14e6eeba3c20b68242429872f4f228af41b763f18b24d344bd54272f",
+        "git_blob_sha": "d00c3c8730db9d521fa274713643da0ca09ce721",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.14.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_DISCOVERY_WORKING_v0.14.0.md",
+        "bytes": 14975,
+        "sha256": "e63f879c68d7bb06167bad9be362e7aff6f6e22aef7daa666afd3f7ec0bdb4fa",
+        "git_blob_sha": "3dd6465a6231e8d6207ca4f04bc9b6f513d8a5a8",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_UPSTREAM_PROMOTION_REVIEW_WORKING_v0.1.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_UPSTREAM_PROMOTION_REVIEW_WORKING_v0.1.0.md",
+        "bytes": 11231,
+        "sha256": "d57cb3964326a98d4df964aa950f45c97c6923e36143bd9703ea8ed657b8516c",
+        "git_blob_sha": "67369141c127a4e6ea963c687d5a5b72418f4d36",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPS_UPD_004_AUTHORITY_PROMOTION_CANDIDATE_WORKING_v0.1.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPS_UPD_004_AUTHORITY_PROMOTION_CANDIDATE_WORKING_v0.1.0.md",
+        "bytes": 17934,
+        "sha256": "61fa0ce7fb21d890faa543c5e413607cb7109f41aa81a575f2542713d0e9e8f0",
+        "git_blob_sha": "9ef60834fccc19a363446aec56e6b76d00d1e802",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPS_UPD_004_AUTHORITY_PROMOTION_CANDIDATE_WORKING_v0.2.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPS_UPD_004_AUTHORITY_PROMOTION_CANDIDATE_WORKING_v0.2.0.md",
+        "bytes": 15941,
+        "sha256": "bf758bcab1ec698dbe04d738ac42c7fc48a7f2bd7851cfb95b6c3376b6c282fe",
+        "git_blob_sha": "7be47d970b4c71aa0d3c9435b714a879733fca8a",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPS_UPD_004_AUTHORITY_SUCCESSOR_BUILD_WORKING_v0.1.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPS_UPD_004_AUTHORITY_SUCCESSOR_BUILD_WORKING_v0.1.0.md",
+        "bytes": 14960,
+        "sha256": "62354e01675422c3d41872ad56e6d0151fffe73955e968f52646c3a8fe4ad861",
+        "git_blob_sha": "acb053188b89135791e779ddd365e9d8a428073a",
+        "verified": true
+      },
+      {
+        "original_path": "docs/delivery/jit/operations_pilot/NEWYOU_OPS_UPD_004_AUTHORITY_SUCCESSOR_INDEPENDENT_REVIEW_WORKING_v0.1.0.md",
+        "archive_path": "docs/history/delivery-packs/operations_pilot/deep/archive/NEWYOU_OPS_UPD_004_AUTHORITY_SUCCESSOR_INDEPENDENT_REVIEW_WORKING_v0.1.0.md",
+        "bytes": 9785,
+        "sha256": "4daab790e8d7096e829caa762cf17926d561fbff14446f33ceee9e760af750d7",
+        "git_blob_sha": "50a4cbf9da157a306a4bf6b9d6594895fe73a2fa",
+        "verified": true
+      }
+    ],
+    "previous_compressed_candidate": {
+      "path": "docs/history/delivery-packs/operations_pilot/deep/archive/NewYou_Operations_Support_Pilot_PreJIT_Compressed_Candidate_v0.1.0.md",
+      "bytes": 26721,
+      "sha256": "1a32ba7edac94fc561bf0e76d50f6dbf698484ca5b05e0362a07e510a2249a12",
+      "git_blob_sha": "f74a8c23d089530af689a79fa9d8077dc5dc80c2"
+    },
+    "previous_compact_pack": {
+      "path": "docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0",
+      "files": [
+        {
+          "path": "docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_COMPRESSION_AUDIT_WORKING_v0.1.0.md",
+          "bytes": 7275,
+          "sha256": "00e022190619751131d6a3d41e8aa39b1ba7928674d40c4798ccf714f91bd885",
+          "git_blob_sha": "f9e9e5344f4079fabc16ccc02667273512ac1ba2"
+        },
+        {
+          "path": "docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_EVIDENCE_INDEX_WORKING_v0.1.0.md",
+          "bytes": 15762,
+          "sha256": "727077d51404193eeeef0661d108c7c94561ac9da42f8772ac84309ca357f533",
+          "git_blob_sha": "ac001c409c12141d552a25ae7b7f3b6f54d434c2"
+        },
+        {
+          "path": "docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_PREJIT_CONTRACT_WORKING_v0.1.0.md",
+          "bytes": 18654,
+          "sha256": "0a6283b6f0819e4cd12dbbe93169567c3b1fb61ceda93fb4bb5d72d2fdf7aa86",
+          "git_blob_sha": "88b7f3196071405037f3a2e8af74aa01bfbe3a3e"
+        },
+        {
+          "path": "docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_SOURCE_COMPACT_VERIFICATION_WORKING_v0.1.0.md",
+          "bytes": 4950,
+          "sha256": "725c1cd138449349245eac1efc2e2f271e23a555abe7949b16f004cae3effab3",
+          "git_blob_sha": "27ff414b2845cf1ac8374471b5d3250a6773d8dd"
+        },
+        {
+          "path": "docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/NEWYOU_OPERATIONS_SUPPORT_PILOT_UPSTREAM_DELTA_REGISTER_WORKING_v0.1.0.md",
+          "bytes": 8247,
+          "sha256": "9ee85ffcd3344b33e3b5dbe8b2440d446976c0bee8fbfff4830318abe19f6638",
+          "git_blob_sha": "96c36a1a39264f1cd905eb4d7d1d31df28f9de66"
+        },
+        {
+          "path": "docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/PACK_MANIFEST_v0.1.0.json",
+          "bytes": 19654,
+          "sha256": "bf10653e7e52221f565a84d76e1551f345332f28b0f6c19e62381f4fc4f973dc",
+          "git_blob_sha": "a15b5cdff4c00e2d03cdc9754184761b0f83cd4b"
+        },
+        {
+          "path": "docs/history/delivery-packs/operations_pilot/deep/archive/compact_pack_v0.1.0/README.md",
+          "bytes": 2884,
+          "sha256": "f200f503a5bcf04fd965d8f2d1e1facacd51b28061574af3c526c47ea5b05416",
+          "git_blob_sha": "fcf9c9085dd5190de1c1e5c7647b6ac3f7a25eb9"
+        }
+      ]
+    }
+  },
+  "freeze": {
+    "new_pressure_tests": 0,
+    "new_upstream_deltas": 0,
+    "new_gaps": 0,
+    "new_domains": 0,
+    "new_architecture_mechanisms": 0,
+    "semantic_reopen_required": false
+  },
+  "manifest_note": "PACK_MANIFEST_v0.1.1.json is intentionally not self-hashed. It was regenerated after all other frozen pack files."
+}

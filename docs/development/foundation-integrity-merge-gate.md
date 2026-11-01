@@ -1,68 +1,51 @@
 # Foundation Integrity merge gate
 
-This is the current operational CI contract for implementation-era development. It is supporting engineering documentation, not Product, Architecture, Domain or Roadmap authority. The live workflows remain canonical for executable behaviour.
+This is the current operational CI contract. The workflows define executable behaviour; this document explains their lane boundaries.
 
-WELL-66 separates **current routing safety** from **historical/provenance certification**:
+## Required gate
 
-- Foundation Smoke validates `docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json` and current merge-gate topology.
-- Foundation Full validates the historical Python governance suite plus the frozen pre-WELL-66 `docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` baseline.
-- Live delivery-state changes happen in Plane and therefore generate no repository PR or Foundation Full run.
+The repository ruleset requires the **Foundation Integrity** status context. Every pull request and push to `main` runs Foundation Smoke. Application CI runs when the change contains application or engineering paths. Foundation Full is separate, non-blocking evidence and is not part of the required aggregate.
 
-`docs/development/foundation-integrity-ci.md` preserves the earlier WELL-38 transition design, baseline measurements and historical certification evidence. Older statements that the required aggregate waits for Foundation Full, that Open Work is live delivery authority, or that exact-SHA certification is dispatched through Foundation Integrity are historical.
+The aggregate requires successful routing and Smoke, plus successful Application CI when selected. It does not wait for Foundation Full.
 
-## Required merge gate
+## Semantic path ownership
 
-The repository ruleset continues to require the status context **Foundation Integrity**.
+The repository path communicates the normal CI route:
 
-For each pull request, the required gate waits only for:
+| Paths | Route |
+| --- | --- |
+| `docs/governance/**` | Smoke + Foundation Full |
+| `docs/history/**` | Smoke + Foundation Full |
+| Foundation Full/provenance machinery | Smoke + Foundation Full |
+| `docs/delivery/**` | Smoke + applicable Application CI |
+| `docs/development/**` | Smoke + applicable engineering CI |
+| application source, migrations and tests | Smoke + Application CI |
+| `.agents/**`, `AGENTS.md` and normal engineering files | Smoke + applicable engineering CI |
+| unknown or unclassifiable paths | fail closed to Foundation Full |
 
-- Route CI lanes;
-- Foundation Smoke, including the merge-gate topology regression test and current-authority router smoke audit;
-- Application CI (`mix check` and `mix check.deep`) when the route classifies application/engineering changes.
+Classification is explicit. Python files under `tests/` do not select Foundation Full by language or location alone. Foundation Full tests and tooling are named directly in the classifier; ordinary application, routing and Smoke tests stay on the Application CI route.
 
-A required lane failure blocks merge. The required aggregate does not depend on Foundation Full.
+Delivery state such as Ready, blockers, dependencies, PR review and Done remains in Plane project `WELL`; it is not mirrored into repository documents.
 
-## Foundation Smoke — current state
+## Foundation Smoke
 
-Foundation Smoke is intentionally small and fail-closed. It checks the lean current router for:
+Smoke validates both current routers:
 
-- the eight current durable governing documents and their hashes;
-- current Engineering and Delivery Governance supporting authority;
-- Plane project `WELL` as authoritative execution state;
-- `Ready` as the only fresh agent/Symphony executable state;
-- durable-governance precedence and Plane-only status changes;
-- the final hash-pinned frozen legacy Open Work snapshot;
-- current semantic working routes staying outside archive; and
-- the live README routing contract.
+- `docs/governance/CURRENT_GOVERNANCE_ROUTER.json` routes current durable law and genuine supporting authority only.
+- `docs/delivery/CURRENT_DELIVERY_ROUTER.json` routes current Feature, JIT, proof, execution and content-evidence contracts beneath governance.
 
-It does not traverse the historical manifest graph. That work belongs to Foundation Full.
+Smoke runs the path-classification regression tests and checks router identity, route containment, target existence, hashes, required authority inventories, the `docs/README.md` entrypoint, required historical files and merge-gate topology. Governance cannot route into delivery or history; delivery cannot route into governance or history. No current route may resolve into an archive.
 
-## Application CI — engineering state
+## Foundation Full
 
-Known engineering/application paths run the canonical fast and slower engineering gates through Application CI. Foundation Smoke still runs alongside them because current authority routing is an always-on repository safety net.
+Full runs for governance and frozen-history changes, Foundation Full/provenance machinery, and unknown paths that cannot safely be classified. It validates the frozen `docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` and historical certification suite. The frozen `docs/history/02_OPEN_WORK_v1.2.90.md` remains evidence only; it is not live execution authority.
 
-## Foundation Full — historical/provenance evidence
+Full is also available for nightly and exact-SHA certification. A Full failure remains evidence and must be investigated when the changed PR affects that lane, even though Full does not block the required aggregate.
 
-Durable-governance, provenance, workflow, mixed or unknown pull-request changes continue to start Foundation Full automatically. Foundation Full is cold, historical/provenance evidence and is not a dependency of the required merge aggregate.
+## Application CI
 
-It deliberately keeps using `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json`, the frozen pre-WELL-66 historical integrity baseline. That manifest is not the live delivery router after WELL-66.
+Application CI runs the canonical `mix check` gate for routed application and engineering changes. The slower `mix check.deep` Dialyzer lane runs when application source, migrations or the dependency/toolchain definition changes. Documentation-only delivery/development changes, agent guidance and test-only changes skip the deep lane. The classifier never selects Full solely because a change is under `docs/delivery/**`, `docs/development/**`, `.agents/**` or `tests/**`.
 
-Routing remains path-specific. `docs/00_platform/**`, `tests/**`, `tools/foundation_integrity_*` and the explicit Foundation workflows are governance-sensitive. Known engineering and execution documentation under `docs/development/**`, `docs/superpowers/**` and `docs/execution/**` also routes Application CI where configured. Unclassified paths fail closed to Foundation Full.
+The historical pre-migration suite and audit use temporary compatibility views inside Foundation Full. They rebuild pinned baseline files at frozen paths, then overlay `docs/history/` evidence so provenance mutations remain visible. The temporary views do not add a legacy documentation root to the repository or either current router. Foundation Smoke validates current governance and delivery routing directly.
 
-This is intentional: after WELL-66, ordinary Ready/In Progress/Blocked/Done movement, dependency edits and delivery sequencing happen only in Plane. There should be no status-only repository patch to carve out of Full.
-
-A new commit on the same pull request cancels the superseded Foundation Integrity workflow run so obsolete cold verification does not queue behind current work.
-
-Foundation Full remains available independently for deliberate exact-SHA certification through its own `workflow_dispatch` input. Nightly hardening on `main` continues to run Foundation Full plus `mix check.deep` on fresh runners.
-
-Historical tests, archives and certification evidence are not current execution authority merely because Foundation Full preserves them.
-
-## Master Gate and handoff rule
-
-Before handoff or merge recommendation, independently verify the exact PR diff and head SHA, durable authority, live Plane ticket/acceptance criteria, required `Foundation Integrity`, routed Application CI lanes and any applicable architecture/security/privacy/persistence invariants.
-
-Do not wait for non-blocking Foundation Full unless the affected task or governing authority explicitly requires full certification. A Foundation Full failure remains evidence: investigate whether the PR caused a meaningful historical/provenance regression. Do not suppress a real regression simply because Full is non-blocking.
-
-Any new PR head invalidates prior exact-head certification.
-
-Merge is not delivery completion. After merge, verify resulting-main SHA/tree, reviewed-candidate integration/no drift and required resulting-main CI/proof before reconciling Plane to `Done` or opening dependent work.
+See [Foundation Integrity CI](foundation-integrity-ci.md) for certification history and command details.

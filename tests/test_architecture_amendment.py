@@ -86,7 +86,7 @@ PROTECTED_HASHES = {
     "docs/00_platform/archive/03_ARCHITECTURE_v1.1.0.md": "d44615f0db3f5f0b38bb68a2904db6066d23e1f82c55da134745c4f6d70b6852",
     "docs/00_platform/archive/05_ROADMAP_v1.0.0.md": "b883c7ae3afeebe969930bd8a5690bfae81429de53145e79233ebce59f172e20",
     "docs/00_platform/archive/PLATFORM_OPERATING_MODEL_v1.0.0.md": "884a7231a86b438a220f057e03ba9c06357820b43629e018d50c92cc773b2811",
-    "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md": "971556eb0f08193a203b12612e6b96cdf8e10c0fbea194618c64c4ac06a31d91",
+    "docs/governance/architecture/references/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md": "9b66675e862c22e89a16c41707ca9d2fae661be2ae0ac6e61d4ae4b699509b70",
     "docs/00_platform/archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.0.md": "8719971d92f70fc2a485e5fb9b23b9d2bc897313bc697025b91bd86802ee23be",
     "docs/00_platform/archive/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md": "f96dcbbf26cdee35ac9aded273dbfc33346bb559fd88525f41112e85c23d798b",
     "docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md": "8cb7769018c21b09c91208c5991b1b9bca09141c5fa0ef74cd577946d76377f1",
@@ -361,15 +361,15 @@ class ArchitectureAmendmentIntegrityTests(unittest.TestCase):
             self.assertNotIn("static analysis", section.lower())
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md"],
-            _sha256(ROOT / "docs/00_platform/archive/04_DOMAIN_MAP_v1.0.0.md"),
+            _sha256(ROOT / "docs/history/platform/archive/04_DOMAIN_MAP_v1.0.0.md"),
         )
         self.assertEqual(
             PROTECTED_HASHES["docs/00_platform/archive/05_ROADMAP_v1.0.0.md"],
-            _sha256(ROOT / "docs/00_platform/archive/05_ROADMAP_v1.0.0.md"),
+            _sha256(ROOT / "docs/history/platform/archive/05_ROADMAP_v1.0.0.md"),
         )
         self.assertEqual(
-            PROTECTED_HASHES["docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"],
-            _sha256(ROOT / "docs/00_platform/reference/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"),
+            PROTECTED_HASHES["docs/governance/architecture/references/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"],
+            _sha256(ROOT / "docs/governance/architecture/references/ARCHITECTURE_REQUIREMENTS_WORKING_v1.1.0.md"),
         )
 
 

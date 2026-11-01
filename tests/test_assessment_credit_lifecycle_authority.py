@@ -53,7 +53,7 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
         cls.decisions = read(
             frozen_manifest_document_path(ROOT, cls.current["DECISION_REGISTER"])
         )
-        cls.roadmap = read(DOCS / cls.current["ROADMAP"]["canonical_filename"])
+        cls.roadmap = read(frozen_manifest_document_path(ROOT, cls.current["ROADMAP"]))
         cls.previous_roadmap = read(DOCS / "archive" / "05_ROADMAP_v1.2.3.md")
         cls.domain_map = read(DOCS / cls.current["DOMAIN_MAP"]["canonical_filename"])
         cls.open_work = read(DOCS / cls.current["OPEN_WORK"]["canonical_filename"])
@@ -208,7 +208,7 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
         self.assertEqual("1.12.0", self.current["DECISION_REGISTER"]["semver"])
         self.assertIn("00_PLATFORM_v1.12.0.md", self.open_work)
         self.assertIn("01_DECISIONS_v1.12.0.md", self.open_work)
-        archived_open_work = read(ROOT / "docs/00_platform/archive/02_OPEN_WORK_v1.2.65.md")
+        archived_open_work = read(ROOT / "docs/history/platform/archive/02_OPEN_WORK_v1.2.65.md")
         self.assertIn("PR #113 completed OPS-UPD-002 / issue #98 and issue #98 is closed", archived_open_work)
         self.assertIn("#98 is closed", self.open_work)
         self.assertIn("#99", self.open_work)

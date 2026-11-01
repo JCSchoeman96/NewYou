@@ -10,11 +10,12 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ROOT / "docs/00_platform"
-ROUTER_PATH = DOCS / "CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
-MANIFEST_PATH = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-OPEN_WORK_PATH = DOCS / "02_OPEN_WORK_v1.2.90.md"
-ARCHIVED_ROADMAP_V124 = DOCS / "archive/05_ROADMAP_v1.2.4.md"
+DOCS = ROOT / "docs"
+ROUTER_PATH = DOCS / "governance/CURRENT_GOVERNANCE_ROUTER.json"
+FROZEN_ROUTER_PATH = DOCS / "history/platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json"
+MANIFEST_PATH = DOCS / "history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
+OPEN_WORK_PATH = DOCS / "history/02_OPEN_WORK_v1.2.90.md"
+ARCHIVED_ROADMAP_V124 = DOCS / "history/platform/archive/05_ROADMAP_v1.2.4.md"
 
 CURRENT_OPEN_WORK_AS_EXECUTION_AUTHORITY = re.compile(
     r"(?im)"
@@ -32,14 +33,15 @@ class Well70RoadmapExecutionRoutingTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.router = json.loads(ROUTER_PATH.read_text(encoding="utf-8"))
         roadmap_entry = next(
-            row for row in cls.router["governing_documents"] if row["document_id"] == "ROADMAP"
+            row for row in cls.router["governing_documents"]
+            if row["document_id"] == "GOVERNING_ROADMAP"
         )
         cls.roadmap_path = ROOT / roadmap_entry["repository_path"]
         cls.roadmap = cls.roadmap_path.read_text(encoding="utf-8")
         cls.readme = (DOCS / "README.md").read_text(encoding="utf-8")
 
     def test_router_points_at_current_roadmap_successor(self) -> None:
-        entry = next(row for row in self.router["governing_documents"] if row["document_id"] == "ROADMAP")
+        entry = next(row for row in self.router["governing_documents"] if row["document_id"] == "GOVERNING_ROADMAP")
         self.assertEqual("05_ROADMAP_v1.2.5.md", entry["canonical_filename"])
         self.assertEqual("1.2.5", entry["semver"])
         digest = hashlib.sha256(self.roadmap_path.read_bytes()).hexdigest()
@@ -59,15 +61,16 @@ class Well70RoadmapExecutionRoutingTests(unittest.TestCase):
             self.assertIn(phrase, self.roadmap)
 
     def test_current_roadmap_identifies_authority_router(self) -> None:
-        self.assertIn("CURRENT_AUTHORITY_ROUTER_v1.0.0.json", self.roadmap)
+        self.assertIn("CURRENT_GOVERNANCE_ROUTER.json", self.roadmap)
+        self.assertIn("CURRENT_DELIVERY_ROUTER.json", self.roadmap)
         self.assertIn(
-            "resolved by `CURRENT_AUTHORITY_ROUTER_v1.0.0.json`",
+            "resolved by `docs/governance/CURRENT_GOVERNANCE_ROUTER.json`",
             self.roadmap,
         )
 
     def test_readme_is_not_restored_as_live_status_ledger(self) -> None:
-        self.assertIn("as a second delivery ledger", self.readme.casefold())
         self.assertIn("Plane project `WELL`", self.readme)
+        self.assertIn("live execution authority", self.readme)
         self.assertNotRegex(
             self.readme,
             r"(?im)^\s*[-*].*open work.*current execution authority",
@@ -79,9 +82,10 @@ class Well70RoadmapExecutionRoutingTests(unittest.TestCase):
             "7ae61b682322628826d05e130546a644cb127baaf6f5fa737aa773aa19936ea5",
             open_work_hash,
         )
+        frozen_router = json.loads(FROZEN_ROUTER_PATH.read_text(encoding="utf-8"))
         self.assertEqual(
             "2a8557193fc071996e23d9214980da22d48bdbf3",
-            self.router["historical_integrity_baseline"]["git_blob_sha"],
+            frozen_router["historical_integrity_baseline"]["git_blob_sha"],
         )
 
     def test_historical_open_work_and_patch_provenance_preserved(self) -> None:

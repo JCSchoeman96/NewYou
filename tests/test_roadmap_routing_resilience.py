@@ -6,7 +6,7 @@ import re
 import unittest
 from pathlib import Path
 
-from foundation_test_support import current_document_path, current_working_path, historical_platform_readme_path, historical_platform_readme_text
+from foundation_test_support import current_document_path, current_governance_router_data, current_working_path, frozen_manifest_document_path, git_snapshot_bytes, historical_platform_readme_path, historical_platform_readme_text, live_platform_readme_text
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +15,7 @@ ROADMAP = DOCS / "archive" / "05_ROADMAP_v1.2.3.md"
 ROOT_ROADMAP_PREDECESSOR = DOCS / "05_ROADMAP_v1.2.2.md"
 ROADMAP_PREDECESSOR = DOCS / "archive" / "05_ROADMAP_v1.2.2.md"
 CURRENT_ROADMAP = current_document_path(ROOT, "ROADMAP")
+LIVE_README = ROOT / "docs/README.md"
 README = historical_platform_readme_path(ROOT)
 MANIFEST = DOCS / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
 ROADMAP_V1_1_4_SHA256 = "251f6d174c35de1d227be3b27f6cf812d5dce79ca3efe6c2370564eb170b04c9"
@@ -99,8 +100,14 @@ def _feature_pack_sections(text: str) -> dict[str, str]:
     return sections
 
 
-def _section_bytes(path: Path, heading: str, next_heading_prefix: str) -> bytes:
-    lines = path.read_bytes().splitlines(keepends=True)
+def _normalise_historical_archive_routes(text: str) -> str:
+    """Ignore only the repository-prefix change for relocated historical links."""
+    return re.sub(r"(?:docs/history/(?:platform/)?)?archive/", "archive/", text)
+
+
+def _section_bytes(source: Path | bytes, heading: str, next_heading_prefix: str) -> bytes:
+    content = source.read_bytes() if isinstance(source, Path) else source
+    lines = content.splitlines(keepends=True)
     start = next(
         index for index, line in enumerate(lines)
         if heading.encode("utf-8") in line
@@ -161,35 +168,38 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
                     _normalise_roadmap_successor(malformed, self.predecessor)
 
     def test_roadmap_dynamic_routing_resolves_through_readme_and_manifest(self):
-        self.assertTrue(self.current_roadmap, "current Roadmap v1.2.4 must exist")
+        self.assertTrue(self.current_roadmap, "current Roadmap must exist")
+        router = current_governance_router_data(ROOT)
         manifest_current = {
             item["document_id"]: item
             for item in self.manifest["governing_documents"]
         }
-        roadmap = manifest_current["ROADMAP"]
+        frozen_roadmap = manifest_current["ROADMAP"]
         open_work = manifest_current["OPEN_WORK"]
-        self.assertEqual(CURRENT_ROADMAP.name, roadmap["canonical_filename"])
-        self.assertEqual(CURRENT_ROADMAP.relative_to(ROOT).as_posix(), roadmap["repository_path"])
-        self.assertEqual(_sha256(CURRENT_ROADMAP), roadmap["sha256"])
+        current_roadmap = next(
+            entry for entry in router["governing_documents"]
+            if entry["document_id"] == "GOVERNING_ROADMAP"
+        )
+        self.assertEqual(CURRENT_ROADMAP.name, current_roadmap["canonical_filename"])
+        self.assertEqual(CURRENT_ROADMAP.relative_to(ROOT).as_posix(), current_roadmap["repository_path"])
+        self.assertEqual(_sha256(CURRENT_ROADMAP), current_roadmap["sha256"])
+        frozen_roadmap_path = frozen_manifest_document_path(ROOT, frozen_roadmap)
+        self.assertEqual("05_ROADMAP_v1.2.4.md", frozen_roadmap_path.name)
+        self.assertEqual(_sha256(frozen_roadmap_path), frozen_roadmap["sha256"])
         self.assertEqual(Path(open_work["repository_path"]).name, open_work["canonical_filename"])
-
-        header = self.current_roadmap.split("## Amendment summary", 1)[0]
-        route_lines = re.findall(r"(?m)^- \*\*Current programme routing:\*\* (.+)$", header)
-        self.assertEqual(1, len(route_lines))
-        route = route_lines[0]
-        self.assertIn("README.md", route)
-        self.assertIn("current Open Work path it identifies", route)
-        self.assertNotRegex(route, r"02_OPEN_WORK_v\d+\.\d+\.\d+\.md")
-
-        default_context = self.readme.split("## Default Agent Context", 1)[1].split("## Current Authority", 1)[0]
-        self.assertIn(f"`{roadmap['canonical_filename']}`", default_context)
-        self.assertIn(f"`{open_work['canonical_filename']}`", default_context)
+        readme = live_platform_readme_text(ROOT)
+        self.assertIn("governance/CURRENT_GOVERNANCE_ROUTER.json", readme)
+        self.assertIn("Plane project `WELL` remains the live execution authority", readme)
+        self.assertFalse(
+            any(entry.get("document_id") == "OPEN_WORK" for entry in router["governing_documents"])
+        )
 
     def test_readme_manifest_open_work_and_atlas_agree_on_current_roadmap(self):
         current_route = CURRENT_ROADMAP.name
-        self.assertIn(f"`{current_route}`", self.readme)
-        self.assertGreaterEqual(self.open_work.count(current_route), 1)
-        self.assertGreaterEqual(self.atlas.count(current_route), 1)
+        router = current_governance_router_data(ROOT)
+        self.assertIn(current_route, {entry["canonical_filename"] for entry in router["governing_documents"]})
+        self.assertIn(current_route, self.atlas)
+        self.assertIn("Plane project `WELL` remains the live execution authority", LIVE_README.read_text(encoding="utf-8"))
 
         stale_current = re.compile(r"(?<!archive/)05_ROADMAP_v1\.1\.4\.md")
         for label, text in (
@@ -201,9 +211,9 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
             with self.subTest(source=label):
                 self.assertIsNone(stale_current.search(text), f"stale active Roadmap route in {label}")
 
-        governing = {entry["document_id"]: entry for entry in self.manifest["governing_documents"]}
-        self.assertEqual(current_route, governing["ROADMAP"]["canonical_filename"])
-        self.assertEqual("1.2.4", governing["ROADMAP"]["semver"])
+        frozen_governing = {entry["document_id"]: entry for entry in self.manifest["governing_documents"]}
+        self.assertEqual("05_ROADMAP_v1.2.4.md", frozen_governing["ROADMAP"]["canonical_filename"])
+        self.assertEqual("1.2.4", frozen_governing["ROADMAP"]["semver"])
         history = {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}
         predecessor_roadmap = history["ROADMAP_V1_2_3"]
         self.assertEqual("05_ROADMAP_v1.2.3.md", predecessor_roadmap["canonical_filename"])
@@ -241,7 +251,7 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
         new_packs = _feature_pack_sections(self.current_roadmap)
         self.assertEqual(old_packs.keys(), new_packs.keys())
         for pack_id in old_packs:
-            expected = old_packs[pack_id]
+            expected = _normalise_historical_archive_routes(old_packs[pack_id])
             if pack_id in {"FP-002", "FP-003"}:
                 expected = expected.replace("00_PLATFORM_v1.8.0.md", "00_PLATFORM_v1.9.0.md", 1)
             if pack_id == "FP-009":
@@ -250,17 +260,21 @@ class RoadmapRoutingResilienceTests(unittest.TestCase):
                     "`00_PLATFORM_v1.9.0.md §§8, 21A.6, 21G, 21L.8, 21L.11–21L.18, 21T.9`; `DEC-039...DEC-043`, `DEC-045`, `DEC-170...DEC-190`, `DEC-275`, `DEC-278`, `DEC-283...DEC-285`, `DEC-312`, `DEC-315`.",
                     1,
                 )
-            self.assertEqual(expected, new_packs[pack_id], pack_id)
+            self.assertEqual(expected, _normalise_historical_archive_routes(new_packs[pack_id]), pack_id)
         for heading, next_heading in (("# 21. Phase 7 handoff", ""),):
             current = _section_bytes(CURRENT_ROADMAP, heading, next_heading)
-            predecessor = _section_bytes(ROADMAP_PREDECESSOR, heading, next_heading)
-            self.assertEqual(
-                predecessor,
-                current.replace(
-                    b"- freeze the architectural proof requirement and applicable obligations; leave the `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET` choice to the separate architectural proof classification gate after Phase 7C and before Phase 8;",
-                    b"- make the final proof choice `REUSE_EXISTING_PROOF` or `NEW_TRACER_BULLET`;",
-                    1,
+            predecessor = _section_bytes(
+                git_snapshot_bytes(
+                    ROOT,
+                    "a2dfeff5d6cf88d7534cd100c28f39d3045bc814",
+                    "docs/00_platform/05_ROADMAP_v1.2.5.md",
                 ),
+                heading,
+                next_heading,
+            )
+            self.assertEqual(
+                _normalise_historical_archive_routes(predecessor.decode("utf-8")),
+                _normalise_historical_archive_routes(current.decode("utf-8")),
                 heading,
             )
 

@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PROMOTION_RULE = "fp001_phase7c_final_contract_current_promotion"
 CONTRACT_REL = "docs/00_platform/working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 OPEN_WORK_REL = "docs/00_platform/archive/02_OPEN_WORK_v1.2.74.md"
-README_REL = "docs/00_platform/archive/README_PRE_WELL66_2026-10-30.md"
+README_REL = "docs/history/platform/archive/README_PRE_WELL66_2026-10-30.md"
 ARCHIVE_REL = "docs/00_platform/archive/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md"
 
 
@@ -108,7 +108,7 @@ class FP001Phase7CCurrentPromotionAuditTests(unittest.TestCase):
         path.write_text(text, encoding="utf-8")
 
     def test_current_successor_and_pinned_predecessor_pass_foundation_integrity(self):
-        report = run_audit(ROOT, ROOT / "docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
+        report = run_audit(ROOT, ROOT / "docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json")
         checks = {item["name"]: item for item in report["checks"]}
         for name in (
             "phase8_approved_status_successor_current",

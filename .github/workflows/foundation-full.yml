@@ -2,13 +2,13 @@ name: Foundation Full
 
 # Historical/provenance governance certification. This workflow is physically
 # separate from the required merge gate and intentionally keeps using the
-# frozen pre-WELL-66 CURRENT_AUTHORITY_MANIFEST_v1.0.0.json baseline.
+# frozen pre-migration CURRENT_AUTHORITY_MANIFEST_v1.0.0.json baseline.
 #
 # Foundation Integrity starts it automatically as non-blocking evidence for
 # durable-governance/provenance/workflow PRs; Nightly hardening calls it on
 # main; workflow_dispatch provides deliberate exact-SHA certification.
 # Current delivery-state routing belongs to Plane and Foundation Smoke's lean
-# CURRENT_AUTHORITY_ROUTER_v1.0.0.json instead.
+# CURRENT_GOVERNANCE_ROUTER.json and CURRENT_DELIVERY_ROUTER.json instead.
 #
 # Every invocation starts cold, without dependency or build caches.
 
@@ -63,6 +63,6 @@ jobs:
         with:
           python-version: "3.12"
       - name: Run full historical governance and provenance unit tests
-        run: python -m unittest discover -s tests -v
+        run: python tools/run_foundation_full_tests.py
       - name: Run frozen manifest-backed historical foundation audit
-        run: python tools/foundation_integrity_audit.py --manifest docs/00_platform/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json
+        run: python tools/foundation_integrity_audit.py --manifest docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json --json

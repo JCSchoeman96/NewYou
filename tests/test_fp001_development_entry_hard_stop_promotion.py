@@ -230,6 +230,10 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         if historical:
             shutil.rmtree(root / "docs" / "00_platform")
             copy_git_snapshot_tree(ROOT, WELL38_BASE_SHA, root, "docs/00_platform", materialize_historical_readme=True)
+            # This fixture exercises the historical legacy audit contract. Keep
+            # it from selecting the migration-aware audit path, which reads the
+            # current routers instead of the pinned historical manifest.
+            shutil.rmtree(root / "docs" / "governance", ignore_errors=True)
         for relative, content in SYNTHETIC_SOURCE_FILES.items():
             target = root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -293,7 +297,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             manifest = self._synthetic_repo(root)
-            atlas_path = current_working_path(root, "DELIVERY_ATLAS_WORKING_")
+            atlas_path = root / "docs/delivery/execution/DELIVERY_ATLAS_WORKING_v0.4.31.md"
             atlas = atlas_path.read_text(encoding="utf-8")
             current = (
                 "PROOF DESIGN: FROZEN TO THE ACCEPTED Q1–Q90 DECISIONS. "
@@ -320,7 +324,7 @@ class FP001DevelopmentEntryHardStopPromotionTests(unittest.TestCase):
             )
             self.assertEqual("FAIL", check["status"], check["message"])
             self.assertIn(
-                "Phase 8 current-route SHA-256 differs: " + atlas_path.relative_to(root).as_posix(),
+                "Phase 8 current-route SHA-256 differs: docs/00_platform/working/" + atlas_path.name,
                 check["message"],
             )
 

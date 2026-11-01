@@ -4,12 +4,12 @@ name: Foundation Integrity
 # named "Foundation Integrity"). It owns routing and the always-on current-state
 # Foundation Smoke safety net, and calls two reusable lanes:
 #
-#   Normal engineering PR -> Foundation Smoke + Application CI (mix check, mix check.deep)
+#   Normal engineering PR -> Foundation Smoke + applicable Application CI
 #   Durable-governance/provenance PR -> the same required fast gate + non-blocking
 #                                      Foundation Full historical evidence
 #
-# Foundation Smoke validates CURRENT_AUTHORITY_ROUTER_v1.0.0.json. Foundation
-# Full validates the frozen pre-WELL-66 historical manifest and is intentionally
+# Foundation Smoke validates the current Governance and Delivery routers.
+# Foundation Full validates the frozen historical manifest and is intentionally
 # not a dependency of the required aggregate. Ordinary delivery-state changes
 # happen in Plane and therefore create no repository workflow run.
 #
@@ -36,6 +36,7 @@ jobs:
     outputs:
       foundation_full: ${{ steps.classify.outputs.foundation_full }}
       application_changes: ${{ steps.classify.outputs.application_changes }}
+      deep_application_changes: ${{ steps.classify.outputs.deep_application_changes }}
     steps:
       - name: Check out change range
         uses: actions/checkout@v7
@@ -64,18 +65,22 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: "3.12"
+      - name: Run Foundation path-routing regression tests
+        run: python -m unittest discover -s tests -p 'test_foundation_lane_routing.py' -v
       - name: Run Foundation Smoke tests
         run: python -m unittest discover -s tests -p 'test_foundation_smoke.py' -v
       - name: Verify merge-gate topology
         run: python -m unittest discover -s tests -p 'test_foundation_merge_gate.py' -v
       - name: Run current authority smoke audit
-        run: python -m tools.foundation_integrity_smoke --router docs/00_platform/CURRENT_AUTHORITY_ROUTER_v1.0.0.json --json
+        run: python -m tools.foundation_integrity_smoke --governance-router docs/governance/CURRENT_GOVERNANCE_ROUTER.json --delivery-router docs/delivery/CURRENT_DELIVERY_ROUTER.json --json
 
   application-ci:
     name: Application CI
     needs: route
     if: needs.route.outputs.application_changes == 'true'
     uses: ./.github/workflows/application-ci.yml
+    with:
+      deep_application_changes: ${{ needs.route.outputs.deep_application_changes == 'true' }}
 
   foundation-full:
     name: Foundation Full

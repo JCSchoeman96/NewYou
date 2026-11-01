@@ -2,13 +2,11 @@ from __future__ import annotations
 
 import json
 import re
-import shutil
-import tempfile
 import unittest
 from pathlib import Path
 
-from tools.foundation_integrity_audit import refresh_manifest, run_audit
-from foundation_test_support import current_document_path, current_working_path, historical_platform_readme_path, historical_platform_readme_text
+from tools.foundation_integrity_smoke import run_smoke_audit
+from foundation_test_support import current_document_path, current_router_data, current_working_path, historical_platform_readme_path, historical_platform_readme_text
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,9 +47,13 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
         cls.open_work_state = _open_work_lifecycle_state(cls.open_work_path.read_text(encoding="utf-8"))
 
     def test_delivery_atlas_routing_points_at_current_successor(self) -> None:
-        current_route = self.atlas_path.relative_to(DOCS).as_posix()
-        self.assertIn(current_route, self.atlas_routing)
-        self.assertNotRegex(self.atlas_routing, r"\(working/DELIVERY_ATLAS_WORKING_v0\.4\.16\.md\)")
+        current_route = self.atlas_path.relative_to(ROOT).as_posix()
+        routed_paths = {
+            item["repository_path"]
+            for item in current_router_data(ROOT)["delivery_contracts"]
+        }
+        self.assertIn(current_route, routed_paths)
+        self.assertIn("delivery/CURRENT_DELIVERY_ROUTER.json", (ROOT / "docs/README.md").read_text(encoding="utf-8"))
 
     def test_tb001_current_status_route_is_v013_and_preserves_v012_history(self) -> None:
         phase8 = self.manifest["integrity_rules"]["fp001_phase8_proof_contract_lifecycle"]
@@ -117,59 +119,10 @@ class PlatformReadmeRouterConsistencyTests(unittest.TestCase):
             with self.subTest(pattern=pattern):
                 self.assertIsNone(re.search(pattern, self.current_prose))
 
-    def test_foundation_integrity_rejects_stale_router_prose_but_allows_historical_section(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            fixture_docs = root / "docs" / "00_platform"
-            shutil.copytree(DOCS, fixture_docs)
-            fixture_execution = root / "docs" / "execution"
-            fixture_execution.mkdir(parents=True)
-            shutil.copy2(ROOT / "docs/execution/p8-05-registration-jit-spec.md", fixture_execution)
-            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-            refresh_manifest(root, manifest_path)
-
-            readme = fixture_docs / "archive" / "README_PRE_WELL66_2026-10-30.md"
-            text = readme.read_text(encoding="utf-8")
-            prose = _current_readme_prose(text)
-            atlas = prose.split("## Delivery Atlas routing", 1)[1].split("\n## ", 1)[0]
-            current_atlas_path = current_working_path(root, "DELIVERY_ATLAS_WORKING_")
-            current_route = current_atlas_path.relative_to(fixture_docs).as_posix()
-            current_atlas = current_atlas_path.read_text(encoding="utf-8")
-            predecessor_match = re.search(r"(?m)^- \*\*Predecessor:\*\* `archive/([^`]+)`", current_atlas)
-            self.assertIsNotNone(predecessor_match)
-            stale_route = "working/" + predecessor_match.group(1)
-            stale_atlas = atlas.replace(current_route, stale_route, 1)
-            stale_prose = prose.replace(atlas, stale_atlas, 1)
-            readme.write_text(
-                stale_prose + text.split("## Historical status evidence", 1)[1],
-                encoding="utf-8",
-            )
-
-            report = run_audit(root, manifest_path)
-            check = next(item for item in report["checks"] if item["name"] == "phase8_approved_status_successor_current")
-            self.assertEqual("FAIL", check["status"])
-            self.assertIn(current_atlas_path.name.rsplit("v", 1)[-1].removesuffix(".md"), check["message"])
-
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            fixture_docs = root / "docs" / "00_platform"
-            shutil.copytree(DOCS, fixture_docs)
-            fixture_execution = root / "docs" / "execution"
-            fixture_execution.mkdir(parents=True)
-            shutil.copy2(ROOT / "docs/execution/p8-05-registration-jit-spec.md", fixture_execution)
-            manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-            refresh_manifest(root, manifest_path)
-
-            readme = fixture_docs / "archive" / "README_PRE_WELL66_2026-10-30.md"
-            readme.write_text(
-                readme.read_text(encoding="utf-8")
-                + "\n\n## Historical status evidence\n\nProof classification remains NOT FINALISED in this preserved snapshot only.\n",
-                encoding="utf-8",
-            )
-
-            report = run_audit(root, manifest_path)
-            checks = {item["name"]: item for item in report["checks"]}
-            self.assertEqual("PASS", checks["phase8_approved_status_successor_current"]["status"])
+    def test_foundation_smoke_checks_current_entrypoint_prose(self) -> None:
+        report = run_smoke_audit(ROOT)
+        checks = {item["name"]: item for item in report["checks"]}
+        self.assertEqual("PASS", checks["smoke_documentation_entrypoint_current_prose"]["status"])
 
 
 if __name__ == "__main__":

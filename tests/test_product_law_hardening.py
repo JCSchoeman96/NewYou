@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 from tools import foundation_integrity_audit
-from foundation_test_support import current_document_path, current_working_path, frozen_manifest_document_path, historical_platform_readme_path, historical_platform_readme_text, live_platform_readme_text
+from foundation_test_support import current_document_path, current_governance_router_data, current_working_path, frozen_manifest_document_path, historical_platform_readme_path, historical_platform_readme_text, live_platform_readme_text
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -462,15 +462,24 @@ class ProductLawHardeningTests(unittest.TestCase):
         self.assertIn("archive/03_ARCHITECTURE_v1.1.0.md", self.open_work)
         self.assertIn("archive/04_DOMAIN_MAP_v1.1.0.md", self.open_work)
         self.assertIn("archive/00_PLATFORM_v1.3.0.md", self.decisions)
-        self.assertIn("synthesis `v1.1.1` (path-only successor to archived v1.1.0)", self.readme)
-        self.assertIn("current Domain Law `v1.2.0` (semantic successor to archived v1.1.1)", self.readme)
+        self.assertEqual(
+            "docs/governance/architecture/03_ARCHITECTURE_v1.1.1.md",
+            current_document_path(ROOT, "ARCHITECTURE_SYNTHESIS").relative_to(ROOT).as_posix(),
+        )
+        self.assertEqual(
+            "docs/governance/domain/04_DOMAIN_MAP_v1.2.0.md",
+            current_document_path(ROOT, "DOMAIN_MAP").relative_to(ROOT).as_posix(),
+        )
         self.assertTrue(
-            "working/DELIVERY_ATLAS_WORKING_v0.2.1.md" in self.fp001,
+            "docs/history/platform/superseded-delivery/DELIVERY_ATLAS_WORKING_v0.2.1.md" in self.fp001,
             "FP-001 retains its pinned v0.2.1 Atlas source-at-freeze path unchanged",
         )
-        self.assertIn("reference/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md", self.fp001)
-        self.assertIn("docs/00_platform/archive/02_OPEN_WORK_v1.2.28.md", self.fp001)
-        self.assertIn("docs/00_platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.fp001)
+        self.assertEqual(
+            "docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+            current_document_path(ROOT, "REFERENCE_FLOW_PRESSURE_TESTS").relative_to(ROOT).as_posix(),
+        )
+        self.assertIn("docs/history/platform/archive/02_OPEN_WORK_v1.2.28.md", self.fp001)
+        self.assertIn("docs/history/platform/archive/DELIVERY_ATLAS_WORKING_v0.1.0.md", self.fp001)
         atlas_reconciliation = self.atlas.split("## 26.18 ATLAS reconciliation (`v0.3.0`) completion standard", 1)[1]
         historical_source_routing = next(
             line for line in atlas_reconciliation.splitlines() if "| Current-source routing |" in line
@@ -550,8 +559,6 @@ class ProductLawHardeningTests(unittest.TestCase):
                 "REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
             ),
             "Domain Map": ("ARCHITECTURE_LAW_WORKING_v0.36.0.md",),
-            "FP-001": ("REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",),
-            "Delivery Atlas": ("ARCHITECTURE_LAW_WORKING_v0.36.0.md",),
         }
         for document_name, filenames in current_reference_sources.items():
             for filename in filenames:
@@ -561,6 +568,19 @@ class ProductLawHardeningTests(unittest.TestCase):
                         re.search(r"(?<!reference/)" + re.escape(filename), source_trails[document_name]),
                         f"{document_name} contains an unresolved reference path: {filename}",
                     )
+
+        self.assertIn(
+            "docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md",
+            source_trails["FP-001"],
+        )
+        self.assertIn(
+            "| `docs/governance/architecture/references/REFERENCE_FLOW_PRESSURE_TESTS_WORKING_v0.3.0.md §§1.1, 2, 3` |",
+            self.fp001,
+        )
+        self.assertIn(
+            "docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md",
+            source_trails["Delivery Atlas"],
+        )
 
         archived_source_paths = (
             "docs/00_platform/archive/PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
@@ -924,9 +944,9 @@ class RoleAuthorityRegressionTests(unittest.TestCase):
             'Domain-sensitive grants require their designated Domain approval',
         ):
             self.assertIn(phrase, operating)
-        for phrase in ('named people may be subjects of explicit grants',
-                       'bootstrap does not hold business capability',
-                       'unresolved approver authority is a STOP condition', 'Super Admin is break-glass'):
+        for phrase in ('Named people may receive explicit grants',
+                       'bootstrap itself holds no business capability',
+                       'An unresolved required approver authority is a STOP condition', 'Super Admin is break-glass'):
             self.assertIn(phrase, agents)
         self.assertIn('WELL-64 is COMPLETE', open_work)
         self.assertNotIn('pending independent Master Gate review', open_work)
@@ -940,23 +960,24 @@ class RoleAuthorityRegressionTests(unittest.TestCase):
         self.assertIn('No runtime RBAC, authentication or Content & Media implementation is authorized here', open_work)
 
     def test_readme_routes_current_platform_roots_and_tracks_decision_head(self):
-        router = json.loads(ROUTER.read_text(encoding="utf-8"))
+        router = current_governance_router_data(ROOT)
         readme = live_platform_readme_text(ROOT)
         routed_documents = {
-            item["document_id"]: item["canonical_filename"]
-            for item in router["governing_documents"]
+            item["document_id"]: item
+            for collection in ("governing_documents", "architecture_references", "supporting_documents")
+            for item in router.get(collection, [])
         }
         for document_id in (
-            "PROJECT_NORTH_STAR_AND_MVP",
-            "PLATFORM_BASELINE",
-            "DECISION_REGISTER",
-            "ARCHITECTURE_SYNTHESIS",
-            "DOMAIN_MAP",
-            "ROADMAP",
+            "NORTH_STAR_AND_MVP",
+            "PLATFORM_PRODUCT_LAW",
+            "PRODUCT_DECISIONS",
+            "ARCHITECTURE_LAW",
+            "DOMAIN_LAW",
+            "GOVERNING_ROADMAP",
             "PLATFORM_OPERATING_MODEL",
             "FRONTEND_EXPERIENCE_SYSTEM",
         ):
-            self.assertIn(routed_documents[document_id], readme)
-        self.assertIn("The current Product/Decision successors include approved decisions through DEC-320.", readme)
-        self.assertNotIn("00_PLATFORM_v1.12.0.md", readme)
-        self.assertNotIn("01_DECISIONS_v1.12.0.md", readme)
+            route = routed_documents[document_id]
+            self.assertTrue((ROOT / route["repository_path"]).is_file(), route)
+        self.assertIn("governance/CURRENT_GOVERNANCE_ROUTER.json", readme)
+        self.assertIn("Plane project `WELL` remains the live execution authority", readme)

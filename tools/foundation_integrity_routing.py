@@ -3,25 +3,27 @@
 
 Every changed path is classified into exactly one category:
 
-* ``application``: normal engineering files (application source, root
-  engineering files, engineering skills and tooling). These run Application CI
-  and never trigger Foundation Full on their own.
-* ``governance``: durable platform governance, semantic platform contracts,
-  provenance/history, and the governance audit/test/workflow machinery. These
-  trigger Foundation Full as non-blocking historical/provenance evidence.
+* ``application``: application source, delivery contracts, development docs,
+  agent instructions, application tests and normal engineering files. These
+  run Application CI and do not trigger Foundation Full on their own.
+* ``governance``: durable governance, frozen history/provenance, and the
+  Foundation Full/Smoke routing machinery. These trigger Foundation Full as
+  non-blocking historical/provenance evidence.
 * ``unknown``: anything unclassified. Unknown paths fail closed to Full.
 
 Live delivery-state changes are not repository paths after WELL-66: Ready/In
 Progress/Blocked/Done, dependencies and sequencing live in Plane. Therefore the
 classifier does not need a special "status-only" GitHub lane.
 
-Pull requests are routed from their exact diff. A ``push`` to ``main`` never
-routes Foundation Full. Governance-sensitive PRs automatically start the cold
-Full lane as non-blocking historical/provenance evidence; the required Foundation
-Integrity merge gate does not wait for it. Ordinary application PRs run
-Application CI and Foundation Smoke without Full. Superseded PR workflow runs
-are cancelled by the workflow concurrency policy. Scheduled nightly hardening
-separately runs Foundation Full and ``mix check.deep`` against ``main``.
+Pull requests and pushes to ``main`` are routed from their exact diff. An
+application-only merge push does not repeat Foundation Full; governance and
+unknown paths remain fail-closed on every event. Governance-sensitive changes
+start the cold Full lane as non-blocking historical/provenance evidence; the
+required Foundation Integrity merge gate does not wait for it. Ordinary
+application changes run Application CI and Foundation Smoke without Full.
+Superseded PR workflow runs are cancelled by the workflow concurrency policy.
+Scheduled nightly hardening separately runs Foundation Full and
+``mix check.deep`` against ``main``.
 Deliberate exact-SHA certification is dispatched directly through the
 Foundation Full workflow. If this classifier is invoked for a
 ``workflow_dispatch`` event it still fails closed to Full.
@@ -49,6 +51,7 @@ APPLICATION_FILES = frozenset(
         ".credo.exs",
         "README.md",
         "AGENTS.md",
+        "docs/README.md",
         ".github/workflows/application-ci.yml",
     }
 )
@@ -58,34 +61,47 @@ APPLICATION_PREFIXES = (
     ".devcore/",
     "assets/",
     "config/",
+    "docs/delivery/",
     "docs/development/",
     "docs/superpowers/",
-    "docs/execution/",
     "lib/",
     "priv/",
     "test/",
+    "tests/",
     "tools/architecture/",
 )
 
-# --- Durable governance, semantic contracts and provenance machinery -------
+# The fast Application CI lane runs for every classified engineering change.
+# Dialyzer is reserved for changes that can alter the Elixir application or its
+# dependency graph; documentation, agent guidance and regression-test edits do
+# not need that slower lane by location alone.
+DEEP_APPLICATION_FILES = frozenset({"mix.exs", "mix.lock", ".tool-versions"})
+DEEP_APPLICATION_PREFIXES = ("lib/", "priv/")
 
-GOVERNANCE_FILES = frozenset(
+# --- Governance, history and Foundation Full machinery ---------------------
+
+FOUNDATION_FULL_FILES = frozenset(
     {
         "tools/__init__.py",
+        "tools/foundation_integrity_audit.py",
+        "tools/foundation_integrity_routing.py",
+        "tools/foundation_integrity_smoke.py",
+        "tools/run_foundation_full_tests.py",
         ".github/workflows/foundation-integrity.yml",
         ".github/workflows/foundation-full.yml",
+        ".github/workflows/nightly-hardening.yml",
+        "tests/foundation_test_support.py",
+        "tests/test_foundation_full.py",
+        "tests/test_foundation_integrity_audit.py",
+        "tests/test_historical_scope.py",
     }
 )
 
-# `docs/00_platform/` contains durable authority, semantic working contracts,
-# and frozen/archived provenance. Any repository change there is governance-
-# sensitive even though not every file is governing authority. Ordinary live
-# delivery-state movement belongs in Plane and should not edit this tree.
-# `tests/` is the Python governance/current-routing suite; normal Elixir tests
-# live under `test/`.
-GOVERNANCE_PREFIXES = (
-    "docs/00_platform/",
-    "tests/",
+# Directory ownership is the default. The exact test/tool/workflow paths below
+# are exceptions because they implement Foundation Full or frozen provenance.
+FOUNDATION_FULL_PREFIXES = (
+    "docs/governance/",
+    "docs/history/",
     "tools/foundation_integrity_",
 )
 
@@ -95,9 +111,9 @@ def classify_path(path: str) -> str:
 
     normalized = path.removeprefix("./")
     parts = PurePosixPath(normalized).parts
-    if not normalized or normalized.startswith("/") or ".." in parts:
+    if not normalized or normalized.startswith("/") or "\\" in normalized or ".." in parts:
         return "unknown"
-    if normalized in GOVERNANCE_FILES or normalized.startswith(GOVERNANCE_PREFIXES):
+    if normalized in FOUNDATION_FULL_FILES or normalized.startswith(FOUNDATION_FULL_PREFIXES):
         return "governance"
     if normalized in APPLICATION_FILES or normalized.startswith(APPLICATION_PREFIXES):
         return "application"
@@ -128,6 +144,18 @@ def classify_changed_paths(paths: list[str]) -> dict[str, bool]:
     }
 
 
+def classify_deep_application_changes(paths: list[str]) -> bool:
+    """Return whether changed paths need the slower Dialyzer lane."""
+
+    for path in paths:
+        normalized = path.removeprefix("./")
+        if classify_path(normalized) != "application":
+            continue
+        if normalized in DEEP_APPLICATION_FILES or normalized.startswith(DEEP_APPLICATION_PREFIXES):
+            return True
+    return False
+
+
 def _changed_paths(event_name: str, base_sha: str, head_sha: str, cwd: str) -> list[str]:
     separator = "..." if event_name == "pull_request" else ".."
     result = subprocess.run(
@@ -145,16 +173,13 @@ def classify_event(event_name: str, base_sha: str, head_sha: str, cwd: str = "."
     if event_name == "workflow_dispatch":
         return {"foundation_full": True, "application_changes": False}
     if event_name == "push":
-        # The required push gate is Smoke plus any routed Application CI.
-        # Foundation Full is retained separately by nightly/manual hardening.
         if not base_sha or not head_sha:
-            return {"foundation_full": False, "application_changes": True}
+            return {"foundation_full": True, "application_changes": True}
         try:
             paths = _changed_paths(event_name, base_sha, head_sha, cwd)
         except (OSError, subprocess.CalledProcessError):
-            return {"foundation_full": False, "application_changes": True}
-        decision = classify_changed_paths(paths)
-        return {"foundation_full": False, "application_changes": decision["application_changes"]}
+            return {"foundation_full": True, "application_changes": True}
+        return classify_changed_paths(paths)
     if event_name != "pull_request" or not base_sha or not head_sha:
         return {"foundation_full": True, "application_changes": False}
     try:
@@ -162,6 +187,34 @@ def classify_event(event_name: str, base_sha: str, head_sha: str, cwd: str = "."
     except (OSError, subprocess.CalledProcessError):
         return {"foundation_full": True, "application_changes": False}
     return classify_changed_paths(paths)
+
+
+def classify_deep_event(event_name: str, base_sha: str, head_sha: str, cwd: str = ".") -> bool:
+    """Classify whether an event needs the slower Application CI lane.
+
+    Missing or unreadable push ranges fail closed to the deep lane because the
+    push path also selects Application CI in that case. Pull requests with an
+    unknown range already fail closed to Foundation Full and do not select the
+    Application workflow.
+    """
+
+    if event_name == "workflow_dispatch":
+        return False
+    if event_name == "push":
+        if not base_sha or not head_sha:
+            return True
+        try:
+            paths = _changed_paths(event_name, base_sha, head_sha, cwd)
+        except (OSError, subprocess.CalledProcessError):
+            return True
+        return classify_deep_application_changes(paths)
+    if event_name != "pull_request" or not base_sha or not head_sha:
+        return False
+    try:
+        paths = _changed_paths(event_name, base_sha, head_sha, cwd)
+    except (OSError, subprocess.CalledProcessError):
+        return False
+    return classify_deep_application_changes(paths)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -173,8 +226,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     decision = classify_event(args.event, args.base_sha, args.head_sha, args.root)
+    deep_application_changes = classify_deep_event(
+        args.event, args.base_sha, args.head_sha, args.root
+    )
     print(f"foundation_full={str(decision['foundation_full']).lower()}")
     print(f"application_changes={str(decision['application_changes']).lower()}")
+    print(f"deep_application_changes={str(deep_application_changes).lower()}")
     if decision["foundation_full"]:
         print("Foundation Full selected as non-blocking historical/provenance evidence.", file=sys.stderr)
     return 0

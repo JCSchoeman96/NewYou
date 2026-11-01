@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from foundation_test_support import historical_platform_readme_text, historical_platform_readme_path
+from foundation_test_support import (
+    frozen_open_work_path,
+    historical_platform_readme_text,
+)
 import hashlib
 import json
 import re
@@ -10,7 +13,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DOCS = ROOT / "docs/00_platform"
+DOCS = ROOT / "docs/history"
 BASE_SHA = "ac8b7c7eeaddd2001c3ad3e2a8fbce46296b0a40"
 PR165_HEAD = "98ad1ce5ef33cf10183cda68802b623afcf41378"
 PR165_MERGE = "ac8b7c7eeaddd2001c3ad3e2a8fbce46296b0a40"
@@ -52,7 +55,7 @@ class WELL60TrackerClosureSyncTests(unittest.TestCase):
         cls.well60 = cls.rules["well60_communications_handoff_candidate"]
         cls.phase8 = cls.rules["fp001_phase8_proof_contract_lifecycle"]
         cls.closure = cls.well60["post_merge_tracker_closure"]
-        cls.open_work_path = ROOT / cls.phase8["current_routes"]["open_work"]
+        cls.open_work_path = frozen_open_work_path(ROOT)
         cls.open_work = cls.open_work_path.read_text(encoding="utf-8")
         cls.state_match = re.search(
             r"<!-- HARDEN_02_LIFECYCLE_STATE_START -->\s*```json\s*(.*?)\s*```\s*<!-- HARDEN_02_LIFECYCLE_STATE_END -->",
@@ -104,11 +107,27 @@ class WELL60TrackerClosureSyncTests(unittest.TestCase):
         for key, path in expected_routes.items():
             with self.subTest(route=key):
                 self.assertEqual(path, self.phase8["current_routes"][key])
-                self.assertTrue((ROOT / path).is_file())
-                self.assertEqual(
-                    self.phase8["current_route_sha256"][path],
-                    hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
-                )
+
+        self.assertEqual(
+            self.phase8["current_route_sha256"][self.phase8["current_routes"]["open_work"]],
+            hashlib.sha256(self.open_work_path.read_bytes()).hexdigest(),
+        )
+        current_delivery = json.loads(
+            (ROOT / "docs/delivery/CURRENT_DELIVERY_ROUTER.json").read_text(encoding="utf-8")
+        )
+        routed = {
+            entry["document_id"]: entry
+            for entry in current_delivery["delivery_contracts"]
+        }
+        for document_id in (
+            "DELIVERY_ATLAS",
+            "FP001_FEATURE_PACK_SKELETON",
+            "HARDEN_02_CONTRACT",
+        ):
+            entry = routed[document_id]
+            target = ROOT / entry["repository_path"]
+            self.assertTrue(target.is_file())
+            self.assertEqual(entry["sha256"], hashlib.sha256(target.read_bytes()).hexdigest())
 
         self.assertEqual("COMPLETE / PR #165 RESULTING-MAIN VERIFIED", self.state["well_60"])
         self.assertEqual("BLOCKED / WAITING ON WELL-61", self.state["well_49"])
@@ -126,7 +145,7 @@ class WELL60TrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("INCOMPLETE / COVERAGE-INCOMPLETE", self.phase8["proof_result"])
         self.assertEqual("NOT CERTIFIED", self.phase8["proof_certification"])
         self.assertEqual("NOT STARTED / NOT AUTHORISED", self.phase8["phase9_vertical_slices"])
-        archive = DOCS / "archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
+        archive = DOCS / "platform/archive/FP-001_TRACER_BULLET_CONTRACT_WORKING_v0.1.3.md"
         self.assertEqual(PR164_CANDIDATE_SHA256, hashlib.sha256(archive.read_bytes()).hexdigest())
         reviewed_bytes = subprocess.run(
             [
@@ -150,7 +169,7 @@ class WELL60TrackerClosureSyncTests(unittest.TestCase):
         hashes = self.phase8["predecessor_archives_sha256"]
         for archive_path, (source_path, document_id, authority_class) in PREDECESSORS.items():
             with self.subTest(archive=archive_path):
-                archived = ROOT / archive_path
+                archived = ROOT / "docs/history/platform/archive" / Path(archive_path).name
                 expected_bytes = subprocess.run(
                     ["git", "show", f"{BASE_SHA}:{source_path}"],
                     cwd=ROOT,
