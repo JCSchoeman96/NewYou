@@ -239,7 +239,7 @@ All paths below are relative to the repository root and were resolved at the can
 - `docs/00_platform/working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md` §§J, O, Q, R–V, sole Identity authority, concurrency and security.
 - `docs/00_platform/working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` §§3, 6, 9, 11–14 and 19, invocation admission, ambiguity, authentication and proof.
 - `docs/00_platform/working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md` §§2, 6–8 and 14–15, E1/E2, evidence identity and source authority.
-- Root `AGENTS.md`, `.agents/skills/project-implementation/SKILL.md`, `.agents/skills/code-change-verification/SKILL.md`, and `docs/development/foundation-integrity-merge-gate.md`.
+- Root `AGENTS.md`, the packaged `$ticket-implement` skill, `.agents/skills/code-change-verification/SKILL.md`, and `docs/development/foundation-integrity-merge-gate.md`.
 
 No unresolved authority contradiction or unclear business owner was found. Frozen contracts' earlier NOT STARTED lifecycle snapshots do not override current Open Work §12.35. They are not silently rewritten here.
 

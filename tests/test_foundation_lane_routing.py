@@ -24,10 +24,50 @@ class ApplicationAndEngineeringRoutingTests(unittest.TestCase):
         self.assertEqual({"foundation_full": False, "application_changes": True}, decision)
 
     def test_root_engineering_files_run_engineering_checks_without_full(self):
-        for path in ["AGENTS.md", ".tool-versions", ".gitattributes", ".devcore/project.conf", ".agents/skills/project-implementation/SKILL.md"]:
+        paths = [
+            "AGENTS.md",
+            ".tool-versions",
+            ".gitattributes",
+            ".devcore/project.conf",
+            ".agents/skills/code-change-verification/SKILL.md",
+        ]
+        for path in paths:
             with self.subTest(path=path):
                 self.assertEqual("application", classify_path(path))
                 self.assertEqual({"foundation_full": False, "application_changes": True}, _route([path]))
+
+    def test_ready_ticket_uses_packaged_skill_with_only_a_legacy_path_shim(self):
+        instructions = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("`$ticket-implement`", instructions)
+        self.assertIn("identify the NewYou Plane ticket to implement", instructions)
+        self.assertIn("compatibility skill for existing references", instructions)
+        self.assertIn("thin shim for the pinned TB-001 reference", instructions)
+        self.assertNotIn(".agents/skills/ticket-implement/SKILL.md", instructions)
+        self.assertFalse((ROOT / ".agents/skills/ticket-implement/SKILL.md").exists())
+        shim = (ROOT / ".agents/skills/project-implementation/SKILL.md").read_text(encoding="utf-8")
+        self.assertEqual(
+            "---\n"
+            "name: project-implementation\n"
+            "description: Compatibility shim for the pinned NewYou repository skill path.\n"
+            "---\n\n"
+            "# Compatibility shim\n\n"
+            "This file preserves a pinned repository reference. For implementation, invoke the installed `$ticket-implement` skill, then identify the NewYou Plane ticket to implement.\n",
+            shim,
+        )
+
+    def test_unpinned_live_implementation_documents_use_packaged_skill_name(self):
+        live_documents = [
+            "AGENTS.md",
+            "docs/execution/p8-05-registration-jit-spec.md",
+            "docs/superpowers/specs/2026-10-22-well-5-p8-04-proof-harness-spec.md",
+        ]
+        local_skill_path = ".agents/skills/project-implementation/SKILL.md"
+        for path in live_documents:
+            with self.subTest(path=path):
+                self.assertFalse(
+                    local_skill_path in (ROOT / path).read_text(encoding="utf-8"),
+                    msg=f"{path} still points to the repo-local legacy path",
+                )
 
     def test_known_engineering_document_paths_run_application_ci_without_full(self):
         for path in [

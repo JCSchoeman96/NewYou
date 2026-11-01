@@ -261,7 +261,7 @@ The current repository is a Phoenix/Ash starter. It has no application Identity,
 - generated migrations under `priv/repo/migrations/`;
 - focused Identity, acceptance-boundary, Communications/Audit, and browser tests under `test/`.
 
-This is a file map, not a selection of final modules, APIs, migrations, or dependencies. Before implementation, follow `.agents/skills/project-implementation/SKILL.md`, load relevant Ash/Phoenix/Elixir skills, inspect exact dependency versions, verify package APIs against primary sources, and use Igniter first for supported structural changes. The transaction-aware Oban/Ash integration and collision retry semantics are stop-and-verify points. No tests or application changes are part of this planning task.
+This is a file map, not a selection of final modules, APIs, migrations, or dependencies. Before implementation, invoke the packaged `$ticket-implement` skill, load relevant Ash/Phoenix/Elixir skills, inspect exact dependency versions, verify package APIs against primary sources, and use Igniter first for supported structural changes. The transaction-aware Oban/Ash integration and collision retry semantics are stop-and-verify points. No tests or application changes are part of this planning task.
 
 ## Review checklist and implementation stop conditions
 
