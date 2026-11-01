@@ -6,7 +6,7 @@ import re
 import unittest
 from pathlib import Path
 
-from foundation_test_support import current_working_path, frozen_manifest_document_path, historical_snapshot_path
+from foundation_test_support import current_router_data, current_working_path, frozen_manifest_document_path, historical_snapshot_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -309,10 +309,11 @@ class MarketingUnsubscribeAuthorityTests(unittest.TestCase):
 
     def test_current_routes_are_current_and_old_paths_remain_archived(self):
         atlas_path = current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").relative_to(ROOT).as_posix()
-        self.assertEqual(
-            atlas_path,
-            self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"][0],
-        )
+        router_paths = {
+            entry["repository_path"]
+            for entry in current_router_data(ROOT)["delivery_contracts"]
+        }
+        self.assertIn(atlas_path, router_paths)
         self.assertTrue((ROOT / atlas_path).is_file())
         archived_atlas = DOCS / "archive" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"
         pinned_atlas = DOCS / "working" / "DELIVERY_ATLAS_WORKING_v0.2.1.md"

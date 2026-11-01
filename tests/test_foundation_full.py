@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import shutil
 import tempfile
 import unittest
@@ -28,15 +29,19 @@ class FoundationFullHistoricalTests(unittest.TestCase):
     def test_full_audit_and_test_runner_share_the_pinned_migration_base(self):
         self.assertEqual(PRE_MIGRATION_BASE_SHA, PRE_MIGRATION_LAYOUT_BASE_SHA)
 
-    def test_semantic_root_migration_retains_the_known_full_audit_baseline(self):
+    def test_semantic_root_migration_resolves_the_frozen_roadmap_source_at_freeze(self):
         report = run_audit(ROOT, MANIFEST_RELATIVE)
+        self.assertEqual("PASS", report["status"], report["findings"])
+        self.assertEqual([], report["findings"])
 
-        self.assertEqual(
-            ["active_document_graph"],
-            [finding["check"] for finding in report["findings"]],
-            report["findings"],
-        )
-        self.assertIn("docs/00_platform/05_ROADMAP_v1.2.4.md", report["findings"][0]["message"])
+        manifest = json.loads((ROOT / MANIFEST_RELATIVE).read_text(encoding="utf-8"))
+        relative = "docs/00_platform/05_ROADMAP_v1.2.4.md"
+        exception = manifest["integrity_rules"]["graph_rules"][
+            "source_at_freeze_reference_exceptions"
+        ][relative]
+        archived = ROOT / "docs/history/platform/archive/05_ROADMAP_v1.2.4.md"
+        self.assertEqual(exception["sha256"], hashlib.sha256(archived.read_bytes()).hexdigest())
+        self.assertFalse((ROOT / relative).exists())
 
     def test_successor_full_audit_uses_the_exact_historical_base_sha(self):
         passes, message = _audit_exact_predecessor_commit(

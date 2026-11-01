@@ -167,8 +167,7 @@ class VerificationMessageAuthorityTests(unittest.TestCase):
         self.assertEqual("docs/00_platform/02_OPEN_WORK_v1.2.90.md", legacy["repository_path"])
         self.assertFalse(legacy["live_execution_authority"])
         self.assertEqual("2a8557193fc071996e23d9214980da22d48bdbf3", FROZEN_ROUTER["historical_integrity_baseline"]["git_blob_sha"])
-        self.assertIn("through DEC-320", self.readme)
-        self.assertIn("not live execution authority", self.readme)
+        self.assertIn("Plane project `WELL` remains the live execution authority", self.readme)
         self.assertEqual("02_OPEN_WORK_v1.2.90.md", next(row for row in MANIFEST["governing_documents"] if row["document_id"] == "OPEN_WORK")["canonical_filename"])
 
     def test_prior_frozen_authority_snapshots_remain_byte_identifiable(self) -> None:

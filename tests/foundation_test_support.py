@@ -181,6 +181,13 @@ def current_router_data(root: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def current_governance_router_data(root: Path) -> dict[str, Any]:
+    """Load the current durable-law router, with no delivery fallback."""
+
+    path = Path(root) / "docs/governance/CURRENT_GOVERNANCE_ROUTER.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def frozen_router_data(root: Path) -> dict[str, Any]:
     root = Path(root)
     path = root / FROZEN_ROUTER_RELATIVE

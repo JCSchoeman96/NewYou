@@ -38,11 +38,11 @@ The accepted WELL-1 INTERNAL Q1–Q90 Grill comments are design provenance, not 
 
 Current FP-001 source contracts:
 
-- `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md`
-- `working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
-- `working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
-- `working/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md`
-- `working/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md`
+- `docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md`
+- `docs/delivery/jit/communications/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
+- `docs/delivery/jit/audit-evidence/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`
+- `docs/delivery/proof/fp-001/FP-001_PHASE_7B_RECONCILIATION_WORKING_v0.1.0.md`
+- `docs/delivery/feature-contracts/fp-001/FP-001_FINAL_FEATURE_PACK_CONTRACT_WORKING_v0.1.0.md`
 
 ## Decision traceability
 

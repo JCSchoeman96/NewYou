@@ -137,6 +137,34 @@ class FoundationSmokeTests(unittest.TestCase):
             self.assertEqual("FAIL", report["status"])
             self.assertTrue(any("documentation entrypoint" in item["message"].lower() for item in report["findings"]))
 
+    def test_smoke_rejects_stale_current_readme_prose_but_ignores_historical_copy(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._fixture(directory)
+            readme = root / "docs/README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\nProof classification remains NOT FINALISED.\n",
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root)
+            self.assertEqual("FAIL", report["status"])
+            self.assertTrue(
+                any(item["check"] == "smoke_documentation_entrypoint_current_prose" for item in report["findings"])
+            )
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = self._fixture(directory)
+            historical = root / "docs/history/platform/README_PRE_SEMANTIC_ROOTS_2026-11-01.md"
+            historical.write_text(
+                historical.read_text(encoding="utf-8")
+                + "\nProof classification remains NOT FINALISED in this frozen snapshot.\n",
+                encoding="utf-8",
+            )
+
+            report = run_smoke_audit(root)
+            self.assertEqual("PASS", report["status"], report["findings"])
+
 
 if __name__ == "__main__":
     unittest.main()

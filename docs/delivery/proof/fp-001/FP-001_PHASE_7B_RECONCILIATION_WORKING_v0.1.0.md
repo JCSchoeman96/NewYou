@@ -42,9 +42,9 @@ The reconciliation uses the exact current versions in the baseline authority man
 | Delivery Atlas | `archive/DELIVERY_ATLAS_WORKING_v0.4.7.md` (current on the baseline), §§4-6 and FP-001 view. Derived navigation only. |
 | HARDEN-02 | `archive/HARDEN-02_CONTRACT_WORKING_v0.5.9.md` (current on the baseline), §§2, 18-21. Governance route only. |
 | FP-001 Skeleton | `archive/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.9.md` (current on the baseline), §§1-17 |
-| Identity dossier | `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md`, §§A-C, E-I, J.1-J.1a, K, L, N-O, R-U, X-AA |
-| Communications dossier | `working/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`, §§1-20 |
-| Audit & Evidence dossier | `working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`, §§1-18 |
+| Identity dossier | `docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md`, §§A-C, E-I, J.1-J.1a, K, L, N-O, R-U, X-AA |
+| Communications dossier | `docs/delivery/jit/communications/FP-001_COMMUNICATIONS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`, §§1-20 |
+| Audit & Evidence dossier | `docs/delivery/jit/audit-evidence/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`, §§1-18 |
 | Current routing | `CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` and `README.md` |
 
 The Pre-JIT packs are not authority and were not used to promote identifiers or hypotheses into this result. The certified/current dossiers and the exact current authority versions above control this reconciliation.

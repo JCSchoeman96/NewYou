@@ -26,6 +26,12 @@ FROZEN_PRE_MIGRATION_MANIFEST = Path("docs/00_platform/CURRENT_AUTHORITY_MANIFES
 PRE_MIGRATION_LAYOUT_BASE_SHA = "a2dfeff5d6cf88d7534cd100c28f39d3045bc814"
 HISTORICAL_CONTEXT_README_PATH = "docs/00_platform/archive/README_PRE_WELL66_2026-10-30.md"
 LIVE_CONTEXT_README_PATH = "docs/00_platform/README.md"
+SOURCE_AT_FREEZE_PATH_ALIASES = {
+    "docs/00_platform/05_ROADMAP_v1.2.4.md": (
+        "docs/history/platform/archive/05_ROADMAP_v1.2.4.md",
+        "docs/00_platform/archive/05_ROADMAP_v1.2.4.md",
+    ),
+}
 
 
 def _import_foundation_test_support(root: Path):
@@ -12675,6 +12681,7 @@ def _check_production_graph(
         source_at_freeze_exceptions = {}
     scan_paths = {relative for relative, _path, _is_reference in scan_targets}
     approved_source_exceptions: dict[str, set[str]] = {}
+    approved_source_paths: dict[str, Path] = {}
     stale_pattern_sources = set(graph_rules.get("stale_reference_patterns", []))
     for relative, exception in source_at_freeze_exceptions.items():
         if not isinstance(relative, str) or relative not in scan_paths or not isinstance(exception, dict):
@@ -12683,7 +12690,22 @@ def _check_production_graph(
         exception_patterns = exception.get("patterns")
         expected_hash = exception.get("sha256")
         reason = exception.get("reason")
-        source = root / relative
+        candidates = [root / relative]
+        candidates.extend(
+            root / candidate
+            for candidate in SOURCE_AT_FREEZE_PATH_ALIASES.get(relative, ())
+        )
+        source = next(
+            (
+                candidate
+                for candidate in candidates
+                if candidate.is_file()
+                and not candidate.is_symlink()
+                and isinstance(expected_hash, str)
+                and sha256_file(candidate) == expected_hash
+            ),
+            None,
+        )
         if (
             not isinstance(exception_patterns, list)
             or not exception_patterns
@@ -12691,14 +12713,14 @@ def _check_production_graph(
             or not isinstance(expected_hash, str)
             or not isinstance(reason, str)
             or not reason.strip()
-            or not source.is_file()
-            or source.is_symlink()
-            or sha256_file(source) != expected_hash
+            or source is None
         ):
             stale_hits.append(f"invalid or changed source-at-freeze exception: {relative}")
             continue
         approved_source_exceptions[relative] = set(exception_patterns)
+        approved_source_paths[relative] = source
     for relative, path, is_reference in scan_targets:
+        path = approved_source_paths.get(relative, path)
         if not path.is_file():
             if relative in navigation_paths:
                 stale_hits.append(f"{relative}: missing active navigation document")
@@ -13204,6 +13226,7 @@ def _materialize_pinned_pre_migration_layout(source_root: Path, legacy_root: Pat
                 _copy_legacy_audit_file(source_root, legacy_root, path.relative_to(source_root).as_posix(), destination)
 
 
+
 def _materialize_legacy_audit_layout(source_root: Path, legacy_root: Path) -> None:
     """Present moved documents at the frozen paths expected by the provenance suite.
 
@@ -13316,7 +13339,7 @@ def run_audit(
     """Run Foundation Full using a temporary view of the frozen pre-migration layout."""
 
     root = Path(root)
-    repository_root = Path(repository_root) if repository_root is not None else root
+    repository_root = Path(repository_root) if repository_root is not None else _default_root()
     if (root / "docs/governance/CURRENT_GOVERNANCE_ROUTER.json").is_file():
         with tempfile.TemporaryDirectory(prefix="newyou-foundation-legacy-view-") as temporary:
             legacy_root = Path(temporary)

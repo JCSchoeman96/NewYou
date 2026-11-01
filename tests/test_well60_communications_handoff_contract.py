@@ -234,17 +234,6 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
         self.assertIn("WELL-60: COMPLETE / PR #165 RESULTING-MAIN VERIFIED", self.open_work)
 
     def test_identity_source_contract_uses_current_v020_route(self) -> None:
-        current_identity_route = (
-            "docs/00_platform/working/"
-            "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md"
-        )
-        graph_routes = self.manifest["integrity_rules"]["graph_rules"]["navigation_document_paths"]
-        identity_routes = [
-            route
-            for route in graph_routes
-            if "FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_" in route
-        ]
-        self.assertEqual([current_identity_route], identity_routes)
         delivery_router = json.loads(
             (DOCS / "delivery/CURRENT_DELIVERY_ROUTER.json").read_text(encoding="utf-8")
         )
@@ -253,6 +242,7 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
             for entry in delivery_router["delivery_contracts"]
             if entry["document_id"] == "FP001_IDENTITY_ACCESS_JIT"
         )
+        current_identity_route = current_identity_entry["repository_path"]
         self.assertTrue((ROOT / current_identity_entry["repository_path"]).is_file())
 
         _, source_heading, source_contents = self.candidate.partition(
@@ -260,13 +250,9 @@ class WELL60CommunicationsHandoffContractTests(unittest.TestCase):
         )
         self.assertTrue(source_heading)
         current_sources = source_contents.split("\n## ", 1)[0]
-        current_identity_source = "working/" + current_identity_route.rsplit("/", 1)[1]
+        current_identity_source = current_identity_route
         self.assertIn(f"`{current_identity_source}`", current_sources)
         self.assertNotIn("FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.1.4.md", current_sources)
-
-        readme = historical_platform_readme_text(ROOT)
-        active_working = readme.split("## Active Working Artifacts", 1)[1].split("\n## ", 1)[0]
-        self.assertIn(f"`{current_identity_source}`", active_working)
 
     def test_no_lost_handoff_and_executor_boundary_are_explicit(self) -> None:
         candidate_clauses = (

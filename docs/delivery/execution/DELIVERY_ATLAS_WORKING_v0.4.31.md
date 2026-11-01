@@ -9,7 +9,7 @@
 - **Scope:** Feature Pack relationships, shared capability movement, lifecycle coverage, journeys, cross-domain interaction, integrations, measurement, risk, proof, hardening and future-extension visibility.
 - **Predecessor:** `archive/DELIVERY_ATLAS_WORKING_v0.4.30.md` (direct routing predecessor; preserved byte-identically). Earlier predecessors remain at their archive paths.
 - **SemVer transition:** `v0.4.30 → v0.4.31` (PATCH current routing).
-- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. This v0.4.31 route points to Product v1.12.0, Decision Register v1.12.0, Open Work v1.2.90, Operating Model v1.2.0, Roadmap v1.2.4 and HARDEN-02 v0.5.33. WELL-60 is COMPLETE after PR #165 resulting-main verification; TB-001 v0.1.3 is routed as CURRENT / APPROVED FOR BOUNDED PHASE 8 PROOF EXECUTION with review COMPLETE / PASS. Full TB-001 proof remains INCOMPLETE / COVERAGE-INCOMPLETE, Phase 8 is NOT CERTIFIED and Phase 9 remains NOT STARTED / NOT AUTHORISED. WELL-49 is BLOCKED only by WELL-61 and has not started; WELL-61 remains PLANNING / INCOMPLETE. This derived route changes no authority, Model B semantics or implementation state.
+- **Current content state:** ATLAS-01 through ATLAS-11 remain complete at their recorded scope as derived navigation. Current Product, Decision, Architecture, Domain, Roadmap and supporting authority resolve through `docs/governance/CURRENT_GOVERNANCE_ROUTER.json`; current Feature, JIT, proof and execution contracts resolve through `docs/delivery/CURRENT_DELIVERY_ROUTER.json`. Open Work v1.2.90 is retained at `docs/history/02_OPEN_WORK_v1.2.90.md` as a frozen snapshot; Plane project `WELL` remains the live execution authority. This derived route changes no authority, Model B semantics or implementation state.
 - **Freeze state:** Not frozen. A later freeze requires a separate governance decision.
 - **Patch scope:** Status and routing successor only. Records the separately reviewed TB-001 v0.1.3 promotion evidence and directs current navigation to v0.1.3. No Atlas authority, Feature Pack content, Domain ownership, delivery semantics or implementation boundary changes.
 
@@ -91,14 +91,14 @@ The current sources that establish this chain are:
 
 | Authority level | Current source | Atlas relationship |
 |---|---|---|
-| Product Law | `docs/governance/product/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/history/platform/archive/00_PLATFORM_v1.12.0.md`; `docs/history/platform/archive/01_DECISIONS_v1.12.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
-| Architecture Law | `docs/governance/architecture/03_ARCHITECTURE_v1.1.1.md` and the accepted Architecture Law represented by it (`reference/ARCHITECTURE_LAW_WORKING_v0.36.0.md`) | Defines architectural authority, state authority, interaction rules, failure behaviour, performance doctrine and deferred mechanisms. |
+| Product Law | `docs/governance/product/PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md`; `docs/governance/product/00_PLATFORM_v1.13.0.md`; `docs/governance/product/01_DECISIONS_v1.13.0.md` | Defines product purpose, approved outcomes, policy, MVP boundaries, non-negotiables and formal gates. |
+| Architecture Law | `docs/governance/architecture/03_ARCHITECTURE_v1.1.1.md` and the accepted Architecture Law represented by it (`docs/governance/architecture/references/ARCHITECTURE_LAW_WORKING_v0.36.0.md`) | Defines architectural authority, state authority, interaction rules, failure behaviour, performance doctrine and deferred mechanisms. |
 | Domain Law | `docs/governance/domain/04_DOMAIN_MAP_v1.2.0.md` | Defines who owns durable business truth and the domain-level dependency direction (20 Domains). |
-| Roadmap | `docs/history/platform/archive/05_ROADMAP_v1.2.4.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
-| Planning tracker | `docs/history/02_OPEN_WORK_v1.2.90.md` | Tracks unresolved gates, planning sequence and development stop conditions. It does not outrank Product, Architecture, Domain or Roadmap authority. |
-| Supporting cross-cutting contract | `docs/history/platform/archive/PLATFORM_OPERATING_MODEL_v1.2.0.md` | Supplies stable operating workflow guidance beneath the four upstream law levels. |
+| Roadmap | `docs/governance/roadmap/05_ROADMAP_v1.2.5.md` | Defines approved delivery phases, Feature Pack outcomes, dependencies, gates and sequencing (17 Feature Packs). |
+| Frozen planning snapshot | `docs/history/02_OPEN_WORK_v1.2.90.md` | Preserves pre-Plane planning evidence. Plane project `WELL` owns live execution state. |
+| Supporting cross-cutting contract | `docs/governance/supporting/PLATFORM_OPERATING_MODEL_v1.3.0.md` | Supplies stable operating workflow guidance beneath the four upstream law levels. |
 | Supporting cross-cutting contract | `docs/governance/supporting/FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` | Supplies frontend, interaction, accessibility, public-experience and measurement guidance beneath the four upstream law levels. |
-| Routing and integrity evidence | `docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` | Routes current and reference documents and records integrity expectations. It does not create a new authority layer. |
+| Frozen provenance manifest | `docs/history/CURRENT_AUTHORITY_MANIFEST_v1.0.0.json` | Preserves freeze-time routes and integrity expectations. Current routing lives in the governance and delivery routers. |
 
 Historical source-at-freeze filenames cited inside earlier ATLAS-01…ATLAS-11 population notes remain provenance for those views. Current navigation must resolve against the current sources above.
 

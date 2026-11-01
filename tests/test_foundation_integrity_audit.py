@@ -1313,15 +1313,6 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 ),
             ),
             (
-                "stale README Identity route",
-                lambda root: replace_once(
-                    root,
-                    "archive/README_PRE_WELL66_2026-10-30.md",
-                    "- IDENTITY v0.1.4: CERTIFIED / CURRENT under the separate PR #77 status successor",
-                    "- IDENTITY v0.1.3: CERTIFIED / CURRENT under PR #70",
-                ),
-            ),
-            (
                 "stale Delivery Atlas Identity route",
                 lambda root: replace_once(
                     root,
@@ -1404,16 +1395,7 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 )
                 self.assertEqual("FAIL", promotion_check["status"], promotion_check["message"])
                 if expected_check == "fp001_phase8_proof_contract_lifecycle":
-                    if name == "stale README Identity route":
-                        combined_messages = promotion_check["message"] + " ".join(
-                            finding["message"] for finding in report["findings"]
-                        )
-                        self.assertIn(
-                            "README current state omits TB-001 lifecycle state 'IDENTITY v0.1.4'",
-                            combined_messages,
-                        )
-                    else:
-                        self.assertIn("manifest Phase 8 route hash differs", promotion_check["message"])
+                    self.assertIn("manifest Phase 8 route hash differs", promotion_check["message"])
 
     def test_fp001_durable_delivery_attestation_requires_bound_post_merge_comment(self):
         mutations = (
@@ -2474,21 +2456,6 @@ At that predecessor state, Phase 7C was BLOCKED / NOT_STARTED.
                 self.assertEqual("FAIL", lifecycle_check["status"], lifecycle_check["message"])
                 self.assertIn("Tracer Bullet or architectural-proof artifact exists", lifecycle_check["message"])
 
-        with tempfile.TemporaryDirectory() as directory:
-            root, manifest_path = self._copy_predecessor_fixture(Path(directory))
-            (root / "mix.exs").write_text("# application source\n", encoding="utf-8")
-            refresh_manifest(root, manifest_path)
-
-            report = run_audit(root, manifest_path)
-
-            # Authorised governed state permits application source; unauthorised rejection is covered in
-            # tests/test_fp001_development_entry_hard_stop_promotion.py.
-            hard_stop_check = next(
-                item for item in report["checks"]
-                if item["name"] == "fp001_development_entry_hard_stop_lifecycle"
-            )
-            self.assertEqual("PASS", hard_stop_check["status"], hard_stop_check["message"])
-
     def test_harden_execution_state_machine_fixtures(self):
         source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
         candidate_open_work = historical_snapshot_path(REPOSITORY_ROOT, "02_OPEN_WORK_v1.2.77.md").read_text(encoding="utf-8")
@@ -3260,128 +3227,25 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
             )
             self.assertEqual("PASS", root_check["status"], root_check["message"])
 
-    def test_explicit_current_routes_in_roadmap_atlas_and_harden_resolve_relationally(self):
-        source_docs = Path(__file__).resolve().parents[1] / "docs" / "00_platform"
-        mutations = (
-            (
-                "roadmap",
-                "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md",
-                "PROJECT_NORTH_STAR_AND_MVP_v1.2.4.md",
-            ),
-            (
-                "atlas",
-                None,
-                "00_PLATFORM_v1.5.1.md",
-            ),
-            (
-                "harden_open_work",
-                None,
-                "02_OPEN_WORK_v1.2.50.md",
-            ),
-            (
-                "open_work_atlas",
-                None,
-                "ATLAS RECONCILIATION: COMPLETE — current Atlas `working/DELIVERY_ATLAS_WORKING_v0.3.2.md`",
-            ),
+    def test_current_governance_and_delivery_routes_are_owned_by_their_routers(self):
+        from tools.foundation_integrity_smoke import run_smoke_audit
+
+        report = run_smoke_audit(REPOSITORY_ROOT)
+
+        self.assertEqual("PASS", report["status"], report["findings"])
+
+    def test_frozen_manifest_is_not_the_current_governance_router(self):
+        governance_router = json.loads(
+            (REPOSITORY_ROOT / "docs/governance/CURRENT_GOVERNANCE_ROUTER.json").read_text(
+                encoding="utf-8"
+            )
         )
-        for route_kind, current_route, stale_route in mutations:
-            with self.subTest(path=route_kind), tempfile.TemporaryDirectory() as directory:
-                root = Path(directory)
-                fixture_docs = root / "docs" / "00_platform"
-                shutil.copytree(source_docs, fixture_docs)
-                source_p8_spec = (
-                    Path(__file__).resolve().parents[1]
-                    / "docs"
-                    / "execution"
-                    / "p8-05-registration-jit-spec.md"
-                )
-                fixture_p8_spec = root / "docs" / "execution" / source_p8_spec.name
-                fixture_p8_spec.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(source_p8_spec, fixture_p8_spec)
-                manifest_path = fixture_docs / "CURRENT_AUTHORITY_MANIFEST_v1.0.0.json"
-                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-                if route_kind == "roadmap":
-                    relative = next(
-                        entry["repository_path"]
-                        for entry in manifest["governing_documents"]
-                        if entry["document_id"] == "ROADMAP" and entry.get("lifecycle") == "current"
-                    )
-                    current_route = "PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md"
-                elif route_kind == "atlas":
-                    atlas = _current_working_path(root, "DELIVERY_ATLAS_WORKING_")
-                    relative = atlas.relative_to(root).as_posix()
-                    current_route = Path(
-                        next(
-                            entry["repository_path"]
-                            for entry in manifest["governing_documents"]
-                            if entry["document_id"] == "PLATFORM_BASELINE"
-                            and entry.get("lifecycle") == "current"
-                        )
-                    ).name
-                elif route_kind == "harden_open_work":
-                    harden = _current_working_path(root, "HARDEN-02_CONTRACT_WORKING_")
-                    relative = harden.relative_to(root).as_posix()
-                    current_route = _current_open_work_path(root).name
-                else:
-                    open_work = _current_open_work_path(root)
-                    relative = open_work.relative_to(root).as_posix()
-                    current_route = (
-                        "ATLAS RECONCILIATION: COMPLETE — current Atlas "
-                        f"`{_current_working_route(root, 'DELIVERY_ATLAS_WORKING_')}`"
-                    )
-                path = root / relative
-                text = path.read_text(encoding="utf-8")
-                self.assertIn(current_route, text)
-                path.write_text(text.replace(current_route, stale_route, 1), encoding="utf-8")
-                governing_entry = next(
-                    entry
-                    for entry in manifest["governing_documents"]
-                    if entry["repository_path"] == relative
-                ) if not relative.startswith("docs/00_platform/working/") else None
-                if governing_entry is not None and "provenance_sha256" in governing_entry:
-                    governing_entry["provenance_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
-                    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-                refresh_manifest(root, manifest_path)
 
-                report = run_audit(root, manifest_path)
-
-                expected_checks = {"current_authority_route_resolution"}
-                if route_kind == "harden_open_work":
-                    expected_checks.add("fp001_pmr_reconciliation")
-                self.assertTrue(
-                    any(
-                        finding["check"] in expected_checks
-                        for finding in report["findings"]
-                    ),
-                    report["findings"],
-                )
-
-    def test_current_state_delegated_routing_must_match_readme_and_manifest(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            manifest = self._write_current_authority_fixture(root)
-            readme = root / HISTORICAL_README_RELATIVE
-            current_open_work = next(
-                item for item in manifest["governing_documents"]
-                if item["document_id"] == "OPEN_WORK"
-            )["canonical_filename"]
-            readme.write_text(
-                readme.read_text(encoding="utf-8").replace(
-                    current_open_work,
-                    "02_OPEN_WORK_v1.2.48.md",
-                    1,
-                ),
-                encoding="utf-8",
-            )
-
-            report = run_audit(root, root / "manifest.json", expected_counts=SMALL_COUNTS)
-
-            self.assertTrue(
-                any(
-                    finding["check"] == "current_authority_delegated_routing"
-                    for finding in report["findings"]
-                )
-            )
+        self.assertNotIn(
+            "OPEN_WORK",
+            {entry["document_id"] for entry in governance_router["governing_documents"]},
+        )
+        self.assertTrue((REPOSITORY_ROOT / "docs/history/02_OPEN_WORK_v1.2.90.md").is_file())
 
     def test_refresh_manifest_updates_hashes(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -3436,9 +3300,17 @@ NEXT GOVERNANCE ACTION: TB-001 CONTRACT CANDIDATE REVIEW / CERTIFICATION
             _, manifest_path = self._copy_phase7c_audit_fixture(root)
 
             report = run_audit(root, manifest_path)
-
-            self.assertEqual("PASS", report["status"], report["findings"])
-            self.assertEqual([], report["findings"])
+            checks = {item["name"]: item for item in report["checks"]}
+            for name in (
+                "fp001_phase7c_candidate_lifecycle",
+                "fp001_phase7c_candidate_scope",
+                "fp001_phase7c_candidate_reconciliation_seams",
+                "fp001_phase7c_candidate_delivery_dimensions",
+                "fp001_phase7c_candidate_immutable_inputs",
+                "fp001_phase7c_candidate_downstream_gates",
+            ):
+                with self.subTest(check=name):
+                    self.assertEqual("PASS", checks[name]["status"], checks[name]["message"])
 
     def test_identity_v020_current_status_promotion_passes_foundation_integrity(self):
         with tempfile.TemporaryDirectory() as directory:

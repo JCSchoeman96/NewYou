@@ -13,6 +13,7 @@ from foundation_test_support import (
     git_snapshot_bytes,
     git_snapshot_path_exists,
     git_snapshot_directory_names,
+    frozen_manifest_document_path,
     historical_platform_readme_path,
     historical_platform_readme_text,
 )
@@ -368,7 +369,9 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertIn("## 12.6 ", self.open_work)
         self.assertLess(self.open_work.index("## 12.4 "), self.open_work.index("## 12.5 "))
         self.assertLess(self.open_work.index("## 12.5 "), self.open_work.index("## 12.6 "))
-        self.assertIn(ROADMAP_CURRENT.name, self.readme, "README current Roadmap")
+        documentation_entrypoint = (ROOT / "docs/README.md").read_text(encoding="utf-8")
+        self.assertIn("governance/CURRENT_GOVERNANCE_ROUTER.json", documentation_entrypoint)
+        self.assertTrue(ROADMAP_CURRENT.is_file())
         self.assertIn("archive/02_OPEN_WORK_v1.2.38.md", self.readme)
         self.assertIn("ROADMAP AMENDMENT: COMPLETE", self.readme)
         current = {
@@ -379,9 +382,11 @@ class RoadmapAmendmentIntegrityTests(unittest.TestCase):
         self.assertEqual(_sha256(ROOT / current["OPEN_WORK"]["repository_path"]), current["OPEN_WORK"]["sha256"])
         self.assertEqual("historical", {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["lifecycle"])
         self.assertEqual(_sha256(OPEN_WORK), {entry["document_id"]: entry for entry in self.manifest["historical_documents"]}["OPEN_WORK_V1_2_38"]["sha256"])
+        frozen_roadmap = frozen_manifest_document_path(ROOT, current["ROADMAP"])
         self.assertEqual("1.2.4", current["ROADMAP"]["semver"])
-        self.assertEqual(ROADMAP_CURRENT.relative_to(ROOT).as_posix(), current["ROADMAP"]["repository_path"])
-        self.assertEqual(_sha256(ROADMAP_CURRENT), current["ROADMAP"]["sha256"])
+        self.assertEqual("05_ROADMAP_v1.2.4.md", frozen_roadmap.name)
+        self.assertEqual(_sha256(frozen_roadmap), current["ROADMAP"]["sha256"])
+        self.assertEqual("05_ROADMAP_v1.2.5.md", ROADMAP_CURRENT.name)
         self.assertEqual(17, self.manifest["integrity_rules"]["expected_counts"]["feature_packs"])
         self.assertEqual(20, self.manifest["integrity_rules"]["expected_counts"]["domains"])
         self.assertEqual(61, self.manifest["integrity_rules"]["expected_counts"]["ownership_rows"])

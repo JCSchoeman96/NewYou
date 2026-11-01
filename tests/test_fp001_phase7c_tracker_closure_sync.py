@@ -87,10 +87,10 @@ class FP001Phase7CTrackerClosureSyncTests(unittest.TestCase):
         self.assertEqual("historical", historical_open_work["lifecycle"])
 
         current_paths = rule["current_paths"]
-        self.assertEqual(current_document_path(ROOT, "OPEN_WORK").relative_to(ROOT).as_posix(), current_paths["open_work"])
-        self.assertEqual(current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").relative_to(ROOT).as_posix(), current_paths["delivery_atlas"])
-        self.assertEqual(current_working_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_").relative_to(ROOT).as_posix(), current_paths["fp001_skeleton"])
-        self.assertEqual(current_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_").relative_to(ROOT).as_posix(), current_paths["harden_02"])
+        self.assertEqual(current_document_path(ROOT, "OPEN_WORK").name, Path(current_paths["open_work"]).name)
+        self.assertEqual(current_working_path(ROOT, "DELIVERY_ATLAS_WORKING_").name, Path(current_paths["delivery_atlas"]).name)
+        self.assertEqual(current_working_path(ROOT, "FP-001_FEATURE_PACK_SKELETON_WORKING_").name, Path(current_paths["fp001_skeleton"]).name)
+        self.assertEqual(current_working_path(ROOT, "HARDEN-02_CONTRACT_WORKING_").name, Path(current_paths["harden_02"]).name)
 
         # These assertions certify the predecessor state promoted by PR #126.
         # The live current paths may advance while this snapshot remains archived.

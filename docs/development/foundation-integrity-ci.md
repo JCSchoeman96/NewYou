@@ -9,7 +9,9 @@ checks from the complete historical suite.
 Run the always-on Smoke lane from the repository root:
 
 ```bash
+python -m unittest discover -s tests -p 'test_foundation_lane_routing.py' -v
 python -m unittest discover -s tests -p 'test_foundation_smoke.py' -v
+python -m unittest discover -s tests -p 'test_foundation_merge_gate.py' -v
 python -m tools.foundation_integrity_smoke --governance-router docs/governance/CURRENT_GOVERNANCE_ROUTER.json --delivery-router docs/delivery/CURRENT_DELIVERY_ROUTER.json --json
 ```
 
@@ -57,12 +59,11 @@ classification, so both source and destination are considered.
 Foundation Smoke always runs. The required **Foundation Integrity** aggregate
 waits for Smoke and routed Application CI, but not for Full.
 
-This ticket does not create an Elixir project or run Mix commands. The
-application path classification is the routing boundary for later governed
-implementation work. When the application has the corresponding Mix aliases,
-its ordinary verification should run `mix check`, followed by `mix check.deep`
-for the deeper proof set. Application-only changes do not run the complete
-historical governance suite.
+Routed application and engineering changes run the canonical `mix check` gate.
+The slower `mix check.deep` lane runs when application source, migrations or
+dependency/toolchain inputs change. Documentation-only delivery/development
+changes, agent guidance and test-only changes skip that lane. Application-only
+changes do not run the complete historical governance suite.
 
 ## Lane responsibilities
 

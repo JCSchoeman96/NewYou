@@ -53,7 +53,7 @@ class AssessmentCreditLifecycleAuthorityTests(unittest.TestCase):
         cls.decisions = read(
             frozen_manifest_document_path(ROOT, cls.current["DECISION_REGISTER"])
         )
-        cls.roadmap = read(DOCS / cls.current["ROADMAP"]["canonical_filename"])
+        cls.roadmap = read(frozen_manifest_document_path(ROOT, cls.current["ROADMAP"]))
         cls.previous_roadmap = read(DOCS / "archive" / "05_ROADMAP_v1.2.3.md")
         cls.domain_map = read(DOCS / cls.current["DOMAIN_MAP"]["canonical_filename"])
         cls.open_work = read(DOCS / cls.current["OPEN_WORK"]["canonical_filename"])

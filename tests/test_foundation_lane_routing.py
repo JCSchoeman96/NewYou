@@ -5,7 +5,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.foundation_integrity_routing import classify_changed_paths, classify_event, classify_path
+from tools.foundation_integrity_routing import (
+    classify_changed_paths,
+    classify_deep_application_changes,
+    classify_deep_event,
+    classify_event,
+    classify_path,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -161,6 +167,27 @@ class SemanticRootRoutingTests(unittest.TestCase):
                     _route([path]),
                 )
 
+    def test_deep_application_lane_is_limited_to_code_and_dependency_inputs(self):
+        for path in [
+            "docs/delivery/jit/identity/IDENTITY_JIT.md",
+            "docs/development/foundation-integrity-merge-gate.md",
+            ".agents/skills/ticket-implement/SKILL.md",
+            "tests/test_application_regression.py",
+            "test/new_you/accounts_test.exs",
+        ]:
+            with self.subTest(path=path):
+                self.assertFalse(classify_deep_application_changes([path]))
+
+        for path in [
+            "lib/new_you/accounts.ex",
+            "priv/repo/migrations/20261101000000_example.exs",
+            "mix.exs",
+            "mix.lock",
+            ".tool-versions",
+        ]:
+            with self.subTest(path=path):
+                self.assertTrue(classify_deep_application_changes([path]))
+
     def test_full_machinery_and_provenance_tests_select_full(self):
         paths = [
             "tools/foundation_integrity_routing.py",
@@ -220,6 +247,10 @@ class EventRoutingTests(unittest.TestCase):
     def test_manual_dispatch_selects_full_only(self):
         decision = classify_event("workflow_dispatch", "", "", str(ROOT))
         self.assertEqual({"foundation_full": True, "application_changes": False}, decision)
+        self.assertFalse(classify_deep_event("workflow_dispatch", "", "", str(ROOT)))
+
+    def test_unknown_push_range_fails_closed_for_all_selected_lanes(self):
+        self.assertTrue(classify_deep_event("push", "", "", str(ROOT)))
 
     def test_post_merge_push_of_reviewed_application_tree_does_not_rerun_full(self):
         """Scenario F: the merged application tree was verified on its PR head; main must not

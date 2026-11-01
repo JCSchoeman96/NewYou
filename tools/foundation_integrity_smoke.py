@@ -65,6 +65,11 @@ DOCUMENT_VERSION_PATTERN = re.compile(
 STATUS_VERSION_PATTERN = re.compile(
     r"^[-*]\s+\*\*Document status:\*\*.*?\bv(\d+\.\d+\.\d+)\b", re.MULTILINE
 )
+STALE_CURRENT_ENTRYPOINT_PATTERNS = (
+    r"(?i)proof classification (?:is|remains) not finalised",
+    r"(?i)architectural proof classification is next",
+    r"(?i)architectural proof classification.*remains unperformed",
+)
 
 
 def _default_root() -> Path:
@@ -323,6 +328,20 @@ def run_smoke_audit(
         "documentation entrypoint describes the semantic roots and Plane"
         if entrypoint_ok
         else "documentation entrypoint must describe governance, delivery, development, history and Plane",
+        path="docs/README.md",
+    )
+    stale_current_prose = [
+        pattern
+        for pattern in STALE_CURRENT_ENTRYPOINT_PATTERNS
+        if re.search(pattern, entrypoint)
+    ]
+    _record(
+        report,
+        "smoke_documentation_entrypoint_current_prose",
+        not stale_current_prose,
+        "documentation entrypoint has no stale current proof-classification claims"
+        if not stale_current_prose
+        else f"documentation entrypoint contains stale current proof-classification claims: {stale_current_prose}",
         path="docs/README.md",
     )
 

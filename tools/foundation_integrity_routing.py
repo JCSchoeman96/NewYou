@@ -71,6 +71,13 @@ APPLICATION_PREFIXES = (
     "tools/architecture/",
 )
 
+# The fast Application CI lane runs for every classified engineering change.
+# Dialyzer is reserved for changes that can alter the Elixir application or its
+# dependency graph; documentation, agent guidance and regression-test edits do
+# not need that slower lane by location alone.
+DEEP_APPLICATION_FILES = frozenset({"mix.exs", "mix.lock", ".tool-versions"})
+DEEP_APPLICATION_PREFIXES = ("lib/", "priv/")
+
 # --- Governance, history and Foundation Full machinery ---------------------
 
 FOUNDATION_FULL_FILES = frozenset(
@@ -137,6 +144,18 @@ def classify_changed_paths(paths: list[str]) -> dict[str, bool]:
     }
 
 
+def classify_deep_application_changes(paths: list[str]) -> bool:
+    """Return whether changed paths need the slower Dialyzer lane."""
+
+    for path in paths:
+        normalized = path.removeprefix("./")
+        if classify_path(normalized) != "application":
+            continue
+        if normalized in DEEP_APPLICATION_FILES or normalized.startswith(DEEP_APPLICATION_PREFIXES):
+            return True
+    return False
+
+
 def _changed_paths(event_name: str, base_sha: str, head_sha: str, cwd: str) -> list[str]:
     separator = "..." if event_name == "pull_request" else ".."
     result = subprocess.run(
@@ -170,6 +189,34 @@ def classify_event(event_name: str, base_sha: str, head_sha: str, cwd: str = "."
     return classify_changed_paths(paths)
 
 
+def classify_deep_event(event_name: str, base_sha: str, head_sha: str, cwd: str = ".") -> bool:
+    """Classify whether an event needs the slower Application CI lane.
+
+    Missing or unreadable push ranges fail closed to the deep lane because the
+    push path also selects Application CI in that case. Pull requests with an
+    unknown range already fail closed to Foundation Full and do not select the
+    Application workflow.
+    """
+
+    if event_name == "workflow_dispatch":
+        return False
+    if event_name == "push":
+        if not base_sha or not head_sha:
+            return True
+        try:
+            paths = _changed_paths(event_name, base_sha, head_sha, cwd)
+        except (OSError, subprocess.CalledProcessError):
+            return True
+        return classify_deep_application_changes(paths)
+    if event_name != "pull_request" or not base_sha or not head_sha:
+        return False
+    try:
+        paths = _changed_paths(event_name, base_sha, head_sha, cwd)
+    except (OSError, subprocess.CalledProcessError):
+        return False
+    return classify_deep_application_changes(paths)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--event", default=os.environ.get("GITHUB_EVENT_NAME", ""))
@@ -179,8 +226,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     decision = classify_event(args.event, args.base_sha, args.head_sha, args.root)
+    deep_application_changes = classify_deep_event(
+        args.event, args.base_sha, args.head_sha, args.root
+    )
     print(f"foundation_full={str(decision['foundation_full']).lower()}")
     print(f"application_changes={str(decision['application_changes']).lower()}")
+    print(f"deep_application_changes={str(deep_application_changes).lower()}")
     if decision["foundation_full"]:
         print("Foundation Full selected as non-blocking historical/provenance evidence.", file=sys.stderr)
     return 0

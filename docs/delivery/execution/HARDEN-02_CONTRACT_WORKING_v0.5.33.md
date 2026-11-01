@@ -92,23 +92,17 @@ HARDEN-02 exists to prove and harden Phase-7 delivery-pipeline governance integr
 
 | Source | Use |
 |---|---|
-| `PROJECT_NORTH_STAR_AND_MVP_v1.3.0.md` | MVP / Phase 7–8 boundary context |
-| `00_PLATFORM_v1.12.0.md` | Product Law; not amended by HARDEN-02 |
-| `01_DECISIONS_v1.12.0.md` | Decision / OQ register; HARDEN-02 is not an OQ |
-| `02_OPEN_WORK_v1.2.90.md` | Programme routing, FP-001 Phase 7B/7C disposition, completed proof classification, Development Entry Hard Stop and current bounded Phase 8 status |
-| `03_ARCHITECTURE_v1.1.1.md` | Architecture synthesis; unchanged |
-| `04_DOMAIN_MAP_v1.2.0.md` | Domain Law including PMR ownership and `FP001_RECONCILIATION_REQUIRED` consequence |
-| `05_ROADMAP_v1.2.4.md` | Roadmap Law; PMR REQUIRED in FP-001; Feature Pack count 17 |
-| `PLATFORM_OPERATING_MODEL_v1.2.0.md` | Phase 7 handoff: Skeleton + Gate Manifest → required JIT Domain Dossiers → Final Feature Pack Contract |
-| `FRONTEND_EXPERIENCE_SYSTEM_v1.0.1.md` | Out of HARDEN-02 scope unless a later governance task requires frontend routing hygiene |
+| `docs/governance/CURRENT_GOVERNANCE_ROUTER.json` | Current durable Product, Architecture, Domain, Roadmap and supporting authority routes |
+| `docs/history/02_OPEN_WORK_v1.2.90.md` | Frozen pre-Plane planning snapshot; Plane project `WELL` is live execution authority |
+| `docs/delivery/CURRENT_DELIVERY_ROUTER.json` | Current Feature, JIT, proof, execution and content-evidence contract routes |
 
 ### CURRENT DERIVED EVIDENCE
 
 | Source | Use |
 |---|---|
-| `working/DELIVERY_ATLAS_WORKING_v0.4.29.md` | Current derived, non-authoritative Phase-7 / proof / HH lifecycle navigation only; pinned `working/DELIVERY_ATLAS_WORKING_v0.2.1.md` remains source-at-freeze evidence, not current navigation; does not create HARDEN-02 law |
-| `working/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.29.md` | Current FP-001 Phase 7A/7B/7C and post-Phase-7C classification status; preserves PR #67 reconciliation, PMR block and representation boundary |
-| `working/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md` | Current certified/current Identity & Access dossier under PR #151; the prior promoted/current v0.1.4 snapshot and exact PR #150 candidate remain separately archived |
+| `docs/delivery/execution/DELIVERY_ATLAS_WORKING_v0.4.31.md` | Current derived, non-authoritative Phase-7 / proof / HH lifecycle navigation only; pinned v0.2.1 remains source-at-freeze evidence, not current navigation; does not create HARDEN-02 law |
+| `docs/delivery/feature-contracts/fp-001/FP-001_FEATURE_PACK_SKELETON_WORKING_v0.1.31.md` | Current FP-001 Phase 7A/7B/7C and post-Phase-7C classification status; preserves PR #67 reconciliation, PMR block and representation boundary |
+| `docs/delivery/jit/identity/FP-001_IDENTITY_ACCESS_JIT_DOMAIN_DOSSIER_WORKING_v0.2.0.md` | Current certified/current Identity & Access dossier under PR #151; the prior promoted/current v0.1.4 snapshot and exact PR #150 candidate remain separately archived |
 
 ### HISTORICAL AUTHORITY / WORKING EVIDENCE
 
@@ -724,7 +718,7 @@ Preserve the fail-closed downstream gates:
 
 ## 21. Current execution certification and next stage (historical v0.5.18 predecessor state)
 
-The governing route is recorded in Open Work v1.2.74. HARDEN-02 execution, Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.4 remain COMPLETE / CERTIFIED. Communications and Audit & Evidence v0.1.0 remain REQUIRED / COMPLETE / CERTIFIED / CURRENT. The current Audit & Evidence dossier route is `working/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`. Privacy & Consent, Content & Media and Analytics remain NOT_REQUIRED. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under historical tracker #120 (CLOSED / COMPLETED). Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET; `REUSE_EXISTING_PROOF` is NOT SELECTED. The Tracer Bullet is REQUIRED / NOT YET DEFINED, has no ID, and proof execution has NOT STARTED. Development Entry Hard Stop evaluation independently satisfied all ten conditions. Phase 8 Architectural Proof is AUTHORISED. Application implementation is AUTHORISED only inside that bounded proof stage. The next governance action is NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION. Communications finalisation remains BLOCKED / STOP pending applicable release gates.
+The governing route is recorded in the frozen Open Work v1.2.90 snapshot; Plane project `WELL` owns live execution state. HARDEN-02 execution, Engineering Standards Authority Promotion, FP-001 PMR reconciliation and Identity dossier v0.1.4 remain COMPLETE / CERTIFIED. Communications and Audit & Evidence v0.1.0 remain REQUIRED / COMPLETE / CERTIFIED / CURRENT. The current Audit & Evidence dossier route is `docs/delivery/jit/audit-evidence/FP-001_AUDIT_EVIDENCE_JIT_DOMAIN_DOSSIER_WORKING_v0.1.0.md`. Privacy & Consent, Content & Media and Analytics remain NOT_REQUIRED. Phase 7B reconciliation v0.1.0 is COMPLETE / CERTIFIED / CURRENT under historical tracker #120 (CLOSED / COMPLETED). Phase 7C and Final Feature Pack Contract v0.1.0 are COMPLETE / CERTIFIED / CURRENT. Issue #124 is CLOSED / COMPLETED after successful resulting-main verification. Architectural Proof Classification is COMPLETE / FINALISED as NEW_TRACER_BULLET; `REUSE_EXISTING_PROOF` is NOT SELECTED. The Tracer Bullet is REQUIRED / NOT YET DEFINED, has no ID, and proof execution has NOT STARTED. Development Entry Hard Stop evaluation independently satisfied all ten conditions. Phase 8 Architectural Proof is AUTHORISED. Application implementation is AUTHORISED only inside that bounded proof stage. The next governance action is NEW_TRACER_BULLET PROOF CONTRACT / TASK DEFINITION. Communications finalisation remains BLOCKED / STOP pending applicable release gates.
 
 PR #67 lifecycle evidence: candidate `79d0540c66f0224ece0330181e61dfef8ab4b458` from prior main `38022caea64cb2522ab8fc4db730099a94cd6600`, unchanged candidate/result tree `a71dbeb2cca79bea0013f9997e40f34769f262f3`, resulting main `4000ae50660930114e3ad43108dc029fd0673d32`, exact-head CI `36991113390`, resulting-main CI `37009244020`, pre-merge attestation comment `5952693308`, post-merge attestation comment `5955641536`, and fresh independent post-merge review PASS.
 
